@@ -1272,7 +1272,8 @@ def cmd_ciclo(raiz: Path, urn: str, nuevo: str) -> int:
 # --------------------------------------------------------------- ley
 
 PIEZAS_LEY = ("ALMA.md", "ley/0-constitucion.md", "ley/1-ontologia.md",
-              "ley/2-forma.md", "ley/3-transmutacion.md")
+              "ley/2-forma.md", "ley/3-transmutacion.md",
+              "ley/4-koraficacion.md")
 
 
 def cmd_ley(raiz: Path) -> int:
@@ -1381,7 +1382,7 @@ def principal(argv: list[str] | None = None) -> int:
     p.add_argument("urn")
     p.add_argument("estado")
 
-    sub.add_parser("ley", help="concatena ALMA.md + ley/0..3")
+    sub.add_parser("ley", help="concatena ALMA.md + ley/0..4")
 
     args = parser.parse_args(argv)
     raiz = raiz_corpus()

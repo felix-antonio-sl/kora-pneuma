@@ -805,7 +805,7 @@ class TestPipeCerrado(unittest.TestCase):
                                           encoding="utf-8")
             (raiz / "ley").mkdir()
             for pieza in ("0-constitucion", "1-ontologia", "2-forma",
-                          "3-transmutacion"):
+                          "3-transmutacion", "4-koraficacion"):
                 (raiz / "ley" / f"{pieza}.md").write_text(
                     f"# {pieza}\n", encoding="utf-8")
             env = dict(os.environ, KORA_RAIZ=str(raiz))

@@ -16,10 +16,12 @@ misma; los URN no cambiaron. Léase en este orden:
    fundacional: lo que el alma no exige, este cuerpo no lo carga.
 2. **`GENESIS.md`** — el sello de la reencarnación: qué ascendió, qué cayó
    (con razón, pieza por pieza), qué se ganó, qué se debe.
-3. **`ley/`** — la ley en cuatro estratos: constitución, ontología (PMI × LFS),
-   forma (el shape y su gramática), transmutación (el funtor y sus matrices).
+3. **`ley/`** — la ley en cuatro estratos y cinco documentos: constitución,
+   ontología (PMI × LFS), forma (el shape y su gramática en `ley/2`, la
+   producción korificada en `ley/4` — mismo estrato), transmutación (el
+   funtor y sus matrices).
 
-La ley entera más el alma caben en ~15k tokens: **KORA completa es cargable
+La ley entera más el alma caben en ~17k tokens: **KORA completa es cargable
 como contexto de un LLM**. Ese es el punto.
 
 ## Los seis gestos
@@ -46,6 +48,7 @@ ley/0-constitucion.md    identidad, precedencia, lifecycle, URN
 ley/1-ontologia.md       el axioma, los 6 ejes, las 5 leyes inter-eje, el arnés
 ley/2-forma.md           gramática del frontmatter, shape, zonas, relaciones
 ley/3-transmutacion.md   el funtor, las matrices, el sello, la honestidad
+ley/4-koraficacion.md    la fábrica: FS=100%, CR, prueba ácida, telegrafización
 kora.py                  el núcleo entero (stdlib puro, Python ≥ 3.11)
 artefactos/
   conocimiento/{ns}/{id}.md

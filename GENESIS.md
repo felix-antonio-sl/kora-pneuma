@@ -45,6 +45,7 @@ en pneuma:
 | Promoción sin democión ("se nace hacia arriba") | autoria-spec §8: URN preservado, bump major, democión prohibida | `ley/2` §7.1, misma doctrina y misma razón (descender pierde estructura de forma no funtorial) |
 | Bisimulación módulo proyección | transmutation-spec §5, doctrina sin check | `ley/3`, garantía declarada no mecanizada — confesada igual que las otras tres |
 | Gate de promoción | `kora promote` verificaba antes de publicar | `ciclo` hacia publicado/activo rechaza si `velar` falla |
+| Contrato de koraficación (la fábrica) | md-spec: funtor K, FS=100%, CR>1,5, prueba ácida, telegrafización T1-T7 | `ley/4-koraficacion.md` (añadida 2026-06-12 tras detectarse el hueco): mismo contrato, anclado al estrato de forma; FS/CR siguen siendo obligación declarada del productor — `velar` mecaniza la forma del resultado, no la verdad del contenido, y la ley lo confiesa |
 | Fuente de verdad = filesystem | sí | sí, sin excepción ni vista persistida |
 
 ## 2. Lo que cae — la escoria, cada pieza con su razón
@@ -58,7 +59,7 @@ soltó, y por qué soltarlo no traiciona la necesidad:
 | 24 subcomandos CLI | Solo 6 son gestos del alma: `censo`, `nombre`, `velar`, `transmutar`, `ciclo`, `ley`. Los otros 18 eran andamiaje (migrate, doctor, recovery, sync-docs, deploy-*, intake, hooks…) — cicatrices de migraciones pasadas, no órganos. |
 | 37 checks → 13 | Los 13 que quedan custodian directamente una frase del ALMA. La mayoría de los 24 que caen vigilaba maquinaria que ya no existe (workspaces duales, staging, TOOLS/config coherence, fidelidad-mastra a un runtime archivado, construction-* del andamiaje de forja). **Tres custodias reales se pierden y se declaran**: el lint estructural del cuerpo (`lint-md`), la vigilancia de `TODO` en compromisos éticos, y la validación target×forma (`entornos-objetivo-soportan`) — esta última cubierta operacionalmente por las matrices de transmutación, que rechazan lo que el target no soporta. |
 | `trace_fidelity` por runtime | La taxonomía de evidencia auditable por runtime (claude-code `media`, codex/opencode `pendiente`) era doctrina operativa de verificación; cae como campo. La honestidad de procedencia la porta ahora el sello inline de cada emisión. |
-| Disciplina prescriptiva del cuerpo (telegrafización DEBE, tags como gate base) | Rebaja deliberada: la compresión del cuerpo pasa de DEBE a DEBERIA y los ≥3 tags del conocimiento publicado se exigen solo bajo `velar --estricto`. La promoción a publicado/activo sí conserva gate mecánico (`ciclo` rechaza si `velar` falla). |
+| Disciplina prescriptiva del cuerpo (telegrafización DEBE, tags como gate base) | Rebaja parcial: para cuerpos en general la compresión pasa de DEBE a DEBERIA y los ≥3 tags del conocimiento publicado se exigen solo bajo `velar --estricto`. **Para el producto de una koraficación, la disciplina completa regresó como DEBE en `ley/4`** (2026-06-12). La promoción a publicado/activo conserva gate mecánico (`ciclo` rechaza si `velar` falla). |
 | Staging pre-categorial (`_SCRIPTORIUM`, `_FRAGUA`, `_TALLER`) | El estado `borrador` **in-place** es la antesala: lo que gesta vive ya en su lugar con nombre provisional y estado humilde. **Pérdida real declarada**: desaparece la antesala *anónima* (material sin URN); lo informe vive fuera del repo, como la bestia ya hacía con el material crudo. |
 | Manifests anidados (`_manifest.*`, `extensions.kora.*`, `artefacto.*` de 6 dimensiones) | El frontmatter plano en subconjunto regular de YAML dice lo mismo que importa con ~15 claves. Lo que era sustancia del shape profundo (reglas duras, disparadores, compromisos) vive en el cuerpo, que es donde el LLM lo lee. |
 | YAML completo (PyYAML) | La ley define una gramática regular que cabe en media página (`ley/2`); un parser de ~120 líneas la realiza con errores por número de línea. Quien necesita YAML arbitrario está cargando coraza. |
@@ -127,14 +128,14 @@ Pneuma hereda la virtud central: *no llamar demostrado al puente prometido*.
 
 | Dimensión | Bestia (`~/kora`) | Pneuma (`~/kora-pneuma`) | Razón |
 |---|---|---|---|
-| Toolchain | 16.057 líneas / 29 archivos | 1.416 líneas / 1 archivo | ~11× |
-| Ley (specs) | 8.368 líneas | 949 líneas (+242 ALMA) | ~9× |
+| Toolchain | 16.057 líneas / 29 archivos | 1.417 líneas / 1 archivo | ~11× |
+| Ley (specs) | 8.368 líneas | 1.132 líneas en 5 documentos (+242 ALMA) | ~7× |
 | Comandos CLI | 24 | 6 | 4× |
 | Checks | 37 | 13 | ~3× |
 | Tests | 383 en 566 s (6.621 líneas) | 66 en 0,24 s (849 líneas) | ~2.300× en tiempo |
 | Dependencias | PyYAML + ecosistema | stdlib puro | — |
 | Tamaño en disco (sin .git/derivados) | 232 MB (incluye `_BUILD/`, staging y material auxiliar — no todo es fuente) | < 450 KB | — |
-| ¿Cabe en un contexto LLM? | no | **sí (~15k tokens, `kora.py ley`)** | la ganancia |
+| ¿Cabe en un contexto LLM? | no | **sí (~17k tokens, `kora.py ley`)** | la ganancia |
 | Artefactos | 745 (16 agentes, 36 skills, 693 kb) | 3 semillas | deuda §4 deliberada |
 
 La vieja bestia solo aplastaba lo que tenía debajo. La nueva, etérea y

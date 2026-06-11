@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.1.0
+# KORA/Constitución — ley pneuma v1.2.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -66,7 +66,10 @@ Cuando dos fuentes parezcan contradecirse, prevalece la de estrato menor:
 
 1. `ley/0-constitucion.md` — constitución.
 2. `ley/1-ontologia.md` — ontología.
-3. `ley/2-forma.md` — forma (serialización).
+3. `ley/2-forma.md` y `ley/4-koraficacion.md` — forma (serialización y
+   producción; comparten estrato: entre ambas prevalece la más específica
+   para el objeto — `ley/2` para la forma del artefacto terminado, `ley/4`
+   para el proceso que produce conocimiento korificado).
 4. `ley/3-transmutacion.md` — transmutación.
 5. Derivados: censo, `_emision/`, mensajes del núcleo, docs auxiliares.
 

@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.1.0
+# KORA/Forma — ley pneuma v1.2.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -234,7 +234,8 @@ no se reemplaza a los vivos.
    el cuerpo DEBERIA eliminar grasa (introducciones vacías, transiciones,
    hedging) y conservar siempre toda condición, umbral, excepción, fecha,
    cifra o referencia. No hay telegrafía impuesta ni métricas de compresión
-   mecanizadas.
+   mecanizadas — con una excepción: el producto de una koraficación se rige
+   por `ley/4`, donde la disciplina completa es DEBE.
 
 Rationale: la prueba ácida heredada sigue siendo buen criterio editorial — si
 al borrar texto cambia solo el tono, sobra; si desaparece un hecho, no se
