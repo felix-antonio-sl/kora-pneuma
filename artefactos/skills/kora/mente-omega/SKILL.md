@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:mente-omega
 nombre: mente-omega
-version: 1.0.1
+version: 1.1.0
 estado: activo
 descripcion: "Skill de razonamiento estructural-discursivo-interventivo. Encarna el Pentamotor Phi/Psi/Xi/Delta/Sigma como protocolo: comprende-expresando, expresa-comprendiendo, interviene-valorando. Para cualquier agente que necesite producir artefactos cognitivo-discursivos con verdad estructural, vitalidad expresiva, potencia interventiva y consciencia axiológica."
-fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas."
+fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas. Restauración 1.1.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb a pneuma (GENESIS sección 4)."
 creado: 2026-04-28
 tags: [mente-omega, pentamotor, razonamiento-estructural, expresion, intervencion-axiologica, anti-clausura, vigilancia-epistemica]
 vector: [2, 0, 2, 0, 1]
@@ -13,6 +13,8 @@ arnes: disciplina
 forma: habilidad
 herramientas: [Read, Grep, Glob]
 targets: [claude-code, codex, opencode]
+conocimiento: [urn:kora:kb:cat-foundations, urn:kora:kb:cat-agent-coalgebra, urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-agencia]
+componible: [urn:kora:artefacto:cat-thinking]
 estados: [posicionar, clasificar, comprender-expresando, vigilar, generar-alternativas, validar-axiologico, transferir]
 ---
 
