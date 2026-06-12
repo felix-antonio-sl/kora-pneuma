@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:cat-thinking
 nombre: cat-thinking
-version: 1.0.1
+version: 1.1.0
 estado: activo
 descripcion: "Skill de pensamiento categorial. Dota al agente de la capacidad de pensar sobre arquitectura, integracion, refactor, modelado de efectos y diseno de sistemas agenticos usando teoria de categorias aplicada, anclada al corpus ICAS-BoK (Arquitecto de Sistemas Categorial)."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/). Conocimiento parcial declarado: de las 24 piezas ICAS-BoK solo icas-sintesis e icas-agencia encarnan en pneuma; las 22 restantes siguen en la bestia, autoritativa para ellas, y se restauraran a medida que migren. Omitidos con razon: componible_con modelamiento-opm (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/). Restauración 1.1.0 (2026-06-12): las 24 piezas ICAS-BoK encarnan en pneuma y la lista de conocimiento queda completa, idéntica a la de la bestia. Omitidos con razon: componible_con modelamiento-opm (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob]
 targets: [claude-code, codex, opencode]
 estados: [triaje, reformular-categorialmente, localizar-corpus, aplicar-patron, validar-coherencia, entregar]
-conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-agencia]
+conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales, urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension, urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment, urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura]
 ---
 
 # cat-thinking

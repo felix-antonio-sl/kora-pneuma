@@ -1,0 +1,132 @@
+---
+urn: urn:fxsl:kb:icas-enriquecimiento
+nombre: icas-enriquecimiento
+version: 1.0.0
+estado: publicado
+descripcion: "Pieza 08 del ICAS-BoK: categorías enriquecidas — Bool/Cost-categories, espacios métricos de Lawvere, profunctors y cambio de base; relaciones cuantitativas (latencia, fiabilidad, costo, QoS)."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/08-enriquecimiento.md (sha256:3c514ef1407c0112d3bb0a1bdf29e578391b86b61e591e994e6f191ad5b8bd00) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+autor: FS
+creado: 2026-04-14
+lang: es
+tags: [enriched-category, cost, metricas-cuantitativas, ICAS-BoK, teoria-categorias, corpus-categorico]
+familia: bok
+---
+
+# Enriquecimiento
+
+## Mas alla de si o no
+
+Hasta ahora cada hom-set ha sido un conjunto plano: los morfismos de A a B forman un set, y la unica pregunta que puedo hacer es "existe un morfismo?" o "cuantos hay?" Eso me basta para muchas cosas, pero no captura una dimension que aparece constantemente en sistemas reales: la dimension cuantitativa. ¿Cuanto cuesta llegar de A a B? ¿Con que probabilidad? ¿Con que latencia? ¿Con que nivel de acceso?
+
+Cuando modelo la topologia de red de un cluster, no me basta saber que el servicio A puede hablar con el servicio B. Necesito saber cuanto tarda -- 2ms, 50ms, 200ms. Cuando modelo permisos, no me basta un grafo de "puede o no puede." Necesito niveles: lectura, escritura, administracion. Cuando modelo calidad de servicio, necesito un numero real entre 0 y 1 que me diga la fiabilidad del canal.
+
+La solucion categorica es reemplazar los hom-sets (objetos en Set) por hom-objects en otra categoria V. Eso es una V-category, una categoria enriquecida sobre V. La idea es simple pero tiene consecuencias profundas: al cambiar la "moneda" con la que mido las relaciones entre objetos, cambio todo el caracter del universo matematico.
+
+## V-categorias: la definicion
+
+Sea V = (V, tensor, I) una categoria monoidal -- ya la conozco del documento 07. Una V-category X consiste en:
+
+- Un conjunto de objetos Ob(X).
+- Para cada par de objetos x, y, un hom-object X(x, y) que es un objeto de V (no un conjunto).
+- Composicion como morfismo en V: X(y, z) tensor X(x, y) -> X(x, z).
+- Identidad como morfismo en V: I -> X(x, x), donde I es la unidad monoidal.
+
+Sujeto a asociatividad y unitalidad, expresadas como diagramas en V que conmutan usando los associators y unitors.
+
+La clave conceptual: ya no puedo "elegir un morfismo" individual, porque los hom-objects no son conjuntos. La composicion no toma un par de flechas y produce otra flecha; toma el tensor de dos hom-objects y produce un hom-object. Todo se expresa globalmente, sin nombrar elementos.
+
+Fong y Spivak lo formulan de manera elegante en el caso preordinal. Como los preordenes son categorias monoidales simples, la definicion de V-category se reduce a condiciones que se leen directamente.
+
+## Bool-enrichment: los preordenes recuperados
+
+El primer ejemplo canónico es V = Bool = ({true, false}, <=, true, AND). Aqui la unidad monoidal es true y el tensor es la conjuncion.
+
+Una Bool-category X asigna a cada par (x, y) un valor booleano X(x, y) in {true, false}. Las condiciones de V-category se reducen a:
+
+- Identidad: true <= X(x, x), que fuerza X(x, x) = true. Esto es reflexividad.
+- Composicion: X(x, y) AND X(y, z) <= X(x, z). Si x <= y y y <= z, entonces x <= z. Esto es transitividad.
+
+El resultado es un preorden. Los preordenes son exactamente las Bool-categories. Fong y Spivak demuestran este isomorfismo con una construccion explicita en ambas direcciones.
+
+Esto no es trivialidad. Es la primera muestra de que el enriquecimiento recupera estructuras familiares como casos particulares de una construccion general. Y tiene aplicacion directa: los permisos de acceso en un sistema son exactamente un preorden. "¿Puede el usuario U acceder al recurso R?" es un Bool-category donde los objetos son (usuarios, recursos) y el hom-object es true o false. La composicion -- la transitividad -- captura la herencia de permisos: si el rol A hereda del rol B, y B tiene acceso a R, entonces A tiene acceso a R.
+
+## Cost-enrichment: espacios metricos de Lawvere
+
+El segundo ejemplo canonico, y el que mas impacto tiene en mi practica, es V = Cost = ([0, infinito], >=, 0, +). Los objetos de Cost son numeros reales no negativos (incluyendo infinito). El orden esta invertido: x >= y significa que hay un morfismo de x a y. La unidad monoidal es 0 y el tensor es la suma.
+
+Una Cost-category X es un conjunto de objetos donde X(x, y) in [0, infinito] asigna una "distancia" o "costo" a cada par. Las condiciones dan:
+
+- Identidad: 0 >= X(x, x), que fuerza X(x, x) = 0. La distancia de un punto a si mismo es cero.
+- Composicion: X(x, y) + X(y, z) >= X(x, z). La desigualdad triangular.
+
+Lawvere observo que esto es exactamente un espacio metrico generalizado -- sin exigir simetria ni separacion. Un espacio metrico de Lawvere permite distancias asimetricas (cuesta mas subir que bajar) y distancias infinitas (no hay camino).
+
+Esto me da la formalizacion exacta de la topologia de red. Los nodos de mi cluster son objetos. La latencia entre nodos es el hom-object. La composicion (suma de latencias) satisface la desigualdad triangular automaticamente: la latencia del camino directo nunca es mayor que la del camino con escala. Y la asimetria captura la realidad de que la latencia de ida puede diferir de la de vuelta.
+
+Un grafo pesado dirigido es exactamente una Cost-category presentada por generadores. Si tengo nodos {A, B, C} con aristas pesadas A->B:3, B->C:2, A->C:10, el Cost-category resultante tiene X(A, C) = min(10, 3+2) = 5 -- el shortest path. La multiplicacion de matrices en el semianillo (min, +) computa exactamente los hom-objects de la Cost-category. Es el algoritmo de Floyd-Warshall reinterpretado como calculo de enriquecimiento.
+
+## [0,1]-enrichment: calidad de servicio
+
+Un caso que uso frecuentemente es V = ([0,1], <=, 1, *), donde el tensor es la multiplicacion y la unidad es 1. Aqui el hom-object X(x, y) in [0,1] mide la fiabilidad o probabilidad de exito del canal de x a y.
+
+La composicion dice que la fiabilidad del camino compuesto es al menos el producto de las fiabilidades individuales: X(x, y) * X(y, z) <= X(x, z). La identidad dice que la fiabilidad del canal de un nodo a si mismo es 1.
+
+Esto captura exactamente el modelo de QoS que uso en arquitecturas de microservicios. Si el servicio A llama a B con fiabilidad 0.99 y B llama a C con fiabilidad 0.95, la fiabilidad del camino A->B->C es al menos 0.99 * 0.95 = 0.9405. Y si hay un camino directo A->C con fiabilidad 0.98, el sistema elige el camino mas fiable.
+
+## Cambio de base de enriquecimiento
+
+Hay una operacion que conecta todos estos mundos: el cambio de base. Si tengo un monoidal monotone f : V -> W (un funtor monoidal lax entre categorias monoidales vistas como preordenes), puedo convertir cualquier V-category en una W-category preservando los objetos y aplicando f a los hom-objects.
+
+Fong y Spivak lo definen formalmente: dada una V-category C, la W-category C_f tiene los mismos objetos y hom-objects C_f(c, d) = f(C(c, d)). Las condiciones de V-category se transfieren automaticamente gracias a las propiedades del monoidal monotone.
+
+El ejemplo mas iluminador: la funcion "threshold" t_epsilon : Cost -> Bool definida por t_epsilon(x) = true si x <= epsilon, false si no, es un monoidal monotone. Aplicarla a una Cost-category (un espacio metrico) produce una Bool-category (un preorden): "x esta a distancia <= epsilon de y." Es exactamente la construccion de grafos de proximidad que uso en clustering: dado un espacio metrico, elijo un umbral y obtengo una relacion de vecindad.
+
+En la otra direccion, la inclusion Bool -> Cost que envía true a 0 y false a infinito convierte preordenes en espacios metricos discretos: o estas a distancia 0 o estas a distancia infinita.
+
+## V-functors y V-natural transformations
+
+Un V-functor F : X -> Y entre V-categories preserva la estructura enriquecida. No mapea morfismos individuales -- mapea hom-objects completos. Para cada par de objetos, da un morfismo en V:
+
+F_{a,b} : X(a, b) -> Y(Fa, Fb)
+
+compatible con composicion e identidad.
+
+Un Bool-functor es exactamente un monotone map entre preordenes. Un Cost-functor es una funcion 1-Lipschitz: d_X(x, y) >= d_Y(Fx, Fy). La estructura enriquecida impone condiciones mas fuertes que un funtor ordinario.
+
+Las V-natural transformations generalizan las transformaciones naturales al contexto enriquecido, reemplazando la condicion de naturalidad puntual por una condicion global expresada con hom-objects. En el caso Bool, una Bool-natural transformation es simplemente la condicion de que la relacion se preserva. En el caso Cost, es una condicion de no-expansividad.
+
+## Enriquecimiento en Cat: las 2-categorias
+
+El caso V = Cat (la categoria de categorias pequenas, con producto cartesiano como tensor) produce las 2-categorias. Una categoria enriquecida en Cat tiene objetos, y entre cada par de objetos no un conjunto de morfismos sino una categoria de morfismos. Los objetos de esa categoria interna son los 1-morfismos (las flechas originales) y los morfismos son los 2-morfismos (las flechas entre flechas).
+
+La composicion en una 2-categoria tiene dos dimensiones. La composicion vertical compone 2-morfismos dentro de una misma hom-categoria: si alpha : f => g y beta : g => h son 2-morfismos entre los mismos objetos, beta . alpha : f => h es su composicion vertical. La composicion horizontal compone 2-morfismos en hom-categorias adyacentes: si alpha : f => g : A -> B y beta : h => k : B -> C, entonces beta * alpha : h.f => k.g : A -> C es su composicion horizontal.
+
+La interchange law dice que las dos composiciones son compatibles: (beta . beta') * (alpha . alpha') = (beta * alpha) . (beta' * alpha'), cuando las composiciones estan definidas. En string diagrams es la condicion de que cajas en cables independientes se pueden mover libremente.
+
+El ejemplo que mas uso: la arquitectura de microservicios como 2-categoria. Los objetos son los servicios. Los 1-morfismos son las llamadas (endpoints). Los 2-morfismos son las transformaciones entre llamadas -- refactorings de API, wrappers, adaptadores. La composicion vertical es encadenar adaptadores. La composicion horizontal es componer llamadas de servicio a servicio con sus adaptadores.
+
+Otro ejemplo: Cat misma es una 2-categoria. Las categorias son 0-celdas, los funtores son 1-celdas, las transformaciones naturales son 2-celdas. Cuando en el documento 03 defini transformaciones naturales, ya estaba trabajando dentro de una 2-categoria sin saberlo.
+
+## Categorias internas
+
+Hay una nocion relacionada pero distinta: una categoria interna a una categoria C con pullbacks. Mientras que una V-category reemplaza los hom-sets por hom-objects, una categoria interna a C reemplaza la coleccion de objetos y la coleccion de morfismos por objetos de C. Una categoria interna tiene un objeto de objetos Ob, un objeto de morfismos Mor, morfismos source y target s, t : Mor -> Ob, identidad i : Ob -> Mor, y composicion c : Mor x_Ob Mor -> Mor (donde el pullback asegura que el target de uno coincide con el source del otro).
+
+Un grupo interno en Set es un grupo ordinario. Un grupo interno en Top es un grupo topologico. Un grupo interno en Diff es un grupo de Lie. La misma definicion categorica, cambiando el ambiente, produce estructuras clasicas distintas.
+
+## Profunctors: relaciones enriquecidas
+
+Los profunctors generalizan las relaciones al mundo enriquecido. Un V-profunctor Phi : X -> Y entre V-categories es un V-functor Phi : X^op tensor Y -> V. En el caso Bool, un profunctor es una relacion de feasibility. En el caso Cost, un profunctor asigna costos a pares (x, y) con x in X e y in Y, respetando la estructura metrica.
+
+La composicion de profunctors en un quantale V (una categoria monoidal preordinal con todos los joins y tensor distribuyendo sobre joins) se define con una formula que es esencialmente una multiplicacion matricial generalizada:
+
+(Phi . Psi)(x, z) = join_{y in Y} Phi(x, y) tensor Psi(y, z)
+
+En Cost, esto es min_{y} (Phi(x,y) + Psi(y,z)) -- el shortest path a traves de un waypoint. En Bool, es exists y . Phi(x,y) AND Psi(y,z) -- "hay un camino pasando por algun y."
+
+Los profunctors son la herramienta para co-design: descomponer un problema de ingenieria en componentes con interfaces cuantitativas y calcular la factibilidad global por composicion.
+
+## El patron recurrente
+
+El enriquecimiento es un meta-patron. No agrega nueva matematica al nucleo de la teoria de categorias -- preserva los mismos diagramas, las mismas propiedades universales, la misma composicionalidad. Lo que hace es parametrizar la teoria sobre la "moneda" con la que se miden las relaciones. Cambiar la moneda de Set a Bool da preordenes. Cambiar a Cost da espacios metricos. Cambiar a Cat da 2-categorias. Cambiar a [0,1] da redes de fiabilidad.
+
+En mi practica diaria, la leccion es que cuando un sistema tiene relaciones cuantitativas -- latencias, costos, fiabilidades, probabilidades, niveles de acceso -- no necesito inventar un framework ad hoc. Necesito identificar el monoidal preorder correcto y enriquecer sobre el. La teoria me da composicion, identidad, y cambio de base gratis. Y lo mas importante: me da una nocion de funtor enriquecido que preserva esa estructura cuantitativa, garantizando que mis transformaciones entre sistemas respetan las cotas que importan.
