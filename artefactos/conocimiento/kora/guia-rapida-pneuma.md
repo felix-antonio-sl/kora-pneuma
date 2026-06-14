@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.1.0
+version: 1.1.1
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. Fuente interna al repo, sin hash externo."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. Fuente interna al repo, sin hash externo."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -86,9 +86,11 @@ error. El tipo se deriva, no se declara:
 
 Campos comunes obligatorios: `urn`, `nombre`, `version` (semver), `estado`,
 `descripcion`, `fuente`. Agénticos agregan: `vector` `[pi,mu,xi,lambda,phi]`,
-`sigma` (5 componentes), `arnes`, `forma`, `herramientas`, `targets`.
-Conocimiento agrega: `familia` ∈ {`nota`, `fuente`, `bok`}. Relaciones
-opcionales para todo tipo: `cita`, `depende`, `reemplaza`, `refina`.
+`sigma` (5 componentes), `arnes`, `forma`, `herramientas`, `targets`;
+opcionales agénticos: `conocimiento` (URNs `kb`), `componible` (URNs
+`artefacto`) y `estados` (plan declarativo). Conocimiento agrega:
+`familia` ∈ {`nota`, `fuente`, `bok`}. Relaciones opcionales para todo
+tipo: `cita`, `depende`, `reemplaza`, `refina`.
 
 ## Leyes que velar cobra
 
