@@ -1,14 +1,14 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Guía rápida de KORA pneuma — qué es, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Primera producción bajo ley/4 (2026-06-12). Korificación de la guía rápida emitida en la sesión de génesis; hechos derivados de ley/0..4, GENESIS.md y kora.py vigentes al commit 4d44bfc. Fuente interna al repo, sin hash externo."
+descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. Fuente interna al repo, sin hash externo."
 autor: FS
 creado: 2026-06-12
 lang: es
-tags: [pneuma, guia-rapida, gestos, shape, vector, transmutacion, koraficacion, lifecycle]
+tags: [pneuma, guia-rapida, gestos, shape, vector, transmutacion, koraficacion, lifecycle, migracion, corpus]
 cita: [urn:kora:kb:alma-de-kora]
 familia: nota
 ---
@@ -27,6 +27,28 @@ en 4 estratos y 5 documentos. URN idénticos a la encarnación anterior
 (`~/kora`, "la bestia"), que sigue autoritativa para su corpus no migrado.
 La ley entera (`kora.py ley`) ≈ 17k tokens: KORA completa cabe en un
 contexto LLM. El alma del sistema: [Alma de KORA](urn:kora:kb:alma-de-kora).
+
+## Qué alberga pneuma hoy
+
+Ya no nace con tres semillas: alberga corpus reales migrados de la bestia,
+artefacto por artefacto. Familias presentes (inventario vivo:
+`python3 kora.py censo`):
+
+- **Categorial** — Formal Layer (`cat-foundations`, `cat-agent-coalgebra`) +
+  las 24 piezas ICAS-BoK; las consume `cat-thinking`.
+- **OPM/Forja ES** — SSOT de modelado: núcleo ISO 19450, OPD, OPL, manual
+  metodológico, reglas estrictas, specs forja OPD/OPL, puente categorial;
+  la consumen la skill `modelamiento-opm` y la persona `dov-dori`.
+- **Personas** — razonamiento (`polymath`, `mente-omega`), modelado
+  (`dov-dori`), ejecución y organización (`steipete`+`ship-discipline`,
+  `allan-kelly`+`cell-design`), diseño (`steve-jobs` + canon + 3 fibras de
+  superficie agéntica/web-AI/salud).
+- **Salud** — cluster consolidado con fronteras limpias: `salubrista`
+  (macro/meso), `medico-hospitalista` (micro asistencial), `urgenciologo`
+  (urgencias adultos) + skills operativas + corpus salubrista, redes, HODOM
+  y med-emergencia.
+
+URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 
 ## Garantías
 
@@ -135,9 +157,11 @@ fidelidad es obligación declarada del productor contra la fuente.
 
 Sin ingesta inversa (`Lift`), sin targets openclaw/hermes, sin verificación
 coalgebraica de FSM, sin staging de directorios (el estado `borrador`
-in-place es la antesala), sin migración masiva: el corpus de la bestia migra
-artefacto por artefacto, con URN preservado y `sha256` de la fuente en
-`fuente:`. Registro completo: GENESIS §4.
+in-place es la antesala). La migración es **por demanda**, no masiva
+(GENESIS: pneuma se gana el corpus, no lo hereda por decreto): artefacto por
+artefacto, con URN preservado y `sha256` de la fuente en `fuente:`. Ya
+encarnaron los corpus mayores (ver §Qué alberga pneuma hoy); el resto sigue
+en la bestia. Registro completo: GENESIS §4.
 
 ## Recetas
 
@@ -148,5 +172,12 @@ artefacto por artefacto, con URN preservado y `sha256` de la fuente en
    `ciclo <urn> publicado`.
 3. Cargar KORA entera a un LLM: `python3 kora.py ley`.
 4. Jubilar: `ciclo <urn> deprecado` — el URN sigue resolviendo.
-5. Traer un artefacto de la bestia: reescribir al shape pneuma con URN
-   preservado y `sha256` del original en `fuente:` (patrón de las semillas).
+5. Traer un artefacto de la bestia (byte-fiel): reescribir al shape pneuma
+   con URN preservado, cuerpo idéntico verificado con diff y `sha256` del
+   original en `fuente:` (patrón de las semillas y de la migración mayor).
+6. Sintetizar una versión superior desde varias fuentes (NO byte-fiel):
+   destilar lo compartido a un canon, dejar lo específico en fibras que
+   `depende`/`refina` el canon, emitir el actor que lo encarna. `fuente:`
+   declara que no es byte-fiel, el `sha256` de cada origen y la decisión de
+   diseño. Verificar completitud y no-redundancia antes de promover (patrón
+   de `steve-jobs`).
