@@ -431,6 +431,43 @@ class TestTransmutacion(CasoPneuma):
         # con sello fresco, velar no reclama
         self.assertEqual(self.fallos("sello-fresco"), [])
 
+    def test_contrato_conocimiento_en_sello(self):
+        # Una skill con corpus declarado: el sello porta el contrato
+        # (ancla + regla de derivación + URN), sin materializar paths.
+        self.escribir_skill(skill_campos(
+            conocimiento=["urn:fxsl:kb:icas-sintesis",
+                          "urn:fxsl:kb:icas-efectos"],
+            componible=["urn:kora:artefacto:modelamiento-opm"]))
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code", "--stdout"])
+        self.assertEqual(codigo, 0)
+        self.assertIn("contrato-conocimiento:", salida)
+        self.assertIn("ancla: ~/kora-pneuma", salida)
+        # La regla de derivación se declara UNA vez, con sus placeholders.
+        self.assertIn("derivacion: urn:{ns}:kb:{id} -> "
+                      "{ancla}/artefactos/conocimiento/{ns}/{id}.md", salida)
+        # Los URN van listados; NINGÚN path concreto se hornea.
+        self.assertIn("conocimiento: urn:fxsl:kb:icas-sintesis "
+                      "urn:fxsl:kb:icas-efectos", salida)
+        self.assertIn("componible: urn:kora:artefacto:modelamiento-opm",
+                      salida)
+        self.assertNotIn("artefactos/conocimiento/fxsl/icas-sintesis.md",
+                         salida)
+        # El contrato no se interpone entre las dos líneas fijas y el cierre.
+        cola = salida[salida.rindex("preservado-por-construccion"):]
+        self.assertNotIn("contrato-conocimiento", cola)
+
+    def test_sin_corpus_no_emite_contrato(self):
+        # Un agéntico sin conocimiento ni componible no carga bloque vacío:
+        # la emisión queda byte-idéntica a la previa al contrato.
+        self.escribir_skill()
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code", "--stdout"])
+        self.assertEqual(codigo, 0)
+        self.assertNotIn("contrato-conocimiento", salida)
+
     def test_perdida_declarada_cuando_partial(self):
         self.escribir_agente(agente_campos(
             vector=[2, 2, 2, 0, 3], sigma=[3, 2, 3, 3, 1]))

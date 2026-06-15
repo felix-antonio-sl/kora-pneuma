@@ -1,6 +1,6 @@
 # Mapa del corpus ICAS-BoK
 
-Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica, vocablo central, cuando activarla. Esta es **navegacion**, no contenido. La SSOT son los archivos en `~/kora/artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/`.
+Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica, vocablo central, cuando activarla. Esta es **navegacion**, no contenido. La SSOT son las 24 URNs `icas-*` del catalogo central de KORA pneuma (el contrato de conocimiento del sello declara el ancla y la regla para resolver cada URN a su archivo), no una ruta fija.
 
 ## Arco I — Fundamentos (00–05)
 
@@ -66,5 +66,5 @@ Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica,
 1. Si **no sabes por donde empezar**, abre `00-sintesis` (`icas-sintesis`). Tiene el ADN cognitivo y el mapa completo del corpus.
 2. Si **conoces el sintoma** del problema, abre `disparadores-canonicos.md` (esta misma fibra).
 3. Si **conoces el vocablo categorial**, usa esta tabla.
-4. Si **ninguno aplica**, usa `Grep -rn "<termino>" ~/kora/artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/`.
+4. Si **ninguno aplica**, usa `Grep`/`Read` sobre los archivos `icas-*.md` del corpus en el catalogo central de KORA pneuma.
 5. Si **el corpus no cubre el problema**, declararlo. No inventar.

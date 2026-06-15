@@ -1005,6 +1005,49 @@ def _fmt_vector(vector: list, sigma: list) -> str:
             + ",".join(str(v) for v in sigma) + "]")
 
 
+# El contrato de conocimiento NO lista paths: el path es función pura del URN
+# (la misma biyección que `lugar-coincide` blinda en cada `velar`). Se declara
+# la regla de derivación una vez; el agente —que solo tiene Read/Grep/Glob, no
+# Bash— resuelve `{ancla}/{path}` por sustitución. URN = autoridad; el path se
+# deriva, nunca se hornea. El ancla nombra la convención del repo central y su
+# override de entorno, sin atarse a un CWD concreto.
+ANCLA_CONTRATO = "~/kora-pneuma  (o $KORA_RAIZ)"
+DERIVACION_CONTRATO = (
+    "  derivacion: "
+    "urn:{ns}:kb:{id} -> {ancla}/artefactos/conocimiento/{ns}/{id}.md ; "
+    "urn:{ns}:artefacto:{id} -> "
+    "{ancla}/artefactos/skills/{ns}/{id}/SKILL.md (skill) | "
+    "{ancla}/artefactos/agentes/{ns}/{id}.md (agente)")
+
+
+def _bloque_contrato(art: Artefacto) -> list[str]:
+    """El contrato de conocimiento del sello: ancla + regla de derivación +
+    los URN declarados, sin materializar paths (§ ley/3.5; cierra GENESIS §4).
+
+    Proyecta `conocimiento` (kb a leer como contexto) y `componible` (otros
+    artefactos componibles) — este último refleja en el output la promesa
+    declarada-no-mecanizada `composicion-kleisli`. Devuelve [] si el artefacto
+    no declara ninguno: un agéntico sin corpus no carga un bloque vacío, y la
+    emisión queda byte-idéntica a la previa al contrato.
+    """
+    conocimiento = art.campos.get("conocimiento")
+    componible = art.campos.get("componible")
+    conocimiento = conocimiento if isinstance(conocimiento, list) else []
+    componible = componible if isinstance(componible, list) else []
+    if not conocimiento and not componible:
+        return []
+    lineas = [
+        "contrato-conocimiento:",
+        f"  ancla: {ANCLA_CONTRATO}",
+        DERIVACION_CONTRATO.format(ns="{ns}", id="{id}", ancla="{ancla}"),
+    ]
+    if conocimiento:
+        lineas.append("  conocimiento: " + " ".join(conocimiento))
+    if componible:
+        lineas.append("  componible: " + " ".join(componible))
+    return lineas
+
+
 def construir_sello(art: Artefacto, target: str, hash_hex: str,
                     proy: dict, perdidas_extra: list | None = None) -> str:
     """El sello proof-carrying inline (contrato §6.3). Sin timestamps."""
@@ -1026,6 +1069,9 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         lineas.append("perdidas:")
         for etiqueta, a, b, razon in perdidas:
             lineas.append(f"  {etiqueta}: {a}->{b} :: {razon}")
+    # El contrato de conocimiento va ANTES de las dos líneas fijas (§ ley/3.5
+    # r4): nada se interpone jamás entre ellas y el cierre `-->`.
+    lineas += _bloque_contrato(art)
     lineas += [
         "preservado-por-construccion: composicion, identidad, monotonia-pi, "
         "monotonia-mu, monotonia-xi",

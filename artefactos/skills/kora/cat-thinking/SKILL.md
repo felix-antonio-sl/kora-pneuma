@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:cat-thinking
 nombre: cat-thinking
-version: 1.2.0
+version: 1.2.1
 estado: activo
 descripcion: "Skill de pensamiento categorial. Dota al agente de la capacidad de pensar sobre arquitectura, integracion, refactor, modelado de efectos y diseno de sistemas agenticos usando teoria de categorias aplicada, anclada al corpus ICAS-BoK (Arquitecto de Sistemas Categorial)."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/). Restauración 1.1.0 (2026-06-12): las 24 piezas ICAS-BoK encarnan en pneuma y la lista de conocimiento queda completa, idéntica a la de la bestia. Restauración 1.2.0 (2026-06-14): componible modelamiento-opm restaurado — la precondición declarada (modelamiento-opm no encarnaba aun) quedó resuelta al migrarse esa skill; el edge respeta la bestia en dirección única (cat-thinking → modelamiento-opm; modelamiento-opm declara su composabilidad hacia jointjs, no recíproca, así que no se fabrica el inverso). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/). Restauración 1.1.0 (2026-06-12): las 24 piezas ICAS-BoK encarnan en pneuma y la lista de conocimiento queda completa, idéntica a la de la bestia. Restauración 1.2.0 (2026-06-14): componible modelamiento-opm restaurado — la precondición declarada (modelamiento-opm no encarnaba aun) quedó resuelta al migrarse esa skill; el edge respeta la bestia en dirección única (cat-thinking → modelamiento-opm; modelamiento-opm declara su composabilidad hacia jointjs, no recíproca, así que no se fabrica el inverso). Correccion 1.2.1 (2026-06-14): el cuerpo y dos fibras (mapa-corpus, disparadores-canonicos) anclaban la SSOT a la ruta de la bestia (~/kora/artifacts/knowledge/fxsl/cat/corpus-...); se reescribieron a referencia por URN + catalogo central de KORA pneuma (el ancla y la regla de derivacion las porta el contrato de conocimiento del sello). El cuerpo deja de ser byte-fiel a la bestia en esos 4 puntos, por coherencia con el invariante URN-como-autoridad. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -28,7 +28,7 @@ Skill de **pensamiento categorial**. Dota al agente de la capacidad de pensar so
 
 No es una skill de programacion ni de ejecucion. Es una skill **introspectiva**: lee el corpus ICAS-BoK, traduce un problema de ingenieria al vocabulario categorial, localiza el patron canonico que aplica, lo aplica al problema y devuelve un diagnostico/recomendacion trazable a una URN especifica del corpus.
 
-Anclaje canonico: las **24 URNs ICAS-BoK** del corpus en `~/kora/artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/`. Todas published v1.0.0.
+Anclaje canonico: las **24 URNs ICAS-BoK** (tabla en §Anclaje a la SSOT; tambien el campo `conocimiento` del frontmatter). La SSOT son los URN, no una ruta: residen en el catalogo central de KORA pneuma, y el contrato de conocimiento del sello declara el ancla y la regla para resolver cada URN a su archivo. Todas published v1.0.0.
 
 ## Cuando Usar
 
