@@ -1022,7 +1022,7 @@ DERIVACION_CONTRATO = (
 
 def _bloque_contrato(art: Artefacto) -> list[str]:
     """El contrato de conocimiento del sello: ancla + regla de derivación +
-    los URN declarados, sin materializar paths (§ ley/3.5; cierra GENESIS §4).
+    los URN declarados, sin materializar paths (ley/3 §5 r6; cierra GENESIS §4).
 
     Proyecta `conocimiento` (kb a leer como contexto) y `componible` (otros
     artefactos componibles) — este último refleja en el output la promesa
@@ -1050,7 +1050,7 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
 
 def construir_sello(art: Artefacto, target: str, hash_hex: str,
                     proy: dict, perdidas_extra: list | None = None) -> str:
-    """El sello proof-carrying inline (contrato §6.3). Sin timestamps."""
+    """El sello proof-carrying inline (ley/3 §5). Sin timestamps."""
     perdidas = list(proy["perdidas"]) + list(perdidas_extra or [])
     fid = proy["fidelidad"]
     lineas = [
@@ -1069,8 +1069,8 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         lineas.append("perdidas:")
         for etiqueta, a, b, razon in perdidas:
             lineas.append(f"  {etiqueta}: {a}->{b} :: {razon}")
-    # El contrato de conocimiento va ANTES de las dos líneas fijas (§ ley/3.5
-    # r4): nada se interpone jamás entre ellas y el cierre `-->`.
+    # El contrato de conocimiento va ANTES de las dos líneas fijas (ley/3 §5
+    # r6, cf. r4): nada se interpone jamás entre ellas y el cierre `-->`.
     lineas += _bloque_contrato(art)
     lineas += [
         "preservado-por-construccion: composicion, identidad, monotonia-pi, "

@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v1.1.0
+# KORA/Transmutación — ley pneuma v1.2.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -128,6 +128,18 @@ declarado-no-mecanizado: naturalidad-xi, cierre-safety, composicion-kleisli
 -->
 ```
 
+Si el artefacto declara `conocimiento` o `componible`, el sello incluye
+además —entre `perdidas:` y las dos líneas fijas— un bloque
+`contrato-conocimiento:` (r6):
+
+```text
+contrato-conocimiento:
+  ancla: ~/kora-pneuma  (o $KORA_RAIZ)
+  derivacion: urn:{ns}:kb:{id} -> {ancla}/artefactos/conocimiento/{ns}/{id}.md ; urn:{ns}:artefacto:{id} -> {ancla}/artefactos/skills/{ns}/{id}/SKILL.md (skill) | {ancla}/artefactos/agentes/{ns}/{id}.md (agente)
+  conocimiento: urn:fxsl:kb:icas-sintesis
+  componible: urn:kora:artefacto:cat-thinking
+```
+
 Reglas:
 
 1. `hash-fuente`: sha256 del archivo fuente completo (bytes).
@@ -141,6 +153,17 @@ Reglas:
    a la lista de preservadas (§6).
 5. Determinismo: misma fuente → emisión byte-idéntica. Ninguna emisión lleva
    timestamp ni estado de máquina.
+6. `contrato-conocimiento:` aparece **solo si** el artefacto declara
+   `conocimiento` o `componible`, e inmediatamente **antes** de las dos líneas
+   fijas (r4). Porta `ancla` (raíz del repo central / `$KORA_RAIZ`),
+   `derivacion` y las listas `conocimiento`/`componible` de URN. La regla de
+   derivación URN→path **no se re-legisla aquí: es la biyección de `ley/2 §6`
+   que `lugar-coincide` blinda**; el sello la *imprime* para que un consumidor
+   con solo lectura la evalúe por sustitución, sin acceso a la ley. **Cero
+   paths materializados**: el URN es la autoridad, el path se deriva. Es
+   extensión aditiva (constitución §12.1): un artefacto sin corpus no porta el
+   bloque y su emisión queda byte-idéntica. Encarna la doctrina de acceso de
+   `urn:kora:kb:regimen-de-ley`.
 
 ## 6. La nota de honestidad (heredada)
 
@@ -245,3 +268,8 @@ mecanizados sobre emisiones ya escritas.
 
 Sublimado de transmutation-spec v1.2.1 y las runtime-extensions claude-code,
 codex y opencode de la bestia el 2026-06-11; ver GENESIS.md.
+
+v1.2.0 (HITL 2026-06-15): §5 legisla el bloque `contrato-conocimiento` del
+sello (extensión aditiva, constitución §12.1 r1); la regla de derivación
+URN→path se cita a `ley/2 §6`, no se re-legisla. Cierra el drift prosa↔código
+del contrato de conocimiento implementado en cbc7652.
