@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.2.0
+# KORA/Constitución — ley pneuma v1.3.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -22,6 +22,13 @@ como garantía formal y no como definición:
 `ALMA.md` es el documento fundacional del que esta ley desciende. Ante
 silencio de la ley, ALMA orienta la interpretación; ante regla explícita,
 manda la ley según la precedencia de §5.
+
+Desde el 2026-06-14, por decisión HITL del operador, **pneuma es la fuente
+única de doctrina futura de KORA**: toda evolución doctrinal se autora en esta
+ley (`ley/0..4`); la ley de la encarnación anterior (la bestia, `~/kora`)
+queda congelada salvo correcciones de verdad. El régimen completo —freeze de
+la bestia, estatus delegado legacy de `openclaw`/`hermes` y disparadores de
+migración— se declara en `urn:kora:kb:regimen-de-ley`.
 
 ## 2. Definiciones
 
@@ -226,3 +233,6 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 
 Sublimado de KORA/Gobernanza v6.2.0 (con el lifecycle de knowledge-spec
 v3.0.0 y autoria-spec v2.0.0) el 2026-06-11; ver GENESIS.md.
+
+v1.3.0 (HITL 2026-06-14): §1 declara a pneuma fuente única de doctrina futura
+y congela la ley de la bestia; régimen completo en `urn:kora:kb:regimen-de-ley`.
