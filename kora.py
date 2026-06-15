@@ -1341,8 +1341,53 @@ def cmd_ley(raiz: Path) -> int:
 
 # --------------------------------------------------------------- CLI
 
-def cmd_censo(raiz: Path, como_json: bool, escribir: bool) -> int:
-    entradas = construir_censo(cargar_corpus(raiz))
+def _huerfanos(arts: list, raiz: Path) -> list:
+    """KB publicados no alcanzados por ninguna arista de consumo (las 6:
+    cita/depende/reemplaza/refina/conocimiento/componible). Reporte
+    informativo, NO check del registro cerrado (ley/0 §11): las raíces de
+    consumo directo —guías leídas con `nombre`, registros citados solo en la
+    prosa de la ley— pueden aparecer sin ser huérfanos reales. Solo `publicado`
+    (un `deprecado` sin citadores es legítimo por la dignidad del URN, ley/0 §9).
+    """
+    referenciados = set()
+    for a in arts:
+        for campo in CAMPOS_RELACION + ("conocimiento", "componible"):
+            v = a.campos.get(campo)
+            if isinstance(v, list):
+                referenciados.update(v)
+    prosa = ""
+    leydir = raiz / "ley"
+    if leydir.is_dir():
+        for f in sorted(leydir.glob("*.md")):
+            prosa += f.read_text(encoding="utf-8")
+    huerf = []
+    for a in arts:
+        if a.tipo == "conocimiento" and a.campos.get("estado") == "publicado" \
+                and a.urn and a.urn not in referenciados:
+            huerf.append((a, a.urn in prosa))
+    return huerf
+
+
+def cmd_censo(raiz: Path, como_json: bool, escribir: bool,
+              huerfanos: bool = False) -> int:
+    arts = cargar_corpus(raiz)
+    if huerfanos:
+        huerf = _huerfanos(arts, raiz)
+        if not huerf:
+            print("huerfanos: 0 — todo kb publicado es alcanzable.")
+            return 0
+        print("kb publicados no alcanzados por arista de consumo "
+              "(cita/depende/reemplaza/refina/conocimiento/componible):\n")
+        for a, en_ley in huerf:
+            marca = "[raiz-ley: lo cita la prosa de ley/]" if en_ley \
+                else "[revisar: ni arista ni cita en ley]"
+            print(f"  {a.urn}  {marca}")
+        print(f"\nhuerfanos: {len(huerf)} candidato(s) — reporte informativo, "
+              "no check. Las raices de consumo directo (guias leidas con "
+              "`nombre`, registros citados solo por la ley) no son huerfanos "
+              "reales; juzgar el resto.")
+        return 0
+    entradas = construir_censo(arts)
     salida = censo_json(entradas)
     if escribir:
         (raiz / "censo.json").write_text(salida, encoding="utf-8")
@@ -1408,6 +1453,9 @@ def principal(argv: list[str] | None = None) -> int:
     p.add_argument("--json", action="store_true", help="emite JSON")
     p.add_argument("--escribir", action="store_true",
                    help="guarda censo.json (derivado, gitignored)")
+    p.add_argument("--huerfanos", action="store_true",
+                   help="reporta kb publicado no alcanzado por arista de "
+                        "consumo (informativo, no check)")
 
     p = sub.add_parser("nombre", help="resuelve un URN a su nombre verdadero")
     p.add_argument("urn")
@@ -1433,7 +1481,7 @@ def principal(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     raiz = raiz_corpus()
     if args.gesto == "censo":
-        return cmd_censo(raiz, args.json, args.escribir)
+        return cmd_censo(raiz, args.json, args.escribir, args.huerfanos)
     if args.gesto == "nombre":
         return cmd_nombre(raiz, args.urn)
     if args.gesto == "velar":
