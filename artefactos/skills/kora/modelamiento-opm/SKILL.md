@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:modelamiento-opm
 nombre: modelamiento-opm
-version: 1.8.1
+version: 1.9.0
 estado: activo
 descripcion: "Skill horizontal y dialectica para co-construir, refinar, validar y serializar modelos OPM (Object-Process Methodology, ISO 19450) con un operador humano. Anclada primero al corpus OPM/Forja SSOT ES y al modelador deep-opm-pro como mesa de trabajo interactiva. Anti-complacencia: bloquea avance ante ambiguedad, fuerza aclaracion antes de plasmar, no construye sobre barro."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15). Actualizacion 1.9.0 (2026-06-15): el corpus OPM declarado se re-sincronizo a la SSOT consolidada v1.4.0 (sexta familia de enlace Excepcion, abanicos convergentes, ruta sobre habilitadores; reglas v1.4.0, spec-opd v1.1.1, spec-opl v1.2.1, bases v3.0.x) bajo el regimen 'pneuma toma la posta de la SSOT OPM' (urn:kora:kb:regimen-de-ley). El render estatico secundario, antes delegado a la skill no migrada jointjs-open-source, ahora se hace con la libreria JointJS consultando su doc web viva urn:dev:kb:jointjs-docs (conocimiento web por convencion, declarado en el campo conocimiento); componible_con jointjs-open-source ya no aplica."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Write, Glob, Bash]
 targets: [claude-code, codex, opencode]
 estados: [triaje, aclarar, normalizar-proto, bootstrap-sd, refinar-modelo, validar-modelo, serializar-opl, serializar-bundle, re-elicitar, revisar-visual, serializar-opd, entregar]
-conocimiento: [urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:metodologia-forja-opm-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:opm-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:manual-metodologico-opm-es]
+conocimiento: [urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:metodologia-forja-opm-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:opm-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:manual-metodologico-opm-es, urn:dev:kb:jointjs-docs]
 ---
 
 # modelamiento-opm
@@ -145,7 +145,7 @@ Clasificar la solicitud para decidir el siguiente estado:
 
 Antes de avanzar, verificar que el sistema tiene funcion transformadora. Si no, abortar con sugerencia de alternativa.
 
-Convencion de entrega por defecto: si no se especifica formato, asumir que el destino preferente es **deep-opm-pro** y emitir `bundle` + `OPL-ES` + `reporte`. El render estatico via jointjs-open-source es la excepcion (e.g. documento sin UI, presentacion impresa, snippet en informe).
+Convencion de entrega por defecto: si no se especifica formato, asumir que el destino preferente es **deep-opm-pro** y emitir `bundle` + `OPL-ES` + `reporte`. El render estatico via JointJS (`urn:dev:kb:jointjs-docs`) es la excepcion (e.g. documento sin UI, presentacion impresa, snippet en informe).
 
 **Gate corpus Forja.** Antes de validar, generar o serializar un modelo, cargar
 el corpus OPM/Forja SSOT ES como referencia primaria. Primero resolver
@@ -591,11 +591,12 @@ Cuando el destino NO es la mesa de trabajo (e.g. snippet en un informe markdown,
   (`aplicarLayoutCompleto`, no un re-layout independiente), que es lo que el
   modelo realmente muestra al humano. Usar este camino tambien para entregar
   imagenes en un informe.
-- **Fallback (render independiente): jointjs-open-source.** Solo cuando
-  `deep-opm-pro` NO esta disponible (otra maquina, sin repo) delegar a
-  `urn:kora:artefacto:jointjs-open-source` con la lista de things + links +
-  decoraciones requeridas por opd-es. Es un render **distinto** al de opforja;
-  declarar explicitamente que no es fiel al modelador.
+- **Fallback (render independiente): JointJS.** Solo cuando `deep-opm-pro` NO
+  esta disponible (otra maquina, sin repo), generar el render con la libreria
+  **JointJS** (open-source) consultando su doc web viva `urn:dev:kb:jointjs-docs`,
+  con la lista de things + links + decoraciones requeridas por opd-es. Es un
+  render **distinto** al de opforja; declarar explicitamente que no es fiel al
+  modelador.
 - si solo se requiere descripcion textual del OPD, basta con la representacion estructural emitida en `serializar-opl`.
 
 Por defecto este estado se omite si ya se emitio bundle y un humano abrira el modelador: deep-opm-pro produce SVG/PNG nativos al exportar. Para la pasada del **agente**, usar `revisar-visual` (mismo render, sin UI).
@@ -608,7 +609,7 @@ Salida coherente al agente invocador:
 - texto OPL-ES.
 - reporte de validacion tripartita.
 - bundle `deep-opm-pro.modelo.v0` (preferente).
-- (opcional) hook a jointjs con los datos del render estatico.
+- (opcional) hook de render estatico via JointJS (ver `urn:dev:kb:jointjs-docs`).
 
 Cuando el modelador este abierto, indicar al agente invocador que el bundle se importa por: `Modelo → Importar JSON → pegar bundle`. La pestana resultante quedara marcada con chip de persistencia `Importado` (ver ronda 19/L5 de deep-opm-pro).
 
@@ -625,7 +626,7 @@ Cuando el modelador este abierto, indicar al agente invocador que el bundle se i
 9. **No invadas dominio**: la skill modela estructura, el agente aporta semantica de dominio.
 10. **Bundle deep-opm-pro fiel**: solo emitir formato `deep-opm-pro.modelo.v0`. Nombres de cosas iguales a OPD/OPL. Preferir omitir campos opcionales antes que inventarlos.
 10a. **Equivalencia funcional**: realizaciones hermanas se comparan por firma de frontera (R-CAT-EQ-2) y toda descomposicion preserva la firma del proceso abstracto (R-CAT-EQ-3). Verificar antes de cerrar el bundle.
-11. **Render estatico es excepcion**: cuando hay entorno interactivo, preferir bundle deep-opm-pro sobre jointjs-open-source. Justificar la opcion contraria.
+11. **Render estatico es excepcion**: cuando hay entorno interactivo, preferir bundle deep-opm-pro sobre el render JointJS. Justificar la opcion contraria.
 12. **Anti-barro**: prohibido plasmar en el modelo cualquier elemento cuyo proposito, transformee, esencia, afiliacion o motivo de refinamiento no este declarado por el operador. Detectar barro = entrar a `aclarar` = bloquear avance.
 12a. **Anti-patrones canonicos**: si el modelo incurre en algun AP-* de `reglas-opm-estrictas-es`, aplicar la politica exacta de la tabla maestra §11. Los AP-* que dicen DEBE bloquearse bloquean; AP-28 se clasifica como no-canonizado/extension declarada; AP-* de reporte o supresion no se elevan artificialmente a bloqueo.
 13. **Anti-complacencia**: si el operador propone una primitiva mal aplicada, decirlo de frente con cita a la capa propietaria. No interpretar caritativamente la intencion. La skill no es un asistente que adivina; es un par que exige.
@@ -759,18 +760,18 @@ Cuando el usuario aporta un JSON `deep-opm-pro.modelo.v0` existente:
 4. Emitir reporte tripartito + recomendaciones de refinamiento.
 5. Devolver bundle revisado si la auditoria implico cambios estructurales.
 
-## Composicion con jointjs-open-source (render estatico secundario)
+## Render estatico secundario via JointJS
 
-Cuando se requiere SVG/PNG **sin abrir el modelador** — por ejemplo para incrustar en un informe, lamina, documento markdown o presentacion — la skill **no genera SVG/PNG por si misma**. Llama a `urn:kora:artefacto:jointjs-open-source` pasandole:
+Cuando se requiere SVG/PNG **sin abrir el modelador** — por ejemplo para incrustar en un informe, lamina, documento markdown o presentacion — la skill genera el render con la libreria **JointJS** (open-source), consultando su doc web viva `urn:dev:kb:jointjs-docs`. El render se construye desde:
 
 - lista tipada de cosas (ids, nombres, esencia fisica/informacional, estados).
 - lista tipada de links (origen, destino, tipo OPM, decoraciones).
 - nivel del OPD (SD, SD1, SD1.1, etc.).
 - perfil de export deseado (canon-diagrama, canon-documento, raster).
 
-`jointjs-open-source` es responsable de la implementacion concreta del render. Esta skill conserva la responsabilidad del modelo correcto.
+La doc viva de JointJS (`urn:dev:kb:jointjs-docs`) rige la implementacion concreta del render (su API evoluciona: consultar antes de generar). Esta skill conserva la responsabilidad del modelo correcto.
 
-Si el modelador esta disponible y el destino admite UI, **prefiere bundle deep-opm-pro**: jointjs-open-source es para casos sin entorno interactivo.
+Si el modelador esta disponible y el destino admite UI, **prefiere bundle deep-opm-pro**: el render JointJS es para casos sin entorno interactivo.
 
 ## Recursos
 
