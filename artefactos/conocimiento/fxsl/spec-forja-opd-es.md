@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:spec-forja-opd-es
 nombre: spec-forja-opd-es
-version: 1.0.4
+version: 1.1.1
 estado: publicado
 descripcion: "Spec-forja OPD — SSOT de la realización visual de OPFORJA: render, canvas y materialización de la gramática OPD en el modelador deep-opm-pro."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opd-es.md (sha256:27afccb1a635209a66d1e1df3212e8d8546f0651f90e64ce7d2d42ad70121452) el 2026-06-12; cuerpo byte-fiel. Fuente original: urn:fxsl:kb:opd-es (capa visual v3.0.0, V-0..V-263); urn:fxsl:kb:reglas-opm-estrictas-es; urn:fxsl:kb:opm-es; figuras ISO 19450 (scriptorium); libro OPM curado de Dov Dori (24 cap); tutoriales/videos/transcripciones OPCloud; OPM version felix; evidencia opforja (assets/svg, docs/JOYAS.md, opm-extracted, ui-forja, app/src/render/jointjs, app/src/canvas)."
+fuente: "SSOT OPM v1.1.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opd-es.md (sha256:7af8e32e318cb72128586840722508562f5812fef1b8cb02ef9af6bd4412bc0b) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.0.4); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-06-04
 lang: es
@@ -19,7 +19,7 @@ cita: [urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:metodologia-forja-opm-es, urn:
 
 ## Definición
 
-Esta spec es la SSOT **visual** y **operativa** de OPFORJA. Gobierna, para el modelador deep-opm-pro, la realización gráfica del OPD: primitivas y sus ocho representaciones, estados y designaciones, las cinco familias de enlace y sus marcadores, modificadores de control y operadores lógicos, relaciones estructurales, refinamiento y navegación entre OPDs, layout/routing, canvas e interacción, edición visual, configuración, validación visual, simulación visual, exportación canónica y equivalencia bimodal con OPL.
+Esta spec es la SSOT **visual** y **operativa** de OPFORJA. Gobierna, para el modelador deep-opm-pro, la realización gráfica del OPD: primitivas y sus ocho representaciones, estados y designaciones, las seis familias de enlace y sus marcadores (incluida la excepción procedimental como familia autónoma, `reglas §5.1`), modificadores de control y operadores lógicos, relaciones estructurales, refinamiento y navegación entre OPDs, layout/routing, canvas e interacción, edición visual, configuración, validación visual, simulación visual, exportación canónica y equivalencia bimodal con OPL.
 
 La audiencia primaria son los agentes de desarrollo de OPFORJA y los agentes que proyectan, auditan o regeneran el renderer (`app/src/render/jointjs`, `app/src/canvas`).
 
@@ -120,7 +120,7 @@ La gramática visual conforme de OPFORJA se define por **lo que persiste en un e
 - **R-OPD-CAN-4**: una captura de pantalla en modo edición, navegación, modal o simulación pausada NO es evidencia de canonicidad. *(Rationale: V-0e.)*
 - **R-OPD-CAN-5**: el canvas DEBE distinguir al menos cinco modos visuales — estático-exportable, edición, navegación, gestión-modal, runtime — y solo el estático-exportable fundamenta la conformidad. *(Rationale: V-200, V-201, R-VIS-MODO-1.)*
 
-**Estado opforja**: existe export visual (`mapaExport.ts`, export de canvas) pero ningún perfil `canon-diagrama`/`canon-documento` declarado formalmente. GAP-OPD-PERFIL-EXPORT.
+**Estado opforja** *(enmienda 2026-06-12, auditoría de coherencia del corpus)*: perfiles declarados y ejecutables en `serializacion/perfilesExport.ts` (`PERFILES_EXPORT` = `canon-diagrama`/`canon-documento`/`intercambio`, `ATRIBUTOS_DE_PERFIL`), con gate de densidad (`gateDensidadCanonica`) y documento canónico emitible desde la paleta. Cierre 2026-06-11 (`3a2db18c`; registro-conformidad-ssot R-OPD-CAN-1).
 
 Rationale: V-0 es la regla rectora de `opd-es` y el criterio que separa gramática de afordance; sin perfiles declarados, la conformidad de todo lo demás queda sin testigo material.
 
@@ -154,7 +154,7 @@ Rationale: las 8 representaciones son producto cartesiano cerrado (V-1, §1.4 de
 | Proceso | `standard.Ellipse`, stroke `#1d3f78` (token `opmProceso`), strokeWidth 1.5, fill transparente | `composers/entidad.ts` |
 | Dimensión base | 135×60 px (`cosaWidth`/`cosaHeight`, herencia OPCloud) | `modelo/constantes.ts` |
 | Ambiental | `strokeDasharray "8 4"` | `entidad.ts` |
-| Física | filtro `dropShadow {dx:6, dy:6, blur:2, color: rgba(23,21,17,0.68)}` | `entidad.ts`; excepción documentada GOVERNANCE §4.59 |
+| Física | filtro `dropShadow {dx:6, dy:6, blur:2, color: rgba(23,21,17,0.68)}` | `entidad.ts`; excepción documentada GOVERNANCE §4 (dropShadow esencia física) |
 | Refinada | strokeWidth 4 (contorno grueso) | `entidad.ts`; V-33/V-69 |
 | Tipografía | `Inria Serif` 17 px, peso 400; proceso en cursiva, objeto normal; color por contraste WCAG (ink `#171511` / blanco) | `entidad.ts`, `colores.ts` |
 | Identificador `o.NN`/`p.NN` | sub-label mono 9.5 px bajo la cosa; afordance UI (V-202), NO persiste en canon | `entidad.ts` |
@@ -186,7 +186,7 @@ Realización opforja: cápsula interna `rx:8`, fill `#dedacb` (token `estadoFill
 | Inicial | borde grueso simple | 0..* | strokeWidth 3 en la cápsula | alineado |
 | Final | doble borde concéntrico | 0..* | fill `#d6d2c6` + rect interno padding 3, stroke 1 | alineado |
 | Por defecto | flecha diagonal abierta apuntando al estado | 0..1 | glifo `↗` serif 12 px esquina sup. derecha | GAP-OPD-DEFAULT-GLIFO |
-| `Current` declarado | glifo externo reservado (pin) | 0..1 | glifo `●` serif 10 px esquina sup. izquierda | glifo: alineado · serialización declarada-vs-runtime: GAP-OPD-VERIFY |
+| `Current` declarado | glifo externo reservado (pin) | 0..1 | glifo `●` serif 10 px esquina sup. izquierda | glifo: GAP-OPD-CURRENT-GLIFO (interno en la cápsula, no externo al borde) · serialización declarada-vs-runtime: alineado |
 | Normal | borde estándar | — | cápsula base | alineado |
 
 - **R-OPD-EST-5**: un estado PUEDE ser simultáneamente inicial y final (borde grueso + doble borde a la vez); duplicar estados para separar inicio/fin es anti-patrón. Los ciclos cerrados usan una sola cosa-estado con doble designación. *(Rationale: V-6, R-EST-3, AP-14.)*
@@ -207,7 +207,7 @@ Bimodal: el OPL de un OPD enumera solo los estados visibles en ese OPD (`spec-fo
 
 ### §4.1 Familia y direcciones
 
-Cinco familias canónicas de enlace, cerradas: transformadora, habilitadora, invocación, estructural fundamental, estructural etiquetada. Todo enlace pertenece a exactamente una; categorías adicionales DEBEN declararse como extensión. *(Rationale: V-239, V-241.)*
+Seis familias canónicas de enlace, cerradas: transformadora, habilitadora, invocación, **excepción procedimental** (familia autónoma proceso→proceso, marca `/`/`//`; extensión Forja sobre la base `V-239`, ver `reglas §5.1`), estructural fundamental, estructural etiquetada. Todo enlace pertenece a exactamente una; categorías adicionales DEBEN declararse como extensión. *(Rationale: `reglas §5.1`; V-239 base cierra en cinco, V-241; la excepción la promueve Forja a familia por paridad con la invocación V-240.)*
 
 | Tipo | ID | Dirección | Marcador | Significado |
 | --- | --- | --- | --- | --- |
@@ -221,7 +221,7 @@ Cinco familias canónicas de enlace, cerradas: transformadora, habilitadora, inv
 - **R-OPD-TR-3**: un enlace de resultado hacia un objeto con estado inicial DEBE conectar al rectángulo del objeto o a un estado distinto del inicial; NUNCA directamente al estado inicial. *(Rationale: V-8, R-RES-1, AP-04; figuras ISO Fig 10.)*
 - **R-OPD-TR-4**: efecto solo-entrada (TS4) sin estado de salida especificado → el destino es el estado por defecto del objeto, o la distribución de probabilidad de estados si no hay defecto. *(Rationale: V-9, R-EFE-3.)*
 - **R-OPD-TR-5**: resultado+consumo sobre el mismo objeto como un solo hecho es inválido; resultado+resultado y consumo+consumo también (validación de conflicto, §17). *(Rationale: V-43, AP-30.)*
-- **R-OPD-TR-8**: todo proceso explícito DEBE crear, consumir o afectar al menos un objeto (directa o indirectamente); los habilitadores NO satisfacen este requisito. Excepción: procesos persistentes que mantienen una condición (*Existir*, *Sostener*, *Esperar*…), que siguen siendo elipses normales. *(Rationale: V-115; opm-es §321; libro 9/10.)*
+- **R-OPD-TR-8**: todo proceso explícito DEBE crear, consumir o afectar al menos un objeto (directa o indirectamente); los habilitadores NO satisfacen este requisito. Excepción: procesos persistentes que mantienen una condición (*Existir*, *Sostener*, *Esperar*…), que siguen siendo elipses normales solo si satisfacen el cierre canónico de R-PROC-2A: declarar objeto afectado e invariancia neta, atributo o condición mantenida, conforme a R-PROC-5..7. *(Rationale: V-115; opm-es §321; libro 9/10; reglas-opm-estrictas R-PROC-2A/5..7.)*
 
 ### §4.2 Variantes con estado especificado
 
@@ -255,12 +255,12 @@ Bimodal: H1↔`maneja`, H2↔`requiere`; HS añade `en \`estado\`` (`spec-forja-
 ### §6.1 Marcas de control `e` / `c` / `¬`
 
 - **R-OPD-CTL-1**: el modificador de control es una **letra-anotación** sobre un enlace transformador o habilitador existente: `e`=evento (dispara), `c`=condición (omite si falla, bypass). NO agrega cosa ni enlace, NO altera la cardinalidad del constructo básico, NO es familia de enlace adicional. *(Rationale: R-ECA-4, R-MOD-NAT-1; opm-es 3.13.)*
-- **R-OPD-CTL-2**: las marcas literales `e`/`c` DEBEN emitirse en **minúscula**; `¬` se emite como símbolo de negación (sin caja). La marca se coloca sobre la línea, cerca del extremo del proceso; la posición vigente (badge en `distance:0.5`) es divergencia menor: GAP-OPD-POS-MODIFICADOR. *(Rationale: §1.6/§4.1 opd-es «cerca del extremo del proceso»; figuras ISO.)*
+- **R-OPD-CTL-2**: las marcas literales `e`/`c` DEBEN emitirse en **minúscula**; `¬` se emite como símbolo de negación (sin caja). La marca se coloca sobre la línea, cerca del extremo del proceso. *(Rationale: §1.6/§4.1 opd-es «cerca del extremo del proceso»; figuras ISO.)*
 - **R-OPD-CTL-3**: `e`/`c` aplican SOLO al lado de entrada Pre(P): consumo, efecto, agente, instrumento, con o sin estado. NO existen «evento de resultado» ni «condición de resultado» (el resultado no existe antes del proceso; R-MOD-1..4, AP-01/02); NO DEBEN anotar un enlace estructural ni uno de invocación (error de categoría; R-ECA-4, reglas §6.4, AP-09/10). El editor DEBE bloquear estas combinaciones. *(Rationale: R-MOD-1..4 para resultado; R-ECA-4 y reglas §6.4 para estructural/invocación; opm-es §restricción absoluta.)*
 - **R-OPD-CTL-4**: el enlace de evento es el segmento objeto/estado→proceso; el segmento de retorno (consumo, efecto) NO es enlace de evento. El evento se pierde tras la evaluación, incluso si la precondición falla. *(Rationale: V-12, V-13.)*
 - **R-OPD-CTL-5** (extensión declarada): la **negación** `¬` sobre la marca de condición/evento (enlace NOT desde el estado `no-existente` o negación del estado requerido) es extensión opforja/OPCloud conforme; reduce N enlaces de condición a uno. *(Rationale: metodologia §NOT; markers `*Negation` OPCloud; no-canonizado en ISO.)*
 
-Realización opforja: badge circular 18×18 (rx 9), fill paper, stroke ink 1, texto serif 12 ink, en `distance:0.5` offset −20; el modelo guarda `C`/`E`/`no` y presenta `c`/`e`/`¬`. Sin canal cromático propio. *(Traza: `markers.ts`, `enlace.ts`.)*
+Realización opforja: badge circular 18×18 (rx 9), fill paper, stroke ink 1, texto serif 12 ink, en distance 0.8 (enlaces entrantes al proceso: consumo/agente/instrumento) o 0.2 (proceso como origen: efecto) con offset −20 — junto al extremo del proceso; el modelo guarda `C`/`E`/`no` y presenta `c`/`e`/`¬`. Sin canal cromático propio. *(Traza: `markers.ts`, `enlace.ts·distanciaProcesoParaModificador`.)*
 
 ### §6.2 Excepciones temporales
 
@@ -288,7 +288,7 @@ Realización opforja: polylines ink en el destino — sobretiempo `4,10 13,-10`;
  Incorrecto: abanico XOR de resultados con `c` en cada rama.
  Rationale: el resultado pertenece a Post(P); el control de flujo proceso→proceso usa nodo de decisión booleano, no `e`/`c` sobre la flecha.
 - **R-OPD-CTL-9**: m-de-f combinatorio — para f>2, «exactamente m de f» (XOR) o «al menos m de f» (OR), con m<f; el número m DEBE anotarse fuera y junto al arco. *(Rationale: R-FAN-M-1..4; libro 23.)*
-- **R-OPD-CTL-10**: abanico probabilístico — cada rama se anota `Pr=p`; la suma DEBE ser 1.0; el abanico probabilístico es SIEMPRE XOR; sin anotación, distribución uniforme 1/n. `Pr=p` fuera de un abanico no es canónico. Realización vigente: opforja anota `N%` (porcentaje entero) en vez de `Pr=p` — GAP-OPD-PROB-NOTACION (mismo hecho, p = N/100; convergir el render o declararlo variante de visualización). *(Rationale: V-18, V-19, R-PROB-1, R-FAN-PROB-1; `enlace.ts`.)*
+- **R-OPD-CTL-10**: abanico probabilístico — cada rama se anota `Pr=p`; la suma DEBE ser 1.0; el abanico probabilístico es SIEMPRE XOR; sin anotación, distribución uniforme 1/n. `Pr=p` fuera de un abanico no es canónico. Realización opforja: `Pr = p` con p decimal en [0,1] (el espaciado `Pr = p` vs `Pr=p` es no-normativo). Alineado. *(Rationale: V-18, V-19, R-PROB-1, R-FAN-PROB-1; `enlace.ts·textoProbabilidad`.)*
 - **R-OPD-CTL-11**: equivalencia visual — enlace de resultado simple hacia objeto con estados ≡ abanico XOR de resultados con estado especificado, uno por estado. *(Rationale: V-19; figuras ISO Fig 40.)*
 
 Realización opforja: arcos construidos dinámicamente, stroke ink 1.5, `strokeDasharray "4 1"`, linecap round; XOR = 1 arco r=30; OR = 2 arcos r=30/35; el arco se abre evitando el mayor hueco angular entre ramas; dock por intersección recta-forma hacia el centroide de los extremos. Alineado (radios herencia OPCloud). *(Traza: `abanicoOverlay.ts`, `customShapes.ts`.)*
@@ -314,7 +314,7 @@ Realización opforja: etiqueta serif 12 inkMid en `distance:0.33`. Bimodal: `Por
 - **R-OPD-STR-2**: el vértice apunta al refinable; la base conecta con los refinadores. En render canónico todo triángulo DEBE conectar por línea visible al refinable (vértice) y al menos un refinador (base); un triángulo sin líneas es error de render. Triángulos auxiliares de edición DEBEN distinguirse (tamaño, color UI, ubicación). *(Rationale: V-3, V-129, V-130, R-TRI-1, R-VIS-TRI-1/2.)*
 - **R-OPD-STR-3**: salvo exhibición-caracterización, refinable y refinadores DEBEN tener la misma perseverancia. Exhibición es la única estructural que conecta objetos con procesos: las 4 combinaciones exhibidor×rasgo son válidas (atributo se dibuja como objeto; operación como proceso). *(Rationale: V-24..V-26, R-STRF-1/2.)*
 - **R-OPD-STR-4**: colección incompleta = **barra horizontal corta bajo la base del triángulo** (existen refinadores no mostrados). Clasificación-instanciación NO la distingue (no lleva barra). No implementada en opforja: GAP-OPD-COLECCION-INCOMPLETA. *(Rationale: §1.8 opd-es; V-27, R-STRF-3; figuras ISO Fig 17.)*
-- **R-OPD-STR-5**: el refinamiento «ordered» se marca con la palabra `ordered` junto al triángulo/abanico (símbolo gráfico de OPD, no frase OPL); con regla: `ordered by` + criterio. *(Rationale: libro 15/17; implementado como etiqueta `ordered`.)*
+- **R-OPD-STR-5** (extensión declarada): el refinamiento «ordered» se marca con la palabra `ordered` junto al triángulo/abanico (símbolo gráfico de OPD, no frase OPL); con regla: `ordered by` + criterio. *(Rationale: la semántica de orden está canonizada en OPL por reglas-opm-estrictas R-OPL-SE-4/opm-opl-es A.7; la marca visual junto al triángulo es la extensión — no-canonizado en ISO; libro 15/17; implementado como etiqueta `ordered`.)*
 - **R-OPD-STR-6**: enlaces heredados por generalización NO se dibujan como duplicados explícitos (aplican semánticamente); su efecto se infiere del árbol general-especialización. La herencia múltiple y el atributo discriminante aplican aunque no se dibujen localmente. *(Rationale: V-28, V-29, V-72, V-73, R-HER-8, AP-29.)*
 - **R-OPD-STR-13**: la **afiliación se hereda por la cadena estructural**: los atributos/operaciones de una cosa ambiental son ambientales y se renderizan con contorno discontinuo automáticamente. *(Rationale: V-74, R-OBJ-6/7.)*
 
@@ -334,9 +334,9 @@ Arbitraje: `ui-forja/08 §4.2/§10` prescribía exhibición=cuadrado outline 10�
 - **R-OPD-STR-7**: un bidireccional con dos etiquetas idénticas ≡ recíproco con esa etiqueta (representaciones intercambiables). *(Rationale: V-56.)*
 - **R-OPD-STR-8**: la etiqueta de usuario se renderiza en **itálica** sobre el eje del enlace; es texto del modelador, no frase reservada. *(Rationale: §1.6 opd-es; figuras ISO; libro «tag en negrita» queda subordinado a la convención itálica de opd-es.)*
 - **R-OPD-STR-9**: estructurales con estado especificado (SSE1..SSE7): el estado puede anclarse en origen, destino o ambos; las variantes bidireccional y recíproco NO existen para estado solo-en-destino (DEBE bloquearse). *(Rationale: V-30, AP-11, R-EST-SSE-1.)*
-- **R-OPD-STR-10**: relación unaria = enlace de la cosa a sí misma; relaciones n-arias se descomponen en binarias. Un proceso que solo preserva estado (`soporta`, `contiene`) DEBE reemplazarse por tagged estructural (o atributo/estado) y su persistencia como elipse DEBE reportarse como mala clasificación metodológica. *(Rationale: R-PROC-6, AP-25; libro 14; metodologia §9.1.)*
+- **R-OPD-STR-10**: relación unaria = enlace de la cosa a sí misma; relaciones n-arias se descomponen en binarias. Un proceso que solo preserva estado (`soporta`, `contiene`) sin esfuerzo sostenido ni condición mantenida que forme parte del hecho (R-PROC-5/7) DEBE reemplazarse por tagged estructural (o atributo/estado) y su persistencia como elipse DEBE reportarse como mala clasificación metodológica; el persistente canónico que declara objeto afectado e invariancia neta conserva la elipse y se realiza como efecto con entrada=salida (`P cambia A de s a s`). *(Rationale: R-PROC-2A/5/6/7, AP-25; libro 14; metodologia §9.1 y su excepción «esfuerzo no trivial».)*
 
-Realización opforja: tagged uni = polyline abierta `0,0 20,-10 0,0 20,10`; bidireccional = arpón `0.5,0 20,±10` en source+target; etiqueta uni en `distance:0.5`, bi en 0.8 (ida) y 0.2 (vuelta), serif 12 ink — hoy en **redonda**, no itálica: GAP-OPD-TAGGED-ITALIC. *(Traza: `linkAssets.ts`, `markers.ts`, `enlace.ts`.)*
+Realización opforja: tagged uni = polyline abierta `0,0 20,-10 0,0 20,10`; bidireccional = arpón `0.5,0 20,±10` en source+target; etiqueta uni en `distance:0.5`, bi en 0.8 (ida) y 0.2 (vuelta), serif 12 ink en itálica (R-OPD-STR-8). Alineado. *(Traza: `linkAssets.ts`, `markers.ts`, `enlace.ts·etiquetaTextoTagged`.)*
 
 ### §7.3 Semi-plegado
 
@@ -435,7 +435,7 @@ Bimodal: las frases OPL de cardinalidad tienen su sede en `spec-forja-opl-es §1
 - **R-OPD-REF-18**: composición inter-modelo — un modelo contiene 1..* OPDs, 1..* párrafos OPL y 0..* referencias a sub-modelos formando un **DAG**; la clausura OPD↔OPL es local a cada modelo; toda cosa referenciable cross-model expone URI/handle persistente; las marcas cross-model (atenuación, distintivo, alias) son gramática de vista, no nuclear; el ciclo de carga (`cargado y sincronizado` / `no sincronizado` / `no cargado`) es propiedad de la referencia. Desconectar un sub-modelo cambia explícitamente el estado del vínculo (sin ambigüedad visual). *(Rationale: V-64, V-176..V-189, V-251..V-256, R-VIS-MODELO-1, R-VIS-XMODEL-1.)*
 - **R-OPD-REF-19**: operaciones auxiliares (`traer conectadas`, `traer enlaces entre seleccionadas`) **materializan apariencias de hechos ya declarados**: no crean semántica, DEBEN ser reversibles o acotadas, su resultado canónico es indistinguible de un OPD manual (sin marcas de «cosa traída») y PUEDEN dejar supresores `…` de enlaces no materializados. NO son refinamiento ontológico. *(Rationale: V-243, V-257..V-263, R-BRING-1.)*
 
-Realización opforja: in-zoom = modo contorno (padding 16, fill `rgba(250,250,248,0.96)`, stroke 4, label arriba, z=0; internas con id jerárquico `padre.ordinal`); unfold = partes fuera con triángulos; árbol por `padreId` con aciclicidad validada; supresión per-OPD; «traer conectados» con layout radial (anillo, minDistance 12). Proxy de parte extraída = enlace dashed `5 4` gris `#98a2b3` sin markers (GAP-OPD-PROXY-TOKEN: hex fuera de tokens). Pendiente: identidad persistente de OPD frente a ids posicionales del DSL de autoría (GAP-OPD-VERIFY-IDS; acta 2026-06-04). *(Traza: `entidad.ts`, `enlace.ts`, `layoutRadial.ts`, `modelo/*`.)*
+Realización opforja: in-zoom = modo contorno (padding 16, fill `rgba(250,250,248,0.96)`, stroke 4, label arriba, z=0; internas con id jerárquico `padre.ordinal`); unfold = partes fuera con triángulos; árbol por `padreId` con aciclicidad validada; categorías de OPD en `Opd.vista` (`OpdVista`: requirement-view/submodel-view read-only, generic-view; jerárquico = vista ausente; `tipos/extensiones.ts`); supresión per-OPD; «traer conectados» con layout radial (anillo, minDistance 12). Proxy de parte extraída = enlace dashed `5 4` gris `#98a2b3` sin markers (GAP-OPD-PROXY-TOKEN: hex fuera de tokens). Pendiente: identidad persistente de OPD frente a ids posicionales del DSL de autoría (GAP-OPD-VERIFY-IDS; acta 2026-06-04). *(Traza: `entidad.ts`, `enlace.ts`, `layoutRadial.ts`, `modelo/*`.)*
 
 Bimodal: `se descompone en` / `se despliega en` / aristas del árbol `se refina por …` (`spec-forja-opl-es §7`); el reverse OPL NO reconstruye el árbol de OPDs (GAP-CX-PARSER de aquella spec): el árbol se materializa por estructura del modelo.
 
@@ -450,7 +450,7 @@ Bimodal: `se descompone en` / `se despliega en` / aristas del árbol `se refina 
 - **R-OPD-LAY-7**: símbolos estructurales que colisionan (<44 px) se separan (50 px, carriles alternados); tras un drag, el orden de terminales de enlaces estructurales PUEDE re-permutarse para minimizar cruces (≤7 enlaces). *(Rationale: V-51 operacionalizado; `agregacionBus.ts`, `sortStructuralLinks.ts`.)*
 - **R-OPD-LAY-8**: el export DEBE auto-ajustar el viewport para no recortar símbolos, rótulos ni decoraciones (ningún símbolo huérfano). *(Rationale: V-199, V-234, R-VIS-LAYOUT-1.)*
 - **R-OPD-LAY-9**: posiciones por defecto — disposición vertical objeto-arriba/proceso-abajo en transformadores; todo-arriba/partes-abajo en estructurales (triángulo en el tramo central); abanico con origen común geométricamente significativo. *(Rationale: figuras ISO Fig 7/16; DEBERÍA, no DEBE: heurística de claridad.)*
-- **R-OPD-LAY-10**: canvas infinito — el paper crece/desplaza en las cuatro direcciones según contenido; el pan es scroll del viewport con compensación de origen; al cambiar de OPD se centra el bbox real del contenido. *(Rationale: implementación vigente post-849930e; conforme con V-50/R-OPD-LAY-2.)*
+- **R-OPD-LAY-10** (extensión declarada): el canvas es conceptualmente ilimitado — el área de dibujo crece en las cuatro direcciones según el contenido — y al cambiar de OPD la vista DEBE centrar el bbox real del contenido. Realización opforja: pan como scroll del viewport con compensación de origen. *(Rationale: conforme con V-50/R-OPD-LAY-2 — el límite de legibilidad es por OPD lógico, no por lienzo; el canon calla sobre el lienzo infinito, nivel `implementacion`. Traza: `JointCanvas.tsx`.)*
 
 ## §12 Composición del OPD y rotulado
 
@@ -460,16 +460,16 @@ Bimodal: `se descompone en` / `se despliega en` / aristas del árbol `se refina 
 - **R-OPD-ROT-4**: instancia lógica se rotula `NombreInstancia : NombreClase`; la clase muestra atributos con rangos y la instancia los mismos con valores concretos. *(Rationale: V-58, R-INS-3.)*
 - **R-OPD-ROT-5**: normalización léxica organizacional, alias de casing o reescritura automática del rótulo NO se aplican silenciosamente: deben ser trazables como política o metadato reversible. Todo conflicto de unicidad nominal se resuelve explícitamente (reusar cosa existente / renombrar / descartar); NO se admite reescritura silenciosa. *(Rationale: V-216, V-222, R-VIS-AUTOR; metodologia §9.14.)*
 - **R-OPD-ROT-6**: estereotipos — sintaxis visible `<<Nombre>>` embebida en el rótulo o distintivo equivalente; la condición de estereotipada NO se oculta del artefacto canónico; el estereotipo no sustituye la clase base (objeto sigue objeto). El estereotipo canónico `<<Requirement>>` es un objeto estereotipado (atributos mínimos: Name, ID, Requirement Essence, Satisfaction, Description; `Requirement Essence` ≠ esencia física/informacional); el requisito se vincula al diseño por enlace estructural etiquetado `satisface`, nunca procedimental. *(Rationale: V-142..V-157, R-VIS-STEREO-1/2, R-VIS-REQ-1; metodologia LF-07.)*
-- **R-OPD-ROT-7**: notas y anotaciones libres son contenido **meta** del autor: no son cosa OPM, no emiten OPL nuclear, y su morfología no reutiliza canales semánticos; si se exportan, se marcan como meta. *(Rationale: V-204, R-BR-4.)*
+- **R-OPD-ROT-7**: notas y anotaciones libres son contenido **meta** del autor: no son cosa OPM, no emiten OPL nuclear, y su morfología no reutiliza canales semánticos; si se exportan, se marcan como meta. Realización opforja (extensión declarada): las **notas de mesa** realizan este contenido meta/auxiliar y quedan excluidas del perfil `canon-diagrama`. *(Rationale: V-204, R-BR-4. Traza: `modelo/notasMesa.ts`.)*
 - **R-OPD-ROT-8**: estilado autoral — capa paralela admisible solo si no colisiona con canales reservados (gramática, simulación, validación, UI); en su ausencia, la implementación converge al esquema por defecto; el export canónico **normaliza** el estilado autoral salvo perfil contrario; el tamaño autoral de una cosa no puede impedir legibilidad ni contención del rótulo; imagen bitmap decorativa PUEDE ir dentro de una cosa sin ocluir contorno/sombra/estados/rótulo (ante conflicto prevalece la geometría OPM). El estilado autoral NO reutiliza: rojo/amarillo/verde como semántica tácita, discontinuidad de borde, cromatismo de simulación ni marcas de validación. *(Rationale: V-207..V-217, R-VIS-AUTOR-1/2.)*
 
 ## §13 Canvas, modos e interacción
 
-- **R-OPD-UI-1**: todo elemento de interacción (handles, halos, anclas, marquee, menús, toasts, ghosts de drag, smart-guides, resaltados de búsqueda) es UI transitoria: usa **canal reservado** no ambiguo respecto de la gramática (§1) y NO persiste en canon. En OPFORJA el canal UI reservado es el **crimson** `#8e2a2e` + grises de interfaz; crimson está PROHIBIDO como marca semántica OPM en el OPD. *(Rationale: V-127, V-200..V-206, R-VIS-MODO-1; GOVERNANCE §35; tokens Codex.)*
+- **R-OPD-UI-1**: todo elemento de interacción (handles, halos, anclas, marquee, menús, toasts, ghosts de drag, smart-guides, resaltados de búsqueda) es UI transitoria: usa **canal reservado** no ambiguo respecto de la gramática (§1) y NO persiste en canon. En OPFORJA el canal UI reservado es el **crimson** `#8e2a2e` + grises de interfaz; crimson está PROHIBIDO como marca semántica OPM en el OPD. *(Rationale: V-127, V-200..V-206, R-VIS-MODO-1; GOVERNANCE §2 (invariante de colores); tokens Codex.)*
 - **R-OPD-UI-2**: selección — única: subrayado crimson hairline bajo la etiqueta embebido en la celda (no infla el conteo de elementos); múltiple: celda-halo aparte (z=30); hover: variante 1 px opacity 0.5. La selección NO redibuja el borde semántico de la cosa. *(Rationale: V-202/V-203 operacionalizados; `halos.ts`, `entidad.ts`.)*
-- **R-OPD-UI-3**: manipulación — 8 handles de resize 8×8 (solo selección única, stroke crimson); 12 anclas de conexión r=5 (opacity 0→1 al hover/modo enlace, cursor crosshair); marquee Shift+drag (borde crimson, fondo crimsonSuave; Ctrl+Shift acumula); vértices de edición de enlace crimson r=4; reanclaje de extremos por arrowhead-tools durante reconexión. Los subprocesos embebidos confinan su drag al interior del padre (restrictTranslate). *(Rationale: implementación vigente; HU-SHARED-008; patrón embed+restrictTranslate.)*
-- **R-OPD-UI-4**: las cápsulas de estado son ciudadanos de interacción de primera clase: hover/selección/foco/drag con variantes crimson propias, sin tocar el canal semántico oliva del estado. *(Rationale: paquete estado-ciudadano 2026-05-24; `jointjs.css`.)*
-- **R-OPD-UI-5**: el feedback de destinos válidos/inválidos del modo enlace DEBE usar el canal UI reservado; la realización vigente usa la paleta legacy OPCloud (`#70E483/#3BC3FF/#586D8C`): GAP-OPD-FEEDBACK-LEGACY (deuda visual viva, alias permitidos por GOVERNANCE §4.56 solo como compat). *(Rationale: R-OPD-CAN-3; `modoEnlace.ts`, `coloresCanon.ts`.)*
+- **R-OPD-UI-3**: las afordances de manipulación directa (handles de resize, anclas de conexión, marquee, vértices de edición de enlace, reanclaje de extremos por arrowhead-tools) usan el canal UI reservado (R-OPD-UI-1) y NO persisten en canon; el drag de un subproceso embebido DEBE quedar confinado al interior de su contenedor (preserva la contención del in-zoom, §10). Realización opforja (extensión declarada de detalle): 8 handles de resize 8×8 solo en selección única, stroke crimson; 12 anclas de conexión r=5 (opacity 0→1 al hover/modo enlace, cursor crosshair); marquee Shift+drag (borde crimson, fondo crimsonSuave; Ctrl+Shift acumula); vértices crimson r=4; confinamiento por embed+restrictTranslate. *(Rationale: R-OPD-UI-1/R-OPD-CAN-3 — canal reservado; V-33/R-OPD-REF-1 — contención; los mecanismos son nivel `implementacion`, no canonizados.)*
+- **R-OPD-UI-4** (extensión declarada): las cápsulas de estado son objeto de interacción de primera clase (hover, selección, foco, drag); su feedback DEBE usar variantes del canal UI reservado sin tocar el canal semántico oliva del estado. *(Rationale: R-OPD-UI-1/R-OPD-CAN-3 — separación de canales; la primera-clase de interacción es nivel `implementacion`. Traza: `jointjs.css`.)*
+- **R-OPD-UI-5**: el feedback de destinos válidos/inválidos del modo enlace DEBE usar el canal UI reservado; la realización vigente usa la paleta legacy OPCloud (`#70E483/#3BC3FF/#586D8C`): GAP-OPD-FEEDBACK-LEGACY (deuda visual viva, alias permitidos por GOVERNANCE §4 (excepción: aliases legacy) solo como compat). *(Rationale: R-OPD-CAN-3; `modoEnlace.ts`, `coloresCanon.ts`.)*
 - **R-OPD-UI-6**: la grid de edición es configurable (paso, color, grosor, escala, snap) y PUEDE estar activa en modo edición como preferencia; su supresión en export es obligatoria (R-OPD-LAY-3). La activación por defecto es materia de ui-forja (estética de edición), no de esta spec. *(Rationale: V-196/V-197; resolución de la tensión con ui-forja §08-§0/§14.)*
 
 ## §14 Interacción OPD↔OPL (lado canvas)
@@ -488,7 +488,7 @@ El puente texto↔canvas está legislado en `spec-forja-opl-es §14` (tokens con
 - **R-OPD-EDIT-4**: toda acción que genere una combinación prohibida (tabla AP, §17) DEBE bloquearse antes de persistir o marcarse como error estructural recuperable; toda edición ambigua se bloquea hasta resolver identidad, firma o alcance. *(Rationale: R-EDIT-8, R-ESC-OP-3/4, R-APP-4.)*
 - **R-OPD-EDIT-5**: al insertar subprocesos en una descomposición, los enlaces del padre migran automáticamente (o la herramienta valida y alerta): consumo al primero, resultado al último, el resto según §10.2; el modelador reasigna al subproceso real. Olvidar la migración crea enlaces superfluos que invalidan el modelo. *(Rationale: V-103/V-104; libro 21/22; metodologia §A3.)*
 - **R-OPD-EDIT-6**: la herramienta DEBE rastrear los refinadores de cada refinable y ajustar automáticamente el símbolo (colección incompleta, contadores de plegado) y las oraciones OPL cuando la colección cambia. *(Rationale: opm-es notas de implementador; libro 17.)*
-- **R-OPD-EDIT-7**: brecha viva — el arrastre de extremos de estructurales fundamentales sobre el canvas (compuesto triangular) sigue roto; el reanclaje vive en el inspector (sección Extremos). GAP-OPD-DRAG-TRIANGULO (BUG-fb6c2c). *(Rationale: estado real 2026-05-31.)*
+- **R-OPD-EDIT-7**: la herramienta DEBE permitir reanclar los extremos de un enlace estructural fundamental (compuesto triangular); la realización vigente lo ofrece solo vía inspector (sección Extremos) y el arrastre directo sobre el canvas es divergente: GAP-OPD-DRAG-TRIANGULO. *(Rationale: R-OPD-UI-3 — reanclaje por arrowhead-tools; V-129/V-130.)*
 
 ## §16 Configuración que afecta al OPD
 
@@ -527,7 +527,7 @@ El puente texto↔canvas está legislado en `spec-forja-opl-es §14` (tokens con
 | AP-22 | sinónimos múltiples / unicidad nominal sin resolver | R-OPD-ROT-5 | runtime (diagnóstico) |
 | AP-23 | truncamiento silencioso de rótulo | R-OPD-COSA-6 | eval |
 | AP-24 | reutilizar canales semánticos para UI/validación | R-OPD-CAN-3 | lint (design:governance) |
-| AP-25 | proceso que solo preserva estado como elipse | R-OPD-STR-10 | runtime (diagnóstico) |
+| AP-25 | proceso de soporte/mantenimiento sin esfuerzo sostenido ni condición mantenida relevante (R-PROC-5..7) como elipse | R-OPD-STR-10 | runtime (diagnóstico) |
 | AP-27 | evento a subproceso intermedio sin justificación | R-OPD-REF-11/R-OPD-INV-3 | runtime (advertencia) |
 | AP-30 | resultado+resultado / consumo+consumo al recomponer | R-OPD-REF-13 | runtime |
 
@@ -549,7 +549,7 @@ Geometrías y valores vigentes de OPFORJA. Norma de lectura: la **estructura** d
 | opmProceso | `#1d3f78` | stroke de proceso |
 | opmEstado / estadoFill / estadoFinalFill | `#68711f` / `#dedacb` / `#d6d2c6` | estado |
 | crimson / crimsonSuave | `#8e2a2e` / `rgba(142,42,46,0.06)` | canal UI reservado (selección, foco); la simulación comparte el hue con separación por dash/glifo/z (§20, R-§23-OPD-CANAL) |
-| legacy OPCloud | `#70E483 #3BC3FF #586D8C #fdffff` | solo compat de apariencias antiguas (GOVERNANCE §4.56); prohibido en superficies nuevas |
+| legacy OPCloud | `#70E483 #3BC3FF #586D8C #fdffff` | solo compat de apariencias antiguas (GOVERNANCE §4, excepción aliases legacy); prohibido en superficies nuevas |
 
 ### §18.2 Trazos, dashes y radios
 
@@ -577,7 +577,7 @@ Geometrías y valores vigentes de OPFORJA. Norma de lectura: la **estructura** d
 | Tagged unidireccional / bidireccional | polyline `0,0 20,-10 0,0 20,10` / arpón `0.5,0 20,±10` | abierto |
 | Sobretiempo / subtiempo | polyline `4,10 13,-10` / `4,10 13,-10 8.5,0 17,0 13,10 22,-10` | trazo ink |
 | Rayo de invocación | 4 vértices, offset perpendicular `min(22, max(12, len·0.08))`; autoinvocación: lazo a ±35°, pico `max(56, h·0.55)` | — |
-| Glifos de estado | inicial: stroke 3 · final: doble contorno · default: flecha abierta entrante (vigente `↗`, GAP) · current **declarado**: `●` en la cápsula (la marca de runtime NO es glifo: es anillo del canal de simulación, §18.2 y R-OPD-SIM-2) | — |
+| Glifos de estado | inicial: stroke 3 · final: doble contorno · default: flecha abierta entrante (vigente `↗`, GAP-OPD-DEFAULT-GLIFO) · current **declarado**: `●` interno en la cápsula (vigente; canon = glifo externo reservado pin, GAP-OPD-CURRENT-GLIFO; la marca de runtime NO es glifo: es anillo del canal de simulación, §18.2 y R-OPD-SIM-2) | — |
 
 ### §18.4 Z-order y tipografía
 
@@ -615,7 +615,7 @@ Geometrías y valores vigentes de OPFORJA. Norma de lectura: la **estructura** d
 - **R-OPD-EXP-2**: el export parcial se declara como tal e identifica el subconjunto; watermarks/overlays editoriales no ocluyen primitivas; los recursos dependientes (bitmaps, sub-modelos, descripciones, código) se embeben, se referencian persistentemente o se declara su ausencia; el export de un modelo compuesto declara cómo resuelve referencias externas (sin depender de filesystem/sesión implícitos). *(Rationale: V-231, V-235, V-236, V-187, V-188.)*
 - **R-OPD-EXP-3**: en el export canónico el estilado autoral se normaliza al esquema por defecto (salvo perfil contrario); los rótulos del grafo van en negro; el viewport se auto-ajusta (R-OPD-LAY-8). *(Rationale: V-217, V-228.)*
 
-**Estado opforja**: export de imagen del canvas y OPL→Markdown existen; el par de perfiles canónicos declarados, la normalización de estilado y el gate de densidad sobre export NO están implementados (GAP-OPD-PERFIL-EXPORT, GAP-OPD-EXPORT-GATE).
+**Estado opforja** *(enmienda 2026-06-12, auditoría de coherencia del corpus)*: perfiles canónicos declarados (`serializacion/perfilesExport.ts`: `canon-diagrama`/`canon-documento`/`intercambio`, atributos por perfil); gate de densidad sobre export en triple superficie (`gateDensidadCanonica` subordina `exportarModeloConPerfil`/`emitirDocumentoCanonico`; `validarDensidadCanonDiagrama` cableado a `validarModelo`; la paleta deshabilita PNG/ZIP en OPD bloqueado); normalización de estilado en `mapaExport.ts` (`normalizarColoresSvg`, `removerChromeEdicionSvg`; verificación formal R-VIS-EXPORT-1A..1E/V-228, 2026-06-12). Residual: la exención «vista tipificada o refinamiento declarado» de R-OPD-LAY-2 no está realizada — el gate bloquea conservadoramente todo OPD >25 (depende de GAP-OPD-CATEGORIAS-OPD).
 
 ## §22 Trazabilidad y gaps
 
@@ -629,30 +629,31 @@ Leyenda: `alineado` (canon y realización coinciden) · `alineado-variante` (rea
 
 | Sección | Constructo / Regla | Realización (archivo·símbolo) | Estado |
 | --- | --- | --- | --- |
-| §1 | Perfiles canon-diagrama/canon-documento (R-OPD-CAN-1) | `mapaExport.ts` (export imagen, sin perfil declarado) | GAP-OPD-PERFIL-EXPORT |
+| §1 | Perfiles canon-diagrama/canon-documento (R-OPD-CAN-1) | `serializacion/perfilesExport.ts` (`PERFILES_EXPORT`, `ATRIBUTOS_DE_PERFIL`, `gateDensidadCanonica`, `emitirDocumentoCanonico`) | alineado (cierre 2026-06-11, `3a2db18c`) |
 | §2 | 8 representaciones (forma×sombra×dash) | `composers/entidad.ts` | alineado |
 | §2 | Rótulo íntegro con autosize (R-OPD-COSA-6) | `entidad.ts` (`ellipsis:false`, expansión) | alineado |
 | §2 | Stick figure opcional para humanos (R-OPD-COSA-9) | — | no-canonizado · extensión opcional |
 | §3 | Rountangle rx 8 + región inferior + layouts h/v | `composers/estados.ts` | alineado (deroga ui-forja §08 «pill») |
 | §3 | Designación inicial / final | `entidad.ts` (sw3 / doble contorno) | alineado |
 | §3 | Designación por defecto = flecha abierta entrante | `entidad.ts` (glifo `↗`) | GAP-OPD-DEFAULT-GLIFO (severidad baja/cosmética) |
-| §3 | `Current` declarado: glifo | `entidad.ts` (glifo `●`) | alineado |
-| §3 | `Current` declarado: serialización distinta de runtime | `src/serializacion` + `src/modelo` (fuera del renderer) | GAP-OPD-VERIFY (V-237/V-238) |
+| §3 | `Current` declarado: glifo externo reservado (pin) | `entidad.ts` (glifo `●` interno en la cápsula) | GAP-OPD-CURRENT-GLIFO |
+| §3 | `Current` declarado: serialización distinta de runtime | `modelo/estadosDesignaciones.ts` (designación persistida, exclusión default/current) + `serializacion/validarEstados.ts` (unicidad por objeto) + round-trip `json-roundtrip-campos.test.ts`; runtime separado en `simulacion/tipos.ts·ContextoSimulacion.estadosCurrent` | alineado (V-237/V-238) |
 | §3 | Supresión global+local + chip `⋯N` | `modelo/visibilidadEstados.ts`, `entidad.ts` | alineado |
 | §4 | Swallowtail T1/T2/T3 + anclaje center+boundary | `linkAssets.ts`, `enlace.ts` | alineado |
 | §4 | TS1..TS5 anclados a cápsula | `enlace.ts` (midSide sticky) | alineado |
 | §5 | Piruletas agente/instrumento | `markers.ts`, `linkAssets.ts` | alineado |
 | §5 | Restricción de agente a humanos | oferta condicionada por **esencia física** (proxy; sin tipo humano en el kernel) | GAP-OPD-AGENTE-HUMANO (alineado-variante) |
 | §6 | Marcas `c/e/¬` minúsculas en badge | `markers.ts` | alineado-variante |
-| §6 | Posición de la marca cerca del extremo proceso | badge en `distance:0.5` | GAP-OPD-POS-MODIFICADOR |
+| §6 | Posición de la marca cerca del extremo proceso | `enlace.ts·distanciaProcesoParaModificador` (0.8 entrantes / 0.2 proceso-origen) | alineado (cierre 2026-06-11, `2766eb74`; residual estrecho: el efecto de entrada estado→proceso recibe 0.2 — junto al estado — porque la heurística decide por tipo, no por dirección) |
 | §6 | Excepciones `/` y `//` | `linkAssets.ts` polylines | alineado |
 | §6 | Arcos XOR (1) / OR (2) dashed en extremo común | `abanicoOverlay.ts` | alineado |
-| §6 | Probabilidad de rama `Pr=p` | `enlace.ts` (render `N%`) | GAP-OPD-PROB-NOTACION (alineado-variante) |
+| §6 | Probabilidad de rama `Pr=p` | `enlace.ts·textoProbabilidad` (render `Pr = p`) | alineado (cierre 2026-06-11, `2766eb74`) |
 | §6 | m-de-f junto al arco | — | GAP-OPD-FAN-M (sin anotación m) |
 | §7 | Topología interna de los 4 triángulos | `markers.ts` | alineado (deroga ui-forja §08 cuadrado/círculo) |
 | §7 | Colección incompleta (barra bajo triángulo) | — | GAP-OPD-COLECCION-INCOMPLETA |
+| §7 | Marca `ordered` junto al triángulo (R-OPD-STR-5) | `composers/enlace.ts·etiquetaOrdenEstructural`, `agregacionBus.ts` | alineado · extensión declarada |
 | §7 | Tagged uni/bi/recíproco + SSE (geometría) | `linkAssets.ts`, `enlace.ts` | alineado |
-| §7 | Etiqueta de tagged en itálica (R-OPD-STR-8) | `enlace.ts` (render en redonda) | GAP-OPD-TAGGED-ITALIC |
+| §7 | Etiqueta de tagged en itálica (R-OPD-STR-8) | `enlace.ts·etiquetaTextoTagged` (fontStyle italic) | alineado (cierre 2026-06-11, `58b752e5`) |
 | §7 | Plegado parcial + badge ▸/▾ + contadores | `composers/plegado.ts` | alineado-variante (filas en vez de íconos) |
 | §8 | Rayo + autoinvocación ±35° + demora | `autoinvocacionLoop.ts`, `enlace.ts` | alineado |
 | §8 | Duración dentro de la elipse (R-OPD-INV-6) | etiquetas `Min:/Max:/Rate` sobre enlace | GAP-OPD-DURACION-ELIPSE |
@@ -660,13 +661,14 @@ Leyenda: `alineado` (canon y realización coinciden) · `alineado-variante` (rea
 | §10 | Contenedor in-zoom (stroke 4, padding 16) + unfold externo | `entidad.ts` | alineado |
 | §10 | Distribución/escisión por matriz §10.2 | `modelo/*` (migración al descomponer) | GAP-OPD-VERIFY (cobertura de matriz completa) |
 | §10 | Identidad persistente de OPD vs `SDx.y` | árbol por `padreId`; ids DSL posicionales | GAP-OPD-VERIFY-IDS (acta 2026-06-04) |
-| §10 | Categorías de OPD en metadato (V-244) | — | GAP-OPD-CATEGORIAS-OPD |
-| §10 | Sub-modelo por referencia (DAG, V-176..) | composición por interfaz (fusión) existe; referencia viva no | GAP-OPD-SUBMODELO-REF (techo T3) |
+| §10 | Categorías de OPD en metadato (V-244) | `Opd.vista` (`OpdVista`: requirement-view / submodel-view / generic-view) + `padreId` | alineado-variante (parcial) — residuo GAP-OPD-CATEGORIAS-OPD |
+| §10 | Sub-modelo por referencia (DAG, V-176..) | fusión por interfaz (`modelo/composicion/interfaz.ts`) + referencia por snapshot materializado con ciclo de carga `syncState` per R-OPD-REF-18 (`modelo/submodelos.ts`, vista anclada read-only); referencia VIVA auto-sincronizada no | GAP-OPD-SUBMODELO-REF (techo T3) |
 | §10 | Cosa duplicada en mismo OPD (silueta) | — | GAP-OPD-DUPLICADO |
 | §11 | Router por familia + manhattan estructural | `enlace.ts`, `opcloudRouting.ts` | alineado |
-| §11 | Grid suprimida en export canónico | grid activa por defecto en edición | GAP-OPD-VERIFY (supresión en export, depende de R-OPD-CAN-1) |
-| §11 | Gate de densidad sobre export (R-OPD-LAY-2) | — | GAP-OPD-EXPORT-GATE |
+| §11 | Grid suprimida en export canónico | grid = chrome DOM fuera del `<svg>` (el export serializa solo el svg: `mapaExport.ts·obtenerSvgPaper`); chrome interno removido por `removerChromeEdicionSvg` | alineado (verificación V-227, 2026-06-12, `ce690057`) |
+| §11 | Gate de densidad sobre export (R-OPD-LAY-2) | `perfilesExport.ts·gateDensidadCanonica` + `perfilDiagrama.ts·perfilCanonDiagrama` (banda 21/25) + `validaciones.ts·validarDensidadCanonDiagrama` + paleta PNG/ZIP | alineado-variante (cierre 2026-06-11, `3a2db18c`; exención vista tipificada/refinamiento no realizada — depende de GAP-OPD-CATEGORIAS-OPD) |
 | §11 | Canvas infinito + compensación de scroll | `JointCanvas.tsx` | alineado |
+| §12 | Notas de mesa = contenido meta del autor (R-OPD-ROT-7) | `modelo/notasMesa.ts` (excluidas del perfil `canon-diagrama`) | alineado · extensión declarada |
 | §13 | Canal UI crimson + selección/marquee/anclas | `halos.ts`, `rubberBand.ts`, `entidad.ts` | alineado |
 | §13 | Feedback de modo enlace en canal reservado | paleta legacy OPCloud en `modoEnlace.ts` | GAP-OPD-FEEDBACK-LEGACY |
 | §14 | Resaltado cruzado por referencia tipada | `halos.ts` + spec-forja-opl-es §14 | alineado |
@@ -674,8 +676,8 @@ Leyenda: `alineado` (canon y realización coinciden) · `alineado-variante` (rea
 | §15 | Drag de extremos de estructurales en canvas | inspector Extremos OK; drag roto | GAP-OPD-DRAG-TRIANGULO (BUG-fb6c2c) |
 | §10/§15 | Proxy de extracción tokenizado | hex `#98a2b3` directo | GAP-OPD-PROXY-TOKEN |
 | §20 | Marcas de simulación (halo, pines, token) | `halos.ts`, `enlace.ts` | alineado |
-| §21 | Normalización de estilado en export | — | GAP-OPD-PERFIL-EXPORT (subsume) |
-| — | ui-forja/08 §3 estado pill · §4.2/§10 exhibición-cuadrado/instancia-círculo · §0 straight-only | documento subordinado | GAP-OPD-UIFORJA-08a/b/c (GAP-doc) |
+| §21 | Normalización de estilado en export | `mapaExport.ts·normalizarColoresSvg` / `removerChromeEdicionSvg` | alineado (verificación R-VIS-EXPORT-1A..1E/V-228, 2026-06-12) |
+| — | ui-forja/08 §3 estado pill · §4.2/§10 exhibición-cuadrado/instancia-círculo · §0 straight-only | documento subordinado | GAP-OPD-UIFORJA-08a/b/c (mitad doc cumplida 2026-06-12: ui-forja/08 reconciliado por remisión; residual: realización en código) |
 | — | Diagrama de vida útil (lifespan) | — | no-canonizado-pendiente (vista derivada opcional) |
 | — | Port folding (operación al contorno del exhibidor) | — | no-canonizado · extensión futura declarada |
 
@@ -683,25 +685,21 @@ Leyenda: `alineado` (canon y realización coinciden) · `alineado-variante` (rea
 
 | GAP | Origen | Descripción de una línea |
 | --- | --- | --- |
-| GAP-OPD-PERFIL-EXPORT | §1/§21 | No hay perfiles `canon-diagrama`/`canon-documento` declarados; la regla rectora queda sin testigo material. |
 | GAP-OPD-AGENTE-HUMANO | §5 | La exclusividad humana del agente se aproxima por esencia física; el kernel no tiene tipo humano (enforcement estricto no exigible hoy). |
 | GAP-OPD-DEFAULT-GLIFO | §3 | Estado por defecto con `↗` en vez de flecha abierta entrante canónica (severidad baja/cosmética). |
-| GAP-OPD-VERIFY | §3/§10/§11 | Trazas no confirmadas: serialización `Current` declarado vs runtime; cobertura completa de la matriz de distribución; supresión de grid en export. |
-| GAP-OPD-POS-MODIFICADOR | §6 | Badge `c/e/¬` en mitad del enlace; canon lo ubica cerca del extremo proceso. |
+| GAP-OPD-CURRENT-GLIFO | §3 | `Current` declarado con glifo `●` interno en la cápsula en vez del glifo externo reservado (pin) canónico; a converger o a declarar como variante de perfil (espejo de GAP-OPD-DEFAULT-GLIFO). |
+| GAP-OPD-VERIFY | §10 | Traza no confirmada: cobertura completa de la matriz de distribución. |
 | GAP-OPD-FAN-M | §6 | Sin anotación `m` junto al arco para «exactamente/al menos m de f». |
-| GAP-OPD-PROB-NOTACION | §6 | Probabilidad de rama como `N%` en vez del canónico `Pr=p` (mismo hecho, p = N/100). |
 | GAP-OPD-COLECCION-INCOMPLETA | §7 | Barra horizontal corta bajo el triángulo no realizada. |
-| GAP-OPD-TAGGED-ITALIC | §7 | Etiqueta de estructural etiquetado en redonda; el canon la exige en itálica. |
 | GAP-OPD-DURACION-ELIPSE | §8 | Duración como etiquetas de enlace; canon = dentro de la elipse `[u] {min, esp, max}`. |
-| GAP-OPD-CATEGORIAS-OPD | §10 | OPDs sin metadato de categoría (jerárquico / vista anclada / ad hoc). |
+| GAP-OPD-CATEGORIAS-OPD | §10 | Residuo: la categoría jerárquica es implícita (vista ausente; la exclusividad mutua la garantiza el campo discriminado) y Mapa del Sistema no está realizado como OPD-con-metadato (es vista de workbench efímera). |
 | GAP-OPD-VERIFY-IDS | §10 | Identidad persistente de OPD frente a ids posicionales del DSL de autoría (V-248/V-249; acta 2026-06-04). |
-| GAP-OPD-SUBMODELO-REF | §10 | Referencia viva a sub-modelos (DAG cross-model) no implementada; existe fusión por interfaz. |
+| GAP-OPD-SUBMODELO-REF | §10 | Referencia viva a sub-modelos (DAG cross-model auto-sincronizado) no implementada; existen fusión por interfaz y referencia por snapshot congelado con detección de obsolescencia (`syncState`). |
 | GAP-OPD-DUPLICADO | §10 | Apariencia duplicada de la misma cosa en un mismo OPD (silueta desplazada) no soportada. |
-| GAP-OPD-EXPORT-GATE | §11 | Gate de densidad (advertir 21-25, bloquear >25) no aplicado al export. |
 | GAP-OPD-FEEDBACK-LEGACY | §13 | Feedback de modo enlace con paleta OPCloud brillante fuera del canal UI reservado. |
 | GAP-OPD-DRAG-TRIANGULO | §15 | Arrastre de extremos de estructurales fundamentales roto en canvas (BUG-fb6c2c). |
 | GAP-OPD-PROXY-TOKEN | §10/§15 | Proxy de extracción con gris hex directo fuera de tokens. |
-| GAP-OPD-UIFORJA-08a/b/c | Precedencia | ui-forja/08 contradice el canon en estado-pill, marcadores de exhibición/instanciación y connector straight-only; corregir el documento. |
+| GAP-OPD-UIFORJA-08a/b/c | Precedencia | ui-forja/08 contradecía el canon en estado-pill, marcadores de exhibición/instanciación y connector straight-only. Mitad documental CUMPLIDA 2026-06-12 (ui-forja/08 reconciliado por remisión a esta spec; GOVERNANCE v1.2); residual: realización en código (estado-pill, marcadores exhibición/instancia, straight-only). |
 
 ### §22.3 Cobertura inversa
 
@@ -754,6 +752,8 @@ Valores de `Enforcement`: `schema`, `lint`, `runtime`, `eval`, `manual`.
 
 Major bump **1.0.0**: esta spec consolida en un documento autoritativo lo que vivía disperso, y cambia la fuente de verdad operativa de lo visual en OPFORJA.
 
+Minor bump **1.1.0** (enmienda 2026-06-12, auditoría de coherencia del corpus; precedente formal de la enmienda V-7/1.0.4): cierre de GAPs ya implementados (PERFIL-EXPORT, EXPORT-GATE, TAGGED-ITALIC, PROB-NOTACION, POS-MODIFICADOR) con traza de código y commits; verificación de trazas GAP-OPD-VERIFY (serialización `Current` declarado, supresión de grid en export); reclasificación GAP-OPD-CURRENT-GLIFO (espejo del trato a DEFAULT-GLIFO); saneo anti-postmortem de R-OPD-EDIT-7 y separación kernel/realización en R-OPD-LAY-10 y R-OPD-UI-3/4; alineación de R-OPD-TR-8/R-OPD-STR-10/AP-25 con reglas R-PROC-2A/5..7; marca de extensión declarada en R-OPD-STR-5; declaración de las notas de mesa como contenido meta excluido de `canon-diagrama` (R-OPD-ROT-7).
+
 ### §25.1 Qué cambia
 
 | Antes | Ahora |
@@ -765,7 +765,7 @@ Major bump **1.0.0**: esta spec consolida en un documento autoritativo lo que vi
 ### §25.2 Qué migrar
 
 - **R-§25-MIG-1**: la implementación (`app/src/render/jointjs`, `app/src/canvas`) DEBE alinearse contra esta spec usando §22; toda divergencia es deuda a cerrar. Ante conflicto, `reglas-opm-estrictas-es` sigue por encima (regla de oro 1 del proyecto).
-- **R-§25-MIG-2**: `ui-forja/08-jointjs-styling.md` (y GOVERNANCE donde corresponda) DEBE corregirse según GAP-OPD-UIFORJA-08a/b/c, declarando la subordinación de su materia OPM-semántica a esta spec.
+- **R-§25-MIG-2**: `ui-forja/08-jointjs-styling.md` (y GOVERNANCE donde corresponda) DEBE corregirse según GAP-OPD-UIFORJA-08a/b/c, declarando la subordinación de su materia OPM-semántica a esta spec. *(Cumplida en su mitad documental 2026-06-12: `ui-forja/08` reconciliado por remisión y GOVERNANCE elevado a v1.2 con esta spec en su cadena de precedencia; el residual es de realización en código.)*
 - **R-§25-MIG-3**: los `GAP-OPD-*` entran al backlog de alineación como corte propio; se cierran vía código+tests (§24), no vía notas sueltas.
 
 ### §25.3 Qué se deprecia

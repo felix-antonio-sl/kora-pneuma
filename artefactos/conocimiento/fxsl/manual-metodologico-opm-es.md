@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:manual-metodologico-opm-es
 nombre: manual-metodologico-opm-es
-version: 3.0.0
+version: 3.0.1
 estado: publicado
 descripcion: "Manual metodológico canónico de OPM: capa procedimental de la SSOT OPM-ES — construcción del SD, refinamiento, gestión de complejidad, patrones y anti-patrones de modelado."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-opm-es.md (sha256:52f1807d65652c9684fced91fe18ed04b609d7a03284737651f641b2aa42ec6f) el 2026-06-12; cuerpo byte-fiel (renombrado de metodologia-opm-es.md a manual-metodologico-opm-es.md por la regla lugar-coincide). Fuente original: Consolidacion SSOT OPM v3.0.0: capa procedimental canonica del corpus OPM-ES (manual metodologico de modelado)."
+fuente: "SSOT OPM v3.0.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-opm-es.md (sha256:bc793ad4151f525cdab013fd2a52a8a3e0ea54e392e1d3ba49dcfb637e4772ee) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -983,7 +983,7 @@ Los invariantes se verifican operativamente en §16, donde se organizan por nive
 | La especificación textual de un modelo compuesto preserva OPL local autocontenido por modelo individual | esquema | `opl-es` |
 | Las cosas referenciadas externamente no se renombran ni reciben estados nuevos en el modelo consumidor | manual | `manual` |
 | Estado cíclico (initial+final simultáneo) es válido para objetos con ciclos cerrados | manual | `manual` |
-| Salida no-determinista por defecto: sin estado especificado → probabilidad 1/n por estado | manual | `opm-es` |
+| Salida no-determinista por defecto: sin estado especificado → probabilidad 1/n por estado | manual | `manual` |
 
 ## 16 Lista de verificación de Validación
 

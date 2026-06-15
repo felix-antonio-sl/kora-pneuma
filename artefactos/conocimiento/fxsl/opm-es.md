@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opm-es
 nombre: opm-es
-version: 3.0.0
+version: 3.0.2
 estado: publicado
 descripcion: "Núcleo conceptual canónico de OPM (ISO 19450) en español: semántica de objetos, procesos, estados y enlaces — capa semántica de la SSOT OPM-ES de cuatro capas."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-iso-19450-es.md (sha256:8d3d6585240cf887c1f1c668c05711c5a22bca1b87478bea54eb356ea7386f1c) el 2026-06-12; cuerpo byte-fiel (renombrado de opm-iso-19450-es.md a opm-es.md por la regla lugar-coincide). Fuente original: Consolidacion SSOT OPM v3.0.0: nucleo conceptual canonico del corpus OPM-ES en cuatro capas (semantica/visual/textual/metodologica)."
+fuente: "SSOT OPM v3.0.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-iso-19450-es.md (sha256:f3cfd2201282bfa5a364536950214bf6115565804c4fd75ce430d5ed5f22d4ab) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -344,7 +344,7 @@ Existen tres clases canónicas:
 - **enlaces habilitadores**: conectan habilitador con proceso (agente o instrumento);
 - **enlaces de invocación**: conectan proceso con proceso (firma `Proceso → Proceso`).
 
-**Control como modificador:** los enlaces de control no constituyen una familia procedimental adicional. Son enlaces transformadores o habilitadores modificados por un modificador de control `e` (evento) o `c` (condición). La semántica de evento/condición/excepción aplica sobre el enlace base; la realización gráfica de estas marcas vive en [OPD — Gramática visual de OPM](urn:fxsl:kb:opd-es).
+**Control como modificador y como enlace autónomo:** los modificadores de control `e` (evento) y `c` (condición) no constituyen una familia procedimental adicional: son anotaciones sobre un enlace transformador o habilitador base, y su semántica aplica sobre ese enlace. El enlace de **excepción** (sobretiempo/subtiempo) es distinto: no anota un enlace base, sino que conecta un proceso fuente con un proceso de manejo (firma proceso→proceso) y es un enlace de control autónomo. La realización gráfica de estas marcas vive en [OPD — Gramática visual de OPM](urn:fxsl:kb:opd-es).
 
 **Principio de unicidad del enlace procedimental:** un objeto o estado tiene exactamente un rol respecto de un proceso enlazado: transformado o habilitador.
 
@@ -656,7 +656,7 @@ Hay cuatro pares de despliegue-plegado intra-modelo, uno por relación fundament
 
 **Operaciones derivadas:** operaciones como `bring connected things`, `bring links between selected entities`, importes asistidos y otras materializaciones automáticas de contexto no constituyen mecanismos de refinamiento ontológico. Son operadores derivados sobre el árbol y el canvas.
 
-**Diagramas de vista (model views):** OPDs que reúnen hechos provenientes de múltiples OPDs para explicar un fenómeno o enfatizar un aspecto concreto. Las herramientas OPM deben soportar la creación de vistas que filtren por criterios específicos, como:
+**Diagramas de vista (model views):** OPDs que reúnen hechos provenientes de múltiples OPDs para explicar un fenómeno o enfatizar un aspecto concreto. Las herramientas OPM pueden soportar la creación de vistas que filtren por criterios específicos — si esa capacidad es exigencia de conformidad lo decide el canon prescriptivo operativo (`reglas-opm-estrictas-es`) y su familia, no esta capa —, como:
 
 - el camino crítico para la duración mínima de ejecución del sistema;
 - los agentes e instrumentos del sistema;
@@ -1198,5 +1198,5 @@ Las siguientes notas informativas del estándar están dirigidas a quienes desar
 - Una herramienta puede notificar a quien modela cuando se intenta incluir un objeto como refinador en más de un contexto, para que determine la pertinencia de la inclusión.
 - Una herramienta puede establecer una sintaxis por defecto para resolver nombres de refinadores ambiguos.
 - El OPL correspondiente a un OPD debe expresar solo los estados de los objetos tal como aparecen en ese OPD; la unión de estados de un objeto a través de todos los OPDs constituye el conjunto completo de estados de ese objeto.
-- Cuando un enlace de evento desde un objeto o estado sistémico cruza el límite de un proceso descompuesto para iniciar un subproceso, la herramienta debería advertir que esto puede interferir con el orden temporal prescrito de la descomposición síncrona. Si el evento proviene de un objeto ambiental, la herramienta debería guiar a quien modela para definir cómo manejar la contingencia.
+- Un enlace de evento desde un objeto o estado sistémico no debe cruzar el límite de un proceso descompuesto para iniciar un subproceso, porque interfiere con el orden temporal prescrito de la descomposición síncrona (véase «Distribución de enlaces a través del contexto»); la severidad con que la herramienta trata ese cruce no conforme la fija el canon prescriptivo operativo (`reglas-opm-estrictas-es`) y su familia. Si el evento proviene de un objeto ambiental, el cruce está permitido y la herramienta debería guiar a quien modela para definir cómo manejar la contingencia.
 - Las herramientas de modelado OPM necesitan rastrear el número e identidades de las instancias operacionales de cada objeto y de cada proceso para poder realizar simulaciones.

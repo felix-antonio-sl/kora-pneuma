@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opm-categorial-es
 nombre: opm-categorial-es
-version: 1.2.4
+version: 1.2.5
 estado: publicado
 descripcion: "Puente formal OPM ↔ teoría de categorías: lectura categorial del corpus OPM-ES anclada a las piezas del ICAS-BoK."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-categorial-es.md (sha256:431aa94ce86223e58ceba3faa3731fe9eefd4bba6ea549f22a1621475a9eb60b) el 2026-06-12; cuerpo byte-fiel. Fuente original: /home/felix/projects/deep-opm-pro/docs/capa-categorial.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-categorial-es.md (sha256:431aa94ce86223e58ceba3faa3731fe9eefd4bba6ea549f22a1621475a9eb60b) el 2026-06-12; cuerpo byte-fiel. Correccion 1.2.5 (2026-06-15): la fuente original /home/felix/projects/deep-opm-pro/docs/capa-categorial.md fue retirada de deep-opm-pro; bajo el regimen pneuma-toma-la-posta de la SSOT OPM (urn:kora:kb:regimen-de-ley), la sintesis viva de la capa categorial es ahora este kb mas la implementacion falsable en deep-opm-pro (app/src/modelo, app/src/leyes). Se corrige la referencia muerta del cuerpo."
 autor: FS
 creado: 2026-06-03
 lang: es
@@ -67,7 +67,7 @@ Este puente es conocimiento; las **reglas normativas** correspondientes viven en
 - `urn:fxsl:kb:metodologia-forja-opm-es §A0.4` — equivalencia funcional de realizaciones como cierre del método A0; comparación de realizaciones hermanas por firma de frontera y criterio vertical in-zoom <-> out-zoom como caso complementario.
 - `urn:fxsl:kb:spec-forja-opd-es` — realización visual/OPD de las reglas cuando una ley categorial se proyecta a canvas, validación visual o export.
 - `urn:fxsl:kb:spec-forja-opl-es §24` — composición por interfaz en OPL (unión deduplicada de párrafos).
-- Implementación verificada en `deep-opm-pro`: `app/src/modelo/{hechos,composicion,equivalencia,razonamiento,simulacion}/` y leyes falsificables en `app/src/leyes/` (`law-composicion-*`, `law-derivacion-no-contradice`, integración S⊑F0 / dualidad S->F3 / F1<->S / F2<->S, condiciones/loops por invocación). El **eje vertical** se verifica en `app/src/modelo/equivalencia/verticalidad.ts` (`firmaFronteraEntidad`, `verificarLiftCartesianoFrontera`) y `app/src/leyes/refinamiento-adjuncion.test.ts` (F-V1 adjunción incl. despliegue e identidades triangulares, F-V2 fibración, puente F-V1<->F-D2). El **enriquecimiento en Cost** (F-D3) en `app/src/modelo/simulacion/costoCategoria.ts` (`costoDeCamino`, `categoriaDeCosto`) y `app/src/leyes/enriquecimiento-cost.test.ts`. Cada ley con control de no-tautología. Síntesis viva: `docs/capa-categorial.md` del repo.
+- Implementación verificada en `deep-opm-pro`: `app/src/modelo/{hechos,composicion,equivalencia,razonamiento,simulacion}/` y leyes falsificables en `app/src/leyes/` (`law-composicion-*`, `law-derivacion-no-contradice`, integración S⊑F0 / dualidad S->F3 / F1<->S / F2<->S, condiciones/loops por invocación). El **eje vertical** se verifica en `app/src/modelo/equivalencia/verticalidad.ts` (`firmaFronteraEntidad`, `verificarLiftCartesianoFrontera`) y `app/src/leyes/refinamiento-adjuncion.test.ts` (F-V1 adjunción incl. despliegue e identidades triangulares, F-V2 fibración, puente F-V1<->F-D2). El **enriquecimiento en Cost** (F-D3) en `app/src/modelo/simulacion/costoCategoria.ts` (`costoDeCamino`, `categoriaDeCosto`) y `app/src/leyes/enriquecimiento-cost.test.ts`. Cada ley con control de no-tautología. Síntesis viva: este kb (`urn:fxsl:kb:opm-categorial-es`) + la implementacion falsable en `deep-opm-pro` (`app/src/modelo`, `app/src/leyes`).
 
 ## 5. Regla de uso
 

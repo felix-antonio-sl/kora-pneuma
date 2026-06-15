@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:reglas-opm-estrictas-es
 nombre: reglas-opm-estrictas-es
-version: 1.3.1
+version: 1.4.0
 estado: publicado
 descripcion: "Reglas OPM estrictas — SSOT prescriptiva OPD/OPL de OPFORJA: canon de reglas duras para tooling, validación mecánica y modelado estricto."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:d6c86afb84070d7298be1ad84607cfceaa0c19b163bef7ca502029c831797330) el 2026-06-12; cuerpo byte-fiel. Fuente original: /home/felix/projects/deep-opm-pro/docs/canon-opm/reglas-opm-estrictas.md"
+fuente: "SSOT OPM v1.4.0. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:5b02e0a1dc6313c9e55242bd143cff46e27843c24656376cbd0156f560ad4e88) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.3.1); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-05-31
 lang: es
@@ -32,13 +32,13 @@ Esta tabla es la norma anti-duplicación del corpus operativo. Cada artefacto DE
 
 | Artefacto | Propiedad primaria | Debe contener | No debe duplicar |
 | --- | --- | --- | --- |
-| `reglas-opm-estrictas-es` | Validez, severidad, defaults, extensiones declaradas y gates de canon operativo. | Reglas prescriptivas aplicables a hechos OPD/OPL, niveles de canonicidad, políticas de herramienta y anexos ejecutables. | Geometría completa, plantillas OPL completas, método paso a paso o explicación categorial extendida. |
+| `reglas-opm-estrictas-es` | Validez, severidad, defaults, extensiones declaradas y gates de canon operativo. | Reglas prescriptivas aplicables a hechos OPD/OPL, niveles de canonicidad, políticas de herramienta y anexos ejecutables. Las tablas de plantilla de §4/§7.3/§9.2 viven aquí como **gate de validez** (R-BI-TAB-1): son criterio de bisimetría, no superficie operativa. | Geometría completa, la **superficie operativa OPL** (tokenización, parseo, variantes, edición — propiedad de `spec-forja-opl-es`), método paso a paso o explicación categorial extendida. |
 | `metodologia-forja-es` | Método de modelamiento y calidad de construcción. | Procedimiento, heurísticas, lecciones forja, criterios de decisión y uso humano/agente del método. | Validez nuclear, severidades, glifos detallados, gramática OPL completa o leyes categoriales como vocabulario de modelador. |
 | `spec-forja-opd-es` | Realización visual/OPD. | Geometría, marcadores, layout, interacción visual, canvas, export visual y trazabilidad renderer. | Taxonomía normativa general de cosas/enlaces si ya está en reglas, plantillas OPL textuales o método de construcción. |
 | `spec-forja-opl-es` | Realización textual/OPL y roundtrip textual. | Vocabulario, plantillas, tokenización, parseo, edición OPL, panel textual, errores y fixtures de bisimetría. | Gramática visual OPD, severidad normativa general o método de modelamiento. |
 | `opm-categorial-es` | Puente formal ICAS-BoK bajo la superficie. | Lectura categorial, trazabilidad a ICAS y correspondencia con leyes verificables. | Reglas nuevas para modeladores, UI, glifos, plantillas OPL o método operativo. |
 
-Una regla que cambie canonicidad DEBE vivir en este documento. Una regla que cambie solo superficie visual DEBE vivir en `spec-forja-opd-es`; si altera validez, debe citar y respetar este documento. Una regla que cambie solo superficie textual DEBE vivir en `spec-forja-opl-es`; si altera validez, debe citar y respetar este documento. Una regla metodológica que recomiende cómo modelar DEBE vivir en `metodologia-forja-es`; si bloquea o permite un hecho, debe elevarse a este documento. Una afirmación categorial que se vuelva operativa DEBE tener regla propietaria en este documento o en la spec modal correspondiente, más ley verificable.
+Una regla que cambie canonicidad DEBE vivir en este documento. Una regla que cambie solo superficie visual DEBE vivir en `spec-forja-opd-es`; si altera validez, debe citar y respetar este documento. Una regla que cambie solo superficie textual DEBE vivir en `spec-forja-opl-es`; si altera validez, debe citar y respetar este documento. Una regla metodológica que recomiende cómo modelar DEBE vivir en `metodologia-forja-es`; si bloquea o permite un hecho, debe elevarse a este documento. Una afirmación categorial que se vuelva operativa DEBE tener regla propietaria en este documento o en la spec modal correspondiente, más ley verificable. **Desempate de plantilla**: ante divergencia de una plantilla OPL entre este documento (tablas-gate) y `spec-forja-opl-es` (superficie operativa), manda este documento — es validez —; `spec-forja-opl-es` se corrige.
 
 ## Definiciones
 
@@ -130,7 +130,7 @@ Las **tablas son normativas**. La prosa fuera de tablas solo es válida si formu
 - **R-CONF-4** (`SSOT-iso §Alcance y conformidad`): una implementación que persiste símbolos sin semántica OPM asignada NO es conforme como herramienta OPM.
 - **R-CONF-5**: una implementación que permite construir modelos completos pero no valida refinamiento, contexto o consistencia OPD↔OPL solo puede declararse parcial, no herramienta conforme.
 - **R-CONF-6**: una implementación que acepta OPL fuera de EBNF DEBE clasificarlo como legacy, extensión o error; NO DEBE presentarlo como OPL-ES canónico.
-- **R-CONF-7** (decisión HITL FS 2026-06-11 — régimen constitucional-enmendable): toda regla DEBE de esta SSOT cuya superficie participa del ciclo operativo activo de la herramienta (export canónico, OPL consumido aguas abajo, render consumido por skills) DEBE tratarse como deuda exigible de implementación. Una regla DEBE sin tráfico operativo PUEDE programarse para un corte futuro o enmendarse. La **programación** DEBE declararse en el registro de conformidad de la herramienta (fuera de este canon, conforme a R-APP-0: el canon no contiene inventarios fechados de implementación); la **enmienda** DEBE materializarse en la spec propietaria con nota explícita. La brecha silenciosa — regla DEBE incumplida sin declaración en ninguno de los dos registros — está PROHIBIDA y constituye no-conformidad documental (se trata según R-DOC-5).
+- **R-CONF-7** (extensión local de gobernanza — régimen constitucional-enmendable): toda regla DEBE de esta SSOT cuya superficie participa del ciclo operativo activo de la herramienta (export canónico, OPL consumido aguas abajo, render consumido por skills) DEBE tratarse como deuda exigible de implementación. Una regla DEBE sin tráfico operativo PUEDE programarse para un corte futuro o enmendarse. La **programación** DEBE declararse en el registro de conformidad de la herramienta (fuera de este canon, conforme a R-APP-0: el canon no contiene inventarios fechados de implementación); la **enmienda** DEBE materializarse en la spec propietaria con nota explícita. La brecha silenciosa — regla DEBE incumplida sin declaración en ninguno de los dos registros — está PROHIBIDA y constituye no-conformidad documental (se trata según R-DOC-5).
 
 ### Principios de modelado como reglas
 
@@ -191,7 +191,7 @@ Una **cosa** es una de exactamente dos clases (`SSOT-iso §Cosas`):
 
 - **R-NOM-OBJ-1** (`SSOT-opl §1.2`): un nombre de objeto DEBE ser sustantivo singular con palabras léxicas capitalizadas.
 - **R-NOM-OBJ-2**: un objeto plural DEBE nombrarse con sufijo **Conjunto** para inanimados o **Grupo** para humanos.
-- **R-NOM-PROC-1** (`SSOT-opl §1.1`, `§17.2`): un nombre de proceso DEBE comenzar con infinitivo `-ar` / `-er` / `-ir`, nominalización `-ción` o nominalización `-miento` justificada por dominio.
+- **R-NOM-PROC-1** (`SSOT-opl §1.1`, `§17.2`): un nombre de proceso DEBE ser una **forma deverbal** — infinitivo (`-ar`/`-er`/`-ir`) o **nominalización deverbal del español**: la palabra deriva de un verbo y denota su acción o resultado. Incluye los sufijos productivos (`-ción`, `-miento`, `-aje`, `-ura`, `-ncia`) y las nominalizaciones deverbales sin sufijo (`Despacho`, `Ingreso`, `Cierre`, `Retiro`, `Traslado`). Quedan EXCLUIDOS los sustantivos no-verbales (`Sistema`, `Módulo`, `Gestión` como comodín). El criterio es la derivación verbal y la denotación de acción/resultado, no una lista cerrada de sufijos; el checker es-CL del modelador realiza este criterio.
 - **R-NOM-PROC-2**: un nombre de proceso canónico DEBE tener 2 a 4 palabras, salvo término de dominio registrado; si queda fuera de ese rango, la herramienta DEBE emitir advertencia metodológica.
 - **R-NOM-PROC-3**: las palabras léxicas de nombres de cosa DEBEN capitalizarse; artículos y preposiciones breves PUEDEN quedar en minúscula.
 - **R-NOM-EST-1** (`SSOT-opl §1.3`): un nombre de estado DEBE escribirse en minúsculas y usar forma pasiva o descriptiva.
@@ -320,7 +320,7 @@ Toda cosa OPM se renderiza como una de exactamente **8** combinaciones:
 - **R-ROT-1** (`V-194`): el rótulo visible permanece íntegro en canon-diagrama. NO se admite truncamiento con elipsis ni corte silencioso.
 - **R-ROT-2** (`V-195`): el rótulo permanece inscrito en el bounding box visible de la cosa; wrap, autosize u overflow solo son válidos si el perfil de export los declara y preservan la lectura completa.
 - **R-ROT-3** (`V-228`): en canon-diagrama los rótulos dentro del grafo permanecen en negro por defecto. El cromatismo de clase se preserva primariamente en bordes/líneas/decoraciones semánticas, no en el texto.
-- **R-ROT-4** (`V-122`): un alias entre paréntesis es decorativo (`Sistema de Turborreactor (str)`). Las llaves `{alias}` se reservan al binding computacional (`§20`).
+- **R-ROT-4** (`V-122`): un alias entre paréntesis es decorativo (`Sistema de Turborreactor (str)`). Las llaves `{alias}` se reservan al binding computacional (`SSOT-visual §20.1`).
 
 ### 3.7 Decoraciones de extremo de enlace (`§1.5`)
 
@@ -513,7 +513,7 @@ Toda cosa OPM se renderiza como una de exactamente **8** combinaciones:
 
 - **R-OPL-PERSIST-1** (`SSOT-opl §3.4`): OPL-ES NO define familia verbal adicional para procesos persistentes.
 - **R-OPL-PERSIST-2**: si un proceso persistente permanece explícito, su realización textual canónica DEBE usar TS3 con estado de entrada igual a estado de salida.
-- **R-OPL-PERSIST-3**: si la temporalidad sostenida no es semánticamente central, la superficie textual PUEDE simplificarse mediante enlace estructural etiquetado según la política metodológica.
+- **R-OPL-PERSIST-3**: si la temporalidad sostenida no es semánticamente central, la superficie textual PUEDE simplificarse mediante enlace estructural etiquetado según la política metodológica de `SSOT-metod-forja §A8` (`urn:fxsl:kb:metodologia-forja-opm-es`).
 
 ### 4.5 Plantillas — enlaces transformadores (`§4`)
 
@@ -665,7 +665,7 @@ Toda cosa OPM se renderiza como una de exactamente **8** combinaciones:
 
 - **R-OPL-RUTA-1** (`SSOT-opl §13`): `Por ruta` es expresión fija.
 - **R-OPL-RUTA-2**: la etiqueta de ruta DEBE ser nombre definido por el modelador.
-- **R-OPL-RUTA-3** (`SSOT-opl §13`/`A.5` + restricción local): `A.5` admite que `Por ruta` prefije **cualquier** oración procedimental. *Restricción de implementación*: el canon local solo emite consumo/resultado salvo extensión documentada. La restricción a consumo/resultado es decisión de producto, no límite de `A.5`.
+- **R-OPL-RUTA-3** (`SSOT-opl §13`/`A.5` + restricción local): `A.5` admite que `Por ruta` prefije **cualquier** oración procedimental. *Restricción de implementación*: el canon local solo emite consumo/resultado salvo extensión documentada. La restricción a consumo/resultado es decisión de producto, no límite de `A.5`. **Estatuto único**: la etiqueta de ruta sobre habilitadores es construcción canónica-condicionada (canónica por `A.5`, restringida por producto), NO «zona no canonizada» — `R-ZNC-1` exige silencio de la SSOT, y `A.5` no calla. Esta regla es su domicilio único (§11.2 no la lista).
 
 ### 4.13 Atributos y valores (`§14`)
 
@@ -741,17 +741,20 @@ Toda cosa OPM se renderiza como una de exactamente **8** combinaciones:
 
 ## 5. Enlaces — taxonomía estricta
 
-### 5.1 Familias canónicas de enlace (`V-239`)
+### 5.1 Familias canónicas de enlace (`V-239`, extensión Forja: 6.ª familia)
 
-Toda relación expresable por enlace en un OPD conforme pertenece a **exactamente una** de cinco familias:
+Toda relación expresable por enlace en un OPD conforme pertenece a **exactamente una** de seis familias:
 
 | # | Familia | Firma | Realización canónica |
 |---|---|---|---|
 | 1 | Transformadora procedimental | Objeto ↔ Proceso | T1–T3, TS1–TS5 |
 | 2 | Habilitadora procedimental | Objeto → Proceso | H1, H2, HS1, HS2 |
 | 3 | Invocación procedimental | Proceso → Proceso | IV1, IV2 |
-| 4 | Estructural fundamental | Cosa ↔ Cosa (con restricciones) | RF1–RF4 |
-| 5 | Estructural etiquetada | Objeto ↔ Objeto o Proceso ↔ Proceso | SE1–SE5, SSE1–SSE7 |
+| 4 | Excepción procedimental | Proceso → Proceso | EX1, EX2 |
+| 5 | Estructural fundamental | Cosa ↔ Cosa (con restricciones) | RF1–RF4 |
+| 6 | Estructural etiquetada | Objeto ↔ Objeto o Proceso ↔ Proceso | SE1–SE5, SSE1–SSE7 |
+
+`V-239` cierra la taxonomía base en cinco familias y agrupa la excepción bajo «modificadores de control». OPFORJA la promueve a familia por derecho propio (**extensión declarada**, paridad con la invocación `V-240`): igual firma `Proceso → Proceso`, igual naturaleza de control de flujo, distinta realización (rayo de invocación vs marca `/`/`//` de excepción) y semántica (delegación al terminar vs desvío por desviación temporal con manejador ambiental). Las capas base se co-enmiendan en consecuencia (`SSOT-iso §Control como modificador` acota la frase «modificador» a evento/condición; `SSOT-visual §4.4` declara la excepción enlace de control autónomo, no modificador).
 
 ### 5.2 Enlaces transformadores (`SSOT-iso §Enlaces transformadores`)
 
@@ -801,6 +804,7 @@ Toda relación expresable por enlace en un OPD conforme pertenece a **exactament
 - **R-INV-2** (invocación implícita, `V-31`, `V-32`): dentro de una descomposición, la terminación de un subproceso DEBE invocar al inmediatamente inferior por posición vertical.
 - **R-INV-2A**: subprocesos con borde superior a la misma altura DEBEN iniciar en paralelo.
 - **R-INV-2B**: en invocación implícita NO DEBE dibujarse enlace explícito.
+- **R-INV-2C** (`SSOT-iso §Enlaces de invocación`): cuando un grupo de subprocesos inicia en paralelo (R-INV-2A), solo la terminación del **último** miembro del grupo DEBE invocar al subproceso siguiente por posición vertical.
 
 ### 5.5 Enlaces estructurales fundamentales (`SSOT-iso §Enlaces estructurales`)
 
@@ -845,6 +849,7 @@ Toda relación expresable por enlace en un OPD conforme pertenece a **exactament
 
 - **R-EXC-1**: un enlace de excepción DEBE conectar proceso fuente con proceso de manejo.
 - **R-EXC-1A** (`SSOT-visual §4.4`): el proceso de manejo de excepción DEBE ser ambiental.
+- **R-EXC-1B** (familia autónoma, paridad con `R-INV-1A`): el enlace de excepción DEBE tratarse como **familia de control autónoma** (§5.1, familia 4), distinta de invocación, transformadora y habilitadora. NO es un modificador `e`/`c` sobre un enlace base: por §6.1 los modificadores anotan exclusivamente enlaces transformadores o habilitadores, y la excepción no anota ninguno (su firma es Proceso → Proceso). Un modificador `e`/`c` NUNCA DEBE aplicarse a un enlace de excepción (error de categoría).
 - **R-EXC-2** (`SSOT-iso §Enlaces de excepción`): un enlace de sobretiempo exige duración máxima declarada del proceso fuente.
 - **R-EXC-3**: un enlace de subtiempo exige duración mínima declarada del proceso fuente.
 - **R-EXC-4**: la duración de proceso PUEDE especializarse en mínima, esperada, máxima y distribución.
@@ -908,7 +913,7 @@ Los modificadores **`e`** (evento) y **`c`** (condición) son **anotaciones sobr
 
 ### 6.5 Resolución de colisión de rol — fuerza semántica
 
-Cuando un objeto tendría dos enlaces procedimentales hacia el mismo proceso (violando R-ROL-UNIC-1), prevalece el de mayor fuerza. Orden principal (`SSOT-visual §13.3`):
+Al **recomponer o abstraer** subprocesos (out-zoom, plegado), cuando un objeto tendría dos enlaces procedimentales hacia el mismo proceso (violando R-ROL-UNIC-1), prevalece el de mayor fuerza. En **edición directa**, la colisión NO se auto-resuelve: se trata por R-EDIT-8 (bloqueo o error estructural recuperable). Esta resolución por fuerza es, pues, regla de recomposición (consistente con §5.8), no de auto-resolución universal. Orden principal (`SSOT-visual §13.3`):
 
 ```
 consumo = resultado > efecto > agente > instrumento
@@ -980,7 +985,7 @@ Restricciones: superficie EBNF normativa `=`, `<`, `>`, `<=`, `>=` y `en {conjun
 
 ### 6.8 Probabilidad (`SSOT-iso §Operadores lógicos`)
 
-`Pr=p` anota cada enlace de un abanico probabilístico. Las probabilidades suman 1.0. Por defecto sin abanico: si un proceso produce un objeto con `n` estados sin especificación, cada estado tiene probabilidad `1/n` (`SSOT-metod §10.10`).
+`Pr=p` anota cada enlace de un abanico **declarado probabilístico** (`SSOT-metod §10.14`, `SSOT-opl §11.5`). Las probabilidades suman 1.0. El default uniforme `1/n` (`SSOT-iso §Operadores lógicos`, `SSOT-metod §10.10`) — cada estado o rama sin anotar es equiprobable — es regla de **simulación** (asignación al ejecutar), no obligación de **modelado**: un abanico ordinario de alternativas no exige anotar probabilidades; solo el abanico que el modelador declara probabilístico las exige (ver R-FAN-PROB-1).
 
 - **R-PROB-1** (`V-18`): un abanico probabilístico DEBE ser siempre XOR.
 - **R-PROB-1A**: en un abanico probabilístico exactamente un enlace DEBE activarse por ejecución.
@@ -1007,9 +1012,11 @@ Restricciones: superficie EBNF normativa `=`, `<`, `>`, `<=`, `>=` y `en {conjun
 | Consumo | N objetos → 1 proceso | 1 objeto → N procesos |
 | Resultado | N procesos → 1 objeto | 1 proceso → N objetos |
 | Efecto | N objetos ↔ 1 proceso | N procesos ↔ 1 objeto |
-| Agente | (no aplica AND-equivalente convergente) | 1 agente → N procesos |
-| Instrumento | (no aplica) | 1 instrumento → N procesos |
+| Agente | N agentes → 1 proceso | 1 agente → N procesos |
+| Instrumento | N instrumentos → 1 proceso | 1 instrumento → N procesos |
 | Invocación | N procesos → 1 proceso | 1 proceso → N procesos |
+
+- **R-FAN-HAB-1** (`V-15`): los habilitadores convergentes (N agentes o N instrumentos sobre 1 proceso) son canónicos. Por defecto son **AND** (todos requeridos — p.ej. dos llaves que juntas abren la caja fuerte): se realizan como enlaces habilitadores planos al mismo proceso, sin arco lógico. El arco XOR/OR solo se dibuja para el abanico alternativo (`exactamente uno` / `al menos uno`). Esto deroga la celda «(no aplica)» que `SSOT-visual §5.5` heredaba en contradicción con su propio `V-15`.
 
 ### 7.3 Plantillas OPL-ES (`SSOT-opl §11.2`, `§11.3`)
 
@@ -1021,8 +1028,10 @@ Restricciones: superficie EBNF normativa `=`, `<`, `>`, `<=`, `>=` y `en {conjun
 | Resultado divergente | *P* genera exactamente uno de **A**, **B** o **C**. | *P* genera al menos uno de **A**, **B** o **C**. |
 | Efecto (objetos) | *P* afecta exactamente uno de **A**, **B** o **C**. | *P* afecta al menos uno de **A**, **B** o **C**. |
 | Efecto (procesos) | **B** es afectado por exactamente uno de *P*, *Q* o *R*. | **B** es afectado por al menos uno de *P*, *Q* o *R*. |
-| Agente | **B** maneja exactamente uno de *P*, *Q* o *R*. | **B** maneja al menos uno de *P*, *Q* o *R*. |
-| Instrumento | Exactamente uno de *P*, *Q* o *R* requiere **B**. | Al menos uno de *P*, *Q* o *R* requiere **B**. |
+| Agente divergente | **B** maneja exactamente uno de *P*, *Q* o *R*. | **B** maneja al menos uno de *P*, *Q* o *R*. |
+| Agente convergente | *P* es manejado por exactamente uno de **A**, **B** o **C**. | *P* es manejado por al menos uno de **A**, **B** o **C**. |
+| Instrumento divergente | Exactamente uno de *P*, *Q* o *R* requiere **B**. | Al menos uno de *P*, *Q* o *R* requiere **B**. |
+| Instrumento convergente | *P* requiere exactamente uno de **A**, **B** o **C**. | *P* requiere al menos uno de **A**, **B** o **C**. |
 | Invocación divergente | *P* invoca exactamente uno de *Q* o *R*. | *P* invoca al menos uno de *Q* o *R*. |
 | Invocación convergente | Exactamente uno de *P* o *Q* invoca *R*. | Al menos uno de *P* o *Q* invoca *R*. |
 
@@ -1037,7 +1046,7 @@ Restricciones: superficie EBNF normativa `=`, `<`, `>`, `<=`, `>=` y `en {conjun
 - Exactamente uno de *P*, *Q* o *R* ocurre si **B** existe, en cuyo caso afecta **B**, de lo contrario se omite.
 
 - **R-FAN-EST-1** (`V-15`, `V-237` aplicado a fans): cada enlace individual del fan PUEDE tener o no estado especificado independientemente.
-- **R-FAN-PROB-1** (`§11.5`): un abanico probabilístico DEBE declarar `Pr=p` por enlace y suma total `1`.
+- **R-FAN-PROB-1** (`SSOT-metod §10.14`, `SSOT-opl §11.5`): la exigencia `Pr=p` distingue tres casos. **(A) Abanico declarado probabilístico con pesos conocidos**: DEBE declarar `Pr=p` por enlace y suma total `1`. **(B) Abanico ordinario de alternativas** (sin pretensión probabilística): NO exige anotación; sus ramas son alternativas sin peso. **(C) Abanico declarado probabilístico sin pesos conocidos**: el modelador DEBE declarar explícitamente el estado «probabilístico sin pesos» — ni número inventado (barro cuantitativo, prohibido por la disciplina hecho↔supuesto) ni default uniforme silencioso; al simular se asume `1/n` (regla de simulación, §6.8), pero el modelo registra que los pesos quedan pendientes.
 
 ### 7.5 Resultado-fan-XOR como expansión de resultado simple a objeto con estados (`V-19`)
 
@@ -1209,10 +1218,10 @@ Es decir: `*P* genera **Obj**` (con n estados) ≡ `*P* genera exactamente uno d
 | Anotación `c` sobre consumo | *Proceso* ocurre si **Objeto** existe, en cuyo caso **Objeto** se consume, de lo contrario *Proceso* se omite. (CT1) |
 | Rayo proceso→proceso | *Invocador* invoca *Invocado*. (IV1) |
 | Triángulo lleno con vértice al todo | **Todo** consta de **Parte1**, **Parte2** y **Parte3**. (RF1) |
-| Triángulo con triángulo interior, vértice al exhibidor | **Exhibidor** exhibe **Atributo1**, **Atributo2**. (RF2) |
+| Triángulo con triángulo interior, vértice al exhibidor | **Exhibidor** exhibe **Atributo1** y **Atributo2**. (RF2) |
 | Triángulo vacío, vértice al general | **Especialización1** y **Especialización2** son **General**. (RF3) |
 | Triángulo con círculo interior, vértice a la clase | **Instancia** es una instancia de **Clase**. (RF4) |
-| Proceso inflado con subprocesos verticales | *Proceso* se descompone en *P1*, *P2*, en esa secuencia. (CX1) |
+| Proceso inflado con subprocesos verticales | *Proceso* se descompone en *P1* y *P2*, en esa secuencia. (CX1) |
 | Arco discontinuo simple sobre fan | exactamente uno de … (XOR) |
 | Arco doble sobre fan | al menos uno de … (OR) |
 | Marca `/` sobre enlace de excepción | *Manejo* ocurre si duración de *Fuente* excede máx-duración. (EX1) |
@@ -1335,7 +1344,6 @@ Al editar OPD:
 |---|---|
 | Combinación `c + e` sobre el mismo enlace | No definida. Tratar como NO canonizada (AP-28). |
 | Enlace probabilístico sin fan | `Pr=p` se define solo dentro de abanicos (`V-18`); fuera no tiene canonicidad. |
-| Etiquetas de ruta sobre enlaces habilitadores | SSOT-opl §13 solo canoniza consumo/resultado. No canonizadas sobre agente/instrumento. |
 
 ---
 
@@ -1460,23 +1468,23 @@ Al editar OPD:
 
 ### Anexo C — Extensión categorial de opforja (linealidad, equivalencia funcional, composición)
 
-- **R-ANEXO-CAT-0**: este anexo declara reglas de la CAPA OPFORJA — extensiones formales sobre la base ISO 19450 que operacionalizan el **eje horizontal** de OPM (composición, equivalencia, linealidad). NO modifican ni reemplazan `opm-es`/`opd-es`/`opl-es`. La lectura categorial (teoría de categorías como semántica denotacional verificable *bajo* la superficie) NUNCA se expone al modelador (`metodologia-forja-es.md §0.2-0.3`); vive en `docs/capa-categorial.md` de deep-opm-pro y en el corpus ICAS-BoK (`urn:fxsl:kb:icas-sintesis` y familia). Cada regla de este anexo DEBE ser ejecutable por una ley verificable en `app/src/leyes/` del modelador.
+- **R-ANEXO-CAT-0**: este anexo declara reglas de la CAPA OPFORJA — extensiones formales sobre la base ISO 19450 que operacionalizan el **eje horizontal** de OPM (composición, equivalencia, linealidad). NO modifican ni reemplazan `opm-es`/`opd-es`/`opl-es`. La lectura categorial (teoría de categorías como semántica denotacional verificable *bajo* la superficie) NUNCA se expone al modelador (`metodologia-forja-es.md §0.2-0.3`); su procedencia formal es el corpus ICAS-BoK (`urn:fxsl:kb:icas-sintesis` y familia). Cada regla de este anexo DEBE ser ejecutable por una **ley o checker verificable** en el modelador; la identificación concreta de cada gate (archivo y símbolo) vive en el **registro de conformidad** de la herramienta (`R-APP-1`/`R-CONF-7`), no en este canon (`R-APP-0`).
 
 **C.1 — Linealidad (recurso consumible no clonable)**
 
 - **R-CAT-LIN-1**: un objeto PUEDE designarse `lineal` cuando representa un recurso que se consume y no se duplica (lectura: categoría monoidal no-cartesiana, `urn:fxsl:kb:icas-composicion-estructura`). Es una dimensión designable adicional a esencia y afiliación; NO es designación ISO 19450 y NO DEBE alterar la gramática visual ni OPL base.
-- **R-CAT-LIN-2**: un objeto `lineal` consumido por dos o más procesos sin ruta exclusiva (XOR) que los separe DEBE señalarse como conflicto de linealidad. Severidad: mejora metodológica (NO bloqueo estructural ISO). Ley ejecutable: `law-composicion-respeta-lineal`.
+- **R-CAT-LIN-2**: un objeto `lineal` consumido por dos o más procesos sin ruta exclusiva (XOR) que los separe DEBE señalarse como conflicto de linealidad. Severidad: mejora metodológica (NO bloqueo estructural ISO). DEBE existir ley verificable que lo realice (gate identificado en el registro de conformidad).
 
 **C.2 — Equivalencia funcional por firma de frontera**
 
 - **R-CAT-EQ-1**: dos realizaciones alternativas de un mismo proceso son funcionalmente equivalentes si presentan la misma FIRMA DE FRONTERA — el conjunto de roles netos `entidad|tipoEnlace|rol` sobre las entidades de frontera — aunque su interior difiera (lectura: 2-célula / equivalencia, `urn:fxsl:kb:icas-higher-categories`, `urn:fxsl:kb:icas-comparacion`). Comparar la sección local completa sería demasiado estricto: dos interiores distintos jamás equivaldrían.
-- **R-CAT-EQ-2**: opforja PUEDE verificar realizaciones hermanas de un proceso mediante `verificarEquivalencia`: dadas dos realizaciones/OPDs comparables del mismo padre, DEBEN compartir la misma firma de frontera para declararse funcionalmente equivalentes. Si difieren roles netos, la equivalencia funcional NO aplica aunque ambas sean modelos OPM válidos. Severidad: mejora metodológica.
-- **R-CAT-EQ-3**: la misma regla se aplica verticalmente como **ley in-zoom ↔ out-zoom**: toda descomposición (in-zoom) DEBE preservar la firma de frontera de su proceso abstracto (out-zoom). Violación: checker navegable `DESCOMPOSICION_NO_PRESERVA_FRONTERA` (pasivo, surge solo si se rompe la frontera). Severidad: mejora metodológica. Cierra formalmente el método A0 (realizaciones alternativas) de `metodologia-forja-es.md` sin negar la comparación de realizaciones hermanas.
+- **R-CAT-EQ-2**: opforja PUEDE verificar realizaciones hermanas de un proceso mediante una verificación de equivalencia (gate identificado en el registro de conformidad): dadas dos realizaciones/OPDs comparables del mismo padre, DEBEN compartir la misma firma de frontera para declararse funcionalmente equivalentes. Si difieren roles netos, la equivalencia funcional NO aplica aunque ambas sean modelos OPM válidos. Severidad: mejora metodológica.
+- **R-CAT-EQ-3**: la misma regla se aplica verticalmente como **ley in-zoom ↔ out-zoom**: toda descomposición (in-zoom) DEBE preservar la firma de frontera de su proceso abstracto (out-zoom). Violación: checker navegable de preservación de frontera (pasivo, surge solo si se rompe la frontera; gate identificado en el registro de conformidad). Severidad: mejora metodológica. Cierra formalmente el método A0 (realizaciones alternativas) de `metodologia-forja-es.md` sin negar la comparación de realizaciones hermanas.
 
 **C.3 — Composición por interfaz compartida**
 
 - **R-CAT-COMP-1**: dos modelos PUEDEN componerse identificando entidades de interfaz compartida (lectura: pushout / structured cospan, `urn:fxsl:kb:icas-universales`). La identificación por defecto se sugiere por nombre normalizado + mismo tipo; la identidad por id solo vale si el nombre también coincide (los ids son secuenciales por modelo y colisionan entre modelos independientes).
-- **R-CAT-COMP-2**: la composición NO DEBE duplicar la entidad compartida —ni en el conjunto de entidades ni en las apariencias de ningún OPD— ni dejar referencias colgantes (`enlacesPadreIds`, refinamientos, abanicos). DEBE ser asociativa módulo namespacing de ids y NO DEBE introducir avisos de error que no estuvieran en los modelos fuente. Leyes: `law-composicion-{no-duplica,sin-refs-colgantes,asociativa,bien-tipada}`.
+- **R-CAT-COMP-2**: la composición NO DEBE duplicar la entidad compartida —ni en el conjunto de entidades ni en las apariencias de ningún OPD— ni dejar referencias colgantes (enlaces a padre, refinamientos, abanicos). DEBE ser asociativa módulo namespacing de ids y NO DEBE introducir avisos de error que no estuvieran en los modelos fuente. DEBEN existir leyes verificables que realicen estas cuatro propiedades (no-duplicación, sin-referencias-colgantes, asociatividad, buen-tipado; gates identificados en el registro de conformidad).
 - **R-CAT-COMP-3**: la composición es no-bloqueante y reversible (undoable); un conflicto de linealidad resultante (R-CAT-LIN-2) DEBE advertirse al operador en el resultado, NO impedir la operación.
 
 ---

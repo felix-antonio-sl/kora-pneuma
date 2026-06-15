@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opl-es
 nombre: opl-es
-version: 3.0.1
+version: 3.0.3
 estado: publicado
 descripcion: "Gramática canónica del OPL en español: capa textual de la SSOT OPM-ES — léxico, plantillas de oraciones y localización es de la bimodalidad OPD↔OPL."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-opl-es.md (sha256:c62ca64c310a65b19d1de7339720a20ca8943ed711f1aaaed4b92c486b9e34b1) el 2026-06-12; cuerpo byte-fiel (renombrado de opm-opl-es.md a opl-es.md por la regla lugar-coincide). Fuente original: Consolidacion SSOT OPM v3.0.0: capa textual canonica del corpus OPM-ES (gramatica OPL en espanol)."
+fuente: "SSOT OPM v3.0.3. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-opl-es.md (sha256:27b0ee243f1162ee47c245a58d82042da5bc1ac4ac613c7b5705f23ffac4257c) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.1); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -478,8 +478,10 @@ Gráficamente: arco discontinuo simple. EN: "exactly one of". ES: "exactamente u
 | Resultado div. | P yields exactly one of A, B, or C. | *P* genera exactamente uno de **A**, **B** o **C**. |
 | Efecto (objetos) | P affects exactly one of A, B, or C. | *P* afecta exactamente uno de **A**, **B** o **C**. |
 | Efecto (procesos) | B is affected by exactly one of P, Q, or R. | **B** es afectado por exactamente uno de *P*, *Q* o *R*. |
-| Agente | B handles exactly one of P, Q, or R. | **B** maneja exactamente uno de *P*, *Q* o *R*. |
-| Instrumento | Exactly one of P, Q, or R requires B. | Exactamente uno de *P*, *Q* o *R* requiere **B**. |
+| Agente div. | B handles exactly one of P, Q, or R. | **B** maneja exactamente uno de *P*, *Q* o *R*. |
+| Agente conv. | P is handled by exactly one of A, B, or C. | *P* es manejado por exactamente uno de **A**, **B** o **C**. |
+| Instrumento div. | Exactly one of P, Q, or R requires B. | Exactamente uno de *P*, *Q* o *R* requiere **B**. |
+| Instrumento conv. | P requires exactly one of A, B, or C. | *P* requiere exactamente uno de **A**, **B** o **C**. |
 | Invocación div. | P invokes exactly one of Q or R. | *P* invoca exactamente uno de *Q* o *R*. |
 | Invocación conv. | Exactly one of P or Q invokes R. | Exactamente uno de *P* o *Q* invoca *R*. |
 
@@ -830,13 +832,21 @@ clausula_de_rango = " es ", ( nombre_de_valor | expresion_de_rango )
 ## A.3 Identificadores
 
 ```ebnf
-identificador_de_objeto = nombre_singular_de_objeto, [ " en ", unidad_de_medida ], [ clausula_de_rango ] ;
-identificador_de_proceso = nombre_singular_de_proceso | nombre_singular_de_proceso, " proceso" ;
+identificador_de_objeto = ( nombre_singular_de_objeto | nombre_de_instancia_de_objeto ),
+ [ " en ", unidad_de_medida ], [ clausula_de_rango ] ;
+identificador_de_proceso = nombre_singular_de_proceso | nombre_singular_de_proceso, " proceso"
+ | nombre_de_instancia_de_proceso ;
 identificador_de_cosa = identificador_de_objeto | identificador_de_proceso ;
 identificador_de_estado = palabra_no_capitalizada ;
 expresion_de_etiqueta = frase_no_capitalizada ;
 nombre_singular_de_objeto = palabra_capitalizada, { " ", palabra_capitalizada | palabra_no_capitalizada } ;
 nombre_singular_de_proceso = palabra_capitalizada, { " ", palabra_capitalizada | palabra_no_capitalizada } ;
+
+(* Nombre canónico de instancia lógica `NombreInstancia : NombreClase`
+   (`opm-visual-es` V-58; reglas R-INS-3). El separador " : " pertenece a esta
+   producción, no al alfabeto: caracter_de_cadena no admite ':'. *)
+nombre_de_instancia_de_objeto = nombre_singular_de_objeto, " : ", nombre_singular_de_objeto ;
+nombre_de_instancia_de_proceso = nombre_singular_de_proceso, " : ", nombre_singular_de_proceso ;
 estado_de_entrada = identificador_de_estado ;
 estado_de_salida = identificador_de_estado ;
 objeto_con_opcion_de_estado = identificador_de_objeto, [ " en ", identificador_de_estado ] ;
@@ -882,6 +892,7 @@ Convenciones:
 
 - nombres de objeto: sintagmas nominales en singular, con mayúscula en palabras léxicas;
 - nombres de proceso: infinitivo o nominalización técnica canónica del dominio;
+- nombres de instancia lógica: `NombreInstancia : NombreClase`, con ` : ` como separador fijo (V-58, R-INS-3);
 - nombres de estado: en minúscula;
 - etiquetas: frases breves en minúscula.
 
@@ -918,9 +929,17 @@ Esencia: `física` o `informacional`. Afiliación: `sistémica` o `ambiental`. P
 oracion_procedimental = oracion_transformadora | oracion_habilitadora | oracion_de_invocacion | oracion_de_control ;
 oracion_transformadora = oracion_de_consumo | oracion_de_resultado | oracion_de_efecto | oracion_de_cambio ;
 
-oracion_de_consumo = identificador_de_proceso, " consume ", objeto_con_opcion_de_estado ;
-oracion_de_resultado = identificador_de_proceso, " genera ", objeto_con_opcion_de_estado ;
-oracion_de_efecto = identificador_de_proceso, " afecta ", lista_de_objetos ;
+(* Multiplicidad en enlaces procedimentales (`opm-visual-es` V-23; reglas §6.7 R-MULT-1;
+   procedencia ISO: `opm-iso-19450-es`). Las frases de cardinalidad se realizan según §12.
+   Solo los slots de objeto admiten restricción de participación; los slots de proceso
+   no la llevan (R-MULT-1A). *)
+objeto_procedimental = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
+lista_de_objetos_procedimentales = objeto_procedimental, { ", ", objeto_procedimental },
+ [ " y ", objeto_procedimental ] ;
+
+oracion_de_consumo = identificador_de_proceso, " consume ", objeto_procedimental ;
+oracion_de_resultado = identificador_de_proceso, " genera ", objeto_procedimental ;
+oracion_de_efecto = identificador_de_proceso, " afecta ", lista_de_objetos_procedimentales ;
 oracion_de_cambio = oracion_de_cambio_entrada_salida | oracion_de_cambio_solo_entrada
  | oracion_de_cambio_solo_salida ;
 
@@ -932,19 +951,19 @@ oracion_de_cambio_solo_entrada = identificador_de_proceso, " cambia ", frase_de_
 oracion_de_cambio_solo_salida = identificador_de_proceso, " cambia ", frase_de_cambio_solo_salida ;
 
 oracion_habilitadora = oracion_de_agente | oracion_de_instrumento ;
-oracion_de_agente = objeto_con_opcion_de_estado, " maneja ", identificador_de_proceso ;
-oracion_de_instrumento = identificador_de_proceso, " requiere ", objeto_con_opcion_de_estado ;
+oracion_de_agente = objeto_procedimental, " maneja ", identificador_de_proceso ;
+oracion_de_instrumento = identificador_de_proceso, " requiere ", objeto_procedimental ;
 
 oracion_de_control = oracion_de_evento | oracion_de_condicion | oracion_de_excepcion ;
 oracion_de_evento = oracion_de_evento_de_consumo | oracion_de_evento_de_efecto
  | oracion_de_evento_de_agente | oracion_de_evento_de_instrumento ;
-oracion_de_evento_de_consumo = objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
+oracion_de_evento_de_consumo = objeto_procedimental, " inicia ", identificador_de_proceso,
  ", que consume ", identificador_de_objeto ;
 oracion_de_evento_de_efecto = identificador_de_objeto, " inicia ", identificador_de_proceso,
  ", que afecta ", identificador_de_objeto ;
-oracion_de_evento_de_agente = objeto_con_opcion_de_estado, " inicia y maneja ", identificador_de_proceso ;
-oracion_de_evento_de_instrumento = objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
- ", que requiere ", objeto_con_opcion_de_estado ;
+oracion_de_evento_de_agente = objeto_procedimental, " inicia y maneja ", identificador_de_proceso ;
+oracion_de_evento_de_instrumento = objeto_procedimental, " inicia ", identificador_de_proceso,
+ ", que requiere ", objeto_procedimental ;
 
 oracion_de_invocacion = identificador_de_proceso, " invoca ", lista_de_procesos
  | identificador_de_proceso, " se invoca a sí mismo" ;
@@ -1187,6 +1206,8 @@ oracion_de_especializacion_individual =
 
 articulo = "un " | "una " ;
 
+(* El lado instancia admite el nombre canónico `NombreInstancia : NombreClase`
+   vía identificador_de_objeto / identificador_de_proceso (A.3, nombre_de_instancia_de_objeto / nombre_de_instancia_de_proceso; V-58, R-INS-3). *)
 oracion_de_instanciacion = oracion_de_instanciacion_objeto | oracion_de_instanciacion_proceso ;
 oracion_de_instanciacion_objeto = identificador_de_objeto, " es una instancia de ", identificador_de_objeto
  | lista_de_objetos_instancia, " son instancias de ", identificador_de_objeto ;
@@ -1264,13 +1285,19 @@ oracion_de_descomposicion = oracion_de_descomposicion_en_diagrama
  | oracion_de_descomposicion_objeto_en_diagrama
  | oracion_de_descomposicion_objeto_en_nuevo_diagrama ;
 
+(* Secuencia mixta: subprocesos secuenciales con grupos paralelos intercalados,
+   en la forma documentada `*A*, paralelo *B* y *C*, y *D*` (véase la nota al final
+   de A.10). Condición semántica: al menos un elemento es un grupo "paralelo". *)
+elemento_de_secuencia_mixta = identificador_de_proceso | ( "paralelo ", lista_de_procesos ) ;
+lista_de_secuencia_mixta = elemento_de_secuencia_mixta, { ", ", elemento_de_secuencia_mixta },
+ [ [ "," ], ( " y " | " e " ), elemento_de_secuencia_mixta ] ;
+
 oracion_de_descomposicion_en_diagrama = ( identificador_de_proceso, " se descompone en ",
  lista_de_procesos, ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] )
  | ( identificador_de_proceso, " se descompone en paralelo ", lista_de_procesos,
  [", así como ", lista_de_objetos_en_zoom] )
- | ( identificador_de_proceso, " se descompone en ", lista_de_procesos,
- " y en paralelo ", lista_de_procesos, ", en esa secuencia",
- [", así como ", lista_de_objetos_en_zoom] ) ;
+ | ( identificador_de_proceso, " se descompone en ", lista_de_secuencia_mixta,
+ ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
 
 oracion_de_descomposicion_en_nuevo_diagrama = ( identificador_de_proceso, " desde ", opd_padre,
  " se descompone en ", opd_hijo, " en ", lista_de_procesos, ", en esa secuencia",
@@ -1279,9 +1306,8 @@ oracion_de_descomposicion_en_nuevo_diagrama = ( identificador_de_proceso, " desd
  " se descompone en ", opd_hijo, " en paralelo ", lista_de_procesos,
  [", así como ", lista_de_objetos_en_zoom] )
  | ( identificador_de_proceso, " desde ", opd_padre,
- " se descompone en ", opd_hijo, " en ", lista_de_procesos,
- " y en paralelo ", lista_de_procesos, ", en esa secuencia",
- [", así como ", lista_de_objetos_en_zoom] ) ;
+ " se descompone en ", opd_hijo, " en ", lista_de_secuencia_mixta,
+ ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
 
 oracion_de_descomposicion_objeto_en_diagrama = ( identificador_de_objeto, " se descompone en ",
  lista_de_objetos, ", en esa secuencia", [", así como ", lista_de_procesos_en_zoom] ) ;

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:spec-forja-opl-es
 nombre: spec-forja-opl-es
-version: 1.1.3
+version: 1.2.1
 estado: publicado
 descripcion: "Spec-forja OPL — SSOT del lenguaje OPL de OPFORJA: generación, parsing y roundtrip bimodal del OPL en el modelador deep-opm-pro."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:7422c9959358361e0ec30fc05c5a9092d5db6f5761ebf3454713e1ac47536bf4) el 2026-06-12; cuerpo byte-fiel. Fuente original: /home/felix/projects/deep-opm-pro/docs/canon-opm/spec-forja-opl.md; urn:fxsl:kb:reglas-opm-estrictas-es; urn:fxsl:kb:opl-es; libro OPM curado; transcripciones OPCloud; curso Dov Dori."
+fuente: "SSOT OPM v1.2.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:6fbde044adfda217778de54e9084035d82d0fc165695927991b54ce276ccf78b) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-05-26
 lang: es
@@ -64,7 +64,7 @@ Un **objeto** DEBE escribirse en negrita; un *proceso* en cursiva; un `estado` o
 
 ### Esquema de IDs
 
-Las entradas DEBEN reusar los IDs ya canonizados en `urn:fxsl:kb:reglas-opm-estrictas-es`: `D1`–`D13` (designaciones), `T1`–`TS5` (cosas/tipos), `H*` (humanos/agencia), `E*` (eventos), `C*` (condiciones), `SE*` (state-specified enabling), `RF*` (refinamiento), `SSE*` (split state-specified), `CX*` (contexto), `CM*` (gestión de complejidad). Para hechos no cubiertos por esos rangos, esta spec PUEDE acuñar IDs nuevos, que NO DEBEN colisionar con los existentes.
+Las entradas DEBEN reusar los IDs ya canonizados en `urn:fxsl:kb:reglas-opm-estrictas-es`: `D1`–`D13` (designaciones de cosas), `T1`–`T3`/`TS1`–`TS5` (enlaces transformadores), `H*`/`HS*` (habilitadores: agente e instrumento), `E*` (eventos), `C*` (condiciones), `SE*` (estructurales etiquetados), `RF*` (relaciones estructurales fundamentales), `SSE*` (estructurales con estado especificado), `CX*` (refinamiento/gestión de contexto), `CM*` (gestión de complejidad). Las glosas son espejo literal de `reglas §4.4`–`§4.11`. Para hechos no cubiertos por esos rangos, esta spec PUEDE acuñar IDs nuevos, que NO DEBEN colisionar con los existentes.
 
 ### Lenguaje de obligación
 
@@ -122,6 +122,7 @@ Rationale: `reglas §4.3` (R-OPL-VERB-1) y `opm-opl-es §2` cierran la superfici
 | se consume | el objeto se destruye (voz pasiva refleja) | condición de consumo | `procedural.ts·oracionCondicion` (`se consume`) |
 | consta de | el todo agrega las partes | agregación-participación | `estructural.ts·oracionEstructural` (`consta de` / `constan de`) |
 | exhibe | el exhibidor caracteriza atributos/operaciones | exhibición-caracterización | `estructural.ts·oracionEstructural` (`exhibe` / `exhiben`) |
+| tiene un … opcional | el exhibidor porta un rasgo de multiplicidad opcional (extensión declarada, §6.2 RF2o) | exhibición con rasgo opcional | `estructural.ts·oracionEnlaceEstructural` (variante opcional) / `parsear.ts` (`tiene un … opcional`, plural `tiene … opcionales`) |
 | son | varias especializaciones son la general (plural) | especialización jerárquica | `estructural.ts·oracionEstructural` (`son`) |
 | es un / es una | una especialización es la general (singular) | especialización jerárquica | `estructural.ts·oracionEstructural` (`es un`) |
 | es una instancia de | la instancia pertenece a la clase | clasificación-instanciación | `estructural.ts·oracionEstructural` (`es una instancia de` / `son instancias de`) |
@@ -212,11 +213,11 @@ Rationale: `opm-opl-es §3` (descripción de entidades) y `reglas §4.4` separan
 
   Rationale: `nombresCanonicos.ts` define `esNombreProcesoPlaceholder` y `esNombreEstadoCanonico`; un nombre placeholder no es un hecho de modelo afirmable.
 
-- **R-ENT-3**: esencia y afiliación de una cosa DEBEN **componerse en UNA sola oración** con el sustantivo de tipo, coordinadas con «y»: `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` Es la forma del eco OPCloud. Las designaciones atómicas D1–D4 son los bloques; el eco las coordina, como D5 (estados) y D10 (`es inicial y final`). La perseverancia (persistente/transitoria), si se emite, va en oración aparte.
+- **R-ENT-3** (extensión declarada de superficie — eco OPCloud): la emisión OPFORJA de esencia y afiliación de una cosa DEBE **componerse en UNA sola oración** con el sustantivo de tipo, coordinadas con «y»: `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` Es la forma del eco OPCloud, declarada aquí como **extensión de superficie** que operacionaliza las designaciones atómicas D1–D4 de `reglas §4.4` **sin derogarlas**: D1–D4 siguen siendo las plantillas canónicas de la capa suprema y son entrada reverse VÁLIDA (el parser las acepta, `parsear.ts·parsearClasificacionRasgo`). La perseverancia (persistente/transitoria), si se emite, va en oración aparte. Producción `(* ext §2.0 *)` en §18.
 
-  Correcto: `**Sensor** es un objeto físico y ambiental.`
-  Incorrecto: `**Sensor** es física.` seguido de `**Sensor** es ambiental.` (escindido, sin sustantivo de tipo)
-  Rationale: `estructural.ts·oracionEntidad` compone una sola oración; `docs/historias-usuario-v2/shared/HU-SHARED-007-eco-opl.md` documenta la forma OPCloud `*Rescatar* es un proceso informacional y sistémico.`. Bajo `solo-difiere` se coordinan solo las propiedades que difieren del default.
+  Preferida en emisión OPFORJA: `**Sensor** es un objeto físico y ambiental.`
+  No preferida en emisión (pero canónica por `reglas §4.4` y parseable): `**Sensor** es física.` seguido de `**Sensor** es ambiental.` (forma atómica escindida D1+D3)
+  Rationale: `estructural.ts·oracionEntidad` compone la oración combinada (forward); `parsear.ts` acepta tanto la combinada (forma colapsada) como la atómica escindida (G2: aditividad, nunca rechazo de OPL válida). Forma observada en OPCloud: `*Rescatar* es un proceso informacional y sistémico.` (evidencia de producto, no canon). Bajo `solo-difiere` se coordinan solo las propiedades que difieren del default.
 
 ### §2.1 Objeto
 
@@ -236,7 +237,7 @@ Rationale: `opm-opl-es §3` (descripción de entidades) y `reglas §4.4` separan
 
 **Traza a código**: `app/src/opl/generadores/estructural.ts·oracionEntidad`; supresión de placeholder en `app/src/modelo/nombresCanonicos.ts`.
 
-> GAP-PLACEHOLDER-ENTIDAD: `nombresCanonicos.ts` expone `esNombreProcesoPlaceholder`, pero `refsHints.ts·entidadOplEsEmitible` retorna `true` para toda entidad; la supresión de cosas placeholder en generación (R-ENT-2) NO está conectada hoy.
+> GAP-PLACEHOLDER-OBJETO: la supresión de placeholder (R-ENT-2) está conectada para *procesos* — `refsHints.ts·entidadOplEsEmitible` (en `generar.ts`) suprime procesos placeholder vía `esNombreProcesoPlaceholder` antes de emitir OPL —, pero los **objetos** placeholder no se filtran (rama objeto de R-ENT-2 sin implementar; `checkers.ts` sí los reconoce) — ver §20.
 
 Rationale: `reglas §2.2` (R-OBJ-1..7) y `opm-opl-es §3`.
 
@@ -258,7 +259,7 @@ Rationale: `reglas §2.2` (R-OBJ-1..7) y `opm-opl-es §3`.
 
 **Edge cases**: un *proceso* persistente (mantiene estado sin cambio neto) NO tiene familia verbal propia; su realización canónica reusa TS3 con `estado-entrada = estado-salida` (remite a la sección de enlaces transformadores y a `opm-opl-es §3.4`).
 
-**Traza a código**: span/clasificación en `app/src/opl/generadores/estructural.ts·oracionEntidad`; supresión en `app/src/modelo/nombresCanonicos.ts·esNombreProcesoPlaceholder` (ver GAP-PLACEHOLDER-ENTIDAD).
+**Traza a código**: span/clasificación en `app/src/opl/generadores/estructural.ts·oracionEntidad`; supresión en `app/src/modelo/nombresCanonicos.ts·esNombreProcesoPlaceholder`, conectada vía `refsHints.ts·entidadOplEsEmitible` (residual de objetos en GAP-PLACEHOLDER-OBJETO, §20).
 
 Rationale: `reglas §2.3` (R-PROC-1..7) y `§2.4` (nombres), `opm-opl-es §3.4`.
 
@@ -371,7 +372,7 @@ Rationale: `reglas §2.7` (R-INS-1..6) y `opm-opl-es §3`.
 
 **ID**: ENT-ESENCIA (D1, D2).
 
-**Plantillas**: la esencia se realiza **dentro de la oración combinada D1** con la afiliación (R-ENT-3, §2.8): `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` Las designaciones atómicas D1 (`es física`) / D2 (`es informacional`) son los bloques canónicos coordinados, no la forma de emisión.
+**Plantillas**: la esencia se realiza **dentro de la oración combinada de clasificación** con la afiliación (R-ENT-3, extensión declarada; §2.8): `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` Las designaciones atómicas D1 (`es física`) / D2 (`es informacional`) son las plantillas canónicas de `reglas §4.4`, no preferidas en la emisión OPFORJA pero válidas como entrada reverse.
 
 **Emisión**: `oracionEntidad` incluye la esencia en la oración combinada cuando la visibilidad es `siempre`, o cuando la esencia **difiere del default** (informacional). Bajo `solo-difiere`, si solo la esencia difiere, la oración combinada lleva solo la esencia (`**Cosa** es un objeto físico.`).
 
@@ -391,7 +392,7 @@ Rationale: `reglas §2.2` (R-OBJ-3, R-OBJ-5..6), `§4.4` (D1, D2) y `opm-opl-es 
 
 **ID**: ENT-AFILIA (D3, D4).
 
-**Plantillas**: la afiliación se realiza **en la misma oración combinada D1** que la esencia (§2.7): `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` D3 (`es ambiental`) / D4 (`es sistémica`) son los bloques atómicos coordinados.
+**Plantillas**: la afiliación se realiza **en la misma oración combinada de clasificación** que la esencia (§2.7, R-ENT-3 extensión declarada): `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` D3 (`es ambiental`) / D4 (`es sistémica`) son las plantillas atómicas canónicas de `reglas §4.4`, válidas como entrada reverse.
 
 **Emisión**: `oracionEntidad` incluye la afiliación en la oración combinada cuando la visibilidad es `siempre`, o cuando la afiliación **difiere del default** (sistémica). Bajo `solo-difiere`, si solo la afiliación difiere, la oración lleva solo la afiliación (`**Cosa** es un objeto ambiental.`).
 
@@ -527,7 +528,9 @@ Rationale: `reglas §4.5` (T3), `§5.2` (R-EFE-1, R-EFE-2, R-EFE-2A, R-EFE-2B) y
 - TS3: `*Proceso* cambia **Objeto** de \`estado-entrada\` a \`estado-salida\`.`
 - Variante evento: `**Objeto** en \`estado-entrada\` inicia *Proceso*, que cambia **Objeto** de \`estado-entrada\` a \`estado-salida\`.`
 - Variante condición: `*Proceso* ocurre si **Objeto** está en \`estado-entrada\`, en cuyo caso *Proceso* cambia **Objeto** de \`estado-entrada\` a \`estado-salida\`, de lo contrario *Proceso* se omite.`
-- Variante negada: `*Proceso* no cambia **Objeto** de \`estado-entrada\` a \`estado-salida\`.`
+- Variante negada (extensión declarada): `*Proceso* no cambia **Objeto** de \`estado-entrada\` a \`estado-salida\`.`
+
+  La variante negada NO es canon ISO: realiza el modificador `no` del kernel (negación del enlace; hecho de modelo: condición/instrumento sobre estado no-existente, enlace NOT compacto). La extensión está declarada en `spec-forja-opd-es` (R-OPD-CTL-5) con kernel en `metodologia-forja-es §NOT`; en OPCloud la negación es flag ortogonal a `c`/`e` (markers `*Negation`), mientras el kernel de la app la trata como tercer modificador excluyente — divergencia declarada. Emisión-only: sin ruta de parseo (GAP-NEGADA-REVERSE, §20). Aplica igual a las variantes negadas de §4.1 y §4.2.
 
 **Emisión**: un efecto con estado especificado tanto en entrada como en salida emite el verbo compuesto `cambia … de … a`. El modificador `e`/`c` reescribe la superficie según las variantes (admisible por R-TR-ASIM-3: el afectado está en Pre(P)).
 
@@ -645,7 +648,7 @@ La distinción agente/instrumento es **ontológica**, no estilística: fija qué
 - Plural por multiplicidad: `**Agentes** manejan *Proceso*.` (verbo concuerda con el sujeto-agente múltiple).
 - Variante evento (EH1, remite a §6): `**Agente** inicia y maneja *Proceso*.`
 - Variante condición (CH1/CS5, remite a §7): `**Agente** maneja *Proceso* si **Agente** existe, de lo contrario *Proceso* se omite.` · `**Agente** maneja *Proceso* si **Agente** está en \`estado\`, de lo contrario *Proceso* se omite.`
-- Variante negada: `**Agente** no maneja *Proceso*.`
+- Variante negada (extensión declarada, ver §3.4; emisión-only, GAP-NEGADA-REVERSE): `**Agente** no maneja *Proceso*.`
 
 **Emisión**: un enlace de tipo `agente` entre **objeto** humano (origen del enlace) y *proceso* (destino) emite la oración con `maneja`, sujeto = **agente**, complemento = *proceso*. Con estado especificado en el extremo del agente (HS1) se añade `en \`estado\`` tras el **objeto**.
 
@@ -677,7 +680,7 @@ Rationale: `reglas §4.6` (H1, HS1), `§5.3` (R-AG-1, R-AG-1A, R-AG-1B, R-AG-2) 
 - Plural por multiplicidad: `*Procesos* requieren **Instrumento**.` (verbo concuerda con el sujeto-proceso múltiple).
 - Variante evento (EH2, remite a §6): `**Instrumento** inicia *Proceso*, que requiere **Instrumento**.`
 - Variante condición (CH2/CS6, remite a §7): `*Proceso* ocurre si **Instrumento** existe, de lo contrario *Proceso* se omite.` · `*Proceso* ocurre si **Instrumento** está en \`estado\`, de lo contrario *Proceso* se omite.`
-- Variante negada: `*Proceso* no requiere **Instrumento**.`
+- Variante negada (extensión declarada, ver §3.4; emisión-only, GAP-NEGADA-REVERSE): `*Proceso* no requiere **Instrumento**.`
 
 **Emisión**: un enlace de tipo `instrumento` entre **objeto** no humano (origen del enlace) y *proceso* (destino) emite la oración con `requiere`, sujeto = *proceso*, complemento = **instrumento**. Con estado especificado en el extremo del instrumento (HS2) se añade `en \`estado\`` tras el **objeto**.
 
@@ -704,7 +707,7 @@ Rationale: `reglas §4.6` (H2, HS2), `§5.3` (R-AG-2, R-AG-3, R-AG-4) y `opm-opl
 ### §4.3 GAPs de cobertura — habilitadores
 
 - GAP-FIXTURE-HS: cerrado para emisión HS1/HS2 por `fixtures-roundtrip.ts` (`habilitador-con-estado-hs`). Las variantes evento/condición/negada de habilitador siguen cubiertas por tests de parser/generador, no por fixture estricta.
-- GAP-ABANICO-AGENTE-PARSE: el parser reconoce el abanico `exactamente uno de … maneja …` (`parsear.ts` línea ~382), pero el abanico de instrumento (`exactamente uno de … requiere …`) y el fan inverso requieren verificación de cobertura no completada en este pase.
+- GAP-FIXTURE-ABANICO-HABILITADOR: la cobertura de parseo del fan de instrumento/agente e inversos está verificada (2026-06-12) — `parsear.ts·ABANICO_VERBO_RE_LIST` (~305–317) mapea `requiere` (instrumento), `es requerido por` (instrumento inverso), `maneja` (agente) y `es manejado por` (agente inverso), y el loop genérico de `parsearAbanicoDirecto` (~357–369) los combina con el cuantificador XOR/OR, espejo de la emisión de `abanico.ts` —, pero ninguna fixture estricta ni test de parser dedicado la defiende contra regresión.
 
 ## §5 Modificadores de control
 
@@ -845,7 +848,7 @@ Rationale: `reglas §4.8` (CT1–CS6, R-OPL-COND-ALT-1..2, R-OPL-SUP-1), `§6.1`
 - EX2 (subtiempo): `*Manejo* ocurre si duración de *Fuente* es menor que mín-duración unidades-tiempo.`
 - Variante combinada (extensión local): `*Manejo* ocurre si duración de *Fuente* es menor que mín-duración o excede máx-duración.`
 
-**Naturaleza**: el enlace de excepción NO es un modificador `e`/`c`: es una familia procedimental autónoma proceso→proceso que conecta un *proceso* fuente con un *proceso* de manejo, disparado por desviación temporal. El sobretiempo se marca `/`, el subtiempo `//`.
+**Naturaleza**: el enlace de excepción NO es un modificador `e`/`c`: es la **familia de excepción procedimental** (`reglas §5.1`, familia 4; `R-EXC-1B`), firma proceso→proceso, que conecta un *proceso* fuente con un *proceso* de manejo, disparada por desviación temporal. El sobretiempo se marca `/`, el subtiempo `//`.
 
 - **R-EXC-AMBIENTAL-1**: el *proceso* de manejo de excepción DEBE ser **ambiental** (contorno discontinuo, `es ambiental` en §2.8). La fuente pertenece al sistema; el manejo del fallo temporal vive en el entorno.
 
@@ -938,7 +941,7 @@ Rationale: `reglas §4.9` (IV1, IV2), `§5.4` (R-INV-1..2B) y `opm-opl-es §8.2`
 
 Esta sección canoniza la realización OPL-ES de los enlaces **estructurales**: las cuatro relaciones fundamentales —**agregación-participación** (RF1), **exhibición-caracterización** (RF2/RF2b), **generalización-especialización** (RF3/RF3b) con su variante **XOR** (RX1/RX2) y herencia múltiple (RH1), **clasificación-instanciación** (RF4/RF4b)— y los **etiquetados** unidireccional, bidireccional y recíproco (SE1–SE5), con sus variantes de estado especificado (SSE1–SSE7).
 
-Un enlace estructural es **invariante en el tiempo** y conecta cosa↔cosa (no proceso↔objeto, salvo exhibición-caracterización). Su firma fija el extremo origen (vértice del triángulo: todo, exhibidor, general, clase) y el extremo destino (base: partes, rasgos, especializaciones, instancias). La generación NO DEBE emitir un verbo estructural fuera de {`consta de`, `exhibe`, `es un`/`son`, `puede ser`/`puede ser uno de`, `es una instancia de`/`son instancias de`, etiqueta-de-usuario, `se relaciona con`/`se relacionan`}; el parseo NO DEBE reconocer otro verbo como estructural.
+Un enlace estructural es **invariante en el tiempo** y conecta cosa↔cosa (no proceso↔objeto, salvo exhibición-caracterización). Su firma fija el extremo origen (vértice del triángulo: todo, exhibidor, general, clase) y el extremo destino (base: partes, rasgos, especializaciones, instancias). La generación NO DEBE emitir un verbo estructural fuera de {`consta de`, `exhibe`, `tiene un … opcional` (extensión declarada, §6.2 RF2o), `es un`/`son`, `puede ser`/`puede ser uno de`, `es una instancia de`/`son instancias de`, etiqueta-de-usuario, `se relaciona con`/`se relacionan`}; el parseo NO DEBE reconocer otro verbo como estructural.
 
 Rationale: `reglas §4.10` (SE1–RH1, SSE1–SSE7), `§5.5` (R-STRF-1..4, R-HER-1..8), `§5.6` (R-STRE-1) y `opm-opl-es §9`.
 
@@ -983,7 +986,7 @@ Rationale: `reglas §4.10` (SE1–RH1, SSE1–SSE7), `§5.5` (R-STRF-1..4, R-HER
 
 **Edición**: agregar una parte a una agregación existente DEBERÍA extender la lista de la oración en su lugar; quitar la última parte de un todo PUEDE colapsar la oración.
 
-**Roundtrip**: el **todo**, el orden de las **partes** y la marca de colección incompleta DEBEN preservarse. GAP-FIXTURE-AGREGACION: no hay fixture dedicado de agregación en `fixtures-roundtrip.ts`; la simetría se apoya en `oracionEnlaceEstructural` y la regex de `astEstructural`.
+**Roundtrip**: el **todo**, el orden de las **partes** y la marca de colección incompleta DEBEN preservarse. La fixture estricta `enlace-estructural-agregacion` (`fixtures-roundtrip.ts`) cubre el caso básico de una parte; el orden de partes múltiples y la marca RF1i de colección incompleta siguen sin fixture (RF1i además sin implementación en `src/opl`).
 
 **Traza a código**: generación `app/src/opl/generadores/estructural.ts·oracionEnlaceEstructural` (caso `agregacion`, línea ~63); parseo `app/src/opl/parser/parsear.ts·astEstructural` (regex `consta de`, línea ~959).
 
@@ -996,7 +999,7 @@ Rationale: `reglas §4.10` (RF1), `§5.5` (R-STRF-1, R-STRF-4) y `opm-opl-es §9
 **Plantilla(s)**:
 - RF2: `**Exhibidor** exhibe **Atributo1** y **Atributo2**.`
 - RF2b (heterogénea): `**Exhibidor** exhibe **Atributo1** así como *Operación1*.`
-- RF2o (rasgo opcional): `**Exhibidor** tiene un **Rasgo** opcional.`
+- RF2o (rasgo opcional — extensión declarada de producto): `**Exhibidor** tiene un **Rasgo** opcional.` El verbo `tiene` NO existe en `reglas` ni en `opm-opl-es` (la base realiza `?` como restricción de participación `un/una opcional` dentro de la oración existente, R-§18-PART-1); OPFORJA lo declara como extensión de superficie con producción `(* ext §6.2 *)` en §18.
 - Plural por multiplicidad del exhibidor: `**Exhibidores** exhiben **Rasgo**.`
 
 **Emisión**: un enlace de tipo `exhibicion` entre el **exhibidor** (origen) y sus **rasgos** (destino) emite `exhibe`, con el exhibidor como sujeto. Cuando el destino porta multiplicidad opcional (`?`/`0..1`), el generador emite la variante `tiene un **Rasgo** opcional` en vez de `exhibe`. Los rasgos heterogéneos (atributos + operaciones) se unen con `así como` (§1.3).
@@ -1009,7 +1012,7 @@ Rationale: `reglas §4.10` (RF1), `§5.5` (R-STRF-1, R-STRF-4) y `opm-opl-es §9
 
 **Composabilidad**: **destino-enumerado** (varios rasgos del mismo exhibidor en una oración). NO DEBE coordinarse con agregación/generalización/clasificación. **Zona prohibida de composición en refinamiento/despliegue**: igual que §6.1, la enumeración de rasgos NO DEBE agruparse cuando el enlace participa de un contexto de descomposición/despliegue; se emite por enlace (remite §9).
 
-**Reverse**: la oración `**Exhibidor** exhibe **A** así como *Op*` se parsea, vía `parsear.ts·astEstructural` (regex `^(.+?) exhibe(?:n)? (.+)$`, `tipo: "exhibicion"`); la variante `tiene un … opcional` se parsea con multiplicidad `0..1`.
+**Reverse**: la oración `**Exhibidor** exhibe **A** así como *Op*` se parsea, vía `parsear.ts·astEstructural` (regex `^(.+?) exhibe(?:n)? (.+)$`, `tipo: "exhibicion"`); la variante `tiene un … opcional` se parsea con multiplicidad `0..1`, y el parser acepta además la variante plural `tiene … opcionales` (`parsear.ts` ~1017), que el generador no emite.
 
 **Roundtrip**: exhibidor, rasgos, orden, opcionalidad y la frontera atributo/operación DEBEN preservarse. GAP-FIXTURE-EXHIBICION: cerrado por `fixtures-roundtrip.ts` (`enlace-estructural-exhibicion`).
 
@@ -1054,7 +1057,7 @@ Rationale: `reglas §4.10` (RF2, RF2b), `§5.5` (R-STRF-2, R-STRF-2A, R-OPL-RF-2
 
 **Reverse**: `parsear.ts·astEstructural` reconoce `^(.+?) es un (.+)$` y `^(.+?) son (.+)$` como `generalizacion` con el general como origen y la(s) especialización(es) como destino. GAP-XOR-PARSER: la superficie `puede ser` / `puede ser uno de` NO tiene regex de parseo estructural dedicada hoy (el verbo es canónico —enum §1.1, marcado GAP-XOR-FEATURE en generación—, pero ni generador ni parser estructural lo realizan); la enumeración XOR de generalización queda como GAP de cobertura bidireccional.
 
-**Roundtrip**: especializaciones, general, exclusividad (XOR vs inclusivo) y herencia múltiple DEBEN preservarse. GAP-FIXTURE-GENERALIZACION: no hay fixture dedicado.
+**Roundtrip**: especializaciones, general, exclusividad (XOR vs inclusivo) y herencia múltiple DEBEN preservarse. La fixture estricta `enlace-estructural-generalizacion` (`fixtures-roundtrip.ts`) cubre la forma `es un`; la exclusividad XOR (`puede ser`) queda fuera, cubierta por GAP-XOR-FEATURE / GAP-XOR-PARSER.
 
 **Traza a código**: generación `app/src/opl/generadores/estructural.ts·oracionEnlaceEstructural` (caso `generalizacion`, línea ~70; `son`/`es un`); parseo `app/src/opl/parser/parsear.ts·astEstructural` (regex `es un` ~967, `son` ~969). XOR `puede ser`: GAP-XOR-FEATURE (sin generador, §1.1) y GAP-XOR-PARSER (sin parser estructural).
 
@@ -1113,6 +1116,10 @@ Rationale: `reglas §4.10` (RF4, RF4b, R-OPL-RF-4), `§5.5` (R-STRF-3, R-HER-6) 
 - **R-EST-TAG-2**: `se relaciona con` (unidireccional) y `se relacionan` (recíproco) son las etiquetas nulas canónicas; el generador DEBE emitirlas cuando el enlace no porta etiqueta de usuario.
 
   Rationale: `reglas §4.10` (R-OPL-SE-5) y `procedural.ts` (líneas ~240, ~244).
+
+- **R-EST-TAG-3** (extensión declarada — sufijo de etiqueta de enlace): la herramienta PUEDE adjuntar la etiqueta de usuario de un enlace **procedimental o estructural fundamental** como sufijo `[etiqueta: …]` tras el punto terminal de la oración base: `**Todo** consta de **Parte**. [etiqueta: componente critico]`. Es superficie de producto (no figura en `opm-opl-es`); el parser extrae el sufijo antes de cotejar la oración base y la edición lo aplica vía el patch `fijar-etiqueta-enlace` (§15.3–§15.4). Producción `(* ext §6.5 *)` en §18.
+
+  Rationale: `procedural.ts·conEtiquetaEnlace` (~273) emite el sufijo; `parsear.ts·ETIQUETA_SUFIX` (línea 5) lo extrae; `aplicar.ts` lo materializa (`fijar-etiqueta-enlace` → `renombrarEtiquetaEnlace`); `generar.test.ts` (129, 607–608) lo defiende.
 
 **Tokenización**: span del **origen** con `ref`; la etiqueta de usuario o `se relaciona con`/`se relacionan` es token-verbo (la de usuario lleva `hint` de etiqueta editable); span del **destino** con `ref`; `y`/`e` conector en las formas recíprocas.
 
@@ -1215,13 +1222,13 @@ Rationale: `reglas §4.11` (CX1–CX8, CM1–CM3), `§8` (mecanismos, síncrona/
 
 **Composabilidad**: la lista de subprocesos es **destino-enumerado** dentro de la única oración de descomposición; NO se fragmenta en una oración por subproceso. La descomposición NO DEBE coordinarse con oraciones de enlace transformador/habilitador en un solo predicado. Aplica la **zona prohibida de composición en contexto de refinamiento** (§7.7): los enlaces de los subprocesos NO se fusionan al emitir la descomposición.
 
-**Reverse**: la oración `se descompone en` se parsea como creación/actualización del refinamiento `descomposicion` del *proceso*, con la lista de subprocesos como refinadores y la marca de secuencia/paralelo derivada de `en esa secuencia` / `paralelo`. GAP-CX-PARSER: `parsear.ts` no expone hoy una regex dedicada de `se descompone en`; el reverse de la descomposición es GAP de cobertura bidireccional (la generación existe en `refinamiento.ts·oracionDescomposicion`, el parseo estructural no).
+**Reverse**: la oración `se descompone en` se parsea (`parsear.ts·parsearContexto`) como AST de contexto y `planificar.ts·planificarContexto` emite el patch `crear-refinamiento` (idempotente; `aplicar.ts` lo materializa vía `descomponerProceso`/`desplegarObjeto`), creando el refinamiento con OPD hijo vacío. Los miembros enumerados NO se crean ni se mueven automáticamente (diagnóstico `info` deliberado anti-pérdida-silenciosa); la lista de refinadores y la marca de secuencia/paralelo (`en esa secuencia`/`paralelo`) NO se reconstruyen — residual de GAP-CX-PARSER. Defendido por `leyes/opl-reverse.test.ts` y `parser.test.ts`.
 
 **Roundtrip**: el padre, la lista de subprocesos, el orden temporal (secuencia/paralelo) y los objetos internos DEBEN preservarse. GAP-FIXTURE-DESCOMPOSICION: no hay fixture roundtrip dedicado de descomposición en `fixtures-roundtrip.ts`; la simetría se apoya en el generador y, parcialmente, en `parser.designacionesPlegado.test.ts`.
 
 **Edge cases**: la **recomposición** (out-zoom, CX7 `se recompone desde`) tiene verbo canónico (enum §1.1) pero ningún generador la emite: GAP-RECOMPONE. Un objeto que es instrumento en el nivel abstracto PUEDE figurar como afectado en el hijo solo si el cambio neto del proceso abstracto es cero (R-ROL-1); ese cambio de rol aplica a descomposición, no a despliegue (R-ROL-2).
 
-**Traza a código**: generación `app/src/opl/generadores/refinamiento.ts·oracionDescomposicion` (verbo `se descompone en`, líneas ~93, ~102) y `oracionParalelo` (~106, `ocurren en paralelo`); orden temporal en `describirProcesosTemporales` / `compararOrdenTemporal` (~150). Parseo: GAP-CX-PARSER.
+**Traza a código**: generación `app/src/opl/generadores/refinamiento.ts·oracionDescomposicion` (verbo `se descompone en`, líneas ~93, ~102) y `oracionParalelo` (~106, `ocurren en paralelo`); orden temporal en `describirProcesosTemporales` / `compararOrdenTemporal` (~150). Parseo: `parsear.ts·parsearContexto` (~1115) / `planificar.ts·planificarContexto` (~96–126) / `aplicar.ts` caso `crear-refinamiento` (~115).
 
 Rationale: `reglas §4.11` (CX1, CX2), `§8.1`–`§8.2`, `§8.9` y `opm-opl-es §10.1`.
 
@@ -1258,7 +1265,7 @@ Rationale: `reglas §4.11` (CX1, CX2), `§8.1`–`§8.2`, `§8.9` y `opm-opl-es 
 
 **Composabilidad**: la lista de refinadores es **destino-enumerado** dentro de la única oración de despliegue. Aplica la **zona prohibida de composición en contexto de despliegue** (§7.7): los enlaces estructurales de los refinadores NO se fusionan en plural al desplegar; cada enlace conserva su token-verbo y `ref`. NO DEBE coordinarse con descomposición ni con enlaces procedimentales.
 
-**Reverse**: la oración de despliegue por relación fundamental se parsea por las regex estructurales de §6 (`consta de`, `exhibe`, `son`, `son instancias de`) reconstruyendo el refinamiento `despliegue`. `parser.designacionesPlegado.test.ts` defiende el reverse del plegado parcial (designaciones de estado bajo plegado). GAP-PLIEGA: la oración autónoma `se pliega en el OPD padre` (CX5/CX6) tiene verbo canónico pero ningún generador la emite ni regex dedicada la parsea.
+**Reverse**: la oración de despliegue por relación fundamental se parsea por las regex estructurales de §6 (`consta de`, `exhibe`, `son`, `son instancias de`) reconstruyendo el refinamiento `despliegue`. `parser.designacionesPlegado.test.ts` defiende el reverse del plegado parcial (designaciones de estado bajo plegado). GAP-PLIEGA: la oración autónoma `se pliega en el OPD padre` (CX5/CX6) tiene verbo canónico pero ningún generador la emite; el parser la reconoce (`parsear.ts·parsearContexto`, familia `plegado`, warning `unsupported-kernel`) sin aplicar plegado (diseño de corte), y la rama `plegado` del parser carece de test propio.
 
 **Roundtrip**: la cosa desplegada, el modo (relación fundamental), la lista de refinadores y el estado de plegado parcial DEBEN preservarse. El plegado parcial (mostrar N partes y suprimir el resto con `al menos otro/a`) se realiza en `plegado.ts·oracionPlegadoParcial` y se defiende en `parser.designacionesPlegado.test.ts`.
 
@@ -1385,19 +1392,17 @@ Esta subsección es el **preludio de §9** y fija la frontera de la coordinació
 **Reglas duras**:
 - **R-CX-COMP-1**: los enlaces de los refinadores (subprocesos de una descomposición, partes/especializaciones/instancias/rasgos de un despliegue) NO DEBEN fusionarse en una oración plural única; cada enlace DEBE emitirse en su propia oración, preservando su **token-verbo** y su **`ref` por enlace**.
 
-  Correcto:
-  `**Especial1** son **General**.` no aplica aquí; en contexto de despliegue de generalización se emite por enlace:
-  `**Auto** es un **Vehículo**.` seguido de `**Camión** es un **Vehículo**.` (un enlace, una oración, refs preservados)
-  Incorrecto (zona prohibida): fusionar a `**Auto** y **Camión** son **Vehículo**.` cuando el contexto es el **despliegue de generalización-especialización** del refinamiento de **Vehículo**, porque la agrupación borra el token-verbo y la `ref` por enlace que el refinamiento necesita para mapear cada refinador a su arista.
-  Rationale: BUG-f897bc — agrupar «A, B y C son X» colisiona con la realización del despliegue (HU-50.015), borra tokens/refs por enlace y rompe la bisimetría del refinamiento; remite §9.
+  Correcto: en contexto de despliegue de generalización, los **enlaces** se emiten por enlace — `**Auto** es un **Vehículo**.` seguido de `**Camión** es un **Vehículo**.` (un enlace, una oración, refs preservados) — y COEXISTEN con la oración de despliegue `**Auto** y **Camión** son **Vehículo**.` (un hecho de refinamiento con refs de entidad, refinadores y enlaces; §7.2, R-CX-COMP-3), tal como emite el generador vigente (`refinamiento.ts·oracionDespliegue` + `estructural.ts·oracionEnlaceEstructural`).
+  Incorrecto (zona prohibida): fusionar las N oraciones de enlace a `**Auto** y **Camión** son **Vehículo**.` **en reemplazo de** su emisión atómica, porque la agrupación borra el token-verbo y la `ref` por enlace que el refinamiento necesita para mapear cada refinador a su arista.
+  Rationale: BUG-f897bc — el transformador que REEMPLAZABA las oraciones por enlace con la fusión plural borró tokens/refs por enlace y rompió la bisimetría del refinamiento; la oración de despliegue es un hecho distinto (R-CX-COMP-3) y nunca fue el bug; remite §9.
 
 - **R-CX-COMP-2**: la coordinación copulativa de §9 (predicados con sujeto-proceso compartido, destino-enumerado de estructurales) DEBE excluir explícitamente el contexto de refinamiento/despliegue de su dominio de aplicación. La detección de candidatos a coordinación NO DEBE activarse sobre enlaces que pertenecen a un OPD hijo de refinamiento.
 
   Rationale: la composabilidad de §3, §5 y §6 declara «zona prohibida de composición en refinamiento/despliegue» precisamente para sellar esta colisión; §9 canoniza la coordinación general bajo esa exclusión.
 
-- **R-CX-COMP-3**: dentro de la **propia** oración de refinamiento (CX1–CX3), la lista de refinadores SÍ es un destino-enumerado legítimo (un solo verbo `se descompone en`/`se despliega en`, varios spans con `ref`); lo prohibido es coordinar **los enlaces de esos refinadores entre sí** en una oración plural separada. La enumeración interna de la oración de refinamiento y la coordinación de enlaces hijos son hechos distintos.
+- **R-CX-COMP-3**: dentro de la **propia** oración de refinamiento (CX1–CX3), la lista de refinadores SÍ es un destino-enumerado legítimo — un solo verbo de refinamiento, sea explícito (`se descompone en`/`se despliega en`) o **reusado de la relación fundamental** del modo de despliegue (`exhibe`, `son`/`es un`, `son instancias de`; §7.2 Emisión), varios spans con `ref` —; lo prohibido es coordinar **los enlaces de esos refinadores entre sí** en una oración plural **en reemplazo de** su emisión atómica. La oración de despliegue superficie-idéntica (p. ej. `**Auto** y **Camión** son **Vehículo**.` como realización del refinamiento) es canónica y COEXISTE con las oraciones por enlace.
 
-  Rationale: distinguir la enumeración de refinadores (un hecho de refinamiento) de la fusión de enlaces hijos (varios hechos de enlace) evita reintroducir BUG-f897bc por sobre-aplicación de R-CX-COMP-1.
+  Rationale: distinguir la enumeración de refinadores (un hecho de refinamiento) de la fusión de enlaces hijos (varios hechos de enlace) evita reintroducir BUG-f897bc por sobre-aplicación de R-CX-COMP-1; un verificador literal que ignore los verbos reusados de §7.2 marcaría como zona prohibida la salida canónica del generador (falso positivo).
 
 **Traza a código**: la agrupación por OPD (`bloquesJerarquicos.ts·agruparOracionesPorOpd`) mantiene cada enlace hijo como oración independiente dentro del bloque del OPD; la oración de refinamiento (`refinamiento.ts·oracionDescomposicion`/`oracionDespliegue`) enumera refinadores pero NO coordina sus enlaces. GAP-COMP-GUARDA queda no-aplicable hasta que exista GAP-COMPOSICION: hoy la protección es por construcción atómica (cada enlace genera su propia oración), sin transformador que pueda fusionarlos.
 
@@ -1405,8 +1410,9 @@ Rationale: BUG-f897bc, `reglas §9` (bisimetría OPD↔OPL) y las cláusulas «z
 
 ### §7.8 GAPs de cobertura — refinamiento / gestión de contexto
 
-- GAP-CX-PARSER: la oración `se descompone en` (CX1/CX2) se genera (`refinamiento.ts·oracionDescomposicion`) pero `parsear.ts` no expone regex dedicada que la reconstruya como refinamiento `descomposicion`; reverse ausente.
-- GAP-PLIEGA: el verbo `se pliega en` (CX5/CX6) es canónico (enum §1.1) pero ningún generador emite la oración autónoma de plegado total ni regex la parsea; solo existe el plegado **parcial** (`plegado.ts·oracionPlegadoParcial`, defendido por `parser.designacionesPlegado.test.ts`).
+- GAP-CX-PARSER: parcial-cerrado — `se descompone en`/`se despliega en` se parsean (`parsear.ts·parsearContexto`) y el patch `crear-refinamiento` (`planificar.ts·planificarContexto`, `aplicar.ts`) crea el refinamiento idempotente con OPD hijo vacío; los miembros enumerados no se crean (diagnóstico `info` deliberado). Residual: lista de refinadores y marca de secuencia/paralelo sin reconstruir.
+- GAP-PLIEGA: el verbo `se pliega en` (CX5/CX6) es canónico (enum §1.1) pero ningún generador emite la oración autónoma de plegado total; el parser la reconoce (`parsear.ts·parsearContexto`, familia `plegado`, warning `unsupported-kernel`) sin aplicar plegado (diseño de corte) y sin test propio de la rama; solo existe el plegado **parcial** (`plegado.ts·oracionPlegadoParcial`, defendido por `parser.designacionesPlegado.test.ts`).
+- GAP-DESPLIEGUE-DEDICADO: las superficies dedicadas de la base A.10 (`se despliega por partes/especialización/instanciación/rasgos en SDx en …`) están derivadas en la EBNF §18 pero sin generador ni declaración de sustitución; la emisión vigente reusa el verbo de la relación fundamental (§7.2).
 - GAP-RECOMPONE: el verbo `se recompone desde` (CX7/CX8) es canónico pero sin generador ni parser.
 - GAP-REFINA: la oración explícita `se refina por descomposición/despliegue de … en` (CX4) es canónica pero sin generador autónomo ni parser; el árbol OPD se materializa por estructura del modelo.
 - GAP-FIXTURE-DESCOMPOSICION: no hay fixture roundtrip dedicado de descomposición/despliegue en `fixtures-roundtrip.ts`; la simetría se apoya en los generadores de `refinamiento.ts` y en `parser.designacionesPlegado.test.ts` (solo plegado parcial).
@@ -1425,7 +1431,7 @@ rol (consumo | resultado | efecto | agente | instrumento)
   × ruta (por ruta L)
 ```
 
-No todas las celdas son válidas. Esta sección fija qué combinaciones son **válidas**, cuáles **inválidas** (error de categoría o de asimetría), y cuáles **no-canonizadas** (silencio de la SSOT). Para autosuficiencia, consolida AQUÍ la fuerza semántica de colisión de rol (`reglas §6.5`) y la matriz de precedencia transformadora de recomposición (`reglas §6.6`).
+No todas las celdas son válidas. Esta sección fija qué combinaciones son **válidas**, cuáles **inválidas** (error de categoría o de asimetría), y cuáles **no-canonizadas** (silencio de la SSOT). La fuerza semántica de colisión de rol y la matriz de precedencia transformadora de recomposición son validez nuclear: viven en `reglas §6.5`/`§6.6` y esta spec las cita sin re-legislarlas (§8.3.1).
 
 Rationale: `reglas §6.4`–`§6.8`, `§7`, `§11.2` y `opm-opl-es §11`–`§13`; un constructo aislado es legible por su sección, pero su combinación con otro abre celdas que ninguna sección individual gobierna.
 
@@ -1557,48 +1563,19 @@ Para cada combinación con relevancia semántica/lógica, su **estatus**, la pla
 | C-22 | resultado × — × XOR × probabilidad (fan probabilístico) | válida | `*P* genera exactamente uno de **A** \`Pr=0.6\`, **B** \`Pr=0.4\`.` | R-FAN-6; suma=1; GAP-PROB-SUPERFICIE cerrado |
 | C-23 | cualquier rol × — × — × probabilidad (sin fan) | **no-canonizada** | — | R-FAN-6; `reglas §11.2` (probabilístico fuera de fan sin canonicidad) |
 | C-24 | consumo/resultado × modificador/abanico/multiplicidad × **ruta** | válida | `Por ruta L1, *P* consume **A**.` | R-COMB-5; una oración por enlace, ruta degrada el fan |
-| C-25 | agente/instrumento × — × ruta | **no-canonizada** | — | `reglas §11.2` (ruta sobre habilitadores no canonizada; `opm-opl-es §13` solo consumo/resultado) |
+| C-25 | agente/instrumento × — × ruta | **canónica-condicionada** | (no emitida por producto) | `reglas §4.12` R-OPL-RUTA-3 (canónica por `A.5`; OPFORJA restringe la emisión a consumo/resultado como extensión declarada de producto) |
 | C-26 | cualquier enlace × `c` + `e` (mismo enlace) | **no-canonizada** | — | R-COMB-3; §8.4 |
 | C-27 | estructural × `e`/`c` | **inválida** | — | error de categoría (R-MOD-CAT-1, AP-09) |
 | C-28 | invocación × `e`/`c` | **inválida** | — | error de categoría (R-MOD-CAT-1, AP-10); usar nodo de decisión booleano |
 | C-29 | enlace escindido TS4/TS5 × `e`/`c` | **inválida** | — | R-MOD-CAT-2 (`V-41`, `V-110`) |
-| C-30 | colisión de rol — dos enlaces procedimentales objeto↔mismo proceso | resolución | (prevalece el de mayor fuerza) | R-COL-FUERZA (§8.3.1) |
-| C-31 | recomposición — dos subprocesos, distinto rol hacia el mismo objeto | resolución | (matriz de precedencia) | R-COL-PREC (§8.3.2) |
+| C-30 | colisión de rol — dos enlaces procedimentales objeto↔mismo proceso | resolución | (prevalece el de mayor fuerza) | R-FUERZA-1..4 (`reglas §6.5`; §8.3.1) |
+| C-31 | recomposición — dos subprocesos, distinto rol hacia el mismo objeto | resolución | (matriz de precedencia) | R-PREC-1..5 (`reglas §6.6`; §8.3.1) |
 
-#### §8.3.1 Fuerza semántica de colisión de rol (consolidado de `reglas §6.5`)
+#### §8.3.1 Colisión de rol y precedencia de recomposición (delegación a `reglas §6.5`/`§6.6`)
 
-Cuando un **objeto** tendría dos enlaces procedimentales hacia el **mismo** *proceso* (violando la unicidad de enlace procedimental), prevalece el de mayor fuerza. Orden principal: `consumo = resultado > efecto > agente > instrumento`. Orden secundario por control dentro de cada clase: `evento > sin control > condición`.
+La resolución de colisión de rol (dos enlaces procedimentales entre el mismo **objeto** y el mismo *proceso*) y la precedencia transformadora al recomponer son **validez nuclear**: su ley vive en `urn:fxsl:kb:reglas-opm-estrictas-es` §6.5 (R-FUERZA-1..4: orden de 12 niveles, `consumo = resultado > efecto > agente > instrumento`, con `evento > sin control > condición` dentro de cada clase) y §6.6 (R-PREC-1..5: matriz 3×3 de recomposición; Resultado+Resultado y Consumo+Consumo inválidos; transformador prevalece sobre habilitador). Esta spec NO re-legisla esas tablas ni acuña IDs paralelos: la capa OPL solo refleja el resultado ya resuelto por el kernel (`modelo/**`, ver GAP-COL-RESOLUCION en §8.5) y no tiene obligación de emitir un reporte narrativo de colisión o precedencia.
 
-Orden completo de **12 niveles** (de más fuerte a más débil):
-
-| Nivel | Enlace | Nivel | Enlace |
-| --- | --- | --- | --- |
-| 1 | Evento de consumo | 7 | Evento de agente |
-| 2 | Consumo = Resultado | 8 | Agente |
-| 3 | Condición de consumo | 9 | Condición de agente |
-| 4 | Evento de efecto | 10 | Evento de instrumento |
-| 5 | Efecto | 11 | Instrumento |
-| 6 | Condición de efecto | 12 | Condición de instrumento |
-
-- **R-COL-FUERZA-1**: ante colisión de rol, la herramienta DEBE conservar el enlace de **menor número de nivel** (mayor fuerza) y reportar el desplazado; los niveles 1 y 3 contienen **consumo** únicamente — el resultado NUNCA DEBE aparecer con modificador (R-COMB-2). La condición de instrumento (nivel 12) es el enlace más débil del sistema.
-
-  Rationale: `reglas §6.5` (R-FUERZA-1..4); el modificador `c` debilita y `e` fortalece respecto del enlace base.
-
-#### §8.3.2 Matriz de precedencia transformadora en recomposición (consolidado de `reglas §6.6`)
-
-Al recomponer (out-zoom) dos subprocesos con distinto enlace hacia el mismo **objeto**, el enlace del padre se determina por:
-
-| B↔P1 \ B↔P2 | Efecto | Resultado | Consumo |
-| --- | --- | --- | --- |
-| **Efecto** | Efecto | Resultado | Consumo |
-| **Resultado** | Resultado | **Inválido** | Efecto |
-| **Consumo** | Consumo | Efecto | **Inválido** |
-
-- **R-COL-PREC-1**: Resultado+Resultado y Consumo+Consumo sobre el mismo objeto al recomponer son **inválidos** (`V-43`); el nivel hijo DEBE corregirse antes de recomponer (AP-30).
-- **R-COL-PREC-2**: Resultado+Consumo (o Consumo+Resultado) DEBE recomponerse como **Efecto** SOLO si hay continuidad de identidad y estados trazables; en su ausencia DEBE reportarse como conflicto, NO colapsarse automáticamente (R-PREC-2..4).
-- **R-COL-PREC-3**: un enlace **transformador** SIEMPRE prevalece sobre un **habilitador** al recomponer (`V-44`).
-
-  Rationale: `reglas §6.6` (R-PREC-1..5).
+Rationale: `reglas §Mapa de familia` — cada regla vive una vez en su capa propietaria; las demás capas citan por URN y delegan la decisión.
 
 ### §8.4 Zonas no-canonizadas explícitas
 
@@ -1608,7 +1585,6 @@ Las siguientes combinaciones son **silencios de la SSOT** (`reglas §11.2`, R-ZN
 | --- | --- | --- |
 | `c` + `e` sobre el **mismo** enlace | No definida en gramática OPL ni en geometría visual | `reglas §6.4`, `§11.2` (AP-28); R-COMB-3 |
 | `Pr=p` sobre un enlace **sin** abanico | `Pr=p` solo se define dentro de fans XOR (`V-18`); fuera no tiene canonicidad | `reglas §11.2`; R-FAN-6 |
-| Etiqueta de **ruta** sobre enlace habilitador (agente/instrumento) | `opm-opl-es §13` canoniza ruta solo para consumo/resultado | `reglas §11.2`; C-25 |
 | Fan de **resultado** bajo condición (`puede generarse`) | Histórico cerrado: el código degrada a fan base y ya no emite `puede generarse`; la combinación sigue inválida por R-COMB-2 | C-20; viola R-COMB-2 |
 | Fan **mixto** (algunas ramas `c`, otras sin control) bajo patrón condicional | El canon no define la realización condicional de un fan parcialmente condicional | R-FAN-3 (recae en fan directo, no en patrón condicional) |
 
@@ -1622,7 +1598,7 @@ Las siguientes combinaciones son **silencios de la SSOT** (`reglas §11.2`, R-ZN
 - GAP-FAN-RESULTADO-COND: cerrado. `abanico.ts·oracionAbanicoCondicional` degrada resultado+condición+fan a fan base; `puede generarse` ya no se exporta.
 - GAP-PROB-SUPERFICIE: cerrado. `procedural.ts·sufijoProbabilidad` y `abanico.ts` emiten `Pr=p`; `parsear.ts` lo trata como anotación de superficie y preserva el hecho base.
 - GAP-FAN-M: no hay generador para `exactamente m de f` / `al menos m de f` (R-FAN-8 / C-30 sentido m-de-f); `abanico.ts` solo emite el caso `m=1`.
-- GAP-COL-RESOLUCION: cerrado por ajuste-spec. La resolución de colisión de rol por fuerza semántica (§8.3.1) y la precedencia de recomposición (§8.3.2) son operaciones de modelo; la resolución vive en el kernel de modelo, no en la capa OPL.
+- GAP-COL-RESOLUCION: cerrado por ajuste-spec. La resolución de colisión de rol por fuerza semántica y la precedencia de recomposición (`reglas §6.5`/`§6.6`, citadas en §8.3.1) son operaciones de modelo; la resolución vive en el kernel de modelo, no en la capa OPL.
 
   Estado: alineado por ubicación arquitectónica. La OPL puede reflejar el resultado ya resuelto del kernel, pero NO tiene obligación de emitir un reporte narrativo de colisión o precedencia.
 
@@ -1687,7 +1663,7 @@ Una oración compuesta coordina hechos que comparten un **eje**. Esta spec canon
 
 - **R-COMP-ELEG-1** (mismo eje): solo PUEDEN coordinarse hechos que compartan **exactamente un** eje de §9.1. Mezclar ejes (p. ej. predicado coordinado con destino enumerado de otra relación) en una sola línea NO DEBE realizarse.
 
-- **R-COMP-ELEG-2** (misma familia semántica): el eje (a) NO DEBE coordinar familias incompatibles que el canon separa: un predicado transformador (`consume`/`genera`/`afecta`/`cambia`) PUEDE coordinarse con habilitadores (`requiere`/`maneja`) bajo sujeto-proceso compartido, pero NUNCA DEBE coordinar consumo con resultado **sobre el mismo objeto** ni mezclar la designación de clasificación genérica (esencia/afiliación) con oraciones de enlace. La esencia y la afiliación entre sí **SÍ se coordinan** en la oración combinada D1 (R-ENT-3, §2.7/§2.8); lo prohibido es coordinarlas con predicados de enlace.
+- **R-COMP-ELEG-2** (misma familia semántica): el eje (a) NO DEBE coordinar familias incompatibles que el canon separa: un predicado transformador (`consume`/`genera`/`afecta`/`cambia`) PUEDE coordinarse con habilitadores (`requiere`/`maneja`) bajo sujeto-proceso compartido, pero NUNCA DEBE coordinar consumo con resultado **sobre el mismo objeto** ni mezclar la designación de clasificación genérica (esencia/afiliación) con oraciones de enlace. La esencia y la afiliación entre sí **SÍ se coordinan** en la oración combinada de clasificación (R-ENT-3, extensión declarada; §2.7/§2.8); lo prohibido es coordinarlas con predicados de enlace.
 
   Rationale: §3.1/§3.2 prohíben coordinar consumo con resultado en un predicado sobre el mismo objeto; R-ENT-3 coordina esencia+afiliación en una sola oración de designación, distinta de las oraciones de enlace.
 
@@ -1701,10 +1677,10 @@ Una oración compuesta coordina hechos que comparten un **eje**. Esta spec canon
 
 ### §9.3 Zonas prohibidas de composición
 
-- **R-COMP-ZP-1** (refinamiento / despliegue): la composición NO DEBE fusionar en plural los enlaces de los refinadores en contexto de refinamiento/despliegue (HU-50.015). La detección de candidatos a coordinación NO DEBE activarse sobre enlaces que pertenecen a un OPD hijo de refinamiento. Remite §7.7 (R-CX-COMP-1/2/3).
+- **R-COMP-ZP-1** (refinamiento / despliegue): la composición NO DEBE fusionar en plural los enlaces de los refinadores en contexto de refinamiento/despliegue. La detección de candidatos a coordinación NO DEBE activarse sobre enlaces que pertenecen a un OPD hijo de refinamiento. Remite §7.7 (R-CX-COMP-1/2/3).
 
-  Correcto: `**Auto** es un **Vehículo**.` seguido de `**Camión** es un **Vehículo**.` (despliegue de generalización: un enlace, una oración, refs preservados)
-  Incorrecto: `**Auto** y **Camión** son **Vehículo**.` cuando el contexto es el despliegue de generalización-especialización del refinamiento de **Vehículo** — la fusión borra el token-verbo y la `ref` por enlace que el refinamiento necesita.
+  Correcto: `**Auto** es un **Vehículo**.` seguido de `**Camión** es un **Vehículo**.` (despliegue de generalización: un enlace, una oración, refs preservados); la oración de despliegue `**Auto** y **Camión** son **Vehículo**.` COEXISTE como hecho de refinamiento (§7.2, R-CX-COMP-3).
+  Incorrecto: fusionar las oraciones de enlace a `**Auto** y **Camión** son **Vehículo**.` **en reemplazo de** su emisión atómica — la fusión borra el token-verbo y la `ref` por enlace que el refinamiento necesita.
   Rationale: BUG-f897bc; §7.7 sella esta colisión y §9 la materializa como zona prohibida del álgebra.
 
 - **R-COMP-ZP-2** (toda composición que pierda refs/hints): cualquier coordinación que no satisfaga R-COMP-MAESTRA-1/2/3 (sub-span por hecho, unión de refs, resolución al hecho individual) está **prohibida**, sin importar el eje. La prosa más rica NUNCA justifica perder direccionabilidad.
@@ -1838,7 +1814,7 @@ Esta sección canoniza la realización OPL de las **etiquetas de ruta** (path la
 | Composabilidad | combina con consumo/resultado (extensión de producto); canon admite toda oración procedimental |
 | Reverse | el parser DEBE detectar el prefijo `Por ruta <etiqueta>,` y asociar la etiqueta de ruta al enlace resultante |
 | Roundtrip | la etiqueta DEBE preservarse: `parsear(emitir(ruta)) = ruta` |
-| Traza a código | `app/src/opl/generadores/procedural.ts` (etiqueta de ruta); si la función no existe aún, `GAP-VERIFY` |
+| Traza a código | generación `app/src/opl/generadores/procedural.ts·oracionEnlaceConRuta` (prefijo `Por ruta L,`); parseo `parsear.ts·RUTA_PREFIJO_RE` (línea 25); aplicación reverse `aplicar.ts` → `modelo/rutas·definirRutaEtiqueta`; defendido por `parser.test.ts` (rutaEtiqueta en reverse). Sin fixture bisimétrica estricta: GAP-FIXTURE-RUTA (§20) |
 | Procedencia | `urn:fxsl:kb:reglas-opm-estrictas-es §4.12` |
 
 Rationale: `urn:fxsl:kb:reglas-opm-estrictas-es §4.12` canoniza la etiqueta de ruta y la regla `A.5`; `procedural.ts` es el punto de emisión procedimental donde el prefijo de ruta se ancla.
@@ -2078,7 +2054,7 @@ Rationale: `clasificadorEdicion.ts` consume el output de `parser`/`planificar` y
 
   Correcto: en una oración que coordina varios enlaces, cambiar el nombre del destino de un sub-span produce un patch sobre ese enlace; los demás hechos de la oración quedan intactos.
   Incorrecto: una edición en cualquier parte de la oración compuesta reescribe o reemplaza todos sus hechos.
-  Rationale: la resolución por sub-span de §14.5 (`interaccion.ts·referenciaEnlaceEspecifico`) identifica el hecho objetivo; la mutación por hecho preserva la composabilidad de §9 y evita efectos colaterales sobre hechos no tocados. GAP-VERIFY: la spec define la regla de mutación por hecho; la mecánica exacta de re-tokenización por sub-span en el editor libre se traza a §9 y §14.5, no a una función nueva de edición compuesta.
+  Rationale: la resolución por sub-span de §14.5 (`interaccion.ts·referenciaEnlaceEspecifico`, traza confirmada 2026-06-12) identifica el hecho objetivo; la mutación por hecho preserva la composabilidad de §9 y evita efectos colaterales sobre hechos no tocados. La mecánica exacta de re-tokenización por sub-span en el editor libre se traza a §9 y §14.5, no a una función nueva de edición compuesta.
 
 | Campo | Valor |
 | --- | --- |
@@ -2203,7 +2179,7 @@ Rationale: el contrato de fallo es cerrado y determinista — todo error tiene c
 
 ## §18 EBNF formal OPL-ES
 
-EBNF normativa consolidada (es-CL, sin transformación de idioma). Cubre todas las familias canonizadas en §1–§12: declaraciones base, identificadores, descripción de cosas, procedimentales (transformadores + habilitadores + control), condición, estructurales, estructuras fundamentales, gestión de contexto, multiplicidad/cardinalidad y ruta. Las producciones con prefijo `(* ext §9 *)` son extensión de esta spec (oración compuesta/coordinada) y no figuran en el Apéndice A de `opm-opl-es`.
+EBNF normativa consolidada (es-CL, sin transformación de idioma). Cubre todas las familias canonizadas en §1–§12: declaraciones base, identificadores, descripción de cosas, procedimentales (transformadores + habilitadores + control), condición, estructurales, estructuras fundamentales, gestión de contexto, multiplicidad/cardinalidad y ruta. Las producciones marcadas `(* ext §n *)` son extensiones declaradas de esta spec y no figuran en el Apéndice A de `opm-opl-es`: `(* ext §2.0 *)` clasificación combinada eco-OPCloud, `(* ext §6.2 *)` rasgo opcional `tiene un … opcional`, `(* ext §6.5 *)` sufijo de etiqueta de enlace, `(* ext §9 *)` oración compuesta/coordinada.
 
 ```ebnf
 (* ===== A.1 — Estructura del documento ===== *)
@@ -2294,11 +2270,15 @@ lista_de_procesos_especiales = lista_de_procesos ;
 lista_de_objetos_instancia = lista_de_objetos ;
 lista_de_procesos_instancia = lista_de_procesos ;
 lista_de_objetos_con_estado = objeto_con_estado, { ", ", objeto_con_estado }, [ " y ", objeto_con_estado ] ;
+(* espejo de opm-opl-es A.5: el efecto admite multiplicidad por objeto (reglas §6.7 R-MULT-1/V-23); solo el slot de objeto la lleva, R-MULT-1A *)
+objeto_procedimental = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
+lista_de_objetos_procedimentales = objeto_procedimental, { ", ", objeto_procedimental }, [ " y ", objeto_procedimental ] ;
 etiqueta_directa = expresion_de_etiqueta ;
 etiqueta_nula_definida_por_usuario = expresion_de_etiqueta ;
 
 (* ===== A.4 — Descripción de cosas ===== *)
 oracion_de_descripcion_de_cosa = oracion_de_propiedad_generica
+ | oracion_de_clasificacion_combinada  (* ext §2.0 *)
  | oracion_de_enumeracion_de_estados
  | oracion_de_estados_iniciales
  | oracion_de_estados_finales
@@ -2307,6 +2287,12 @@ oracion_de_descripcion_de_cosa = oracion_de_propiedad_generica
  | oracion_de_tipo_de_dato ;
 oracion_de_tipo_de_dato = identificador_de_objeto, " es de tipo ", identificador_de_tipo ;
 oracion_de_propiedad_generica = identificador_de_cosa, " es ", ( esencia | afiliacion | perseverancia ) ;
+(* ext §2.0 — clasificación combinada eco-OPCloud (R-ENT-3): esencia y afiliación en UNA oración
+   con sustantivo de tipo; los adjetivos concuerdan con el sustantivo, no con la cosa. *)
+oracion_de_clasificacion_combinada = identificador_de_cosa, " es un ", ( "objeto" | "proceso" ), " ",
+ ( esencia_combinada | afiliacion_combinada | ( esencia_combinada, " y ", afiliacion_combinada ) ) ;  (* ext §2.0 *)
+esencia_combinada = "físico" | "informacional" ;  (* ext §2.0 *)
+afiliacion_combinada = "sistémico" | "ambiental" ;  (* ext §2.0 *)
 oracion_de_enumeracion_de_estados = identificador_de_objeto, " puede estar ", lista_de_estados, [", y otros estados"] ;
 oracion_de_estados_iniciales = "Estado ", identificador_de_estado, " de ", identificador_de_objeto, " es inicial" ;
 oracion_de_estados_finales = "Estado ", identificador_de_estado, " de ", identificador_de_objeto, " es final" ;
@@ -2319,9 +2305,11 @@ perseverancia = "persistente" | "transitoria" ;
 (* ===== A.5 — Procedimentales ===== *)
 oracion_procedimental = oracion_transformadora | oracion_habilitadora | oracion_de_invocacion | oracion_de_control ;
 oracion_transformadora = oracion_de_consumo | oracion_de_resultado | oracion_de_efecto | oracion_de_cambio ;
-oracion_de_consumo = identificador_de_proceso, " consume ", objeto_con_opcion_de_estado ;
-oracion_de_resultado = identificador_de_proceso, " genera ", objeto_con_opcion_de_estado ;
-oracion_de_efecto = identificador_de_proceso, " afecta ", lista_de_objetos ;
+(* multiplicidad procedimental (reglas §6.7 R-MULT-1 / V-23; §10.1): los slots de objeto admiten
+   restricción de participación antepuesta; los slots de proceso NO la llevan (R-MULT-1A). *)
+oracion_de_consumo = identificador_de_proceso, " consume ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
+oracion_de_resultado = identificador_de_proceso, " genera ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
+oracion_de_efecto = identificador_de_proceso, " afecta ", lista_de_objetos_procedimentales ;
 oracion_de_cambio = oracion_de_cambio_entrada_salida | oracion_de_cambio_solo_entrada | oracion_de_cambio_solo_salida ;
 frase_de_cambio_entrada_salida = identificador_de_objeto, " de ", estado_de_entrada, " a ", estado_de_salida ;
 frase_de_cambio_solo_entrada = identificador_de_objeto, " de ", estado_de_entrada ;
@@ -2330,17 +2318,17 @@ oracion_de_cambio_entrada_salida = identificador_de_proceso, " cambia ", frase_d
 oracion_de_cambio_solo_entrada = identificador_de_proceso, " cambia ", frase_de_cambio_solo_entrada ;
 oracion_de_cambio_solo_salida = identificador_de_proceso, " cambia ", frase_de_cambio_solo_salida ;
 oracion_habilitadora = oracion_de_agente | oracion_de_instrumento ;
-oracion_de_agente = objeto_con_opcion_de_estado, " maneja ", identificador_de_proceso ;
-oracion_de_instrumento = identificador_de_proceso, " requiere ", objeto_con_opcion_de_estado ;
+oracion_de_agente = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado, " maneja ", identificador_de_proceso ;
+oracion_de_instrumento = identificador_de_proceso, " requiere ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
 oracion_de_control = oracion_de_evento | oracion_de_condicion | oracion_de_excepcion ;
 oracion_de_evento = oracion_de_evento_de_consumo | oracion_de_evento_de_efecto
  | oracion_de_evento_de_agente | oracion_de_evento_de_instrumento ;
-oracion_de_evento_de_consumo = objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
+oracion_de_evento_de_consumo = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
  ", que consume ", identificador_de_objeto ;
-oracion_de_evento_de_efecto = identificador_de_objeto, " inicia ", identificador_de_proceso,
+oracion_de_evento_de_efecto = [ restriccion_de_participacion, " " ], identificador_de_objeto, " inicia ", identificador_de_proceso,
  ", que afecta ", identificador_de_objeto ;
-oracion_de_evento_de_agente = objeto_con_opcion_de_estado, " inicia y maneja ", identificador_de_proceso ;
-oracion_de_evento_de_instrumento = objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
+oracion_de_evento_de_agente = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado, " inicia y maneja ", identificador_de_proceso ;
+oracion_de_evento_de_instrumento = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado, " inicia ", identificador_de_proceso,
  ", que requiere ", objeto_con_opcion_de_estado ;
 oracion_de_invocacion = identificador_de_proceso, " invoca ", lista_de_procesos
  | identificador_de_proceso, " se invoca a sí mismo" ;
@@ -2421,7 +2409,8 @@ lista_de_objetos_generales = " un ", identificador_de_objeto,
 
 (* ===== A.8 — Estructurales (enlaces etiquetados) ===== *)
 oracion_estructural = oracion_de_enlace_estructural_etiquetado | oracion_de_agregacion
- | oracion_de_caracterizacion | oracion_de_especializacion | oracion_de_instanciacion ;
+ | oracion_de_caracterizacion | oracion_de_rasgo_opcional  (* ext §6.2 *)
+ | oracion_de_especializacion | oracion_de_instanciacion ;
 oracion_de_enlace_estructural_etiquetado = oracion_etiquetado_unidireccional | oracion_etiquetado_bidireccional ;
 oracion_etiquetado_unidireccional = oracion_etiquetado_unidireccional_simple | oracion_etiquetado_bifurcada ;
 oracion_etiquetado_unidireccional_simple = oracion_etiquetado_nullTag_objeto
@@ -2484,6 +2473,10 @@ oracion_de_caract_objeto = identificador_de_objeto, " exhibe ",
  ( lista_de_atributos | lista_de_operadores | lista_de_atributos, ", así como ", lista_de_operadores ) ;
 oracion_de_caract_proceso = identificador_de_proceso, " exhibe ",
  ( lista_de_operadores | lista_de_atributos | lista_de_operadores, ", así como ", lista_de_atributos ) ;
+(* ext §6.2 — RF2o rasgo opcional: extensión declarada de producto; el reverse acepta además
+   la variante plural « tiene … opcionales » que el generador no emite. *)
+oracion_de_rasgo_opcional = identificador_de_cosa, " tiene ", ( "un " | "una " ),
+ identificador_de_objeto, " opcional" ;  (* ext §6.2 *)
 oracion_de_especializacion = oracion_de_especializacion_objeto | oracion_de_especializacion_proceso
  | oracion_de_especializacion_estado | oracion_de_especializacion_individual
  | oracion_de_especializacion_xor_objeto | oracion_de_herencia_multiple_objeto ;
@@ -2539,20 +2532,25 @@ oracion_de_plegado_proceso = identificador_de_proceso, " se pliega en ", opd_pad
 oracion_de_descomposicion = oracion_de_descomposicion_en_diagrama
  | oracion_de_descomposicion_en_nuevo_diagrama | oracion_de_descomposicion_objeto_en_diagrama
  | oracion_de_descomposicion_objeto_en_nuevo_diagrama ;
+(* alineación §7.1 plantilla Mixta: grupos paralelos intercalados en cualquier posición de la
+   secuencia; corrige el bloque paralelo terminal « y en paralelo » de la base A.10, nunca emitido. *)
+elemento_de_secuencia_mixta = identificador_de_proceso | ( "paralelo ", lista_de_procesos ) ;
+lista_de_secuencia_mixta = elemento_de_secuencia_mixta, { ", ", elemento_de_secuencia_mixta },
+ [ ( " y " | " e " | ", y " | ", e " ), elemento_de_secuencia_mixta ] ;
 oracion_de_descomposicion_en_diagrama = ( identificador_de_proceso, " se descompone en ",
  lista_de_procesos, ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] )
  | ( identificador_de_proceso, " se descompone en paralelo ", lista_de_procesos,
  [", así como ", lista_de_objetos_en_zoom] )
- | ( identificador_de_proceso, " se descompone en ", lista_de_procesos,
- " y en paralelo ", lista_de_procesos, ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
+ | ( identificador_de_proceso, " se descompone en ", lista_de_secuencia_mixta,
+ ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
 oracion_de_descomposicion_en_nuevo_diagrama = ( identificador_de_proceso, " desde ", opd_padre,
  " se descompone en ", opd_hijo, " en ", lista_de_procesos, ", en esa secuencia",
  [", así como ", lista_de_objetos_en_zoom] )
  | ( identificador_de_proceso, " desde ", opd_padre,
  " se descompone en ", opd_hijo, " en paralelo ", lista_de_procesos, [", así como ", lista_de_objetos_en_zoom] )
  | ( identificador_de_proceso, " desde ", opd_padre,
- " se descompone en ", opd_hijo, " en ", lista_de_procesos,
- " y en paralelo ", lista_de_procesos, ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
+ " se descompone en ", opd_hijo, " en ", lista_de_secuencia_mixta,
+ ", en esa secuencia", [", así como ", lista_de_objetos_en_zoom] ) ;
 oracion_de_descomposicion_objeto_en_diagrama = identificador_de_objeto, " se descompone en ",
  lista_de_objetos, ", en esa secuencia", [", así como ", lista_de_procesos_en_zoom] ;
 oracion_de_descomposicion_objeto_en_nuevo_diagrama = identificador_de_objeto, " desde ", opd_padre,
@@ -2586,6 +2584,14 @@ oracion_compuesta_sujeto_coordinado = lista_de_objetos, " ", verbo_concordado_pl
 verbo_concordado_plural = "consumen" | "generan" | "afectan" | "requieren" | "manejan" ;
 conector_final = " y " | " e " | " o " | " u " ;
 salto_de_linea = "\n" ;
+
+(* ===== ext §6.5 — Sufijo de etiqueta de enlace ===== *)
+(* Extensión declarada de producto: el generador adjunta la etiqueta de usuario de un enlace
+   (procedimental o estructural fundamental) como sufijo tras el punto terminal de la oración
+   base; el parser extrae el sufijo antes de cotejar la oración. Traza: procedural.ts·conEtiquetaEnlace
+   (~273) / parsear.ts·ETIQUETA_SUFIX (línea 5) / aplicar.ts (patch fijar-etiqueta-enlace). *)
+sufijo_de_etiqueta_de_enlace = " [etiqueta: ", expresion_de_etiqueta, "]" ;  (* ext §6.5 *)
+oracion_con_etiqueta_de_enlace = oracion_opl_es, sufijo_de_etiqueta_de_enlace ;  (* ext §6.5 *)
 ```
 
 Restricciones (RFC 2119):
@@ -2598,7 +2604,12 @@ Restricciones (RFC 2119):
 - **R-§18-NORM-1**: el parser NORMALIZA la entrada a la forma ASCII canónica antes de cotejar producciones; los caracteres del alfabeto extendido (acentos, `ñ`, `ü`) SE PRESERVAN en los nombres pero las operaciones lógicas y delimitadores SE NORMALIZAN a ASCII.
 - **R-§18-EXT-1** (ext `§9`): la `oracion_compuesta` es extensión de esta spec, no del Apéndice A. Coordina N hechos atómicos en UNA línea; cada hecho coordinado CONSERVA su `ref` y su sub-span (`hint`). NO SE ADMITE la fusión opaca que descarte tokens/refs por hecho. La coordinación de sujeto SOLO SE EMITE cuando el canon define el plural concordado.
 
-Trazabilidad de parser: `app/src/opl/parser/parsear.ts` (reconocimiento de producciones), `app/src/opl/parser/tipos.ts` (tipos de la superficie reconocida).
+GAPs de derivación sin soporte (producciones derivables de esta EBNF sin generador ni parser hoy):
+
+- GAP-DONDE-EXPRESION (§18·A.7): la `restriccion_de_expresion` (`donde …`) es derivable pero sin generador ni parser (`donde` solo aparece en comentarios de `parsear.ts`); derivación-sin-soporte.
+- GAP-RANGO-TEXTUAL (§18·A.2): los intervalos de rango (`intervalo_de_rango`/`expresion_de_rango`, `[..]`/`(..)`) y la `clausula_de_rango` son derivables pero sin generador ni parser; GAP-VARIA cubre solo el verbo `varía de … a`.
+
+Trazabilidad de parser: `app/src/opl/parser/parsear.ts` reconoce el **subconjunto soportado** de producciones (el detalle vive en la tabla §20); las producciones derivables sin soporte llevan GAP nombrado (GAP-DONDE-EXPRESION, GAP-RANGO-TEXTUAL, GAP-DESPLIEGUE-DEDICADO, GAP-RECOMPONE, GAP-PLIEGA). Tipos de la superficie reconocida en `app/src/opl/parser/tipos.ts`.
 
 Rationale: `opm-opl-es A.0–A.10` (gramática formal OPL-ES) + `reglas §4.14` (EBNF normativa). La extensión `oracion_compuesta` traza a §9 de esta spec.
 
@@ -2649,6 +2660,8 @@ Esta sección CONSOLIDA, en una tabla maestra única, las trazas a código y los
 
 **R-§20-AUD-1 (RFC 2119)**: la tabla §20 ES el punto de partida de la auditoría de alineación spec↔código. Toda fila con estado `GAP-*` DEBE resolverse en esa auditoría —cerrando el código, corrigiendo la emisión no canónica, añadiendo el fixture, o reclasificando el hecho—. Ninguna fila `GAP-*` se resuelve dentro de esta spec.
 
+**Nota de vigencia (2026-06-12)**: el último pase forward completo de esta tabla es **anterior al 2026-06-11** (frente reverse de opforja). La auditoría de coherencia del corpus 2026-06-12 consolidó abajo los cierres puntuales verificados (descomposición reverse, fixtures de agregación/generalización, ruta, fan de habilitadores, placeholder de procesos), pero el re-forward completo de §20 (spec→código y código→spec, incluida la cabecera obsoleta de `fixtures-roundtrip.ts`) queda en backlog (`deep-opm-pro/docs/HANDOFF.md`).
+
 Leyenda de **Estado**:
 
 - `alineado` — la oración canónica tiene generador y, cuando aplica, parser/fixture confirmados.
@@ -2667,7 +2680,7 @@ Leyenda de **Estado**:
 | §1.1 | Enum verbal `se pliega` (plegado) | — | — | — | GAP-PLIEGA |
 | §1.1 | Enum verbal `se recompone` (recomposición) | — | — | — | GAP-RECOMPONE |
 | §2.1 | Entidad (objeto/proceso) | `estructural.ts·oracionEntidad` | — | — | alineado |
-| §2.1 | Supresión de placeholder (R-ENT-2) | `refsHints.ts·entidadOplEsEmitible` + `nombresCanonicos.ts·esNombreProcesoPlaceholder` | — | `refsHints.test.ts` / `generar.test.ts` | alineado |
+| §2.1 | Supresión de placeholder (R-ENT-2) | `refsHints.ts·entidadOplEsEmitible` + `nombresCanonicos.ts·esNombreProcesoPlaceholder` (conectado en `generar.ts`) | — | `refsHints.test.ts` / `generar.test.ts` | alineado (procesos) · GAP-PLACEHOLDER-OBJETO |
 | §2.3 | Estados `puede estar` | `duracionMetadata.ts·oracionEstados` | — | — | alineado |
 | §2.4 | Designación de estado | `designaciones.ts·oracionDesignacionEstado` / `textoDesignacionEstado` | — | — | alineado |
 | §2.5 | Valor de atributo `es valor` | `estructural.ts·oracionValorAtributo` | — | — | alineado |
@@ -2680,10 +2693,10 @@ Leyenda de **Estado**:
 | §3.4 | Cambio de estado TS3 (`de … a …`) | `procedural.ts·oracionTransicionEstados` | `parsear.ts·ABANICO_CAMBIA_RE` / regex CS2 | `cambio-estado-ts3` / `cambio-estado-ts3-compacto` (estrictas) | alineado |
 | §3.5 | Efecto parcial TS4 (`de \`estado\``) | `procedural.ts·oracionEfecto` (rama origen) | regex standalone verificada | `cambio-estado-ts4-solo-entrada` (estricta) | alineado · GAP-PROCEDENCIA-ESCIND |
 | §3.6 | Efecto parcial TS5 (`a \`estado\``) | `procedural.ts·oracionEfecto` (rama destino) | regex standalone verificada | `cambio-estado-ts5-solo-salida` (estricta) | alineado |
-| §4.1 | Agente `maneja` (+ estado/evento/cond/negada) | `procedural.ts·oracionEnlaceSinEtiqueta` / `refsHints.ts·nombreOplExtremo` | `parsear.ts·ABANICO_VERBO_RE_LIST` (`maneja`) / `CONDICION_AGENTE_RE` | `enlace-agente-simple` | alineado |
-| §4.2 | Instrumento `requiere` (+ estado/evento/cond/negada) | `procedural.ts·oracionEnlaceSinEtiqueta` / `refsHints.ts·nombreOplExtremo` | `parsear.ts·ABANICO_VERBO_RE_LIST` (`requiere`) | `enlace-instrumento-simple` | alineado |
+| §4.1 | Agente `maneja` (+ estado/evento/cond/negada) | `procedural.ts·oracionEnlaceSinEtiqueta` / `refsHints.ts·nombreOplExtremo` | `parsear.ts·ABANICO_VERBO_RE_LIST` (`maneja`) / `CONDICION_AGENTE_RE` | `enlace-agente-simple` | alineado · GAP-NEGADA-REVERSE (negada emisión-only) |
+| §4.2 | Instrumento `requiere` (+ estado/evento/cond/negada) | `procedural.ts·oracionEnlaceSinEtiqueta` / `refsHints.ts·nombreOplExtremo` | `parsear.ts·ABANICO_VERBO_RE_LIST` (`requiere`) | `enlace-instrumento-simple` | alineado · GAP-NEGADA-REVERSE (negada emisión-only) |
 | §4.x | Habilitador con estado especificado (HS1/HS2) | `refsHints.ts·nombreOplExtremo` (sufijo `en \`estado\``) | `ABANICO_VERBO_RE_LIST` | `habilitador-con-estado-hs` (estricta) | alineado |
-| §4.x | Abanico de instrumento/agente inverso | `abanico.ts` | `parsear.ts` (cobertura no completada) | — | GAP-ABANICO-AGENTE-PARSE |
+| §4.x | Abanico de instrumento/agente inverso | `abanico.ts` | `parsear.ts·ABANICO_VERBO_RE_LIST` (`requiere` ~308, `es requerido por` ~314, `es manejado por` ~316) + loop genérico `parsearAbanicoDirecto` (~357–369) | — | alineado · GAP-FIXTURE-ABANICO-HABILITADOR |
 | §5.1 | Evento `inicia` | `procedural.ts·oracionEvento` | `parsear.ts` (ruta evento) | `evento-consumo-canonico` | alineado |
 | §5.1 | Evento sobre **resultado** (no canónico) | `procedural.ts·oracionEvento` degrada a base | — | `procedural.test.ts` | cerrado |
 | §5.1 | Evento sobre **invocación** (no canónico) | `procedural.ts·oracionEvento` degrada a base | — | `procedural.test.ts` | cerrado |
@@ -2692,18 +2705,19 @@ Leyenda de **Estado**:
 | §5.2 | Condición sobre **invocación** (no canónico) | `procedural.ts·oracionCondicion` degrada a base | — | `procedural.test.ts` | cerrado |
 | §5.3 | Excepción sobre/sub/sub-sobretiempo | `procedural.ts·oracionEnlaceSinModificador` / `formatoTiempo*` / `duracionMetadata.ts` | `parser.condicionesExcepciones.test.ts` | (test) | alineado |
 | §5.4 | Invocación / autoinvocación | `procedural.ts·oracionEnlaceSinModificador` / `modelo/autoinvocacion.ts·esAutoInvocacion` | `parsear.ts` (`despu[eé]s`, rehidrata demora) | `invocacion-con-demora-tilde` / `autoinvocacion-con-demora-tilde` (estrictas) / `evento-invocacion-degrada-base` | alineado |
-| §6.1 | Agregación `consta de` | `estructural.ts·oracionEnlaceEstructural` (agregación) | `parsear.ts·astEstructural` (`consta de`) | (sin fixture) | GAP-FIXTURE-AGREGACION |
+| §6.1 | Agregación `consta de` | `estructural.ts·oracionEnlaceEstructural` (agregación) | `parsear.ts·astEstructural` (`consta de`) | `enlace-estructural-agregacion` (estricta) | alineado |
 | §6.2 | Exhibición `exhibe` / `así como` | `estructural.ts·oracionEnlaceEstructural` (exhibición) | `parsear.ts·astEstructural` (`exhibe`) | `enlace-estructural-exhibicion` | alineado |
-| §6.3 | Generalización `son` / `es un` | `estructural.ts·oracionEnlaceEstructural` (generalización) | `parsear.ts·astEstructural` (`es un` / `son`) | (sin fixture) | GAP-FIXTURE-GENERALIZACION |
+| §6.3 | Generalización `son` / `es un` | `estructural.ts·oracionEnlaceEstructural` (generalización) | `parsear.ts·astEstructural` (`es un` / `son`) | `enlace-estructural-generalizacion` (estricta) | alineado |
 | §6.3 | Generalización XOR `puede ser` | — (feature pendiente; `emitirEspecializacion` emite `es un`) | — (sin regex estructural) | — | GAP-XOR-FEATURE · GAP-XOR-PARSER |
 | §6.4 | Clasificación `es una instancia de` / `son instancias de` | `estructural.ts·oracionEnlaceEstructural` (clasificación) | `parsear.ts·astEstructural` (`es una instancia de` / `son instancias de`) | `enlace-estructural-clasificacion` | GAP-NOMBRE-INSTANCIA |
 | §6.5 | Etiquetado `tag` / `se relaciona con` / `se relacionan` (SE1–SE5) | `procedural.ts·oracionEstructuralEtiquetada` | — (sin regex en `astEstructural`) | (sin fixture) | GAP-TAG-PARSER · GAP-FIXTURE-TAGGED |
+| §6.5 | Sufijo de etiqueta `[etiqueta: …]` (extensión declarada, R-EST-TAG-3) | `procedural.ts·conEtiquetaEnlace` | `parsear.ts·ETIQUETA_SUFIX` / `aplicar.ts` (`fijar-etiqueta-enlace`) | `generar.test.ts` | alineado |
 | §6.6 | Etiquetado con estado especificado (SSE1–SSE7) | `procedural.ts·oracionEstructuralEtiquetada` (sufijo de estado) | — | (sin fixture) | GAP-SSE-PARSER · GAP-FIXTURE-SSE |
-| §7.1 | Descomposición `se descompone en` / `paralelo` (CX1/CX2) | `refinamiento.ts·oracionDescomposicion` / `oracionParalelo` / `describirProcesosTemporales` | — (sin regex dedicada) | `parser.designacionesPlegado.test.ts` (parcial) | GAP-CX-PARSER · GAP-FIXTURE-DESCOMPOSICION |
+| §7.1 | Descomposición `se descompone en` / `paralelo` (CX1/CX2) | `refinamiento.ts·oracionDescomposicion` / `oracionParalelo` / `describirProcesosTemporales` | `parsear.ts·parsearContexto` / `planificar.ts·planificarContexto` / `aplicar.ts` (`crear-refinamiento`) | `opl-reverse.test.ts` / `parser.test.ts` | parcial; GAP-CX-PARSER (residual refinadores/secuencia) · GAP-FIXTURE-DESCOMPOSICION |
 | §7.1 | Recomposición `se recompone desde` (CX7/CX8) | — | — | — | GAP-RECOMPONE |
 | §7.2 | Despliegue por relación fundamental (CX3) | `refinamiento.ts·oracionDespliegue` / `modoDespliegue` / `modoPorTipoEnlace` | regex estructurales de §6 | `parser.designacionesPlegado.test.ts` | alineado |
 | §7.2 | Plegado parcial | `plegado.ts·oracionPlegadoParcial` / `bloquesJerarquicos.ts·agruparOracionesPorOpd` | `parser.designacionesPlegado.test.ts` | (test) | alineado |
-| §7.2 | Plegado total `se pliega en el OPD padre` (CX5/CX6) | — | — | — | GAP-PLIEGA |
+| §7.2 | Plegado total `se pliega en el OPD padre` (CX5/CX6) | — | `parsear.ts·parsearContexto` (reconoce con warning `unsupported-kernel`; el reverse no aplica plegado) | — | GAP-PLIEGA |
 | §7.3 | Refinamiento autónomo `se refina por …` (CX4) | — (jerarquía vía `bloquesJerarquicos.ts·ordenarOpdsParaOpl` / `profundidadOpd`) | — | — | GAP-REFINA |
 | §7.4 | Visibilidad de estados por OPD | `duracionMetadata.ts·oracionEstados` / `bloquesJerarquicos.ts·agruparOracionesPorOpd` | — | — | alineado |
 | §7.5 | Marca temporal solo en descomposición de proceso | `refinamiento.ts·oracionesRefinamiento` / `describirProcesosTemporales` | — | — | alineado |
@@ -2715,12 +2729,12 @@ Leyenda de **Estado**:
 | §7.6 | Fan probabilístico `Pr=p` por rama (C-22) | `abanico.ts` / `procedural.ts·sufijoProbabilidad` (`Pr=p`) | `parsear.ts` descarta `Pr=p` como anotación | `abanico.test.ts` / `procedural.test.ts` | alineado |
 | §7.6 | Fan `m de f` (R-FAN-8) | — (`abanico.ts` solo `m=1`) | — | — | GAP-FAN-M |
 | §9 | Composición eje (a) — predicados coordinados | — (capa de composición ausente) | — (descomposición serial ausente) | — | GAP-COMPOSICION · GAP-COMP-REVERSE |
-| §11 | Etiqueta de ruta (path label) | `refsHints.ts·nombreOplExtremo` / `procedural.ts` (etiqueta de ruta) | — | — | GAP-VERIFY |
+| §11 | Etiqueta de ruta (path label) | `procedural.ts·oracionEnlaceConRuta` / `oracionProcedimentalParaRuta` | `parsear.ts·RUTA_PREFIJO_RE` / `aplicar.ts` → `modelo/rutas·definirRutaEtiqueta` | `parser.test.ts` (rutaEtiqueta reverse) / `generar.test.ts` (forward) | alineado · GAP-FIXTURE-RUTA |
 | §12–§13 | Display por OPD / orden / bloques | `bloquesJerarquicos.ts·agruparOracionesPorOpd` / `ordenarOpdsParaOpl` / `plegado.ts·oracionPlegadoParcial` | — | — | alineado |
 | §14.x | Panel OPL interactivo / tokens / referencias | `panel.ts·derivarPanelOpl` / `interaccion.ts·OplToken` / `crearLineaOplInteractiva` / `referenciaEnlaceEspecifico` | — | — | alineado |
 | §14.5 | Navegación click→foco (handler UI) | `interaccion.ts` (`OplToken.ref`) + handler en `app/src/ui` | — | — | alineado-fuera-opl |
 | §15 | Edición OPL clasificada / aplicación | `clasificadorEdicion.ts·clasificarEdicionOpl` / `edicionCanvas.ts·aplicarEdicionOpl` | `aplicar.ts·aplicarPatchesOpl` / `aplicarPatchEnlace` / `aplicarPatchAbanico` | — | alineado |
-| §15.x | Mutación por hecho (re-tokenización sub-span) | — (se traza a §9 y §14.5, no a función nueva) | `interaccion.ts·referenciaEnlaceEspecifico` | — | GAP-VERIFY |
+| §15.x | Mutación por hecho (re-tokenización sub-span) | — (se traza a §9 y §14.5, no a función nueva) | `interaccion.ts·referenciaEnlaceEspecifico` (confirmada; cableada en `ui/panelOpl/Bloques.tsx`) | — | alineado |
 | §16 | Visibilidad de esencia / orden canónico | `opciones.ts·VisibilidadOpl` / `VISIBILIDAD_OPL_DEFAULT` | — | — | alineado |
 | §18 | Diagnóstico / fail-fast | — | `aplicar.ts·aplicarPatchesOpl` (`Resultado<Modelo>`) / `clasificadorEdicion.ts·razonDesdeDiagnostico` / parser `DiagnosticoOpl` | — | alineado |
 
@@ -2735,9 +2749,9 @@ Lista consolidada de todos los marcadores `GAP-*` (sección de origen · descrip
 | GAP-XOR-FEATURE | §1.1 / §6.3 | `puede ser` (especialización XOR) canónico, reclasificado como feature pendiente; `es un` ya cubre la generalización individual. |
 | GAP-XOR-PARSER | §6.3 | `puede ser` sin regex estructural en `astEstructural`. |
 | GAP-REFINA | §1.1 / §7.3 | `se refina por …` (CX4) canónico, sin generador autónomo ni parser. |
-| GAP-PLIEGA | §1.1 / §7.2 | `se pliega en` (plegado total CX5/CX6) canónico, sin generador ni parser (existe plegado parcial). |
+| GAP-PLIEGA | §1.1 / §7.2 | `se pliega en` (plegado total CX5/CX6) canónico, sin generador; el parser lo reconoce (`parsear.ts·parsearContexto`, familia `plegado`, warning `unsupported-kernel`) pero el reverse no aplica plegado por diseño de corte (`planificar.ts·planificarContexto` solo aplica descomposición/despliegue). Existe plegado parcial. |
 | GAP-RECOMPONE | §1.1 / §7.1 | `se recompone desde` (CX7/CX8) canónico, sin generador ni parser. |
-| GAP-PLACEHOLDER-ENTIDAD | §2.1 | Cerrado: `entidadOplEsEmitible` suprime procesos placeholder antes de emitir OPL. |
+| GAP-PLACEHOLDER-OBJETO | §2.1 | Rama objeto de R-ENT-2 sin implementar: `entidadOplEsEmitible` retorna `true` para objetos placeholder (`checkers.ts` sí los reconoce: `Objeto`/`Objeto_N`); la supresión de procesos placeholder está cerrada (`esNombreProcesoPlaceholder` conectado en `generar.ts`). |
 | GAP-NOMBRE-INSTANCIA | §2.6 / §6.4 | Formato nominal `Instancia : Clase` sin generador dedicado. |
 | GAP-FIXTURE-EFECTO | §3.3 | Cerrado: `enlace-efecto-simple`. |
 | GAP-FIXTURE-TS3 | §3.4 | Cerrado: `cambio-estado-ts3` y `cambio-estado-ts3-compacto` son fixtures estrictas. |
@@ -2747,7 +2761,8 @@ Lista consolidada de todos los marcadores `GAP-*` (sección de origen · descrip
 | GAP-PARSE-TS5 | §3.6 | Cerrado: regex de `cambia … a \`estado\`` sin `de` verificada por fixture estricta. |
 | GAP-FIXTURE-TS5 | §3.6 | Cerrado: `cambio-estado-ts5-solo-salida` es fixture estricta. |
 | GAP-FIXTURE-HS | §4.x | Cerrado: `habilitador-con-estado-hs` es fixture estricta. |
-| GAP-ABANICO-AGENTE-PARSE | §4.x | Abanico de instrumento y fan inverso sin verificación de cobertura de parseo. |
+| GAP-NEGADA-REVERSE | §3.4 / §4.1 / §4.2 | La variante negada (extensión declarada, ver §3.4) es emisión-only: `procedural.ts` la emite pero no existe ruta de parseo; sin bisimetría. |
+| GAP-FIXTURE-ABANICO-HABILITADOR | §4.x | Cobertura de parseo del fan de instrumento/agente e inversos verificada (2026-06-12, `ABANICO_VERBO_RE_LIST` + `parsearAbanicoDirecto`), pero sin fixture ni test de parser dedicado que la defienda contra regresión. |
 | GAP-FIXTURE-EVENTO | §5.1 | Cerrado: `evento-consumo-canonico`. |
 | GAP-EVENTO-RESULTADO | §5.1 | Cerrado: evento sobre resultado degrada a resultado base. |
 | GAP-EVENTO-INVOCACION | §5.1 | Cerrado: evento sobre invocación degrada a invocación base. |
@@ -2756,17 +2771,18 @@ Lista consolidada de todos los marcadores `GAP-*` (sección de origen · descrip
 | GAP-EXC-UNIDADES-LITERAL | §5.3 | Cerrado por ajuste-spec: `unidades-tiempo` es metavariable realizada como valor+unidad. |
 | GAP-FIXTURE-INVOCACION | §5.4 | Cerrado: `invocacion-con-demora-tilde`, `autoinvocacion-con-demora-tilde` y `evento-invocacion-degrada-base`. |
 | GAP-INVOCACION-TILDE | §5.4 | Cerrado: emisión canónica `después de`; parser acepta grafía legacy sin tilde. |
-| GAP-FIXTURE-AGREGACION | §6.1 | Sin fixture roundtrip dedicado de agregación. |
+| GAP-FIXTURE-AGREGACION | §6.1 | Cerrado: `enlace-estructural-agregacion` (estricta). |
 | GAP-FIXTURE-EXHIBICION | §6.2 | Cerrado: `enlace-estructural-exhibicion`. |
-| GAP-FIXTURE-GENERALIZACION | §6.3 | Sin fixture roundtrip dedicado de generalización. |
+| GAP-FIXTURE-GENERALIZACION | §6.3 | Cerrado: `enlace-estructural-generalizacion` (estricta). |
 | GAP-FIXTURE-CLASIFICACION | §6.4 | Cerrado: `enlace-estructural-clasificacion`. |
 | GAP-TAG-PARSER | §6.5 | `se relaciona con` / `se relacionan` / etiquetas de usuario sin regex en `astEstructural`. |
 | GAP-FIXTURE-TAGGED | §6.5 | Sin fixture roundtrip dedicado de etiquetado. |
 | GAP-SSE-PARSER | §6.6 | Etiquetados con estado especificado heredan GAP-TAG-PARSER (sin regex). |
 | GAP-FIXTURE-SSE | §6.6 | Sin fixture dedicado de estructural con estado especificado. |
 | GAP-FIXTURE-ESTRUCTURALES | §6.x | Cerrado para relaciones fundamentales; etiquetado sigue separado en GAP-TAG-PARSER / GAP-FIXTURE-TAGGED. |
-| GAP-CX-PARSER | §7.1 | `se descompone en` se genera pero no hay regex que la reconstruya como refinamiento. |
+| GAP-CX-PARSER | §7.1 | Parcial: `parsear.ts·parsearContexto` + patch `crear-refinamiento` (`planificar.ts`/`aplicar.ts`) reconstruyen el refinamiento (idempotente, OPD hijo vacío; miembros enumerados no se crean: diagnóstico `info` deliberado). Residual: lista de refinadores y marca `en esa secuencia`/`paralelo` sin reconstruir. |
 | GAP-FIXTURE-DESCOMPOSICION | §7.1 | Sin fixture roundtrip dedicado de descomposición/despliegue. |
+| GAP-DESPLIEGUE-DEDICADO | §7.2 / §18 | Superficies dedicadas A.10 (`se despliega por partes/especialización/instanciación/rasgos en`) derivadas en §18 pero sin generador ni declaración de sustitución; la emisión vigente reusa el verbo de la relación fundamental. |
 | GAP-COMP-GUARDA | §7.7 / §9 | Cerrado-no-aplica: guard pendiente solo cuando exista GAP-COMPOSICION; hoy la protección es por construcción atómica. |
 | GAP-FAN-EVENTO | §7.6 | Parcial: efecto con objeto común y procesos alternativos cerrado; otros roles bajo evento siguen sin generador. |
 | GAP-FAN-RESULTADO-COND | §7.6 | Cerrado: fan resultado+condición degrada a fan base; `puede generarse` retirado. |
@@ -2775,7 +2791,9 @@ Lista consolidada de todos los marcadores `GAP-*` (sección de origen · descrip
 | GAP-COL-RESOLUCION | §8.3 | Cerrado por ajuste-spec: vive en kernel `modelo/**`, no exige generador OPL de reporte. |
 | GAP-COMPOSICION | §9 | Sin capa que coordine predicados de distinto verbo bajo sujeto-proceso compartido (eje a). |
 | GAP-COMP-REVERSE | §9 | Parser no descompone una línea de predicados coordinados de distinto verbo (R-COMP-REV-1). |
-| GAP-VERIFY | §11 / §14.5 / §15.x | Trazas no confirmadas en este pase: etiqueta de ruta, handler click→foco (UI), mutación por hecho. |
+| GAP-FIXTURE-RUTA | §11 | Sin fixture bisimétrica estricta de ruta en `fixtures-roundtrip.ts`; forward y reverse confirmados (`oracionEnlaceConRuta` / `RUTA_PREFIJO_RE` / `definirRutaEtiqueta`), defendidos por `parser.test.ts`. |
+| GAP-DONDE-EXPRESION | §18 | `restriccion_de_expresion` (`donde …`) derivable de la EBNF, sin generador ni parser; derivación-sin-soporte. |
+| GAP-RANGO-TEXTUAL | §18 | Intervalos de rango (`[..]`/`(..)`, `expresion_de_rango`, `clausula_de_rango`) derivables, sin generador ni parser; GAP-VARIA cubre solo el verbo `varía de … a`. |
 
 ### §20.3 Cobertura inversa
 
@@ -2783,8 +2801,8 @@ Barrido de los exports de `app/src/opl/**` para detectar símbolos sin entrada t
 
 | Símbolo | Archivo | Estado |
 |---------|---------|--------|
-| `oracionEnlaceConRuta` | `generadores/procedural.ts` | trazado §11 (etiqueta de ruta, GAP-VERIFY) |
-| `oracionProcedimentalParaRuta` | `generadores/procedural.ts` | trazado §11 (GAP-VERIFY) |
+| `oracionEnlaceConRuta` | `generadores/procedural.ts` | cubierto §11 (etiqueta de ruta; reverse `RUTA_PREFIJO_RE`/`definirRutaEtiqueta`) |
+| `oracionProcedimentalParaRuta` | `generadores/procedural.ts` | cubierto §11 |
 | `transicionesEstado` / `transicionesEstadoInteractivo` | `generadores/procedural.ts` | cubierto §3.4 (helpers de cambio de estado) |
 | `oracionesAbanicoInteractivo` / `oracionesAbanico` / `oracionAbanico` | `generadores/abanico.ts` | cubierto §7.6 (fan); ramas evento/m/prob en GAP-FAN-* |
 | `emitirDespliegueOcurren` | `generadores/refinamiento.ts` | cubierto §7.2 (emisor contextual de despliegue con ocurrencia) |
@@ -2794,7 +2812,7 @@ Barrido de los exports de `app/src/opl/**` para detectar símbolos sin entrada t
 | `formatearDuracion` / `nombreEstadoOpl` | `generadores/duracionMetadata.ts` | cubierto §2.3 / §5.3 |
 | `pluralizarCanonico` / `multiplicidadPlural` / `verbo` / `listarOpl` / `listarEstadosOpl` / `listarDesignaciones` / `nombreOplConMultiplicidad` | `generadores/refsHints.ts` | cubierto (utilitarios de superficie; multiplicidad §10, listas en cada familia) |
 | `codigoOpd` | `generadores/refsHints.ts` | cubierto §7 / §12 (código de OPD) |
-| `entidadOplEsEmitible` / `estadoOplEsEmitible` / `extremoOplEsEmitible` / `enlaceOplEsEmitible` | `generadores/refsHints.ts` | cubierto §2.1 (emitibilidad); GAP-PLACEHOLDER-ENTIDAD cerrado |
+| `entidadOplEsEmitible` / `estadoOplEsEmitible` / `extremoOplEsEmitible` / `enlaceOplEsEmitible` | `generadores/refsHints.ts` | cubierto §2.1 (emitibilidad; procesos placeholder suprimidos, residual GAP-PLACEHOLDER-OBJETO) |
 | `extraerMultiplicidad` | `parser/parsear.ts` | cubierto §10 (multiplicidad reverse) |
 | `parsearParrafoOpl` / `normalizarLineas` / `normalizarNombreOpl` / `claveNombre` | `parser/parsear.ts` | cubierto §18 (normalización) / §19 (parseo) |
 | `planificarEdicionOplLibre` | `parser/planificar.ts` | cubierto §15 (planificación de edición) |
@@ -2805,7 +2823,7 @@ Barrido de los exports de `app/src/opl/**` para detectar símbolos sin entrada t
 | `oracionPlegadoParcial` | `generadores/plegado.ts` | cubierto §7.2 / §12 |
 | `leyes/opl-reverse.test.ts` (ley `law-opl-safe-lens`) | `leyes/` | cubierto §19 |
 
-`GAP-spec` detectados (0) tras la reclasificación: `emitirDespliegueOcurren`, `emitirEspecializacion`, los formateadores inline de `duracionMetadata.ts` y la mecánica de colapso de bloques quedan trazados en §7.2, §6.3, §7.4 y §12–§13 respectivamente.
+`GAP-spec` detectados (0) tras la reclasificación: `emitirDespliegueOcurren`, `emitirEspecializacion`, los formateadores inline de `duracionMetadata.ts` y la mecánica de colapso de bloques quedan trazados en §7.2, §6.3, §7.4 y §12–§13 respectivamente. El sufijo `[etiqueta: …]` (`conEtiquetaEnlace`/`ETIQUETA_SUFIX`), detectado como GAP-spec en la auditoría 2026-06-12, queda trazado como extensión declarada en §6.5 (R-EST-TAG-3) y §18 `(* ext §6.5 *)`.
 
 Rationale: §20 materializa la disciplina de trazabilidad bidireccional (spec→código vía §20.1/§20.2; código→spec vía §20.3) declarada por el esquema de entrada (§0, campo `Traza a código`) y por la política de auditoría de alineación. Remite a `app/src/opl/**` y a `leyes/opl-reverse.test.ts` como superficie auditada.
 
@@ -2897,7 +2915,7 @@ Modelo completo y pequeño: **sistema de despacho de pedidos**. Reúne todas las
 
 ### A.1 Vocabulario del modelo
 
-- **Objetos**: **Pedido** (informacional, estados `pendiente`/`despachado`), **Inventario** (físico, estado `disponible`/`agotado`), **Bulto** (físico, resultado), **Guía** (informacional, resultado), **Furgón** (físico), **Repartidor** (físico, agente humano), **Cliente** (físico, beneficiario), **Sistema De Despacho** (informacional, sistema), **Zona** (informacional) con especializaciones **Zona Urbana** / **Zona Rural**.
+- **Objetos**: **Pedido** (informacional, estados `pendiente`/`despachado`), **Inventario** (físico, estado `disponible`/`agotado`), **Embalaje** (físico, insumo consumido), **Bulto** (físico, resultado), **Guía** (informacional, resultado), **Furgón** (físico), **Bicicleta** (físico), **Repartidor** (físico, agente humano), **Cliente** (físico, beneficiario), **Sistema De Despacho** (informacional, sistema), **Zona** (informacional) con especializaciones **Zona Urbana** / **Zona Rural**.
 - **Proceso raíz**: *Despachar* (descompone en *Preparar*, *Embalar*, *Entregar*).
 - **Atributo**: **Prioridad** de **Pedido**.
 
@@ -2919,24 +2937,23 @@ Estructural (§6):
 
 Transformador (§3):
 
-- *Despachar* consume **Pedido**.
+- *Despachar* consume **Embalaje**.
 - *Despachar* genera **Guía**.
 - *Despachar* afecta **Inventario**.
 - *Despachar* cambia **Pedido** de `pendiente` a `despachado`.
 
 Habilitador (§4):
 
-- **Repartidor** maneja *Despachar*.
-- *Despachar* requiere **Furgón**.
+- **Repartidor** maneja *Despachar*. (único enlace procedimental de **Repartidor** hacia *Despachar*: humano = agente, R-HAB-AG-1/5; el instrumento se realiza vía el abanico XOR de abajo, `reglas §5.3`)
 
 Modificador de control (§5):
 
-- **Pedido** inicia *Despachar*, que consume **Pedido**.
+- **Embalaje** inicia *Despachar*, que consume **Embalaje**.
 - *Despachar* ocurre si **Inventario** está en `disponible`, en cuyo caso *Despachar* afecta **Inventario**, de lo contrario *Despachar* se omite.
 
 Abanico XOR (§8.1) y multiplicidad (§10):
 
-- *Despachar* requiere exactamente uno de **Furgón** o **Repartidor**.
+- *Despachar* requiere exactamente uno de **Furgón** o **Bicicleta**. (objetos no humanos; las ramas del fan suprimen la oración H2 individual, §4.2)
 - *Despachar* genera al menos una **Guía**.
 
 ### A.3 OPL prosaica / compuesta (§9) del mismo modelo
@@ -2944,7 +2961,7 @@ Abanico XOR (§8.1) y multiplicidad (§10):
 La forma compuesta coordina hechos con eje compartido en una sola línea, **preservando un sub-span y una `ref` por hecho** (R-COMP-MAESTRA-1/2):
 
 - Eje (a) — predicado coordinado, sujeto-proceso compartido (**forma objetivo**; hoy sin generador, `GAP-COMPOSICION` §9.6):
-  `*Despachar* consume **Pedido**, genera **Guía**, afecta **Inventario** y requiere **Furgón**.`
+  `*Despachar* consume **Embalaje**, genera **Guía** y afecta **Inventario**.`
 - Eje (b) — destino enumerado estructural:
   `**Sistema De Despacho** consta de **Furgón**, **Repartidor** e **Inventario**.`
 
@@ -2953,23 +2970,22 @@ La forma compuesta coordina hechos con eje compartido en una sola línea, **pres
 | sub-span | tipo de hecho | `ref` |
 | --- | --- | --- |
 | `*Despachar*` | proceso (sujeto compartido) | proceso:despachar |
-| `consume **Pedido**` | transformador consumo | enlace:consumo · objeto:pedido |
+| `consume **Embalaje**` | transformador consumo | enlace:consumo · objeto:embalaje |
 | `genera **Guía**` | transformador resultado | enlace:resultado · objeto:guia |
 | `afecta **Inventario**` | transformador efecto | enlace:efecto · objeto:inventario |
-| `requiere **Furgón**` | habilitador instrumento | enlace:instrumento · objeto:furgon |
 
-`refs` de la línea = unión sin duplicados de las cinco filas (R-COMP-MAESTRA-2, vía `refsUnicasPorTipoId`); el hover sobre `genera` resuelve `enlace:resultado`, no la primera `ref` (R-COMP-MAESTRA-3). Orden estable por fuerza semántica consumo→resultado→efecto→instrumento (R-COMP-ELEG-3). `parsear(componer(F)) = F` como conjunto (R-COMP-REV-2).
+`refs` de la línea = unión sin duplicados de las cuatro filas (R-COMP-MAESTRA-2, vía `refsUnicasPorTipoId`); el hover sobre `genera` resuelve `enlace:resultado`, no la primera `ref` (R-COMP-MAESTRA-3). Orden estable por fuerza semántica consumo→resultado→efecto (R-COMP-ELEG-3). Los enlaces de instrumento no se coordinan aquí: viven bajo el abanico XOR de A.2, y un fan se realiza como oración de abanico, no por coordinación copulativa (§4.2). `parsear(componer(F)) = F` como conjunto (R-COMP-REV-2).
 
 ### A.4 Refinamiento (§7) — descomposición síncrona de *Despachar*
 
 OPD hijo SD1: *Despachar* se descompone en sus subprocesos en secuencia temporal (primero arriba, último abajo):
 
 - *Despachar* se descompone en *Preparar*, *Embalar* y *Entregar*, en esa secuencia.
-- *Preparar* consume **Pedido**. *Preparar* cambia **Pedido** de `pendiente`.
+- *Preparar* consume **Embalaje**. *Preparar* cambia **Pedido** de `pendiente`.
 - *Embalar* genera **Bulto**.
 - *Entregar* cambia **Pedido** a `despachado`. *Entregar* afecta **Cliente**.
 
-Nota (§7): el enlace de consumo de **Pedido** y el de resultado de **Guía** NO viven en el contorno de *Despachar* en el OPD hijo: migran al primer/último subproceso y se reasignan (R-CX-DIST-1/2). El cambio de estado `pendiente`→`despachado` se escinde: entrada en *Preparar*, salida en *Entregar* (R-ESC-1).
+Nota (§7): el enlace de consumo de **Embalaje** y el de resultado de **Guía** NO viven en el contorno de *Despachar* en el OPD hijo: migran al primer/último subproceso y se reasignan (R-CX-DIST-1/2). El cambio de estado `pendiente`→`despachado` se escinde: entrada en *Preparar*, salida en *Entregar* (R-ESC-1).
 
 Rationale: §2–§10 (todas las familias); §9.0 (composición a nivel de token); §7.5–§7.6 (distribución de enlaces y escisión de cambio de estado en descomposición síncrona). Ejemplo de referencia para fixtures y para enseñanza de la spec.
 
@@ -3036,7 +3052,7 @@ Rationale: `sociotecnico.ts` (tipos `ActorSim`/`AgenteSim`/`DecisionSim`/`Efecto
 
 ## Apéndice C — Índice de IDs
 
-Familias de identificadores de regla y de oración usados en §1–§23, con su sección de origen. Las IDs de oración (D*, T*/TS*, H*/HS*, E*, C*, SE*/SSE*, CX*, EX*, IV*) etiquetan hechos OPL atómicos; las IDs de regla (`R-*`) etiquetan normas con `Rationale:`/`Enforcement`.
+Familias de identificadores de regla y de oración usados en §1–§23, con su sección de origen. Las IDs de oración (D*, T*/TS*, H*/HS*, E*, C*, RF*/RX*/RH*, SE*/SSE*, CX*, EX*, IV*) etiquetan hechos OPL atómicos; las IDs de regla (`R-*`) etiquetan normas con `Rationale:`/`Enforcement`.
 
 ### C.1 IDs de oración (hechos atómicos)
 
@@ -3049,7 +3065,8 @@ Familias de identificadores de regla y de oración usados en §1–§23, con su 
 | CT1–CT2 / CH1–CH2 / CS1–CS6 | Condiciones: transformador/habilitador/con estado | §5.2 |
 | EX1–EX2 | Excepción: EX1 sobretiempo, EX2 subtiempo | §5.3 |
 | IV1–IV2 | Invocación / autoinvocación | §5.4 |
-| SE1–SE5 | Estructurales: agregación, exhibición, especialización, instanciación, tagged | §6 |
+| RF1–RF4 (+RF2b/RF3b/RF4b) / RX1–RX2 / RH1 | Relaciones estructurales fundamentales: RF1 agregación, RF2 exhibición, RF3 generalización (RX* XOR, RH1 herencia múltiple), RF4 clasificación | §6 |
+| SE1–SE5 | Estructurales etiquetados: etiqueta de usuario, `se relaciona con`/`se relacionan`, bidireccional, recíproco | §6.5 |
 | SSE1–SSE7 | Estructurales con estado especificado | §6 |
 | CX1–CX8 | Refinamiento / gestión de contexto (in-zoom, despliegue, escisión) | §7 |
 | CL | Token de composición / línea OPL | §9 |
@@ -3074,7 +3091,7 @@ Familias de identificadores de regla y de oración usados en §1–§23, con su 
 | R-IDP-*, R-ROL-*, R-CX-*, R-REF-*, R-DIST-*, R-ESC-* | Refinamiento / contexto / distribución de enlaces | §7 |
 | R-OPL-RF-*, R-OPL-CX-*, R-OPL-TOTAL-* | OPL de refinamiento / despliegue total | §7 |
 | R-COMB-*, R-ZNC-*, R-FAN-*, R-FAN-EST-*, R-FAN-PROB-*, R-FAN-M-*, R-PROB-* | Combinatoria / abanicos (XOR/OR/probabilístico) | §8 |
-| R-COL-FUERZA-*, R-FUERZA-*, R-COL-PREC-*, R-PREC-* | Colisión de roles / fuerza / precedencia | §8 |
+| R-FUERZA-*, R-PREC-* | Colisión de roles / fuerza / precedencia (propiedad de `reglas §6.5`/`§6.6`, citadas en §8.3.1) | §8 |
 | R-COMP-MAESTRA-*, R-COMP-EJE-*, R-COMP-ELEG-*, R-COMP-ZP-*, R-COMP-REV-*, R-COMP-CFG-* | Composición de oraciones / prosa OPL | §9 |
 | R-MULT-*, R-MULT-COMB-* | Multiplicidad y cardinalidad | §10 |
 | R-OPL-RUTA-* | Etiquetas de ruta | §11 |

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opd-es
 nombre: opd-es
-version: 3.0.0
+version: 3.0.2
 estado: publicado
 descripcion: "Gramática visual canónica del OPD: capa visual de la SSOT OPM-ES con las reglas V-* de representación gráfica de OPM."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-visual-es.md (sha256:d492f499228e8a7c4974ed30f2815b78a5e8841590a5810cf6255124699d55ac) el 2026-06-12; cuerpo byte-fiel (renombrado de opm-visual-es.md a opd-es.md por la regla lugar-coincide). Fuente original: Consolidacion SSOT OPM v3.0.0: capa visual canonica del corpus OPM-ES (gramatica grafica del OPD)."
+fuente: "SSOT OPM v3.0.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-visual-es.md (sha256:02506aa8de095c009621879cc95c03d0e93870ef5ffd7af9ccc1402bf125979e) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -15,13 +15,13 @@ cita: [urn:fxsl:kb:manual-metodologico-opm-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:o
 ---
 
 
-# OPD — Gramática visual de OPM (v3.0.0)
+# OPD — Gramática visual de OPM (v3.0.1)
 
 Reglas completas para construir y evaluar cualquier OPD (Diagrama Objeto‑Proceso, Object-Process Diagram) conforme a esta adaptación española del corpus OPM. Este documento opera primariamente a nivel de **tipo y representación**: define las primitivas, composiciones válidas, restricciones y reglas de precedencia que gobiernan la capa gráfica de OPM, e incluye las convenciones visuales de ejecución, simulación, instanciación, estereotipos, composición inter-modelo, validación y exportación canónica cuando afectan la forma visible del OPD.
 
 Referencia de núcleo: `urn:fxsl:kb:opm-es`.
 
-Esta versión integra los resultados del análisis de corpus OPCloud contra la v1 y aplica las decisiones axiomáticas D1..D6 documentadas en `ssot-decisiones-axiomaticas.md`. Es la **capa visual canónica** del corpus OPM-ES en KORA (v3.0.0). Reemplaza a la línea `ssot/` legacy, ya removida del repositorio.
+Esta versión integra los resultados del análisis de corpus OPCloud contra la v1 y aplica las decisiones axiomáticas D1..D6 documentadas en `ssot-decisiones-axiomaticas.md`. Es la **capa visual canónica** del corpus OPM-ES en KORA (v3.0.1). Reemplaza a la línea `ssot/` legacy, ya removida del repositorio.
 
 ---
 
@@ -280,7 +280,7 @@ Esta versión declara explícitamente cinco familias canónicas de enlace. El re
 
 **Regla V-7**: Un enlace de efecto requiere que el objeto tenga al menos un estado definido. [Semántica heredada de `opm-es` §9; aquí se fija la restricción de conectividad gráfica.]
 
-**Regla V-8**: Un enlace de resultado hacia un objeto con estado inicial debe conectar al rectángulo del objeto, nunca directamente al estado inicial.
+**Regla V-8**: Un enlace de resultado hacia un objeto con estado inicial debe conectar al rectángulo del objeto o a un estado distinto del inicial, nunca directamente al estado inicial. [Semántica heredada de `opm-es` §Resultado hacia un objeto con estado inicial; aquí se fija la restricción de conectividad gráfica.]
 
 **Regla V-115**: Como regla general, todo proceso explícito DEBE transformar (crear, consumir o afectar) al menos un objeto. Los enlaces habilitadores (agente, instrumento) no satisfacen este requisito. Excepción: los procesos persistentes reconocidos por la capa base son válidos cuando el hecho del modelo consiste precisamente en mantener una condición o estado relevante en el tiempo. [Semántica heredada de `opm-es` §9; aquí se fija la restricción mínima de conectividad transformadora.]
 
@@ -305,7 +305,7 @@ Cuando un enlace parte de o llega a un estado específico dentro del objeto:
 | Agente | agente → proceso | Círculo negro relleno (black lollipop) | Persona que habilita sin ser transformada |
 | Instrumento | instrumento → proceso | Círculo blanco vacío (white lollipop) | Objeto inanimado que habilita sin ser transformado |
 
-**Regla V-10**: Si un habilitador deja de existir durante la ejecución, el proceso se detiene y el estado del afectado queda indeterminado. [Semántica heredada de `opm-es` §10; aquí se fija la consecuencia visual: la elipse del proceso deja de estar rellena.]
+**Regla V-10**: Si un habilitador deja de existir durante la ejecución, el proceso se detiene y el estado del afectado queda indeterminado. [Semántica heredada de `opm-es` §10; aquí se fija la consecuencia visual: la elipse del proceso deja de exhibir la marca reservada de actividad (V-53), cualquiera sea el canal declarado por la implementación.]
 
 ### 3.4 Enlaces habilitadores con estado especificado
 
@@ -321,7 +321,7 @@ El enlace parte del estado específico del agente/instrumento hacia el proceso. 
 
 ### 4.1 Evento (`e`)
 
-El modificador `e` se coloca sobre cualquier enlace transformador o habilitador, cerca del extremo del proceso. Semántica: el objeto (o su estado) **inicia** la evaluación de la precondición del proceso.
+El modificador `e` se coloca sobre los enlaces habilitadores y los transformadores de entrada (consumo, efecto), cerca del extremo del proceso. Semántica: el objeto (o su estado) **inicia** la evaluación de la precondición del proceso.
 
 | Enlace base | + evento = | Geometría adicional |
 |---|---|---|
@@ -356,7 +356,7 @@ Los modificadores `e` y `c` se combinan con estado especificado. La geometría r
 | Excepción por sobretiempo | `/` (una barra oblicua) | Duración real > duración máxima |
 | Excepción por subtiempo | `//` (dos barras oblicuas) | Duración real < duración mínima |
 
-Estos enlaces conectan un proceso fuente con un proceso de manejo de excepción. El proceso de manejo es ambiental (borde discontinuo).
+Estos enlaces conectan un proceso fuente con un proceso de manejo de excepción. El proceso de manejo es ambiental (borde discontinuo). A diferencia de los modificadores `e`/`c` (§4.2/§4.3), que anotan un enlace base, la excepción temporal es un **enlace de control autónomo** (firma proceso→proceso), no un modificador; aparece bajo este capítulo por afinidad temática, no porque modifique otro enlace.
 
 ---
 
@@ -395,13 +395,13 @@ Estos enlaces conectan un proceso fuente con un proceso de manejo de excepción.
 | Consumo | N objetos → 1 proceso | 1 objeto → N procesos |
 | Resultado | N procesos → 1 objeto | 1 proceso → N objetos |
 | Efecto | N objetos ↔ 1 proceso | N procesos ↔ 1 objeto |
-| Agente | (no aplica) | 1 agente → N procesos |
-| Instrumento | (no aplica) | 1 instrumento → N procesos |
+| Agente | N agentes → 1 proceso | 1 agente → N procesos |
+| Instrumento | N instrumentos → 1 proceso | 1 instrumento → N procesos |
 | Invocación | N procesos → 1 proceso | 1 proceso → N procesos |
 
 ### 5.6 Abanicos con modificadores de control
 
-Cada abanico XOR/OR admite variantes con `e` (evento) y `c` (condición). La marca se coloca sobre cada enlace individual del abanico. La contraparte OR de cualquier XOR se obtiene reemplazando el arco simple por arco doble y la semántica de "exactamente" por "al menos".
+Los abanicos XOR/OR de enlaces del lado de entrada (consumo, efecto, agente, instrumento) admiten variantes con `e` (evento) y `c` (condición); la marca se coloca sobre cada enlace individual del abanico. Los abanicos de resultado e invocación NO las admiten: el resultado no existe antes del proceso (cfr. §13.5) y la invocación queda fuera del alcance definicional de los modificadores de control (cfr. `reglas-opm-estrictas-es` AP-03/AP-10). La contraparte OR de cualquier XOR se obtiene reemplazando el arco simple por arco doble y la semántica de "exactamente" por "al menos".
 
 ### 5.7 Abanicos con estado especificado
 
@@ -687,7 +687,7 @@ El semi-plegado es un mecanismo de visualización intermedio entre el plegado co
 
 ### 11.1 Regla general
 
-**Regla V-36**: Los enlaces conectados al contorno exterior de un proceso descompuesto se distribuyen a todos los subprocesos. Los enlaces de agente e instrumento conectados al proceso padre aplican a todos los subprocesos. [Semántica heredada de `opm-es` §14.2.2.4; aquí se fija la distribución gráfica de enlaces en descomposición.]
+**Regla V-36**: Los enlaces conectados al contorno exterior de un proceso descompuesto se interpretan distributivamente. Las familias que se distribuyen a todos los subprocesos son efecto básico, agente e instrumento (cfr. V-104); consumo y resultado se rigen por V-37/V-103 (prohibidos en el contorno exterior, migran al primer/último subproceso); los enlaces estructurales no se distribuyen (V-105). [Semántica heredada de `opm-es` §14.2.2.4; aquí se fija la distribución gráfica de enlaces en descomposición.]
 
 ### 11.2 Distribución por tipo de enlace
 
@@ -1506,7 +1506,7 @@ Las operaciones auxiliares son gestos de la herramienta sobre un OPD activo que 
 | V-33 | In-zooming: contorno grueso en padre e hijo |
 | V-34 | Descomposición: elipse agrandada contiene subprocesos |
 | V-35 | Línea temporal: arriba → abajo |
-| V-36 | Agente/instrumento en contorno exterior se distribuyen |
+| V-36 | Contorno exterior se interpreta distributivamente; familias según V-37/V-103/V-104/V-105 |
 | V-37 | Consumo/resultado NO en contorno exterior de descomposición |
 | V-38 | Eventos sistémicos no cruzan límite de descomposición |
 | V-39 | Condición omite subproceso: control pasa al siguiente |
