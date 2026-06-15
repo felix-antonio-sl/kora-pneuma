@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:regimen-de-ley
 nombre: regimen-de-ley
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; openclaw y hermes son competencia delegada legacy con fecha de revisión."
-fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). Decisión interna al ecosistema, sin hash externo."
+fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) que la sesión de auditoría doctrinal aplicó a 5 artefactos (H1/H2/H3) y mecanizó en el contrato de conocimiento de emitir(). Decisión interna al ecosistema, sin hash externo."
 autor: FS
 creado: 2026-06-14
 lang: es
@@ -27,6 +27,7 @@ fijando una sola fuente de doctrina y congelando la otra.
 | 1 | **pneuma es la fuente única de doctrina futura de KORA.** |
 | 2 | **La ley de la encarnación bestia queda congelada.** |
 | 3 | **openclaw y hermes son competencia delegada legacy de la bestia**, con fecha de revisión. |
+| 4 | **El corpus de la bestia es origen de migración por demanda, nunca destino de resolución**: migrar-o-omitir, jamás enlazar. |
 
 ## 1. Fuente única de doctrina futura
 
@@ -52,6 +53,16 @@ fijando una sola fuente de doctrina y congelando la otra.
 4. La bestia conserva su corpus (≈745 artefactos) y su realización de runtimes;
    sigue siendo autoritativa para todo lo no migrado. Congelar la ley no jubila
    el cuerpo: lo fija como referencia estable.
+5. El corpus de la bestia es **origen de migración por demanda, nunca destino
+   de resolución en runtime**. Un artefacto de pneuma no referencia la bestia
+   (ni por path ni por URN no catalogado): el conocimiento se **migra** a pneuma
+   (byte-fiel o adaptado, URN preservado, `sha256` en `fuente:`) y se cataloga
+   localmente, o se **omite con razón declarada** (la sustancia vive en el
+   cuerpo mientras tanto). Migrar-o-omitir, jamás enlazar.
+6. Esto no duplica: la bestia congelada es respaldo inmutable, no segunda
+   fuente viva. El contrato de conocimiento del sello (función pura del URN,
+   blindada por `lugar-coincide`) deriva siempre contra el catálogo central de
+   pneuma, nunca contra la estructura de la bestia.
 
 ## 3. openclaw y hermes — competencia delegada legacy
 
