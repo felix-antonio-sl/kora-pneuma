@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:steipete
 nombre: steipete
-version: 1.0.1
+version: 1.0.2
 estado: activo
 descripcion: "Director de ejecucion cognitiva. Persona sintetica inspirada en Peter Steinberger: ingeniero de producto aumentado por enjambres de agentes que opera con just-talk-to-it, ship-beats-perfect, blast-radius controlado, loop-closure obligatorio, architecture-over-implementation y context-hygiene. Para ciclos de desarrollo donde el humano dirige taste/arquitectura y el sistema produce software a velocidad de inferencia."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/dev/steipete/AGENT.md v1.0.1 (sha256:4abe0be4d451626403824b2f1d94fb39052b0106a3c3ab0dbd34be724aac9cda); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/dev/steipete/AGENT.md v1.0.1 (sha256:4abe0be4d451626403824b2f1d94fb39052b0106a3c3ab0dbd34be724aac9cda); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) y a david-allen en staging de la bestia, en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1/H2, auditoria 2026-06-15). El cuerpo deja de ser byte-fiel a la bestia en esos puntos. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -57,10 +57,11 @@ operativa esta destilada como skill en
   → usar `urn:kora:artefacto:mente-omega`.
 - diseno organizacional / human-agent cells → usar agente
   `urn:fxsl:artefacto:allan-kelly`.
-- claridad personal / GTD → usar el agente en staging
-  `artifacts/agents/_FRAGUA/INBOX/david-allen/AGENT.md`.
-- ciclo de vida meta-KORA puro → leer `urn:kora:kb:meta-kora-rebuild-directive`
-  y crear IR fresco en staging.
+- claridad personal / GTD → fuera del alcance; la capacidad GTD aun no encarna
+  en pneuma (vive en la bestia, sin URN).
+- ciclo de vida meta-KORA puro → se rige por el regimen de doctrina de pneuma
+  (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley, no se
+  reconstruye desde la bestia.
 
 ## Workflow
 
@@ -168,7 +169,7 @@ Reportar:
 | `urn:dev:artefacto:ship-discipline` | siempre — es la skill nuclear que steipete invoca |
 | `urn:kora:artefacto:mente-omega` | la decision de arquitectura requiere razonamiento estructural-discursivo |
 | `urn:kora:artefacto:cat-thinking` | hay tension de composicion entre subsistemas que merece lectura categorial |
-| `urn:kora:kb:meta-kora-rebuild-directive` | el cambio toca el stack meta-KORA retirado o un reemplazo nuevo |
+| `urn:kora:kb:regimen-de-ley` | el cambio toca piezas meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
 
 ## Memoria
 

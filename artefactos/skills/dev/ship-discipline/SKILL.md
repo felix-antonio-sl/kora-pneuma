@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:ship-discipline
 nombre: ship-discipline
-version: 1.0.1
+version: 1.0.2
 estado: activo
 descripcion: "Skill de disciplina de envio: blast radius, loop closure, ship-beats-perfect, architecture-over-implementation, repo-shaping para agent-friendliness, agent-foreman. Para cualquier agente que produzca o intervenga software con velocidad de inferencia manteniendo steerability, taste y reversibilidad."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577); cuerpo Markdown preservado byte-fiel. 4 referencias byte-identicas. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577); cuerpo Markdown preservado byte-fiel salvo la correccion 1.0.2. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1, auditoria 2026-06-15). 4 referencias byte-identicas. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -52,8 +52,9 @@ correccion.
 - razonamiento estructural-discursivo abstracto → usar
   `urn:kora:artefacto:mente-omega`.
 - enmarque categorial puro → usar `urn:kora:artefacto:cat-thinking`.
-- ciclo de vida meta-KORA → leer `urn:kora:kb:meta-kora-rebuild-directive`
-  y crear IR fresco en staging.
+- ciclo de vida meta-KORA → se rige por el regimen de doctrina de pneuma
+  (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley, no se
+  reconstruye desde la bestia.
 - diseno de celulas humano-agente organizacionales → usar
   `urn:fxsl:artefacto:cell-design`.
 
@@ -172,7 +173,7 @@ Reportar:
 |---|---|
 | `urn:kora:artefacto:mente-omega` | la decision de arquitectura requiere razonamiento estructural-discursivo previo |
 | `urn:kora:artefacto:cat-thinking` | la composicion del repo o la integracion entre subsistemas tensiona y se necesita lectura categorial |
-| `urn:kora:kb:meta-kora-rebuild-directive` | se va a producir o reemplazar una pieza meta-KORA |
+| `urn:kora:kb:regimen-de-ley` | se va a producir o reemplazar una pieza meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
 
 ## Recursos
 

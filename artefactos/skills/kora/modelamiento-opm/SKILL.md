@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:modelamiento-opm
 nombre: modelamiento-opm
-version: 1.8.0
+version: 1.8.1
 estado: activo
 descripcion: "Skill horizontal y dialectica para co-construir, refinar, validar y serializar modelos OPM (Object-Process Methodology, ISO 19450) con un operador humano. Anclada primero al corpus OPM/Forja SSOT ES y al modelador deep-opm-pro como mesa de trabajo interactiva. Anti-complacencia: bloquea avance ante ambiguedad, fuerza aclaracion antes de plasmar, no construye sobre barro."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15)."
 autor: FS
 creado: 2026-04-27
 lang: es

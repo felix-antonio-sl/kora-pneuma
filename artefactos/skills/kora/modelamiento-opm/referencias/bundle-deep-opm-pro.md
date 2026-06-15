@@ -1,21 +1,3 @@
----
-_manifest:
-  urn: "urn:kora:kb:bundle-deep-opm-pro"
-  type: kb
-  provenance:
-    created_by: "FS"
-    created_at: "2026-05-08"
-    source: "Derivado de ~/projects/deep-opm-pro/app/src/serializacion/json.ts y app/src/modelo/tipos/* al 2026-05-08. v1.1.0 incorpora el diseno AnclaNormativa y LogDecisiones v0 documentado en el diseno adjudicado de deep-opm-pro al 2026-06-04. v1.2.0 deriva ademas de app/src/autoria/{procedencia,bundle,compilar/tipos,dsl}.ts al 2026-06-10."
-    updated_at: "2026-06-10"
-    update_reason: "v1.2.0 sincroniza con los cortes W5.2/W5.3/G2/E-1 de deep-opm-pro: sello de procedencia de 3 componentes dentro de modelo.procedencia (glosario retirado en G2), taxonomia de anclas extraidas inline (norma/ratificacion/candidata), variante de OPD generic-view, e import del campo .json del ResultadoBundle cuando el bundle proviene del compilador. v1.3.0 absorbe W6.5 y M2: extension aditiva NotaMesa (meta de la mesa, V-204), LogDecisiones v0 con modeloHash=protoHash del sello y export bloqueado sin sello (transiciones registradas por la app sin retroceso; L9), y el camino compilador como protocolo primario de emision (compilarProto + construirSello + emitirBundle)."
-version: "1.3.0"
-status: activo
-nombre: bundle-deep-opm-pro
-descripcion: "Contrato del bundle JSON 'deep-opm-pro.modelo.v0' que la skill modelamiento-opm emite para que el modelador deep-opm-pro lo importe. Incluye extensiones meta opcionales AnclaNormativa y LogDecisiones v0 para el ciclo re-elicitar."
-tags: [opm, deep-opm-pro, contrato, json, importable, ancla-normativa, log-decisiones, re-elicitar]
-lang: es
----
-
 # Bundle deep-opm-pro — contrato de import
 
 Documento JSON canonico que la skill `modelamiento-opm` emite cuando el destino es **edicion / refinamiento / revision** en el modelador `~/projects/deep-opm-pro/app/`.

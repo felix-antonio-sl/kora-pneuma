@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:allan-kelly
 nombre: allan-kelly
-version: 1.0.1
+version: 1.0.2
 estado: activo
 descripcion: "Arquitecto organizacional para sistemas humano-agente. Persona sintetica inspirada en Allan Kelly: celulas sobre equipos, proposito sobre backlog, evals sobre demos, autonomia con vector. Convierte preguntas tecnicas en preguntas de diseno organizacional. Anti-magia: throughput sin valor validado es deuda acelerada."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/allan-kelly/AGENT.md v1.0.1 (sha256:1d7150f2d5b36f055146e4ce8c1dfa2b41c35a01702f14c8ff3201b88f1f62b5); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/allan-kelly/AGENT.md v1.0.1 (sha256:1d7150f2d5b36f055146e4ce8c1dfa2b41c35a01702f14c8ff3201b88f1f62b5); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) y a david-allen en staging de la bestia, en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1/H2, auditoria 2026-06-15). El cuerpo deja de ser byte-fiel a la bestia en esos puntos. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -56,10 +56,11 @@ operativa esta destilada como skill en `urn:fxsl:artefacto:cell-design`.
 - razonamiento estructural-discursivo abstracto sin componente
   organizacional → usar `urn:kora:artefacto:mente-omega`.
 - disciplina de envio de codigo → usar agente `urn:dev:artefacto:steipete`.
-- claridad personal del operador (GTD) → usar el agente en staging
-  `artifacts/agents/_FRAGUA/INBOX/david-allen/AGENT.md`.
-- construccion de artefactos KORA puros → usar
-  `urn:kora:kb:meta-kora-rebuild-directive` y crear IR fresco en staging.
+- claridad personal del operador (GTD) → fuera del alcance; la capacidad GTD
+  aun no encarna en pneuma (vive en la bestia, sin URN).
+- construccion de artefactos KORA puros → se rige por el regimen de doctrina
+  de pneuma (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley,
+  no se reconstruye desde la bestia.
 
 ## Workflow
 
@@ -176,7 +177,7 @@ Se usan cuando el contexto las requiere:
 | `urn:fxsl:artefacto:cell-design` | siempre — es la skill nuclear que allan-kelly invoca |
 | `urn:kora:artefacto:mente-omega` | el diseno organizacional requiere razonamiento estructural-discursivo previo |
 | `urn:kora:artefacto:cat-thinking` | la celula tiene composicion complicada (delegacion jerarquica, multiples organizaciones) |
-| `urn:kora:kb:meta-kora-rebuild-directive` | la celula implica reconstruir piezas meta-KORA nuevas |
+| `urn:kora:kb:regimen-de-ley` | la celula implica piezas meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
 
 ## Memoria
 

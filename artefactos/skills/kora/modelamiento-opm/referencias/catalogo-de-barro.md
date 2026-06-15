@@ -1,19 +1,3 @@
----
-_manifest:
-  urn: "urn:kora:kb:catalogo-de-barro"
-  type: kb
-  provenance:
-    created_by: "FS"
-    created_at: "2026-05-08"
-    source: "Derivado de la postura dialectica de modelamiento-opm v1.2.0 + experiencia de modelado OPM con operadores."
-version: "1.0.0"
-status: activo
-nombre: catalogo-de-barro
-descripcion: "Catalogo de anti-patrones de modelado OPM (barro) que la skill modelamiento-opm detecta y bloquea. Cada entrada incluye sintoma, regla en juego, pregunta clarificadora y criterio de salida."
-tags: [opm, dialectico, anti-patrones, modelado, aclaracion]
-lang: es
----
-
 # Catalogo de barro
 
 "Barro" = cualquier ambiguedad, conjetura, primitiva mal aplicada o elemento sin proposito declarado que el operador pretende plasmar en el modelo. La skill `modelamiento-opm` lo detecta, lo cita, lo bloquea y entra al estado `aclarar`.

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:cell-design
 nombre: cell-design
-version: 1.0.1
+version: 1.0.2
 estado: activo
 descripcion: "Skill de diseno organizacional para celulas humano-agente: intent contracts, autonomy envelopes, evals, control plane, debt audit, recalibracion. Para cualquier agente que disene, evalue o recalibre unidades de delivery donde humanos y agentes operan como una sola unidad de entrega con responsabilidad de valor compartida."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/fxsl/cell-design/SKILL.md v1.0.1 (sha256:3f3845200c3913d20bdd8c78bcee42a8d2172d1eff4644faea28e4a8bd728234); cuerpo Markdown preservado byte-fiel. 3 referencias byte-identicas. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/fxsl/cell-design/SKILL.md v1.0.1 (sha256:3f3845200c3913d20bdd8c78bcee42a8d2172d1eff4644faea28e4a8bd728234); cuerpo Markdown preservado byte-fiel salvo la correccion 1.0.2. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) y a gtd-flow en staging de la bestia, en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1/H2, auditoria 2026-06-15). 3 referencias byte-identicas. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -53,10 +53,11 @@ preguntas tecnicas como preguntas de diseno organizacional.
 - enmarque categorial puro → usar `urn:kora:artefacto:cat-thinking`.
 - disciplina de envio de codigo → usar
   `urn:dev:artefacto:ship-discipline`.
-- claridad personal del operador (GTD) → usar la skill en staging
-  `artifacts/skills/_TALLER/INBOX/gtd-flow/SKILL.md`.
-- construccion de piezas meta-KORA → leer
-  `urn:kora:kb:meta-kora-rebuild-directive` y crear IR fresco en staging.
+- claridad personal del operador (GTD) → fuera del alcance; la capacidad GTD
+  aun no encarna en pneuma (vive en la bestia, sin URN).
+- construccion de piezas meta-KORA → se rige por el regimen de doctrina de
+  pneuma (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley, no
+  se reconstruye desde la bestia.
 
 ## Workflow
 
@@ -246,7 +247,7 @@ NO HACER bajo ninguna circunstancia:
 |---|---|
 | `urn:kora:artefacto:mente-omega` | el diseno organizacional requiere razonamiento estructural-discursivo previo |
 | `urn:kora:artefacto:cat-thinking` | la celula tiene composicion complicada y se necesita lectura categorial |
-| `urn:kora:kb:meta-kora-rebuild-directive` | la celula incluye piezas meta-KORA nuevas o reemplazos |
+| `urn:kora:kb:regimen-de-ley` | la celula incluye piezas meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
 
 ## Recursos
 
