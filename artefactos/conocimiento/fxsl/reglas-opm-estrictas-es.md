@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:reglas-opm-estrictas-es
 nombre: reglas-opm-estrictas-es
-version: 1.4.0
+version: 1.4.1
 estado: publicado
 descripcion: "Reglas OPM estrictas — SSOT prescriptiva OPD/OPL de OPFORJA: canon de reglas duras para tooling, validación mecánica y modelado estricto."
-fuente: "SSOT OPM v1.4.0. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:5b02e0a1dc6313c9e55242bd143cff46e27843c24656376cbd0156f560ad4e88) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.3.1); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
+fuente: "SSOT OPM v1.4.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:976ad532b019d6815a7996b13b8122c25a9c52261cea782542206c0b0b60aa09) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.3.1) y el re-sync v1.4.0 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.4.1: frontera implicito/explicito de la invocacion entre subprocesos (R-INV-2D, 8 casos ratificados 2026-06-14) y aclaracion R-IDP-0A (el orden es declarado; la coordenada lo realiza)."
 autor: FS
 creado: 2026-05-31
 lang: es
@@ -805,6 +805,17 @@ Toda relación expresable por enlace en un OPD conforme pertenece a **exactament
 - **R-INV-2A**: subprocesos con borde superior a la misma altura DEBEN iniciar en paralelo.
 - **R-INV-2B**: en invocación implícita NO DEBE dibujarse enlace explícito.
 - **R-INV-2C** (`SSOT-iso §Enlaces de invocación`): cuando un grupo de subprocesos inicia en paralelo (R-INV-2A), solo la terminación del **último** miembro del grupo DEBE invocar al subproceso siguiente por posición vertical.
+- **R-INV-2D** (frontera implícito/explícito de la invocación entre subprocesos; panel deliberativo ratificado 2026-06-14): la fuente de verdad del orden de ejecución de una descomposición es el **orden declarado** de la descomposición (presentación del preorden por bandas con cardinalidad), NO los enlaces de invocación entre hermanos. Un enlace de invocación que repite un orden ya expresado como transición de banda **adyacente** es **doble vara** y viola R-INV-2B. La frontera reparte el orden en clases con realización fija:
+
+  | Caso | Clase | Realización |
+  |---|---|---|
+  | secuencial 1→1; paralelo a la misma altura (R-INV-2A); AND-join síncrono **total** | **implícito** | orden declarado (bandas con cardinalidad); OPL `en esa secuencia` / `paralelo`; sin rayo (R-INV-2/2A/2B/2C) |
+  | reactivo por evento (sistemas reactivos, `SSOT-metod LF-06`) | **explícito por enlace de evento, no rayo** | un enlace de evento por subproceso; sin verticalidad temporal forzada; tratarlo como invocación es error de categoría |
+  | autoinvocación/bucle; salto fuera de orden; invocación cross-OPD | **explícito por rayo (IV1/IV2)** | única realización honesta; el rayo sobrevive (R-INV-1) |
+  | demora intra-secuencia | **disuelto** | no existe «demora sobre invocación implícita»: la duración es propiedad del proceso (`SSOT-metod`), y la espera entre bandas se reifica como subproceso *Esperar* implícito; `después de <demora>` solo cuelga de un rayo ya-explícito |
+  | join parcial o disyuntivo (OR) | **fuera del orden simple** | es abanico/decisión con realización explícita propia; el campo de bandas no lo cubre y NO DEBE forzarse |
+
+  Las ocho clases numeradas (secuencial, paralelo, AND-join total, reactivo-evento, bucle, demora, salto fuera de orden, cross-OPD) cierran la frontera; el join parcial/OR queda deliberadamente fuera de alcance. El orden es atributo de la descomposición, no relación entre pares ni coordenada (mejora R-IDP-0A).
 
 ### 5.5 Enlaces estructurales fundamentales (`SSOT-iso §Enlaces estructurales`)
 
@@ -1128,7 +1139,7 @@ Es decir: `*P* genera **Obj**` (con n estados) ≡ `*P* genera exactamente uno d
 ### 8.7 Identidad persistente vs etiqueta visible (`V-246`–`V-250`)
 
 - **R-IDP-0** (`V-246`–`V-250`): orden temporal, orden de navegación e identidad persistente DEBEN mantenerse como canales separados.
-- **R-IDP-0A**: el orden temporal se deriva de la coordenada vertical de subprocesos dentro de una descomposición y se rige por R-INV-2/R-INV-2A.
+- **R-IDP-0A**: el orden temporal es un atributo **declarado** de la descomposición (presentación del preorden por bandas con cardinalidad, R-INV-2D); la coordenada vertical de los subprocesos lo **realiza**, no es su fuente. Se rige por R-INV-2/R-INV-2A.
 - **R-IDP-0B**: el orden de navegación se deriva de la posición en el árbol de OPDs y NO DEBE usarse como identidad persistente.
 - **R-IDP-0C**: la identidad persistente DEBE ser un identificador estable recuperable en serialización y usado como ancla de referencia cruzada externa.
 
