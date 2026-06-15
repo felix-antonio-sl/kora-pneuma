@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.3.0
+# KORA/Constitución — ley pneuma v1.4.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -207,7 +207,11 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 
 1. Cada estrato versiona en su título (semver). Corrección editorial: patch;
    precisión compatible: minor; cambio de enums, rangos, ids de checks,
-   cadenas de lifecycle o formato del sello: major.
+   cadenas de lifecycle o **ruptura del formato del sello** (que altera o
+   invalida emisiones previas): major. Una **extensión aditiva del sello** —un
+   campo que solo aparece para los artefactos que lo declaran y deja
+   byte-idénticas las emisiones que no lo declaran— es precisión compatible:
+   minor.
 2. `ley/1-ontologia.md` está en **freeze heredado**: solo se permiten
    correcciones de verdad necesarias. NO DEBE recibir nuevos ejes, nuevos
    niveles ni expansiones doctrinales durante el freeze; todo cambio se
@@ -236,3 +240,7 @@ v3.0.0 y autoria-spec v2.0.0) el 2026-06-11; ver GENESIS.md.
 
 v1.3.0 (HITL 2026-06-14): §1 declara a pneuma fuente única de doctrina futura
 y congela la ley de la bestia; régimen completo en `urn:kora:kb:regimen-de-ley`.
+
+v1.4.0 (HITL 2026-06-15): §12.1 distingue **ruptura** del formato del sello
+(major) de **extensión aditiva byte-idéntica** (minor), cerrando la categoría
+que faltaba; habilita el bump minor de `ley/3` v1.2.0 (contrato-conocimiento).
