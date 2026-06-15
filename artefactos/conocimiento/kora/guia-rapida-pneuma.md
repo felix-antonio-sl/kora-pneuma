@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.1.1
+version: 1.2.0
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. Fuente interna al repo, sin hash externo."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. Fuente interna al repo, sin hash externo."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -136,7 +136,10 @@ emite artefacto nuevo con `reemplaza`.
   Con `--aplicar`: instala en `~/.claude/{agents,skills}/`,
   `~/.codex/skills/`, `~/.config/opencode/{agents,skills}/`.
 - Toda emisión es determinista y termina en `<!-- kora:sello ... -->` con
-  fuente, hash sha256, fidelidad por eje y pérdidas con razón.
+  fuente, hash sha256, fidelidad por eje, pérdidas con razón y —si el artefacto
+  declara `conocimiento`/`componible`— un bloque `contrato-conocimiento:` con el
+  ancla al repo central y la regla de derivación URN→path (`ley/3 §5 r6`); el
+  path es función pura del URN, no se hornea.
 
 ## Koraficación
 
@@ -163,7 +166,9 @@ in-place es la antesala). La migración es **por demanda**, no masiva
 (GENESIS: pneuma se gana el corpus, no lo hereda por decreto): artefacto por
 artefacto, con URN preservado y `sha256` de la fuente en `fuente:`. Ya
 encarnaron los corpus mayores (ver §Qué alberga pneuma hoy); el resto sigue
-en la bestia. Registro completo: GENESIS §4.
+en la bestia. Registro completo: GENESIS §4. La SSOT OPM ya la autora pneuma
+(tomó la posta, `regimen-de-ley`); deuda de coordinación: deep-opm-pro debe
+pasar a consumirla desde pneuma.
 
 ## Recetas
 
@@ -183,3 +188,10 @@ en la bestia. Registro completo: GENESIS §4.
    declara que no es byte-fiel, el `sha256` de cada origen y la decisión de
    diseño. Verificar completitud y no-redundancia antes de promover (patrón
    de `steve-jobs`).
+7. Enlazar conocimiento web: crear un kb familia `fuente` cuyo cuerpo apunta a
+   la URL canónica viva (sin copiar el contenido); `fuente:` declara la URL, sin
+   `sha256` porque es viva. El agéntico lo declara en `conocimiento` (patrón
+   `urn:dev:kb:jointjs-docs`).
+8. Auditar conocimiento inalcanzable: `python3 kora.py censo --huerfanos`
+   reporta kb publicado que ninguna arista de consumo alcanza (informativo, no
+   check; las raíces de consumo directo no son huérfanos reales).
