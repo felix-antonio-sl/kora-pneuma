@@ -15,6 +15,7 @@ arnes: disciplina
 forma: habilidad
 herramientas: [Read, Write, Bash]
 targets: [claude-code]
+alcance: usuario
 estados: [resolver-parametros, cargar-plantilla, escribir-satelites, cerrar]
 ---
 
