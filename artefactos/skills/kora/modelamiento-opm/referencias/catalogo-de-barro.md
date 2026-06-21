@@ -48,7 +48,7 @@ Una pregunta a la vez. Nunca batch.
 ### B3. Confusion agente / instrumento
 
 - **Sintoma**: el operador llama "agente" a una herramienta (e.g. "el bisturi es agente") o "instrumento" a un humano/organizacion (e.g. "el cirujano es instrumento").
-- **Regla**: `reglas-opm-estrictas-es AP-05` y reglas de agencia/instrumento: agente = humano/organizacion con voluntad/responsabilidad sobre la ejecucion del proceso; instrumento = ente usado para ejecutar el proceso.
+- **Regla**: `reglas-opm-estrictas-es AP-05` / `R-AG-1` (ISO 3.3): agente = humano o grupo de humanos, EXCLUSIVAMENTE; el criterio es ser humano, no voluntad/responsabilidad. Robots, software, IA, maquinas y sistemas externos van por enlace de INSTRUMENTO (R-AG-1A) aunque coloquialmente se les llame agentes; instrumento = ente usado para ejecutar el proceso.
 - **Pregunta tipica**:
   ```
   [BARRO]    Llamaste "agente" a "Bisturi"; un bisturi es usado, no decide ejecutar.
