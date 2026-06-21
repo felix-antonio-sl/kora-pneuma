@@ -1,0 +1,22 @@
+# Backups automáticos del host (invariante — ver ~/CLAUDE.md)
+*.tar.gz
+
+# Archivo / papelera de no-vigentes (historia local, NO SSOT — ver CLAUDE.md §Vigencia documental)
+# Acumula versiones previas, handoffs superados y documentos deprecados. No se versiona.
+_archivo/
+
+# Sistema operativo / editores
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Secretos — nunca versionar
+.env
+.env.local
+*.local
+
+# --- Añadir según runtime real del repo ---
+# Node:   node_modules/  dist/  .vite/
+# Python: .venv/  __pycache__/  *.pyc
+# Go:     /bin/
