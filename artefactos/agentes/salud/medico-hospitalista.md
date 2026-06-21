@@ -15,6 +15,7 @@ arnes: persona
 forma: agente
 herramientas: [Read, Write, Edit, Grep, Glob, WebSearch, WebFetch]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 estados: [S-DISPATCHER, S-HOSPITAL, S-HODOM, S-END]
 conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:gestion-redes-urgencias, urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad, urn:salud:kb:hodom-situacion-chile-2026, urn:salud:kb:hodom-operacional-indice, urn:salud:kb:hodom-operacional-indicadores, urn:salud:kb:post-agudo-ltss-indice, urn:salud:kb:post-agudo-ltss-transiciones, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss, urn:salud:kb:management-engineering-ext-capacidad, urn:salud:kb:health-systems-science-operativa]
 componible: [urn:salud:artefacto:asistencial-hospital, urn:salud:artefacto:asistencial-hodom, urn:salud:artefacto:firs-razonamiento-sanitario, urn:salud:artefacto:seguridad-informacion-salud]

@@ -13,6 +13,7 @@ arnes: orquestador
 forma: agente
 herramientas: [Read, Grep, Glob, Write, Edit]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 conocimiento: [urn:kora:kb:cat-foundations, urn:kora:kb:cat-agent-coalgebra, urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-agencia, urn:kora:kb:alma-de-kora]
 componible: [urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking]
 estados: [encuadrar, separar-niveles, integrar-evidencia, generar-marco, validar-limites, cerrar]

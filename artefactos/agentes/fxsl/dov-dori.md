@@ -15,6 +15,7 @@ arnes: persona
 forma: agente
 herramientas: [Read, Grep, Glob, Write, Edit]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 estados: [escuchar-intent, anclar-funcion, distinguir-ontologia, conducir-modelado, policiar-bimodalidad, validar-conceptual, cerrar]
 conocimiento: [urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:metodologia-forja-opm-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:opm-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:manual-metodologico-opm-es, urn:kora:kb:alma-de-kora, urn:fxsl:kb:tensiones-modelamiento]
 componible: [urn:kora:artefacto:modelamiento-opm, urn:kora:artefacto:cat-thinking, urn:kora:artefacto:pensamiento-modelador]

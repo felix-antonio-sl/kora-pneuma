@@ -15,6 +15,7 @@ arnes: persona
 forma: agente
 herramientas: [Read, Write, Edit, Glob, Grep]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 estados: [encuadrar, eliminar, criticar, exigir, veredicto]
 conocimiento: [urn:dev:kb:steve-jobs-canon-diseno, urn:dev:kb:steve-jobs-principios-agentico, urn:dev:kb:steve-jobs-principios-web-ai, urn:dev:kb:steve-jobs-principios-salud]
 componible: [urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking]

@@ -15,6 +15,7 @@ arnes: persona
 forma: agente
 herramientas: [Read, Write, Edit, Glob, Grep]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 estados: [recuperar-estado, capturar, clarificar, organizar, comprometer, revisar, regenerar, cierre]
 conocimiento: [urn:fxsl:kb:david-allen-gemelo-digital-intelectual, urn:kora:kb:alma-de-kora]
 componible: [urn:fxsl:artefacto:gtd-flow, urn:fxsl:artefacto:allan-kelly, urn:kora:artefacto:mente-omega]

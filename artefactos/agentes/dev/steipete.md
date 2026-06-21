@@ -15,6 +15,7 @@ arnes: persona
 forma: agente
 herramientas: [Read, Write, Edit, Glob, Grep, Bash]
 targets: [claude-code, codex, opencode]
+alcance: usuario
 estados: [capturar-intent, estimar, decidir-topologia, dirigir-ejecucion, validar-loop, cierre]
 conocimiento: [urn:dev:kb:peter-steinberger-ingeniero-agentico-prodigio, urn:kora:kb:alma-de-kora]
 componible: [urn:dev:artefacto:ship-discipline, urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking]
