@@ -83,7 +83,7 @@ Cuando alguno de estos aparece, **detener** el flujo y entrar a `aclarar`:
 |-------|--------------|-------------|
 | Nombre pobre | "Sistema", "Modulo", "Cosa", "Procesar", "Gestionar", "Manejar" | Nombre concreto que diga que transforma o que es. |
 | Proceso sin transformee | "Quiero modelar el proceso de X" sin explicitar que cosa cambia por X | Identificar la cosa que entra distinta y sale distinta. Sin transformee no es proceso OPM. |
-| Confusion agente / instrumento | "El doctor es la herramienta" o "el bisturi es agente" | Agente = ente con voluntad/responsabilidad; instrumento = herramienta usada. Forzar la distincion. |
+| Confusion agente / instrumento | "El doctor es la herramienta" o "el bisturi es agente" | Agente = humano o grupo de humanos (ISO 3.3 / R-AG-1), exclusivamente. Robots, software, IA, maquinas y sistemas externos van por enlace de INSTRUMENTO aunque coloquialmente se les llame agentes (R-AG-1A). El criterio NO es voluntad/responsabilidad: es ser humano. Forzar la distincion. |
 | Refinamiento sin motivo | "Hagamos in-zoom de Y" sin decir que detalle se gana | Pedir el motivo: que pregunta del modelo se responde con el OPD hijo. |
 | Esencia ambigua | Cosa cuya naturaleza fisica vs. informacional no esta declarada | Forzar la declaracion: ¿es cosa material o es dato/concepto? |
 | Mezcla estructura/comportamiento sin razon | "Modela esto y aquello todo junto" cuando son hechos distintos | Separar: que es estructura, que es proceso, en que OPD vive cada uno. |
@@ -242,7 +242,7 @@ es responsabilidad de esta skill:
 | `X [en 's'] puede iniciar P` (V3) | `X en estado 's' inicia P` (evento de estado; la disyuncion multi-destino NO es V3 y se modela aparte) |
 | `O alimenta P` (V4) | `P requiere O` (instrumento persistente objeto→proceso) |
 | `P detecta O` (V5) | `P genera O` (resultado: el objeto detectado es evento **producido**; la skill exige que O no sea receptor preexistente) |
-| `A precede a B` (V7) | `A invoca B` (proceso→proceso = invocacion) |
+| `A precede a B` (V7) | si A,B son subprocesos hermanos de un in-zoom: NO se emite enlace; el orden es atributo declarado de la descomposicion (`opd.ordenInzoom`) y se realiza con `*Padre* se descompone en *A* y *B*, en esa secuencia` (CX1, sin rayo). Un rayo `A invoca B` entre hermanos adyacentes es **doble vara** (R-INV-2B/R-INV-2D). La firma proceso→proceso es **necesaria pero no suficiente** para el rayo de invocacion: la secuencia de hermanos es orden declarado implicito (sin glifo); solo la autoinvocacion, el salto fuera de orden, el bucle y la invocacion cross-OPD justifican el rayo IV1 como subrutina/salto/bucle/cross-OPD (R-INV-2D). |
 | `<oracion> cuando <condicion>` (cola `cuando`) | `<oracion estricta>. [RATIFICAR: <condicion>]` — la condicion es ancla meta, no hecho OPM |
 | `<oracion> a 'a','b' o 'c' segun <objeto>` (cola `segun`) | abanico multi-destino modelado estricto + correspondencia estado→rama explicita (condicion estructural o `[RATIFICAR]`); el path `segun` producia perdida silenciosa de enlaces |
 
@@ -318,7 +318,7 @@ Cuatro pares canonicos (ver `referencias/refinamiento-mecanismos.md`):
 | 3 | **State expression** | State suppression | explicitar/colapsar estados de un objeto |
 | 4 | **Sub-model composition** | Sub-model decomposition | incluir un modelo externo por referencia |
 
-Decision guiada: elegir el par segun la naturaleza del detalle pendiente. No ciclar el arbol de refinamiento (V-220 / V-221 en opd-es).
+Decision guiada: elegir el par segun la naturaleza del detalle pendiente. No ciclar el arbol de refinamiento (V-100 (R-REF-1, R-OPD-REF-8, AP-16; chequeo transitivo sobre la cadena de ancestros)).
 
 **Vista generica (`generic-view`, E-1) — NO es refinamiento.** deep-opm-pro
 soporta una variante de OPD `vista: { kind: "generic-view", readOnly? }` (DSL:
@@ -328,7 +328,7 @@ semantica de refinamiento. Reglas:
 
 - No exige transformee ni motivo de refinamiento; exige en cambio **proposito de
   vista declarado** (que pregunta de lectura responde).
-- No crea hechos: su OPL es **delta-cero** (§243/V-114 — la vista navega, no
+- No crea hechos: su OPL es **delta-cero** (V-114/V-244 opd-es + R-OPD-REF-16 spec-forja-opd-es: «Una vista NO crea hechos OPM nuevos» — la vista navega, no
   afirma) y queda **exenta** de los checkers de frontera/descomposicion
   (R-CAT-EQ-3 no aplica).
 - Para multi-edges legitimos por transicion de estado dentro de una vista, usar
@@ -350,11 +350,11 @@ Tras cada paso de refinamiento, mantener bimodalidad y volver a `validar-modelo`
 Tres niveles (ver `referencias/checklist-validacion.md`), homologados a la **clasificacion tripartita** del modelador deep-opm-pro (`PanelMetodologia`: bloqueos estructurales / mejoras metodologicas / estilo-legibilidad), con cobertura del canon prescriptivo `urn:fxsl:kb:reglas-opm-estrictas-es`:
 
 1. **Bloqueos estructurales** — Reglas V-* de la capa visual (`opd-es`), reglas semanticas de la capa nuclear (`opm-es`), y reglas prescriptivas operativas (`reglas-opm-estrictas-es` R-COSA-*, R-OBJ-*, R-PROC-*, R-EST-*, R-INS-*, R-NOM-*, R-EJEC-*): firma de enlaces, clases validas de cosas y links, aciclicidad del refinement tree, integridad de referencias OPD↔OPL. Validar contra los **30 anti-patrones canonicos** (AP-01 a AP-30) aplicando su politica especifica (bloqueo, reporte, supresion o no-canonizado) y las zonas no canonizadas (R-ZNC-*). Usar el checklist de cierre OPD↔OPL del Anexo A (12 gates: identidad, firma, estado, OPL, parseo, modificadores, refinamiento, distribucion, vistas, UI, export, deuda).
-2. **Mejoras metodologicas** — Heuristicas de la Metodologia Forja (A5: 38 heuristicas §9.1-§9.38, A8.1) y del manual base solo por delegacion: claridad (≤ 20-25 entidades por OPD), completitud (estructura + comportamiento + funcion explicitas), bimodalidad efectiva, jerarquia de refinamiento bien motivada, equivalencia horizontal de realizaciones hermanas por firma de frontera (R-CAT-EQ-2), preservacion vertical in-zoom/out-zoom (R-CAT-EQ-3), conflictos de linealidad (R-CAT-LIN-2).
+2. **Mejoras metodologicas** — Heuristicas de la Metodologia Forja (A5: 38 heuristicas §9.1-§9.38, A8.1) y del manual base solo por delegacion: claridad (≤ 20-25 entidades por OPD), completitud (estructura + comportamiento + funcion explicitas), bimodalidad efectiva, jerarquia de refinamiento bien motivada, equivalencia horizontal de realizaciones hermanas por firma de frontera (R-CAT-EQ-2), preservacion vertical in-zoom/out-zoom (R-CAT-EQ-3), conflictos de linealidad (R-CAT-LIN-2; premisa R-CAT-LIN-1: un objeto puede designarse `lineal` (recurso consumible no clonable) como dimension designable adicional a esencia/afiliacion; no es designacion ISO 19450 y no altera la gramatica visual ni OPL base).
 3. **Estilo / legibilidad** — Convenciones tipograficas, posicionamiento, etiquetas, codigos OPD, reglas visuales prescriptivas (R-VIS-* del Anexo B); equivalentes a las advertencias visuales del modelador.
 
 Checkers vigentes del modelador homologados a este reporte (ademas de los
-estructurales): `EFECTO_OBJETO_SIN_ESTADOS` (§3.15, severidad mejora),
+estructurales): `EFECTO_OBJETO_SIN_ESTADOS` — la SSOT lo manda como restriccion DURA (R-OPD-EST-3/R-EFE-1/V-7: el editor DEBE bloquear efecto a objeto sin estados); deep-opm-pro hoy lo clasifica 'mejora' (divergencia de severidad = deuda, no rebaja de la regla canonica) —,
 `ENTIDAD_SIN_APARICIONES` (severidad mejora; exencion declarativa por glosa
 `[sin-aparicion-deliberada]`), y los calibrados es-CL
 `PROCESO_NOMBRE_FORMA_VERBAL` (lexico de deverbales irregulares: Ingreso,
@@ -439,7 +439,7 @@ Reglas (ambos caminos; en el primario el compilador ya verifica la mayoria):
 - Si la skill no tiene certeza de un campo opcional (estilo, vertices, ordenPartes, duracion), omitirlo: el modelador lo normaliza al hidratar.
 - No emitir `formato` distinto a `"deep-opm-pro.modelo.v0"` (el detector de version de la app falla al hidratar variantes no anunciadas).
 - **Gate de equivalencia funcional** (`reglas-opm-estrictas-es` Anexo C): si el bundle contiene realizaciones hermanas comparables, verificar R-CAT-EQ-2 mediante firma de frontera; si contiene descomposicion (in-zoom), verificar R-CAT-EQ-3 preservando la firma del proceso abstracto (out-zoom). El checker `DESCOMPOSICION_NO_PRESERVA_FRONTERA` detecta la violacion vertical.
-- **Gate de composicion** (R-CAT-COMP-1/2/3 de `reglas-opm-estrictas-es` Anexo C): si el bundle compone multiples modelos, la interfaz compartida no debe duplicar entidades, no debe dejar referencias colgantes, y debe ser asociativa modulo namespacing de ids.
+- **Gate de composicion** (R-CAT-COMP-1/2/3 de `reglas-opm-estrictas-es` Anexo C): si el bundle compone multiples modelos, la interfaz compartida no debe duplicar entidades, no debe dejar referencias colgantes, y debe ser asociativa modulo namespacing de ids y no introducir avisos de error ausentes en los modelos fuente (buen-tipado, R-CAT-COMP-2); la composicion es no-bloqueante y reversible, y un conflicto de linealidad (R-CAT-LIN-2) se advierte, no se impide (R-CAT-COMP-3).
 
 **Limites del fallback artesanal.** Un bundle emitido a mano **no porta sello de
 procedencia** y la skill no falsifica ninguno. En consecuencia: (a) el panel de
@@ -620,7 +620,7 @@ Cuando el modelador este abierto, indicar al agente invocador que el bundle se i
 3. **Solo primitivas OPM**: objetos, procesos, estados, links. Sin atajos visuales no autorizados.
 4. **OPL-ES por defecto** salvo peticion explicita de OPL-EN.
 5. **SD primero**: no refinar sin SD raiz.
-6. **Aciclicidad** del refinement tree (V-220/V-221 de opd-es).
+6. **Aciclicidad** del refinement tree (V-100 (R-REF-1, R-OPD-REF-8, AP-16; chequeo transitivo sobre la cadena de ancestros)).
 7. **Cita la capa propietaria** de cada regla que aplicas.
 8. **Aborta si OPM no aplica** (sistema sin funcion transformadora identificable).
 9. **No invadas dominio**: la skill modela estructura, el agente aporta semantica de dominio.

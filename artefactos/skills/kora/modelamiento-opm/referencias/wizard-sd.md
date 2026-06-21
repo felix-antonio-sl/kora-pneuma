@@ -10,6 +10,8 @@ Antes de modelar, confirmar que el sistema tiene **funcion transformadora identi
 
 Si la respuesta es nula o solo describe estructura estatica, OPM no es la herramienta adecuada. Sugerir alternativa (`data-modeling`, `ontologista-gist`, BPMN, etc.) y abortar.
 
+> Nota: en sistemas **naturales** el transformee es el afectado que porta el outcome; su ausencia sigue invalidando OPM, pero la ausencia de beneficiario humano (o de purpose, problem occurrence y agentes humanos) NO invalida.
+
 ## Paso 1 — Clasificar el sistema
 
 Determinar el tipo del sistema antes de hablar de proposito:
@@ -18,7 +20,7 @@ Determinar el tipo del sistema antes de hablar de proposito:
 |------|------------------------|
 | Artificial | modelar purpose, problem occurrence, agentes humanos si existen e instrumentos. |
 | Natural | modelar outcome/affectee; no forzar purpose, problem occurrence ni agentes humanos. |
-| Social | modelar purpose, beneficiario y condiciones sociales/ambientales relevantes. |
+| Social | 5 componentes completos: purpose, problem occurrence, agentes humanos, instrumentos y entorno; condiciones ambientales/sociales por enlace habilitador con estado especificado. |
 | Socio-tecnico | modelar purpose, beneficiario, agentes humanos, instrumentos tecnicos y contexto externo. |
 
 La clasificacion no es decorativa: decide que preguntas son legales. Si no se
@@ -103,14 +105,21 @@ cosa cuya transformacion materializa la funcion principal para el beneficiario.
 Los otros transformees pueden ser inputs, consumibles, residuos o resultados
 secundarios, pero no definen la funcion.
 
+En sistemas **naturales** no hay beneficiario humano ni purpose: la funcion la
+define el afectado/resultado que porta el outcome, NO un benefit-providing
+object para un beneficiario (metodologia-opm §5.1). El outcome puede ser
+beneficioso O PERJUDICIAL (`Fetus Developing` → `embryo`/`baby`; `Rain Storm
+Forming`). Basta que la cosa transformada porte el resultado.
+
 ## Paso 7 — Resolver agencia humana
 
 Preguntar por agentes humanos u organizacionales. Si no existen, registrar
 `sin agentes humanos`; no inventar un agent placeholder.
 
-OPM reserva `agent` para humanos/organizaciones. Robots, software, IA,
-maquinas y sistemas externos son instrumentos, aunque en lenguaje comun se les
-llame agentes.
+OPM reserva `agent` exclusivamente para un humano o grupo de humanos (ISO 3.3 /
+R-AG-1). Robots, software, IA, maquinas y sistemas externos van por enlace de
+INSTRUMENTO, aunque en lenguaje comun se les llame agentes (R-AG-1A). El
+criterio NO es voluntad/responsabilidad: es ser humano.
 
 ## Paso 8 — Nombrar sistema y frontera
 
@@ -143,7 +152,12 @@ naturales, cerrar como `NO APLICA`.
 
 No omitir silenciosamente este punto: `NO APLICA` es una decision de modelo.
 
-## Paso 12 — Conectar con links procedurales
+Con esto cierran las **11 etapas canonicas (0..11)** del wizard de SD segun
+`metodologia-forja-opm-es` §A2. Lo que sigue —conectar links y decidir si
+refinar— es **post-cierre**, no etapa del wizard, y debe unificarse con el
+bootstrap-sd de `SKILL.md`.
+
+## Post-cierre A — Conectar con links procedurales
 
 Tipos canonicos segun `reglas-opm-estrictas-es`, realizados en OPD/OPL por las specs Forja:
 
@@ -158,7 +172,7 @@ Tipos canonicos segun `reglas-opm-estrictas-es`, realizados en OPD/OPL por las s
 
 Validar primero contra `reglas-opm-estrictas-es`; luego realizar la firma visual con `spec-forja-opd-es` y la sentencia con `spec-forja-opl-es`.
 
-## Paso 13 — Bimodalidad y gate de cierre
+## Post-cierre B — Bimodalidad y gate de cierre
 
 Para cada hecho del SD, emitir la sentencia OPL-ES correspondiente. Si una sentencia OPL no se puede formular sin ambiguedad, el OPD esta mal construido.
 
@@ -195,7 +209,7 @@ Gate de cierre minimo:
 - [ ] cada link tiene firma legal confirmada.
 - [ ] cada hecho tiene OPL-ES validado por el operador.
 
-## Paso 14 — Decidir si el SD basta
+## Post-cierre C — Decidir si el SD basta
 
 Tres criterios:
 
@@ -208,5 +222,5 @@ Tres criterios:
 - SD con **mas de un proceso central**: senal de que la funcion no esta bien identificada. Refinar el proposito.
 - SD **sin transformee**: si nada cambia, OPM no aplica.
 - SD con **agent no humano**: si activa una maquina, es instrument.
-- SD con **mas de 7±2 cosas visibles**: senal de que necesitas in-zooming inmediato.
+- SD que **excede el techo de claridad de 20-25 entidades por OPD** (A4.2): senal de que necesitas in-zooming inmediato. Como heuristica subordinada de la skill, ya >~7 cosas en el SD sugieren in-zoom temprano.
 - SD que **describe estructura sin proceso**: usar otra herramienta (ERD, OWL).

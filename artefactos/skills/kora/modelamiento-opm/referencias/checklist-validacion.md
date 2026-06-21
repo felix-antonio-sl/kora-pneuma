@@ -88,7 +88,9 @@ Reglas ejecutables de `reglas-opm-estrictas-es`. Cada regla cita su fuente.
 
 - [ ] Combinacion `c + e` sobre el mismo enlace: NO CANONIZADA (AP-28).
 - [ ] Enlace probabilistico sin fan: no tiene canonicidad.
-- [ ] Etiquetas de ruta sobre enlaces habilitadores: no canonizadas sobre agente/instrumento.
+
+Construcciones **canonica-condicionadas** (NO zona no canonizada):
+- [ ] Etiquetas de ruta sobre enlaces habilitadores: canonica por A.5, restringida a consumo/resultado por producto (R-OPL-RUTA-3).
 
 ## Nivel 2 — Checklist de cierre OPD↔OPL (Anexo A)
 
@@ -97,7 +99,7 @@ Reglas ejecutables de `reglas-opm-estrictas-es`. Cada regla cita su fuente.
 | Gate | Regla | Falla si | Severidad |
 |------|-------|----------|-----------|
 | Identidad | Cada cosa, estado, enlace y OPD con identidad persistente | se usa `SDx.y` como unico identificador externo | Alta |
-| Firma | Cada enlace respeta familia, direccion y tipos de extremos | procedural conecta objeto-objeto, structural conecta estado, invocacion toca objeto | Alta |
+| Firma | Cada enlace respeta familia, direccion y tipos de extremos | procedural conecta cosa↔cosa sin proceso; invocacion toca un objeto (debe ser proceso→proceso, R-IV-1); estructural bidireccional/reciproco con estado solo-en-destino (AP-11/V-30). El anclaje de estado en estructurales es legal (SSE1..SSE7, R-OPD-STR-9) | Alta |
 | Estado | Todo estado con objeto propietario y designaciones validas | estado flotante, doble default, Current runtime serializado como designacion | Alta |
 | OPL | Todo hecho nuclear visible emite plantilla OPL-ES canonica | forma visual persistente sin plantilla ni metadato de vista | Alta |
 | Parseo | Toda oracion OPL aceptada reconstruye el mismo hecho | el parser crea entidades plausibles ante ambiguedad | Alta |
@@ -116,7 +118,7 @@ Subset critico sobre las 263 reglas V-*. Para cada validacion, cita la regla.
 ### V-0 a V-10 (gramatica base)
 
 - [ ] **V-1**: cada cosa tiene exactamente uno de `objeto` o `proceso` como tipo.
-- [ ] **V-2**: rectangulos rectos = objetos; rectangulos redondeados = procesos.
+- [ ] **V-2**: la perseverancia se infiere del tipo (objeto=persistente, proceso=transitorio), no es atributo visual. Glifos: objeto = rectángulo recto; proceso = ELIPSE; estado = rectángulo redondeado (rountangle) SIEMPRE dentro de un objeto (§3.1).
 - [ ] **V-3**: estados son sub-rectangulos redondeados dentro de un objeto.
 - [ ] **V-5**: enlaces tienen exactamente un origen y un destino.
 - [ ] **V-7**: contornos respetan distintivos de esencia (fisica vs informatica).
@@ -130,9 +132,10 @@ Subset critico sobre las 263 reglas V-*. Para cada validacion, cita la regla.
 
 ### V-100 a V-130 (refinamiento entre OPDs)
 
-- [ ] **V-105**: arbol de in-zooming es aciclico.
+- [ ] **V-100**: no se puede refinar una cosa desde dentro de su propio arbol de refinamiento (chequeo transitivo, aciclico; R-REF-1, AP-16).
+- [ ] **V-105**: enlace estructural no se distribuye al descomponer.
 - [ ] **V-110**: sub-procesos en in-zoom estan ordenados temporalmente (top-down por defecto).
-- [ ] **V-115**: links del padre se preservan en el hijo (visibles o referenciados).
+- [ ] **V-115**: todo proceso explicito no persistente transforma ≥1 objeto (transformee; R-PROC-2).
 - [ ] **V-120**: unfolding mantiene una sola dimension por descomposicion.
 
 ### V-200 a V-263 (canon-diagrama, sub-modelo, requisitos)
@@ -151,10 +154,14 @@ Subset critico sobre las 263 reglas V-*. Para cada validacion, cita la regla.
 
 ### Clases de relaciones
 
-- [ ] enlaces estructurales: `agregacion-participacion`, `generalizacion-especializacion`, `clasificacion-instanciacion`, `exhibicion-caracterizacion`.
-- [ ] enlaces procedurales transformadores: `consumption`, `result`, `effect`.
-- [ ] enlaces procedurales habilitantes: `agent`, `instrument`.
-- [ ] enlaces de control: `condition`, `event`, `exception`, `invocation`.
+SEIS familias canonicas (§5.1):
+- [ ] **transformadora**: `consumption`, `result`, `effect` (proceso ↔ objeto/estado).
+- [ ] **habilitadora**: `agent` (humano), `instrument` (proceso ← objeto/estado).
+- [ ] **invocacion**: proceso → proceso (familia autonoma).
+- [ ] **excepcion procedimental autonoma**: proceso → proceso (EX1/EX2).
+- [ ] **estructural fundamental**: `agregacion-participacion`, `generalizacion-especializacion`, `clasificacion-instanciacion`, `exhibicion-caracterizacion`.
+- [ ] **estructural etiquetada**: relacion estructural con etiqueta de rol/cardinalidad.
+- [ ] evento (`e`) y condicion (`c`) NO son familias sino **modificadores** que anotan exclusivamente enlaces transformador/habilitador (§6.1, R-ECA-4).
 
 ### Principios
 
@@ -190,7 +197,9 @@ Subset critico sobre las 263 reglas V-*. Para cada validacion, cita la regla.
 - [ ] **R-CAT-EQ-2**: realizaciones hermanas comparables comparten firma de frontera para declararse funcionalmente equivalentes.
 - [ ] **R-CAT-EQ-3**: toda descomposicion in-zoom preserva la firma de frontera del proceso abstracto out-zoom.
 - [ ] **R-CAT-LIN-2**: objetos lineales no son consumidos por mas de un proceso sin XOR.
-- [ ] **R-CAT-COMP-1**: composicion de modelos no duplica entidades compartidas ni deja referencias colgantes.
+- [ ] **R-CAT-COMP-1**: identificacion de entidades compartidas por interfaz (nombre normalizado + tipo).
+- [ ] **R-CAT-COMP-2**: la composicion satisface las cuatro propiedades: no-duplicacion, sin-colgantes, asociatividad modulo namespacing de ids, y buen-tipado (no introducir avisos de error ausentes en los modelos fuente).
+- [ ] **R-CAT-COMP-3**: la composicion es no-bloqueante y reversible; un conflicto de linealidad (R-CAT-LIN-2) se advierte, no se impide.
 
 ### Validacion continua (A8)
 
@@ -216,7 +225,7 @@ Checklist cierre OPD↔OPL (Anexo A): X/Y gates pasan
   ✗ Gate Identidad: OPD "SD1.2" usado como identificador externo
 
 Capa visual (spec-forja-opd-es + opd-es delegado): X/Y pasan
-  ✗ V-105: ciclo detectado entre in-zoom
+  ✗ V-100: ciclo detectado entre in-zoom (R-REF-1)
 
 Capa semantica (reglas Forja + opm-es delegado): X/Y pasan
   ✗ Cafetera declarada como agent

@@ -70,6 +70,18 @@ El vocabulario OPL-ES para opforja es un **enum cerrado** (`spec-forja-opl-es` �
 | una cosa es objeto fisico | `**<Cosa>** es un objeto fisico.` |
 | una cosa es objeto informacional | `**<Cosa>** es un objeto informacional.` |
 | una cosa es proceso fisico | `*<Cosa>* es un proceso fisico.` |
+| **cosa con esencia + afiliacion (forma preferida AESS)** | `**<Cosa>** es un {objeto\|proceso} {esencia} y {afiliacion}.` |
+
+La forma preferida (R-ENT-3, §2.7-2.8) combina esencia y afiliacion en una sola oracion: `**<Cosa>** es un {objeto\|proceso} {esencia} y {afiliacion}.`
+
+```
+**Sensor** es un objeto físico y ambiental.
+*Rescatar* es un proceso informacional y sistémico.
+```
+
+- Esencia ∈ {físico, informacional}; afiliación ∈ {sistémico, ambiental}; defaults: informacional / sistémica.
+- R-ENT-3 es extensión (eco de OPCloud) que **no deroga** D1-D4: el orden reverso (`Sensor es un objeto`) sigue siendo válido.
+- Concordancia de género: con cosa femenina la copula y los adjetivos concuerdan, p.ej. `es una **Máquina** física y sistémica`.
 
 Nota: la tipografia (negrita para objetos, cursiva para procesos) es portadora de tipo. Sin ella el parser no distingue objeto de proceso.
 
@@ -78,13 +90,15 @@ Nota: la tipografia (negrita para objetos, cursiva para procesos) es portadora d
 | Hecho | Plantilla |
 |-------|-----------|
 | enumeracion de estados | `**<Objeto>** puede estar \`<estado1>\`, \`<estado2>\`, ..., \`<estadoN>\`.` |
-| estado inicial | `**<Objeto>** esta inicialmente en \`<estado>\`.` |
-| estado final | `**<Objeto>** esta terminalmente en \`<estado>\`.` |
+| estado inicial | `Estado \`<estado>\` de **<Objeto>** es inicial.` |
+| estado final | `Estado \`<estado>\` de **<Objeto>** es final.` |
+
+La designacion de estado (§2.4, D7-D13) se afirma con la copula `Estado \`s\` de **<Objeto>** es <designación>`, donde la designación ∈ {inicial, final, por defecto, inicial y final, declarado `Current`}. Las formas «está inicialmente/terminalmente en» no existen en el enum.
 
 Ejemplos:
 ```
 **Paciente** puede estar `no-diagnosticado` o `diagnosticado`.
-**Paciente** esta inicialmente en `no-diagnosticado`.
+Estado `no-diagnosticado` de **Paciente** es inicial.
 ```
 
 ## Enlaces procedurales transformadores
@@ -120,9 +134,12 @@ Ejemplos:
 
 | Tipo | Plantilla | Verbo canónico opforja |
 |------|-----------|------------------------|
-| evento | `**<Objeto>** \`<estado>\` inicia *<Proceso>*.` | `inicia` |
-| condicion | `*<Proceso>* ocurre si **<Objeto>** esta en \`<estado>\`.` | `ocurre si` |
-| condicion de existencia | `*<Proceso>* ocurre si **<Objeto>** existe.` | `ocurre si … existe` |
+| evento (consumo) | `**<Objeto>** en \`<estado>\` inicia *<Proceso>*, que consume **<Objeto>**.` | `inicia` |
+| evento (efecto) | `**<Objeto>** en \`<estado>\` inicia *<Proceso>*, que afecta **<Objeto>**.` | `inicia` |
+| evento (agente) | `**<Agente>** inicia y maneja *<Proceso>*.` | `inicia` |
+| condicion (consumo) | `*<Proceso>* ocurre si **<Objeto>** está en \`<estado>\`, en cuyo caso **<Objeto>** se consume, de lo contrario *<Proceso>* se omite.` | `ocurre si` |
+| condicion de existencia | `*<Proceso>* ocurre si **<Objeto>** existe, de lo contrario *<Proceso>* se omite.` | `ocurre si … existe` |
+| condicion de efecto | `*<Proceso>* ocurre si **<Objeto>** existe, en cuyo caso *<Proceso>* afecta **<Objeto>**, de lo contrario *<Proceso>* se omite.` | `ocurre si … existe` |
 | excepcion sobretiempo | `*<Manejo>* ocurre si duracion de *<Fuente>* excede <valor> <unidad>.` | `ocurre` + cota EX1 |
 | excepcion subtiempo | `*<Manejo>* ocurre si duracion de *<Fuente>* es menor que <valor> <unidad>.` | `ocurre` + cota EX2 |
 | invocacion | `*<Proceso-A>* invoca *<Proceso-B>*.` | `invoca` |
@@ -130,11 +147,13 @@ Ejemplos:
 
 Ejemplos:
 ```
-**Solicitud** `pendiente` inicia *Resolver Solicitud*.
-*Resolver Solicitud* ocurre si **Expediente** existe.
+**Solicitud** en `pendiente` inicia *Resolver Solicitud*, que afecta **Solicitud**.
+*Resolver Solicitud* ocurre si **Expediente** existe, de lo contrario *Resolver Solicitud* se omite.
 *Manejar Excepcion* ocurre si duracion de *Procesar* excede 5 minutos.
 *Diagnosticar* invoca *Pedir Examen*.
 ```
+
+El evento de consumo (ET1/ETS1, §5.1) lleva la preposicion `en` ante el estado y una clausula relativa obligatoria que nombra la transformacion: `**<Objeto>** en \`<estado>\` inicia *<Proceso>*, que consume **<Objeto>**`. Toda condicion (§5.2, R-COND-RAMA-1) DEBE declarar rama positiva y rama negativa; la negativa es fija: `de lo contrario *<Proceso>* se omite`.
 
 ## Enlaces estructurales
 
@@ -189,8 +208,26 @@ Ejemplo: `**Paciente** exhibe **Edad**, **Sexo** y **Diagnostico**.`
 
 | Hecho | Plantilla | Verbo canónico opforja |
 |-------|-----------|------------------------|
-| descomposicion | `*<Proceso>* se descompone en *<Sub1>*, *<Sub2>*, ..., *<SubN>*.` | `se descompone` |
+| descomposicion secuencial (CX1) | `*<Proceso>* se descompone en *<Sub1>*, *<Sub2>*, ..., *<SubN>*, en esa secuencia.` | `se descompone` |
+| descomposicion paralela (CX2) | `*<Proceso>* se descompone en paralelo en *<Sub1>*, *<Sub2>*, ..., *<SubN>*.` | `se descompone` |
+| descomposicion mixta | combina bloques secuenciales y paralelos segun el orden declarado (`ordenInzoom`/bandas). | `se descompone` |
 | despliegue | `**<Cosa>** se despliega en **<Ref1>**, **<Ref2>**, ..., **<RefN>**.` | `se despliega` |
+
+La descomposicion (§7.1) distingue tres formas: **secuencial** (CX1), **paralela** (CX2) y **mixta**. La frase `en esa secuencia` es palabra clave fija portadora de orden temporal: solo aparece en descomposicion secuencial. El **despliegue NUNCA** lleva «en esa secuencia» (R-CX-DESP-2).
+
+```
+*Hacer Cafe* se descompone en *Calentar Agua*, *Filtrar Cafe* y *Servir Cafe*, en esa secuencia.
+*Hacer Cafe* se descompone en paralelo en *Calentar Agua* y *Moler Cafe*.
+```
+
+**Despliegue por relación fundamental (R-CX-DESP-1, §7.2)**: `se despliega en` se usa **solo** para despliegue genérico (agregación). Cuando el despliegue es por una relación fundamental, la oracion reusa el verbo propio de esa relación, no `se despliega` genérico:
+
+- exhibición-caracterización → `exhibe`
+- generalización-especialización → `son` / `es un`
+- clasificación-instanciación → `son instancias de`
+- agregación-participación → `consta de`
+
+Una sola relación fundamental por oración (R-CX-DESP-1).
 
 ## Operadores logicos en fans de enlaces
 

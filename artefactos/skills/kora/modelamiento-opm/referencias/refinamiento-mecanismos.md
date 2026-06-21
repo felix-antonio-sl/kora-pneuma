@@ -13,20 +13,24 @@ Referencia primaria para esta skill: corpus OPM/Forja SSOT ES. `metodologia-forj
 
 ## 1. In-zooming / Out-zooming
 
-**Que hace**: descompone un proceso en sus sub-procesos secuenciales.
+**Que hace**: descompone un proceso en sus sub-procesos, que pueden ir en secuencia o en paralelo (sub-procesos con el mismo borde superior = paralelos).
 
 **Cuando aplicar**: el proceso del nivel actual es complejo y conviene mostrar como ocurre internamente.
 
 **Como**:
 - Crear un OPD hijo etiquetado `SDx.y`.
 - En el OPD hijo, el proceso del padre aparece como contenedor.
-- Dentro del contenedor, los sub-procesos en orden de ejecucion (de arriba hacia abajo).
+- Dentro del contenedor, los sub-procesos en orden de ejecucion (de arriba hacia abajo). El orden es atributo **declarado** de la descomposicion (`opd.ordenInzoom`, bandas verticales), NO un enlace: NO se dibujan rayos de invocacion entre hermanos (R-INV-2B/R-INV-2D). Sub-procesos con el mismo borde superior se interpretan como paralelos.
 - Los transformees y enablers del padre cruzan el contenedor segun pertenecientes a cada sub-proceso.
 - Los links que entran/salen del proceso padre se redistribuyen a los sub-procesos correctos.
 
 **OPL-ES**:
 ```
-*Hacer Cafe* se descompone en *Calentar Agua*, *Filtrar Cafe* y *Servir Cafe*.
+*Hacer Cafe* se descompone en *Calentar Agua*, *Filtrar Cafe* y *Servir Cafe*, en esa secuencia.
+```
+Si los sub-procesos fueran simultaneos, el contraste paralelo es (CX2):
+```
+*Hacer Cafe* se descompone en paralelo en *Calentar Agua*, *Filtrar Cafe* y *Servir Cafe*.
 ```
 
 **Restricciones (Forja + base delegada)**:
@@ -34,6 +38,7 @@ Referencia primaria para esta skill: corpus OPM/Forja SSOT ES. `metodologia-forj
 - frontera: la descomposicion preserva la firma de frontera del proceso abstracto (R-CAT-EQ-3).
 - conservacion: los transformees/enablers del padre estan presentes o redistribuidos segun la regla visual aplicable.
 - coherencia: los links del padre se preservan o redistribuyen sin perder semantica.
+- orden: la secuencia de subprocesos hermanos es atributo DECLARADO de la descomposicion (`ordenInzoom`/bandas), NO un enlace de invocacion entre ellos; un rayo `A invoca B` entre hermanos adyacentes es doble vara y viola R-INV-2B/R-INV-2D. El rayo (IV1/IV2) se reserva a subrutina proceso→proceso distinto, autoinvocacion, salto fuera de orden o invocacion cross-OPD.
 
 ## 2. Unfolding / Folding
 

@@ -10,7 +10,7 @@ Referencia operativa tomada de `urn:fxsl:kb:reglas-opm-estrictas-es` §11. Cada 
 | AP-02 | **Resultado + modificador `e`**. Resultado pertenece a Post(P), no puede ser disparador. | Colocar el evento sobre consumo, efecto, agente o instrumento. |
 | AP-03 | **Abanico XOR/OR de resultado + `c` o `e`**. Cada enlace del fan sigue siendo resultado y hereda AP-01/AP-02. | Mover control al lado de entrada o usar fan probabilistico sin `c/e`. |
 | AP-04 | **Resultado conectado a estado inicial** (V-8). | Conectar al rectangulo del objeto o a un estado no inicial. |
-| AP-05 | **Agente conectado a robot, software, IA o maquina** (glosario 3.3). | Usar enlace de instrumento. Agente = humano con voluntad/responsabilidad. |
+| AP-05 | **Agente conectado a robot, software, IA o maquina** (glosario 3.3 y SSOT-metod §6.5). | Usar enlace de instrumento. Agente = humano con voluntad/responsabilidad. |
 | AP-06 | **Consumo o resultado en contorno exterior de proceso descompuesto** (V-37, V-103). | Reasignar consumo al primer subproceso y resultado al ultimo subproceso. |
 | AP-07 | **Efecto entrada-salida sin escision al descomponer** (V-40, V-110). | Reemplazar por TS4 en subproceso temprano y TS5 en subproceso tardio. |
 | AP-08 | **Enlace escindido TS4/TS5 (par acoplado) + `c` o `e`** (V-41, V-110). No aplica a ETS3/ETS4 standalone. | Modelar opcionalidad sobre el efecto entrada-salida completo o con control externo. |
@@ -41,7 +41,7 @@ Referencia operativa tomada de `urn:fxsl:kb:reglas-opm-estrictas-es` §11. Cada 
 | AP-23 | **Truncamiento silencioso de rotulo en export canonico** (V-194, V-212). | Ajustar bounding box, layout o tamano antes de exportar. |
 | AP-24 | **Reutilizar canales semanticos para UI/validacion** (V-198, V-203, V-220, V-224). | Usar canal visual reservado a UI. |
 | AP-25 | **Proceso explicito para soporte/mantenimiento sin esfuerzo sostenido relevante**. | Usar enlace estructural etiquetado. |
-| AP-26 | **Objeto transiente creado y consumido sin observacion intermedia**. | Usar enlace de invocacion. |
+| AP-26 | **Objeto transiente creado y consumido sin observacion intermedia**. DEBE reportarse como objeto artificial. | Fix canonico: sustituir el objeto transitorio por un enlace de invocacion (R-OPD-INV-4). |
 | AP-27 | **Evento a subproceso intermedio sin justificar omision previa**. Bloquea si previos tienen efectos obligatorios no omitibles. | Conectar al primer subproceso o declarar omision valida de previos. |
 | AP-28 | **`c` y `e` simultaneamente sobre el mismo enlace**. NO CANONIZADO (silencio SSOT). | Clasificar como no canonizado. Modelar control externo explicito. |
 | AP-29 | **Enlaces heredados dibujados como explicitos**. | Inferirlos por herencia desde generalizacion-especializacion. |
@@ -55,7 +55,8 @@ Construcciones que no aparecen explicitamente prohibidas ni canonizadas por la S
 |------|--------|
 | Combinacion `c + e` sobre el mismo enlace | NO CANONIZADA (AP-28). Tratar como extension declarada. |
 | Enlace probabilistico sin fan | `Pr=p` solo dentro de abanicos; fuera no tiene canonicidad. |
-| Etiquetas de ruta sobre enlaces habilitadores | Solo canonizadas sobre consumo/resultado; no sobre agente/instrumento. |
+
+> **No es zona no canonizada — etiquetas de ruta.** Las etiquetas de ruta NO son una zona no canonizada: §11.2 no las lista. Son una construccion **canonica-condicionada** (R-OPL-RUTA-3): canonicas por A.5, restringidas a enlaces de consumo/resultado por producto. No estan canonizadas sobre agente/instrumento, pero esa restriccion es condicion de la construccion canonica, no ausencia de canonicidad.
 
 ## Uso en la skill
 
