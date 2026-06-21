@@ -96,6 +96,7 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | `conocimiento` | no | lista URNs `kb` | conocimiento permitido |
 | `componible` | no | lista URNs `artefacto` | artefactos componibles |
 | `estados` | no | lista | plan declarativo simple (sin FSM mecanizado) |
+| `alcance` | no | enum | `usuario\|proyecto\|ambos`; ausente = `ambos`. Gobierna qué destino de `--aplicar` admite el artefacto (instalación user-general vs proyecto). Lo respeta y valida el gesto de transmutación (ley/3 §7). Es un atributo del artefacto, no del runtime: ortogonal a `targets` |
 
 Renombres pneuma sobre la bestia: `agente-propiamente-tal` → `agente`,
 `agente-plataforma` → `plataforma`. Estos campos NO DEBEN aparecer en un

@@ -39,6 +39,10 @@ FORMAS = ("habilidad", "subagente", "agente", "plataforma")
 ARNESES = ("utilidad", "disciplina", "delegado", "persona",
            "orquestador", "servicio", "arquetipo")
 FAMILIAS = ("nota", "fuente", "bok")
+# Alcance de instalación (opcional; ausente = "ambos"). Gobierna qué destinos de
+# --aplicar admite el artefacto: usuario-general, proyecto (.opencode/.claude) o
+# ambos. El gesto `transmutar --aplicar [--proyecto]` lo respeta y valida.
+ALCANCES = ("usuario", "proyecto", "ambos")
 LANGS = ("es", "en")
 
 EJES = ("pi", "mu", "xi", "lambda", "phi")
@@ -79,7 +83,7 @@ CAMPOS_COMUNES = {
 }
 CAMPOS_AGENTICOS = {
     "vector", "sigma", "arnes", "forma", "herramientas", "targets",
-    "conocimiento", "componible", "estados",
+    "conocimiento", "componible", "estados", "alcance",
 }
 CAMPOS_CONOCIMIENTO = {"familia"}
 
@@ -428,6 +432,10 @@ def chk_forma_valida(arts, raiz):
             if isinstance(arnes, str) and arnes not in ARNESES:
                 f(art, f"arnes inválido: '{arnes}' "
                        f"(esperado: {'|'.join(ARNESES)})")
+            alcance = art.campos.get("alcance")
+            if isinstance(alcance, str) and alcance not in ALCANCES:
+                f(art, f"alcance inválido: '{alcance}' "
+                       f"(esperado: {'|'.join(ALCANCES)})")
             for clave in ("vector", "sigma"):
                 v = art.campos.get(clave)
                 if isinstance(v, list) and (
@@ -1274,6 +1282,17 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
               "registra agentes")
     if aplicar:
         nombre_art = art.campos["nombre"]
+        # El gesto respeta el alcance declarado (ausente = ambos).
+        alcance = art.campos.get("alcance", "ambos")
+        if proyecto and alcance == "usuario":
+            print(f"error: '{nombre_art}' declara alcance 'usuario'; no admite "
+                  f"instalacion a nivel proyecto (--proyecto).", file=sys.stderr)
+            return 1
+        if not proyecto and alcance == "proyecto":
+            print(f"error: '{nombre_art}' declara alcance 'proyecto'; requiere "
+                  f"--proyecto PATH (no se instala a nivel usuario).",
+                  file=sys.stderr)
+            return 1
         if proyecto:
             base = Path(proyecto).expanduser()
             if not base.is_dir():

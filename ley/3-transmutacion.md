@@ -224,6 +224,13 @@ opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}
 nombrando los targets soportados. La emisión canónica en `_emision/` no cambia;
 `--proyecto` solo redirige el destino de `--aplicar`.
 
+El gesto `--aplicar` **respeta y valida el campo `alcance`** del artefacto (ley/2
+§3; ausente = `ambos`): un artefacto con `alcance: usuario` rechaza `--proyecto`;
+uno con `alcance: proyecto` exige `--proyecto` (falla en la instalación
+user-general); `ambos` admite cualquiera. El alcance es propiedad del artefacto,
+ortogonal a `targets`: se determina en autoría, no en el gesto — el gesto solo lo
+honra. La emisión canónica en `_emision/` es siempre alcance-neutral.
+
 Los espacios de emisión por runtime son **planos** (un directorio por
 `nombre`): dos artefactos con el mismo `nombre` y URN distinto NO DEBEN
 emitirse — `transmutar` falla nombrando la colisión; renombra uno.

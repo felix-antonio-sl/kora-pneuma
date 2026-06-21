@@ -987,6 +987,48 @@ class TestTransmutacionProyecto(CasoPneuma):
         self.assertIn("  websearch: deny", texto)
         self.assertIn("  task: deny", texto)
 
+    def test_alcance_invalido_falla_velar(self):
+        self.escribir_agente(agente_campos(alcance="global"))
+        self.assert_fallo("forma-valida", "alcance inválido")
+
+    def test_alcance_usuario_rechaza_proyecto(self):
+        self.escribir_agente(agente_campos(alcance="usuario"))
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 1)
+        self.assertIn("alcance 'usuario'", err)
+
+    def test_alcance_proyecto_exige_proyecto(self):
+        self.escribir_agente(agente_campos(alcance="proyecto"))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("alcance 'proyecto'", err)
+
+    def test_alcance_proyecto_con_proyecto_ok(self):
+        self.escribir_agente(agente_campos(alcance="proyecto"))
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 0)
+        self.assertTrue((proj / ".opencode/agents/agente-x.md").is_file())
+
+    def test_alcance_ausente_es_ambos(self):
+        # Sin campo alcance: --aplicar user y --proyecto ambos validos.
+        self.escribir_agente()
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 0)
+
 
 if __name__ == "__main__":
     unittest.main()
