@@ -539,7 +539,7 @@ class TestTransmutacion(CasoPneuma):
             forma="subagente", arnes="delegado",
             vector=[2, 1, 2, 0, 1], sigma=[1, 1, 1, 1, 1]))
         for urn, modo, nombre in (
-                ("urn:dev:artefacto:agente-x", "mode: primary", "agente-x"),
+                ("urn:dev:artefacto:agente-x", "mode: all", "agente-x"),
                 ("urn:dev:artefacto:sub-x", "mode: subagent", "sub-x")):
             codigo, _, _ = self.correr(
                 ["transmutar", "--urn", urn, "--target", "opencode"])
@@ -880,6 +880,112 @@ class TestGatePromocion(CasoPneuma):
             ["ciclo", "urn:kora:artefacto:util-x", "deprecado"])
         self.assertEqual(codigo, 0)
         self.assertIn("estado: deprecado", path.read_text(encoding="utf-8"))
+
+
+class TestTransmutacionProyecto(CasoPneuma):
+    """ley/3 §7: --proyecto instala a nivel proyecto; modo opencode agente=all."""
+
+    def test_opencode_agente_emite_mode_all(self):
+        # forma agente (persona dual-mode) -> mode: all, no primary.
+        self.escribir_agente()
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/opencode/agents/agente-x.md").read_text("utf-8")
+        self.assertIn("mode: all", texto)
+        self.assertNotIn("mode: primary", texto)
+
+    def test_opencode_subagente_emite_mode_subagent(self):
+        self.escribir_agente(agente_campos(
+            forma="subagente", arnes="delegado", vector=[2, 1, 2, 0, 1],
+            sigma=[1, 1, 1, 1, 1]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/opencode/agents/agente-x.md").read_text("utf-8")
+        self.assertIn("mode: subagent", texto)
+
+    def test_proyecto_instala_agente_en_dot_opencode(self):
+        self.escribir_agente()
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 0)
+        destino = proj / ".opencode/agents/agente-x.md"
+        self.assertTrue(destino.is_file())
+        self.assertIn("mode: all", destino.read_text("utf-8"))
+        self.assertIn(f"aplicado: {destino}", salida)
+
+    def test_proyecto_instala_skill_en_dot_claude(self):
+        self.escribir_skill()
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 0)
+        self.assertTrue((proj / ".claude/skills/util-x/SKILL.md").is_file())
+
+    def test_proyecto_sin_aplicar_es_error(self):
+        self.escribir_agente()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--proyecto", str(self.raiz)])
+        self.assertEqual(codigo, 1)
+        self.assertIn("--proyecto requiere --aplicar", err)
+
+    def test_proyecto_codex_no_soportado_es_error(self):
+        self.escribir_skill(skill_campos(targets=["claude-code", "codex"]))
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 1)
+        self.assertIn("no soporta instalacion a nivel proyecto", err)
+
+    def test_proyecto_inexistente_es_error(self):
+        self.escribir_agente()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode", "--aplicar",
+             "--proyecto", str(self.raiz / "no-existe")])
+        self.assertEqual(codigo, 1)
+        self.assertIn("no es un directorio", err)
+
+    def test_opencode_permission_deniega_elevadas_no_concedidas(self):
+        # herramientas=[Read, Write] -> deniega bash/webfetch/websearch/task.
+        self.escribir_agente()  # default: herramientas=[Read, Write]
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/opencode/agents/agente-x.md").read_text("utf-8")
+        self.assertIn("permission:", texto)
+        for k in ("bash", "webfetch", "websearch", "task"):
+            self.assertIn(f"  {k}: deny", texto)
+
+    def test_opencode_permission_respeta_concedidas(self):
+        # Bash y WebFetch concedidas -> NO se deniegan; sí websearch/task.
+        self.escribir_agente(agente_campos(
+            herramientas=["Read", "Write", "Bash", "WebFetch"]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "opencode"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/opencode/agents/agente-x.md").read_text("utf-8")
+        self.assertNotIn("bash: deny", texto)
+        self.assertNotIn("webfetch: deny", texto)
+        self.assertIn("  websearch: deny", texto)
+        self.assertIn("  task: deny", texto)
 
 
 if __name__ == "__main__":

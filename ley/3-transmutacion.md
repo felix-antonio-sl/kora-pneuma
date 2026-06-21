@@ -194,7 +194,7 @@ llamarlos demostrados.
 
 ## 7. Emisión por target
 
-Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout]`.
+Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout] [--proyecto PATH]`.
 Default: escribe bajo `_emision/{target}/...` (derivado, gitignored) y
 reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 
@@ -205,7 +205,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre |
 | `codex` | agente | se emite **como skill**; el colapso de forma se declara en el sello como pérdida adicional: `forma: agente->habilidad :: codex no registra agentes` |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
-| `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: primary` (forma `agente`) |
+| `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
 `~/.claude/agents/{nombre}.md`; codex → `~/.codex/skills/{nombre}/`;
@@ -213,6 +213,16 @@ opencode → `~/.config/opencode/skills/{nombre}/` y
 `~/.config/opencode/agents/{nombre}.md`. En toda emisión y aplicación la
 fibra `referencias/` conserva su nombre: el cuerpo emitido cita paths
 `referencias/...` y ningún target exige otro nombre.
+
+`--proyecto PATH` (requiere `--aplicar`): redirige la instalación al nivel
+**proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
+claude-code → `PATH/.claude/skills/{nombre}/` y `PATH/.claude/agents/{nombre}.md`;
+opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}.md`
+(subdirectorios en **plural**, convención canónica de opencode: el `.opencode/` y
+`~/.config/opencode/` usan nombres plurales; singular solo por retrocompat).
+`codex` NO soporta nivel proyecto (sin convención verificada): `transmutar` falla
+nombrando los targets soportados. La emisión canónica en `_emision/` no cambia;
+`--proyecto` solo redirige el destino de `--aplicar`.
 
 Los espacios de emisión por runtime son **planos** (un directorio por
 `nombre`): dos artefactos con el mismo `nombre` y URN distinto NO DEBEN

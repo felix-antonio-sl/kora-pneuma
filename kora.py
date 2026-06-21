@@ -954,6 +954,16 @@ Este artefacto es dual-mode (arnés persona). Declara su modo efectivo:
   declarada en el sello."""
 
 
+# Frontera de capacidad KORA -> opencode: el allowlist `herramientas` se traduce
+# al idiom canonico de opencode `permission: <key>: deny` (el objeto `tools` esta
+# deprecado desde opencode v1.1.1, doc oficial /docs/permissions). Solo se
+# deniegan las tools de EFECTO EXTERNO que la fuente NO concede; las read-ish
+# (read/edit/glob/grep) e internas (question/list/lsp) quedan en default para no
+# romper la operacion. Pares (key KORA, key opencode).
+OPENCODE_TOOLS_ELEVADAS = (("Bash", "bash"), ("WebFetch", "webfetch"),
+                           ("WebSearch", "websearch"), ("Task", "task"))
+
+
 class ErrorTransmutacion(Exception):
     """La transmutación no procede; el mensaje explica por qué."""
 
@@ -1126,9 +1136,21 @@ def emitir(art: Artefacto, target: str, proy: dict,
             extra = DOCTRINA_DUAL_MODE
         rel = f"{target}/agents/{nombre}.md"
     else:  # opencode, agente
+        # forma subagente -> subagent; forma agente (persona dual-mode, ver
+        # DOCTRINA_DUAL_MODE) -> all: usable como modo primario Y delegable como
+        # subagente. 'all' es el default de opencode y preserva ambos modos;
+        # 'primary' perderia la delegabilidad declarada en el sello.
         modo = "subagent" if art.campos.get("forma") == "subagente" \
-            else "primary"
+            else "all"
         fm = [f"description: {_fm_str(descripcion)}", f"mode: {modo}"]
+        # Frontera de capacidad: deniega via `permission` las tools elevadas
+        # que `herramientas` no concede (paridad con el allowlist `tools` de
+        # claude-code, en el idiom canonico de opencode).
+        hset = set(herramientas)
+        denegadas = [op for kt, op in OPENCODE_TOOLS_ELEVADAS if kt not in hset]
+        if denegadas:
+            fm.append("permission:")
+            fm.extend(f"  {op}: deny" for op in denegadas)
         rel = f"{target}/agents/{nombre}.md"
     sello = construir_sello(art, target, hash_hex, proy, perdidas_extra)
     return rel, _componer(fm, art.cuerpo, extra, sello), perdidas_extra
@@ -1159,9 +1181,27 @@ RUTAS_APLICAR = {
     ("opencode", "agente"): "~/.config/opencode/agents/{nombre}.md",
 }
 
+# Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/
+# .claude del proyecto, no en el home del operador. Paths relativos a la raiz
+# del proyecto. opencode y claude-code usan nombres plurales (agents/, skills/)
+# tanto global como por proyecto (doc oficial opencode.ai/docs/config; .claude
+# de este host). codex no expone una convencion de proyecto verificada: se omite
+# (error explicito si se intenta).
+RUTAS_APLICAR_PROYECTO = {
+    ("claude-code", "skill"): ".claude/skills/{nombre}",
+    ("claude-code", "agente"): ".claude/agents/{nombre}.md",
+    ("opencode", "skill"): ".opencode/skills/{nombre}",
+    ("opencode", "agente"): ".opencode/agents/{nombre}.md",
+}
+
 
 def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
-                   a_stdout: bool) -> int:
+                   a_stdout: bool, proyecto: str | None = None) -> int:
+    if proyecto and not aplicar:
+        print("error: --proyecto requiere --aplicar (instala a nivel "
+              "proyecto, no afecta la emision canonica en _emision/).",
+              file=sys.stderr)
+        return 1
     arts = cargar_corpus(raiz)
     art = resolver(arts, urn)
     if art is None:
@@ -1233,8 +1273,25 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
         print("pérdida declarada: forma: agente->habilidad :: codex no "
               "registra agentes")
     if aplicar:
-        plantilla = RUTAS_APLICAR[(target, art.tipo)]
-        ruta = Path(plantilla.format(nombre=art.campos["nombre"])).expanduser()
+        nombre_art = art.campos["nombre"]
+        if proyecto:
+            base = Path(proyecto).expanduser()
+            if not base.is_dir():
+                print(f"error: el proyecto '{proyecto}' no es un directorio.",
+                      file=sys.stderr)
+                return 1
+            if (target, art.tipo) not in RUTAS_APLICAR_PROYECTO:
+                soportados = ", ".join(
+                    sorted({t for t, _ in RUTAS_APLICAR_PROYECTO}))
+                print(f"error: el target '{target}' no soporta instalacion a "
+                      f"nivel proyecto (soportados: {soportados}).",
+                      file=sys.stderr)
+                return 1
+            ruta = base / RUTAS_APLICAR_PROYECTO[(target, art.tipo)].format(
+                nombre=nombre_art)
+        else:
+            ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
+                nombre=nombre_art)).expanduser()
         if art.tipo == "skill" or (art.tipo, target) == ("agente", "codex"):
             ruta.mkdir(parents=True, exist_ok=True)
             (ruta / "SKILL.md").write_text(contenido, encoding="utf-8")
@@ -1471,6 +1528,10 @@ def principal(argv: list[str] | None = None) -> int:
                    help="instala en los paths del runtime")
     p.add_argument("--stdout", action="store_true",
                    help="imprime la emisión en vez de escribirla")
+    p.add_argument("--proyecto", metavar="PATH",
+                   help="instala a nivel proyecto en <PATH>/.opencode|.claude/ "
+                        "(plural) en vez del home del operador; requiere "
+                        "--aplicar")
 
     p = sub.add_parser("ciclo", help="transición de lifecycle (solo adelante)")
     p.add_argument("urn")
@@ -1488,7 +1549,7 @@ def principal(argv: list[str] | None = None) -> int:
         return cmd_velar(raiz, args.estricto)
     if args.gesto == "transmutar":
         return cmd_transmutar(raiz, args.urn, args.target, args.aplicar,
-                              args.stdout)
+                              args.stdout, args.proyecto)
     if args.gesto == "ciclo":
         return cmd_ciclo(raiz, args.urn, args.estado)
     if args.gesto == "ley":
