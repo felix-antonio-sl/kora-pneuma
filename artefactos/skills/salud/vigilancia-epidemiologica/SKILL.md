@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:vigilancia-epidemiologica
 nombre: vigilancia-epidemiologica
-version: 1.2.0
+version: 1.2.1
 estado: activo
 descripcion: "Evalua senales de vigilancia, brotes, IAAS, RAM, alertas sanitarias. Detecta, clasifica, estima riesgo, notifica y propone respuesta inmediata para sistemas de hospitalizacion."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/vigilancia-epidemiologica/SKILL.md v1.0.1 (sha256:dd6b666c924f12d9d55630af7bb82ed695627699747367d8e33415be1e0c9936); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — definiciones de caso (sospechoso/probable/confirmado), criterios cuantitativos de brote (incl. IAAS sobre linea de base, tasa de ataque) y campos del formulario de notificacion obligatoria; anclado en RE 60/2022 (citada en urn:salud:kb:hodom-operacional-iaas) y en epidemiologia de campo estandar. Los criterios especificos por evento, plazos y campos oficiales (definiciones ENO, articulado RE 60/2022 no cargado como KB) quedan marcados {{verificar}} para el operador."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/vigilancia-epidemiologica/SKILL.md v1.0.1 (sha256:dd6b666c924f12d9d55630af7bb82ed695627699747367d8e33415be1e0c9936); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — definiciones de caso (sospechoso/probable/confirmado), criterios cuantitativos de brote (incl. IAAS sobre linea de base, tasa de ataque) y campos del formulario de notificacion obligatoria; anclado en RE 60/2022 (citada en urn:salud:kb:hodom-operacional-iaas) y en epidemiologia de campo estandar. Los criterios especificos por evento, plazos y campos oficiales (definiciones ENO, articulado RE 60/2022 no cargado como KB) quedan marcados {{verificar}} para el operador. v1.2.1 (2026-06-22): cierra los {{verificar}} anclando a urn:salud:kb:notificacion-eno-iaas (sintesis de fuentes oficiales verificadas: BCN/LeyChile, MINSAL); CORRIGE la cita 'RE 60/2022' — el reglamento ENO vigente es el Decreto 7/2019 (deroga DS 158/2004) y la norma IAAS es el Decreto Exento 60/2022 que aprueba la Norma Tecnica 225 (deroga NT 124); la incertidumbre irreducible (definiciones de caso por evento, que viven en circulares por enfermedad) queda como referencia grounded al KB, no como placeholder."
 autor: FS
 creado: 2026-05-08
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob, WebSearch]
 targets: [claude-code, codex, opencode]
 estados: [caracterizar, clasificar, estimar-riesgo, proponer-respuesta, notificar]
-conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:gestion-redes-general, urn:salud:kb:hodom-operacional-iaas]
+conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:gestion-redes-general, urn:salud:kb:hodom-operacional-iaas, urn:salud:kb:notificacion-eno-iaas]
 componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:hospitalista]
 ---
 
@@ -71,11 +71,11 @@ antes de aplicarla:
   referencia del evento (cultivo, PCR, serología pareada, etc.), independiente
   de la clínica.
 
-{{verificar: los criterios clínicos, de laboratorio y de tiempo de cada
-definición de caso dependen del evento específico y de la circular MINSAL
-vigente (p. ej. circular de vigilancia de IRA grave, definiciones ENO). No
-aplicar una definición de caso sin contrastarla con el protocolo vigente del
-agente bajo vigilancia.}}
+> El **Decreto 7/2019 no define transversalmente** sospechoso/probable/confirmado:
+> la definición operativa por evento (criterios clínicos, de laboratorio y de nexo)
+> vive en la Norma Técnica/circular MINSAL de cada enfermedad. El marco normativo
+> (modalidades, plazos, plataforma) está en `urn:salud:kb:notificacion-eno-iaas`;
+> los criterios por agente se toman de su circular específica antes de aplicarlos.
 
 #### Criterios cuantitativos de brote
 
@@ -89,10 +89,11 @@ ajustar al evento y al denominador local):
 - **IAAS — brote**: aumento de casos de una infección por sobre la línea de base
   (endemia) de la unidad, o agrupación inusual en tiempo/lugar (misma sala,
   mismo dispositivo, mismo microorganismo), o aparición de un microorganismo
-  epidemiológicamente significativo (p. ej. multirresistente). {{verificar: la
-  línea de base se calcula con la tasa histórica de la unidad; fijar el umbral
-  (p. ej. tasa observada > media + 2 DE, o > percentil esperado) con el programa
-  IAAS local.}}
+  epidemiológicamente significativo (p. ej. multirresistente). Criterio **NT 225**
+  (Decreto Exento 60/2022): casos por sobre ~el doble de lo esperado, acúmulos en
+  tiempo/servicio, o aislamiento de patógeno específico/resistente. La línea de base
+  es la tasa histórica de la unidad; el umbral estadístico (p. ej. > media + 2 DE) lo
+  fija el programa IAAS (PCI) local.
 - **Tasa de ataque** = casos / población expuesta × 100 — cuantifica la magnitud
   y orienta la búsqueda de la fuente.
 - **IAAS — indicadores de vigilancia continua** (urn:salud:kb:hodom-operacional-iaas):
@@ -113,21 +114,22 @@ restricción de visitas y coordinación con salud pública.
 
 ### notificar
 
-Si aplica lógica de notificación obligatoria (RE 60/2022 para IAAS,
-urn:salud:kb:hodom-operacional-iaas; régimen ENO para enfermedades de
-notificación obligatoria), estructurar el reporte con los campos requeridos por
-la normativa vigente.
+Si aplica notificación obligatoria, estructurar el reporte según la normativa
+vigente (`urn:salud:kb:notificacion-eno-iaas`): **ENO** por el **Decreto 7/2019**
+(vía EPIVIGILA); **IAAS** por el **Decreto Exento 60/2022 (Norma Técnica 225)**
+(reporte mensual a SICARS), con la regla puente: un **brote de IAAS escala a
+notificación inmediata vía EPIVIGILA** (Decreto 7, Art. 1.d).
 
 **Oportunidad de la notificación.** Distinguir la urgencia según el evento:
 
-- **Notificación inmediata** (vía más rápida disponible, dentro de 24 h):
-  eventos de alerta — brote, evento inusual, agente de declaración inmediata.
-- **Notificación diaria/semanal**: eventos de vigilancia regular según el
-  calendario del evento.
+- **Inmediata** (Decreto 7/2019 Art. 1.a/1.d): ante sospecha, vía más expedita a la
+  SEREMI; formalización en EPIVIGILA ≤ 24 h. Cubre los agentes de la lista inmediata
+  y **todos los brotes**.
+- **Dentro de 24 h** (Art. 1.b): ≤ 24 h desde confirmación/clasificación final.
+- **Centinela semanal** (Art. 1.c): solo establecimientos centinela definidos por la SEREMI.
+- **IAAS**: reporte **mensual** a SICARS (NT 225); el brote IAAS escala a inmediata vía EPIVIGILA.
 
-{{verificar: el plazo exacto (inmediato vs. diario vs. semanal) y la vía
-(electrónica/telefónica) los fija la normativa ENO y la RE 60/2022 vigentes
-para cada evento; confirmar antes de comprometer un plazo.}}
+La modalidad y el plazo por evento están tabulados en `urn:salud:kb:notificacion-eno-iaas`.
 
 **Campos del formulario de notificación.** Estructurar el reporte con, al menos:
 
@@ -146,11 +148,12 @@ para cada evento; confirmar antes de comprometer un plazo.}}
 8. **En IAAS**: tipo de infección, dispositivo asociado, microorganismo y
    patrón de resistencia, unidad/servicio, días-dispositivo.
 
-{{verificar: el set exacto y obligatorio de campos lo define el formulario
-oficial vigente (ENO MINSAL; reporte al programa IAAS del hospital según RE
-60/2022). La RE 60/2022 está citada como marco en el corpus pero su articulado
-no está cargado como KB — confirmar los campos contra el formulario oficial
-antes de usarlo como definitivo.}}
+Los grupos de campos siguen el formulario **EPIVIGILA** (detalle en
+`urn:salud:kb:notificacion-eno-iaas`). El **set exacto por cada ENO** lo fija la
+Norma Técnica/circular de la enfermedad y el instructivo oficial de EPIVIGILA; en
+IAAS, las definiciones e indicadores los fijan las circulares C37 (reporte a SICARS).
+Tomar la lista de arriba como estructura, no como transcripción literal del
+formulario oficial.
 
 ## Reglas duras
 
@@ -161,10 +164,11 @@ antes de usarlo como definitivo.}}
    brote. La definición de caso específica del evento se verifica contra la
    circular/protocolo MINSAL vigente antes de aplicarla.
 3. WebSearch solo para verificación situacional o de vigencia normativa.
-4. Notificar según la normativa vigente (RE 60/2022 para IAAS; régimen ENO),
-   respetando la oportunidad (inmediata vs. regular) y los campos del formulario
-   oficial. Un número clínico, una definición de caso o un plazo que no se pueda
-   fundar en la normativa vigente se marca {{verificar}}, nunca se afirma.
+4. Notificar según la normativa vigente (`urn:salud:kb:notificacion-eno-iaas`):
+   **Decreto 7/2019** (ENO, EPIVIGILA) y **Decreto Exento 60/2022 / NT 225** (IAAS,
+   SICARS), respetando la oportunidad (inmediata vs. regular) y los campos del
+   formulario oficial. Un número clínico, una definición de caso o un plazo que no
+   se pueda fundar en la normativa vigente se marca {{verificar}}, nunca se afirma.
 
 ## Composición
 
