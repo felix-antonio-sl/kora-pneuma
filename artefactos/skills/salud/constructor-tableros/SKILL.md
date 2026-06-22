@@ -2,7 +2,7 @@
 urn: urn:salud:artefacto:constructor-tableros
 nombre: constructor-tableros
 version: 1.1.0
-estado: activo
+estado: deprecado
 descripcion: "Construye artefactos estructurados de apoyo a decision: mapas de brechas, mapas de riesgo, dashboards, policy briefs, escenarios."
 fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/constructor-tableros/SKILL.md v1.0.1 (sha256:66566651cefa33ed8d4ce74e29682a521363c91f0a47bb0ec76db2c135db47f5); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS

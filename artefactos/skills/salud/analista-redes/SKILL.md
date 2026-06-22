@@ -2,7 +2,7 @@
 urn: urn:salud:artefacto:analista-redes
 nombre: analista-redes
 version: 1.1.0
-estado: activo
+estado: deprecado
 descripcion: "Analiza o disena unidades, establecimientos, redes, modelos territoriales, flujos, capacidad, accesibilidad y gobernanza en sistemas de salud."
 fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/analista-redes/SKILL.md v1.0.1 (sha256:18e7b6e3a41191c782a794fc8f3c679afb5312809762b4768330cd28f11391ea); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
 autor: FS
