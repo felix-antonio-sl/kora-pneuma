@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:auditor-calidad-hospitalizacion
 nombre: auditor-calidad-hospitalizacion
-version: 1.2.0
+version: 1.3.0
 estado: activo
 descripcion: "Evalua desempeno, calidad y mejora continua de sistemas de hospitalizacion integrados. Auditoria normativa, KPIs, brechas, plan de mejora."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/auditor-calidad-hospitalizacion/SKILL.md v1.0.1 (sha256:25dca15f7b8389f226de40d5a330c646570c4303463cdae67f5deb631fd64311); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — catalogo concreto de KPIs con umbrales de referencia (ocupacion, estancia, reingreso 30d, escalamiento HaH, mortalidad evitable, oportunidad de ingreso, IAAS); fundado en urn:salud:kb:gestion-redes-herramientas (Anexo A), urn:salud:kb:gestion-redes-general, urn:salud:kb:management-engineering-ext-capacidad y el benchmark real urn:salud:kb:hodom-operacional-indicadores; indicadores sin umbral cerrado marcados {{verificar}}."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/auditor-calidad-hospitalizacion/SKILL.md v1.0.1 (sha256:25dca15f7b8389f226de40d5a330c646570c4303463cdae67f5deb631fd64311); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — catalogo concreto de KPIs con umbrales de referencia (ocupacion, estancia, reingreso 30d, escalamiento HaH, mortalidad evitable, oportunidad de ingreso, IAAS); fundado en urn:salud:kb:gestion-redes-herramientas (Anexo A), urn:salud:kb:gestion-redes-general, urn:salud:kb:management-engineering-ext-capacidad y el benchmark real urn:salud:kb:hodom-operacional-indicadores; indicadores sin umbral cerrado marcados {{verificar}}. v1.3.0 (2026-06-22): cierra los 3 {{verificar}} restantes reformulandolos como decisiones-locales-grounded (mismo patron que urn:salud:kb:notificacion-eno-iaas con las definiciones de caso por evento) — reingreso HODOM (meta local; ref Federman 2018 <=8.6%), estancia HODOM (no auditar PDE chilena vs benchmark internacional sin ajustar case-mix), mortalidad HODOM (definir cruda vs ajustada por riesgo). No requieren KB nuevo: las referencias (Federman 2018, Shepperd 2021, urn:salud:kb:hodom-operacional-indicadores) ya estan ancladas en las tablas; lo que faltaba no era un numero sino una decision de politica local."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -123,15 +123,21 @@ Indicadores que el corpus nombra pero NO acota con un umbral cerrado, a confirma
 con el operador antes de auditarlos como incumplimiento:
 
 - **Tasa de reingreso HODOM**: no reportada en el benchmark HSC real
-  (urn:salud:kb:hodom-operacional-indicadores la marca como brecha). {{verificar:
-  fijar meta local; a falta de ella usar el ≤8.6% de Federman 2018 como referencia.}}
-- **Estancia media HODOM**: el benchmark HSC observó 7.4 → 10.8 d (+46%), pero la
-  referencia internacional de LOS HaH es ≤3.2 d (Shepperd 2021). {{verificar: la
-  brecha refleja diferencias de case-mix/modelo; no auditar la PDE chilena contra
-  el benchmark internacional sin ajustar.}}
+  (urn:salud:kb:hodom-operacional-indicadores la marca como brecha). Meta a fijar
+  localmente por la unidad; a falta de meta local, usar como referencia el ≤ 8.6%
+  de Federman 2018 (ya tabulado arriba). No auditar como incumplimiento sin meta
+  local declarada (regla dura 4).
+- **Estancia media HODOM**: el benchmark HSC observó 7.4 → 10.8 d (+46%), frente a
+  la referencia internacional de LOS HaH ≤ 3.2 d (Shepperd 2021). La brecha refleja
+  diferencias de case-mix y modelo de atención: **no auditar la PDE chilena contra
+  el benchmark internacional sin ajustar por case-mix**. Reportar la tendencia local
+  (7.4 → 10.8 d) como señal de prolongación a investigar, no como incumplimiento de
+  un estándar foráneo.
 - **Mortalidad HODOM**: HSC observó 0.13% (1/747); no hay umbral normativo de
-  referencia. {{verificar: definir si se audita como tasa cruda o ajustada por
-  riesgo.}}
+  referencia. Decisión metodológica local previa a auditar: definir si se mide como
+  **tasa cruda o ajustada por riesgo** (la cruda no es comparable entre unidades con
+  distinto case-mix). Sin ajuste de riesgo, usarla solo como monitoreo interno de
+  tendencia, no como comparación entre servicios.
 
 ## Reglas duras
 
