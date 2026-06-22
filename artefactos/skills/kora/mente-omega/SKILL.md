@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:mente-omega
 nombre: mente-omega
-version: 1.1.0
+version: 1.1.1
 estado: activo
 descripcion: "Skill de razonamiento estructural-discursivo-interventivo. Encarna el Pentamotor Phi/Psi/Xi/Delta/Sigma como protocolo: comprende-expresando, expresa-comprendiendo, interviene-valorando. Para cualquier agente que necesite producir artefactos cognitivo-discursivos con verdad estructural, vitalidad expresiva, potencia interventiva y consciencia axiológica."
-fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas. Restauración 1.1.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb a pneuma (GENESIS sección 4)."
+fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas. Restauración 1.1.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb a pneuma (GENESIS sección 4). v1.1.1 (2026-06-22): absorbe de polymath (en retiro) la disciplina del coordinador transversal que deriva al especialista — la interrupción LIMITE-HUMANO y la regla dura 9 ahora mandan derivar al especialista (no fingir pericia) cuando el dominio exige autoridad específica y el riesgo es alto."
 creado: 2026-04-28
 tags: [mente-omega, pentamotor, razonamiento-estructural, expresion, intervencion-axiologica, anti-clausura, vigilancia-epistemica]
 vector: [2, 0, 2, 0, 1]
@@ -124,7 +124,7 @@ canónicas se documentan en `referencias/interrupciones-psi.md`. Resumen:
 | ANTI-DERIVA | Abstracción sube sin utilidad | Devolver al objetivo concreto |
 | ANTI-RIGIDEZ | Datos contradicen marco y se descarta | Forzar cambio de modelo |
 | ANTI-OPACIDAD | No se puede explicar la lógica con claridad | Reiniciar desde el problema base |
-| LIMITE-HUMANO | Cuello de botella es autoridad/relación/cuidado | Salir del impulso de optimización, explicitar paso humano |
+| LIMITE-HUMANO | Cuello de botella es autoridad/relación/cuidado, o el dominio exige pericia específica con riesgo alto | Salir del impulso de optimización, explicitar paso humano; si el dominio demanda autoridad específica y el riesgo es alto, derivar al especialista en vez de aconsejar — no presentar síntesis general como pericia de dominio |
 | ANTI-GRANDILOCUENCIA | Forma crece sin sustancia | Depurar, reforzar densidad |
 | ANTI-DISOCIACION | Análisis sólido + articulación débil (o viceversa) | Reintegrar; no avanzar con uno mejor que el otro |
 | ANTI-ESTERILIDAD | Artefacto epistémicamente impecable que no puede actuar | Reconectar con acción |
@@ -206,7 +206,10 @@ Funciones (`referencias/motor-sigma.md`):
    relación, cuidado, presencia o negociación, salir del modo
    optimización.
 9. **No invadir dominio**: la skill da arquitectura cognitiva; el
-   conocimiento sustantivo lo aporta el invocador.
+   conocimiento sustantivo lo aporta el invocador. Cuando el dominio
+   exige autoridad específica y la recomendación es de riesgo alto,
+   derivar al especialista en vez de fingir pericia: una síntesis
+   transversal no es un dictamen de dominio.
 10. **La forma del artefacto es parte de su contenido**: separar "qué
     se dice" de "cómo se dice" es abstracción útil para análisis, no
     descripción de la realidad cognitiva.

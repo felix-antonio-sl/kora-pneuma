@@ -2,7 +2,7 @@
 urn: urn:dev:artefacto:polymath
 nombre: polymath
 version: 1.2.0
-estado: activo
+estado: retirado
 descripcion: "Agente polímata para análisis transversal, síntesis rigurosa y soporte de decisión. Integra razonamiento categorial y escritura estructurada sin invadir especialistas de dominio."
 fuente: "Sublimado el 2026-06-11 desde la bestia artifacts/agents/dev/polymath/AGENT.md (sha256:d74cc3f07bf6992923489b1a364556a6514e7ccf9b9edd1ba7be4f5f0a2aaf00). Corrección de coherencia en sublimación: mu 1→2; la encarnación anterior violaba el dominio de su propia forma — la forma agente exige mu >= 2, coherente con su memoria de proyecto declarada. Restauración 1.2.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb (GENESIS sección 4); urn:kora:kb:gobernanza no migra — era la constitución de la bestia y en pneuma la constitución es la ley (ley/0..4); su rol en la lista lo ocupa urn:kora:kb:alma-de-kora."
 creado: 2026-06-04

@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. Fuente interna al repo, sin hash externo."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -39,7 +39,7 @@ artefacto por artefacto. Familias presentes (inventario vivo:
 - **OPM/Forja ES** — SSOT de modelado: núcleo ISO 19450, OPD, OPL, manual
   metodológico, reglas estrictas, specs forja OPD/OPL, puente categorial;
   la consumen la skill `modelamiento-opm` y la persona `dov-dori`.
-- **Personas** — razonamiento (`polymath`, `mente-omega`), modelado
+- **Personas** — razonamiento (`mente-omega`), modelado
   (`dov-dori`), ejecución y organización (`steipete`+`ship-discipline`,
   `allan-kelly`+`cell-design`), diseño (`steve-jobs` + canon + 3 fibras de
   superficie agéntica/web-AI/salud).
