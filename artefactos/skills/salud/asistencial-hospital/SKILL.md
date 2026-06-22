@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:asistencial-hospital
 nombre: asistencial-hospital
-version: 1.2.0
+version: 1.3.0
 estado: activo
 descripcion: "Skill para visita clinica en servicio de medicina intrahospitalaria. Evaluacion SOAP, ajuste terapeutico, decision de alta/continuacion/traslado, plan de seguimiento."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/asistencial-hospital/SKILL.md v1.0.1 (sha256:90fe83b266fa8b8a4185ef6f9311d4824ed5594c4397d7efe8ad3580c6d5e926); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): modo asistencial hospitalario del agente medico-hospitalista, frontera micro-asistencial declarada. Omitido con razon: target openclaw (GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — criterios objetivos de estabilidad para alta (espejo de las banderas rojas de asistencial-hodom) y umbrales de escalamiento a UCI/UTI; fundados en la skill hermana asistencial-hodom y en urn:salud:kb:management-engineering-ext-capacidad (ocupacion UCI >85%, readmision <48h centinela); cortes con {{verificar}} para confirmacion del operador."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/asistencial-hospital/SKILL.md v1.0.1 (sha256:90fe83b266fa8b8a4185ef6f9311d4824ed5594c4397d7efe8ad3580c6d5e926); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): modo asistencial hospitalario del agente medico-hospitalista, frontera micro-asistencial declarada. Omitido con razon: target openclaw (GENESIS seccion 4). v1.2.0 (2026-06-22): inyeccion de umbrales/criterios operables (evaluacion funcional) — criterios objetivos de estabilidad para alta (espejo de las banderas rojas de asistencial-hodom) y umbrales de escalamiento a UCI/UTI; fundados en la skill hermana asistencial-hodom y en urn:salud:kb:management-engineering-ext-capacidad (ocupacion UCI >85%, readmision <48h centinela); cortes con {{verificar}} para confirmacion del operador. v1.3.0 (2026-06-22): cierra los {{verificar}} clinicos anclando a urn:salud:kb:umbrales-clinicos-hospitalizacion (sintesis de fuentes oficiales: BTS 2017, IDSA/ATS-Halm, Surviving Sepsis Campaign 2021). Correcciones de encuadre fundadas en guia: el criterio de estabilidad por SatO2 es >=90% (IDSA/ATS) y el >=92% queda declarado como margen de alta, no como cifra de guia; el 'afebril 48 h' no es requisito IDSA/ATS 2019 (T<=37.8 sostenida, sin periodo fijo post-estabilidad); ventana antibiotico estratificada <=1 h shock / <=3 h sepsis sin shock (SSC 2021); qSOFA reposicionado como predictor de desenlace, NEWS2 preferido como tamizaje (SSC recomienda en contra de qSOFA como tamizaje unico)."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob, WebSearch, WebFetch]
 targets: [claude-code, codex, opencode]
 estados: [evaluar, ajustar-tratamiento, decidir-disposicion, documentar]
-conocimiento: [urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:management-engineering-ext-capacidad, urn:salud:kb:health-systems-science-operativa]
+conocimiento: [urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:management-engineering-ext-capacidad, urn:salud:kb:health-systems-science-operativa, urn:salud:kb:umbrales-clinicos-hospitalizacion]
 componible: [urn:salud:artefacto:medico-hospitalista, urn:salud:artefacto:firs-razonamiento-sanitario]
 ---
 
@@ -100,16 +100,22 @@ menos las últimas 24 horas (son la imagen intrahospitalaria de las banderas
 rojas de escalamiento de la skill hermana asistencial-hodom, leídas en positivo):
 
 - **SpO2 ≥ 92% en aire ambiente** (o de vuelta a su basal/O2 domiciliario
-  habitual en EPOC u oxígeno-dependiente). {{verificar: el umbral ≥ 92% es el
-  recíproco del corte de escalamiento SpO2 < 90% de asistencial-hodom más un
-  margen; confirmar contra protocolo local y tipo de paciente.}}
+  habitual en EPOC u oxígeno-dependiente). El criterio de estabilidad clínica
+  validado es **SatO2 ≥ 90% sin O2 suplementario** (IDSA/ATS, criterios de Halm);
+  el ≥ 92% que exige esta skill es margen de seguridad sobre ese mínimo para el
+  alta domiciliaria, declarado como tal, no como cifra de guía. En EPOC el
+  objetivo es la basal 88–92% (BTS 2017). Fundado en
+  urn:salud:kb:umbrales-clinicos-hospitalizacion.
 - **FR 12–20 rpm**, sin uso de musculatura accesoria.
 - **FC 50–100 lpm**, sin arritmia sintomática nueva.
 - **PAS ≥ 100 mmHg** sin requerir vasoactivos ni reposición de volumen activa
   (margen sobre el corte de escalamiento PAS < 90 mmHg de la skill hermana).
-- **Afebril ≥ 48 h** sin antipiréticos (T° < 37.8°C), o fiebre explicada y en
-  resolución documentada. {{verificar: 48 h afebril es el estándar habitual de
-  estabilidad previa al alta; confirmar contra norma local.}}
+- **Afebril sostenida (T° ≤ 37.8°C)** sin antipiréticos, o fiebre explicada y en
+  resolución documentada. El criterio de estabilidad es la temperatura ≤ 37.8°C,
+  no un período fijo: IDSA/ATS 2019 no exige observar 24–48 h tras alcanzar la
+  estabilidad y desaconseja prolongar la estancia por ese motivo
+  (urn:salud:kb:umbrales-clinicos-hospitalizacion). Mantener tendencia afebril y
+  descartar recurrencia antes del alta.
 - **Glasgow 15 / nivel de conciencia basal**, orientado, tolerancia a vía oral.
 - **Dolor controlado** con esquema oral (EVA ≤ 3) y deglución segura para pasar
   EV → oral.
@@ -132,14 +138,18 @@ intrahospitalaria, complementadas con criterios de gravedad establecidos):
 - **FR > 30 rpm** sostenida o **FR < 8 rpm**.
 - **FC > 120 lpm** sostenida sintomática o **FC < 50 lpm** sintomática.
 - **PAS < 90 mmHg** sintomática o que requiere vasoactivos.
-- **T° > 38.5°C** con criterios de sepsis: la sospecha de sepsis exige
-  hemocultivos y antibiótico dentro de 1 hora (paquete Surviving Sepsis
-  Campaign). {{verificar: la ventana antibiótico < 1 h proviene de SSC 2021;
-  confirmar contra protocolo de sepsis local.}}
+- **T° > 38.5°C** con criterios de sepsis: tomar hemocultivos e iniciar
+  antibiótico **≤ 1 h si hay shock séptico o sepsis de alta probabilidad**; en
+  sepsis posible sin shock, evaluación rápida de causas y decisión **≤ 3 h**
+  (SSC 2021, urn:salud:kb:umbrales-clinicos-hospitalizacion). La ventana de 1 h
+  es de sepsis con shock, no de toda infección.
 - **Deterioro de conciencia: Glasgow < 13** o caída ≥ 2 puntos.
-- **qSOFA ≥ 2** (PAS ≤ 100 mmHg, FR ≥ 22, alteración de conciencia) ante
-  sospecha de infección. {{verificar: qSOFA es tamizaje, no diagnóstico;
-  confirmar uso local frente a NEWS2/criterios de la unidad.}}
+- **Deterioro por score agregado**: preferir **NEWS2** (o MEWS/SIRS) más lactato
+  como tamizaje de sepsis — la SSC 2021 recomienda *en contra* de qSOFA como
+  herramienta única de tamizaje. **qSOFA ≥ 2** (PAS ≤ 100 mmHg, FR ≥ 22,
+  alteración de conciencia) ante sospecha de infección marca alto riesgo de mal
+  desenlace y obliga a evaluación de gravedad/escalamiento; no es el filtro que
+  decide si buscar sepsis (urn:salud:kb:umbrales-clinicos-hospitalizacion).
 - **Diuresis < 0.5 mL/kg/h** sostenida, o lactato en ascenso.
 - Necesidad de monitorización invasiva o intervención no disponible en sala.
 
