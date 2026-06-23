@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:hermes-agent-specialist
 nombre: hermes-agent-specialist
-version: 1.0.0
+version: 1.0.1
 estado: activo
 descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend (local/docker/ssh/modal/daytona/singularity), mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
-fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI ~50 comandos; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria 20+ con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva."
+fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI ~50 comandos; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria 20+ con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23, 9/11 claims confirmados verbatim) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva."
 autor: FS
 creado: 2026-05-12
 lang: es
@@ -172,7 +172,7 @@ residual, siguiente paso si la tarea es multi-incremento.
   `alibaba`, `qwen-oauth`, `kimi-coding`, `zai`, `deepseek`, `minimax`, `novita`, `nvidia`,
   `huggingface`, `ollama-cloud`, y self-hosted `ollama`, `vllm`, `sglang`, `llama-cpp`,
   `lmstudio`, `custom` (la lista crece; verificar viva).
-- Self-hosted critico: **Ollama** necesita `OLLAMA_CONTEXT_LENGTH=64000` antes de arrancar;
+- Self-hosted critico: **Ollama** debe arrancar con `OLLAMA_CONTEXT_LENGTH=64000` para alcanzar el piso de 64k (la doc lo lista como *recomendado*, no como flag obligatorio; su default es 4096 tokens, que no califica para uso agentico con tools);
   **vLLM** necesita `--enable-auto-tool-choice --tool-call-parser hermes`.
 - **Nous Portal**: un OAuth cubre 300+ modelos + 4 herramientas Tool Gateway.
 
@@ -258,7 +258,7 @@ Anti-patrones que se reportan siempre:
 - `SOUL.md` fuera de `HERMES_HOME`, generico copiado, o tratado como archivo de proyecto.
 - `MEMORY.md`/`USER.md` excediendo sus limites de chars.
 - skills duplicando responsabilidad de context files o de `SOUL.md`.
-- modelo con contexto <64k tokens; Ollama sin `OLLAMA_CONTEXT_LENGTH=64000`.
+- modelo con contexto <64k tokens (incluye Ollama en su default 4096 sin `OLLAMA_CONTEXT_LENGTH=64000`, que la doc recomienda para alcanzar el piso; reportar como ajuste necesario, no como flag obligatorio del canon).
 - MCP servers sin escopado/filtrado claro; secretos MCP sin filtrar.
 
 ## Puentes con KORA y OpenClaw

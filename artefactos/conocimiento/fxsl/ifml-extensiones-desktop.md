@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:ifml-extensiones-desktop
 nombre: ifml-extensiones-desktop
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Extensiones IFML para aplicaciones desktop (Java Swing, Windows Forms, RIA): nuevos events (OnFocusLost, OnDragStart/OnDrop), componentes Tree/Table y EditableSelectionField, con criterios para extender y caveats de notacion."
-fuente: "Migrado de la bestia (~/kora) artifacts/knowledge/fxsl/ifml/ifml-extensiones-desktop.md (sha256:4339ea54dead75f384dc80705a15fc2464550fa53ea6b3c3d3fae63b45c4e3f3); cuerpo IFML ya koraficado, preservado integro (FS=100%, sin recomprimir; solo se aplano el frontmatter anidado). Fuente original: Ifml-In-A-Nutshell, capitulo 7 seccion Desktop Extensions, manual del estandar IFML/OMG."
+fuente: "Migrado de la bestia (~/kora) artifacts/knowledge/fxsl/ifml/ifml-extensiones-desktop.md (sha256:4339ea54dead75f384dc80705a15fc2464550fa53ea6b3c3d3fae63b45c4e3f3); cuerpo IFML ya koraficado, preservado integro (FS=100%, sin recomprimir; solo se aplano el frontmatter anidado). Fuente original: Ifml-In-A-Nutshell, capitulo 7 seccion Desktop Extensions, manual del estandar IFML/OMG. v1.0.1 (2026-06-23): correccion de fidelidad OMG (revision adversarial dov-dori, verificada contra corpus) — el portador de los dos input parameters del OnDrop (seccion 4) es `ParameterBindingGroup`, no `DataBindingGroup`; este ultimo no es primitiva IFML (`DataBinding` es content-source al domain, no agrupacion de parametros de un InteractionFlow). Consistente con el uso del constructo en el resto del corpus."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -84,7 +84,7 @@ Caracteristicas:
 - asociable a `Details` o `List` ViewComponents (y especializaciones).
 - debe aparecer como valor de la propiedad `OnDropEvent` del `OnDragStart` source.
 - un outgoing `InteractionFlow`, con cualquier `ViewElement` como destino.
-- `DataBindingGroup` con dos input parameters:
+- `ParameterBindingGroup` con dos input parameters:
  1. instancia(s) del `ViewComponent` asociado al `OnDragStart`.
  2. instancia(s) del `ViewComponent` asociado al `OnDrop`.
 

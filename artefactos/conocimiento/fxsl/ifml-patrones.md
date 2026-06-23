@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:ifml-patrones
 nombre: ifml-patrones
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Catalogo cifrado de los patrones de diseno IFML del estandar OMG, organizados en nueve familias (organizacion, navegacion, data entry, busqueda, gestion de contenido, identidad/autorizacion, sesion, social, geo) con su convencion de codigo XY-Z."
-fuente: "Migrado de la bestia (~/kora @ aa2e2f14) artifacts/knowledge/fxsl/ifml/ifml-patrones.md (sha256:e200306cb77362a6fbe6db49305edb0ba1edd263347f897f2ec007321701c544) el 2026-06-22; cuerpo preservado integro (solo se aplano el frontmatter anidado). Fuente original: Ifml-In-A-Nutshell (Brambilla & Fraternali), capitulo final 'List of IFML design patterns'."
+fuente: "Migrado de la bestia (~/kora @ aa2e2f14) artifacts/knowledge/fxsl/ifml/ifml-patrones.md (sha256:e200306cb77362a6fbe6db49305edb0ba1edd263347f897f2ec007321701c544) el 2026-06-22; cuerpo preservado integro (solo se aplano el frontmatter anidado). Fuente original: Ifml-In-A-Nutshell (Brambilla & Fraternali), capitulo final 'List of IFML design patterns'. v1.0.1 (2026-06-23): correccion clasificatoria (revision adversarial dov-dori) — `GEO-LAS` se movio de la tabla `CS-*` (busqueda) a su propia familia `GEO-*`, consistente con la nota del catalogo y con la novena familia (geo) declarada en el resumen; resuelve la contradiccion entre el codigo `GEO-` y su ubicacion tabular."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -94,7 +94,6 @@ Categoria `CS` (content search). Cubiertos en `urn:fxsl:kb:ifml-view-components`
 | `CS-FSR` | Faceted search | Refinamiento progresivo de resultados sobre datos multidimensionales restringiendo por valores de propiedades |
 | `CS-RSRC` | Restricted search | Restringe el foco de busqueda a subcollections especificas en colecciones grandes |
 | `CS-SRCS` | Search suggestions | Explota auto-completion logueando keywords previos; los matching se muestran sorted por frecuencia |
-| `GEO-LAS` | Location-aware search | Busqueda de items relacionados y cercanos a la posicion actual del usuario |
 
 ## Patrones de gestion de contenido (CM-*)
 
@@ -147,6 +146,14 @@ Categoria `SOC` (social functions).
 | `SOC-AW` | Activity wall | Loguea la actividad social tipica de una plataforma social |
 | `SOC-SH` | Sharing, liking, and commenting | Habilita posting, commenting, liking, sharing de contenido producido por otros miembros de la community |
 | `SOC-FR` | Friendship management | Maneja una asociacion simetrica (friendship) o asimetrica (following) entre usuarios |
+
+## Patrones geo (GEO-*)
+
+Categoria `GEO` (geo-dependent functions). Cubiertos en `urn:fxsl:kb:ifml-extensiones-mobile`.
+
+| Codigo | Titulo | Descripcion |
+| --- | --- | --- |
+| `GEO-LAS` | Location-aware search | Busqueda de items relacionados y cercanos a la posicion actual del usuario |
 
 ## Notas sobre el catalogo
 

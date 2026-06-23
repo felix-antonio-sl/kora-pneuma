@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:ifml
 nombre: ifml
-version: 1.1.0
+version: 1.1.1
 estado: activo
 descripcion: "Skill horizontal para diagnosticar, disenar y aplicar soluciones IFML (Interaction Flow Modeling Language, OMG) durante el desarrollo de aplicaciones interactivas web/desktop/mobile/multiscreen."
-fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/ifml/SKILL.md v1.0.1 (sha256:ac314213031614eefbc3891c99028d5071bffbe71c1c2b9dfe540ad4dcbd5601) el 2026-06-22; cuerpo y reglas preservados. Normalizacion pneuma: frontmatter _manifest/extensions/atlas/artefacto anidado -> shape plano ley/2; vector [2,0,1,0,1] disciplina/habilidad re-verificado legal contra dominio-forma + leyes inter-eje; conocimiento re-apuntado a los 9 gemelos urn:fxsl:kb:ifml-* migrados en este mismo frente; componible jointjs-open-source omitido (descartado, no existe en pneuma) — el hook de render visual baja a nota condicional. v1.1.0: absorbe el unico residuo del retirado agente ifml-architect — un gate de elicitacion (estado triaje + regla dura) que detiene la skill y pide al operador la semantica de negocio/dominio en vez de fabricarla, haciendo la skill autosuficiente para que cualquier agente se haga arquitecto IFML sin wrapper."
+fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/ifml/SKILL.md v1.0.1 (sha256:ac314213031614eefbc3891c99028d5071bffbe71c1c2b9dfe540ad4dcbd5601) el 2026-06-22; cuerpo y reglas preservados. Normalizacion pneuma: frontmatter _manifest/extensions/atlas/artefacto anidado -> shape plano ley/2; vector [2,0,1,0,1] disciplina/habilidad re-verificado legal contra dominio-forma + leyes inter-eje; conocimiento re-apuntado a los 9 gemelos urn:fxsl:kb:ifml-* migrados en este mismo frente; componible jointjs-open-source omitido (descartado, no existe en pneuma) — el hook de render visual baja a nota condicional. v1.1.0: absorbe el unico residuo del retirado agente ifml-architect — un gate de elicitacion (estado triaje + regla dura) que detiene la skill y pide al operador la semantica de negocio/dominio en vez de fabricarla, haciendo la skill autosuficiente para que cualquier agente se haga arquitecto IFML sin wrapper. v1.1.1 (2026-06-23): correccion de fidelidad (revision adversarial dov-dori, verificada contra corpus) — en la composicion con OPM, la `Action` referencia el proceso OPM como su 'behavior externo' (business logic black-box), no como `DynamicBehavior` (que es content-source de un `ViewComponent`); evita cruzar el eje de accion disparada con el de publicacion de contenido."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -220,7 +220,7 @@ Composicion tipica:
 
 1. `modelamiento-opm` produce el OPM model del sistema; identifica los procesos visibles al usuario.
 2. IFML modela el front-end que expone esos procesos como `Action` triggered by user events.
-3. `Action` IFML referencia al proceso OPM correspondiente como su DynamicBehavior.
+3. `Action` IFML referencia al proceso OPM correspondiente como su **behavior externo** (la business logic que IFML trata como black-box), no como `DynamicBehavior` — `DynamicBehavior` es content-source de un `ViewComponent` (otro eje del modelo: publicacion de contenido), no el behavior disparado por una `Action`.
 
 Cuando el OPM model ya aporta la semantica de negocio de un proceso, el gate de elicitacion se satisface con esa fuente en vez de preguntar al operador.
 
