@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.1
+version: 1.0.2
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
-fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad."
+fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -57,6 +57,7 @@ Cinco comandos, **conjunto cerrado** (no hay otros; no inventes `init`, `login`,
 | `catalog <rut>` | barato | Listar la vitrina del paciente: qué handles hay |
 | `get <handle> [--fresh]` | caro | Materializar el contenido de un handle |
 | `bundle <handle> --minimal\|--compact\|--handoff\|--longitudinal` | caro | Componer varios handles de un encuentro en un paquete |
+| `bundle <h1> <h2> ... --handoff\|--minimal` | caro | LOTE: producto de bundles en una invocación (colapsa el N+1 del censo); máx. 50 |
 | `find <criterio>` | medio | Ubicar paciente/episodio activo antes de pedir handles |
 | `health` | barato | Verificar conectividad upstream + versión del binario; reporta por sistema `ok`, `latency_ms` y `checked_at` de esa invocación |
 
@@ -202,6 +203,26 @@ los handles SGH existentes, el bundle `--handoff` y el timeline longitudinal.
 Los handles `hospitalizacion:sgh:*` usan SIEMPRE `ingreso_id`, **no `cp`**
 (`find --hospitalizados` trae `id_semantics` con `next_handle_pattern`).
 
+**Censo completo en una operación (lote multi-handle).** Para pasar la visita a
+todo el censo sin invocar el bundle N veces (un proceso/login por paciente), `find`
+te entrega el comando de lote **ya armado** en `recommended_batch_handle`: léelo y
+ejecútalo tal cual. No memorices reglas — `find` ya eligió el modo de cada scope
+(hospitalizados → `--handoff`, urgencia → `--minimal --compact`).
+
+```
+find --hospitalizados --hodom                  # mira recommended_batch_handle
+bundle hospitalizacion:sgh:<id1> hospitalizacion:sgh:<id2> ... --handoff
+```
+
+El resultado es `kind: multi_bundle`: un **producto** con un sub-envelope por ingreso
+en `bundles[]`, cada uno idéntico al bundle single (lee cada uno y compón; el sistema
+no resume). Cada componente cierra su propia identidad: un `identity_mismatch` marca
+SOLO ese handle en `summary.unsafe_handles`, no contamina al resto. Máximo 50 handles
+(si el censo excede, el puntero se trunca y marca `recommended_batch_handle_truncated`:
+compón lote(s) adicional(es)). **Latencia:** la primera pasada `--fresh` es lenta
+(SGH legacy, decenas de segundos por paciente); para censos grandes considera lotes
+acotados por sala/servicio.
+
 **Epicrisis — pídela por HCC, no por el PDF SGH.** La epicrisis SGH
 (`hospitalizacion:sgh:<id>/doc/epicrisis`) **nace como TCPDF vacío** (caveat
 4.4.1): es un cascarón, el contenido nunca entró al PDF, así que **OCR no
@@ -240,6 +261,8 @@ usar el CLI a medias.
 | `status_normalized` | órdenes/indicaciones | índice de estado operacional (`requested`/`executed`/`resulted`/`reviewed`/...); conserva siempre `estado` original |
 | `compaction` / `_compaction` / `truncated_keys[]` | salidas `--compact` | hubo pérdida mecánica (truncado, `last_n`); `truncated_keys[]` lista las claves exactas truncadas en ese item — pide el handle fuente con `--fresh` para su texto completo |
 | `id_semantics` | `find --hospitalizados` | `next_handle_pattern` para construir handles correctos |
+| `recommended_batch_handle` | `find --urgencia`/`--hospitalizados` (≥2 items) | comando de lote ya armado (`bundle h1 h2 ... --modo`): léelo y ejecútalo para componer todo el censo/board en una invocación |
+| `summary.unsafe_handles` / `has_unsafe_handles` | `bundle multi_bundle` | qué componentes del lote tienen `identity_mismatch` (no usar SOLO esos; el resto sigue válido) |
 
 En bundles de hospitalización, revisa `summary.hospitalizacion`: `critical_gaps`,
 `technical_findings`, `fallbacks`, `doc_ingreso_pdf`, `ingreso_servicio_pdf`. Los
