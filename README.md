@@ -54,7 +54,7 @@ artefactos/
   conocimiento/{ns}/{id}.md
   agentes/{ns}/{nombre}.md
   skills/{ns}/{nombre}/SKILL.md
-tests/test_kora.py       66 tests, 0,24 s
+tests/test_kora.py       la suite de unidad del núcleo
 _emision/                emisiones transmutadas (derivado, gitignored)
 censo.json               vista derivada opcional (gitignored)
 ```
@@ -73,8 +73,10 @@ python3 kora.py velar --estricto        # gate de mantenimiento
 
 ## Relación con la bestia
 
-`~/kora` sigue viva y es autoritativa para sus 745 artefactos. Pneuma nace
-con 3 semillas (el alma catalogada, `mente-omega`, `polymath`) y debe ganarse
-el corpus demostrando que la ley leve basta — no heredarlo por decreto.
-La migración, si ocurre, será artefacto por artefacto, con URN preservado y
-procedencia con hash, como manda `GENESIS.md`.
+`~/kora` sigue viva y es autoritativa para su corpus —legacy en
+estrangulamiento, congelada salvo correcciones de verdad (`ley/0` §1)—.
+Pneuma nació el 2026-06-11 con 3 semillas (`alma-de-kora`, `mente-omega`,
+`polymath`) y se gana el corpus artefacto por artefacto, demostrando que la
+ley leve basta en vez de heredarlo por decreto: con URN preservado y
+procedencia con hash, como manda `GENESIS.md`. Cuánto lleva ganado lo dice
+el censo vivo (`python3 kora.py censo`), nunca un número escrito aquí.

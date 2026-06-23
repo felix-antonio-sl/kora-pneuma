@@ -1,4 +1,9 @@
+# Derivados — regenerables, jamás autoridad (ley/0 §6)
 censo.json
 _emision/
 __pycache__/
 *.pyc
+
+# Vigencia documental — red de seguridad fuera del árbol vivo
+_archivo/
+*.tar.gz
