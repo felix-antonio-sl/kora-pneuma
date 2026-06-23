@@ -65,6 +65,7 @@ minuta o auditoría— obedece tres invariantes:
 | Tramo | Contiene | Cuándo entrar |
 |-------|----------|---------------|
 | `{{00-rol/}}` | {{marco, handoff vigente}} | Entrada del visitante nuevo |
+| `BITACORA.md` | registro histórico append-only (≠ handoff, que es el snapshot vigente) | Al cerrar una sesión |
 | `{{...}}` | {{...}} | {{...}} |
 
 ## Sistemas y corpus vecinos

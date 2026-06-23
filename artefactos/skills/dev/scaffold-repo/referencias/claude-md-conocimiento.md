@@ -34,6 +34,7 @@ Al abrir una sesión nueva sobre este repo:
 | Path | Contiene | Cuándo entrar |
 |------|----------|---------------|
 | `{{...}}` | {{...}} | {{...}} |
+| `BITACORA.md` | registro cronológico append-only de sesiones/decisiones (se versiona, no entra en `_archivo/`) | Al cerrar una sesión o hito |
 
 <!-- Si hay vistas generadas/derivadas, deja explícito que son regenerables y que el
      filesystem con manifests válidos es la fuente de verdad, no las vistas. -->

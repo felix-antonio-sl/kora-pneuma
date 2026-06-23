@@ -22,6 +22,7 @@ Versionado independiente. Para concerns cross-cutting del host, ver `~/CLAUDE.md
 | `{{src/}}` | {{...}} |
 | `{{tests/}}` | {{...}} |
 | `docs/` | {{solo documentos vigentes y vinculantes; no-vigentes en `_archivo/` (gitignorado)}} |
+| `CHANGELOG.md` | registro de cambios append-only (Keep a Changelog); se versiona, no entra en `_archivo/` |
 
 ## Desarrollo
 

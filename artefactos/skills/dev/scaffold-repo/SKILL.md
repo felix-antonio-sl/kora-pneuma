@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:scaffold-repo
 nombre: scaffold-repo
-version: 1.1.0
+version: 1.2.0
 estado: activo
-descripcion: "Andamia un repo nuevo en este host (Hetzner/Ubuntu) con su CLAUDE.md como SSOT, README.md y AGENTS.md como punteros, y .gitignore base. Úsala cuando el operador quiera crear, iniciar, andamiar o «scaffoldear» un repositorio, proyecto o cuaderno nuevo en ~/projects/ (o un corpus de conocimiento / cuaderno de rol), aunque no diga «skill» ni «scaffold»: «creemos un repo para X», «arranquemos el proyecto Y», «necesito un cuaderno para el rol Z», «inicializa el corpus W». Destila el patrón CLAUDE.md del host en tres arquetipos: desarrollo, conocimiento y cuaderno de rol. Instaura además la vigencia documental: un solo vigente por especie, versionado por fecha sin sobrescritura, y los previos a una papelera _archivo/ gitignorada."
-fuente: "Autorada runtime-first en ~/.claude/skills/scaffold-repo/ el 2026-06-21 (SKILL.md sha256:8d91319442a4232185ece0b28505b8c2d62a47d5b5306b0939bae15bdd12dd2d; assets/ preservados verbatim); absorbida a fuente canónica pneuma el 2026-06-21. No proviene de la bestia. Normalización aplicada: assets/ → referencias/ (única fibra legal de skill, ley/2 §6); descripcion plegada a una sola línea (sobre cerrado, ley/2 §1); frontmatter agéntico completo (vector/sigma/arnes/forma). Cuerpo preservado salvo el reapunte de rutas assets/ → referencias/. v1.1.0 (2026-06-21): añade la política de vigencia documental (handoff único + series por fecha + papelera _archivo/ gitignorada); unifica y reescribe las reglas de handoff divergentes de las 3 plantillas (cuaderno-rol descartaba el previo; conocimiento acumulaba docs/handoffs; desarrollo usaba docs/archive versionado) hacia _archivo/; gitignore-base suma _archivo/."
+descripcion: "Andamia un repo nuevo en este host (Hetzner/Ubuntu) con su CLAUDE.md como SSOT, README.md y AGENTS.md como punteros, y .gitignore base. Úsala cuando el operador quiera crear, iniciar, andamiar o «scaffoldear» un repositorio, proyecto o cuaderno nuevo en ~/projects/ (o un corpus de conocimiento / cuaderno de rol), aunque no diga «skill» ni «scaffold»: «creemos un repo para X», «arranquemos el proyecto Y», «necesito un cuaderno para el rol Z», «inicializa el corpus W». Destila el patrón CLAUDE.md del host en cuatro arquetipos: desarrollo, conocimiento, cuaderno de rol y modelamiento OPM (modelos construidos con opforja). Instaura además la vigencia documental: un solo vigente por especie, versionado por fecha sin sobrescritura, y los previos a una papelera _archivo/ gitignorada. Siembra el registro de evolución de cada repo: CHANGELOG.md (Keep a Changelog) en los de desarrollo, BITACORA.md en los demás."
+fuente: "Autorada runtime-first en ~/.claude/skills/scaffold-repo/ el 2026-06-21 (SKILL.md sha256:8d91319442a4232185ece0b28505b8c2d62a47d5b5306b0939bae15bdd12dd2d; assets/ preservados verbatim); absorbida a fuente canónica pneuma el 2026-06-21. No proviene de la bestia. Normalización aplicada: assets/ → referencias/ (única fibra legal de skill, ley/2 §6); descripcion plegada a una sola línea (sobre cerrado, ley/2 §1); frontmatter agéntico completo (vector/sigma/arnes/forma). Cuerpo preservado salvo el reapunte de rutas assets/ → referencias/. v1.1.0 (2026-06-21): añade la política de vigencia documental (handoff único + series por fecha + papelera _archivo/ gitignorada); unifica y reescribe las reglas de handoff divergentes de las 3 plantillas (cuaderno-rol descartaba el previo; conocimiento acumulaba docs/handoffs; desarrollo usaba docs/archive versionado) hacia _archivo/; gitignore-base suma _archivo/. v1.2.0 (2026-06-23): añade el 4º arquetipo `modelamiento` (modelos OPM/ISO 19450 construidos con opforja; firma `models/`+`opl/`+`scripts/`, bundle regenerado no editado, anclaje externo; plantilla austera nueva `claude-md-modelamiento.md`) y el registro de evolución como 5º satélite append-only y versionado: `CHANGELOG.md` (Keep a Changelog) en desarrollo, `BITACORA.md` en conocimiento/cuaderno-rol/modelamiento (seeds `changelog-base.md` + `bitacora-base.md`). §Vigencia distingue el registro (acumulativo, nunca a `_archivo/`) del patrón de reemplazo-por-versión. Diseñado por brainstorming con aprobación del operador."
 autor: FS
 creado: 2026-06-21
 lang: es
@@ -48,6 +48,9 @@ Antes de escribir nada, fija:
   - **`conocimiento`** — corpus de artefactos `.md` para consumo/producción gobernada. (ej. kora)
   - **`cuaderno-rol`** — no hay código; un rol produce/decide/firma/presenta. Maneja
     handoff vivo y referencia sistemas vecinos. (ej. hd-dt)
+  - **`modelamiento`** — construye un modelo OPM (ISO 19450) con **opforja** como mesa de
+    trabajo; no es software ejecutable sino modelos versionados (bundle JSON OPM + OPL
+    derivado). Firma estructural `models/`+`opl/`+`scripts/`. (ej. hodom-opm, gist-opm)
 
 Si el operador no lo dijo y no es inequívoco por contexto, **pregunta el arquetipo**
 — es la decisión que más cambia la plantilla. El nombre y propósito suelen inferirse
@@ -63,6 +66,7 @@ mecánicamente — cada sección pide contenido real, no un eco del placeholder:
 | `desarrollo` | `referencias/claude-md-desarrollo.md` |
 | `conocimiento` | `referencias/claude-md-conocimiento.md` |
 | `cuaderno-rol` | `referencias/claude-md-cuaderno-rol.md` |
+| `modelamiento` | `referencias/claude-md-modelamiento.md` |
 
 Reglas al rellenar:
 
@@ -87,11 +91,18 @@ Desde `referencias/`, instancia tal cual (sustituyendo `{{nombre}}` y `{{una-lí
   (Node → `node_modules/ dist/`; Python → `.venv/ __pycache__/`; Go → `/bin/`).
   Las líneas `*.tar.gz` (backups del host) y `_archivo/` (papelera de no-vigentes,
   §Vigencia documental) son invariantes del host y no se quitan.
+- **registro de evolución** (quinto satélite, **append-only y versionado** — no es `_archivo/`):
+  - `desarrollo` → `CHANGELOG.md` ← `referencias/changelog-base.md` (Keep a Changelog).
+  - `conocimiento` / `cuaderno-rol` / `modelamiento` → `BITACORA.md` ← `referencias/bitacora-base.md`.
+  Siémbralo con la entrada de nacimiento (fecha de hoy); su forma append-only se distingue de la
+  vigencia en §Vigencia documental.
 
 ### 4. Cerrar
 
-- Crea el directorio y escribe los cuatro archivos.
-- Si es repo versionable (`desarrollo`/`conocimiento`/`cuaderno-rol` que llevará git),
+- Crea el directorio y escribe los cinco archivos (`CLAUDE.md`, `README.md`, `AGENTS.md`,
+  `.gitignore` y el registro `CHANGELOG.md`/`BITACORA.md`). Para `modelamiento`, crea además
+  los directorios `models/ opl/ scripts/` (con `.gitkeep` si quieres versionarlos vacíos).
+- Si es repo versionable (cualquiera de los cuatro arquetipos que llevará git),
   ofrece `git init` + primer commit. No lo des por hecho: pregunta antes de inicializar.
 - Reporta en una línea qué creaste y dónde, y nombra la **primera sección que el
   operador debería terminar de llenar** (normalmente "Qué es" y el mapa).
@@ -119,6 +130,14 @@ previo — la nueva versión *es* su actualización; (2) mueve el previo a `_arc
 escribe `<especie>-<fecha-de-hoy>.md`. Si tras andamiar el operador pide "actualiza el
 handoff" o "nueva auditoría", aplica este protocolo: jamás dejes dos vigentes de la
 misma especie en el árbol versionado ni sobrescribas el previo.
+
+**El registro de evolución (changelog/bitácora) es un patrón DISTINTO — no confundir.** El
+`CHANGELOG.md` (desarrollo) y la `BITACORA.md` (los demás arquetipos) **no** siguen la vigencia:
+son un **único archivo acumulativo**, entradas nuevas arriba, **versionado en el árbol vivo y
+nunca movido a `_archivo/`**. La vigencia gobierna *documentos que se reemplazan por versión*
+(handoff, series-informe: un vigente, el previo al archivo); el registro gobierna *la historia que
+se acumula* (qué cambió / qué se hizo, fecha a fecha). En un `cuaderno-rol` conviven sin solaparse:
+el **handoff** es el snapshot vigente para continuar; la **bitácora** es el registro histórico.
 
 ## Por qué esta forma y no otra
 
