@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
-fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo."
+fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -58,7 +58,7 @@ Cinco comandos, **conjunto cerrado** (no hay otros; no inventes `init`, `login`,
 | `get <handle> [--fresh]` | caro | Materializar el contenido de un handle |
 | `bundle <handle> --minimal\|--compact\|--handoff\|--longitudinal` | caro | Componer varios handles de un encuentro en un paquete |
 | `find <criterio>` | medio | Ubicar paciente/episodio activo antes de pedir handles |
-| `health` | barato | Verificar conectividad upstream + versión del binario |
+| `health` | barato | Verificar conectividad upstream + versión del binario; reporta por sistema `ok`, `latency_ms` y `checked_at` de esa invocación |
 
 **Salida:** SIEMPRE JSON en stdout (incluso los errores). Un log estructurado
 puede ir a stderr; **parsea solo stdout**.
@@ -117,6 +117,7 @@ leer**:
 | `error_code` / `error_detail` | ver §4 |
 | `clinical_warning` | string de advertencia mecánica; **léelo siempre que no esté vacío** |
 | `fetched_at` | timestamp de materialización |
+| `cache_status` / `cache_ttl_remaining_seconds` | en `get` y en cada sub-item de `bundle`: `hit`\|`miss` (no existe `stale`) + segundos de TTL restante. Decide `--fresh` con criterio en vez de actuar a ciegas sobre dato viejo. `catalog`/`find`/`health` no cachean en disco → omiten estos campos (siempre en vivo) |
 
 **Descubrimiento de shape:** nunca asumas la forma de `data`. Lee `data_keys` y
 navega. Shapes conocidos están en el `CLAUDE.md` del repo (§Shape hints).
@@ -124,16 +125,21 @@ navega. Shapes conocidos están en el `CLAUDE.md` del repo (§Shape hints).
 ## 4. Errores: qué hacer con cada uno
 
 `error_code` es el contrato estable. `error_detail` lo enriquece con
-`reason`, `source_system`, `retryable`, y a veces `upstream_status`,
-`clinical_meaning`, `canonical_fallback_handle`, `fallback_strategy`,
-`next_steps[]`, `doctrinal_note`.
+`reason`, `source_system`, `affected_systems[]` (sistemas involucrados en
+materializar el handle: HCC es bridge → `[HCC, DAU, SGH]`; compuestos DAU→LIS →
+`[DAU, LIS]`; el resto, su fuente única), `retryable`, y a veces
+`upstream_status`, `outage_kind` (`transient`|`down`|`unknown` en
+`upstream_unavailable`; conservador, default `unknown` para no inducir a
+ignorarlo por sobre-reporte), `clinical_meaning`, `canonical_fallback_handle`,
+`fallback_strategy`, `next_steps[]`, `doctrinal_note`. No hay
+`downtime_estimated` (sería predicción, no hecho).
 
 | `error_code` | Qué significa | Tu acción |
 |---|---|---|
 | `usage_error` | input mal formado (handle, RUT, flag) | corrige la invocación; no reintentes igual |
 | `patient_not_found` | upstream no encuentra al paciente, o atención DAU cerrada | verifica el id/RUT; si la atención cerró, busca vía `find` o handles `paciente:*` |
 | `identity_mismatch` | el handle dice RUT R, upstream devolvió R' | **DETENTE.** No uses el dato. Es una falla categorial, no un dato degradado |
-| `upstream_unavailable` | red/proxy/login/5xx | si `retryable=true`, reintenta acotado; si persiste, reporta caída y usa `canonical_fallback_handle` si lo hay |
+| `upstream_unavailable` | red/proxy/login/5xx | mira `outage_kind`: `transient` → reintenta acotado; `down` → no insistas, reporta caída y usa `canonical_fallback_handle` si lo hay; `unknown` → un reintento acotado y evalúa. `affected_systems[]` te dice qué sistema(s) revisar |
 | `not_implemented_yet` | handle válido, fetcher pendiente | no insistas; usa la fuente alternativa que sugiere `error_detail` |
 | `internal_error` | bug del CLI | reporta; no es problema de tus datos |
 
@@ -196,6 +202,17 @@ los handles SGH existentes, el bundle `--handoff` y el timeline longitudinal.
 Los handles `hospitalizacion:sgh:*` usan SIEMPRE `ingreso_id`, **no `cp`**
 (`find --hospitalizados` trae `id_semantics` con `next_handle_pattern`).
 
+**Epicrisis — pídela por HCC, no por el PDF SGH.** La epicrisis SGH
+(`hospitalizacion:sgh:<id>/doc/epicrisis`) **nace como TCPDF vacío** (caveat
+4.4.1): es un cascarón, el contenido nunca entró al PDF, así que **OCR no
+recupera nada**. La epicrisis **real** viaja por el ESB Salud En Red y es
+direccionable: `get hcc:secundaria:<rut>/detalle/<id>` (`discharge_report`).
+Flujo: `get hcc:secundaria:<rut>/resumen` para ubicar el `id` de la atención de
+egreso → `get hcc:secundaria:<rut>/detalle/<id>`. Cuando `/doc/epicrisis` viene
+vacío, el CLI **ya te redirige** allí vía `clinical_warning` /
+`nota_doctrinal_si_vacio`: síguela. Las evoluciones (`/evoluciones`) reconstruyen
+el curso del ingreso pero **no son** la epicrisis formal de egreso.
+
 ### 6.3 Paciente sin atención activa (longitudinal)
 
 ```
@@ -221,7 +238,7 @@ usar el CLI a medias.
 | `usable_clinically` | por item de bundle | `false` + `reason_not_usable` cuando el item no sirve (mismatch, PDF vacío, texto inútil) |
 | `summary.urgencia.*` | bundles DAU | flags de scanner/lab copiados, `possible_copied_report_in_observaciones`, etc. |
 | `status_normalized` | órdenes/indicaciones | índice de estado operacional (`requested`/`executed`/`resulted`/`reviewed`/...); conserva siempre `estado` original |
-| `compaction` / `_compaction` | salidas `--compact` | hubo pérdida mecánica (truncado, `last_n`); pide el handle fuente con `--fresh` para texto completo |
+| `compaction` / `_compaction` / `truncated_keys[]` | salidas `--compact` | hubo pérdida mecánica (truncado, `last_n`); `truncated_keys[]` lista las claves exactas truncadas en ese item — pide el handle fuente con `--fresh` para su texto completo |
 | `id_semantics` | `find --hospitalizados` | `next_handle_pattern` para construir handles correctos |
 
 En bundles de hospitalización, revisa `summary.hospitalizacion`: `critical_gaps`,
