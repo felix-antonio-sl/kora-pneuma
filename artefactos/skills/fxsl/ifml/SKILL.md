@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:ifml
 nombre: ifml
-version: 1.1.1
+version: 1.1.2
 estado: activo
 descripcion: "Skill horizontal para diagnosticar, disenar y aplicar soluciones IFML (Interaction Flow Modeling Language, OMG) durante el desarrollo de aplicaciones interactivas web/desktop/mobile/multiscreen."
-fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/ifml/SKILL.md v1.0.1 (sha256:ac314213031614eefbc3891c99028d5071bffbe71c1c2b9dfe540ad4dcbd5601) el 2026-06-22; cuerpo y reglas preservados. Normalizacion pneuma: frontmatter _manifest/extensions/atlas/artefacto anidado -> shape plano ley/2; vector [2,0,1,0,1] disciplina/habilidad re-verificado legal contra dominio-forma + leyes inter-eje; conocimiento re-apuntado a los 9 gemelos urn:fxsl:kb:ifml-* migrados en este mismo frente; componible jointjs-open-source omitido (descartado, no existe en pneuma) — el hook de render visual baja a nota condicional. v1.1.0: absorbe el unico residuo del retirado agente ifml-architect — un gate de elicitacion (estado triaje + regla dura) que detiene la skill y pide al operador la semantica de negocio/dominio en vez de fabricarla, haciendo la skill autosuficiente para que cualquier agente se haga arquitecto IFML sin wrapper. v1.1.1 (2026-06-23): correccion de fidelidad (revision adversarial dov-dori, verificada contra corpus) — en la composicion con OPM, la `Action` referencia el proceso OPM como su 'behavior externo' (business logic black-box), no como `DynamicBehavior` (que es content-source de un `ViewComponent`); evita cruzar el eje de accion disparada con el de publicacion de contenido."
+fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/ifml/SKILL.md v1.0.1 (sha256:ac314213031614eefbc3891c99028d5071bffbe71c1c2b9dfe540ad4dcbd5601) el 2026-06-22; cuerpo y reglas preservados. Normalizacion pneuma: frontmatter _manifest/extensions/atlas/artefacto anidado -> shape plano ley/2; vector [2,0,1,0,1] disciplina/habilidad re-verificado legal contra dominio-forma + leyes inter-eje; conocimiento re-apuntado a los 9 gemelos urn:fxsl:kb:ifml-* migrados en este mismo frente; componible jointjs-open-source omitido (descartado, no existe en pneuma) — el hook de render visual baja a nota condicional. v1.1.0: absorbe el unico residuo del retirado agente ifml-architect — un gate de elicitacion (estado triaje + regla dura) que detiene la skill y pide al operador la semantica de negocio/dominio en vez de fabricarla, haciendo la skill autosuficiente para que cualquier agente se haga arquitecto IFML sin wrapper. v1.1.1 (2026-06-23): correccion de fidelidad (revision adversarial dov-dori, verificada contra corpus) — en la composicion con OPM, la `Action` referencia el proceso OPM como su 'behavior externo' (business logic black-box), no como `DynamicBehavior` (que es content-source de un `ViewComponent`); evita cruzar el eje de accion disparada con el de publicacion de contenido. v1.1.2 (2026-06-23): cierre de Grupo B (verificacion contra spec OMG, no deliberacion) — el invariante XOR-default se FORTALECE, no se debilita: la hipotesis del revisor (relajar 'si o si' a 'puede') fue REFUTADA por el spec normativo OMG IFML v1.0 final (formal/2015-02-05, §8.3.54, p.49), que tiene la well-formedness rule OCL nombrada `xorMustHaveADefaultParent` haciendo el default OBLIGATORIO. Se documentan ambas reglas del metamodelo (`xorMustHaveADefaultParent` + `defaultMustHaveXorParent`) y el caveat de la contradiccion interna del propio spec (ejemplo GMail Apendice A muestra XOR sin default; WebRatio lo tolera) → error duro por fidelidad formal, warning por fidelidad a la practica. Ademas se precisa el disparador del gate de elicitacion: pedir la lista de clases ya dadas del domain model es input legitimo que IFML consume, no fabricacion."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -161,7 +161,16 @@ Regla de parsimonia: usar core IFML cuando alcance. Las extensiones pagan prima 
 Tres niveles:
 
 1. **Estructurales** (corpus core):
-   - todo `ViewContainer` no-XOR no necesita default; uno XOR si o si necesita uno.
+   - **Default y XOR (dos reglas nombradas del metamodelo OMG, ambas duras):**
+     `xorMustHaveADefaultParent` — un `ViewContainer` con `isXOR=true` debe tener
+     exactamente un hijo con `isDefault=true`; y `defaultMustHaveXorParent` — marcar
+     `Default` solo es valido bajo un padre XOR (marcarlo en una familia conjuntiva es
+     el error). Caveat de fidelidad: el propio spec OMG IFML v1.0 (formal/2015-02-05,
+     §8.3.54) contradice la primera regla en su ejemplo canonico (GMail, Apendice A:
+     un XOR sin default «accessed as a consequence of an explicit user's choice») y
+     herramientas reales (WebRatio) toleran XOR-sin-default; tratar como error duro si
+     se prioriza el estandar formal, como warning si se prioriza la practica del propio
+     ejemplo OMG.
    - `Landmark` solo dentro del enclosing comun.
    - todo `Event` interactivo tiene `NavigationFlow` o `Action` saliente.
    - `ParameterBinding` cuando hay dependencia I/O explicita.
@@ -205,7 +214,7 @@ Salida coherente al agente invocador:
 10. **Extensiones cuando justifiquen**, no como decoracion. Core IFML cuando alcance.
 11. **Context + ViewPoint solo si la composicion cambia en runtime**, sino `ActivationExpression` sobre elementos individuales.
 12. **No invadir dominio**: la skill modela estructura de interaccion, no semantica de negocio ni look & feel.
-13. **Gate de elicitacion (regla dura)**: cuando el modelado requiere semantica de negocio/dominio que la skill (horizontal) no posee — que hace una Action, que entidades pueblan el domain model, que regla condiciona un binding o flujo — **PARAR y pedirla al operador**. Prohibido fabricar Actions, bindings, DataBindings o transiciones de negocio a partir de supuestos. Placeholder marcado y pregunta abierta son aceptables; supuesto no declarado, no.
+13. **Gate de elicitacion (regla dura)**: cuando el modelado requiere semantica de negocio/dominio que la skill (horizontal) no posee — que hace una Action, que entidades pueblan el domain model, que regla condiciona un binding o flujo — **PARAR y pedirla al operador**. Prohibido fabricar Actions, bindings, DataBindings o transiciones de negocio a partir de supuestos. Placeholder marcado y pregunta abierta son aceptables; supuesto no declarado, no. Precision: pedir al operador la LISTA de clases del domain model ya dadas (para tipar un binding) no es fabricar — es input estructural que IFML consume del domain modeling; el gate dispara ante fabricar el SIGNIFICADO de negocio (que hace una Action, que regla condiciona un flujo), no ante necesitar el nombre de una clase que el operador puede entregar de inmediato.
 
 ## Composicion con otras skills
 

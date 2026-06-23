@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:design
 nombre: design
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Disena de extremo a extremo como Claude Design: de brief/imagen/doc a interfaces, identidad, slides, prototipos y collateral, anclando todo a un design system trazable y entregando codigo frontend funcional con handoff a Claude Code. Usar al construir o iterar cualquier salida visual con gusto y trazabilidad."
-fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Cristaliza, en formato skill ley/2, la esencia operativa del producto Claude Design de Anthropic Labs (research preview; anuncio 2026-04-17, overhaul 2026-06-17; fuentes anthropic.com/news/claude-design-anthropic-labs, support.claude.com get-started + set-up-design-system, venturebeat/thenewstack/techcrunch/engadget/techrepublic 2026). Sucede CONCEPTUALMENTE a graphic-design (urn:kora:artefacto:graphic-design en la bestia ~/kora, sha256:fe261c35387ab98652f19d2e32b599921a930ac3583425eee973dea72c01cbd5): absorbe sus operadores visuales, los design tokens ejecutables (JSON+CSS+Tailwind), el SVG y el axioma info/simpleza, y los amplia a diseno generativo de UI/identidad/prototipos. NO se declara reemplaza ni refina: graphic-design no encarna en el censo pneuma (referencias-resuelven fallaria), de modo que la sucesion se formalizara recien al migrar el target. Vector [2,0,2,0,1] = disciplina (cuerpo de conocimiento procedural, sin materia propia): Pi2 plan ramificado (brief->system->generar->refinar->verificar->entregar), Mu0 el ejecutor provee todo el soporte (el canvas es materia del runtime anfitrion, no de la skill), Xi2 interaccion bidireccional (round-trip diseno<->codigo con Claude Code), Lambda0 individual, Phi1 instrumental."
+fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Cristaliza, en formato skill ley/2, la esencia operativa del producto Claude Design de Anthropic Labs (research preview; anuncio 2026-04-17, overhaul 2026-06-17; fuentes anthropic.com/news/claude-design-anthropic-labs, support.claude.com get-started + set-up-design-system, venturebeat/thenewstack/techcrunch/engadget/techrepublic 2026). Sucede CONCEPTUALMENTE a graphic-design (urn:kora:artefacto:graphic-design en la bestia ~/kora, sha256:fe261c35387ab98652f19d2e32b599921a930ac3583425eee973dea72c01cbd5): absorbe sus operadores visuales, los design tokens ejecutables (JSON+CSS+Tailwind), el SVG y el axioma info/simpleza, y los amplia a diseno generativo de UI/identidad/prototipos. NO se declara reemplaza ni refina: graphic-design no encarna en el censo pneuma (referencias-resuelven fallaria), de modo que la sucesion se formalizara recien al migrar el target. Vector [2,0,2,0,1] = disciplina (cuerpo de conocimiento procedural, sin materia propia): Pi2 plan ramificado (brief->system->generar->refinar->verificar->entregar), Mu0 el ejecutor provee todo el soporte (el canvas es materia del runtime anfitrion, no de la skill), Xi2 interaccion bidireccional (round-trip diseno<->codigo con Claude Code), Lambda0 individual, Phi1 instrumental. v1.1.0 (2026-06-23): refinamiento por consenso deliberativo (panel steve-jobs/steipete/agent-architect, modo orquestacion, 1 ciclo de refutacion adversarial que cazo 2 criticas). Dos cruces resueltos sin promediar: (1) sustraccion — `verificar` ahora INVOCA (no copia) las preguntas letales del canon ya anclado como guardia binaria, y la regla 9 pasa de anclaje pasivo a anclaje-que-ejecuta (el axioma vinculante estaba muerto: import decorativo); (2) continuabilidad — `verificar` chequea ESTATICAMENTE (Read/Grep, mu=0-safe) que las referencias del artefacto resuelven, mientras el build EJECUTABLE se declara en HANDOFF.md como verificado-por-receptor (ejecutarlo dentro de la skill seria incoherencia cuerpo-vector mu=0). Ademas: bundle como contrato observable en `entregar` con gate de buen-formado pre-handoff, staging aislado, techo de iteracion (3 ciclos). La refutacion corrigio dos defectos antes de aplicar: no redefinir 'funcional' como 'continuable' (regla 5 los separa: continuable=skill, funcional-runtime=receptor) y mover la validacion bundle/manifiesto de `verificar` a `entregar` (orden de estados). Vector [2,0,2,0,1] preservado: ninguna edicion ejecuta build."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -167,20 +167,42 @@ puede gobernar de una vez.
 - ¿la jerarquia visual respeta la escala definida?
 - ¿contraste y tamanos cumplen accesibilidad (WCAG AA: contraste >= 4.5:1 texto
   normal, 3:1 texto grande; targets tactiles >= 44px)?
-- ¿el axioma se sostiene — cada elemento aporta mas informacion que complejidad?
+- **Sustracción (binaria).** Antes de mostrar, pasar la propia salida por las
+  preguntas letales del canon anclado (`urn:dev:kb:steve-jobs-canon-diseno`): ¿qué
+  tres elementos cortarías?, ¿es una cosa o varias fingiendo ser una?, ¿inevitable o
+  solo competente? Si no podés nombrar tres para cortar, no miraste lo suficiente —
+  volvé a `refinar`. Corte o no-corte, no ensayo.
+- **¿las referencias del artefacto resuelven? (estático, sin ejecutar build):** todo
+  import/referencia interna del código generado apunta a un símbolo o archivo
+  presente, o a una dependencia nombrada; sin componentes fantasma. Es lectura
+  (Read/Grep) del propio output, no ejecución: la skill garantiza continuabilidad
+  estática; el build ejecutable y el render son del receptor (regla 10).
 
-Si un check falla → volver a `generar`/`refinar` y corregir antes de entregar.
-La autocorreccion es parte del trabajo, no un paso opcional.
+Si un check falla → volver a `generar`/`refinar` y corregir antes de entregar. La
+autocorrección es parte del trabajo, no opcional. Techo de seguridad: si tras 3
+ciclos completos `generar→refinar→verificar` un check sigue en rojo, detener y
+reportar el bloqueo al operador con el último error en vez de seguir iterando — un
+bucle que no converge es deuda, no diligencia (única excepción reglada a
+"autocorregir antes de mostrar").
 
 ### `entregar`
 
 Cerrar con uno de:
 
-- **handoff a Claude Code**: empaquetar un bundle continuable (codigo + tokens +
-  estructura), no un screenshot — Claude Code continua desde el diseno existente.
+- **handoff a Claude Code — bundle continuable con contrato** (no screenshot). El
+  bundle fija roles, no rutas literales: **artefacto** (código frontend / tokens /
+  deck), **tokens** (JSON + CSS custom properties + Tailwind) y **`HANDOFF.md`**
+  (manifiesto: qué se construyó, contra qué design system, punto de entrada, comando
+  de build/preview declarado como `verificado-por: receptor`, deuda/supuestos, y la
+  siguiente decisión pendiente). Antes del handoff, validar que el bundle está bien
+  formado: existen entrypoint, tokens y manifiesto, y su árbol coincide con lo que
+  `HANDOFF.md` declara. Se escribe en staging aislado (el que indique el operador),
+  nunca in-place sobre el frontend vivo salvo instrucción explícita. Es el contrato
+  que deja a Claude Code continuar sin reconstruir (regla 6).
 - **export**: a HTML standalone, PPTX, PDF, .zip, o el formato que pida el target.
-- **resumen al invocador**: que se construyo, contra que sistema, que quedo como
-  deuda o supuesto, y la siguiente decision pendiente.
+- **resumen al invocador**: el mismo cierre que recoge `HANDOFF.md` — qué se
+  construyó, contra qué sistema, qué quedó como deuda o supuesto, y la siguiente
+  decisión pendiente — cuando la salida no es un bundle de handoff.
 
 ## Decision router
 
@@ -204,19 +226,28 @@ Cerrar con uno de:
    generar, no un paso posterior opcional.
 4. **La primera generacion es borrador.** Declararlo: el valor esta en iterar,
    no en el primer disparo.
-5. **Codigo funcional, no mockup.** El output de UI es frontend que ingenieria
-   puede continuar, no una imagen.
+5. **Código funcional, no mockup.** El output de UI es frontend que ingeniería
+   puede continuar, no una imagen. La skill verifica estáticamente su
+   **continuabilidad** (referencias resueltas, sin componentes fantasma); que el
+   código **funcione en runtime** lo prueba el receptor al montarlo (la skill no
+   ejecuta el build — regla 10). Continuable ≠ funcional-probado: la skill garantiza
+   lo primero, el receptor lo segundo.
 6. **Handoff por bundle, no por screenshot.** Claude Code continua desde el
    trabajo existente; nunca se reconstruye desde una captura.
 7. **Cambio de token se propaga.** Un ajuste de sistema se aplica en todo el
    diseno de una vez; no se reescribe elemento por elemento.
 8. **Accesibilidad es regla, no gusto.** WCAG AA en contraste y targets es piso,
    no negociable por estetica.
-9. **El gusto se ancla, no se improvisa.** Las decisiones de gusto (sustraccion,
-   primeros principios) se consultan en `urn:dev:kb:steve-jobs-canon-diseno`, no
-   de memoria.
-10. **No invadir implementacion ni dominio.** La skill entrega forma y bundle; no
-    despliega, no cablea backend, no decide copy estrategico.
+9. **El gusto se ancla y se ejecuta, no se improvisa ni se decora.** Las decisiones
+   de gusto se consultan en `urn:dev:kb:steve-jobs-canon-diseno`; además,
+   `verificar` pasa la propia salida por sus preguntas letales como guardia binaria
+   de sustracción. Anclar sin ejecutar es import muerto.
+10. **No invadir implementación ni dominio.** La skill entrega forma y bundle; no
+    despliega, no cablea backend, no integra al codebase vivo, no decide copy. Pero
+    verificar estáticamente la continuabilidad del propio output y empaquetar el
+    contrato de handoff SÍ es de la skill: validar lo que uno produjo y definir qué
+    se entrega es deber del emisor; ejecutar el build y montarlo en producción es del
+    receptor.
 
 ## Composicion con otras skills
 
