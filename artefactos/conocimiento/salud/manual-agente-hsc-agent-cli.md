@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.3
+version: 1.0.4
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
-fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85."
+fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -262,7 +262,7 @@ usar el CLI a medias.
 |---|---|---|
 | `clinical_warning` | todo sobre | advertencia mecánica; léela siempre |
 | `decision_safety` | summary de bundles | `safe_to_act_on_bundle` + `blocking_conditions[]` + `cautionary_conditions[]` |
-| `clinical_gaps[]` | summary de bundles urgencia/hosp | `{severity, domain, message, suggested_handle}`: brecha + handle para cerrarla |
+| `clinical_gaps[]` | summary de bundles urgencia/hosp | `{severity, domain, message, gap_kind, suggested_handle}`: brecha + handle para cerrarla. **`gap_kind`** distingue la naturaleza de la falta (eje ortogonal a `severity`): `confirmed_absence` = la fuente respondió y el dato no existe → PUEDES concluir ausencia; `acquisition_failure` = la fuente cayó (`upstream_unavailable`) → NO concluyas ausencia, reintenta o reporta caída; `identity_failure` = `identity_mismatch` (dato de otro paciente); `unknown` = error sin causa clasificable. No reclasifiques con regex: el campo ya lo hace |
 | `usable_clinically` | por item de bundle | `false` + `reason_not_usable` cuando el item no sirve (mismatch, PDF vacío, texto inútil) |
 | `summary.urgencia.*` | bundles DAU | flags de scanner/lab copiados, `possible_copied_report_in_observaciones`, etc. |
 | `status_normalized` | órdenes/indicaciones | índice de estado operacional (`requested`/`executed`/`resulted`/`reviewed`/...); conserva siempre `estado` original |
@@ -315,6 +315,12 @@ Stateless con caché en disco, TTL por kind (encounter/timeseries/orders/medicat
 Usa `--fresh` cuando necesites el estado **ahora** (paciente activo, turno en
 curso) y quieras bypassar la lectura de caché. `--fresh` igual reescribe la
 entrada nueva.
+
+`--fresh` **solo existe en `get` y `bundle`** (los que cachean en disco). `find`,
+`catalog` y `health` son siempre en vivo (no cachean). Si pasas `--fresh` a `find`
+recibes `usage_error` con el mensaje honesto `"find no cachea; --fresh no aplica
+(siempre en vivo). --fresh solo existe en get/bundle."` — no es un flag que falte
+un argumento, es que no aplica por diseño.
 
 ## 11. Disciplina del agente
 
