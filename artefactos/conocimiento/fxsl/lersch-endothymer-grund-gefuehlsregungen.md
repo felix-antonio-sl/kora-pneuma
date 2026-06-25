@@ -3,8 +3,8 @@ urn: urn:fxsl:kb:lersch-endothymer-grund-gefuehlsregungen
 nombre: lersch-endothymer-grund-gefuehlsregungen
 version: 1.0.0
 estado: publicado
-descripcion: "Los movimientos del sentir (Gefühlsregungen) del fondo endotimico: fenomenologia y papel en la vida psiquica, las clases (del darse viviente, del ser-si, transitivas, sentimientos del destino), combinaciones y diferencias individuales."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada (ley/4), verificada contra el texto aleman y la imagen. Seccion: 2. Abschnitt Kap. 2 DIE GEFÜHLSREGUNGEN, OCR lineas 9939-13638, paginas del libro aprox. 218-300."
+descripcion: "Los movimientos del sentir (Gefühlsregungen) del fondo endotímico: fenomenología y papel en la vida psíquica, las clases (del darse viviente, del ser-sí, transitivas, sentimientos del destino), combinaciones y diferencias individuales."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 2. Abschnitt Kap. 2 DIE GEFÜHLSREGUNGEN, OCR lineas 9939-13638, paginas del libro aprox. 218-300."
 autor: FS
 creado: 2026-06-24
 lang: es

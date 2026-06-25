@@ -3,8 +3,8 @@ urn: urn:fxsl:kb:lersch-estratificacion
 nombre: lersch-estratificacion
 version: 1.0.0
 estado: publicado
-descripcion: "El modelo de la estratificacion (Schichtung) de Lersch: la persona como estructura en dos capas (fondo endotimico + superestructura personal) y el Vorentwurf, el boceto sistemático que deduce la arquitectura completa de la obra."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada (ley/4), verificada contra el texto aleman y la imagen. Seccion: Vorerorterung (HAUPTTEIL), OCR lineas 4497-4871, paginas del libro aprox. 99-106."
+descripcion: "El modelo de la estratificación (Schichtung) de Lersch: la persona como estructura en dos capas (fondo endotímico + superestructura personal) y el Vorentwurf, el boceto sistemático que deduce la arquitectura completa de la obra."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: Vorerorterung (HAUPTTEIL), OCR lineas 4497-4871, paginas del libro aprox. 99-106."
 autor: FS
 creado: 2026-06-24
 lang: es

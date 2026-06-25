@@ -3,8 +3,8 @@ urn: urn:fxsl:kb:lersch-endothymer-grund-antriebserlebnisse
 nombre: lersch-endothymer-grund-antriebserlebnisse
 version: 1.0.0
 estado: publicado
-descripcion: "Las vivencias pulsacionales (Antriebserlebnisse: pulsiones y tendencias) del fondo endotimico: las tres clases (del darse viviente, del ser-si individual, del ser-mas-alla-de-si), su multiplicidad, convergencia/divergencia, suerte individual y fuerza."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada (ley/4), verificada contra el texto aleman y la imagen. Seccion: 2. Abschnitt Kap. 1 DIE ANTRIEBSERLEBNISSE, OCR lineas 5487-9938, paginas del libro aprox. 121-217."
+descripcion: "Las vivencias pulsionales (Antriebserlebnisse: pulsiones y tendencias) del fondo endotímico: las tres clases (del darse viviente, del ser-sí individual, del ser-más-allá-de-sí), su multiplicidad, convergencia/divergencia, suerte individual y fuerza."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 2. Abschnitt Kap. 1 DIE ANTRIEBSERLEBNISSE, OCR lineas 5487-9938, paginas del libro aprox. 121-217; §4-7 reexpandidos 2026-06-25 contra OCR."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -13,9 +13,9 @@ familia: bok
 depende: [urn:fxsl:kb:lersch-estratificacion]
 ---
 
-# Las vivencias pulsacionales (Antriebserlebnisse)
+# Las vivencias pulsionales (Antriebserlebnisse)
 
-Las **vivencias pulsacionales** (*Antriebserlebnisse*: pulsiones y tendencias) son,
+Las **vivencias pulsionales** (*Antriebserlebnisse*: pulsiones y tendencias) son,
 dentro del fondo endotímico (*endothymer Grund*), el conjunto de vivencias por las
 que el psiquismo es puesto en marcha: la dinámica direccionada a la realización de
 estados aún no existentes que atraviesa la conducción y configuración de la vida
@@ -39,12 +39,12 @@ difieran entre animal y hombre) sino de **forma de aparición**:
 
 ## Naturaleza y significado (§1)
 
-Tres **rasgos esenciales constitutivos** de toda vivencia pulsacional:
+Tres **rasgos esenciales constitutivos** de toda vivencia pulsional:
 
 | Rasgo | Qué es |
 |---|---|
 | **Befindlichkeit de la necesidad** (*Bedürfnis*) | todo impulso/drang se vive como estado de carencia, necesidad; el concepto más amplio de "necesidad" envuelve esta básica afectación. La concepción psicológica que pone los impulsos en el centro se llama "psicología de las necesidades". |
-| **Anticipación de futuro** (*Ausgriff in die Zukunft*) | la necesidad empuja más allá del *status quo*; la vivencia pulsacional es arco tendido entre presente y futuro, oscuro o figurado, pero siempre anticipación de lo aún-no. |
+| **Anticipación de futuro** (*Ausgriff in die Zukunft*) | la necesidad empuja más allá del *status quo*; la vivencia pulsional es arco tendido entre presente y futuro, oscuro o figurado, pero siempre anticipación de lo aún-no. |
 | **Dirección temática a un fin = valor** | el drang no es sólo huida de la carencia sino camino hacia un fin; el fin cuya realización cumple la necesidad **representa un valor**. Pulsiones y tendencias son **direcciones a valores**. |
 
 **Significado dentro del alma.** La psicología científica descuidó largo tiempo los
@@ -94,9 +94,9 @@ de Gehlen — el hombre como *Mängelwesen* que compensa biológicamente su
 insuficiencia con su propia actividad — hace del instinto de autoconservación el
 instinto fundamental; es, no dicho, una variante **monotemática**.
 
-## Las clases de vivencias pulsacionales (§3)
+## Las clases de vivencias pulsionales (§3)
 
-Se parte de que las vivencias pulsacionales son **formas de ejecución en que el
+Se parte de que las vivencias pulsionales son **formas de ejecución en que el
 Dasein humano intenta realizarse**, y se pregunta si las tendencias se agrupan de
 modo que en cada grupo se reconozca una temática propia del Dasein. Resultan
 **tres clases** — y la ordenación es a la vez **escala de desarrollo** (la infancia
@@ -119,7 +119,7 @@ forman el todo del alma plenamente desarrollada — **polifonía de las tendenci
 > roto en las tendencias del ser-sí — no ya la unidad ingenua dada por la
 > naturaleza, sino la **unidad asignada**, que hay que realizar.
 
-### A) Las vivencias pulsacionales del darse viviente
+### A) Las vivencias pulsionales del darse viviente
 
 Lo común: lograr que la vida se vuelva consciente en la inmediatez, originalidad y
 dinámica de su cumplimiento. Lo que se busca es la **"vivacidad" de la vida** — su
@@ -148,7 +148,7 @@ Lebensdrang se realiza en la forma ─┤
 | **Libido** | Innerung / zentripetal | la *Lust* cualitativamente específica de la **Wollust** (voluptuosidad), desvinculada por Freud de la madurez genital. Tesis freudiana: la forma madura del instinto sexual (unión corporal con fines de procreación) es **estadio final** de un desarrollo que comienza en la lactancia; primario es el instinto de la *Wollust* corporal, ligada no sólo a los órganos genitales sino también a la **zona oral** (succión) y **anal** (excreción) — "sexualidad infantil". En su madurez la libido se revela como **forma fundamental del *Lebensdrang***: en el instinto sexual irrumpe en la vigilia la vida preindividual anónima con sus fuerzas creadoras (el orgasmo como cumplimiento supremo). Diferente fenomenológicamente del *Genustreben*, aunque genealógicamente unidos: en la madurez el acento puede **desplazarse** y fijarse en la Wollust (la pulsión sexual se "encoge" a *Genustreben*, p. ej. onanismo). Desarrollo: vínculo libidinal al padre/madre entre los años 2-5; en la pubertad, normalmente, desligamiento; si fracasa, **fijación** → frigidez / homosexualidad; si no encuentra satisfacción, **sublimación** o **regresión** (Freud). Traumas infantiles (exhibitionismo, sadismo, masoquismo, aversión sexual). La crítica de Lersch: despojada del **pansexualismo** (la libido como única pulsión y todas las demás sublimaciones), queda el mérito del psicoanálisis de haber mostrado la eficacia preconsciente de la libido. |
 | **Erlebnisdrang** (pulsión de vivencia) | Innerung / zentripetal | **tercera** variante: el *Pathos* de la vivacidad vivida en estados endotímicos **cualquiera sea su cualidad**. La *Sensation* — éxtasis, embriaguez dionisíaca, aventura, peligro, lo espantoso, incluso el dolor (Schlegel, *Lucinde*) — da cumplimiento. Se cumple siempre en el encuentro con el mundo, pero **no es** tendencia del ser-más-allá-de-sí: su intención no va a *Sinnwerte* sino a *Lebenswerte* (sensaciones). Tampoco es *Tätigkeitsdrang* (aunque se una con actividad en el afán de aventura): es **movimiento intensivo-zentripetal**, "inhalación". Aparece con especial claridad en el *Sturm und Drang* de la pubertad (Nohl: el muchacho que quiere "sentir cómo se estrellan los bloques cerebrales"). Vuelve en la vejez (Leila en *Ein Heiliger* de Galsworthy). Varía de sujeto a sujeto: ausente en el hombre del trabajo y en general donde dominan las tendencias del ser-más-allá-de-sí; patológico en la *Erlebnissucht* (hambre de vivencias, sensationssüchtig), cuya fórmula da Byron; **dos formas** según la fuerza vital (Nietzsche): vitalidad elemental originaria o vitalidad quebradiza, **décadence** (necesidad de estimulantes: morfina, opio, hachís, cocaína). Como la *Genusucht*, corre siempre sobre el abismo del aburrimiento; la vida oscila entre *Sensation* y *Langeweile*. No es egoísmo: el egoísmo va a autoconservación, aseguramiento y expansión; *Genussucht* y *Erlebnisdrang* descuidan los intereses egoístas y a veces los contradicen (Jaspers: "todo goce es finalmente autogoce" — pero los rasgos egoístas son aquí sólo efectos, no la intención). |
 
-### B) Las vivencias pulsacionales del ser-sí individual
+### B) Las vivencias pulsionales del ser-sí individual
 
 | Sub-tendencia | Lado del ser-sí | Definición y notas distintivas |
 |---|---|---|
@@ -372,166 +372,454 @@ originario: toda agresión observable es medio de otra tendencia:
 | Agresión en ira, cólera, irritación | **desvíos** (*Umleitungen*) de agresiones cuyo objeto y fin natural no pudo alcanzar — el sujeto está en cease-less enfrentamiento con el entorno, surgen resistencias; la agresión primaria para superarlas no llega a "arrancar" (propia impotencia), los impulsos estancados se **redirigen** sobre objetos sustitutivos → agresividad **anónima, inespecífica** contra todos; incluso ciertos delitos violentos. |
 | Agresión por **mala conciencia reprimida** | desvió: uno se vive a sí mismo como resistencia frente a lo que (desde el *Eigenwertstreben*) querría ser; no se enfrenta oneelf, sino que descarga la energía sobre el entorno (pararrayos). |
 
-## La multiplicidad de las vivencias pulsacionales (§4)
+## La multiplicidad de las vivencias pulsionales (§4)
 
 La articulación de pulsiones y tendencias humanas está cerrada: tres clases como
-direcciones fundamentales del alma en cuya temática el Dasein humano se
-reconoce como **todo polifónico**. Cada temática es el esquema aún no cumplido
-de una pregunta al mundo (actividad, goce, vivencia, autoconservación,
-posesión, poder, vigencia…) y el mundo es el que canaliza estas preguntas hacia
-fines concretos determinados.
+direcciones fundamentales de la dinámica anímica en cuya temática el Dasein
+humano se reconoce como **todo polifónico**. Cada temática es el esquema aún no
+cumplido de una pregunta a la mundo (actividad, goce, vivencia,
+autoconservación, posesión, poder, vigencia…) y el mundo es el que canaliza estas
+preguntas hacia fines concretos determinados.
 
 > **Aclaración contra malentendidos:** la articulación no dice que toda tendencia
-> específica esté en todo hombre del mismo modo, ni prejuzga cuánto sea
-> innato o stimulado por el entorno (cultural). Las tendencias posibles del
-> hombre se actualizan en **distintos niveles** del desarrollo psíquico global; ello
-> no va contra su autonomía y originariedad temáticas.
+> temáticamente específica esté en todo hombre del mismo modo, ni prejuzga
+> cuánto sea innato o stimulado por el entorno (en particular, el medio cultural).
+> Las tendencias posibles del hombre se actualizan en **distintos niveles** del
+> desarrollo psíquico global — lo cual no contradice su autonomía y originariedad
+> temáticas: es el ψεῦδος de la teoría evolutiva de cuño darwiniano creer que lo
+> genéticamente posterior sólo pueda ser transformación y modificación de lo
+> genéticamente anterior. La psicología animal muestra que incluso los instintos
+> irrumpen como fuerzas originarias en distintos tiempos del desarrollo: hay una
+> **ley de madurez del desarrollo** para lo psíquicamente posible. Es una resaca
+> de la teoría evolutiva darwiniana intentar explicar la multiplicidad de
+> tendencias humanas como transformaciones, modificaciones o compensaciones
+> de la libido, del instinto de autoconservación o de la voluntad de poder.
 
-**Crítica de Lersch al monismo** (Freud, Adler; trasfondo en el modo de pensar de
-la ciencia natural mecánica, heredero del axioma darwiniano — "lo genéticamente
-posterior sólo puede ser transformación de lo genéticamente anterior"): el intento de reducir la multiplicidad a transformaciones,
-modificaciones o compensaciones de la libido, del instinto de autoconservación o
-del Wille zur Macht es un **monismo llevado al extremo**, modelado sobre la
-física (la conversión de movimiento en calor, de fuerza hidráulica en energía
-eléctrica). La reducción es legítima para la ciencia natural, que trata sólo
-**cantidades** (Planck: el objetivo de la física es eliminar todo cualitativo); pero
-**aplicarla al alma es desconocer su carácter** — los contenidos cualitativos de la
-vivencia no se dejan reducir a relaciones cuantitativas (como tampoco el
-contenido vivencial de una sinfonía se expresa por las relaciones cuantitativas de
-las vibraciones del aire, que son sólo condición de posibilidad del fenómeno, no
-el fenómeno mismo). La teoría psicoanalítica de la **sublimación** de la libido
-estancada es **una tal ecuación**. Freud corrigió tardíamente su pans sexualismo
-añadiendo un *Todestrieb*; la unilateralidad no se remedia. El mérito de Freud y
-Adler queda a salvo: haber mostrado **que y en qué grado** el alma está
-dinámicamente gobernada (cosa difícil de imponer en la historia de la
-psicología) y la **eficacia real** de la libido y del *Machtreben* (también en formas
-que al principio no se revelan como tales y son propiamente satisfacciones
-sustitutivas).
+### Crítica de Lersch al monismo reduccionista
 
-**Concierto / polifonía de las tendencias.** Las tendencias no están aisladas como
-elementos; el comportamiento concreto es un **haces**, un complejo, un
-entreverarse de tendencias diversas — como los instrumentos de una orquesta
-(contrapunto del alma). En cada instante o fase de la vida, bajo influencia del
-entorno, las distintas tendencias pueden pasar al frente y asumir la dirección; a lo
-largo del curso vital, algunas pueden **dominar temáticamente**.
+En Freud opera además el modo de pensar de la ciencia natural mecánica. Según su
+teoría de la **sublimación**, todas las tendencias que hemos llamado del
+ser-más-allá-de-sí —sobre todo el co-crear en los valores de la cultura humana—
+no serían sino destilaciones y transformaciones de una libido que no ha encontrado
+su desagüe natural en el desahogo sexual. Vista de cerca, esta concepción es hija
+del pensamiento científico-natural mecánico: está concebida según el modelo de
+experiencias físicas —la conversión de movimiento en calor o de fuerza hidráulica
+en energía eléctrica. Para la ciencia natural tal reducción es legítima, pues ella
+sólo trata con **cantidades**: según **Planck**, es justamente la meta de la física
+**eliminar todo lo cualitativo** de su imagen del mundo y expresarlo en relaciones
+cuantitativas. Pero es **desconocer la índole propia de lo anímico** trasladar este
+procedimiento al ámbito de la vivencia: los contenidos cualitativos de la vivencia
+no se dejan reconducir a distintas relaciones cuantitativas —como tampoco el
+contenido vivencial de una sinfonía puede expresarse mediante las relaciones
+cuantitativas de las vibraciones aéreas que subyacen a cada tono. Ciertamente cada
+tono tiene su base física en vibraciones cuantitativamente determinables —éstas son
+la **condición** de posibilidad de que se oigan tonos—, pero las condiciones de un
+fenómeno no son idénticas al fenómeno mismo. Los contenidos vivenciales
+específicos de una pieza musical, más aún las cualidades vivenciales
+específicamente distintas de un acorde mayor y uno menor, no se dejan poner en
+relación de **ecuación** con sus condiciones físicas. Y nada distinto de una tal
+ecuación es la teoría psicoanalítica de la sublimación de la libido estancada y no
+desahogada.
+
+Freud intentó corregir en sus trabajos tardíos su concepción originariamente
+monotemática —que suele llamarse **pansexualismo**— añadiendo junto a la pulsión
+de vida (la libido) una **pulsión de muerte** (*Todestrieb*). Pero ni siquiera con
+eso queda remediada la unilateralidad de su doctrina de las pulsiones. Con esto no
+se quiere mermar el mérito de Freud —y lo mismo vale para la psicología individual
+de Adler—: consiste, en primer lugar, en la intelección de **que y en qué grado**
+la vida anímica está dinámicamente gobernada —intelección que tan difícilmente
+logró imponerse en la historia de la psicología y sólo hoy ha alcanzado su pleno
+derecho. Es además mérito de Freud y Adler haber mostrado la **significación
+efectiva** de la libido y del afán de poder —significación que una concepción del
+hombre idealizante y autocomplaciente no quería ver. Y también han reconocido
+correctamente que la libido y el afán de poder y de *Geltung* pueden vivirse en
+formas que al principio no se revelan como expresión de estas pulsiones
+fundamentales y representan propiamente **satisfacciones sustitutivas**
+(*Ersatzbefriedigungen*).
+
+A pesar de ello, todo intento de reducir la dinámica teleológica de la vida
+anímica humana a la temática de **una sola** tendencia representa un **monismo
+llevado al extremo** que —como queda dicho— hunde sus raíces en los hábitos de
+pensamiento y en los esquemas explicativos de las ciencias naturales. Una actitud
+no metódicamente pre-lastrada ante lo que la experiencia muestra conduce
+necesariamente a la intelección de que en el curso del desarrollo se despliega una
+**multiplicidad de tendencias temáticamente autónomas y originarias**. En esa
+multiplicidad se despliega a la vez la totalidad de lo que el hombre **es**, esto
+es, lo que pertenece a las posibilidades de su ser y con ello a la temática de su
+**autorrealización** (*Selbstverwirklichung*): él es **partícipe** de la vida
+preindividual que también en él y por él quiere vivir; es **criatura singular** que
+ha de imponerse en la lucha por la existencia y determinar su posición en el
+entorno y el con-entorno; y es igualmente —con igual originariedad y
+esencialidad— **ser espiritual** que puede preguntar más allá de sí y pugna por la
+participación en valores de sentido.
+
+### El concierto / polifonía de las tendencias
+
+Así como la temática del darse viviente, del ser-sí individual y del
+ser-más-allá-de-sí pertenecen a la realización de la existencia humana en su
+totalidad, así también las tendencias temáticamente distintas no están en modo
+alguno aisladas unas de otras como elementos. El comportamiento concreto del
+hombre no puede reconducirse la mayoría de las veces a **una sola** Triebfeder, sino
+que representa un **haz**, un **complejo**, un **entreverarse** (*Ineinander*) de
+diversas tendencias. Las tendencias colaboran en el acontecer anímico formando un
+todo, exactamente como los distintos instrumentos de una orquesta —o sus
+ejecutantes, en su conducción de voces— se unen en la totalidad de una obra
+musical. Tiene buen sentido proseguir esta imagen y hablar del **concierto
+(*Konzert*) de las tendencias** en la composición global de la vida pulsional
+humana. Las tendencias por nosotros distinguidas pertenecen a la
+**contrapuntística** de la vida anímica: cada tendencia tiene su propia conducción
+de voz y su temática propia, y lo que hace el concierto de las tendencias es que en
+los distintos instantes o fases de la vida —bajo la cooperación de influjos del
+entorno— las diversas tendencias pueden **pasar temáticamente al primer plano y
+asumir la dirección**, o bien que en el conjunto del curso vital algunas de estas
+tendencias **dominan temáticamente**.
 
 ## Convergencia y divergencia de las tendencias (§5)
 
-El "concierto" no armonía unconditional: hay **dissonanzen**. Las tendencias se
-relacionan en **convergencia** (direcciones compatibles) o **divergencia**
-(direcciones opuestas). El *Tätigkeitsdrang* puede converger tanto con tendencias
-del ser-sí como del ser-más-allá-de-sí; *Genustreben* y *Erlebnishunger*
-convergen más con egoísmo, *Wille zur Macht* y *Geltungsstreben* que con las del
-ser-más-allá-de-sí, sobre todo con las de la **participación verpflichtende**;
-**especial divergencia** entre egoísmo y las tendencias del *Füreinanderseins*.
+Ahora bien, con la imagen del concierto de las tendencias no debe asociarse la
+representación de una armonía incondicional, de una consonancia siempre dada.
+Como en el ámbito musical, también en el concierto de las tendencias aparecen
+**disonancias** (*Dissonanzen*). Las múltiples tendencias posibles guardan entre sí
+una relación de **convergencia** y **divergencia**: para cada tendencia hay una
+serie de otras cuya dirección sobre la configuración y la conducción de la vida
+**discurre con la suya** o al menos no la perturba; pero hay también tendencias
+que son **opuestas** en su dirección.
 
-Divergent trends en un mismo sujeto producen **conflicto interno**. La posibilidad
-de este conflicto muestra la **pluralidad real** de tendencias autónomas
-originarias; su expresión más simple, la palabra de Fausto sobre las dos almas en
-su pecho. "*Exponerse a tales conflictos paralizantes de las fuerzas es el precio
-que el hombre paga por su capacidad de perseguir incansablemente fines e
-ideales diversos*" (McDougall). Los **más diferenciados** y ricos en talento están
-**más expuestos** al conflicto; el conflicto es siempre gasto de energía y
-perturba la unidad de la conducción de la vida; en casos extremos se eleva a la
-**psiconeurosis**. El hombre es, por lo que le distingue del animal,
-**simultáneamente chance y peligro**, y por eso un ser **mucho más
-perturbable** que el animal. Caracterológicamente hablamos de naturalezas
-**unificadas, armónicas** y naturalezas **escindidas, disharmónicas** (ésta, p. ej.,
-entre los impulsos del egoísmo y los del compromiso por personas, cosas o
-ideas; o quienes desde una riqueza de intereses luchan en vano por la unidad —
-la divergencia cabe también **dentro** de los intereses).
+### Dinámica de convergencia y divergencia
+
+| Relación | Ejemplos |
+|---|---|
+| **Convergencia** | el *Tätigkeitsdrang* puede estar armónicamente compuesto tanto con la temática de las tendencias del ser-sí individual como con las del ser-más-allá-de-sí. |
+| **Divergencia** | *Genustreben* y *Erlebnishunger* convergen con egoísmo, voluntad de poder y *Geltungsstreben* en medida mucho mayor que con las tendencias del ser-más-allá-de-sí, en particular con las de la **participación obligante** (*verpflichtende Teilhabe*). Sobre todo entre el **egoísmo** y las tendencias del **ser-uno-para-el-otro** (*Füreinanderseins*) existe una relación de **pronunciada divergencia**. |
+
+Tan pronto como tendencias divergentes de esta clase son eficaces en un mismo
+hombre, provocan un **conflicto interno** (*innerer Widerstreit*), un **conflicto
+anímico** (*seelischer Konflikt*). Justamente en la posibilidad de tal conflicto se
+muestra la **pluralidad efectiva** de tendencias originarias, autónomas, esto es,
+temáticamente autónomas. El hecho de un tal conflicto —dado por la divergencia de
+las tendencias— encuentra su expresión más simple en las palabras de Fausto sobre
+las dos almas que moran en su pecho:
+
+> «*Tener que exponerse a tales conflictos paralizantes de las fuerzas es el precio
+> que el hombre paga por poder perseguir con incansable ahínco distintos fines e
+> ideales. Así sucede que justamente las naturalezas más ricamente dotadas están
+> particularmente expuestas al peligro de ser atormentadas y, por así decirlo,
+> castigadas por los conflictos*» (McDougall, *Aufbaukräfte der Seele*, 1937,
+> p. 105).
+
+Cuanto más diferenciadas y múltiples son las tendencias de un hombre, tanto mayor
+es por un lado el **espacio de despliegue** de su Dasein, pero tanto mayor es
+también el **peligro** de un conflicto interno, que representa siempre un
+considerable **derroche de energía** (*Energieverschwendung*) y perturba la
+**unidad** de la conducción de la vida y de la configuración del Dasein. En
+determinadas circunstancias, un tal conflicto interno puede exacerbarse hasta la
+forma de aquella perturbación anímica que la psicopatología conoce bajo el nombre
+de **psiconeurosis**. Se muestra aquí por vez primera en nuestra exposición que lo
+que distingue anímicamente al hombre del animal es **simultáneamente chance y
+peligro**, y que el hombre es por ello un ser **mucho más perturbable**
+(*störbares Wesen*) que el animal.
+
+### Tipos caracterológicos según convergencia/divergencia
+
+De cara a las posibilidades de convergencia y divergencia de las tendencias
+operantes en un hombre, hablamos caracterológicamente de naturalezas
+**unitarias**, **armónicas** y naturalezas **escindidas**, **disharmónicas** (véase
+también el concepto de Klages de *Tektonik des Charakters*). La experiencia nos
+muestra estas últimas en múltiples formas: por ejemplo, hombres que son
+arrastrados de un lado a otro entre los impulsos de sus egoísmos y los del
+compromiso (*Einsatz*) por personas, cosas o ideas; o bien hombres que, desde una
+**riqueza de intereses**, luchan en vano por la unidad de su configuración vital.
+Así pues, la relación de divergencia puede darse también **dentro** de una misma
+clase de tendencias (los intereses). Lückert (*Konfliktpsychologie*, 1957) ve en
+el conflicto justamente el fenómeno central de la vida anímica humana e interpreta
+al hombre como el «ser cargado de conflictos» (*konfliktträchtiges Wesen*).
 
 ## El destino individual de las tendencias (§6)
 
-Que una tendencia obre no garantiza su realización. Hay que preguntar qué
-**destino** tienen en el despliegue de la vida.
+Con la ordenación de las especies de tendencias ganamos la posibilidad de traer a
+conciencia, en el caso singular, los motivos fundamentales de la temática del
+Dasein de un hombre. Pues a la idiosincrasia individual de un hombre pertenece sin
+duda esencialmente aquello de que se trata en su vida, a qué fines está orientado:
+goce, posesión, vigencia, poder, el ejercicio de intereses, el trabajo social, etc.
+Pero con la **eficacia** de una tendencia no está ni mucho menos dado que ésta
+encuentre también su **realización**. Y así, cuando nos esforzamos por comprender a
+un hombre en su temática existencial, se vuelve necesario preguntar también **hasta
+qué punto** las tendencias en él operantes llegan efectivamente a realizarse, qué
+**destino** (*Schicksal*) les está deparado en el despliegue de la vida. No es
+problemático el caso en que las tendencias hallan su realización sin impedimento;
+problemático se vuelve cuando las Triebfedern operantes en un hombre no logran
+imponerse. Hay aquí una serie de posibilidades que considerar.
 
 ### Frustración
 
-| Fuente | Tesis |
-|---|---|
-| **Dollard y colaboradores** (psicología americana; *Frustration and aggression*, 1949) | la frustración — la frustración de una tendencia, la impedición de la realización de su fin — tiene por consecuencia **necesaria** la **agresión**: "*toda agresión presupone frustración; toda frustración conduce a una forma de agresión*" (agresión en sentido amplio: plan de represalia, mera representación-de-deseo, masoquismo, martirologio, suicidio). |
-| **Lersch** | no hay duda de que la frustración **puede** llevar a la agresión (como se vio al tratar las agresiones del *Selbsterhaltungstrieb*, *Geschlechtstrieb*, egoísmo, *Wille zur Macht*, *Vergeltungsdrang* y la agresión anónima redirigida). Pero la tesis de la **necesidad** es generalización ilegítima. La experiencia muestra otras salidas. |
-| **Rosenzweig** y otros | **Frustrationstoleranz** — la capacidad de arreglárselas con tendencias sin perspectivas: ponerse en el suelo de los hechos, abandonar el fin, "cancelar" la tendencia. Del hombre normal se espera una frustración-tolerancia relativamente alta. |
-| (tercera salida) | si no se domina la tendencia frustrada pero tampoco se cae en la agresión, las energías se **redirigen** a la **fantasía-de-deseo**, donde se cumplen en imágenes ilusorias del sueño diurno y nocturno (los mundos oníricos de la deseo sexual, del hambre de poder y de la sed de *Geltung*); fácilmente perturban la relación con la realidad concreta. |
+La psicología americana designa la **frustración** (*Vereitelung*) de una
+Triebfeder —esto es, la impedición de la realización de su fin— como
+**frustration**.
 
-**Compensación** (Adler) — cuando el *Streben* de *Geltung* y poder no se cumple
-por logros, la satisfacción se busca **por rodeos**; técnicas compensatorias ya
-tratadas al exponer la *Geltungssucht*: fanfarronería, *Aufschneiderei*,
-*Anmaßung*, *Renommisterei*, desprecio de los hombres y del mundo, *Eigensinn*,
-*Starrsinn*, *Trotz*, *Rechthaberei* — todas satisfacciones sustitutivas del *Macht*- y
-del *Geltungsstreben*. En esta línea pueden formarse "**fictive Leitlinien**"
-(Adler) — la apropiación de un rol vital que (dictado por el Wille zur Macht o el
-*Geltungsstreben*) se **representa** para alcanzar por rodeos lo que la dotación
-natural no permite.
+#### La tesis Dollard y sus límites
 
-**Frustración específica del instinto sexual** — sin tomar posición crítica,
-recordar la teoría de Freud (ya mencionada): la energía no vivida de la libido
-puede convertirse (sublimación) en actividad espiritual o, si esto fracasa, volver
-a formas infantiles de cumplimento (regresión).
+**Dollard y colaboradores** (*Frustration and aggression*, 1949) investigaron las
+frustraciones en situaciones concretas y formularon la tesis de que la consecuencia
+**necesaria** de una frustración es siempre una **agresión**: «*El comportamiento
+agresivo presupone siempre la existencia de frustración, mientras que, por otra
+parte, la existencia de frustración conduce siempre a una forma de agresión*». El
+concepto de agresión no se entiende aquí sólo en el sentido físico de la violencia
+manual, sino que incluye también toda **planificación de una represalia**
+(eventualmente como mera representación de deseo), así como la posible dirección
+de la agresión **contra sí mismo** en forma de masoquismo, martirologio o suicidio.
+
+Que el comportamiento agresivo en el sentido de ataque al otro se produce cuando
+una Triebfeder —instinto de autoconservación, instinto sexual, egoísmo o afán de
+poder— tropieza en el curso de la realización de su fin con **obstáculos y
+resistencias**, ya fue tratado (al exponer las formas de agresión ligadas a cada
+tendencia del ser-sí). Se señaló también que las mociones del *Vergeltungsdrang*
+—venganza y resentimiento—, que brotan ambas de una lesión de las pretensiones
+del ser-sí individual por parte de otro, **intencionan agresiones**. Y se habló
+finalmente de que las agresiones pueden dirigirse **indiscriminadamente** contra
+entorno y con-entorno cuando no logran descargarse en las ocasiones fácticas de la
+lesión.
+
+No hay, pues, duda de que las frustraciones **pueden** conducir a agresiones. Pero
+la afirmación de que las frustraciones se descargan **siempre y sólo** en una forma
+de agresión aparece como una **generalización ilegítima**. La experiencia muestra
+que un hombre, bajo circunstancias dadas, puede arreglárselas con tendencias y
+fines desesperanzados poniéndose en el suelo de los hechos, **abandonando** el fin
+perseguido y, por así decirlo, **cancelando** (*abschreiben*) su tendencia. Así, en
+otros autores americanos la pretensión de absolutez de la teoría de Dollard aparece
+restringida al reconocerse la posibilidad de la **tolerancia a la frustración**
+(*Frustrationstoleranz*): se alude justamente al **avenirse** (*Sichabfinden*) con
+el hecho de que una tendencia no puede ser llevada a su fin. Del hombre normal se
+espera que disponga de una tolerancia a la frustración relativamente alta
+(Rosenzweig, *An outline of Frustration Theory*, 1944; Cameron, *Psychology of
+behavior disorders*, 1947; Murphy, *Personality*, 1947).
+
+Pero ocurre también que el hombre interiormente **no logra arreglárselas** con sus
+tendencias frustradas, no puede **detener** su dinámica y sin embargo no cae en la
+actitud de la agresión. Esta **tercera forma** en que las tendencias no realizadas
+son vividas consiste en que las **energías tendentes se reconducen** (*umgeleitet*)
+a la **fantasía de deseo** (*Wunschphantasie*), donde se cumplen en las imágenes
+ilusionistas del sueño en vigilia y en el dormir. Los mundos oníricos de deseo de
+la apetencia sexual, del hambre de poder y de la sed de *Geltung* son ejemplos de
+ello. En tales casos se llega fácilmente a una **perturbación** de la relación y de
+la actitud con la realidad concreta y objetivamente dada, así como, a la inversa,
+es siempre signo de un claro y sobrio sentido de los hechos **abandonar**
+tendencias tan pronto como se gana la intelección de que su realización es
+prácticamente imposible.
+
+#### Compensación
+
+Junto a la satisfacción sustitutiva puramente ilusoria, fantaseada, de pulsiones y
+tendencias cuyos fines no se dejan realizar, hay otra vía de escape: la
+**compensación** (*Kompensation*). Adler habla de compensación cuando al *Streben*
+de *Geltung* y de poder, innato en el hombre, le queda negado en la vida el
+cumplimiento por logros y realizaciones de valor efectivos, y la satisfacción del
+*Streben* se busca por así decirlo **por rodeos** (*auf Umwegen*). En la exposición
+de la *Geltungssucht* se mencionaron ya tales prácticas compensatorias:
+fanfarronería, *Aufschneiderei*, pretensión (*Anmaßung*), *Renommisterei*,
+desprecio de los hombres y del mundo, *Eigensinn*, *Starrsinn*, *Trotz*,
+*Rechthaberei*: todas ellas son satisfacciones sustitutivas (*Ersatzbefriedigungen*)
+del *Macht*- y del *Geltungsstreben*. En el curso de esta compensación puede
+llegarse a la formación de «**líneas directrices ficticias**» (*fiktive Leitlinien*,
+Adler), a la apropiación de un determinado **rol vital** que —dictado por la
+voluntad de poder o el afán de *Geltung*— se **representa** (*gespielt*) para
+alcanzar por rodeos lo que no puede alcanzarse con la dotación natural de dotes
+corporales y anímicas.
+
+#### Frustración del instinto sexual
+
+En lo que atañe en particular a la frustración del instinto sexual, hay que
+recordar aquí —sin tomar posición crítica— la teoría de Freud ya mencionada, según
+la cual la energía no vivida de la libido puede **convertirse** (*umgesetzt*) en
+actividad espiritual —Freud llama a esto **sublimación** (*Sublimierung*)— o, en
+la medida en que esto no se logra, tiene lugar una recaída y un recurso a formas de
+ejercicio de la libido de la primera infancia: una **regresión** (*Regression*).
+Hasta aquí en lo que toca al destino de aquellas tendencias a las que el
+cumplimiento les queda negado.
 
 ### Tendencias y capacidades
 
-**Capacidades / dotes** (*Fähigkeiten* / *Begabungen*) — siempre **para** algo:
-presuposiciones aparatales y funcionales en la dotación corporal-anímica
-orientadas a la realización de determinados fines tendentes (como la tijera, al
-corte). Es, en comparación grosera, el **instrumentario de las tendencias**.
-**Carácter caracterológicamente decisivo** de la relación *Können*/*Wollen*:
-"hay hombres incompletos (*incompletae*, botánicamente), cuya añoranza y
-tendencia no se proportiona al hacer y al lograr" (Goethe, *Maximen und
-Reflexionen*); Klages: las capacidades son el instrumento sobre el que las
-pulsiones tocan la melodía del carácter individual; **W. Stern** habla de
-**Rüstungsdispositionen** (las capacidades) y **Richtungsdispositionen** (las
-tendencias).
+Si las tendencias de un hombre llegan a realizarse depende de diversas condiciones:
+en parte, de las **circunstancias externas de la vida** con que el hombre se
+encuentra; en parte, de ciertos **presupuestos** que residen en la persona misma.
+Aquí pertenece sobre todo lo que entendemos bajo el concepto de las
+**capacidades** (*Fähigkeiten*) o **dotes** (*Begabungen*).
 
-Particularmente visible en los **intereses**: no a cada interés (por el arte, la
-ciencia) acompaña la dote necesaria, ni toda dote va acompañada de los impulsos
-de un interés correspondiente; la determinación de los intereses **debe
-complementarse** con la de las dotes. Lo mismo vale para toda tendencia:
-*Schaffensdrang* según la *Schaffenskraft*; *Erlebnisdrang* según la
-*Erlebnisfähigkeit* (hay quien con gran hambre de vivencia tiene escasa
-capacidad vivencial); *Gesellungsstreben* y búsqueda de contacto según la
-*Kontaktfähigkeit* (quien difícilmente entra en contacto no por falta de pulsión de
-sociabilidad sino por escasa *Kontaktfähigkeit*).
+**Capacidades / dotes** (*Fähigkeiten* / *Begabungen*) — son siempre
+**capacidades para** (dotes para) algo, esto es: presuposiciones aparatales y
+funcionales en la dotación corporal-anímica del hombre, en la medida en que están
+orientadas a la realización de determinados fines tendentes, como la tijera está
+orientada al corte de papel o de tela. Las capacidades, las dotes, representan
+pues —dicho en una comparación algo tosca— el **instrumentario**
+(*Instrumentarium*) de las tendencias. Que justamente la relación entre tendencias
+y capacidades es caracterológicamente importante se desprende ya del hecho de que
+prácticamente hablamos muy a menudo de una **desproporción entre poder y querer**
+(*Mißverhältnis von Können und Wollen*), empleándose el concepto de querer en el
+sentido pre-científico de tender. A este propósito, una observación de Goethe en
+las *Maximen und Reflexionen*:
+
+> «*Los botánicos tienen una clase de plantas que llaman incompletae; también
+> puede decirse que hay hombres incompletos, inacabados. Son aquellos cuya
+> añoranza y tendencia no están proporcionadas a su hacer y a su lograr… El
+> hombre más insignificante puede ser completo si se mueve dentro de los
+> límites de sus capacidades y destrezas*».
+
+La significación caracterológica de las capacidades en conexión con las tendencias
+la ilumina Klages comparando las capacidades con el **instrumento** sobre el que
+las Triebfedern tocan la melodía del carácter individual. Una distinción análoga
+establece **W. Stern** al hablar de **disposiciones de equipamiento**
+(*Rüstungsdispositionen*) y **disposiciones de dirección**
+(*Richtungsdispositionen*).
+
+**Importancia en los intereses y más allá.** Cuán importantes se vuelven las
+capacidades en conexión con las tendencias se muestra sobre todo en el ámbito de
+los intereses. No a todo interés (por el arte, por la ciencia, etc.) acompaña la
+dote necesaria, así como las dotes existentes no siempre están emparejadas con los
+impulsos de un interés correspondiente. Justamente la determinación de los
+intereses de un hombre tiene, pues, que ser **complementada** necesariamente por
+la de sus dotes si se quiere esclarecer la eficacia de los intereses en la
+conformación del carácter.
+
+Pero esto no vale sólo para los intereses, sino para **todas** las tendencias. Así,
+el *Schaffensdrang* (pulsión creadora) depende de la *Schaffenskraft* (fuerza
+creadora); el *Erlebnisdrang* (pulsión de vivencia), de la **capacidad de
+vivenciar** (*Erlebnisfähigkeit*), de la que se hablará todavía más adelante: sin
+duda hay hombres que están particularmente caracterizados por el hecho de que a un
+fuerte *Erlebnishunger* en ellos operante no le acompaña la correspondiente
+*Erlebnisfähigkeit*. También para la realización del *Gesellungsstreben*, de la
+búsqueda de contacto, se necesita —como ya se dijo— una particular **capacidad de
+contacto** (*Kontaktfähigkeit*): hay hombres que tienen gran dificultad para entrar
+en contacto con otros, y no porque les falte necesidad e impulso de socialización,
+sino porque su *Kontaktfähigkeit* es escasa.
 
 ## La fuerza de las tendencias (§7)
 
-El alma está determinada no sólo por las **especies** de las tendencias y su
-relación interna y su destino, sino también por su **fuerza individual**. A mayor
-fuerza, más aspira una tendencia a tomar la dirección; a menor, más
-indiferente. Dos direcciones de la fuerza:
+En la medida en que la vida anímica está determinada por las tendencias en ella
+operantes, esto no sucede sólo por las **especies** de estas tendencias, por su
+relación intra-anímica recíproca y por el destino que experimentan a través de los
+presupuestos dados para su realización, sino también por su **fuerza individual**
+(*Stärke*). Cuanto mayor es la fuerza de una Triebfeder, tanto más aspira a tomar
+la **dirección** (*Führung*) en la vida anímica; cuanto menor es, tanto más
+**irrelevante** se vuelve para la conducción y la configuración de la vida. Y esto
+vale tanto respecto del **corte transversal** (*Querschnitt*) de la presencia
+anímica como respecto del **corte longitudinal** (*Längsschnitt*) del curso vital.
+Pero la fuerza de las tendencias no se manifiesta siempre en la misma medida en
+cada una de estas dos direcciones. Se recomienda por ello distinguir, de un lado,
+la **intensidad** (*Intensität*) o **fuerza impulsiva** (*Antriebsstärke*), y de
+otro lado, la **persistencia** (*Nachhaltigkeit*) de las tendencias.
 
-| Dimensión | Definición |
+### Intensidad (*Intensität*) y sus manifestaciones
+
+Por **intensidad** ha de entenderse el efecto dinámico de las tendencias en la
+medida en que se extiende al corte transversal de la presencia anímica. Una
+**intensidad alta** se acredita en que **todos** los contenidos del vivir
+—incluidas las percepciones, representaciones y pensamientos— quedan
+**determinados y dominados** por el fin de las tendencias. En el ámbito de la
+percepción esto se manifiesta como **selección psíquica**: la «imagen de búsqueda»
+(*Suchbild*) destruye la «imagen de notación» (*Merkbild*, Uexküll); bajo la
+coacción de la tendencia (de la pulsión), sólo se **percibe** lo que corresponde al
+fin perseguido, todo lo demás no se nota o apenas se nota. Así puede, por ejemplo,
+el *Geltungssüchtige* estar tan fuertemente entregado a la imagen desiderativa de
+su efecto personal que **falsea** la realidad según el fin de su sed de *Geltung*.
+
+> «*Cuanto más intensa se presenta una tendencia, tanto más es el vivir
+> indiferente contra todas las demás excitaciones, y en general contra todo lo que
+> podría distraer de su fin. Cuando mi perro, que habitualmente obedece a mi
+> llamada, topa con la pista de un conejo, se vuelve ciego y sordo para conmigo.
+> A lo sumo, mis llamadas y gestos no tienen efecto perceptible para retenerlo o
+> desviarlo de su actividad intensa, concentrada… El atleta de pista que persigue
+> una victoria en la carrera de velocidad es, por esos pocos segundos, tan ciego
+> y sordo para todo lo accesorio que pueda influir sobre él como el perro de
+> caza*» (McDougall, *Aufbaukräfte der Seele*, 1937, pp. 101 s.).
+
+«*Así pues, puede en general establecerse que una tendencia domina tanto más
+fuertemente al organismo entero —excluyendo todas las demás formas de
+actividad— cuanto más intensamente se presenta*» (McDougall, ibíd.).
+
+### Diferencias individuales en la intensidad general
+
+La experiencia muestra que los hombres singulares difieren entre sí no sólo en el
+**grado de intensidad** con que determinadas tendencias aparecen en ellos, sino
+que también hay casos en los que podemos hablar, con toda generalidad —esto es,
+sin remitir a determinadas especies de tendencias—, de naturalezas
+**impulsivamente fuertes** (*antriebsstarke Naturen*) y naturalezas
+**impulsivamente débiles** (*antriebsschwache Naturen*).
+
+| Intensidad general | Descripción |
 |---|---|
-| **Intensität** (intensidad / fuerza impulsiva) | efecto dinámico en el **cross-section** del presente anímico: a mayor intensidad, todos los contenidos del vivir (percepciones, representaciones, pensamientos) quedan determinados y dominados por el fin de la tendencia; en la percepción, **selección psíquica** — el *Suchbild* destruye el *Merkbild* (Uexküll), sólo se percibe lo que corresponde al fin (ej.: el perro de caza ciego y sordo al amo cuando está sobre la pista; el velocista en los pocos segundos de la carrera). "*Un tender cuanto más intenso más domina al organismo entero, excluyendo toda otra forma de actividad*" (McDougall). |
-| **Nachhaltigkeit** (persistencia) | fuerza en el **longitudinal-section** del curso vital: cierta unidad y consecuencia del comportamiento. Una intensidad alta **no** garantiza persistencia. Hay quienes con tendencias impulsivamente fuertes las cambian rápidamente, introduciendo oscilación o ausencia de dirección (en cierto grado es propio del joven, que lucha crisis tras crisis por su mundo de valores y su Eigentlichkeit). Es marca de **madurez** cuando las tendencias, desde la profundidad por fin encontrada del fondo de valores, han alcanzado tal persistencia que — unidas a una dirección organizadora consciente de la voluntad — dan a la conducción y configuración de la vida una dirección unitaria y un curso consecuente, y a la persona cierta solidez. |
+| **Naturalezas impulsivas** (*antriebsstarke Naturen*) | alta intensidad general de la dinámica anímica. |
+| **Naturalezas de impulso débil** (*antriebsschwache Naturen*) | la intensidad de la dinámica anímica general se ha desvanecido a un **mínimo empírico**. A las tendencias operantes en tales hombres —y con ello a su conducción de vida, a su influjo sobre el mundo y a su configuración vital— les falta fuerza impulsora y acuñadora. |
 
-| Intensidad general | Caso extremo |
-|---|---|
-| **antriebsstarke** (naturalezas impulsivas) | — |
-| **antriebsschwache** (naturalezas de impulso débil) — la intensidad de la dinámica anímica general se ha desvanecido a un mínimo empírico | en el círculo psicopatológico: **Antriebslosigkeit** / **Abulie** — apatía, incapacidad vivencial; nada place, nada interesa; indiferencia incluso ante las cuestiones de la autoconservación, autoafirmación y *Geltung*; sin meta ni plan de vida; incoloros, sin contorno. |
+En el círculo de la experiencia psicopatológica, esta **pobreza de impulsos**
+(*Antriebsarmut*) aparece exacerbada hasta la **ausencia de impulsos**
+(*Antriebslosigkeit*), hasta la **abulia** (*Abulie*). Se trata de hombres de
+completa **indiferencia** e **incapacidad vivencial** (*Apathie*), a los que nada
+les procura goce, nada les despierta interés; que incluso frente a las cuestiones
+de la autoconservación, de la autoafirmación y de la *Geltung* permanecen
+indiferentes, no vivencian ni valores materiales ni ideales y, por tanto, ningún
+impulso tendente. **Sin meta vital**, sin plan de vida que dé dirección, perseveran
+—incoloros y sin contorno en su conducción de vida— en la actitud fundamental de
+la más completa indiferencia y ausencia de impulsos.
 
-Cuando la fuerza especial se muestra **a la vez** como intensidad alta y gran
-persistencia, hablamos de **Sucht** (adicción), **Leidenschaft** (pasión) y
-**Fanatismus** (fanatismo) — siempre aplicados a **especies** determinadas de
-tendencia: *Genussucht*, *Rachsucht*, *Herrschsucht*; *Leidenschaft* se reserva
-mejor para la fuerza especial de ciertas tendencias del ser-más-allá-de-sí (un afán
-apasionado de configuración, una disposición social apasionada); la fuerza
-especial de las tendencias **normativas** se llama **Fanatismus** (fanático de la
-verdad, fanático del deber; Kleist, *Michael Kohlhaas* — el caso ejemplar del afán
-de justicia elevado al fanatismo).
+### Persistencia (*Nachhaltigkeit*)
+
+De la **intensidad** con que las tendencias determinan la vida anímica total en el
+corte transversal de la presencia vivida, hay que distinguir, como queda dicho, su
+**persistencia** (*Nachhaltigkeit*), que se acredita en el curso de la conducción y
+configuración de la vida como una cierta **unidad** y **consecuencia**
+(*Folgerichtigkeit*) del comportamiento. Si bien las tendencias intensas,
+impulsivamente fuertes, aventajan por regla general a las débiles en duración, una
+gran intensidad de las Triebfedern existentes **no garantiza en modo alguno**
+siempre su persistencia. Así, la experiencia muestra naturalezas en las que
+tendencias impulsivamente fuertes **alternan rápidamente** entre sí e introducen
+con ello en la conducción de la vida una cierta **oscilación de dirección** o
+incluso **ausencia de dirección** (*Richtungslosigkeit*).
+
+En cierta medida, esto vale para el **hombre juvenil**, cuyas tendencias operan por
+un lado a menudo con una particular fuerza impulsiva, pero por otro lado están
+sujetas a una alternancia relativamente rápida. Se comprende desde aquí que el
+joven luche en un forcejeo **crísico** por el mundo de valores que le es adecuado y
+con ello por su **propiedad** (*Eigentlichkeit*), que busque **abrir** la
+profundidad de su fondo de valores para, desde ella, vivir **unitaria y
+centralmente**. Es justamente una marca de la **madurez** (*Reife*) cuando en un
+hombre las tendencias —desde la profundidad **por fin encontrada** de su fondo de
+valores— han alcanzado aquella persistencia tal que —unidas a una dirección
+organizadora consciente de la **voluntad**, de la que aún se ha de hablar— dan a la
+configuración y a la conducción de la vida una **dirección unitaria** y un **curso
+consecuente**, y con ello a la persona en su movilidad viviente una **cierta
+solidez** (*Festigkeit*).
+
+### Combinación de intensidad y persistencia: Sucht, Leidenschaft, Fanatismus
+
+Si de cara a la experiencia la fuerza de las tendencias ha de diferenciarse según
+intensidad y persistencia, también hay naturalmente casos en los que una fuerza
+especial de las tendencias se muestra eficaz **tanto** como intensidad alta
+**cuanto** como gran persistencia. Esto sucede siempre allí donde hablamos de
+**adicción** (*Sucht*), **pasión** (*Leidenschaft*) y **fanatismo** (*Fanatismus*).
+Y aplicamos estos conceptos siempre a **determinadas especies** de tendencias:
+
+| Término | Ámbito de aplicación | Ejemplos |
+|---|---|---|
+| **Sucht** (adicción) | tendencias del darse viviente y del ser-sí individual | *Genussucht*, *Rachsucht*, *Herrschsucht*, *Geltungssucht*. |
+| **Leidenschaft** (pasión) | tendencias del ser-más-allá-de-sí | un afán apasionado de configuración (*leidenschaftlicher Gestaltungsdrang*), una apasionada disposición al compromiso social (*leidenschaftliche soziale Einsatzbereitschaft*). |
+| **Fanatismus** (fanatismo) | tendencias **normativas** del ser-más-allá-de-sí | *Wahrheitsfanatiker* (fanático de la verdad), fanático del deber (*Fanatiker der Pflicht*). En la figura de **Michael Kohlhaas** ha representado Kleist el caso ejemplar del afán de justicia elevado al fanatismo. |
+
+Cuando en el corte transversal de la presencia y en el corte longitudinal del
+curso vital la intensidad y la persistencia se unen, la tendencia en cuestión
+cobra un **poder de penetración** en la vida anímica que la convierte en
+dominante, en centro organizador del concierto de las tendencias — para bien o
+para mal del hombre y de su mundo.
 
 ## Glosario de términos clave
 
 | Término alemán | Traducción canónica |
 |---|---|
-| die Antriebserlebnisse | las vivencias pulsacionales (tendenciales); abarcan pulsiones y tendencias |
+| die Antriebserlebnisse | las vivencias pulsionales (tendenciales); abarcan pulsiones y tendencias |
 | die Triebe | las pulsiones (modo animal: dinámica teleológica sin conciencia del fin) |
 | die Strebungen / Triebfedern | las tendencias / aspiraciones (modo humano: dinámica con conciencia del fin) |
 | der Lebensdrang | la pulsión vital (la vida preindividual anónima que se vuelve consciente en el individuo) |
 | Äußerung / Innerung | exteriorización (zentrifugal) / interiorización (zentripetal): el ritmo de la vivacidad |
-| die Antriebserlebnisse des lebendigen Daseins | las vivencias pulsacionales del darse viviente (clase A; valores: *Lebenswerte*) |
-| die Antriebserlebnisse des individuellen Selbstseins | las vivencias pulsacionales del ser-sí individual (clase B; valores: *Bedeutungswerte*) |
+| die Antriebserlebnisse des lebendigen Daseins | las vivencias pulsionales del darse viviente (clase A; valores: *Lebenswerte*) |
+| die Antriebserlebnisse des individuellen Selbstseins | las vivencias pulsionales del ser-sí individual (clase B; valores: *Bedeutungswerte*) |
 | die Strebungen des Über-sich-hinaus-seins | las tendencias del ser-más-allá-de-sí (transitivas) (clase C; valores: *Sinnwerte*); **Geist** = Über-sich-hinaus-sein, trascendencia |
 | der Tätigkeitsdrang | la pulsión de actividad (actividad por sí misma; se cumple en el juego) |
 | das Genustreben | la aspiración al goce (goce del *Lust* como estado interno) |

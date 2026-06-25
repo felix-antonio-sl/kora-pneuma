@@ -3,8 +3,8 @@ urn: urn:fxsl:kb:lersch-aussenbereich
 nombre: lersch-aussenbereich
 version: 1.0.0
 estado: publicado
-descripcion: "El ambito exterior del vivenciar (Aussenbereich): el advenir al mundo y la orientacion en el (noticia sensorial, hacer-presente representativo, aprehension pensante) y la conducta actuante (el obrar: instinto, experiencia, inteligencia, voluntad)."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada (ley/4), verificada contra el texto aleman y la imagen. Seccion: 3. Abschnitt DER AUSSENBEREICH DES ERLEBENS, OCR lineas 15718-22192, paginas del libro aprox. 347-494."
+descripcion: "El ámbito exterior del vivenciar (Aussenbereich): el advenir al mundo y la orientación en el (notar sensorial, hacer-presente representativo, aprehensión pensante) y la conducta actuante (el obrar: instinto, experiencia, inteligencia, voluntad)."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 3. Abschnitt DER AUSSENBEREICH DES ERLEBENS, OCR lineas 15718-22192, paginas del libro aprox. 347-494."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -433,7 +433,7 @@ memoria experiencial (huellas infantiles, vínculos con seres amados perdidos);
 sobre la reproductiva se funda todo **saber** que puede ser traído al
 conocimiento.
 
-##### Formas del acaecer del recuerdo
+**Formas del acaecer del recuerdo**
 
 Tres distinciones se entrecruzan; su sucesión ontogenética marca el camino de
 la liberación del aquí-ahora.
@@ -455,7 +455,7 @@ balón perdido: reproduce la configuración sin conciencia temporal); 3) al fina
 no ligadas, citadas voluntariamente, marcadas: el **disponerse a recordar** del
 adulto. Agustín (*Confesiones* X) celebró este soberano despliegue de la memoria.
 
-##### Regularidades del acaecer del recuerdo (Gesetzmäßigkeiten)
+**Regularidades del acaecer del recuerdo (Gesetzmäßigkeiten)**
 
 El **recordar** (`Behalten`) se rige por:
 
@@ -514,7 +514,7 @@ El **recordar** (`Behalten`) se rige por:
   **asociacionismo libre** de Freud solo abre camino al inconsciente porque las
   representaciones asociadas forman un tejido de significatividad.
 
-##### Perturbaciones del recuerdo
+**Perturbaciones del recuerdo**
 
 **Del reconocimiento:** pérdida de la cualidad de familiaridad (Linneo no
 reconoce como propios sus escritos en la vejez; el sabio que rechaza una idea
@@ -556,7 +556,7 @@ A diferencia de la **Urphantasie** (preamplia, sin representación), la fantasí
 representativa opera con representaciones; pero ambas comparten lo esencial
 del concepto: **anticipación** (`Antizipation`) de lo todavía no presente.
 
-##### Formas
+**Formas**
 
 | Forma | Motivo | Notas |
 |---|---|---|
@@ -566,7 +566,7 @@ del concepto: **anticipación** (`Antizipation`) de lo todavía no presente.
 | **Fantasía planificadora** (`planende Phantasie`) | autoproyección en el futuro | doble cara epimeteica (retrospectiva) y prometeica (prospectiva) de la representación; el hombre "*vive en la visión por delante del minutero del tiempo real*" (Hartmann); base del **obrar** humano |
 | **Fantasía creadora (Realphantasie)** | — | cumbre evolutiva; anticipa lo real *sin* haberlo experimentado y sin mera proyección del pasado. Cognitiva: modo de **conocimiento** del mundo. Propia del poeta, del inventor técnico (Kekulé y el anillo bencénico), del fundador de estados, del estratega genial, del médico que capta el alma del otro. No expliciable psicológicamente; pide la hipótesis metafísica de un **microcosmos** del alma (Platón, Goethe: "*toda productividad de la más alta clase… son regalos inesperados, hijos puros de Dios*") |
 
-##### Bedeutung y proyección / evocación
+**Bedeutung y proyección / evocación**
 
 La fantasía es **medio conectivo** en ambas dimensiones: temporal (pasado,
 presente, futuro) y espacial (alma–mundo). Su función **creadora de mundo**
@@ -629,7 +629,7 @@ Tres, según la tradición lógica desde Aristóteles: **formación de conceptos
 **juicio**, **inferencia**. "*La lógica es una axiomática de la razón cuya ciencia
 experimental correlativa es la psicología*" (Piaget).
 
-##### Formación de conceptos (Begriffsbildung)
+**Formación de conceptos (Begriffsbildung)**
 
 **Concepto** — abstracción de rasgos generales comunes a varias apariciones
 particulares.
@@ -660,7 +660,7 @@ abstracción se ha dado. Al principio el niño sobre-extiende: llama "perro" al
 ternero, la vaca, el caballos (semejanza gestáltica mínima); con el crecimiento
 del vocabulario y el entrenamiento del distinguir se diferencian los conceptos.
 
-##### Juicio e inferencia (Urteilen und Schließen)
+**Juicio e inferencia (Urteilen und Schließen)**
 
 **Juicio.** Captación pensante de relaciones entre contenidos ya cogidos en
 conceptos. El concepto es compendio de un juicio (toda definición es juicio); el
@@ -865,7 +865,7 @@ instinto, experiencia, inteligencia (los tres purposivos) y la acción
 
 #### La acción en el aspecto del cumplimiento vital
 
-##### La acción instintiva (`Instinkthandlung`)
+**La acción instintiva (`Instinkthandlung`)**
 
 Caso emblema: la hembra del **curculionido del abedul** (`Birkenwickler`) corta
 en la hoja una curva matemática que permite enrollarla en cucurucho donde
@@ -908,7 +908,7 @@ madurez); en el hombre, juego e imitación son instintos que maduran tarde.
 Se habla con razón de personas **instinto-seguras** (más la mujer) y
 **instinto-empty**, según se acierte sin larga reflexión.
 
-##### La acción por experiencia (`Erfahrungshandlung`)
+**La acción por experiencia (`Erfahrungshandlung`)**
 
 La naturaleza **compensa** la pobreza instintiva humana dándole la **capacidad
 de experiencia** en grado superior. Se funda en la **memoria experiencial
@@ -947,7 +947,7 @@ gradual, no de principio. (Hull y Tolman, al usar "necesidad", "intención",
 "expectativa", abandonan el behaviorismo estricto, pues son conceptos
 vivenciales.)
 
-##### El comportamiento comprensivo (inteligente) (`einsichtiges Verhalten`)
+**El comportamiento comprensivo (inteligente) (`einsichtiges Verhalten`)**
 
 Aún **insight** separable del ensayo-error: el momento de tentativa ciega cede
 ante la **anticipación insightosa del éxito**. Caso emblema: los **chimpancés
@@ -986,7 +986,7 @@ capacidad personal de ajustarse a nuevas exigencias mediante uso propositivo
 de medios pensantes; su tarea (frente a la memoria) es hacer frente a
 exigencias nuevas"*. — Siempre **concepto de cumplimiento**.
 
-##### Las acciones propositivamente neutras (`zweckneutrale Handlungen`)
+**Las acciones propositivamente neutras (`zweckneutrale Handlungen`)**
 
 No toda acción sirve a la adaptación/inserción en el entorno. La otra gran
 clase: **actualizaciones de las gestalt-impulsionales** contenidas en los
@@ -1016,7 +1016,7 @@ contacto con el desagradable).
 
 #### La acción en el aspecto de la estructura psíquica
 
-##### La acción impulsional inmediata (`antriebsunmittelbare Handlung`)
+**La acción impulsional inmediata (`antriebsunmittelbare Handlung`)**
 
 Cuando el impulso se realiza sin solución entre tendencia y comportamiento
 — "en cortocircuito" —: lo que llamamos acción instintiva, afectiva, impulsiva.
@@ -1029,7 +1029,7 @@ inmediatas (el animal no se despega del dominio actual del instinto: solo
 resuelve la situación bajo el dictado de una tendencia presente). En el
 humano adulto, las intelectuales son mediadas por deliberación y plan.
 
-##### La acción volitiva: el concepto de querer (`Wollen`)
+**La acción volitiva: el concepto de querer (`Wollen`)**
 
 Doble sentido del término "querer":
 
@@ -1070,7 +1070,7 @@ directriz del comportamiento** superando resistencias. En esencia: **trato con
 resistencias**; pertenece al querer el toparse con resistencias y el dirigirse
 contra ellas.
 
-##### El desarrollo del querer
+**El desarrollo del querer**
 
 Aparece cuando se da un **vivencia del yo**. El lactante no tiene yo; este
 nace cuando el niño descubre que sus tendencias no se realizan en acto y
@@ -1098,7 +1098,7 @@ Luego el querer se **despliega** progresivamente desde la periferia al centro:
 En todos los niveles el querer se despliega **en una perturbación** del flujo de
 la realización impulsional.
 
-##### La acción volitiva simple (`einfache Willenshandlung`)
+**La acción volitiva simple (`einfache Willenshandlung`)**
 
 Cuando la meta impulsional es **única y sin competencia**. Frente a la acción
 impulsional inmediata, cuatro momentos:
@@ -1123,7 +1123,7 @@ impulsional inmediata, cuatro momentos:
    tiempo y más compleja la organización, mayor se abre la cisura entre
    tendencia y realización; la cisura aloja los momentos 1–3.
 
-##### La acción automatizada (`automatisierte Handlung`)
+**La acción automatizada (`automatisierte Handlung`)**
 
 La repetición de las subacciones voluntarias las convierte en hábito: la
 voluntad se retira y los movimientos parciales se integran en una **gestalt
@@ -1133,7 +1133,7 @@ motora total**. Fenomenológicamente se sitúa entre la impulsional inmediata
    mayoría de las voluntarias hay componentes impulsional-inmediatos y
    automatizados como subprocesos.
 
-##### La acción de elección (`Wahlhandlung`)
+**La acción de elección (`Wahlhandlung`)**
 
 Cuando **varias tendencias-meta** entran en competencia y se requiere
 **decisión** (`Entschluß`) por una tras deliberación. La elección tiene pues un
@@ -1152,7 +1152,7 @@ comportamiento con una meta.
 Tras la decisión, la elección sigue el curso de la voluntaria simple: empuque
 volitivo y organización del proceder.
 
-##### La libertad de voluntad (`Willensfreiheit`)
+**La libertad de voluntad (`Willensfreiheit`)**
 
 ¿Opera el querer ya en la decisión o solo tras ella? Dos posibilidades:
 
