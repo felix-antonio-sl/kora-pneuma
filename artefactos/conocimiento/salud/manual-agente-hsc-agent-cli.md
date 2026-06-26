@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.5
+version: 1.0.6
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
-fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8. Actualizado 2026-06-24 (v1.0.5, Cortes 3+4): forma normal canonica de la evolucion (texto=coalesce(historia,evolucion), plan_indicacion=coalesce(plan,indicacion), data_keys del sub-objeto, preservando los crudos; mata el falso 'sin evolucion' del jq contra el campo equivocado; auditoria F5) y procedencia de la ubicacion en handoff_view (ubicacion_source/diagnostico_admin_source en {estado-actual, unavailable}; un hueco no se lee como dato real; auditoria F4); sobre hsc-agent-cli@3b9f28d."
+fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8. Actualizado 2026-06-24 (v1.0.5, Cortes 3+4): forma normal canonica de la evolucion (texto=coalesce(historia,evolucion), plan_indicacion=coalesce(plan,indicacion), data_keys del sub-objeto, preservando los crudos; mata el falso 'sin evolucion' del jq contra el campo equivocado; auditoria F5) y procedencia de la ubicacion en handoff_view (ubicacion_source/diagnostico_admin_source en {estado-actual, unavailable}; un hueco no se lee como dato real; auditoria F4); sobre hsc-agent-cli@3b9f28d. Actualizado 2026-06-26 (v1.0.6, Corte 5): bundle ... --stream entrega el lote como NDJSON (una linea type:bundle por sub-envelope conforme cierra, en orden de completitud, + linea terminal type:summary con streamed:true y sin bundles[]); opt-in, aditivo, retrocompat, requiere >=2 handles; mata F3 (el lote atomico perdia todo en timeout). Cierra la auditoria del censo (Cortes 1-5). Agregado el suite de aceptacion scripts/eval-contrato-agente.sh (5 escenarios exigentes del contrato, casos vivos auto-descubiertos); sobre hsc-agent-cli@1f4e608."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -230,6 +230,26 @@ uno idéntico al bundle single (lee cada uno y compón; el sistema no resume). C
 componente cierra su propia identidad: un `identity_mismatch` marca SOLO ese handle
 en `summary.unsafe_handles`, no contamina al resto.
 
+**Entrega incremental con `--stream` (NDJSON).** Agrega `--stream` a cualquier
+sub-lote (`bundle <h1> <h2> ... --handoff --stream`) para recibir cada bundle
+**apenas cierra**, en vez de esperar a que todos terminen. La salida deja de ser un
+único objeto y pasa a ser **una línea JSON por sub-envelope**, en orden de
+**completitud** (no de petición):
+
+```
+{"type":"bundle","index":1,"handle":"hospitalizacion:sgh:<id>","envelope":{…}}
+{"type":"bundle","index":0,"handle":"hospitalizacion:sgh:<id>","envelope":{…}}
+{"type":"summary","streamed":true,"summary":{…}}   ← línea terminal, SIEMPRE la última
+```
+
+Cada línea `type:bundle` lleva el sub-envelope **intacto** en `envelope` (idéntico al
+bundle single) y su `index` (el orden de petición, para que reordenes si lo
+necesitas). La línea final `type:summary` trae el mismo `summary` mecánico del lote,
+**sin** `bundles[]` (ya los recibiste). Es opt-in, retrocompat y requiere ≥2 handles
+(con 1 → `usage_error`). Úsalo cuando un sub-lote es lento (SGH legacy ~62 s/paciente)
+y quieras ir trabajando cada paciente conforme llega, sin que un timeout del último te
+haga perder los ya computados. Procesa cada línea NDJSON por separado.
+
 **Epicrisis — pídela por HCC, no por el PDF SGH.** La epicrisis SGH
 (`hospitalizacion:sgh:<id>/doc/epicrisis`) **nace como TCPDF vacío** (caveat
 4.4.1): es un cascarón, el contenido nunca entró al PDF, así que **OCR no
@@ -341,3 +361,7 @@ un argumento, es que no aplica por diseño.
 - Doctrina y contrato público (SSOT de implementación): `~/projects/hsc-agent-cli/CLAUDE.md`.
 - Referencia técnica de endpoints upstream: `~/projects/hsc-agent-cli/docs/reference/`.
 - Estado operacional vigente: `~/projects/hsc-agent-cli/MEMORY.md` y el handoff vigente del repo.
+- **Suite de aceptación del contrato** (5 escenarios exigentes, casos vivos
+  auto-descubiertos; corre el binario y verifica el contrato de extremo a extremo):
+  `~/projects/hsc-agent-cli/scripts/eval-contrato-agente.sh`. Córrelo para confiar en
+  que el CLI honra lo que este manual promete antes de apoyarte en él.
