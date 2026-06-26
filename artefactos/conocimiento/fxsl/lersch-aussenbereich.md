@@ -4,7 +4,7 @@ nombre: lersch-aussenbereich
 version: 1.0.0
 estado: publicado
 descripcion: "El ámbito exterior del vivenciar (Aussenbereich): el advenir al mundo y la orientación en el (notar sensorial, hacer-presente representativo, aprehensión pensante) y la conducta actuante (el obrar: instinto, experiencia, inteligencia, voluntad)."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 3. Abschnitt DER AUSSENBEREICH DES ERLEBENS, OCR lineas 15718-22192, paginas del libro aprox. 347-494."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). Auditada contra imagen el 2026-06-26; FS=con-reservas; muestreo=págs.PDF-174-176,182-184,190-192,200-202,210-212,220-222,230-232,238-240,244-247 (27/73 págs.PDF). Reservas: tabla Hautsinne (págs.libro~350-355), tabla Ley de Weber (págs.libro~336-345) y sección Willensfreiheit/Kant (págs.libro~492-494) no cayeron en las páginas muestreadas y no se verificaron contra imagen; todo lo verificado mostró fidelidad alta. Seccion: 3. Abschnitt DER AUSSENBEREICH DES ERLEBENS, OCR lineas 15718-22192, paginas del libro aprox. 347-494."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -85,6 +85,8 @@ cutáneos —frío, calor, dolor y presión—. Densidades en la superficie corp
 | Presión / contacto (`Druck`) | 700 000 |
 | Frío (`Kälte`) | 250 000 |
 | Calor (`Wärme`) | 30 000 |
+
+<!-- DUDA AUDITORÍA 2026-06-26: Tabla de densidades cutáneas (dolor 1.200.000, presión 700.000, frío 250.000, calor 30.000). Las páginas del libro que contienen esta tabla (~350-355, PDF ~175-178) no formaron parte del muestreo; los valores provienen del OCR y no fueron verificados contra imagen. -->
 
 Por cm² hay ~12–13 puntos de frío y solo 1–2 de calor; los puntos de calor yacen
 más profundos. La asimetría es biológica: el frío suele ser más amenazante, de
@@ -251,6 +253,7 @@ tendencias, con sus **imágenes de búsqueda** (`Suchbilder`) preconscientes.
   lo que llamamos tal es solo atención no prestada aquí-ahora o un equilibrio de
   intereses. La diferencia entre círculo y rectángulo —preferencia gestáltica por
   estos— se explica porque simbolizan cosas con las que se rueda o construye.
+  <!-- DUDA AUDITORÍA 2026-06-26: Afirmación sobre preferencia gestáltica círculo/rectángulo ligada a simbolismo funcional no encontrada en las páginas muestreadas que cubren este pasaje (págs.libro 376-381). Posible adición sin asiento directo en el texto o ubicada en páginas no muestreadas de esta subsección. -->
 - La experiencia puede descubrir formas; pero para que el descubrimiento
   se viva como "¡ahí está!", un esquema preconsciente debe ya anticiparlo. La
   experiencia no obra sin la **Urphantasie**.
@@ -327,6 +330,8 @@ traducción** según el alfabeto del organismo. Tres grupos de leyes:
    | Peso, presión en la mano, simultáneo | 1 : 3 (100 g → +33 g) |
    | Peso, sucesivo | 1/15 a 1/20 |
    | Luz | 1 : 100 (100 velas Hefner → +1; 200 → +2) |
+
+   <!-- DUDA AUDITORÍA 2026-06-26: Valores de la tabla de Ley de Weber (cociente 1:3 presión simultánea; 1/15-1/20 sucesivo; 1:100 luz con velas Hefner). Las páginas del libro que contienen esta tabla (~336-345, PDF ~168-173) no fueron muestreadas; los valores provienen del OCR y no se verificaron contra imagen. El valor 1:3 para presión simultánea es inusualmente grueso respecto a valores estándar y merece verificación específica. -->
 
    La mayor sensibilidad diferencial de la vista respecto al tacto se corresponde
    con el papel rector del ojo en el humano. Significado vital: lo que se nota para
@@ -564,7 +569,7 @@ del concepto: **anticipación** (`Antizipation`) de lo todavía no presente.
 | **Fantasía de deseo** (`Wunschphantasie`) | tendencias frustradas | refugio antes de la realidad; sueños diurnos desde la prepubertad; el yo como centro; temas: autoafirmación, eroticidad, vivencia; "siempre más se asusta el hombre de la lucha por la vida" (McDougall); en exceso, reemplaza la acción y degrada en fantasía enfermiza |
 | **Fantasía de miedo** (`Furchtphantasie`) | miedo al destino (enfermedad, miseria, fracaso) | inversa de la de deseo: temores son "deseos con signo negativo" |
 | **Fantasía planificadora** (`planende Phantasie`) | autoproyección en el futuro | doble cara epimeteica (retrospectiva) y prometeica (prospectiva) de la representación; el hombre "*vive en la visión por delante del minutero del tiempo real*" (Hartmann); base del **obrar** humano |
-| **Fantasía creadora (Realphantasie)** | — | cumbre evolutiva; anticipa lo real *sin* haberlo experimentado y sin mera proyección del pasado. Cognitiva: modo de **conocimiento** del mundo. Propia del poeta, del inventor técnico (Kekulé y el anillo bencénico), del fundador de estados, del estratega genial, del médico que capta el alma del otro. No expliciable psicológicamente; pide la hipótesis metafísica de un **microcosmos** del alma (Platón, Goethe: "*toda productividad de la más alta clase… son regalos inesperados, hijos puros de Dios*") |
+| **Fantasía creadora (Realphantasie)** | — | cumbre evolutiva; anticipa lo real *sin* haberlo experimentado y sin mera proyección del pasado. Cognitiva: modo de **conocimiento** del mundo. Propia del poeta, del inventor técnico (Kekulé y el anillo bencénico) <!-- DUDA AUDITORÍA 2026-06-26: ejemplo de Kekulé no verificado contra imagen; págs.libro ~425-435 no muestreadas -->, del fundador de estados, del estratega genial, del médico que capta el alma del otro. No expliciable psicológicamente; pide la hipótesis metafísica de un **microcosmos** del alma (Platón, Goethe: "*toda productividad de la más alta clase… son regalos inesperados, hijos puros de Dios*") |
 
 **Bedeutung y proyección / evocación**
 
@@ -1061,7 +1066,7 @@ de **soberanía** (`Selbstherrlichkeit`) y **autonomía** (`Selbstbestimmung`).
 
 **El querer es función formal.** "*La voluntad es un mero instrumento formal
 que nada crea por sí, solo elige, inhibe y favorece lo que ya está sin ella*"
-(Jaspers). Es "**un simple cambio de agujas**" (Lindworsky), "**una unique
+(Jaspers). Es "**un simple cambio de agujas**" (Lindworsky), "**una única
 instalación de timón**" (Klages). El contenido del querer viene de las
 tendencias; el querer las gobierna. La igualación con lo endotímico nace de
 esta dependencia material — pero el querer es función específica: el yo toma
@@ -1162,6 +1167,7 @@ volitivo y organización del proceder.
 | **B** El querer decide como juez supremo, veta uno, da fiat a otro | Soberano, en **libertad** | **Libre** |
 
 La cuestión ha animado la disputa entre **determinismo** e **indeterminismo**.
+<!-- DUDA AUDITORÍA 2026-06-26: La sección completa de Willensfreiheit (págs.libro ~492-494, PDF ~246-247) no cayó en las imágenes visibles del muestreo (el rango 244-247 mostró págs.libro 484-491). Los argumentos sobre microfísica, las dos objeciones de Lersch y la síntesis kantiana provienen del OCR y no se verificaron contra imagen. -->
 Algunos pretenden derivar la libertad de la **ruptura causal en la microfísica**
 (imposibilidad de predecir el ángulo de desviación de un electrón). Doble
 objeción de Lersch: (1) la indeterminación microfísica puede ser un límite de

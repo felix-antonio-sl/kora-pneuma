@@ -4,7 +4,7 @@ nombre: lersch-endothymer-grund-gefuehlsregungen
 version: 1.0.0
 estado: publicado
 descripcion: "Los movimientos del sentir (Gefühlsregungen) del fondo endotímico: fenomenología y papel en la vida psíquica, las clases (del darse viviente, del ser-sí, transitivas, sentimientos del destino), combinaciones y diferencias individuales."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 2. Abschnitt Kap. 2 DIE GEFÜHLSREGUNGEN, OCR lineas 9939-13638, paginas del libro aprox. 218-300."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). Auditada contra imagen el 2026-06-25; FS=con-reservas; muestreo=págs.PDF-109-111,118-120,127-130,138-140,146-150 (17/41 págs.PDF); zonas-corrupción-OCR en límite del muestreo, no verificables directamente (primera zona: págs.libro~249, fuera de muestra; segunda zona: págs.libro~300+, justo al borde). Seccion: 2. Abschnitt Kap. 2 DIE GEFÜHLSREGUNGEN, OCR lineas 9939-13638, paginas del libro aprox. 218-300."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -103,7 +103,7 @@ Toda Anmutungserlebnis tiene dos estratos (cfr. Abb. 5):
        encolerizamos, etc.).
      - **Tiefe** (profundidad): cuántos sectores del psiquismo son alcanzados,
        «impregnados». Krueger: cuanto más profundo, más estructurante; los
-       sentimientos profundos «greeting in die seelische Substanz unserer
+       sentimientos profundos «greifen in die seelische Substanz unserer
        personalen Struktur». Una alegría profunda colorea también
        percepciones, pensamientos, pasado y futuro; un placer superficial
        queda en el momento.
@@ -167,11 +167,11 @@ movimiento del sentir listado puede llevar, como Oberton, la tematología del
 | **der Widerwille** | la repugnancia (leve) | lo *Unangenehme*, lo repelente | *Widerlust* aumentada | empujar lejos, volverse |
 | **der Ekel** / **die Abscheu** | el asco / la abyección | lo *Abstoßende* | sentirse rechazado, como si la sustancia propia debiera protegerse de «infección» por contacto | el *Sich-weg-wenden* domina; sólo se rechaza activamente si el volverse está impedido |
 | **das Vergnügen** (*Sichvergnügen*) | el recreo / entretenimiento | la *Gelegenheit* (ocasión para desplegar el *Spieltrieb*) | vivencia de libre, no inhibida *Entfaltung*; *Funktionslust*; componente de Genießen | *Sich-hinein-begeben*, *Sich-darin-umtun*; «hinein ins Vergnügen» |
-| **der Ärger** (*Sichverdrießen*) | la contrariedad / enojo | la perturbación de la marcha lisa, del *Funktionsablauf* libre | «algo me roe»; *Mimut*, *Verdrossenheit*, *Verbitterung* si se cronifica | agresividad impotente contra entorno y con-semejantes; protesta impotente que se descarga en el *Ressentiment* |
+| **der Ärger** (*Sichverdrießen*) | la contrariedad / enojo | la perturbación de la marcha lisa, del *Funktionsablauf* libre | «algo me roe»; *Mißmut*, *Verdrossenheit*, *Verbitterung* si se cronifica | agresividad impotente contra entorno y con-semejantes; protesta impotente que se descarga en el *Ressentiment* |
 | **die Freude** (*Sichfreuen*) | la alegría | un *Daseinsgewinn* (cosa, ser o acontecimiento) con rostro de claridad, luz, regalo; dice tácita: «da ist es» | *Überhellung* y *Aufschwung* del aquí-ahora; sentimiento de *Glück* (no aplicable a Lust o Vergnügen: demasiado anspruchsvoll) | abrirse, abarcar, donarse (*Sich-verschenken*); «Seid umschlungen, Millionen» |
 | **die Trauer** (*Trauern*) | la tristeza | el *Nichtsein* o *Nichtmehrdasein* de algo; pérdida de plenitud y sentido de Dasein | sombra, vacío, entrega a la pobreza de la propia existencia; contiene dolor pero no se reduce a él | cerrarse, *Abseits-gehen*; contragesto del abrazo de la alegría |
 | **das Entzücken** | el arrobamiento | (como la alegría, pero en modo extático) | forma extática de la alegría: arrebatamiento; Aufschwung erregado del darse viviente; el ser-sí es **suscitado** a una vida acrecentada en el otro | ser arrebatado fuera del propio ser-sí |
-| **das Entsetzen** | el espanto | algo con referencia a la muerte (negación de la vida); también ante daño a un tercero (crimen, desgracia) | la voz de la vida en nosotros responde a lo que **aún no** amenaza al Dasein individual sino a la vida en cuanto tal; el fondo vital se conmueve ante la presencia de la muerte | *Sich-schütteln* (sacudirse, para sacudir el contacto con la muerte y lo desfigurado) |
+| **das Entsetzen** | el espanto | algo con referencia a la muerte (negación de la vida); también ante daño a un tercero (crimen, desgracia) que puede **no tener relación alguna** con el Dasein individual | la voz de la vida en nosotros responde a lo que afecta a la vida en cuanto tal, no al ser-sí individual; el fondo vital se conmueve ante la presencia de la muerte | *Sich-schütteln* (sacudirse, para sacudir el contacto con la muerte y lo desfigurado) <!-- DUDA AUDITORÍA 2026-06-25: Antriebsgestalt «Sich-schütteln» no verificable; texto del libro pág. 239 se interrumpe en «die Stimme des Lebens in uns, die im Ent-», continuación fuera del muestreo --> |
 
 Notas:
 
@@ -286,7 +286,7 @@ confunde:
 |---|---|---|
 | **Nacherleben** (nach Scheler y Vierkandt) | reproducción empathizante de los actos psíquicos ajenos: conocimiento captante, del orden del Miteinandersein | condición necesaria del Mitfühlen pero no idéntica a él: «puedo nachfühlt muy bien, pero no tener Mitgefühl». Es teórico-distante, sin Wertergriffenheit. |
 | **Gefühlsansteckung** | quedar arrastrado por una oleada afectiva ajena (llorar con los que lloran; masenpsychológicamente: pánico, exaltación de masa) | sumersión pasiva en una ola que trasciende a los individuos, no dirección a un **Du**. Schopenhauer y Nietzsche confunden esta Scheinform con el Mitleid. |
-| **Scheinmitleid** (cfr. Augustinus) | el que **goza** en su propia generosidad de helper | meta última es la propia complacencia, no el bien del otro |
+| **Scheinmitleid** (cfr. Augustinus) <!-- DUDA AUDITORÍA 2026-06-25: atribución a Augustinus no encontrada en págs. libro 258-259 visibles en muestra; podría estar en páginas adyacentes no muestreadas [pág. libro ~260-262] --> | el que **goza** en su propia generosidad de helper | meta última es la propia complacencia, no el bien del otro |
 
 Carácter del **Mitgefühl auténtico**:
 
@@ -494,7 +494,7 @@ característico es la **no-unitariedad**, la zwiespältigkeit.
 
 **Ambivalenz der Gefühle** (Bleuler): el mismo objeto tiene valencia endotímica
 doble y opuesta, y dispara intenciones de comportamiento contradictorias. El
-**Tabu** de los primitivos es modelo. Caso extremo: la **Halbliebe** — Liebe
+**Tabu** de los primitivos es modelo. Caso extremo: la **Haßliebe** — Liebe
 vuelta Haß porque su esfuerzo hacia el otro fue decepcionado, sin poder sin
 embargo soltar al otro (ejemplos en Strindberg). Sólo es posible donde la Liebe
 no ha alcanzado su altura plena (cuando ha dejado todavía bajo sí los últimos
@@ -549,9 +549,9 @@ Ansprechbarkeit que el adulto.
 
 **Die Empfindsamkeit** — Sonderform elevada de Ansprechbarkeit en el ámbito del
 Gemüt: reacciona a los matices más finos del cambio de impresiones (como un
-sismógrafo), pero con **pasividadidad** pura: es «inundado» por las impresiones
+sismógrafo), pero con **pasividad** pura: es «inundado» por las impresiones
 y no recibe de ellas impulsos activos hacia fuera; las Gefühlsregungen no se
-convierten en Handlungen. Lleva always en sí una *Zartheit* hacia adentro y una
+convierten en Handlungen. Lleva siempre en sí una *Zartheit* hacia adentro y una
 cierta resistencia perdida frente a las impresiones.
 
 ### d) Die Tiefe des Erlebens

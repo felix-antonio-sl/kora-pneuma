@@ -4,7 +4,7 @@ nombre: lersch-tektonik-der-person
 version: 1.0.0
 estado: publicado
 descripcion: "La tectónica de la persona (Tektonik): la integración y las perturbaciones entre fondo endotímico y superestructura personal: la acentuación unilateral de las capas, la disociación (y el sueño como compensación), y la autenticidad/inautenticidad."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 5. Abschnitt DIE TEKTONIK DER PERSON, OCR lineas 23806-26754, paginas del libro aprox. 530-593."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. Auditada contra imagen el 2026-06-26; FS=con-reservas; muestreo=págs.PDF-265-268,272-275,278-281,284-287,290-297 (18/32 págs.PDF). Seccion: 5. Abschnitt DIE TEKTONIK DER PERSON, OCR lineas 23806-26754, paginas del libro aprox. 530-593."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -128,6 +128,7 @@ desde la vigilia de la superestructura a la capa endotímica**, entregado a sus
 vivencias *pathisch*. Fenomenología por **contraste con el *Tagesbewußtsein***
 (conciencia diurna vigilante):
 
+<!-- DUDA AUDITORÍA 2026-06-26: tabla fenomenológica Tagesbewusstsein vs. Traum — libro ~536-539, págs.PDF ~270-271 no leídas en imagen; contenido no verificable contra imagen. -->
 | Dimensión | *Tagesbewußtsein* | *Traum* |
 |---|---|---|
 | **Espacio/tiempo** (Kant) | mantienen lo dado en orden de lo junto-junto y lo uno-tras-otro; estabilidad | caen como las trabas de una carpa; saltos de escena; pasado y presente se imbrican; el tiempo puede acelerarse enormemente (horas en segundos) |
@@ -224,6 +225,7 @@ contrapeso del querer director/frenante del Oberbau.
 | **Hombre de impulso** (*triebhaft*, «antriebsunmittelbar» ≈ *impulsiv*; Klages/Schneider) | responde a **todos** los impulsos —no sólo los animales (hambre, *Sexus*), también los de valencia, venganza, amor, odio, compasión, entusiasmo— con **reacción inmediata**, sin *Hiatus* de reflexión ni freno del querer | forma sobrealzada hasta lo anormal: los **«explosiblen Psychopathen»** (K. Schneider: «las funciones geistgeleiteten de regulación no resisten el asalto de abajo»); la mujer, en promedio, más *triebhaft* que el hombre |
 | ***Willensmensch*** | la **koppelung** de la función voluntiva a impulsos específicos del fondo endotímico se reduce a un mínimo y la **disponibilidad libre** del querer alcanza un máximo: el querer se vuelve **aparato** no-especializado, aplicable a cualquier mandato del *Ich* | puede volverse **caricatura de la autonomía** del *Ich*, perjudicando al alma por perder la conexión con el fondo endotímico (única fuente de plenitud y empuje) |
 
+<!-- DUDA AUDITORÍA 2026-06-26: sección Kiriloff (libro ~548-551, págs.PDF ~275-276) no leída en imagen; detalles (cadáver "petrificado", mordida del dedo, escena culminante) no verificables contra imagen. -->
 La **sobre-hiperbolización ideal-típica** del *Willensmensch*: **Kiriloff** en
 *Los demonios* de Dostoievski. Obsesionado con probar la no-existencia de Dios
 mostrando la **soberanía absoluta de la voluntad** mediante el suicidio, y
@@ -394,6 +396,7 @@ aparece **enmascarado/simbólico**. Freud distingue así:
   adecuado (adulterio → fractura de pierna/brazo).
 - ***Traumsymbolik*** — símbolos (Freud: mayoría sexuales):
 
+<!-- DUDA AUDITORÍA 2026-06-26: tabla de símbolos freudianos — libro ~560-562, págs.PDF ~281-282 no leídas en imagen; items y orden no verificables contra imagen. -->
 | Referente | Símbolos freudianos |
 |---|---|
 | Genitales masculinos | bastones, paraguas, el **número 3**, pértigas, árboles, grifos, regaderas, surtidores |
@@ -492,8 +495,8 @@ siente la **necesidad** de estar triste (como deuda de gratitud); se esfuerza co
 buena voluntad, sabe lo que es penar, pero la pena queda *externa, vacía, hueca,
 sin sustancia*; no logra hacer subir el contenido desde el fondo. **Gottfried
 Keller** (*Der grüne Heinrich*): el héroe, al saber de la muerte del Meierlein
-(que lo había calumniado), reza un торtuoso «padre nuestro» construido, «mas lo
-íntimo del corazón reía y estaba contento»; la participation póstuma fue «más flor
+(que lo había calumniado), construye apresuradamente una tortuosa oración confusa<!-- DUDA AUDITORÍA 2026-06-26: el original (libro 566) dice "rasch ein künstliches und verworrenes Gebet" — un Gebet (oración) genérico; la especificación "padre nuestro" del OCR no tiene asiento en el texto alemán; corregido a "oración confusa". -->, «mas lo
+íntimo del corazón reía y estaba contento»; la participación póstuma fue «más flor
 del entendimiento que del corazón». El **«corazón más íntimo, que no se deja
 mandar»** marca el déficit de *Innerlichkeit*.
 
@@ -692,8 +695,8 @@ el «parecer más de lo que se es» (Jaspers). Klages y E. R. Jaensch la sitúan
 en sus sistemas — Klages acentúa el **Geltungsstreben**, Jaensch el
 **Erlebnishunger con Erlebnisimpotenz**.
 
-- **Klages**: el **grunde-sencia del histérico** es **causar impresión a cualquier
-  precio** (asombro, admiración, o incluso repugnancia, horror, desprecio). Su
+- **Klages**: el ***Grundwesen*** del histérico es **causar impresión a cualquier
+  precio**<!-- DUDA AUDITORÍA 2026-06-26: el OCR reconstruyó "grunde-sencia" (híbrido malformado); el original (libro 584) dice "das Grundwesen des Hysterikers" — corregido a *Grundwesen*. --> (asombro, admiración, o incluso repugnancia, horror, desprecio). Su
   **tragedia** es la **falta de *Gestaltungskraft*** — no puede producir imágenes
   expresivas/impresionantes desde la fuerza de su sustancia. Del desajuste entre
   voluntad de impresión y fuerza plástica del vivir propio resulta que **adopta
@@ -853,10 +856,10 @@ fuerzas plásticas inconscientes de la vida**, desde las que la existencia human
 se yergue en la claridad del Dasein consciente. «Sustancia anímica» y «hondura
 del grund del alma» son sólo **indicaciones de lo inexplicable** de la fuerza
 creadora en que el Dasein viviente está enraizado y que es ya **un allende de la
-conciencia**. Schopenhauer (*Parerga*, § 340): «todo lo originario y por tanto
+conciencia**. Schopenhauer (*Parerga*, § 340): «todo lo originario (*das Ursprüngliche*) y por tanto
 todo lo auténtico en el hombre obra como tal, como las fuerzas naturales,
 **inconscientemente**; lo que ha pasado por la conciencia se vuelve
-representación… sólo lo innato es auténtico y resistente». Frost: «la naturaleza
+representación… sólo lo originario es auténtico y resistente».<!-- DUDA AUDITORÍA 2026-06-26: el OCR había vertido "Ursprüngliche" como "lo innato"; el original (libro 591) dice "alles Ursprüngliche" (lo originario/primordial), no "das Angeborene/Eingeborene" (lo innato/hereditario). Distinción filosófica relevante. Corregido. --> Frost: «la naturaleza
 **inconscientemente obrante** en el hombre», de la que provienen la auténtica arte
 y la auténtica *Liebenswürdigkeit* — «postulamos simplemente que debe haber algo
 que, independiente de intelecto y voluntad, … obre».

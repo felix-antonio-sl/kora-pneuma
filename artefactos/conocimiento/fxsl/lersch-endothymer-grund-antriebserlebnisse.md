@@ -4,7 +4,7 @@ nombre: lersch-endothymer-grund-antriebserlebnisse
 version: 1.0.0
 estado: publicado
 descripcion: "Las vivencias pulsionales (Antriebserlebnisse: pulsiones y tendencias) del fondo endotímico: las tres clases (del darse viviente, del ser-sí individual, del ser-más-allá-de-sí), su multiplicidad, convergencia/divergencia, suerte individual y fuerza."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 2. Abschnitt Kap. 1 DIE ANTRIEBSERLEBNISSE, OCR lineas 5487-9938, paginas del libro aprox. 121-217; §4-7 reexpandidos 2026-06-25 contra OCR."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. Auditada contra imagen el 2026-06-25; FS=con-reservas; muestreo=págs.PDF-61-63,72-74,84-86,93-95,100-102,106-109 (18/48 págs.PDF). Seccion: 2. Abschnitt Kap. 1 DIE ANTRIEBSERLEBNISSE, OCR lineas 5487-9938, paginas del libro aprox. 121-217; §4-7 reexpandidos 2026-06-25 contra OCR."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -374,6 +374,8 @@ originario: toda agresión observable es medio de otra tendencia:
 
 ## La multiplicidad de las vivencias pulsionales (§4)
 
+<!-- DUDA AUDITORÍA 2026-06-25: §4 completo (págs. libro aprox. 204-209, PDF ~103-105) NO verificado contra imagen. El muestreo del protocolo asignó PDF 84-86 a este § pero esas páginas corresponden aún a §3 (libro pp. 166-171: Geltungssucht, Anspruchsniveau); desfase por subestimación de la longitud de §3. Quedan sin auditar directamente: apertura «la articulación está cerrada» / «todo polifónico», Aclaración contra malentendidos + ψεῦδος darwiniano, Crítica al monismo (cita Planck, analogía calor/fuerza hidráulica, metáfora sinfonía), corrección por Todestrieb, síntesis de pluralidad de tendencias autónomas, y el «concierto de las tendencias». -->
+
 La articulación de pulsiones y tendencias humanas está cerrada: tres clases como
 direcciones fundamentales de la dinámica anímica en cuya temática el Dasein
 humano se reconoce como **todo polifónico**. Cada temática es el esquema aún no
@@ -475,6 +477,8 @@ asumir la dirección**, o bien que en el conjunto del curso vital algunas de est
 tendencias **dominan temáticamente**.
 
 ## Convergencia y divergencia de las tendencias (§5)
+
+<!-- DUDA AUDITORÍA 2026-06-25: §5 completo (págs. libro aprox. 205-209, PDF ~104-105) NO verificado contra imagen. El muestreo del protocolo asignó PDF 93-95 a este § pero esas páginas corresponden a §3 (libro pp. 184-189: Gesinnungen, Aggressionstrieb); mismo desfase que §4. Quedan sin auditar directamente: cita de Fausto «dos almas en el pecho», referencia a Lückert Konfliktpsychologie 1957 y «konfliktträchtiges Wesen», ejemplos de convergencia Tätigkeitsdrang/ser-más-allá, pronunciada divergencia Egoismus/Füreinanderseins, y la tesis de la psiconeurosis como conflicto exacerbado. -->
 
 Ahora bien, con la imagen del concierto de las tendencias no debe asociarse la
 representación de una armonía incondicional, de una consonancia siempre dada.
@@ -803,6 +807,7 @@ Y aplicamos estos conceptos siempre a **determinadas especies** de tendencias:
 | **Leidenschaft** (pasión) | tendencias del ser-más-allá-de-sí | un afán apasionado de configuración (*leidenschaftlicher Gestaltungsdrang*), una apasionada disposición al compromiso social (*leidenschaftliche soziale Einsatzbereitschaft*). |
 | **Fanatismus** (fanatismo) | tendencias **normativas** del ser-más-allá-de-sí | *Wahrheitsfanatiker* (fanático de la verdad), fanático del deber (*Fanatiker der Pflicht*). En la figura de **Michael Kohlhaas** ha representado Kleist el caso ejemplar del afán de justicia elevado al fanatismo. |
 
+<!-- DUDA AUDITORÍA 2026-06-25: la oración que sigue NO aparece en el PDF (edición 1970, pág. libro 215). El cap. 1 («Die Antriebserlebnisse») termina en el original con la frase sobre Michael Kohlhaas («In der Gestalt des Michael Kohlhaas hat Kleist den exemplarischen Fall des zum Fanatismus gesteigerten Gerechtigkeitsstrebens dargestellt.»), seguida inmediatamente del encabezado «2. Kapitel — Die Gefühlsregungen». No hay párrafo de cierre adicional. Adición no fundada: posible síntesis del productor a partir del inicio de §7 (libro p. 213: «Je größer die Kraft einer Triebfeder ist, desto mehr sucht sie die Führung im seelischen Leben zu übernehmen»); verificar contra edición 1966 antes de eliminar. -->
 Cuando en el corte transversal de la presencia y en el corte longitudinal del
 curso vital la intensidad y la persistencia se unen, la tendencia en cuestión
 cobra un **poder de penetración** en la vida anímica que la convierte en

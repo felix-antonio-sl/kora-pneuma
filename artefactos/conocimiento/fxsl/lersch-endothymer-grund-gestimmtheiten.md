@@ -4,7 +4,7 @@ nombre: lersch-endothymer-grund-gestimmtheiten
 version: 1.0.0
 estado: publicado
 descripcion: "Los temples estacionarios (stationäre Gestimmtheiten) del fondo endotímico: el sentimiento vital (estados corporales, humores, formas de excitación), el sentimiento de sí (poder propio, valor propio) y el sentimiento del mundo."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 2. Abschnitt Kap. 3 DIE STATIONÄREN GESTIMMTHEITEN, OCR lineas 13639-15717, paginas del libro aprox. 301-346."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. Auditada contra imagen el 2026-06-25; FS=con-reservas; muestreo=págs.PDF-151-153,157-159,163-165,169-173 (15/22 págs.PDF). Seccion: 2. Abschnitt Kap. 3 DIE STATIONÄREN GESTIMMTHEITEN, OCR lineas 13639-15717, paginas del libro aprox. 301-346."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -15,7 +15,7 @@ depende: [urn:fxsl:kb:lersch-estratificacion]
 
 # Los temples estacionarios del fondo endotímico
 
-Las «*stationären Gestimmtheiten*» (templos estacionarios, estados de ánimo) son
+Las «*stationären Gestimmtheiten*» (temples estacionarios, estados de ánimo) son
 el estrato más profundo —accesible a la experiencia— del «*endothymer Grund*»
 (fondo endotímico). A diferencia de las «*Strebungen*» (tendencias) y las
 «*Gefühlsregungen*» (reacciones de sentimiento), que son procesos que se
@@ -109,6 +109,7 @@ enfermedad corporal que su sentimiento vital se contrae sobre la conciencia de
 su estado psicosomático (Goethe sobre Herder, con dolorosa enfermedad ocular:
 «el peso de su humor contradictorio, amargo, mordaz provenía sin duda de su
 mal… no se observa bastante el efecto moral de los estados enfermizos»).
+<!-- DUDA AUDITORÍA 2026-06-25: cita de Goethe sobre Herder (enfermedad ocular) — pág. libro ~305-306 (PDF 153-154) fuera del muestreo; no verificada contra imagen. -->
 
 ### Los humores («*die Stimmungen*»)
 
@@ -140,7 +141,10 @@ jovialidad. Del lado no-alegre: tristeza, mal humor.
 | **«*Traurigkeit / Schwermut*»** (tristeza / melancolía) | no-alegre | oscuridad interior (Lenau: «negra por todos lados está mi alma»; «*Trübsinn*»); laxitud y pobreza de vida, un plegarse hacia la muerte; depresión, vacío, peso interior (de ahí «*Schwermut*», «*Niedergeschlagenheit*», «corazón pesado»); expresión corporal: movimientos parcos, lentos, arrastrados (Grillparzer: «insoportable tibio arrastre»; «*schlappen, geisttötenden Einerlei*») | el mundo se vuelve pobre y lejano, en la «lejanía del desinterés»; optimismo paralizado; mínima disponibilidad para obrar; imposible el goce vital que Mörike pinta; pero aún capaz de simpatía y bondad bajo demanda (Rosalinda a Celia, *Como gustéis*), aún capaz de una sonrisa | cansancio, laxitud |
 | **«*Mimut / Verdrossenheit*»** (mal humor / displicencia) | no-alegre | también falta de distensión, anchura y luz interior; pero añadida **hostilidad y reactividad irritada** contra entorno y sememejantes; siempre en peligro de *sich ärgern* (enojarse), lo que acopla el temple con la reacción de sentimiento del *Ärger* | cobra al mundo la factura de su propia no-alegría; *reizbar* (irritable), propenso al desagrado y la agresión; sin bondad (la bondad le es esencialmente ajena); hiel de insatisfacción, amargura por decepción, rencor, envidia contra quien tiene más motivos de alegría; stirn de *ressentiment* que amarga y envenena | — |
 
-**Sentido antropológico de la tristeza**: lo que se experience es el anhelo
+<!-- DUDA AUDITORÍA 2026-06-25: citas de Grillparzer «insoportable tibio arrastre» y «schlappen, geisttötenden Einerlei» (fila Traurigkeit, col. rasgo fenoménico) no verificadas contra imagen — en pág. libro 312 (PDF 157) el único Grillparzer visible es «Mein Herz ist teilnahmslos geworden, mich interessiert kein Mensch, kein Genuß, kein Gedanke, kein Buch.», que versa sobre la desvitalización del interés, no sobre la expresión corporal. Las citas del KB podrían ser de pág. libro 307-309 (no muestreadas) o atribuidas erradamente. -->
+<!-- DUDA AUDITORÍA 2026-06-25: término «Euphorie» en el encabezado de la fila Lustigkeit/Vergnügtheit — pág. libro 309-311 (sección específica Lustigkeit) no muestreada; en pág. libro 315 (PDF 158) sólo aparece «Vergnügtheit» como polo de la escala de Launenhaftigkeit. No se puede confirmar que Lersch use «Euphorie» como término agrupador. -->
+
+**Sentido antropológico de la tristeza**: lo que se experimenta es el anhelo
 insatisfecho de contenidos de sentido del mundo en que el Dasein encuentre un
 arranque y su propia plenitud; el Dasein puesto en un mundo vacío de sentido y,
 a la vez, atravesado por la pregunta no formulada por tales contenidos —eso es
@@ -198,7 +202,11 @@ formas fundamentales:
 | **«*Weltangst*» / angustia existencial** (angustia del mundo) | más honda: la humanización misma. El hombre, hijo de la naturaleza, se desligó de ella para dominarla y se volvió excéntrico respecto de su ritmo; el estadio técnico-mecanizado es la fase tardía de esa pérdida de la unidad simbiótica con el mundo. Sólo el estadio superior de la conciencia religiosa puede compensarla | el *In-der-Welt-sein* como tal (Heidegger): el mundo se vuelve *unheimlich* (siniestro), se pierde como espacio del Dasein; retroceso ante el mundo como todo, un retroquerer hacia el seno materno protector | anónima: el Dasein bajo la sombra de un *Nichts* (nada) innominado; el lenguaje llega aquí a sus límites (el *Nichts* no puede objetivarse). Lleva una componente de sentimiento del mundo |
 | **«*Binnenangst*»** (angustia interior) | del entramado interno de la persona: se instala cuando en el todo de la persona algo no está en orden y hay una disonancia interna; el ritmo de la vida interna y con él la totalidad personal están perturbados. Fuentes: represión de la conciencia de culpa (Kierkegaard; profundizada por la psicología de profundidades); vida al margen de la propia conciencia; vivir en la prisa «sólo a lo ancho», perder el centro y volverse excéntrico respecto de sí; no entrar en juego como todo en lo que se hace; toda vida no vivida y toda vida falsa | — | también anónima; pierde fuerza en la medida en que se logra hacer conscientes los fondos en que se basa |
 
+<!-- DUDA AUDITORÍA 2026-06-25: fila Binnenangst completa — pág. libro 318-319 (PDF 160-161) fuera del muestreo. Las fuentes específicas («vivir en la prisa», «excéntrico respecto de sí», referencias a Kierkegaard, psicología de profundidades) no pudieron verificarse contra imagen. -->
+
 #### El éxtasis («*die Ekstase*»)
+
+<!-- DUDA AUDITORÍA 2026-06-25: sección Éxtasis completa (págs. libro 319-321, PDF 160-162) fuera del muestreo; ninguna afirmación de esta sección fue verificada contra imagen, incluida la fórmula «pura estatalidad» y la interpretación dionisíaca/sexual. -->
 
 Imagen polar contraria de la angustia; la cumbre más alta del sentimiento vital.
 Su sentido etimológico *ἔκστασις* indica un salir de los límites de la
@@ -242,7 +250,7 @@ vivir.
 - **todo hombre** tiene acceso al éxtasis, incluso sin ser capaz de las
   exitas de comunidades religioso-cultuales, a saber en el acto de la **génesis
   corporal**, en el orgasmo del encuentro sexual: también aquí un rapto de la más
-  alta y originaria vivacidad se experience como desaparición de los límites de la
+  alta y originaria vivacidad se experimenta como desaparición de los límites de la
   individuación, como inmersión en un fondo vital preindividual (de ahí la
   interpretación metafísica del amor sexual en Hegel y E. v. Hartmann). Prueba:
   en el centro de aquellos festejos dionisíacos, cuya *Ecstasis* desvanecía lo
@@ -339,6 +347,7 @@ Distinción natural: **elevado** (positivo) frente a **deprimido / perturbado** 
 
 **Tipos del sentimiento de valía propia elevado**
 
+<!-- DUDA AUDITORÍA 2026-06-25: tabla de tipos del Selbstwertgefühl elevado (págs. libro 328-334, PDF 166-168) fuera del muestreo. Ninguna de las caracterizaciones individuales (incrítico, daimónico, aristocrático, narcisista, sachlich-mittelbar, no-auténtico) fue verificada contra imagen. -->
 
 | Tipo | Haltung (actitud) | Fundamento | Riesgo / caricatura |
 |---|---|---|---|

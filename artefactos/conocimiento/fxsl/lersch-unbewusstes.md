@@ -4,7 +4,7 @@ nombre: lersch-unbewusstes
 version: 1.0.0
 estado: publicado
 descripcion: "El problema del inconsciente (das Unbewusste): los grados de actualidad del vivenciar y los seis significados del concepto de inconsciente; más el cierre de la obra sobre la psicología profunda y la unidad de la psicología."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: 6. Abschnitt DAS PROBLEM DES UNBEWUSSTEN + ABSCHLUSS, OCR lineas 26755-29009, paginas del libro aprox. 594-641."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS declarada por productor: 100% (ley/4). Auditada contra imagen el 2026-06-26; FS=con-reservas; muestreo=págs.PDF-297-300,304-307,310-321,322 (22/24 págs.PDF). Seccion: 6. Abschnitt DAS PROBLEM DES UNBEWUSSTEN + ABSCHLUSS, OCR lineas 26755-29009, paginas del libro aprox. 594-641."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -46,6 +46,7 @@ viviente y, por tanto, psicológicamente observable. Hay **cuatro grados de
 actualidad** del cumplimiento de la existencia humana, dispuestos en **pirámide**
 (base: la vida; cúspide: la *Bewußtheit*): cada grado presupone y se funda en el
 anterior, y cada uno es más estrecho que el que lo sostiene.
+<!-- DUDA AUDITORÍA 2026-06-26: La metáfora explícita de "pirámide" no pudo verificarse contra imagen en las págs. leídas; el desarrollo completo de los cuatro grados está en págs.libro 598-603 = págs.PDF 300-302, fuera del muestreo. La estructura cuádruple y la relación fundante son confirmadas; "pirámide" puede ser síntesis del KB o término explícito de Lersch en esas páginas no cubiertas. Pág.libro ~598-603] -->
 
 | Grado (*Aktualitätsstufe*) | Definición | Marca operativa |
 |---|---|---|
@@ -411,6 +412,7 @@ que ella constituye.
 > fuerte descarga afectiva; tras expresar su enojo pidió beber, bebió sin
 > impedimento una gran cantidad y despertó con el vaso en los labios. El
 > trastorno quedó curado para siempre.
+<!-- DUDA AUDITORÍA 2026-06-26: El original alemán usa "englische Gesellschafterin" (dama de compañía, acompañante), no "Erzieherin/institutriz" (gobernanta/educadora). "Gesellschafterin" = mujer que hace compañía, rol sin responsabilidad educativa; "institutriz" = gobernanta con rol educativo. Son roles distintos. La traducción "institutriz" puede seguir la convención del psicoanálisis en español (p. ej. ediciones Amorrortu), pero es técnicamente imprecisa respecto al alemán de Lersch. Pág.libro 626] -->
 >
 > **Interpretación.** La antipatía hacia la institutriz fue reprimida por la
 > consciencia orientada a las reglas de buena educación; sobre todo se reprimió
@@ -509,7 +511,7 @@ reconocer una especie más: el **inconsciente colectivo**.
 > pues, una reminiscencia del mordisco bíblico.
 >
 > **¿Cómo llegó esa representación al alma?** "El conocimiento bíblico consciente
-> del paciente era mínimamente lamentable. Probablemente oyó una vez sin pensar
+> del paciente era un mínimo lamentable. Probablemente oyó una vez sin pensar
 > nada del mordisco en el talón de la serpiente y lo olvidó. Pero algo
 > profundamente inconsciente en él lo oyó y no lo olvidó, sino que lo recordó a
 > la ocasión oportuna, un pedazo de inconsciente que ama expresarse mitológicamente

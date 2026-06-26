@@ -4,7 +4,7 @@ nombre: lersch-lebensgrund
 version: 1.0.0
 estado: publicado
 descripcion: "El fundamento vital (Lebensgrund): el acaecer orgánico-corporal como condición de la vida psíquica, la unidad cuerpo-alma, el espejamiento de la persona en el fundamento vital y el vivir de dicho fundamento."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstrucción del alemán a traducción canónica es-CL a destilación kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Sección: 1. Abschnitt DER LEBENSGRUND, OCR líneas 4872-5486, páginas del libro aprox. 107-121."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstrucción del alemán a traducción canónica es-CL a destilación kb. FS=con-reservas (auditada contra imagen el 2026-06-26; muestreo=págs.PDF-54-61, cobertura completa del rango). Sección: 1. Abschnitt DER LEBENSGRUND, OCR líneas 4872-5486, páginas del libro aprox. 107-121."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -70,8 +70,8 @@ paratiroides, suprarrenales, páncreas, tracto gastrointestinal, gónadas
 masculinas y femeninas— muestra que las condiciones del quimismo sanguíneo
 determinan decisivamente la apariencia humana, tanto psíquica como corporal.
 La insuficiencia suprarrenal (enfermedad de Addison) produce psíquicamente una
-fuerte disminución y fatigabilidad de los impulsos, irritabilidad, depresión e
-insomnio.
+fuerte disminución y fatigabilidad de los impulsos, irritabilidad,
+depresión<!-- DUDA AUDITORÍA 2026-06-26: el original dice «depressiver Verstimmung» (disforia depresiva / estado depresivo), no «Depressionen» (depresión clínica). La traducción «depresión» sobrecarga el término. Pág. libro 108. --> e insomnio.
 
 Las gónadas desempeñan un papel especial en el habitus psíquico:
 
@@ -84,10 +84,10 @@ Las gónadas desempeñan un papel especial en el habitus psíquico:
 No solo en cuadros caracterológicos habituales, también en estados y procesos
 psíquicos agudos se manifiesta el efecto de procesos químico-fisiológicos:
 
-- Cocaína, opio, hachís → «paraísos artificiales» (Baudelaire)[^15]
+- Cocaína, opio, hachís → «paraísos artificiales» (Baudelaire)<!-- DUDA AUDITORÍA 2026-06-26: en el original alemán el [^15] aparece al final de la oración que cierra con los Fliegenpilzen (Wutanfälle), no específicamente tras Baudelaire. La referencia Reko+Huxley cubre el bloque entero. Pág. libro 109. -->
 - Bromuro de sodio → efecto calmante sobre una excitación existente
 - Ciertas especies de amanita → ataques de ira[^15]
-- Carne y bebidas embriagantes → vuelven agresivo (también sexualmente)
+- Carne y bebidas embriagantes → vuelven agresivo<!-- DUDA AUDITORÍA 2026-06-26: el original dice «vor allem auch auf sexuellem Gebiet» (sobre todo también en el ámbito sexual), enfatizando la dimensión sexual como primaria; el KB «también sexualmente» debilita ese énfasis. Pág. libro 109. --> (también sexualmente)
 - Alimentación vegetal → desplaza ánimo y actitud hacia el polo opuesto
 - Ayuno → reduce la pulsión sexual[^16]
 - Alcohol → modifica el ánimo hacia lo confortable o eufórico; disuelve
@@ -118,10 +118,11 @@ vivo vitalmente débil perece en la lucha por la vida; el vitalmente fuerte se
 impone. Esta energía vital general irradia también al vivir y se manifiesta como
 capacidad de procesar los estímulos ambientales en el sentido de la
 autoconservación y la autoformación, respondiendo con reacciones adecuadas.
-La vitalidad coincide en gran medida con el **biotono** (Biotonus) de Ewald:
-concepto psicosomático total — vertiente física: «turgencia vital»
-(Vitalturgor); vertiente psíquica: «élan anímico». El biotono determina también
-el temperamento: con buen biotono el hombre es creador y decidido.[^18]
+La vitalidad coincide en gran medida con el **biotono** (Biotonus,
+también llamado **Lebensspannung** —tensión vital— por Ewald): concepto
+psicosomático total — vertiente física: «turgencia vital» (Vitalturgor);
+vertiente psíquica: «élan anímico» (seelischer Elan). El biotono determina
+también el temperamento: con buen biotono el hombre es creador y decidido.[^18]
 
 El alcance de la conexión entre fundamento vital y vivir no está acotado. El
 fundamento vital se extiende más allá de los límites de la individualidad: no
@@ -147,7 +148,7 @@ inserción pasa también a la vigilia del vivir:
 > «Quien analiza fenómenos como la nostalgia o todo anhelo que separa de un
 > entorno viejo y consabido pero perdido, todos los sentimientos dolorosos de un
 > desarraigo, de cada despedida profundamente sentida, de cada partida de un
-> lugar amado en que nuestro ánimo estaba enraizado, difícilmente puede engañarse
+> lugar amado en que nuestro ánimo estaba enraizado<!-- DUDA AUDITORÍA 2026-06-26: el original alemán dice «›eingewohnt‹ war» (habituado/instalado, entre comillas tipográficas de Rothacker), no «enraizado». El KB traslada aquí la metáfora de «Wurzeln schlug» (echó raíces) que aparece más adelante en la misma cita, fusionando dos imágenes distintas. Pág. libro 111. -->, difícilmente puede engañarse
 > de que estos procesos no se desarrollan en la esfera abstracta del pensamiento o
 > de actos puramente espirituales, sino que aquí es primariamente nuestro
 > organismo mismo el que en capas muy profundas echó raíces en su entorno,
@@ -324,7 +325,7 @@ dos ámbitos: la función de las glándulas de secreción interna y los procesos
 vitales del metabolismo, digestión, respiración, circulación sanguínea y función
 vascular dirigidos por el sistema nervioso vegetativo (autónomo, simpático)
 constituyen un sistema funcional holístico relativamente cerrado, al que se
-conecta también el mesencéfalo como regulador. Este sistema funcional
+conecta también el diencéfalo-mesencéfalo (Zwischen-Mittelhirn) como regulador. Este sistema funcional
 «vegetativo» se ha designado como **persona profunda** (Tiefenperson, Kraus,
 Rothacker) o **persona vital** (vitale Person, Braun), para expresar que ciertos
 procesos y estados psíquicos están integrativamente acoplados con él. A esta
@@ -438,8 +439,8 @@ persona.
 | **Unidad cuerpo-alma (Leib-Seele-Einheit)** | Totalidad integrada, polar-coexistencial en que lo corporal y lo psíquico no son dos ámbitos entitativos cerrados sino uno solo que reacciona como un todo. |
 | **Espejamiento (Spiegelung)** | Fenómeno por el cual un miembro subordinado de un todo mayor —el fundamento vital— reproduce en sí mismo ese todo en una suerte de anticipación. |
 | **Vitalidad (Vitalität)** | Fuerza con que el organismo se despliega y conserva mediante apropiación y adaptación. Irradia al vivir como capacidad de procesar estímulos y responder con reacciones adecuadas. |
-| **Biotono (Biotonus, Ewald)** | Concepto psicosomático total: tensión vital. Vertiente física: turgencia vital; vertiente psíquica: élan anímico. Determina el temperamento. |
-| **Persona profunda / vital (Tiefenperson / vitale Person)** | Sistema funcional vegetativo (glándulas endocrinas más procesos de metabolismo, digestión, respiración, circulación dirigidos por el sistema nervioso vegetativo, con el mesencéfalo como regulador) acoplado integrativamente a procesos psíquicos. |
+| **Biotono (Biotonus / Lebensspannung, Ewald)** | Concepto psicosomático total: tensión vital. Vertiente física: turgencia vital (Vitalturgor); vertiente psíquica: élan anímico (seelischer Elan). Determina el temperamento. |
+| **Persona profunda / vital (Tiefenperson / vitale Person)** | Sistema funcional vegetativo (glándulas endocrinas más procesos de metabolismo, digestión, respiración, circulación dirigidos por el sistema nervioso vegetativo, con el diencéfalo-mesencéfalo / Zwischen-Mittelhirn como regulador) acoplado integrativamente a procesos psíquicos. |
 | **Persona cortical (Kortikalperson)** | Conjunto de conexiones entre procesos y estructura del cerebro con prestaciones psíquicas: sensaciones, movimientos voluntarios, pensar, lenguaje, representación, memoria. |
 | **Sentimientos vitales (Vitalgefühle)** | Sentimientos en que la conexión del vivir con la corporalidad del fundamento vital se da inmediatamente: frescura, lasitud, bienestar, malestar, dolor, hambre, sed, saciedad, placer sexual, sentimiento de salud y enfermedad. |
 

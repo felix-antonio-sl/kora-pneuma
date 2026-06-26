@@ -4,7 +4,7 @@ nombre: lersch-estructura-persona
 version: 1.0.0
 estado: publicado
 descripcion: "Índice de la familia y Einleitung de Aufbau der Person de Lersch: psicología comprensiva y estratificada, definición de la obra, sus fundamentos fenomenológicos y el mapa de los diez artefactos que la korafican."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: Einleitung + indice, OCR lineas 787-4496, paginas del libro aprox. 1-98."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). Auditada contra imagen el 2026-06-25; FS=con-reservas; muestreo=págs.PDF-5-8,14-17,24-26,35-38,45-49 (17/47 págs.PDF). Seccion: Einleitung + indice, OCR lineas 787-4496, paginas del libro aprox. 1-98."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -19,7 +19,7 @@ depende: [urn:fxsl:kb:lersch-estratificacion, urn:fxsl:kb:lersch-lebensgrund, ur
 
 ### Propósito de la obra
 
-Esta exposición trata de los **hechos fundamentales de la vida anímica humana** (Grundtatsachen des menschlichen Seelenlebens). Lo psíquico —el pulso de nuestros sentimientos, estados de ánimo, excitaciones, pasiones, impulsos, resoluciones, representaciones y pensamientos— es aquello en lo que se despliega nuestro existir arrojado al mundo (entworfenes Dasein) desde el nacimiento hasta la muerte. Lo anímico no solo recorre nuestro interior: nos circunda en la convivencia, se encuentra en las obras y expresiones de los otros, y comparece como realidad que despierta las fuerzas del espíritu cuando se alcanza la reflexión sobre sí mismo (Selbstbesinnung). La **psicología** (Seelenkunde) tiene la tarea de llevar a conocimiento y hacer comprensible (verständlich) la multiplicidad de formas en que experimentamos la vida anímica en nosotros y en los demás.
+Esta exposición trata de los **hechos fundamentales de la vida anímica humana** (Grundtatsachen des menschlichen Seelenlebens). Lo psíquico —el pulso de nuestros sentimientos, estados de ánimo, excitaciones, pasiones, impulsos, resoluciones, representaciones y pensamientos— es aquello en lo que se despliega nuestro existir proyectado al mundo (entworfenes Dasein) desde el nacimiento hasta la muerte. Lo anímico no solo recorre nuestro interior: nos circunda en la convivencia, se encuentra en las obras y expresiones de los otros, y comparece como realidad que despierta las fuerzas del espíritu cuando se alcanza la reflexión sobre sí mismo (Selbstbesinnung). La **psicología** (Seelenkunde) tiene la tarea de llevar a conocimiento y hacer comprensible (verständlich) la multiplicidad de formas en que experimentamos la vida anímica en nosotros y en los demás.
 
 ### 1. El dominio de la psicología (Der Bereich der Seelenkunde)
 
@@ -305,3 +305,6 @@ No hay oposición entre pericia y ciencia: la frontera de la ciencia se desplaza
 | Superestructura personal | urn:fxsl:kb:lersch-personaler-oberbau | 4. Abschnitt (p. 495–529) | El hábito noético y la artación de la voluntad |
 | Tectónica de la persona | urn:fxsl:kb:lersch-tektonik-der-person | 5. Abschnitt (p. 530–593) | Integración, acentuación unilateral, disociación, autenticidad/inautenticidad |
 | Inconsciente y cierre | urn:fxsl:kb:lersch-unbewusstes | 6. Abschnitt + Abschluss (p. 594–641) | Las seis significaciones del inconsciente, la psicología profunda, la unidad de la psicología |
+
+<!-- DUDA AUDITORÍA 2026-06-25: rangos p. 107–121 (1. Abschnitt / Fundamentos vitales) y p. 121–217 (2. Abschnitt Kap. 1 / Vivencias pulsionales) no verificados contra imagen — las páginas del índice que cubren esos Abschnitte quedan fuera del muestreo. El solapamiento en p. 121 podría indicar que el fin real del 1. Abschnitt es p. 120. -->
+<!-- DUDA AUDITORÍA 2026-06-25: los diagramas Abb. 1 (Funktionskreis, p. 31 libro) y Abb. 2 (PERSON, p. 76 libro) presentes en el original no están referenciados ni descritos en este KB. Omisión de contenido visual estructurante. -->

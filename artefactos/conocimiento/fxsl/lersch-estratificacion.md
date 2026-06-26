@@ -4,7 +4,7 @@ nombre: lersch-estratificacion
 version: 1.0.0
 estado: publicado
 descripcion: "El modelo de la estratificación (Schichtung) de Lersch: la persona como estructura en dos capas (fondo endotímico + superestructura personal) y el Vorentwurf, el boceto sistemático que deduce la arquitectura completa de la obra."
-fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). No verificada contra imagen (modelo sin soporte PDF). Pendiente de auditoría. Seccion: Vorerorterung (HAUPTTEIL), OCR lineas 4497-4871, paginas del libro aprox. 99-106."
+fuente: "Lersch, P., Aufbau der Person, 10. Auflage, 1966, Johann Ambrosius Barth, München. Cadena: escaneo (sha256:3e0eab27d15b02be2924417b19e3ca31ee4b038bb82570d309dc45da814614d9) a OCR (lersch.txt, sha256:520e6ac931f899cd9e8bb3cbf96414354624a85a4386ba37e13e65e8bb803699) a reconstruccion del aleman a traduccion canonica es-CL a destilacion kb. FS=100% declarada por el productor (ley/4). Auditada contra imagen el 2026-06-25; FS=con-reservas; muestreo=págs.PDF-49-53 (5/5 págs.PDF — cobertura completa del rango). Seccion: Vorerorterung (HAUPTTEIL), OCR lineas 4497-4871, paginas del libro aprox. 99-106."
 autor: FS
 creado: 2026-06-24
 lang: es
@@ -69,7 +69,7 @@ guardan una estrecha conexión con el *"Stammhirn"* / *"Althirn"* (tronco
 cerebral), filogenéticamente más antiguo. De ahí la fisiología cerebral moderna
 distinguió:
 
-- ***Kortikalperson* (persona cortical)** — las conexiones entre la corteza del *Großhirn* y los logros anímicos de orientación mundial, pensamiento, lenguaje y memoria.
+- ***Kortikalperson* (o *Rindenperson*; persona cortical)** — las conexiones entre la corteza del *Großhirn* y los logros anímicos de orientación mundial, pensamiento, lenguaje y memoria.
 - ***Tiefenperson* (persona profunda)** — en dependencia del tronco cerebral; sus manifestaciones vitales son sobre todo los instintos, los sentimientos y los afectos.
 
 El término *"Tiefenperson"* procede de **F. Kraus** (1926). A partir de
@@ -118,7 +118,7 @@ estratificación de la vida anímica se ha impuesto cada vez más en la
 
 ### Hoffmann: tres capas y el paralelo platónico
 
-A partir de las oposiciones *"Trieb und Wille"*, *"Fühldenken und ratio"*,
+A partir de las oposiciones *"Trieb und Wille"*, *"Fühldenken und ratio"*<!-- DUDA AUDITORÍA 2026-06-25: la imagen (p. 101) parece leer "Fühlendenken" (no "Fühldenken"); difícil de verificar por calidad del escaneo. Comprobar en edición impresa. -->,
 *"Unmittelbarkeit und Beherrschung"*, *"Fühlen und Sollen"*, Hoffmann desarrolla
 un **modelo de tres capas** de la persona humana:
 
@@ -134,7 +134,7 @@ ellas y, no obstante, relativamente libre — es la capa del querer consciente, 
 pensar racional, el dominio de sí y el cumplimiento consciente del deber.
 Hoffmann remite al **paralelo platónico**: lo apetitivo (biológicamente
 condicionado) **ἐπιθυμητικόν**, lo esforzante-animoso **θυμοειδές**, lo espiritual
-**λογιστικόν / γνωμονικόν**. En retrospección consciente sobre esa
+**λογιστικόν**. En retrospección consciente sobre esa
 "conceptualización genial de base" de Platón, **H. Nohl** desarrolla asimismo una
 imagen del *"Aufbau"* estratificado del alma.
 
@@ -146,7 +146,7 @@ La concepción más pensada y más rica en sugerencias es la de Rothacker. Su
 - ***Tiefenperson* (o *Es-Schicht*)** — graduada a su vez **en tres**, abarca "la vida" en el hombre (instintos animales y *Triebemotionen*, emociones de instinto) y la capa **emocional exclusivamente humana**: la capa del alma de **Klages**.
 - ***Person-Schicht*** — construida con ayuda de la **función del yo**; es idéntica a lo que en *Aufbau der Person* se expone como ***personaler Oberbau*** (superestructura personal).
 
-### Thiele: convergencia somato-/trimo-/poio-psíquica
+### Thiele: convergencia somato-/thymo-/poio-psíquica
 
 **R. Thiele** (*Person und Charakter*, 1940, p. 19) intenta hacer converger las
 articulaciones —en sí nada concordantes— de los distintos autores, distinguiendo:
@@ -154,7 +154,7 @@ articulaciones —en sí nada concordantes— de los distintos autores, distingu
 | Capa | Contenido |
 |---|---|
 | **Somatopsíquica** (vital) | — |
-| **Trimopsíquica** | "la vida sentimental y de *Gemüt* superior y las aspiraciones a ella asignadas". |
+| **Thymopsíquica** (*thymopsychisch*) | "la vida sentimental y de *Gemüt* superior y las aspiraciones a ella asignadas". |
 | **Poiopsíquica** | "el reino de la voluntad, que despliega su señorío… en actos de voluntad, en el pensar como en el actuar". |
 
 ## La estratificación es un modelo, no una cosa (aviso metódico)
@@ -192,20 +192,24 @@ allí se expande una y otra vez a la **vista horizontal del *Funktionskreises***
 ### Abb. 3 — el esquema de capas
 
 ```
-                          ┌─────────────────────────────────────┐
-   PERSONELLER OBERBAU →  │   Denken und bewusstes Wollen       │
-                          │   (pensar y querer conscientes)     │
-                          ├─────────────────────────────────────┤
-                          │  Anmutungserlebnisse                │
-   ENDOTHYMER GRUND   →   │  Triebe / Strebungen                │
-                          │  stationäre Gestimmtheiten          │
-                          ├─────────────────────────────────────┤
-                          │  Welt als Ort des Bemerkens         │
-                          │  und des wirkenden Verhaltens       │
-                          ├─────────────────────────────────────┤
-   LEBENSGRUND        →   │  bewußtlos-unbewußtes Leben         │
-                          └─────────────────────────────────────┘
+  PERSONELLER OBERBAU
+  ┌───────────────────────────────────────────┐
+  │  Denken und bewusstes Wollen              │ ──────────────────────┐
+  └───────────────────────────────────────────┘                       │
+                                                                       ▼
+  ┌───────────────────────────────────────────┐     ┌─────────────────────────────┐
+  │  Triebe und Strebungen                    │     │  Welt als Ort des           │
+  │  Anmutungserlebnisse                      │ ──► │  Bemerkens und des          │
+  │  Stationäre Gestimmtheiten                │     │  wirkenden Verhaltens       │
+  └───────────────────────────────────────────┘     └─────────────────────────────┘
+  ENDOTHYMER GRUND
+
+                    LEBENSGRUND
 ```
+
+*(Reproducción del Abb. 3, p. 103. La «Welt» no es una capa vertical: es el horizonte
+al que apuntan flechas horizontales desde ambos estratos — el Oberbau y el Grund
+endotímico. El LEBENSGRUND yace por debajo de todo el vivenciar, pre-ordenado a él.)*
 
 ### Los dos grupos de vivencias y el *endothymer Grund*
 
