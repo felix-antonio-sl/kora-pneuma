@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:modelamiento-opm
 nombre: modelamiento-opm
-version: 1.9.0
+version: 1.10.0
 estado: activo
 descripcion: "Skill horizontal y dialectica para co-construir, refinar, validar y serializar modelos OPM (Object-Process Methodology, ISO 19450) con un operador humano. Anclada primero al corpus OPM/Forja SSOT ES y al modelador deep-opm-pro como mesa de trabajo interactiva. Anti-complacencia: bloquea avance ante ambiguedad, fuerza aclaracion antes de plasmar, no construye sobre barro."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15). Actualizacion 1.9.0 (2026-06-15): el corpus OPM declarado se re-sincronizo a la SSOT consolidada v1.4.0 (sexta familia de enlace Excepcion, abanicos convergentes, ruta sobre habilitadores; reglas v1.4.0, spec-opd v1.1.1, spec-opl v1.2.1, bases v3.0.x) bajo el regimen 'pneuma toma la posta de la SSOT OPM' (urn:kora:kb:regimen-de-ley). El render estatico secundario, antes delegado a la skill no migrada jointjs-open-source, ahora se hace con la libreria JointJS consultando su doc web viva urn:dev:kb:jointjs-docs (conocimiento web por convencion, declarado en el campo conocimiento); componible_con jointjs-open-source ya no aplica."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15). Actualizacion 1.9.0 (2026-06-15): el corpus OPM declarado se re-sincronizo a la SSOT consolidada v1.4.0 (sexta familia de enlace Excepcion, abanicos convergentes, ruta sobre habilitadores; reglas v1.4.0, spec-opd v1.1.1, spec-opl v1.2.1, bases v3.0.x) bajo el regimen 'pneuma toma la posta de la SSOT OPM' (urn:kora:kb:regimen-de-ley). El render estatico secundario, antes delegado a la skill no migrada jointjs-open-source, ahora se hace con la libreria JointJS consultando su doc web viva urn:dev:kb:jointjs-docs (conocimiento web por convencion, declarado en el campo conocimiento); componible_con jointjs-open-source ya no aplica. Actualizacion 1.10.0 (2026-06-30): se anade el §Regimen apunte (modo borrador) — modula la Postura Dialectica como reflejo del bit esApunte del modelo activo en la mesa opforja (gemelo de esBiblioteca); suspende EXACTAMENTE las Reglas Duras #12/#13 y mantiene #1/#14/#15/#17 + integridad estructural (fence etico). Cambio menor aditivo, sin reescritura del metodo; nace en deep-opm-pro (corte modo apunte) y se eleva por solicitudes-upstream."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -51,6 +51,7 @@ corpus Forja las delega; no se usan para saltarse una regla Forja vigente.
 - diseñar antes de implementar (codigo, organizacion, proceso)
 - validar un OPD existente contra ISO 19450
 - refinar un modelo en curso (in-zoom, unfold, state, sub-model)
+- bocetar un modelo OPM legitimo como **apunte** (borrador sin rigor de cierre): pensar en la mesa sin que el rigor interrumpa (ver §Regimen apunte)
 - emitir OPL-ES como surface form auditable
 
 ## Cuando NO Usar
@@ -122,6 +123,82 @@ El operador puede decir:
 
 Esto es **decision declarada**. Valida. La skill la registra como supuesto explicito en el reporte y avanza. La skill no acepta supuestos sin declaracion: "Procesar" sin justificacion = barro = bloqueo.
 
+## Regimen apunte (modo borrador)
+
+Estado **transversal**, no un estado del workflow: modula la Postura Dialectica
+sobre cualquier estado productivo. Un **apunte** es una **especie de artefacto
+hermana del modelo** (no sub-tipo, no capa): OPM legitimo en la mesa de opforja,
+pero **sin la exigencia de cerrar** como modelo valido. **Relaja el RIGOR, no la
+SEMANTICA.** Su funcion: dejar que el operador piense en OPM legitimo sin que el
+rigor de cierre lo interrumpa, en un archivo que no miente sobre ser borrador.
+
+### El flag es la unica verdad (no un estado paralelo)
+
+El regimen apunte es el **reflejo del bit `esApunte`** del modelo activo en opforja
+(metadata del record de persistencia, gemelo de `esBiblioteca`). La skill **lee** ese
+bit; **no mantiene un regimen propio**. El triaje **propone**; el **flag decide**:
+
+- **Oir el sinonimo, nombrar una palabra.** El triaje puede reconocer
+  "bocetar", "apunte", "borrador", "modelar sin cerrar" como senal de intencion y
+  **proponer** marcar el modelo como apunte. Pero todo lo que el usuario VE y la
+  doctrina NOMBRA es **«Apunte»** (una palabra) — "borrador/boceto" son la
+  explicacion, no el rotulo.
+- **El flag manda.** El regimen permisivo se activa **solo** cuando el modelo de la
+  mesa lleva `esApunte`. Marcar/desmarcar es UN gesto (el toggle de opforja) que
+  prende el flag y, con el, esta voz. Sin flag, la Postura Dialectica corre completa.
+
+### Voz: acompana sin bloquear
+
+En un apunte la skill **plasma lo que el operador pide** y deja sus observaciones
+**discretas, al margen, colapsables** — sin imponer, sin detener el avance. Las
+observaciones **no son una lista nueva**: son la **misma** salida de `validar-modelo`
+recomputada (UNA SOLA LISTA), mostrada como observacion en vez de bloqueo. La mesa y
+esta skill miran el mismo inventario; el apunte solo cambia el **tono**, no el censo.
+
+### Linea dura: que se relaja y que NO
+
+| Clase | En un modelo | En un apunte |
+|-------|--------------|--------------|
+| **Validez OPM** (firma de enlaces, transformee, agente=humano, refinamiento, nombres, AP-*) | bloqueo / mejora | **observacion al margen** |
+| **Integridad estructural** (referencia OPD<->OPL colgante, enlace sin extremo, formato) | bloqueo | **sigue bloqueando** |
+
+Validez = juicio sobre el *significado*; integridad = precondicion *mecanica* del
+documento. La integridad **nunca** se relaja: un apunte con una referencia colgante
+es un documento roto, no un borrador legitimo. (En opforja esto se realiza por-clase:
+`severidadDiagnostico(aviso, { esApunte })` degrada solo una whitelist de codigos de
+validez; el gate de integridad `validarReferenciasOpd` es ciego al flag.)
+
+### Fence etico: que reglas se suspenden (EXACTAMENTE dos)
+
+En regimen apunte se suspenden **solo** estas Reglas Duras:
+
+- **#12 (Anti-barro)** — se admite plasmar con proposito/transformee/esencia aun no
+  declarados; quedan como **observacion**, no como bloqueo.
+- **#13 (Anti-complacencia)** — la correccion deja de detener el avance; se ofrece al
+  margen, sin exigir.
+
+**Se MANTIENEN intactas** (suspenderlas seria traicionar al operador):
+
+- **#1 (Bimodalidad)** — todo hecho sigue siendo OPD + OPL-ES equivalentes.
+- **#14 (Aclaracion serial)** — cuando se pregunta, una a la vez con la plantilla;
+  el apunte no autoriza batches.
+- **#15 (la skill NO rellena campos en blanco)** — los huecos quedan **como huecos**;
+  jamas se inventa transformee, esencia o agente no declarados. Suspender #15 seria
+  alucinacion atribuida al humano. El apunte relaja la *exigencia de cerrar*, no la
+  *honestidad sobre lo que falta*.
+- **#17 (Vocabulario OPL cerrado)** — el OPL emitido sigue dentro del enum de
+  `spec-forja-opl-es`; el parser de opforja lo rechazaria igual.
+- **Integridad estructural** — segun la linea dura de arriba.
+
+### Promocion = ausencia de seccion
+
+Graduar un apunte a modelo **no es un pipeline**: es el **mismo** toggle que lo marca,
+en sentido inverso (corrige el bit a ausente). Los bloqueos de `validar-modelo`
+**re-enganchan solos** porque la degradacion lee la **presencia** del flag. Las
+observaciones acumuladas son el **checklist de cierre** (recomputadas, no
+persistidas). Un modelo graduado **ES un modelo**: sin rastro, sin casta, sin
+`promovidoDesdeApunte` — la procedencia ya vive en git.
+
 ## Workflow
 
 ### Estado inicial: `triaje`
@@ -131,6 +208,7 @@ Clasificar la solicitud para decidir el siguiente estado:
 | Input del usuario | Siguiente estado |
 |-------------------|------------------|
 | "modelar un sistema X" / "diagramar Y con OPM" | `bootstrap-sd` |
+| "bocetar/apuntar X" / "esto es un borrador" / "modelar sin cerrar" | `bootstrap-sd` o `refinar-modelo` en **regimen apunte** (oir el sinonimo y proponer marcar Apunte; el flag `esApunte` de la mesa decide la voz — ver §Regimen apunte) |
 | "refinar el proceso A" / "in-zoom de B" | `refinar-modelo` |
 | "validar este OPD" / "este modelo cumple OPM?" | `validar-modelo` |
 | "normaliza/estandariza este proto-modelo" / "identifica lo normativo" | `normalizar-proto` |
@@ -644,6 +722,7 @@ Cuando el modelador este abierto, indicar al agente invocador que el bundle se i
 25. **Camino primario de emision (M2)**: con deep-opm-pro disponible, `serializar-bundle` emite via compilador de autoria (proto estricto → `compilarProto` → `emitirBundle` con `construirSello`): bundle con sello, round-trip/contencion/canon verificados, cruce g3 y golden-harness habilitados. El bundle artesanal es fallback **solo** sin deep-opm-pro, se entrega declarando sus limites (sin sello, sin cruce, sin LogDecisiones), y jamas se simula o copia un sello.
 26. **El contexto W6.0 es derivado**: el «Contexto de modelado» del puente se consume, no se edita. Toda correccion va al proto (fuente unica) y se recompila.
 27. **Notas de mesa desechables**: una `NotaMesa` registra que se pregunta la mesa, no que es la cosa. Se consume en `re-elicitar` corrigiendo el proto o respondiendo con aclaracion dirigida; nunca se fosiliza como definicion, hecho OPM ni ancla. El paso de un ancla a `vigente` ocurre solo en esta skill sobre el proto — las transiciones registradas por la app (W6.5-b) son registro, no mutacion.
+28. **Regimen apunte = reflejo del flag, fence de dos reglas**: cuando el modelo de la mesa lleva `esApunte`, la skill acompana sin bloquear (ver §Regimen apunte). Suspende **EXACTAMENTE** #12 (Anti-barro) y #13 (Anti-complacencia); **mantiene** #1, #14, #15 (jamas rellena huecos), #17 y la integridad estructural. La validez OPM se degrada a observacion al margen; la integridad **sigue bloqueando**. El flag persistido es la unica verdad: el triaje oye sinonimos y propone, el flag decide. Promocion = el mismo toggle en inverso, sin rastro.
 
 ## Composicion con deep-opm-pro (mesa de trabajo primaria)
 
