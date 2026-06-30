@@ -30,7 +30,7 @@ from pathlib import Path
 # ------------------------------------------------------------------ constantes
 
 TARGETS_CONOCIDOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
-TARGETS_REALIZADOS = ("claude-code", "codex", "opencode")
+TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw")
 
 ESTADOS_CONOCIMIENTO = ("borrador", "publicado", "deprecado")
 ESTADOS_AGENTICO = ("borrador", "activo", "deprecado", "retirado")
@@ -912,6 +912,35 @@ MATRICES = {
                    4: (None, "none", "co-evolutivo no soportado")}),
         "sigma-max": [3, 2, 2, 2, 1],
     },
+    # openclaw: techo más alto del retículo (meta-runtime ACP, materia
+    # ambiental always-on). Razones veraces de la runtime-extension de origen
+    # (urn:agengai:kb:openclaw-runtime-extension v1.2.1), verificadas contra el
+    # runtime real. Único target que realiza mu=3 y xi=4 sin recorte.
+    "openclaw": {
+        "pi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None)}),
+        "mu": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None)}),
+        "xi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None),
+                  4: (4, "full", None)}),
+        "lambda": _m({0: (0, "full", None), 1: (1, "full", None),
+                      2: (2, "full", None),
+                      3: (3, "partial",
+                          "society-in-the-loop requiere gobernanza externa "
+                          "no modelada en el runtime")}),
+        "phi": _m({0: (0, "full", None), 1: (1, "full", None),
+                   2: (2, "full", None),
+                   3: (3, "partial",
+                       "cognición híbrida parcial: HOTL presente, sin HAJCS "
+                       "completo"),
+                   4: (None, "none",
+                       "co-evolutivo no soportado: sin aprendizaje continuo")}),
+        "sigma-max": [3, 3, 3, 3, 2],
+    },
 }
 
 # Razón por componente de sigma cuando la fuente excede el máximo del target.
@@ -939,13 +968,23 @@ SIGMA_RAZONES = {
                           "trail cross-session transparente",
         "sustainability": "solo declarativo",
     },
+    "openclaw": {
+        "safety": "máximo del runtime",
+        "fairness": "declarativo + bias audits manuales, sin enforcement "
+                    "runtime automático",
+        "transparency": "máximo del runtime",
+        "accountability": "máximo del runtime (materia persistente "
+                          "cross-session: git log + logs por sesión)",
+        "sustainability": "model routing + budget tracking; sostenibilidad "
+                          "ambiental no medida directamente",
+    },
 }
 
 # Quién sí soporta un eje que el target rechaza (para el mensaje de fallo).
 QUIEN_SOPORTA = {
-    ("mu", 3): "openclaw (reconocido por la ley, no realizado en esta "
-               "encarnación; ver GENESIS.md)",
-    ("lambda", 3): "ninguno de los runtimes reconocidos",
+    ("mu", 3): "openclaw (único runtime con materia ambiental always-on; "
+               "mu=3 realizado por T-openclaw-pneuma-v1)",
+    ("lambda", 3): "openclaw, con pérdida declarada (partial)",
     ("phi", 4): "ninguno de los runtimes reconocidos",
 }
 
@@ -1087,6 +1126,19 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         lineas.append("perdidas:")
         for etiqueta, a, b, razon in perdidas:
             lineas.append(f"  {etiqueta}: {a}->{b} :: {razon}")
+    # Extensión del sello openclaw (ley/3 §5.1): calificación mu=3 observable
+    # (realiza/difiere) y clausura-F como referente de cierre-safety. En la
+    # zona variable, antes del contrato y de las dos líneas fijas.
+    if target == "openclaw":
+        herr = art.campos.get("herramientas") or []
+        conjunto = "{" + ", ".join(herr) + "}" if herr else "∅"
+        lineas += [
+            "realiza: emision-mu3-conforme (techo always-on, sin truncamiento "
+            "de min)",
+            "difiere: conducta-always-on (gateway/systemd) -> a desplegar",
+            f"clausura-F: {conjunto} :: tool-SET portador de cierre-safety "
+            f"(tipo); binding allow/deny diferido a openclaw.json (deploy)",
+        ]
     # El contrato de conocimiento va ANTES de las dos líneas fijas (ley/3 §5
     # r6, cf. r4): nada se interpone jamás entre ellas y el cierre `-->`.
     lineas += _bloque_contrato(art)
@@ -1107,7 +1159,13 @@ def _fm_str(valor: str) -> str:
 
 def _componer(frontmatter: list[str], cuerpo: str, extra: str,
               sello: str) -> str:
-    partes = ["---"] + frontmatter + ["---", "", cuerpo.strip("\n")]
+    # Sin frontmatter (openclaw SOUL.md): markdown libre, el cuerpo abre el
+    # archivo. Un fence YAML vacío (`---\n---`) se inyectaría como ruido de
+    # identidad en el slot #1 de Hermes, así que se omite por completo.
+    if frontmatter:
+        partes = ["---"] + frontmatter + ["---", "", cuerpo.strip("\n")]
+    else:
+        partes = [cuerpo.strip("\n")]
     if extra:
         partes += ["", extra]
     partes += ["", sello, ""]
@@ -1143,6 +1201,24 @@ def emitir(art: Artefacto, target: str, proy: dict,
         if art.campos.get("arnes") == "persona":
             extra = DOCTRINA_DUAL_MODE
         rel = f"{target}/agents/{nombre}.md"
+    elif target == "openclaw":
+        # SOUL.md de Hermes: markdown libre, slot #1, inyectado VERBATIM —
+        # SIN frontmatter (_componer omite los fences con fm=[]). El cuerpo
+        # entero (U_phen + operativa) colapsa al único slot bajo pneuma-mínima;
+        # MEMORY.md/USER.md los auto-bootstrapea el runtime. Dos pérdidas de
+        # forma, verificables por AUSENCIA (precedente: codex agente->habilidad):
+        # el binding de tools va a openclaw.json (deploy), y la anatomía
+        # multi-slot colapsa a este único archivo.
+        perdidas_extra.append(
+            ("forma", "tool-binding", "deploy",
+             "el enforcement allow/deny vive en openclaw.json (deploy-side); "
+             "no se enforcea desde SOUL.md"))
+        perdidas_extra.append(
+            ("forma", "workspace-anatomy", "soul-slot",
+             "la anatomia multi-slot de openclaw colapsa a un unico SOUL.md "
+             "(pneuma-minima; sin AGENTS.md/TOOLS.md/... hermanos)"))
+        fm = []  # sin frontmatter: el cuerpo abre el SOUL.md
+        rel = f"{target}/agents/{nombre}/SOUL.md"
     else:  # opencode, agente
         # forma subagente -> subagent; forma agente (persona dual-mode, ver
         # DOCTRINA_DUAL_MODE) -> all: usable como modo primario Y delegable como
@@ -1222,6 +1298,16 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
               f"deuda. Realizados: {', '.join(TARGETS_REALIZADOS)}.",
               file=sys.stderr)
         return 1
+    if target == "openclaw" and aplicar:
+        # Hermes prohíbe sobrescribir un SOUL.md existente (never-overwrite);
+        # el modelo clobber de --aplicar lo violaría. El deploy a un HERMES_HOME
+        # / workspace del fleet es deploy, no función del funtor (ley/3 §7).
+        print("error: 'openclaw' no admite --aplicar en esta encarnación: "
+              "Hermes prohíbe sobrescribir un SOUL.md existente "
+              "(never-overwrite); el deploy a un HERMES_HOME es del fleet, no "
+              "del funtor. Transmuta sin --aplicar: la emisión canónica vive "
+              "en _emision/openclaw/.", file=sys.stderr)
+        return 1
     if art.tipo == "conocimiento":
         print("error: el conocimiento no se transmuta — se consume como "
               "contexto. Solo agentes y skills se proyectan.",
@@ -1280,6 +1366,11 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
     if art.tipo == "agente" and target == "codex":
         print("pérdida declarada: forma: agente->habilidad :: codex no "
               "registra agentes")
+    if art.tipo == "agente" and target == "openclaw":
+        print("pérdida declarada: forma: tool-binding->deploy :: binding en "
+              "openclaw.json (deploy-side)")
+        print("pérdida declarada: forma: workspace-anatomy->soul-slot :: "
+              "anatomía multi-slot colapsa a SOUL.md")
     if aplicar:
         nombre_art = art.campos["nombre"]
         # El gesto respeta el alcance declarado (ausente = ambos).

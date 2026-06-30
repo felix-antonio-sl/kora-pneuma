@@ -513,13 +513,93 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(primera, emitido.read_bytes())
 
     def test_target_no_realizado_falla_honesto(self):
+        # openclaw salió del bucle: realizado por T-openclaw-pneuma-v1.
+        # Solo hermes sigue reconocido-no-realizado.
         self.escribir_skill()
-        for target in ("openclaw", "hermes"):
+        for target in ("hermes",):
             codigo, _, err = self.correr(
                 ["transmutar", "--urn", "urn:kora:artefacto:util-x",
                  "--target", target])
             self.assertEqual(codigo, 1, target)
             self.assertIn("GENESIS", err)
+
+    # ----------------------------------------- openclaw (T-openclaw-pneuma-v1)
+
+    def _agente_openclaw_mu3(self):
+        """Agente plataforma/servicio mu=3, xi=4 — techo del retículo."""
+        self.escribir_agente(agente_campos(
+            urn="urn:dev:artefacto:plat-x", nombre="plat-x",
+            forma="plataforma", arnes="servicio",
+            vector=[2, 3, 4, 1, 1], sigma=[2, 1, 2, 1, 1],
+            herramientas=["Read", "Write", "Bash"],
+            targets=["openclaw"]))
+
+    def _emitir_openclaw(self):
+        self._agente_openclaw_mu3()
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:plat-x",
+             "--target", "openclaw"])
+        self.assertEqual(codigo, 0)
+        return (self.raiz /
+                "_emision/openclaw/agents/plat-x/SOUL.md").read_text(
+                    encoding="utf-8")
+
+    def test_openclaw_soul_sin_frontmatter(self):
+        soul = self._emitir_openclaw()
+        self.assertFalse(soul.startswith("---"))         # markdown libre
+        self.assertTrue(soul.rstrip().endswith("-->"))   # sello al cierre
+        self.assertIn("# Cuerpo", soul)                  # cuerpo verbatim
+        self.assertIn("target: openclaw", soul)
+        self.assertIn("funtor: T-openclaw-pneuma-v1", soul)
+
+    def test_openclaw_mu3_xi4_full(self):
+        soul = self._emitir_openclaw()
+        self.assertIn(
+            "fidelidad: pi:full mu:full xi:full lambda:full phi:full "
+            "sigma:full", soul)
+        self.assertIn("vector-fuente: [2,3,4,1,1]", soul)
+        self.assertIn("vector-proyectado: [2,3,4,1,1]", soul)
+        # mu=3 y xi=4 NO se proyectan como pérdida de eje (full, sin recorte)
+        self.assertNotIn("mu: 3->", soul)
+        self.assertNotIn("xi: 4->", soul)
+
+    def test_openclaw_perdidas_forma_y_calificacion(self):
+        soul = self._emitir_openclaw()
+        self.assertIn("forma: tool-binding->deploy ::", soul)
+        self.assertIn("forma: workspace-anatomy->soul-slot ::", soul)
+        self.assertIn(
+            "realiza: emision-mu3-conforme (techo always-on, sin "
+            "truncamiento de min)", soul)
+        self.assertIn(
+            "difiere: conducta-always-on (gateway/systemd) -> a desplegar",
+            soul)
+        self.assertIn("clausura-F: {Read, Write, Bash} ::", soul)
+        self.assertIn("cierre-safety", soul)
+
+    def test_openclaw_archivo_unico(self):
+        self._emitir_openclaw()
+        agent_dir = self.raiz / "_emision/openclaw/agents/plat-x"
+        hijos = sorted(p.name for p in agent_dir.iterdir())
+        self.assertEqual(hijos, ["SOUL.md"])  # sin AGENTS.md/TOOLS.md/... hermanos
+
+    def test_openclaw_determinismo_byte(self):
+        self._agente_openclaw_mu3()
+        argv = ["transmutar", "--urn", "urn:dev:artefacto:plat-x",
+                "--target", "openclaw"]
+        self.assertEqual(self.correr(argv)[0], 0)
+        emitido = self.raiz / "_emision/openclaw/agents/plat-x/SOUL.md"
+        primera = emitido.read_bytes()
+        self.assertEqual(self.correr(argv)[0], 0)
+        self.assertEqual(primera, emitido.read_bytes())
+
+    def test_openclaw_rechaza_aplicar(self):
+        self._agente_openclaw_mu3()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:plat-x",
+             "--target", "openclaw", "--aplicar"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("never-overwrite", err)
+        self.assertIn("--aplicar", err)
 
     def test_codex_colapsa_agente_a_skill(self):
         self.escribir_agente()
