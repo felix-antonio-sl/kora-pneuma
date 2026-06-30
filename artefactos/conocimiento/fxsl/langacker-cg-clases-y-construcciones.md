@@ -4,7 +4,7 @@ nombre: langacker-cg-clases-y-construcciones
 version: 1.0.0
 estado: publicado
 descripcion: "Clases gramaticales y construcciones en Cognitive Grammar (Parte II, caps. 4-8): caracterización semántica de nombre, verbo, y clases de expresiones relacionales (preposición, adjetivo, adverbio, participio); subclases mayores (count/mass, perfective/imperfective); la teoría construccional — assemblies simbólicos, esquemas construccionales, correspondencias, profile determinance, elaboración, constituencia—; redes, convencionalidad y regularidad (generalidad, productividad, composicionalidad parcial, generalizaciones de orden superior)."
-fuente: "Langacker, Ronald W. (2008). Cognitive Grammar: A Basic Introduction. Oxford University Press. Archivo fuente: /home/felix/kora-external-sources/Cognitive Grammar_ A Basic Introduction - Ronald W. Langacker.txt (sha256:6370e8b08fdaaf1ebc2a05db7a4b0db553cf9384a58bb7532f3a0f037838707f). Alcance: Part II (Fundamentals), caps. 4-8 (pp. 93-255 del libro; líneas 1200-3129 del archivo). Descartado: Part I korificada en langacker-cg-fundamentos; Parts III-IV en artefactos hermanos."
+fuente: "Langacker, Ronald W. (2008). Cognitive Grammar: A Basic Introduction. Oxford University Press. Archivo fuente: /home/felix/kora-external-sources/Cognitive Grammar_ A Basic Introduction - Ronald W. Langacker.txt (sha256:6370e8b08fdaaf1ebc2a05db7a4b0db553cf9384a58bb7532f3a0f037838707f). Alcance: Part II (Fundamentals), caps. 4-8 (pp. 93-255 del libro; líneas 1200-3129 del archivo). Descartado: Part I korificada en langacker-cg-fundamentos; Parts III-IV en artefactos hermanos; figuras (descripciones textuales conservadas por capítulo; los diagramas como objetos visuales se consultan en el original fuente)."
 autor: FS
 creado: 2026-06-29
 lang: es
@@ -16,6 +16,24 @@ depende: [urn:fxsl:kb:langacker-cg-fundamentos]
 # Clases gramaticales y construcciones en Cognitive Grammar
 
 ## 4. Clases gramaticales
+
+**Recursos gráficos del capítulo 4** (figs. 4.1–4.15 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **4.1** — Cinco diagramas lado a lado que contrastan las clases gramaticales básicas mediante primitivos visuales: una cosa se representa como un círculo delimitado (entidad), una relación no-procesual como una flecha de doble punta entre dos círculos, y un proceso como una serie de relaciones componentes (time-slices) enlazadas por símbolos '>' a lo largo de un eje 't' con barra, ilustrando la evolución secuencial a través del tiempo concebido. La figura argumenta que el esquema del nombre perfila una cosa y el del verbo perfila un proceso escaneado secuencialmente.
+- **4.2** — Diagramas etiquetados (a)-(e) que muestran el verbo choose perfilando un proceso (tr con flecha discontinua hacia lm en un rango de doble flecha vertical) frente a los nombres derivados chooser y choice, que desplazan el perfil a cosas: el actor (a), la cosa elegida (b), el rango de opciones (c), el evento reificado como elipse (d) y el evento abstracto conceptualmente reificado como elipse (e). La figura argumenta que la nominalización consiste típicamente en reificar la base procesual en una cosa.
+- **4.3** — Cinco diagramas (a)-(e) que comparten la misma base conceptual: un círculo (mover), una flecha sólida (trayectoria de movimiento) y una caja parcial con apertura (contenedor), conectados al final por una flecha discontinua de doble punta (relación locativa final). Los perfiles impuestos difieren: preposición (in, relación simple), nombre (inside, superficie del contenedor), nombre (entrance, la apertura), verbo (enter, el proceso de movimiento) y nombre (entry, evento reificado como elipse).
+- **4.4** — Cinco diagramas (a)-(e) basados en una región Y en el espacio de color: (a) Yellow como nombre propio perfila toda la región Y delimitada; (b) Yellow como nombre común perfila un área acotada dentro de Y (un tono particular); (c) Yellow como adjetivo perfila una relación no-procesual con flecha de dardos entre el trayector (cosa) y la región de color; (d) Yellow como verbo perfila un proceso (cambio de estado a lo largo de 't' con barra) desde afuera hacia adentro de Y; (e) Yellow como nombre masa perfila una región amorfa no-delimitada (varias manchas discontinuas).
+- **4.5** — Dos conjuntos de puntos ilustrando agrupamiento y reificación: (a) muestra cinco puntos que se perciben automáticamente como grupo de dos más grupo de tres por contigüidad espacial; (b) muestra puntos negros y blancos entremezclados espacialmente que forman grupos por similitud de color, dentro de los cuales se reifican grupos de tres por contigüidad, y a un nivel superior se perciben como líneas rectas paralelas. La figura ilustra que el agrupamiento opera a múltiples niveles de organización conceptual.
+- **4.6** — Diagrama de una pelota rodando por una pendiente: la pelota dibujada en posiciones sucesivas a lo largo del eje 't' (tiempo concebido), cada posición es una relación simple (time-slice), y los símbolos '>' entre los estados continuos representan la transición fluida (wedge de continuidad). La figura introduce el escaneo secuencial como integración mental de los estados a lo largo del tiempo.
+- **4.7** — Diagrama retomando la pelota rodando pero ahora con doble eje: 'T1-T5' representa el tiempo de procesamiento y 't1-t5' representa el tiempo concebido, con rectángulos mayores correspondientes a las concepciones activas en cada momento y círculos pequeños indicando la posición de la pelota en ese instante. Los segmentos solapados verticalmente muestran cómo el procesamiento accede secuencialmente a través del tiempo concebido a estados componentes individuales en foco uno-a-uno.
+- **4.8** — Misma escena de la pelota pero ahora representando el escaneo sumario: en cada momento T de procesamiento, los estados componentes accedidos hasta ese punto se superponen mentalmente (rectángulos anidados con activación simultánea), produciendo un gestalt comparable a una fotografía de exposición múltiple. La figura contrasta el escaneo secuencial (4.7) con el escaneo sumario.
+- **4.9** — Pareja de diagramas cuadrado (a)-(b): ambos comparten la base conceptual (una cosa especificada por evaluaciones configuracionales representadas como flechas de trazos internos), pero (a) muestra el nombre square perfilando la cosa (círculo/trayector) mientras que (b) muestra el adjetivo square perfilando las evaluaciones configuracionales (flechas de dardos internas), con la cosa como trayectoria focal. La figura argumenta que nombre y adjetivo comparten contenido y difieren sólo en qué se perfila.
+- **4.10** — Tres diagramas (a)-(c) de una escena de abrazo: (a) la novia (B) abrazo al novio (G) con doble flecha, B como trayector; (b) G como trayector con doble flecha hacia B; (c) ambos como grupo simétrico de nivel superior (rectángulo que contiene B y G) con doble flecha interna sin trayector/landmark individual conferido a ninguno. La figura argumenta que la prominencia focal (asignación de trayector/landmark) depende del hablante, no de la escena objetiva.
+- **4.11** — Tres diagramas abstractos (a)-(c) que muestran la organización trayector/landmark de las clases relacionales: (a) Adjetivo: flecha horizontal con círculo (trayector cosa) y marcas (lm) - un solo focal; (b) Adverbio: misma flecha pero el trayector es un rectángulo (relación); (c) Preposición: flecha con círculo como trayector y rectángulo como landmark (cosa). Los diagramas distinguen adjetivo, adverbio y preposición en función del número y tipo de participante focal.
+- **4.12** — Comparación de verbo y preposición en una relación de complejo desarrollo temporal: el verbo (e.g. climbed up onto) invoca específicamente el tiempo concebido 't' con barra (escaneo secuencial) y desarrolla la relación a lo largo de ese eje con estados componentes (time-slices) marcados, mientras que la preposición (onto) construye la misma relación holísticamente como un único gestalt sin barra de tiempo. La figura muestra el contraste entre procesual secuencial y no-procesual mediante la presencia/ausencia de la barra en 't'.
+- **4.13** — Tres diagramas (a)-(c) ilustrando pasos de la nominalización: (a) Proceso: relación compleja escaneada secuencialmente con barra en 't' y estados componentes '>' a lo largo del tiempo; (b) Infinitivo/participio (mínimo cambio): escaneo sumario impuesto (sin barra en 't') manteniendo los mismos estados y perfilando la relación no-procesual con trayector/landmark iguales; (c) Sustantivo nominalizado: perfil desplazado a una cosa abstracta (elipse) que engloba todos los estados componentes del proceso original.
+- **4.14** — Diagrama del participio -ing mostrando una porción delimitada 'IS1' (immediate scope temporal interno) del proceso total excluyendo los puntos finales, perfilando una relación homogénea. La '-ing' imponiendo un immediate scope temporal interno y 'construyendo como homogénea' (línea recta sin marcas de heterogeneidad) la porción seleccionada del proceso base.
+- **4.15** — Cuatro diagramas (a)-(d) de participios: (a) Participio de presente (climbing) con internal perspective, configurando el proceso completo con flecha y '>' (heterogeneidad); (b) Participio adjetival (e.g. charming) con small wavy line indicando que los estados internos son equivalentes; (c)-(d) Participio estativo-adjetival (-ed, e.g. frozen) mostrando un solo estado restringido donde un participante (círculo grande) exhibe una propiedad P que no tenía previamente, funcionando como trayector único.
 
 CG afirma que las categorías gramaticales básicas (nombre, verbo, sujeto, objeto, posesivo) son **caracterizables semánticamente**, tanto al nivel del prototipo como al nivel del esquema (válido para todos los miembros).
 
@@ -88,6 +106,22 @@ Categorías tradicionales caracterizadas como relaciones atemporales:
 
 ## 5. Subclases mayores: count/mass y perfective/imperfective
 
+**Recursos gráficos del capítulo 5** (figs. 5.1–5.13 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **5.1** — Diagrama arborescente que clasifica sustantivos en count (rectángulo, perfilando cosa delimitada) y mass (elipse, perfilando cosa amorfa no-delimitada), con subclasificación interna en count (proper/common) y mass (plural/no-plural).
+- **5.2** — Boceto esquemático que presenta el contraste count/mass como perfiles opuestos: count como círculo (cosa delimitada, replicable) y mass como elipse (cosa amorfa, contractible/expansible).
+- **5.3** — Dos diagramas (a)-(b) con un rectángulo de 'IS' (immediate scope) y una región sombreada (sustancia): (a) count noun con la sustancia delimitada dentro de IS; (b) mass noun donde 'IS' es interno a la sustancia sin requerir delimitación.
+- **5.4** — Cuatro diagramas (a)-(d) ilustrando modos de delimitación virtual: (a) contenedor con límite superior virtual como línea discontinua; (b) cavidad con frontera extrapolada; (c) convexidad con superficie extrapolada; (d) colección virtualmente delimitada.
+- **5.5** — Diagrama que modela la extensión count→mass mediante restricción del immediate scope.
+- **5.6** — Pareja de diagramas del cambio de dominio de instanciación: (a) masa básico; (b) count derivado.
+- **5.7** — Contraste perfective/imperfective mediante líneas con barras verticales (perfective) y elipses (imperfective).
+- **5.8** — Cuatro diagramas mostrando la analogía count/mass y perfective/imperfective.
+- **5.9** — Diagrama del efecto del progresivo (be...-ing).
+- **5.10** — Diagrama del significado del tiempo verbal en inglés (cuadro con líneas onduladas marca el speech event).
+- **5.11** — Cuatro diagramas de tense combinado con perfectividad.
+- **5.12** — Diagrama del performativo: speech event coincide con proceso profiled.
+- **5.13** — Dos diagramas del progresivo con presente y pasado.
+
 ### 5.1 Count y Mass Nouns
 
 La distinción nombre contable (_count_) vs. nombre de masa (_mass_) tiene una base conceptual: cómo se construye la **extensionalidad** de la cosa perfilada.
@@ -127,6 +161,23 @@ El **tiempo presente** con verbos imperfectivos describe una situación que **co
 
 ## 6. Construcciones: caracterización general
 
+**Recursos gráficos del capítulo 6** (figs. 6.1–6.14 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **6.1** — Dos diagramas (a)-(b) del ensamblaje simbólico abstracto y concreto: (a) tres estructuras simbólicas Σ1, Σ2, Σ3, cada una con polo semántico S y polo fonológico P vinculado por relación de simbolización 's'; los componentes se integran por relaciones 'i' en cada polo y se relacionan con el compuesto por relaciones 'c'; (b) el caso concreto jar lid con [JAR], [LID], [JAR LID] y correspondientes polos fonológicos.
+- **6.2** — Diagramas de la integración semántica de [JAR] (cilindro con apertura superior) y [LID] (cubierta plana): una línea punteada conecta el contenedor esquemático evocado por [LID] con el contenedor perfilado por [JAR]; y la integración fonológica de [jar] y [lid] como palabras (w) con flecha 'T' (processing/speech time) y línea de correspondencia.
+- **6.3** — Diagrama del ensamblaje completo jar lid: el compuesto fonológico [jár lid] con acento principal en la primera palabra (notado por marca de acento), y el compuesto semántico [JAR LID] con [LID] como perfil heredado.
+- **6.4** — Diagrama de las relaciones de categorización: flecha sólida indica [LID] esquemático respecto a [JAR LID] (más específico); flecha de trazos indica [JAR] vs [JAR LID] en relación de extensión.
+- **6.5** — Diagrama del ensamblaje simbólico a dos niveles de jar lid factory: cinco estructuras ([JAR], [LID], [JAR LID] compuesto de nivel 1; [FACTORY] y [JAR LID FACTORY] compuesto de nivel 2) con líneas de correspondencia.
+- **6.6** — Esquema de construcción (constructional schema) del patrón básico de compuestos nominales en inglés: N1 y N2 (rectángulos) en el polo semántico, palabras 'w' en el polo fonológico.
+- **6.7** — Vista detallada de la categorización paradigmática entre el esquema de construcción y la expresión instantánea jar lid.
+- **6.8** — Versión abreviada de 6.7: el esquema se representa como [N1 - N2].
+- **6.9** — Diagrama del compounding recursivo: el mismo esquema [N1 - N2] se aplica en dos niveles.
+- **6.10** — Lado izquierdo: la patrón de compounding de dos niveles como esquema explícito combinando dos instancias del esquema básico. Lado derecho: vista simplificada.
+- **6.11** — Cinco diagramas fonológicos (a)-(e) mostrando caminos bipolares de composición: sat con modificación vocálica, rose verbo vs nombre, told vs tolled.
+- **6.12** — Diagrama ortogonal de composición bipolar (vertical) y unipolar (horizontal) para picnics.
+- **6.13** — Dos diagramas (a) y (b) de la composición bipolar con elementos discrepantes: (a) 's añadido al final de la nominal poseedora; (b) th'big dog con cliticización.
+- **6.14** — Diagrama del clítico =nil en Luiseno.
+
 ### 6.1 Symbolic Assemblies
 
 Una **construcción** es un _symbolic assembly_ que se ha establecido como unidad convencional. Sus componentes son estructuras simbólicas (con polo semántico y fonológico) integradas por **correspondencias** y **relaciones de categorización**.
@@ -159,6 +210,20 @@ La organización interna del polo semántico (jerarquías de scope, cadenas de m
 ---
 
 ## 7. Construcciones: factores descriptivos
+
+**Recursos gráficos del capítulo 7** (figs. 7.1–7.11 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **7.1** — Dos diagramas (a)-(b) en francés 'lever la main': esquema general con V (verbo con flecha de interacción tr↔lm) y NML (objeto nominal) unidos por correspondencia (i) que identifica el landmark del verbo con el perfil del nominal; sub-esquema más específico donde el NML es ART + Nb (artículo + parte del cuerpo), con un gran círculo 'B' (cuerpo) y una segunda correspondencia (ii).
+- **7.2** — Dos diagramas (a)-(b) del compuesto 'lever la main' mostrando los efectos de las dos correspondencias: solo esquema general vs sub-esquema con unificado compactado.
+- **7.3** — Diagrama de los componentes de tall giraffe: el adjetivo tall perfila una relación no-procesual con un trayector (entidad física con dimensión vertical) y una flecha-escala con región 'n' (norma humana normal); el nombre giraffe se muestra como cosa con alineamiento vertical y rango típico 'n'. La correspondencia (i) básica une los trayector; la correspondencia (ii) adicional identifica la norma.
+- **7.4** — Diagrama del polo semántico del enunciado luiseno 'Noo=nil 'owo'aquş': dos estructuras con un proceso perfilado en flecha sólida (cláusula, especificando que el potencial trayector es el hablante 'S' y el proceso es pasado) y un proceso esquemático en flecha con elipsis (clítico).
+- **7.5** — Tres diagramas (a)-(b)-(c) de tall giraffe y 'tall idea': (a) esquema de construcción [ADJ N] con la flecha discontinua del adjetivo correspondiendo al perfil del nombre; (b)-(c) los dos sentidos de 'tall idea'.
+- **7.6** — Diagrama del perfil determinante en la frase preposicional 'in the closet': el nominal (the closet) perfila una cosa dibujada como rectángulo etiquetado 'C'; la preposición in perfila una relación no-procesual.
+- **7.7** — Diagrama de perfiles correspondientes (apposition nominal): ambos componentes perfilan cosas (rectángulos X e Y) y sus perfiles corresponden.
+- **7.8** — Diagrama de los perfiles conflacionados en locativos anidados: integración de 'in the closet' y 'on the shelf' con IS y MS.
+- **7.9** — Diagrama del compuesto exocéntrico pickpocket: pick perfila un proceso con landmark que es la ubicación.
+- **7.10** — Dos diagramas (a) y (b) de e-sites con notación de sombreado: el landmark esquemático de in elaborado por the closet como sitio de elaboración.
+- **7.11** — Dos diagramas (a) y (b) de integración fonológica con e-sites.
 
 ### 7.1 Correspondencias
 
@@ -203,6 +268,32 @@ El orden de combinación no está fijado rígidamente. En _the cat on the mat_, 
 ---
 
 ## 8. Reglas y restricciones
+
+**Recursos gráficos del capítulo 8** (figs. 8.1–8.23 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **8.1** — Diagrama de la 'lengua' (L) como inventario estructurado de unidades lingüísticas: cuadro grande etiquetado 'L' contiene cuadrados pequeños que representan unidades individuales, separadas e independientes como ilustraciones desempaquetadas; pero se recalca que es ficción útil.
+- **8.2** — Dos diagramas (a)-(b) de una relación de categorización individual: [A] dentro de un cuadrado categorizando (B) dentro de un círculo. (a) Elaboración [A] → (B); (b) Extensión [A] ⤳ (B).
+- **8.3** — Diagrama del cambio lingüístico progresivo: la categorización ([A] ⤳ (B)) ocurre en muchos eventos hasta que se entrincha, transformándose en categorización entre unidades: ([A] ⤳ (B)) > [[A] ⤳ [B]].
+- **8.4** — Tres diagramas (a)-(b)-(c) de la extensión semántica de mail de 'correo postal' a 'email'.
+- **8.5** — Tres diagramas (a)-(b)-(c) sobre reconocimiento y esquematización en extensión: conflicto con [A], rasgos suspendidos para obtener (A') (extensión por abstracción).
+- **8.6** — Diagrama esquemático de una red de categorías complejas: nodos conectados por relaciones de categorización con grosores variables.
+- **8.7** — Dos diagramas (a)-(b) de reconocimiento facial: dos esquemas [ZELDA] y [QUENTIN] compitiendo para categorizar la misma imagen visual (Z).
+- **8.8** — Dos diagramas (a)-(b) de activación competitiva de esquemas: inicialmente el target T activa múltiples unidades competidoras; una unidad gana.
+- **8.9** — Diagrama con dos esquemas alternativos y cuatro expresiones blanco: [ADJ N] y [N ADJ+X] comparados con tall giraffe, giraffe tall, giraffe tall beyond belief, etc.
+- **8.10** — Red jerárquica de patrones de posposición en Luiseno: cajas para esquemas accesibles y de línea punteada para inaccesibles. Tres esquemas de bajo nivel y un esquema abstracto [N-P].
+- **8.11** — Esbozo de red parcial de compuestos en inglés: [N+N] como prototipo con [ADJ+N], [V+N] y [N+V] como variantes convencionales.
+- **8.12** — Tres diagramas (a)-(b)-(c) de los tres sentidos de send (send_1 ditransitivo, send_2 caused-motion, send_3 send for): muestran prominencia diferencial del 'recipiente'.
+- **8.13** — Red mixta lexical-gramatical: izquierda fragmento de red de construcciones ditransitivas en inglés; derecha red lexical de send con tres sentidos estructurales.
+- **8.14** — Diagrama de la categorización extendida (no sólo elaboración) en la ditransitiva.
+- **8.15** — Dos diagramas (a)-(b) del blended meaning inducido por la categorización de 8.14.
+- **8.16** — Diagrama de la metonimia patrón-a-patrón (generalización de alto orden).
+- **8.17** — Diagrama específico de patrones metonímicos: línea punteada representa el desplazamiento de profile A→B.
+- **8.18** — Tabla parcial de inflexión regular de la clase 'a' en español (verbs amar, cantar, trabajar).
+- **8.19** — Dos diagramas de construcciones individuales (1s presente 'amo' y 2s pretérito 'amaste').
+- **8.20** — Cuadrícula de ensamblajes esquemáticos: filas superiores con esquema de tallo y filas inferiores con las unidades específicas.
+- **8.21** — Dos diagramas: (a) complejos de categoría para tallo ama/am alternantes; (b) generalización de alto orden.
+- **8.22** — Diagrama de esquematización basada en la primera persona singular del presente.
+- **8.23** — Red completa de la clase de conjugación española 'a' (verbo tipo amar).
 
 CG rechaza la visión de la gramática como sistema de reglas algorítmicas que generan oraciones. En su lugar: la gramática reside en una vasta red de **unidades convencionales** (esquemas construccionales, ítems léxicos, relaciones de categorización) que colectivamente **sancionan** (_sanction_) las expresiones.
 
