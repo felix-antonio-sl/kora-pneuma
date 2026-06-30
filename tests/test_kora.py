@@ -513,13 +513,14 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(primera, emitido.read_bytes())
 
     def test_target_no_realizado_falla_honesto(self):
+        # hermes sigue reconocido-no-realizado; openclaw YA está realizado
+        # (ley/3 v1.3.0) y se prueba en TestOpenclaw.
         self.escribir_skill()
-        for target in ("openclaw", "hermes"):
-            codigo, _, err = self.correr(
-                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
-                 "--target", target])
-            self.assertEqual(codigo, 1, target)
-            self.assertIn("GENESIS", err)
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("GENESIS", err)
 
     def test_codex_colapsa_agente_a_skill(self):
         self.escribir_agente()
@@ -574,6 +575,179 @@ class TestTransmutacion(CasoPneuma):
              "--target", "claude-code"])
         self.assertEqual(codigo, 1)
         self.assertIn("no se transmuta", err)
+
+
+# ------------------------------------- 11b. openclaw: workspace multi-archivo
+
+def cuerpo_persona(operativa, voz):
+    """Cuerpo de agente persona con el span de U_phen delimitado por el
+    centinela canónico kora:soul (ley/2 §10 r6)."""
+    return (f"# agente-x\n\n## Operativa\n\n{operativa}\n\n"
+            f"{kora.SOUL_ABRE}\n## Voz\n\n{voz}\n{kora.SOUL_CIERRA}\n")
+
+
+class TestOpenclaw(CasoPneuma):
+    """openclaw realizado (ley/3 v1.3.0): emite un WORKSPACE multi-archivo
+    (AGENTS.md = operativa/cuerpo verbatim; SOUL.md = voz/U_phen), no un
+    monolito. Conformidad real verificada contra ~/openclaw-fleet."""
+
+    def _emitir_persona(self, **over):
+        campos = agente_campos(targets=["openclaw"], **over)
+        self.escribir("artefactos/agentes/dev/agente-x.md",
+                      doc(campos, cuerpo_persona("Regla de operacion uno.",
+                                                 "Tono directo y denso.")))
+        return self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "openclaw"])
+
+    def test_workspace_segrega_voz_de_operativa(self):
+        codigo, _, _ = self._emitir_persona()
+        self.assertEqual(codigo, 0)
+        ws = self.raiz / "_emision/openclaw/workspaces/agente-x"
+        agents = ws / "AGENTS.md"
+        soul = ws / "SOUL.md"
+        self.assertTrue(agents.is_file())
+        self.assertTrue(soul.is_file())
+        ta = agents.read_text(encoding="utf-8")
+        ts = soul.read_text(encoding="utf-8")
+        # AGENTS.md = cuerpo verbatim (transporte de fibra): operativa + voz.
+        self.assertFalse(ta.startswith("---"))   # markdown plano, sin frontmatter
+        self.assertIn("Regla de operacion uno.", ta)
+        self.assertIn("Tono directo y denso.", ta)
+        self.assertIn("funtor: T-openclaw-pneuma-v1", ta)
+        self.assertIn("target: openclaw", ta)
+        # SOUL.md = voz PURA: tiene la voz, NO la operativa. La doc de openclaw
+        # prohíbe operativa en SOUL.md.
+        self.assertIn("Tono directo y denso.", ts)
+        self.assertIn("## Voz", ts)
+        self.assertNotIn("Regla de operacion uno.", ts)
+        self.assertNotIn("## Operativa", ts)
+        # Ambos archivos se auto-certifican con el sello.
+        self.assertIn("<!-- kora:sello", ta)
+        self.assertIn("<!-- kora:sello", ts)
+        # sello fresco no reclama sobre el workspace recién emitido.
+        self.assertEqual(self.fallos("sello-fresco"), [])
+
+    def test_matriz_mu3_xi4_full(self):
+        # plataforma/servicio con mu=3 y xi=4: openclaw los proyecta FULL —
+        # único target que lo logra (techo más alto, ley/3 §4.4).
+        codigo, _, _ = self._emitir_persona(
+            forma="plataforma", arnes="servicio",
+            vector=[2, 3, 4, 1, 2], sigma=[2, 1, 2, 1, 1])
+        self.assertEqual(codigo, 0)
+        ta = (self.raiz /
+              "_emision/openclaw/workspaces/agente-x/AGENTS.md").read_text(
+                  encoding="utf-8")
+        self.assertIn("vector-proyectado: [2,3,4,1,2] sigma [2,1,2,1,1]", ta)
+        self.assertIn("fidelidad: pi:full mu:full xi:full lambda:full "
+                      "phi:full sigma:full", ta)
+        self.assertNotIn("perdidas:", ta)
+
+    def test_mu3_califica_realiza_difiere(self):
+        # mu=3: el sello califica realiza/difiere en AMBOS archivos del
+        # workspace (ley/3 §7.1 r5) — el funtor realiza la emisión conforme al
+        # techo always-on (TIPO), difiere la conducta always-on al deploy
+        # (TOKEN). Observable en el proof-carrier, no sólo en la ley.
+        codigo, _, _ = self._emitir_persona(
+            forma="plataforma", arnes="servicio",
+            vector=[2, 3, 4, 1, 2], sigma=[2, 1, 2, 1, 1])
+        self.assertEqual(codigo, 0)
+        ws = self.raiz / "_emision/openclaw/workspaces/agente-x"
+        for archivo in ("AGENTS.md", "SOUL.md"):
+            t = (ws / archivo).read_text(encoding="utf-8")
+            self.assertIn("realiza: workspace-mu3-conforme", t)
+            self.assertIn("difiere: conducta-always-on", t)
+
+    def test_mu_menor_3_sin_calificacion(self):
+        # mu<3 (persona default mu=2): no hay always-on que diferir.
+        codigo, _, _ = self._emitir_persona()
+        self.assertEqual(codigo, 0)
+        ta = (self.raiz /
+              "_emision/openclaw/workspaces/agente-x/AGENTS.md").read_text(
+                  encoding="utf-8")
+        self.assertNotIn("realiza: workspace-mu3", ta)
+        self.assertNotIn("difiere: conducta-always-on", ta)
+
+    def test_lambda3_partial_unico_target(self):
+        # lambda=3: openclaw es el ÚNICO target que lo proyecta (partial).
+        codigo, _, _ = self._emitir_persona(
+            forma="plataforma", arnes="servicio",
+            vector=[2, 3, 3, 3, 2], sigma=[2, 2, 2, 2, 2])
+        self.assertEqual(codigo, 0)
+        ta = (self.raiz /
+              "_emision/openclaw/workspaces/agente-x/AGENTS.md").read_text(
+                  encoding="utf-8")
+        self.assertIn("lambda: 3->3 :: society-in-the-loop", ta)
+        self.assertIn("lambda:partial", ta)
+
+    def test_persona_sin_centinela_falla_honesto(self):
+        # arnes con U_phen + openclaw, sin centinela: el núcleo no fabrica voz.
+        campos = agente_campos(targets=["openclaw"])
+        self.escribir("artefactos/agentes/dev/agente-x.md", doc(campos))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "openclaw"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("centinela", err)
+        self.assertIn("forma-no-verdad", err)
+        self.assertFalse((self.raiz / "_emision").exists())
+
+    def test_delegado_sin_soul(self):
+        # subagente/delegado NO porta U_phen: workspace con AGENTS.md y SIN
+        # SOUL.md (no hay persona que segregar).
+        campos = agente_campos(
+            urn="urn:dev:artefacto:sub-x", nombre="sub-x",
+            forma="subagente", arnes="delegado",
+            vector=[2, 1, 2, 0, 1], sigma=[1, 1, 1, 1, 1],
+            targets=["openclaw"])
+        self.escribir("artefactos/agentes/dev/sub-x.md", doc(campos))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:sub-x",
+             "--target", "openclaw"])
+        self.assertEqual(codigo, 0)
+        ws = self.raiz / "_emision/openclaw/workspaces/sub-x"
+        self.assertTrue((ws / "AGENTS.md").is_file())
+        self.assertFalse((ws / "SOUL.md").exists())
+
+    def test_skill_a_openclaw(self):
+        self.escribir_skill(skill_campos(targets=["openclaw"]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "openclaw"])
+        self.assertEqual(codigo, 0)
+        sk = self.raiz / "_emision/openclaw/skills/util-x/SKILL.md"
+        self.assertTrue(sk.is_file())
+        texto = sk.read_text(encoding="utf-8")
+        self.assertIn("name: util-x", texto)
+        self.assertIn("funtor: T-openclaw-pneuma-v1", texto)
+
+    def test_byte_determinismo_workspace(self):
+        self.assertEqual(self._emitir_persona()[0], 0)
+        ws = self.raiz / "_emision/openclaw/workspaces/agente-x"
+        a1 = (ws / "AGENTS.md").read_bytes()
+        s1 = (ws / "SOUL.md").read_bytes()
+        self.assertEqual(self._emitir_persona()[0], 0)
+        self.assertEqual(a1, (ws / "AGENTS.md").read_bytes())
+        self.assertEqual(s1, (ws / "SOUL.md").read_bytes())
+
+    def test_sello_rancio_en_workspace(self):
+        self.assertEqual(self._emitir_persona()[0], 0)
+        fuente = self.raiz / "artefactos/agentes/dev/agente-x.md"
+        fuente.write_text(fuente.read_text(encoding="utf-8") + "\nx\n",
+                          encoding="utf-8")
+        self.assert_fallo("sello-fresco", "emisión rancia, re-transmutar")
+
+    def test_stdout_multi_archivo(self):
+        campos = agente_campos(targets=["openclaw"])
+        self.escribir("artefactos/agentes/dev/agente-x.md",
+                      doc(campos, cuerpo_persona("Op uno.", "Voz dos.")))
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "openclaw", "--stdout"])
+        self.assertEqual(codigo, 0)
+        self.assertIn("=== openclaw/workspaces/agente-x/AGENTS.md ===", salida)
+        self.assertIn("=== openclaw/workspaces/agente-x/SOUL.md ===", salida)
+        self.assertFalse((self.raiz / "_emision").exists())
 
 
 # ------------------------------------------------------------- 12. censo

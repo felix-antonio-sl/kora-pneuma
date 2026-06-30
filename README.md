@@ -36,8 +36,9 @@ python3 kora.py ciclo <urn> <estado>   # lifecycle: solo hacia adelante, jamás 
 python3 kora.py ley                    # toda la ley a stdout — KORA en un contexto
 ```
 
-Targets realizados: `claude-code`, `codex`, `opencode`. Reconocidos pero no
-realizados (deuda declarada en GENESIS §4): `openclaw`, `hermes`.
+Targets realizados: `claude-code`, `codex`, `opencode`, `openclaw` (este último
+emite un **workspace** multi-archivo: AGENTS.md + SOUL.md; `ley/3 §7.1`, cierra la
+deuda de GENESIS §4 sin editar GENESIS). Reconocido pero no realizado: `hermes`.
 
 ## Topología
 

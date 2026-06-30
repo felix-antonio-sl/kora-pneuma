@@ -30,7 +30,11 @@ from pathlib import Path
 # ------------------------------------------------------------------ constantes
 
 TARGETS_CONOCIDOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
-TARGETS_REALIZADOS = ("claude-code", "codex", "opencode")
+TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw")
+
+# Arneses que portan U_phen (ley/2 §10 r5): su personalidad se segrega a SOUL.md
+# en los targets que separan voz de operativa (openclaw, ley/3 §7.1).
+ARNESES_CON_UPHEN = ("persona", "orquestador", "servicio")
 
 ESTADOS_CONOCIMIENTO = ("borrador", "publicado", "deprecado")
 ESTADOS_AGENTICO = ("borrador", "activo", "deprecado", "retirado")
@@ -760,6 +764,11 @@ def chk_sello_fresco(arts, raiz):
         agents = target_dir / "agents"
         if agents.is_dir():
             emitidos.extend(sorted(agents.glob("*.md")))
+        # openclaw: el agente es un workspace; AGENTS.md y SOUL.md portan sello.
+        workspaces = target_dir / "workspaces"
+        if workspaces.is_dir():
+            emitidos.extend(sorted(workspaces.glob("*/AGENTS.md")))
+            emitidos.extend(sorted(workspaces.glob("*/SOUL.md")))
     for path in emitidos:
         rel = path.relative_to(raiz).as_posix()
         texto = path.read_text(encoding="utf-8")
@@ -912,6 +921,31 @@ MATRICES = {
                    4: (None, "none", "co-evolutivo no soportado")}),
         "sigma-max": [3, 2, 2, 2, 1],
     },
+    # openclaw: el techo más alto de los cinco targets (ley/3 §4.4). Meta-runtime
+    # ACP + systemd always-on. Único con mu=3 y xi=4 full; único que proyecta
+    # lambda=3 (partial). Fiel a la runtime-extension openclaw de la bestia y
+    # confirmada contra el openclaw real (~/openclaw-fleet/, docs.openclaw.ai).
+    "openclaw": {
+        "pi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None)}),  # delegación jerárquica vía ACP
+        "mu": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None)}),  # always-on systemd + Telegram
+        "xi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None), 3: (3, "full", None),
+                  4: (4, "full", None)}),  # operad dinámica vía ACP dispatch
+        "lambda": _m({0: (0, "full", None), 1: (1, "full", None),
+                      2: (2, "full", None),
+                      3: (3, "partial", "society-in-the-loop requiere "
+                          "gobernanza externa no modelada en runtime")}),
+        "phi": _m({0: (0, "full", None), 1: (1, "full", None),
+                   2: (2, "full", None),
+                   3: (3, "partial", "cognición híbrida parcial, no HAJCS "
+                       "completo"),
+                   4: (None, "none", "co-evolutivo no modelado")}),
+        "sigma-max": [3, 3, 3, 3, 2],
+    },
 }
 
 # Razón por componente de sigma cuando la fuente excede el máximo del target.
@@ -939,15 +973,31 @@ SIGMA_RAZONES = {
                           "trail cross-session transparente",
         "sustainability": "solo declarativo",
     },
+    "openclaw": {
+        "safety": "hard_rules en AGENTS.md + approval gates + policy en gateway",
+        "fairness": "declarativo + bias audits manuales; sin enforcement runtime",
+        "transparency": "historial persistente + logs + audit trails por sesión",
+        "accountability": "git log del fleet + logs por sesión + Telegram",
+        "sustainability": "sustainability ambiental no medida; model routing + "
+                          "budget tracking",
+    },
 }
 
 # Quién sí soporta un eje que el target rechaza (para el mensaje de fallo).
+# openclaw realizado desde ley/3 v1.3.0: sostiene mu=3 (full) y lambda=3 (partial).
 QUIEN_SOPORTA = {
-    ("mu", 3): "openclaw (reconocido por la ley, no realizado en esta "
-               "encarnación; ver GENESIS.md)",
-    ("lambda", 3): "ninguno de los runtimes reconocidos",
+    ("mu", 3): "openclaw (transmutar --target openclaw)",
+    ("lambda", 3): "openclaw (parcial; transmutar --target openclaw)",
     ("phi", 4): "ninguno de los runtimes reconocidos",
 }
+
+# Centinela canónico que delimita el span de U_phen en el cuerpo (ley/2 §10 r6).
+# Predicado literal decidible: el núcleo NO segmenta prosa (forma-no-verdad);
+# el autor marca el span y el funtor lo transporta a SOUL.md (openclaw, ley/3 §7.1).
+SOUL_ABRE = "<!-- kora:soul -->"
+SOUL_CIERRA = "<!-- kora:soul:fin -->"
+RE_SOUL = re.compile(
+    re.escape(SOUL_ABRE) + r"\n(.*?)\n" + re.escape(SOUL_CIERRA), re.DOTALL)
 
 DOCTRINA_DUAL_MODE = """## Modos de invocacion
 
@@ -1087,6 +1137,19 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         lineas.append("perdidas:")
         for etiqueta, a, b, razon in perdidas:
             lineas.append(f"  {etiqueta}: {a}->{b} :: {razon}")
+    # Calificación mu=3 observable (ley/3 §7.1): para un agente con materia
+    # ambiental always-on (mu=3), el funtor REALIZA la emisión del workspace
+    # conforme al techo always-on (mu:3 full, enunciado de TIPO) y DIFIERE la
+    # conducta always-on (daemon/gateway/systemd) al deploy del fleet (TOKEN).
+    # En el proof-carrier, no sólo en la ley: reconcilia el "openclaw no
+    # realizado" inmutable de GENESIS con el realizado registrado en ley/3.
+    if target == "openclaw" and art.campos.get("vector", [0, 0])[1] == 3:
+        lineas += [
+            "realiza: workspace-mu3-conforme (AGENTS.md+SOUL.md; techo "
+            "always-on, sin recorte de min)",
+            "difiere: conducta-always-on (gateway/systemd/openclaw.json) -> "
+            "deploy del fleet",
+        ]
     # El contrato de conocimiento va ANTES de las dos líneas fijas (ley/3 §5
     # r6, cf. r4): nada se interpone jamás entre ellas y el cierre `-->`.
     lineas += _bloque_contrato(art)
@@ -1114,12 +1177,73 @@ def _componer(frontmatter: list[str], cuerpo: str, extra: str,
     return "\n".join(partes)
 
 
-def emitir(art: Artefacto, target: str, proy: dict,
-           hash_hex: str) -> tuple[str, str, list]:
-    """Construye la emisión: (path relativo bajo _emision, contenido, extra).
+def _componer_plano(cuerpo: str, sello: str) -> str:
+    """Composición sin frontmatter: los workspace files de openclaw (AGENTS.md,
+    SOUL.md) son markdown plano + sello. Byte-determinista, sin timestamps."""
+    return "\n".join([cuerpo.strip("\n"), "", sello, ""])
 
-    Devuelve también las pérdidas extra (colapso de forma), ya selladas.
+
+def _extraer_soul(cuerpo: str) -> tuple[str | None, str | None]:
+    """Extrae el span de U_phen delimitado por el centinela kora:soul (ley/2
+    §10 r6). Devuelve (span | None, error | None). Match literal, sin
+    interpretar prosa (forma-no-verdad). A lo sumo un par balanceado."""
+    matches = list(RE_SOUL.finditer(cuerpo))
+    n_abre = cuerpo.count(SOUL_ABRE)
+    n_cierra = cuerpo.count(SOUL_CIERRA)
+    if n_abre == 0 and n_cierra == 0:
+        return None, "ausente"
+    if n_abre != 1 or n_cierra != 1 or len(matches) != 1:
+        return None, ("desbalanceado o múltiple "
+                      f"({n_abre} aperturas, {n_cierra} cierres)")
+    return matches[0].group(1).strip("\n"), None
+
+
+def _emitir_openclaw(art: Artefacto, proy: dict,
+                     hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+    """openclaw: el objeto-runtime es un WORKSPACE multi-archivo name-keyed,
+    no un archivo único (ley/3 §7.1). skill -> SKILL.md; agente -> workspace con
+    AGENTS.md (cuerpo verbatim, transporte de fibra) + SOUL.md (span de U_phen,
+    sólo si el arnes lo porta; sale del centinela kora:soul, ley/2 §10 r6).
+    Duplicación, no partición: el span queda en AGENTS.md (cuerpo verbatim) y se
+    COPIA a SOUL.md — preserva la bisimulación módulo proyección (ley/3 §3)."""
+    nombre = art.campos["nombre"]
+    perdidas_extra: list = []
+    sello = construir_sello(art, "openclaw", hash_hex, proy, perdidas_extra)
+    if art.tipo == "skill":
+        descripcion = art.campos.get("descripcion", "")
+        fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
+        contenido = _componer(fm, art.cuerpo, "", sello)
+        return [(f"openclaw/skills/{nombre}/SKILL.md", contenido)], perdidas_extra
+    # agente / subagente / plataforma -> workspace
+    archivos = [(f"openclaw/workspaces/{nombre}/AGENTS.md",
+                 _componer_plano(art.cuerpo, sello))]
+    arnes = art.campos.get("arnes")
+    if arnes in ARNESES_CON_UPHEN:
+        span, err = _extraer_soul(art.cuerpo)
+        if err:
+            raise ErrorTransmutacion(
+                f"el agente '{nombre}' (arnes '{arnes}', con U_phen) declara "
+                f"target openclaw, que segrega SOUL.md (voz) de AGENTS.md "
+                f"(operativa), pero su cuerpo no delimita U_phen con el "
+                f"centinela {SOUL_ABRE} ... {SOUL_CIERRA} (centinela {err}). El "
+                f"núcleo no segmenta prosa (forma-no-verdad): delimita el span "
+                f"de U_phen en el cuerpo (ley/2 §10 r6; skill "
+                f"autoria-de-persona) y reintenta. No se fabrica voz.")
+        archivos.append((f"openclaw/workspaces/{nombre}/SOUL.md",
+                         _componer_plano(span, sello)))
+    return archivos, perdidas_extra
+
+
+def emitir(art: Artefacto, target: str, proy: dict,
+           hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+    """Construye la emisión: (lista de (path relativo bajo _emision, contenido),
+    pérdidas extra ya selladas — colapso de forma).
+
+    Casi todos los targets emiten UN archivo; openclaw emite un WORKSPACE
+    (AGENTS.md [+ SOUL.md]). La lista uniforma ambos casos.
     """
+    if target == "openclaw":
+        return _emitir_openclaw(art, proy, hash_hex)
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
     herramientas = art.campos.get("herramientas") or []
@@ -1161,7 +1285,7 @@ def emitir(art: Artefacto, target: str, proy: dict,
             fm.extend(f"  {op}: deny" for op in denegadas)
         rel = f"{target}/agents/{nombre}.md"
     sello = construir_sello(art, target, hash_hex, proy, perdidas_extra)
-    return rel, _componer(fm, art.cuerpo, extra, sello), perdidas_extra
+    return [(rel, _componer(fm, art.cuerpo, extra, sello))], perdidas_extra
 
 
 def _copiar_referencias(art: Artefacto, destino_dir: Path) -> Path | None:
@@ -1187,6 +1311,10 @@ RUTAS_APLICAR = {
     ("codex", "agente"): "~/.codex/skills/{nombre}",
     ("opencode", "skill"): "~/.config/opencode/skills/{nombre}",
     ("opencode", "agente"): "~/.config/opencode/agents/{nombre}.md",
+    # openclaw: el agente es un WORKSPACE name-keyed (dir con AGENTS.md+SOUL.md);
+    # la skill, un managed skill. El gateway hot-reloadea en `gateway restart`.
+    ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
+    ("openclaw", "agente"): "~/openclaw-fleet/workspaces/{nombre}",
 }
 
 # Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/
@@ -1259,66 +1387,85 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
         return 1
     try:
         proy = proyectar(vector, sigma, target)
+        hash_hex = hashlib.sha256(art.path.read_bytes()).hexdigest()
+        archivos, perdidas_extra = emitir(art, target, proy, hash_hex)
     except ErrorTransmutacion as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
-    hash_hex = hashlib.sha256(art.path.read_bytes()).hexdigest()
-    rel, contenido, _ = emitir(art, target, proy, hash_hex)
     if a_stdout:
-        sys.stdout.write(contenido)
+        for i, (rel, contenido) in enumerate(archivos):
+            if len(archivos) > 1:
+                sys.stdout.write(("\n" if i else "") + f"=== {rel} ===\n")
+            sys.stdout.write(contenido)
         return 0
-    destino = raiz / "_emision" / rel
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    destino.write_text(contenido, encoding="utf-8")
-    print(f"emitido: _emision/{rel}")
-    refs = _copiar_referencias(art, destino.parent)
-    if refs:
-        print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
-              f"(copia de referencias/)")
-    for etiqueta, a, b, razon in proy["perdidas"]:
+    skill_dir = None
+    for rel, contenido in archivos:
+        destino = raiz / "_emision" / rel
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(contenido, encoding="utf-8")
+        print(f"emitido: _emision/{rel}")
+        if rel.endswith("/SKILL.md"):
+            skill_dir = destino.parent
+    if art.tipo == "skill" and skill_dir is not None:
+        refs = _copiar_referencias(art, skill_dir)
+        if refs:
+            print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
+                  f"(copia de referencias/)")
+    for etiqueta, a, b, razon in list(proy["perdidas"]) + list(perdidas_extra):
         print(f"pérdida declarada: {etiqueta}: {a}->{b} :: {razon}")
-    if art.tipo == "agente" and target == "codex":
-        print("pérdida declarada: forma: agente->habilidad :: codex no "
-              "registra agentes")
     if aplicar:
-        nombre_art = art.campos["nombre"]
-        # El gesto respeta el alcance declarado (ausente = ambos).
-        alcance = art.campos.get("alcance", "ambos")
-        if proyecto and alcance == "usuario":
-            print(f"error: '{nombre_art}' declara alcance 'usuario'; no admite "
-                  f"instalacion a nivel proyecto (--proyecto).", file=sys.stderr)
-            return 1
-        if not proyecto and alcance == "proyecto":
-            print(f"error: '{nombre_art}' declara alcance 'proyecto'; requiere "
-                  f"--proyecto PATH (no se instala a nivel usuario).",
+        return _aplicar(art, target, archivos, proyecto)
+    return 0
+
+
+def _aplicar(art: Artefacto, target: str,
+             archivos: list[tuple[str, str]], proyecto: str | None) -> int:
+    """Instala la emisión en el runtime real, honrando el `alcance` (ley/3 §7).
+    Destinos dir-based (skill, codex-agente, openclaw-workspace) reciben cada
+    archivo por su nombre base; file-based (claude-code/opencode agente) un solo
+    archivo."""
+    nombre_art = art.campos["nombre"]
+    alcance = art.campos.get("alcance", "ambos")
+    if proyecto and alcance == "usuario":
+        print(f"error: '{nombre_art}' declara alcance 'usuario'; no admite "
+              f"instalacion a nivel proyecto (--proyecto).", file=sys.stderr)
+        return 1
+    if not proyecto and alcance == "proyecto":
+        print(f"error: '{nombre_art}' declara alcance 'proyecto'; requiere "
+              f"--proyecto PATH (no se instala a nivel usuario).",
+              file=sys.stderr)
+        return 1
+    if proyecto:
+        base = Path(proyecto).expanduser()
+        if not base.is_dir():
+            print(f"error: el proyecto '{proyecto}' no es un directorio.",
                   file=sys.stderr)
             return 1
-        if proyecto:
-            base = Path(proyecto).expanduser()
-            if not base.is_dir():
-                print(f"error: el proyecto '{proyecto}' no es un directorio.",
-                      file=sys.stderr)
-                return 1
-            if (target, art.tipo) not in RUTAS_APLICAR_PROYECTO:
-                soportados = ", ".join(
-                    sorted({t for t, _ in RUTAS_APLICAR_PROYECTO}))
-                print(f"error: el target '{target}' no soporta instalacion a "
-                      f"nivel proyecto (soportados: {soportados}).",
-                      file=sys.stderr)
-                return 1
-            ruta = base / RUTAS_APLICAR_PROYECTO[(target, art.tipo)].format(
-                nombre=nombre_art)
-        else:
-            ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
-                nombre=nombre_art)).expanduser()
-        if art.tipo == "skill" or (art.tipo, target) == ("agente", "codex"):
-            ruta.mkdir(parents=True, exist_ok=True)
-            (ruta / "SKILL.md").write_text(contenido, encoding="utf-8")
+        if (target, art.tipo) not in RUTAS_APLICAR_PROYECTO:
+            soportados = ", ".join(
+                sorted({t for t, _ in RUTAS_APLICAR_PROYECTO}))
+            print(f"error: el target '{target}' no soporta instalacion a "
+                  f"nivel proyecto (soportados: {soportados}).",
+                  file=sys.stderr)
+            return 1
+        ruta = base / RUTAS_APLICAR_PROYECTO[(target, art.tipo)].format(
+            nombre=nombre_art)
+    else:
+        ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
+            nombre=nombre_art)).expanduser()
+    dir_based = (art.tipo == "skill"
+                 or (art.tipo, target) in (("agente", "codex"),
+                                           ("agente", "openclaw")))
+    if dir_based:
+        ruta.mkdir(parents=True, exist_ok=True)
+        for rel, contenido in archivos:
+            (ruta / Path(rel).name).write_text(contenido, encoding="utf-8")
+        if art.tipo == "skill":
             _copiar_referencias(art, ruta)
-        else:
-            ruta.parent.mkdir(parents=True, exist_ok=True)
-            ruta.write_text(contenido, encoding="utf-8")
-        print(f"aplicado: {ruta}")
+    else:
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        ruta.write_text(archivos[0][1], encoding="utf-8")
+    print(f"aplicado: {ruta}")
     return 0
 
 
