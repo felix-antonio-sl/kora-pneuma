@@ -4,7 +4,7 @@ nombre: langacker-cg-fronteras
 version: 1.0.0
 estado: publicado
 descripcion: "Fronteras de Cognitive Grammar (Parte IV, caps. 13-14): discurso como base de la estructura lingüística (sustrato conceptual, géneros discursivos, construcción de estructura discursiva, anclaje encubierto —covert grounding—); dinamicidad de la conceptualización (caminos de acceso mental, punto de referencia, posesión, anáfora pronominal, tópico vs. sujeto); fictividad (entidades virtuales, movimiento ficticio, cambio ficticio, habla ficticia); y simulación/subjetificación como anclaje de la mente en la experiencia corporeizada."
-fuente: "Langacker, Ronald W. (2008). Cognitive Grammar: A Basic Introduction. Oxford University Press. Archivo fuente: /home/felix/kora-external-sources/Cognitive Grammar_ A Basic Introduction - Ronald W. Langacker.txt (sha256:6370e8b08fdaaf1ebc2a05db7a4b0db553cf9384a58bb7532f3a0f037838707f). Alcance: Part IV (Frontiers), caps. 13-14 (pp. 457-540 del libro; líneas 5591-7200 del archivo). Descartado: Parts I-III en artefactos hermanos. Excluido de alcance por ser derivado: References e Index (líneas 7200-8296)."
+fuente: "Langacker, Ronald W. (2008). Cognitive Grammar: A Basic Introduction. Oxford University Press. Archivo fuente: /home/felix/kora-external-sources/Cognitive Grammar_ A Basic Introduction - Ronald W. Langacker.txt (sha256:6370e8b08fdaaf1ebc2a05db7a4b0db553cf9384a58bb7532f3a0f037838707f). Alcance: Part IV (Frontiers), caps. 13-14 (pp. 457-540 del libro; líneas 5591-7200 del archivo). Descartado: Parts I-III en artefactos hermanos; figuras (descripciones textuales conservadas por capítulo; los diagramas como objetos visuales se consultan en el original fuente). Excluido de alcance por ser derivado: References e Index (líneas 7200-8296)."
 autor: FS
 creado: 2026-06-29
 lang: es
@@ -17,7 +17,21 @@ depende: [urn:fxsl:kb:langacker-cg-fundamentos, urn:fxsl:kb:langacker-cg-clases-
 
 ## 13. Discurso
 
-### 13.1 La base de la estructura lingüística
+**Recursos gráficos del capítulo 13** (figs. 13.1–13.12 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **13.1** — Esquema genérico de elementos prospectivos y retrospectivos: «Once upon a time… / …happily ever after» — flechas indicando avance del tiempo del discurso y posición en la estructura del cuento.
+- **13.2** — Current Discourse Space (CDS) como base compartida: elipsoide grande etiquetada CDS conteniendo los interlocutores S y H (con flechas dashed internas) y un objeto O foco de atención; flechas dashed desde S y hacia H muestran que el hablante dirige la atención del oyente al mismo foco.
+- **13.3** — Doble rol del conceptualizador como sujeto y objeto de concepción: (a) «I don't trust him» con la línea de correspondencia entre hablante como conceptualizer y onstage como tr; (b) «Don't trust him» sin O explícito onstage (discrepancia entre OC y IS).
+- **13.4** — Realizaciones del acto de habla (performative) vs. imperativo simple: (a) «She ordered him to leave»; (b) «I order you to leave!» performativo; (c) superimposición; (d)/(e) «Leave!» y «You leave!».
+- **13.5** — Tres escenarios de speech act con interlocutores (S, H en elipse G) y la proposición arriba: (a) Statement Scenario (C con flecha e), (b) Order Scenario (double arrow=fuerza social, dashed double=intención), (c) Question Scenario (cadena de tres usage events).
+- **13.6** — Frame atencional básico para cláusulas en discurso: (a) cláusula mínima con proceso profiled e immediate scope; (b) variante con precedente o anticipado.
+- **13.7** — Inicio del discourse building para «I just ran into Jill»: cuadro vacío evoluciona por correspondencia y arrow al primer frame «I just ran into Jill» produciendo la primera estructura.
+- **13.8** — Adición de «she's upset» con esquema procesual (3sf circle = she como tr; lm=u small square = upset).
+- **13.9** — Construcción con belief space: panel superior izquierdo «she really thinks» con sub-cuadro BELIEF; panel superior derecho «her daughter might move»; abajo derecha actualizada con proposición en BELIEF.
+- **13.10** — Aplicación del nominal «the bear» al discurso: (a) the inside box (thing instance con t type) con correspondencia; (b) the bear composición; (c) aplicación al discurso con estructura previa.
+- **13.11** — Aplicación del nominal no-groundeado (covert grounding): (a) cuando hay instancia salient en CDS; (b) cuando NO hay.
+- **13.12** — Patrones esquemáticos conventionalizados para covert grounding: dos recuadros esquematizando 13.11(a) y (b) como patrones conventionalizados. No son plantillas constructionales sino patrones standardized.
+
 
 El discurso **no es separable** de la gramática. La estructura lingüística emerge de los _usage events_: instancias reales de uso lingüístico. Las unidades convencionales (ítems léxicos, esquemas construccionales) se abstraen de estos eventos mediante refuerzo de comunalidades recurrentes. La gramática reside en un inventario masivo de tales unidades abstractas, que colectivamente permiten y constriñen la construcción y comprensión de expresiones novedosas.
 
@@ -71,6 +85,24 @@ En lenguas que no marcan la definitud consistentemente (e.g. Luiseño), el groun
 ---
 
 ## 14. Engaging the World
+
+**Recursos gráficos del capítulo 14** (figs. 14.1–14.15 del fuente; descripciones textuales, los diagramas se consultan en el original):
+
+- **14.1** — Panel (a) relación reference-point: R conectado a T por flechas (dos fases secuenciales de awareness) con D (dominion) como elipse alrededor. Panel (b) cadena de tales relaciones: cada T_i funciona como R_{i+1}.
+- **14.2** — Construcción nominal posesiva: la base conceptual de 's es reference-point; el esquema mira 's perfila T; elemento esquemático de R es un e-site elaborado por el poseedor.
+- **14.3** — Configuración de topic/relación: cuadro superior con 'that mural' topic; cuadro lower con cláusula target 'I really hate it'; el composite tiene doble perfil (R + P) en correspondencia.
+- **14.4** — Topic interno / 'that mural I really hate': topic + cláusula blended sin disjunctura.
+- **14.5** — Topic subcláusula expandida como referencia + cláusula interna.
+- **14.6** — Contraste entre reference-point extrínseco (topic, panel a) e intrínseco (sujeto, panel b).
+- **14.7** — Esquema detallado para relación con ambos trayector y landmark: R₁→T₁, R₂→T₂, T=T₁+T₂.
+- **14.8** — Notación simplificada para R, T, D, C suprimidos.
+- **14.9** — Tres variaciones de give (reciprocal construct): transferred content con dominion ellipses y flechas de movimiento, interacción tr/lm.
+- **14.10** — Transitivos y pasivos como alternate construals: verbo activo throw (panel izq); be thrown (panel der) con backtracking.
+- **14.11** — Nominalización y possessive en eventos reificados: heavy-line elipse (assassination) con Booth's/Lincoln's como poseedores.
+- **14.12** — Tipos y instancias representativas en el dominio de instanciación (DI): (a) instancia actual; (b) tipo como abstracción; (c) instancia representativa con virtual location.
+- **14.13** — Instancia representativa de un evento generalizado: three times this morning a customer bought a python.
+- **14.14** — Movimiento fictivo (fictive motion): panel (a) concebir secuencia de processing time T through conceived time t; panel (b) aplicación a escena estática.
+- **14.15** — Engaged vs. disengaged cognition: (a) engaged — persona conectada por doble arrow a W (world) con A intermediando; (b) disengaged — A' occurs autonomously sin input perceptual.
 
 ### 14.1 Dinamicidad (_Dynamicity_)
 
