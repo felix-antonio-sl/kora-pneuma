@@ -1,4 +1,4 @@
-# KORA/Ontología — ley pneuma v1.0.0
+# KORA/Ontología — ley pneuma v1.1.0
 
 Estrato 1 de la ley. Define el espacio donde todo artefacto agéntico **es un
 punto**: los seis ejes PMI × LFS, las leyes que los acoplan y el arnés que
@@ -23,15 +23,32 @@ Artefacto = (m_p × c_q × Ξ) ⋉ (Contexto)
 donde `⋉` denota producto semidirecto: el contexto modula la tripleta, no la
 sustituye.
 
-## 2. Identidad es posición
+## 2. Identidad es posición — de TIPO
 
 KORA canoniza **ontología, no serialización**. Todo artefacto agéntico DEBE
 declarar su posición en el espacio (`vector` + `sigma`, ley/2 §3).
 
-Regla: dos artefactos con el mismo vector ontológico son **categóricamente
-equivalentes**, aunque sus serializaciones difieran. Dos artefactos con
-vectores distintos son **categóricamente distintos**, aunque sus textos se
-vean idénticos. La identidad no vive en el texto: vive en la posición.
+Regla (corregida v1.1.0): dos artefactos con el mismo vector ontológico son
+**estructuralmente bisimilares** —misma maquinaria de transición (`c`, F): el
+**mismo TIPO**—, aunque sus serializaciones difieran. El alcance de esa
+equivalencia depende del arnés:
+
+- Arneses **sin `U_phen` individuante** (`utilidad`, `disciplina`, `delegado`,
+  `servicio` no-persona): la bisimilaridad estructural arrastra la observable;
+  mismo vector ⟹ **mismo objeto**. Aquí la identidad vive en la posición.
+- Arneses **con `U_phen`** (`persona`, `orquestador`, `servicio`-persona): la
+  bisimilaridad **observable NO se sigue** —la transición `c` lee `U_phen` y
+  permea la salida (`urn:kora:kb:cat-agent-coalgebra` §2.2, reformulado en
+  `urn:kora:kb:cat-agent-modulo` §3; `urn:kora:kb:aufbau-persona-agente` §3)—:
+  **mismo tipo, token distinto**.
+
+La **individuación cualitativa** de una persona (su carácter) reside en
+`U_phen`, fibra **no-coordenada** del vector, materializada en el cuerpo del
+artefacto + el KB de persona; la individuación **numérica** la da siempre el
+URN (constitución §7, §9). **La ley conmensura tipos; no individúa personas.**
+`U_phen` no es coordenada nueva del retículo: es la fibra ya definida
+(`cat-agent-modulo` §2) que el vector deliberadamente no mide — una población
+cualitativa abierta no cabe en un retículo finito acotado.
 
 ## 3. Los seis ejes
 
@@ -181,9 +198,12 @@ Doctrina heredada intacta:
 
 Reglas:
 
-1. La identidad ontológica de un artefacto agéntico se define por el par
-   (`arnes`, vector completo). Mismo arnés y mismo vector: el mismo objeto en
-   categorías de realización distintas.
+1. La identidad **de tipo** de un artefacto agéntico se define por el par
+   (`arnes`, vector completo). Mismo arnés y mismo vector: el mismo **tipo** en
+   categorías de realización distintas. Para arneses con `U_phen` (`persona`,
+   `orquestador`, `servicio`-persona) esto NO implica el mismo **token**: la
+   individuación cualitativa reside en `U_phen` (no-coordenada) y la numérica en
+   el URN (§2; constitución §7).
 2. La `forma` (ley/2) es derivada operacional: dado un arnés, se elige por
    modo de invocación (humano directo, por otro agente, always-on) y por
    dominio de proyección compatible. NO es discriminante ontológico
@@ -206,8 +226,17 @@ la materialización.
 | Leyes inter-eje | las cinco de §4 | mecanizado (`leyes-inter-eje`) |
 | Vector dentro del dominio de su forma | ley/2 §7 | mecanizado (`dominio-forma`) |
 | Par (arnés, forma) legal | ley/2 §8 | mecanizado (`arnes-compatible`) |
-| Equivalencia categórica por vector | §2 | declarado |
+| Equivalencia **de tipo** por vector (§2; solo arneses sin `U_phen`) | §2 | declarado |
 | Cierre de safety estructural | §3.6, ley/3 §6 | declarado |
 
 Sublimado de KORA/Harness-Spec v1.1.1 (con el atlas de arnés de autoria-spec
 v2.0.0) el 2026-06-11; ver GENESIS.md.
+
+v1.1.0 (HITL 2026-06-30): §2, §6.1 r1 y §7 corrigen un universal falso —el
+vector da identidad de TIPO, no de token; para arneses con `U_phen` mismo
+vector NO implica mismo objeto (probado por la colisión `steipete`≡`steve-jobs`
+en `[2,2,3,1,2]`)—. **Corrección-de-verdad** bajo freeze (constitución §12.2):
+alinea §2 con la identidad-token del URN (constitución §7/§9), importa la
+distinción estructural/observable de `cat-agent-coalgebra` §2.2 + `aufbau` §3,
+y NO introduce eje ni nivel nuevo. Origen: panel consenso-deliberativo, spec
+`docs/superpowers/specs/2026-06-30-sistema-componible-agente-design.md`.
