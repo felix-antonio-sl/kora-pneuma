@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v1.2.0
+# KORA/Transmutación — ley pneuma v1.3.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -12,6 +12,29 @@ Un artefacto vive como vector en el IR; para correr en un mundo concreto se
 proyecta vía el funtor `T_target: IR → Runtime_target`. Encarnar, bajo esta
 ley, es un acto que viene acompañado de su propia confesión: el sello (§5).
 
+### 1.1 Transporte de fibra (doctrina universal, todos los targets)
+
+> El funtor `T_target` actúa sobre la **base** —el retículo de vectores PMI×LFS—
+> proyectando cada eje por `min` (§3). El **cuerpo** del artefacto es la
+> **fibra** sobre el punto-base; viaja **verbatim** al archivo de operativa del
+> runtime, sin reescribirse. Ese transporte de fibra es **NO-funtorial** (el
+> cuerpo no es una flecha que se componga): es el lift cartesiano `T̃` sobre `T`.
+
+Reglas:
+
+1. La proyección del vector la hace `T` sobre la base (matrices §4). El cuerpo
+   NO se proyecta: se transporta entero al archivo que el target reserva para la
+   operativa (`SKILL.md`, `{nombre}.md`, o `AGENTS.md` en `openclaw`).
+2. Este transporte vale para **todos** los targets, sin campo por-emisión que lo
+   declare: es la forma del funtor, no un atributo del artefacto.
+3. Un target cuyo objeto-runtime es un **producto de archivos** (un workspace,
+   p. ej. `openclaw`) recibe el cuerpo en su archivo de operativa y PUEDE además
+   proyectar **componentes adicionales** del producto (p. ej. `SOUL.md` = el span
+   de `U_phen`); cada componente adicional sale de un **span marcado** del cuerpo
+   (`ley/2 §10 r6`), nunca de una segmentación de prosa por el núcleo
+   (forma-no-verdad). Esto preserva la bisimulación módulo proyección (§3): el
+   cuerpo completo viaja al archivo de operativa en TODOS los targets.
+
 ## 2. Targets reconocidos y realizados
 
 | Target | Estatus | `transmutar` |
@@ -19,18 +42,19 @@ ley, es un acto que viene acompañado de su propia confesión: el sello (§5).
 | `claude-code` | realizado | emite |
 | `codex` | realizado | emite |
 | `opencode` | realizado | emite |
-| `openclaw` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
+| `openclaw` | realizado | emite (workspace, §7) |
 | `hermes` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
 
 1. `targets` DEBE ser subconjunto de los cinco reconocidos (check
    `targets-conocidos`, ley/2).
-2. Un artefacto PUEDE declarar `openclaw` o `hermes` en `targets` — la ley
-   los reconoce — pero transmutar hacia ellos DEBE fallar con mensaje que
-   remita a `GENESIS.md`. La ley no nombra capacidades inexistentes como si
-   existieran.
+2. Un artefacto PUEDE declarar `hermes` en `targets` — la ley lo reconoce — pero
+   transmutar hacia él DEBE fallar con mensaje que remita a `GENESIS.md`. La ley
+   no nombra capacidades inexistentes como si existieran. `openclaw` está
+   **realizado** desde v1.3.0 (cierra la deuda de `GENESIS §4`, registrada aquí
+   sin editar GENESIS).
 3. El identificador del funtor DEBE ser `T-{target}-pneuma-v1`. Funtores
    vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v1`,
-   `T-opencode-pneuma-v1`.
+   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`.
 
 ## 3. Leyes del funtor
 
@@ -104,6 +128,26 @@ núcleo.)
 | `lambda` | 0→0, 1→1 full · 2→1 partial — ecosistema colapsa a organizacional · 3→∅ none — society-in-the-loop no soportado |
 | `phi` | 0→0, 1→1, 2→2 full · 3→2 partial — cognición híbrida no nativa · 4→∅ none — co-evolutivo no soportado |
 | `sigma` | máx soportado `[3,2,2,2,1]` |
+
+### 4.4 `openclaw`
+
+El **techo más alto** de los cinco targets: meta-runtime ACP + systemd
+always-on + agentToAgent. Único con `mu`=3 y `xi`=4 full; único que proyecta
+`lambda`=3 (partial). Fiel a la runtime-extension openclaw de la bestia y
+confirmada contra el openclaw real (`~/openclaw-fleet/`, `docs.openclaw.ai`).
+
+| Eje | Proyecciones |
+|---|---|
+| `pi` | 0→0, 1→1, 2→2, 3→3 full — delegación jerárquica recursiva vía ACP dispatch |
+| `mu` | 0→0, 1→1, 2→2, 3→3 full — always-on vía systemd + Telegram; único runtime con μ=3 full |
+| `xi` | 0→0, 1→1, 2→2, 3→3, 4→4 full — operad dinámica `Org^#_m` vía ACP + agentToAgent |
+| `lambda` | 0→0, 1→1, 2→2 full · 3→3 partial — society-in-the-loop requiere gobernanza externa no modelada en runtime |
+| `phi` | 0→0, 1→1, 2→2 full · 3→3 partial — cognición híbrida parcial (no HAJCS completo) · 4→∅ none — co-evolutivo no modelado |
+| `sigma` | máx soportado `[3,3,3,3,2]` — sustainability ambiental no medida directamente |
+
+Consecuencia: agentes `plataforma`/`servicio` (μ=3) — sin hogar en los otros
+targets, que abortan μ=3 — encuentran hogar pleno en `openclaw`. Sólo `phi`=4
+aborta (none, igual que el resto).
 
 ## 5. El sello
 
@@ -206,13 +250,79 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `codex` | agente | se emite **como skill**; el colapso de forma se declara en el sello como pérdida adicional: `forma: agente->habilidad :: codex no registra agentes` |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
+| `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
+| `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo verbatim + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
+
+### 7.1 La emisión de workspace de `openclaw`
+
+`openclaw` es el único target cuyo objeto-runtime es un **workspace
+multi-archivo** name-keyed (`workspaces/{agentId}/`), no un archivo único. La
+doc de openclaw exige segregar **`AGENTS.md`** (operating instructions) de
+**`SOUL.md`** (voz: «Keep AGENTS.md for operating rules. Keep SOUL.md for
+voice»). La emisión:
+
+1. **`AGENTS.md`** = el cuerpo **verbatim** + sello. Siempre. Es el transporte de
+   fibra de §1.1: el mismo cuerpo que reciben todos los targets, en el archivo de
+   operativa. Sin frontmatter (los workspace files de openclaw son markdown
+   plano).
+2. **`SOUL.md`** = el span de `U_phen` + sello, emitido **sólo si** el `arnes`
+   porta `U_phen` (`persona`, `orquestador`, `servicio`). El span sale del
+   **centinela** `<!-- kora:soul -->…<!-- kora:soul:fin -->` del cuerpo
+   (`ley/2 §10 r6`). Realiza la doctrina ya declarada del corpus
+   (`urn:kora:kb:aufbau-persona-agente §3`, `urn:kora:artefacto:autoria-de-persona`):
+   `SOUL.md = U_phen`.
+   - Centinela ausente, desbalanceado o múltiple con `arnes` de `U_phen` ⇒
+     `transmutar` FALLA (exit 1) nombrando que el núcleo no segmenta prosa y que
+     el autor debe delimitar `U_phen`. **NUNCA se fabrica voz.**
+   - `arnes` sin `U_phen` (`delegado`): se emite sólo `AGENTS.md`; no hay persona
+     que segregar (openclaw tolera el `SOUL.md` ausente con un missing-file
+     marker).
+3. **Decisión duplicación, no partición**: el span de `U_phen` permanece en
+   `AGENTS.md` (es parte del cuerpo verbatim) y se **copia** a `SOUL.md`. Así el
+   `AGENTS.md` de openclaw es idéntico al cuerpo que reciben los demás targets, y
+   se preserva la **bisimulación módulo proyección** (§3): el agente no cambia de
+   doctrina según el runtime. La doc de openclaw es asimétrica —prohíbe operativa
+   en `SOUL.md`, no voz en `AGENTS.md`—: la duplicación la honra (`SOUL.md` queda
+   voz pura).
+4. Ambos archivos portan el **mismo sello** (misma fuente, misma proyección):
+   `hash-fuente` y vectores son los del artefacto fuente completo. Cada archivo
+   se auto-certifica (§5).
+5. **Calificación `mu=3` observable.** Si el artefacto fuente porta `mu=3`
+   (materia ambiental always-on), el sello porta en la zona variable dos líneas:
+
+   ```text
+   realiza: workspace-mu3-conforme (AGENTS.md+SOUL.md; techo always-on, sin recorte de min)
+   difiere: conducta-always-on (gateway/systemd/openclaw.json) -> deploy del fleet
+   ```
+
+   El funtor **realiza** la emisión del workspace conforme al techo always-on
+   (`mu:3→3 full` es enunciado de **TIPO**: el techo lo admite sin recorte); la
+   **conducta** always-on —el daemon vivo recordando entre sesiones (**TOKEN**)—
+   es deploy del fleet, no función del funtor. La calificación vive en el
+   **proof-carrier** (no sólo en esta ley): reconcilia el «openclaw no realizado»
+   inmutable de `GENESIS §4` con el realizado registrado aquí, sin tercerizar la
+   honestidad a una ley que no viaja con el artefacto. `mu<3` no porta la
+   calificación (no hay always-on que diferir).
+
+**Frontera declarada — lo que el funtor NO emite.** `IDENTITY.md`, `USER.md`,
+`TOOLS.md`, `HEARTBEAT.md`, `BOOT.md`, `MEMORY.md`, `memory/`, y la config de
+deploy (`openclaw.json`: model, tools, auth, telegram, systemd). No son doctrina
+KORA: son scaffolding de workspace (bootstrap ritual / `openclaw setup`, que
+siembra los faltantes sin sobrescribir) y deploy (operador). La **frontera de
+capacidad** (`herramientas`) NO se materializa en el workspace —`TOOLS.md` es
+guía, no controla disponibilidad—: se realiza en `openclaw.json` a nivel deploy.
+El sello la declara; el runtime la enforce por config. No es pérdida de eje (no
+genera línea `perdidas:`): es arquitectura del target.
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
 `~/.claude/agents/{nombre}.md`; codex → `~/.codex/skills/{nombre}/`;
 opencode → `~/.config/opencode/skills/{nombre}/` y
-`~/.config/opencode/agents/{nombre}.md`. En toda emisión y aplicación la
-fibra `referencias/` conserva su nombre: el cuerpo emitido cita paths
-`referencias/...` y ningún target exige otro nombre.
+`~/.config/opencode/agents/{nombre}.md`; openclaw → workspace
+`~/openclaw-fleet/workspaces/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`];
+name-keyed, sobrescribe por nombre, sin never-overwrite) para el agente, y
+`~/.openclaw/skills/{nombre}/` (managed skills) para la skill. En toda emisión y
+aplicación la fibra `referencias/` conserva su nombre: el cuerpo emitido cita
+paths `referencias/...` y ningún target exige otro nombre.
 
 `--proyecto PATH` (requiere `--aplicar`): redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
@@ -220,9 +330,11 @@ claude-code → `PATH/.claude/skills/{nombre}/` y `PATH/.claude/agents/{nombre}.
 opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}.md`
 (subdirectorios en **plural**, convención canónica de opencode: el `.opencode/` y
 `~/.config/opencode/` usan nombres plurales; singular solo por retrocompat).
-`codex` NO soporta nivel proyecto (sin convención verificada): `transmutar` falla
-nombrando los targets soportados. La emisión canónica en `_emision/` no cambia;
-`--proyecto` solo redirige el destino de `--aplicar`.
+`codex` y `openclaw` NO soportan nivel proyecto: `codex` sin convención
+verificada; `openclaw` porque sus workspaces son user/fleet-level, no de
+proyecto. `transmutar --proyecto` hacia ellos falla nombrando los targets
+soportados. La emisión canónica en `_emision/` no cambia; `--proyecto` solo
+redirige el destino de `--aplicar`.
 
 El gesto `--aplicar` **respeta y valida el campo `alcance`** del artefacto (ley/2
 §3; ausente = `ambos`): un artefacto con `alcance: usuario` rechaza `--proyecto`;
@@ -274,6 +386,8 @@ mecanizados sobre emisiones ya escritas.
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
+| Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
+| Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Emisión fresca (presencia de sello + `hash-fuente` actual, último bloque) | §9 | mecanizado (`sello-fresco`) |
 | Buena forma completa del sello en emisiones ya escritas | §5, §9 | declarado |
@@ -290,3 +404,19 @@ v1.2.0 (HITL 2026-06-15): §5 legisla el bloque `contrato-conocimiento` del
 sello (extensión aditiva, constitución §12.1 r1); la regla de derivación
 URN→path se cita a `ley/2 §6`, no se re-legisla. Cierra el drift prosa↔código
 del contrato de conocimiento implementado en cbc7652.
+
+v1.3.0 (HITL 2026-07-01): **realiza el target `openclaw`** (`T-openclaw-pneuma-v1`).
+§1.1 legisla el transporte de fibra universal (lift cartesiano); §2 pasa
+`openclaw` a realizado; §4.4 la matriz (μ:3, ξ:4 full — techo más alto;
+σ-max `[3,3,3,3,2]`); §7/§7.1 la emisión de **workspace** multi-archivo
+(`AGENTS.md` = cuerpo verbatim, `SOUL.md` = span de `U_phen` por el centinela
+`kora:soul`), la decisión duplicación-no-partición (preserva bisimulación), la
+frontera no-emitida (IDENTITY/USER/TOOLS/HEARTBEAT/BOOT/config = scaffolding y
+deploy), `--aplicar` a `~/openclaw-fleet/workspaces/{nombre}/`, y la
+**calificación `mu=3` observable** en el sello (§7.1 r5: `realiza`/`difiere` —
+el funtor realiza la emisión conforme al techo always-on, difiere la conducta
+always-on al deploy; reconcilia GENESIS↔realizado en el proof-carrier).
+**Registra el cierre de la deuda de `GENESIS §4` (μ=3) sin editar GENESIS** (acta inmutable).
+Reintroduce, con la anatomía openclaw REAL verificada (workspace multi-archivo,
+no el monolito tipo-Hermes del intento revertido `8ef7c6e`), la matriz y el
+transporte que ya eran correctos. `hermes` sigue reconocido-no-realizado.

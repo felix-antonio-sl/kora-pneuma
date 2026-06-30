@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.3.0
+# KORA/Forma — ley pneuma v1.4.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -246,6 +246,35 @@ no se reemplaza a los vivos.
    verifica (forma-no-verdad): es oficio, no check. Funda en la corrección de
    `ley/1 §2` v1.1.0 (la persona vive en `U_phen`, no en el vector).
 
+6. El span de `U_phen` en el cuerpo PUEDE delimitarse con un **centinela
+   canónico**, un par de comentarios HTML literales:
+
+   ```text
+   <!-- kora:soul -->
+   ... el span de U_phen (la voz) ...
+   <!-- kora:soul:fin -->
+   ```
+
+   Reglas:
+
+   a. El centinela es **opcional** en general; un cuerpo sin él queda
+      byte-idéntico (extensión aditiva). Pero los targets que **segregan voz**
+      —hoy `openclaw`, cuyo `SOUL.md` es voz separada de la operativa de
+      `AGENTS.md`— lo **EXIGEN** para emitir el `SOUL.md` de un `arnes` que porta
+      `U_phen` (`ley/3 §7`): el núcleo no segmenta prosa (forma-no-verdad), así
+      que el span lo delimita el autor.
+   b. El núcleo lo halla por **match literal** (predicado decidible sobre el
+      texto), nunca interpretando la prosa. Es el mismo régimen de
+      `<!-- kora:sello -->`.
+   c. A lo sumo **un** par por cuerpo. Cero pares, o pares desbalanceados o
+      múltiples, hacen **fallar la emisión** (no `velar`) en el target que lo
+      exige; `velar` NO lo verifica (oficio, validado al emitir por
+      `transmutar`).
+   d. Los comentarios HTML son **invisibles al renderizar**: el cuerpo viaja
+      verbatim al archivo de operativa (transporte de fibra, `ley/3 §1`) con los
+      centinelas dentro, sin mutación. La realización de la voz es la KB de
+      persona y la skill `urn:kora:artefacto:autoria-de-persona`.
+
 Rationale: la prueba ácida heredada sigue siendo buen criterio editorial — si
 al borrar texto cambia solo el tono, sobra; si desaparece un hecho, no se
 borra — pero pneuma la quiere como oficio, no como ley mecanizada.
@@ -269,6 +298,7 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | Publicación digna | con `--estricto`: tags ≥3 en conocimiento `publicado`; `descripcion` y `fuente` no vacías en todo artefacto `activo`/`publicado` | mecanizado (`publicacion-digna`) |
 | Cuerpo subordinado al frontmatter | §10 r3 | declarado |
 | Compresión sin grasa | §10 r4 | declarado |
+| Centinela `kora:soul` bien formado (≤1 par balanceado) | §10 r6 | declarado (validado al emitir por `transmutar`, no por `velar`) |
 
 Sublimado de autoria-spec v2.0.0, md-spec v12.0.0, knowledge-spec v3.0.0 y
 spec-md v1.0.0 el 2026-06-11; ver GENESIS.md.
@@ -278,3 +308,10 @@ para arneses con personalidad (locus en la ley, estructura en
 `urn:kora:kb:aufbau-persona-agente`, control en la skill de autoría). Sin campo,
 sin check, sin eje. Complementa la corrección de `ley/1` §2 v1.1.0. Origen:
 panel consenso-deliberativo.
+
+v1.4.0 (HITL 2026-07-01): §10 r6 — centinela canónico opcional
+`<!-- kora:soul -->…<!-- kora:soul:fin -->` que delimita el span de `U_phen` en
+el cuerpo, para los targets que segregan voz (`openclaw`, `ley/3 §7`). Aditivo:
+sin centinela el cuerpo queda byte-idéntico. Predicado literal decidible
+(forma-no-verdad: el núcleo no segmenta prosa). Sin campo, sin check; validado al
+emitir, no por `velar`. Habilita la realización de `T-openclaw-pneuma-v1`.
