@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v1.3.0
+# KORA/Transmutación — ley pneuma v1.2.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -19,22 +19,18 @@ ley, es un acto que viene acompañado de su propia confesión: el sello (§5).
 | `claude-code` | realizado | emite |
 | `codex` | realizado | emite |
 | `opencode` | realizado | emite |
-| `openclaw` | realizado | emite |
+| `openclaw` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
 | `hermes` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
 
 1. `targets` DEBE ser subconjunto de los cinco reconocidos (check
    `targets-conocidos`, ley/2).
-2. Un artefacto PUEDE declarar `hermes` en `targets` — la ley lo reconoce —
-   pero transmutar hacia él DEBE fallar con mensaje que remita a `GENESIS.md`.
-   La ley no nombra capacidades inexistentes como si existieran. `openclaw`
-   pasa de «reconocido, no realizado» (estado de `GENESIS.md §4`, acta
-   inmutable) a **realizado** por `T-openclaw-pneuma-v1`: la realización se
-   **registra aquí**, reconciliando `GENESIS.md` (que seguirá diciendo «no
-   realizado») sin editarlo. `openclaw` es el único runtime cuyo techo admite
-   materia ambiental `mu=3` y operad dinámica `xi=4` sin recorte.
+2. Un artefacto PUEDE declarar `openclaw` o `hermes` en `targets` — la ley
+   los reconoce — pero transmutar hacia ellos DEBE fallar con mensaje que
+   remita a `GENESIS.md`. La ley no nombra capacidades inexistentes como si
+   existieran.
 3. El identificador del funtor DEBE ser `T-{target}-pneuma-v1`. Funtores
    vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v1`,
-   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`.
+   `T-opencode-pneuma-v1`.
 
 ## 3. Leyes del funtor
 
@@ -109,22 +105,6 @@ núcleo.)
 | `phi` | 0→0, 1→1, 2→2 full · 3→2 partial — cognición híbrida no nativa · 4→∅ none — co-evolutivo no soportado |
 | `sigma` | máx soportado `[3,2,2,2,1]` |
 
-### 4.4 `openclaw`
-
-Techo más alto del retículo: meta-runtime ACP multi-backend, único con
-materia ambiental always-on (systemd + bots Telegram). Heredado de la
-runtime-extension de origen (`urn:agengai:kb:openclaw-runtime-extension`),
-verificado contra el runtime real; su literal vive en `kora.py` (§4).
-
-| Eje | Proyecciones |
-|---|---|
-| `pi` | 0→0, 1→1, 2→2, 3→3 **full** — delegación jerárquica recursiva vía ACP dispatch y sub-agentes |
-| `mu` | 0→0, 1→1, 2→2, 3→3 **full** — **único target con materia ambiental always-on** (systemd + Telegram; `MEMORY.md`/`USER.md` + memoria declarativa) |
-| `xi` | 0→0, 1→1, 2→2, 3→3, 4→4 **full** — **único que no aplana la operad dinámica**: federación `Org^#_m` vía ACP dispatch + agent-to-agent |
-| `lambda` | 0→0, 1→1, 2→2 full · 3→3 partial — society-in-the-loop requiere gobernanza externa no modelada en el runtime |
-| `phi` | 0→0, 1→1, 2→2 full · 3→3 partial — cognición híbrida parcial: HOTL presente, sin HAJCS completo · 4→∅ none — co-evolutivo no soportado |
-| `sigma` | máx soportado `[3,3,3,3,2]` — accountability=3 real (materia persistente cross-session); solo `sustainability` se recorta (no medida directamente) |
-
 ## 5. El sello
 
 Todo archivo emitido DEBE terminar con un sello proof-carrying: comentario
@@ -185,61 +165,6 @@ Reglas:
    bloque y su emisión queda byte-idéntica. Encarna la doctrina de acceso de
    `urn:kora:kb:regimen-de-ley`.
 
-### 5.1 Extensión del sello para `openclaw`
-
-La emisión `openclaw` es un `SOUL.md` sin frontmatter (§7); su sello porta, en
-la **zona variable** (antes de las dos líneas fijas, que NO se mueven —r4), tres
-elementos propios, todos observables en el archivo (el proof-carrier reconcilia
-`GENESIS.md`↔`realizado` por sí mismo, sin tercerizar la calificación a una ley
-que no viaja con el artefacto):
-
-1. **Dos pérdidas de forma** bajo `perdidas:` (precedente: codex
-   `forma: agente->habilidad`), verificables como aserción de **ausencia**:
-   - `forma: tool-binding->deploy` — el enforcement allow/deny vive en
-     `openclaw.json` (deploy-side); el binding NO se enforcea desde el `SOUL.md`.
-   - `forma: workspace-anatomy->soul-slot` — la anatomía multi-slot de openclaw
-     (`SOUL.md`/`AGENTS.md`/`TOOLS.md`/`MEMORY.md`/…) colapsa a un único
-     `SOUL.md` bajo «pneuma-mínima» (archivo único, sin hermanos).
-2. **La calificación `mu=3` observable** (dos líneas):
-
-   ```text
-   realiza: emision-mu3-conforme (techo always-on, sin truncamiento de min)
-   difiere: conducta-always-on (gateway/systemd) -> a desplegar
-   ```
-
-   `mu:3→3 full` afirma que el **techo** del runtime admite materia always-on
-   sin truncamiento de `min` (*tipo/sintaxis*); NO que el always-on conductual
-   esté verificado (*token/semántica*). El substrato `mu=3` es estado de runtime
-   acumulado (`MEMORY.md`/`USER.md` snapshot-inyectados + gateway), inherentemente
-   no-emitible. La realización del funtor es la emisión tipo-conforme; la conducta
-   always-on es deploy del fleet, declarada y diferida, no fingida.
-3. **La clausura `F` declarada** (`clausura-F`): el tool-SET intencionado se
-   declara para que `cierre-safety` (§6) tenga **referente** —de lo contrario
-   `openclaw` sería el único target que deja `cierre-safety` sin portador—; solo
-   el binding (enforcement allow/deny → `openclaw.json`, *token*) se difiere.
-
-### 5.2 El transporte de fibra (universal, en prosa)
-
-El sello documenta **dos operaciones** distintas sobre el artefacto, y esto vale
-para **todos los targets**, no solo `openclaw`:
-
-- la **proyección funtorial del vector** (las líneas de `fidelidad` y `perdidas`):
-  `min` sobre la matriz, mecanizada;
-- el **transporte verbatim del cuerpo** —portador de `U_phen`, fibra
-  no-coordenada (`ley/1 §2`)—: el cuerpo NO se min-proyecta, NO se declara-pierde
-  por eje y **NO se re-proyecta** para concordar con el vector.
-
-El transporte **no es funtorial** (es la componente sobre la fibra de un
-funtor cartesiano `T̃` que yace sobre el `T` de base; `openclaw` lo hace
-sintáctico al escindir `SOUL.md`=fibra ⊥ `openclaw.json`=base, sin crear un
-régimen nuevo). Un consumidor que lee un cuerpo **no debe asumir** que concuerda
-automáticamente con el vector proyectado. El **riesgo de desincronización
-cuerpo↔vector** (un cuerpo verbatim puede afirmar capacidad que el vector ya no
-declara tras `min`) se **nombra** como puntero a la confesión FS-no-mecanizada de
-`ley/4` —obligación del productor, no del núcleo—; **NO** se mecaniza con un check
-nuevo (eso contradiría `ley/4`). `T̃` es emisión hacia adelante: **no realiza
-`Lift⊣T`** (§8 sigue abierta).
-
 ## 6. La nota de honestidad (heredada)
 
 Dos regímenes de garantía, y la ley los distingue en voz alta:
@@ -252,13 +177,6 @@ Dos regímenes de garantía, y la ley los distingue en voz alta:
   conmuta en el target), `cierre-safety` (la sub-coálgebra segura sigue
   cerrada tras la proyección), `composicion-kleisli` (la composición de
   efectos declarada en `componible` se refleja en el target).
-
-Hay un **tercero que no es ninguno de los dos**: el transporte verbatim del
-cuerpo —portador de `U_phen`, fibra no-coordenada (`ley/1 §2`)— no es garantía
-sobre la proyección (no se preserva-por-construcción ni se declara-no-mecanizado
-como las cinco/tres de arriba): es copia de contenido, legislada en §5.2. No
-entra en ninguna de las dos listas fijas del sello (r4) precisamente porque no es
-una garantía del funtor, sino su acompañante cartesiano.
 
 Reglas:
 
@@ -288,20 +206,11 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `codex` | agente | se emite **como skill**; el colapso de forma se declara en el sello como pérdida adicional: `forma: agente->habilidad :: codex no registra agentes` |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
-| `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md` (superficie agentskills; mismo formato que codex/opencode) |
-| `openclaw` | agente | `_emision/openclaw/agents/{nombre}/SOUL.md`; **sin frontmatter** — markdown libre, slot #1 de Hermes inyectado verbatim (un fence YAML `---…---` se inyectaría como ruido de identidad); body = body fuente verbatim (abre con su propio H1); la anatomía multi-slot de openclaw colapsa a este **único** `SOUL.md` (pneuma-mínima; sin `AGENTS.md`/`TOOLS.md`/… hermanos); sello inline con la extensión §5.1 (pérdidas de forma, `realiza`/`difiere`, `clausura-F`) |
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
 `~/.claude/agents/{nombre}.md`; codex → `~/.codex/skills/{nombre}/`;
 opencode → `~/.config/opencode/skills/{nombre}/` y
-`~/.config/opencode/agents/{nombre}.md`. **`openclaw` NO admite `--aplicar`** en
-esta encarnación: Hermes prohíbe sobrescribir un `SOUL.md` existente
-(never-overwrite), que el modelo clobber de `--aplicar` violaría; la instalación
-en un `HERMES_HOME` / workspace del fleet es **deploy**, no función del funtor
-(como la bestia, que tampoco auto-desplegó: emitió a `_BUILD/` + `DEPLOY.md`
-manual). `transmutar --target openclaw --aplicar` falla (exit 1) con mensaje
-honesto; la emisión canónica a `_emision/openclaw/` sí procede. En toda emisión y
-aplicación la
+`~/.config/opencode/agents/{nombre}.md`. En toda emisión y aplicación la
 fibra `referencias/` conserva su nombre: el cuerpo emitido cita paths
 `referencias/...` y ningún target exige otro nombre.
 
@@ -369,11 +278,6 @@ mecanizados sobre emisiones ya escritas.
 | Emisión fresca (presencia de sello + `hash-fuente` actual, último bloque) | §9 | mecanizado (`sello-fresco`) |
 | Buena forma completa del sello en emisiones ya escritas | §5, §9 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
-| `openclaw` realizado: emisión `SOUL.md` sin frontmatter, archivo único | §4.4, §7 | mecanizado (`transmutar`) + tests |
-| Pérdidas de forma openclaw (`tool-binding`, `workspace-anatomy`) | §5.1 | mecanizado (sello); test por aserción de ausencia |
-| Calificación `mu=3` observable (`realiza`/`difiere`) y `clausura-F` | §5.1 | mecanizado (sello) |
-| `openclaw` rechaza `--aplicar` (never-overwrite) | §7 | mecanizado (`transmutar`) + tests |
-| Transporte de fibra `U_phen` (no funtorial, universal) | §5.2 | declarado (prosa) |
 | `naturalidad-xi` | §6 | declarado |
 | `cierre-safety` | §6 | declarado |
 | `composicion-kleisli` | §6 | declarado |
@@ -386,19 +290,3 @@ v1.2.0 (HITL 2026-06-15): §5 legisla el bloque `contrato-conocimiento` del
 sello (extensión aditiva, constitución §12.1 r1); la regla de derivación
 URN→path se cita a `ley/2 §6`, no se re-legisla. Cierra el drift prosa↔código
 del contrato de conocimiento implementado en cbc7652.
-
-v1.3.0 (HITL 2026-06-30, Pieza C): realiza `T-openclaw-pneuma-v1`. §2 mueve
-`openclaw` a realizado (registrando la deuda de `GENESIS.md §4`, que no se
-edita); §4.4 fija su matriz (techo más alto: `mu=3` y `xi=4` full, único con
-materia ambiental always-on; razones veraces de
-`urn:agengai:kb:openclaw-runtime-extension`); §5.1 extiende el sello (dos
-pérdidas de forma, calificación `mu=3` observable `realiza`/`difiere`,
-`clausura-F` como referente de `cierre-safety`); §5.2 legisla el transporte de
-fibra `U_phen` como tercera capa universal (no funtorial, no campo por-emisión;
-desync cuerpo↔vector = puntero a `ley/4`, no mecanizado); §6 reconoce ese
-transporte como tercero ajeno a las dos listas fijas; §7 fija la emisión
-`SOUL.md` sin frontmatter (archivo único) y el rechazo de `--aplicar`
-(never-overwrite de Hermes; deploy del fleet, no del funtor). Sin tocar
-`ley/0/1/2/4`, `RUTAS_APLICAR` ni `GENESIS.md`. Deudas que NO salda, declaradas:
-`hermes`, `Lift⊣T` (§8), convergencia teleológica y `α-iso` (`cat-agent-modulo`),
-puente retículo↔coálgebra (`ley/1 §5`).
