@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.2.0
+# KORA/Forma — ley pneuma v1.3.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -238,6 +238,14 @@ no se reemplaza a los vivos.
    mecanizadas — con una excepción: el producto de una koraficación se rige
    por `ley/4`, donde la disciplina completa es DEBE.
 
+5. Un agente cuyo `arnes` porta `U_phen` (`persona`, `orquestador`,
+   `servicio`-persona) DEBERIA portar su `U_phen` —su disposición de
+   personalidad— en el cuerpo; su **estructura** la define la KB de persona
+   (`urn:kora:kb:aufbau-persona-agente`). La ley señala el **locus** (el cuerpo);
+   el KB define la estructura y la skill de autoría la controla. `velar` NO lo
+   verifica (forma-no-verdad): es oficio, no check. Funda en la corrección de
+   `ley/1 §2` v1.1.0 (la persona vive en `U_phen`, no en el vector).
+
 Rationale: la prueba ácida heredada sigue siendo buen criterio editorial — si
 al borrar texto cambia solo el tono, sobra; si desaparece un hecho, no se
 borra — pero pneuma la quiere como oficio, no como ley mecanizada.
@@ -264,3 +272,9 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 
 Sublimado de autoria-spec v2.0.0, md-spec v12.0.0, knowledge-spec v3.0.0 y
 spec-md v1.0.0 el 2026-06-11; ver GENESIS.md.
+
+v1.3.0 (HITL 2026-06-30): §10 r5 — `DEBERIA` orientador de `U_phen`-en-el-cuerpo
+para arneses con personalidad (locus en la ley, estructura en
+`urn:kora:kb:aufbau-persona-agente`, control en la skill de autoría). Sin campo,
+sin check, sin eje. Complementa la corrección de `ley/1` §2 v1.1.0. Origen:
+panel consenso-deliberativo.
