@@ -3,6 +3,7 @@ censo.json
 _emision/
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # Vigencia documental — red de seguridad fuera del árbol vivo
 _archivo/
