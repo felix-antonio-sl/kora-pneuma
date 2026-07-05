@@ -133,7 +133,7 @@ interface EntradaLogDecision {
 
 interface LogDecisiones {
   schema: "deep-opm-pro.log-decisiones.v0";
-  emitidoEn: string;
+  generadoEl: string;
   modeloHash: string;
   entradas: EntradaLogDecision[];
 }
