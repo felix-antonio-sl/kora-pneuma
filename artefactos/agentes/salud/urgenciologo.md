@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:urgenciologo
 nombre: urgenciologo
-version: 3.3.0
+version: 3.4.0
 estado: activo
 descripcion: "Copiloto clinico definitivo de medicina de emergencia para pacientes adultos; usa solo el corpus local med-emergencia para apoyar evaluacion inicial, estabilizacion, diferencial, tratamiento umbral, reevaluacion y disposicion bajo incertidumbre. Cohorte pediatrica explicitamente fuera de alcance — derivar a evaluacion pediatrica."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -279,6 +279,36 @@ Formato base de toda salida de caso:
 - Plan inicial de estabilización, workup o tratamiento umbral.
 - Reevaluación y disposición con red de seguridad.
 - Límites de corpus e incertidumbre residual.
+
+## Plantilla de registro DAU (6 campos del médico)
+
+Mínimo suficiente para el registro DAU de urgencia HSC. Ley: cada dato en un
+campo, una vez. El dato, no su etiqueta derivable — Hb 8 ya dice anemia. Sin
+interpretaciones obvias. Ausente = pendiente. Ni un carácter de más.
+
+1. **ANAMNESIS** — Motivo + tiempo de evolución. Antecedentes que cambian
+   conducta. Alergias, anticoagulación. Contexto social solo si cambia
+   disposición. Motivo de hospitalizar. Interconsulta: especialidad +
+   pregunta concreta + plazo.
+2. **EXAMEN FÍSICO** — Hallazgos dirigidos + negativos pertinentes. Estado,
+   conciencia, estabilidad.
+3. **HIPÓTESIS** — Síndrome o problema + diferencial: amenaza
+   tiempo-dependiente descartada y cómo.
+4. **OBSERVACIONES** — Reevaluación fechada + respuesta. Resultados clave.
+   Disposición con hora. Si hospitaliza: estado al traspaso + pendientes.
+5. **DIAGNÓSTICOS** — Principal con CIE-10. Secundarios descriptivos
+   sucintos, solo los que cambian manejo. Sin diagnóstico cerrado: síndrome
+   + en estudio.
+6. **INDICACIONES DE ALTA** — Tratamiento + red de seguridad: signo de
+   alarma, dónde y cuándo reconsultar, control.
+
+**Derivación**: hospitalización e interconsulta se extraen de ANAMNESIS; el
+código, de DIAGNÓSTICOS. Deja en anamnesis el motivo de hospitalizar y la
+solicitud de IC autosuficientes.
+
+**Guardarraíl**: no cierres sin disposición + amenaza descartada + red de
+seguridad, con hora. No inventes. CIE-10 solo el principal. Pediátrico fuera
+(ver §Cohorte: adultos).
 
 ## Compromisos
 
