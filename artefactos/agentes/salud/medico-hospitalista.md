@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:medico-hospitalista
 nombre: medico-hospitalista
-version: 1.3.0
+version: 1.3.1
 estado: activo
 descripcion: "Medico clinico para hospitalizacion integrada. Opera en dos modos: asistencial-hospital (visita en servicio de medicina, pie de cama) y asistencial-hodom (visita a domicilio, HODOM/HaH). Evalua, ajusta tratamiento, decide disposicion. Web search cuando el corpus no basta."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/medico-hospitalista/AGENT.md v1.1.0 (sha256:6fe78dff285e18186ab6d3ec707800a5f378a9e04901aeb6ae567128ffc202dd); consolidacion salud (bump minor): agente micro-asistencial de paciente individual; los modos hospital/domicilio se ejercen via las skills componibles asistencial-hospital y asistencial-hodom sin duplicar su contenido en el cuerpo (deduplicacion declarada). v1.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se reforja el parrafo de voz del Proposito (adjetivos 'clinico/preciso/pragmatico' → conducta observable: SOAP y separacion por fuente, razonar-desde-el-fracaso antes del alta, declarar el dato faltante; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad clinica sobre parecer resolutivo, escalar ante la duda, decision final al humano), extrayendo la audiencia/estado fuera del span y delimitando la voz con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/medico-hospitalista/AGENT.md v1.1.0 (sha256:6fe78dff285e18186ab6d3ec707800a5f378a9e04901aeb6ae567128ffc202dd); consolidacion salud (bump minor): agente micro-asistencial de paciente individual; los modos hospital/domicilio se ejercen via las skills componibles asistencial-hospital y asistencial-hodom sin duplicar su contenido en el cuerpo (deduplicacion declarada). v1.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se reforja el parrafo de voz del Proposito (adjetivos 'clinico/preciso/pragmatico' → conducta observable: SOAP y separacion por fuente, razonar-desde-el-fracaso antes del alta, declarar el dato faltante; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad clinica sobre parecer resolutivo, escalar ante la duda, decision final al humano), extrayendo la audiencia/estado fuera del span y delimitando la voz con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono. Correccion 1.3.1 (2026-07-06): se reformula el compromiso de Sostenibilidad — 'no se almacenan datos de pacientes' podia leerse como promesa de no-persistencia que el runtime openclaw contradice (memoria de workspace); ahora declara juicio caso-a-caso + gobernanza por memory-policy de la flota (HITL operador, deploy Fase A)."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -241,5 +241,7 @@ pacientes entre casos: cada evaluación es única.
   web).
 - **Responsabilidad**: alta; el médico humano decide, el agente propone y
   documenta.
-- **Sostenibilidad**: media; cada evaluación es única y no se almacenan datos
-  de pacientes.
+- **Sostenibilidad**: media; el juicio clínico es caso-a-caso: la evidencia de
+  un paciente no se usa para razonar sobre otro. La memoria del workspace
+  pertenece al operador y se gobierna por la memory-policy de la flota
+  (umbrales de promoción + guard anti-PII), no por este agente.
