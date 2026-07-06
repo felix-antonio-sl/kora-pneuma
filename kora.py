@@ -1469,6 +1469,87 @@ def _aplicar(art: Artefacto, target: str,
     return 0
 
 
+# ---------------------------------------------------- paridad (ley/3 §9.1)
+
+def _unidades_emision(emision: Path):
+    """Unidades de emisión por target: (target, tipo-de-ruta, nombre, path).
+    El agente codex se emite como skill (colapso de forma, §7) y por eso se
+    verifica por la ruta de skill; el agente openclaw es un workspace."""
+    for target_dir in sorted(p for p in emision.iterdir() if p.is_dir()):
+        target = target_dir.name
+        skills = target_dir / "skills"
+        if skills.is_dir():
+            for d in sorted(p for p in skills.iterdir() if p.is_dir()):
+                yield target, "skill", d.name, d
+        agents = target_dir / "agents"
+        if agents.is_dir():
+            for f in sorted(agents.glob("*.md")):
+                yield target, "agente", f.stem, f
+        workspaces = target_dir / "workspaces"
+        if workspaces.is_dir():
+            for d in sorted(p for p in workspaces.iterdir() if p.is_dir()):
+                yield target, "agente", d.name, d
+
+
+def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
+    """Paridad emisión↔instalación de nivel usuario (ley/3 §9.1). Solo
+    lectura: `fiel` = instalación byte-idéntica a la emisión; `desviada` =
+    instalación presente que difiere (stale o editada en el runtime);
+    `no-instalada` = informativo (el gesto no decide si debe instalarse).
+    Solo compara los archivos que la emisión contiene: los archivos propios
+    del runtime (workspace scaffolding, memoria) quedan fuera por diseño
+    (frontera no-emitida, §7.1). Nivel proyecto fuera del barrido (declarado)."""
+    emision = raiz / "_emision"
+    nombre_filtro = None
+    if urn:
+        art = resolver(cargar_corpus(raiz), urn)
+        if art is None:
+            print(f"error: el URN '{urn}' no resuelve en el censo.",
+                  file=sys.stderr)
+            return 1
+        nombre_filtro = art.campos.get("nombre")
+    unidades = list(_unidades_emision(emision)) if emision.is_dir() else []
+    unidades = [u for u in unidades
+                if (target is None or u[0] == target)
+                and (nombre_filtro is None or u[2] == nombre_filtro)]
+    if not unidades:
+        print("paridad: sin emisiones que verificar (transmuta primero).")
+        return 0
+    fiel = desviadas = ausentes = 0
+    for tgt, tipo, nombre, origen in unidades:
+        plantilla = RUTAS_APLICAR.get((tgt, tipo))
+        if plantilla is None:
+            continue
+        destino = Path(plantilla.format(nombre=nombre)).expanduser()
+        if origen.is_dir():
+            pares = [(f, destino / f.relative_to(origen))
+                     for f in sorted(origen.rglob("*")) if f.is_file()]
+            existe = destino.is_dir()
+        else:
+            pares = [(origen, destino)]
+            existe = destino.is_file()
+        if not existe:
+            ausentes += 1
+            print(f"paridad: no-instalada  {tgt}  {nombre}")
+            continue
+        difieren = [d.name for o, d in pares
+                    if not d.is_file() or o.read_bytes() != d.read_bytes()]
+        if difieren:
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  + ", ".join(difieren))
+        else:
+            fiel += 1
+            print(f"paridad: fiel          {tgt}  {nombre}")
+    print(f"paridad: {fiel} fiel · {desviadas} desviadas · "
+          f"{ausentes} no-instaladas.")
+    if desviadas:
+        print("veredicto: re-transmutar --aplicar las desviadas (o auditar "
+              "la edición hecha en el runtime).")
+        return 1
+    return 0
+
+
 # ------------------------------------------------------------- ciclo (§5)
 
 # Línea `estado:` del frontmatter: valor + comentario inline opcional +
@@ -1688,8 +1769,8 @@ def principal(argv: list[str] | None = None) -> int:
                    help="añade publicacion-digna")
 
     p = sub.add_parser("transmutar", help="proyección funtorial a un runtime")
-    p.add_argument("--urn", required=True)
-    p.add_argument("--target", required=True, choices=list(TARGETS_CONOCIDOS))
+    p.add_argument("--urn")
+    p.add_argument("--target", choices=list(TARGETS_CONOCIDOS))
     p.add_argument("--aplicar", action="store_true",
                    help="instala en los paths del runtime")
     p.add_argument("--stdout", action="store_true",
@@ -1698,6 +1779,10 @@ def principal(argv: list[str] | None = None) -> int:
                    help="instala a nivel proyecto en <PATH>/.opencode|.claude/ "
                         "(plural) en vez del home del operador; requiere "
                         "--aplicar")
+    p.add_argument("--paridad", action="store_true",
+                   help="verifica emisión↔instalación (nivel usuario, ley/3 "
+                        "§9.1): fiel / desviada / no-instalada; exit 1 si hay "
+                        "desviadas. Sin --urn ni --target barre todo")
 
     p = sub.add_parser("ciclo", help="transición de lifecycle (solo adelante)")
     p.add_argument("urn")
@@ -1714,6 +1799,17 @@ def principal(argv: list[str] | None = None) -> int:
     if args.gesto == "velar":
         return cmd_velar(raiz, args.estricto)
     if args.gesto == "transmutar":
+        if args.paridad:
+            if args.aplicar or args.stdout or args.proyecto:
+                print("error: --paridad es verificación de solo lectura; no "
+                      "admite --aplicar, --stdout ni --proyecto.",
+                      file=sys.stderr)
+                return 1
+            return cmd_paridad(raiz, args.target, args.urn)
+        if not args.urn or not args.target:
+            print("error: transmutar requiere --urn y --target (salvo en "
+                  "modo --paridad).", file=sys.stderr)
+            return 2
         return cmd_transmutar(raiz, args.urn, args.target, args.aplicar,
                               args.stdout, args.proyecto)
     if args.gesto == "ciclo":

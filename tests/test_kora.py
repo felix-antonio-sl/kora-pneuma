@@ -1206,3 +1206,103 @@ class TestTransmutacionProyecto(CasoPneuma):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ------------------------------------------------------------- paridad (ley/3 §9.1)
+
+from unittest import mock  # noqa: E402
+
+
+class TestParidad(CasoPneuma):
+    """ley/3 §9.1: `transmutar --paridad` compara emisión↔instalación
+    (nivel usuario) y reporta fiel / desviada / no-instalada."""
+
+    def rutas_tmp(self):
+        base = self.raiz / "runtime"
+        return {
+            ("claude-code", "skill"): str(base / "claude/skills/{nombre}"),
+            ("claude-code", "agente"): str(base / "claude/agents/{nombre}.md"),
+            ("codex", "skill"): str(base / "codex/skills/{nombre}"),
+            ("codex", "agente"): str(base / "codex/skills/{nombre}"),
+            ("opencode", "skill"): str(base / "oc/skills/{nombre}"),
+            ("opencode", "agente"): str(base / "oc/agents/{nombre}.md"),
+            ("openclaw", "skill"): str(base / "claw/skills/{nombre}"),
+            ("openclaw", "agente"): str(base / "fleet/workspaces/{nombre}"),
+        }
+
+    def con_rutas(self):
+        return mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True)
+
+    def test_paridad_fiel_exit_0(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                         "--target", "claude-code", "--aplicar"])
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 0, salida)
+        self.assertIn("fiel", salida)
+        self.assertIn("util-x", salida)
+
+    def test_paridad_desviada_exit_1(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                         "--target", "claude-code", "--aplicar"])
+            instalado = (self.raiz / "runtime/claude/skills/util-x/SKILL.md")
+            instalado.write_text(
+                instalado.read_text("utf-8") + "\nEDITADO A MANO\n", "utf-8")
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("desviada", salida)
+        self.assertIn("SKILL.md", salida)
+
+    def test_paridad_no_instalada_es_informativa(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                         "--target", "claude-code"])
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 0, salida)
+        self.assertIn("no-instalada", salida)
+
+    def test_paridad_sin_emision_no_falla(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 0, salida)
+        self.assertIn("sin emisiones", salida)
+
+    def test_paridad_workspace_openclaw_detecta_soul_desviado(self):
+        campos = agente_campos(targets=["openclaw"])
+        self.escribir("artefactos/agentes/dev/agente-x.md",
+                      doc(campos, cuerpo_persona("Hace X.", "Voz sobria.")))
+        with self.con_rutas():
+            self.correr(["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                         "--target", "openclaw", "--aplicar"])
+            soul = self.raiz / "runtime/fleet/workspaces/agente-x/SOUL.md"
+            soul.write_text(soul.read_text("utf-8") + "\nDRIFT\n", "utf-8")
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("desviada", salida)
+        self.assertIn("SOUL.md", salida)
+
+    def test_paridad_filtra_por_target(self):
+        self.escribir_skill(skill_campos(targets=["claude-code", "opencode"]))
+        with self.con_rutas():
+            for t in ("claude-code", "opencode"):
+                self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                             "--target", t, "--aplicar"])
+            roto = self.raiz / "runtime/claude/skills/util-x/SKILL.md"
+            roto.write_text("pisado\n", "utf-8")
+            codigo_oc, _, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "opencode"])
+            codigo_todo, _, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo_oc, 0)
+        self.assertEqual(codigo_todo, 1)
+
+    def test_paridad_excluye_aplicar(self):
+        self.escribir_skill()
+        codigo, _, err = self.correr(
+            ["transmutar", "--paridad", "--aplicar"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("--paridad", err)
