@@ -8,3 +8,6 @@ __pycache__/
 # Vigencia documental — red de seguridad fuera del árbol vivo
 _archivo/
 *.tar.gz
+
+# Scratch de sesiones agénticas (ledger sdd)
+.superpowers/
