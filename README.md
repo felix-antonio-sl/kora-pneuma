@@ -32,6 +32,7 @@ python3 kora.py nombre <urn>           # resolver un nombre verdadero (también 
 python3 kora.py velar [--estricto]     # los 13 checks: que nada se contradiga
 python3 kora.py transmutar --urn U --target T [--aplicar|--stdout]
                                        # proyección funtorial con sello y pérdida declarada
+python3 kora.py transmutar --paridad   # emisión↔instalación: fiel/desviada/no-instalada (ley/3 §9.1)
 python3 kora.py ciclo <urn> <estado>   # lifecycle: solo hacia adelante, jamás de vuelta
 python3 kora.py ley                    # toda la ley a stdout — KORA en un contexto
 ```
