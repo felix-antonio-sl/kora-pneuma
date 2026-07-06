@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v1.3.0
+# KORA/Transmutación — ley pneuma v1.4.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -238,7 +238,8 @@ llamarlos demostrados.
 
 ## 7. Emisión por target
 
-Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout] [--proyecto PATH]`.
+Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout] [--proyecto PATH]`,
+o en modo verificación `transmutar --paridad [--urn U] [--target T]` (§9.1).
 Default: escribe bajo `_emision/{target}/...` (derivado, gitignored) y
 reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 
@@ -375,6 +376,39 @@ emisión). NO verifica la buena forma completa del sello — formato exacto y
 líneas fijas de §5 quedan garantizados al emitir y declarados después, no
 mecanizados sobre emisiones ya escritas.
 
+### 9.1 Paridad de despliegue
+
+La frescura tiene dos aguas. `sello-fresco` (§9) vigila **emisión↔fuente**;
+la **paridad** vigila **emisión↔instalación**: que lo que corre en el runtime
+de nivel usuario sea byte-idéntico a lo emitido. Gesto:
+`transmutar --paridad [--urn U] [--target T]` — solo lectura; sin filtros
+barre todas las emisiones.
+
+Reglas:
+
+1. Veredictos por unidad de emisión: `fiel` (instalación byte-idéntica),
+   `desviada` (instalación presente que difiere — stale porque la fuente
+   avanzó, o editada en el runtime: ambas son drift), `no-instalada`
+   (informativo: el gesto no decide si un artefacto debe estar instalado).
+2. Exit 1 si existe alguna `desviada`; el veredicto es re-transmutar
+   `--aplicar` (o auditar la edición hecha en el runtime). `no-instalada`
+   no falla.
+3. Solo se comparan los archivos que la emisión contiene: el scaffolding del
+   workspace y la memoria del runtime quedan fuera (frontera no-emitida,
+   §7.1).
+4. Alcance honesto: la paridad cubre las instalaciones de **nivel
+   usuario/flota** (las rutas de `--aplicar`); las instalaciones `--proyecto`
+   quedan fuera del barrido (declarado, no mecanizado).
+5. La paridad NO es check de `velar` (registro cerrado, constitución §11):
+   `velar` vela el corpus; la paridad mira el mundo. Por eso vive como modo
+   del gesto `transmutar`, que ya gobierna la relación IR↔runtime.
+
+Rationale (2026-07-06): cinco agentes corrieron días desactualizados en los
+runtimes de escritorio sin que ningún gesto lo viera — la fuente avanzó, la
+emisión se regeneró, la instalación quedó atrás. `velar` verde no lo detecta
+por diseño (vela la forma del corpus, no el mundo); este modo cierra esa
+clase de fallos sin fingir que la instalación es corpus.
+
 ## 10. Validación
 
 | Regla | Detalle | Enforcement |
@@ -390,6 +424,8 @@ mecanizados sobre emisiones ya escritas.
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Emisión fresca (presencia de sello + `hash-fuente` actual, último bloque) | §9 | mecanizado (`sello-fresco`) |
+| Paridad de despliegue (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
+| Paridad de instalaciones `--proyecto` | §9.1 r4 | declarado |
 | Buena forma completa del sello en emisiones ya escritas | §5, §9 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
 | `naturalidad-xi` | §6 | declarado |
@@ -420,3 +456,11 @@ always-on al deploy; reconcilia GENESIS↔realizado en el proof-carrier).
 Reintroduce, con la anatomía openclaw REAL verificada (workspace multi-archivo,
 no el monolito tipo-Hermes del intento revertido `8ef7c6e`), la matriz y el
 transporte que ya eran correctos. `hermes` sigue reconocido-no-realizado.
+
+v1.4.0 (HITL 2026-07-06): §9.1 legisla la **paridad de despliegue**
+(`transmutar --paridad`) — la segunda agua de la frescura: emisión↔instalación
+de nivel usuario, con veredictos `fiel`/`desviada`/`no-instalada` y exit 1
+ante drift. Es modo del gesto existente: no altera los seis gestos (`ley/0
+§10`) ni el registro cerrado de checks (`ley/0 §11`). Extensión aditiva
+(constitución §12.1): minor. Motivada por el deploy 2026-07-06, que halló
+cinco instalaciones stale silenciosas en runtimes de escritorio.
