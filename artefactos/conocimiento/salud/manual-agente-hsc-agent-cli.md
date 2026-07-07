@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.7
+version: 1.0.8
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
-fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8. Actualizado 2026-06-24 (v1.0.5, Cortes 3+4): forma normal canonica de la evolucion (texto=coalesce(historia,evolucion), plan_indicacion=coalesce(plan,indicacion), data_keys del sub-objeto, preservando los crudos; mata el falso 'sin evolucion' del jq contra el campo equivocado; auditoria F5) y procedencia de la ubicacion en handoff_view (ubicacion_source/diagnostico_admin_source en {estado-actual, unavailable}; un hueco no se lee como dato real; auditoria F4); sobre hsc-agent-cli@3b9f28d. Actualizado 2026-06-26 (v1.0.6, Corte 5): bundle ... --stream entrega el lote como NDJSON (una linea type:bundle por sub-envelope conforme cierra, en orden de completitud, + linea terminal type:summary con streamed:true y sin bundles[]); opt-in, aditivo, retrocompat, requiere >=2 handles; mata F3 (el lote atomico perdia todo en timeout). Cierra la auditoria del censo (Cortes 1-5). Agregado el suite de aceptacion scripts/eval-contrato-agente.sh (5 escenarios exigentes del contrato, casos vivos auto-descubiertos); sobre hsc-agent-cli@1f4e608. Actualizado 2026-06-30 (v1.0.7, Corte 6 + sub-cortes 1 y 2 del frente faithful find): el censo SGH se vuelve FIEL en sus dos niveles ortogonales y lo declara en data. (Corte 6) hospitalizacion:sgh:<id>/estado-actual agrega sweep_complete/rooms_unavailable (barrido de pacientes por sala). (Sub-corte 1) agrega enumeration_complete/services_unavailable (enumeracion de salas por servicio), ortogonal al barrido. (Sub-corte 2 / Caso A) propaga los CUATRO campos a find --hospitalizados (functor distinto FetchHospitalizados; la fidelidad no es transitiva, hubo que reaplicar el patron) y marca censo-parcial en recommended_batch_handles[] con recommended_batch_handles_census_incomplete (+ _detail con las dos dimensiones por separado), solo bajo censo parcial (omitido bajo censo fiel = byte-identico). Cuando estado-actual concluye ausencia bajo censo incompleto, el clinical_gap de dominio ingreso sale con gap_kind=acquisition_failure (no confirmed_absence). Semantica honesta: *_complete=true significa 'sin fallo DURO observado', no 'lista realmente completa'; censo parcial es USABLE (advierte, no bloquea); el agente compone sweep_complete && enumeration_complete. Sobre hsc-agent-cli@a7b28b9."
+fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8. Actualizado 2026-06-24 (v1.0.5, Cortes 3+4): forma normal canonica de la evolucion (texto=coalesce(historia,evolucion), plan_indicacion=coalesce(plan,indicacion), data_keys del sub-objeto, preservando los crudos; mata el falso 'sin evolucion' del jq contra el campo equivocado; auditoria F5) y procedencia de la ubicacion en handoff_view (ubicacion_source/diagnostico_admin_source en {estado-actual, unavailable}; un hueco no se lee como dato real; auditoria F4); sobre hsc-agent-cli@3b9f28d. Actualizado 2026-06-26 (v1.0.6, Corte 5): bundle ... --stream entrega el lote como NDJSON (una linea type:bundle por sub-envelope conforme cierra, en orden de completitud, + linea terminal type:summary con streamed:true y sin bundles[]); opt-in, aditivo, retrocompat, requiere >=2 handles; mata F3 (el lote atomico perdia todo en timeout). Cierra la auditoria del censo (Cortes 1-5). Agregado el suite de aceptacion scripts/eval-contrato-agente.sh (5 escenarios exigentes del contrato, casos vivos auto-descubiertos); sobre hsc-agent-cli@1f4e608. Actualizado 2026-06-30 (v1.0.7, Corte 6 + sub-cortes 1 y 2 del frente faithful find): el censo SGH se vuelve FIEL en sus dos niveles ortogonales y lo declara en data. (Corte 6) hospitalizacion:sgh:<id>/estado-actual agrega sweep_complete/rooms_unavailable (barrido de pacientes por sala). (Sub-corte 1) agrega enumeration_complete/services_unavailable (enumeracion de salas por servicio), ortogonal al barrido. (Sub-corte 2 / Caso A) propaga los CUATRO campos a find --hospitalizados (functor distinto FetchHospitalizados; la fidelidad no es transitiva, hubo que reaplicar el patron) y marca censo-parcial en recommended_batch_handles[] con recommended_batch_handles_census_incomplete (+ _detail con las dos dimensiones por separado), solo bajo censo parcial (omitido bajo censo fiel = byte-identico). Cuando estado-actual concluye ausencia bajo censo incompleto, el clinical_gap de dominio ingreso sale con gap_kind=acquisition_failure (no confirmed_absence). Semantica honesta: *_complete=true significa 'sin fallo DURO observado', no 'lista realmente completa'; censo parcial es USABLE (advierte, no bloquea); el agente compone sweep_complete && enumeration_complete. Sobre hsc-agent-cli@a7b28b9. Actualizado 2026-07-07 (v1.0.8, fase 1 HODOM fuentes vivas, encargo DT 2026-07-06): scope hodom: (hodom:libro-mayor/<rut> + hodom:programacion/<rut>, kind sheet, source drive) — las planillas Drive manuales de la unidad entran a la vitrina como handles identity-safe via export CSV sin credenciales, con cache de archivo 10 min; composicion automatica en bundle hospitalizacion (items aislados) cuando el episodio es HODOM o el servicio no resuelve (servicio resuelto no-HODOM = salida byte-identica); summary.discrepancies[] con guard temporal (estado_hodom SIN precedence_hint — SGH es tiempo real y el libro arrastra lag de cierre; la regla de precedencia del DT queda consagrada como doctrina de agente en 6.2) y gap candidato en clinical_gaps cuando un activo SGH no tiene fila en libro sano; tab_found/rows_total/rows_empty/rows_unparseable/estado_normalizado como higiene de planilla manual; --fresh bypassa tambien el cache de archivo drive; error_detail con sistema DRIVE y reason header_mismatch (retryable=false). Sobre hsc-agent-cli@4e5f225 (tag v1.1.0)."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -75,7 +75,9 @@ puede ir a stderr; **parsea solo stdout**.
 | 5 | `internal_error` (bug del CLI) |
 
 **Credenciales:** vienen del entorno (`H_DAU_*`, `H_SGH_*`, `H_LAB_*`,
-`H_SGH_HOSPITAL_ID`, `H_PROXY_HOST`) o de `~/.config/hsc-agent-cli/credentials.env`.
+`H_SGH_HOSPITAL_ID`, `H_PROXY_HOST`; para las planillas HODOM,
+`H_DRIVE_INGRESOS_ID`/`H_DRIVE_PROGRAMACION_ID` con defaults compilados — no son
+secretos y rotan por año) o de `~/.config/hsc-agent-cli/credentials.env`.
 No es tu trabajo gestionarlas; si faltan, `health` lo reporta.
 
 ## 2. Modelo mental: handles
@@ -282,6 +284,48 @@ censo fue parcial, el `clinical_gap` de dominio `ingreso` sale con
 `gap_kind=acquisition_failure` (no `confirmed_absence`): la misma señal, propagada al
 lenguaje de brechas (§7).
 
+**Fuentes vivas de la unidad (scope `hodom:`, fase 1 — encargo DT 2026-07-06).**
+Para el caso HODOM la vitrina expone además dos planillas Drive **manuales** de la
+unidad como handles identity-safe (kind `sheet`, `source: drive`):
+
+| Handle | Qué trae |
+|---|---|
+| `hodom:libro-mayor/<rut>` | fila(s) del paciente en el libro mayor anual: `ESTADO` (con lag de cierre), Barthel, categorización, O2, servicio de origen, CESFAM, motivo de egreso |
+| `hodom:programacion/<rut>` | prestaciones programadas por día del paciente en la pestaña del mes en curso |
+
+En `bundle hospitalizacion:sgh:<id> --handoff|--minimal` se **componen solos** como
+items del bundle cuando el episodio es HODOM (o el servicio no resolvió); un
+servicio resuelto no-HODOM los omite (salida byte-idéntica). En el flujo de censo
+ya vienen dentro de cada sub-envelope del lote: no los pidas aparte.
+
+Reglas de lectura (doctrina de agente, pactada con el DT):
+
+- **Fuente MANUAL con `clinical_warning` permanente**: planilla de la unidad, no
+  sistema institucional. Para el **estado del HOY manda SGH** (tiempo real); el
+  libro mayor es censo manual **con lag de cierre**; `PROGRAMACIÓN` da la mayor
+  granularidad del proceso activo.
+- **Regla de precedencia (encargo DT 2026-07-06)**: ante conflicto entre SGH y
+  fuentes vivas **en lo relativo al proceso de hospitalización domiciliaria
+  actual**, pesan más las fuentes vivas — SALVO el campo `ESTADO`, donde SGH es
+  tiempo real y el libro arrastra lag: ahí la vitrina expone ambos valores y la
+  resolución es **tuya**, caso a caso.
+- **`summary.discrepancies[]`**: comparación mecánica con **guard temporal** (solo
+  filas cuyo rango solapa el episodio SGH actual; episodios previos del año son
+  contexto, no conflicto). Cada entry: `{campo, valor_sgh, valor_drive,
+  precedence_hint, regla}` — `estado_hodom` viene SIN `precedence_hint` (la
+  salvedad de arriba); `fecha_egreso_hodom` con `precedence_hint: "drive"`.
+- **Gap candidato**: activo en censo SGH + libro mayor **sano** sin fila → entra a
+  `clinical_gaps[]` (`domain: hodom`, `gap_kind: confirmed_absence`): anomalía o
+  retraso de registro de la unidad — repórtalo, no lo silencies. Planilla caída
+  produce en cambio `acquisition_failure` del propio item.
+- **Higiene de planilla**: `data.rows_total`/`rows_empty`/`rows_unparseable`
+  cuentan la realidad del CSV (filas de relleno, RUT mal tipeados);
+  `estado_normalizado` ∈ {`activo`,`egresado`,`unknown`} absorbe typos
+  (`EGRESADC`) preservando el crudo. En `hodom:programacion`, `tab_found:false` =
+  la pestaña del mes no existe → **universo trunco: NO concluyas ausencia**.
+- Multi-fila con el mismo RUT = rehospitalizaciones del año;
+  `filas_orden_cronologico[]` da el orden mecánico.
+
 **Epicrisis — pídela por HCC, no por el PDF SGH.** La epicrisis SGH
 (`hospitalizacion:sgh:<id>/doc/epicrisis`) **nace como TCPDF vacío** (caveat
 4.4.1): es un cascarón, el contenido nunca entró al PDF, así que **OCR no
@@ -326,6 +370,8 @@ usar el CLI a medias.
 | `sweep_complete` / `enumeration_complete` (+ `rooms_unavailable` / `services_unavailable`) | `data` de `estado-actual` y `find --hospitalizados` | fidelidad del censo SGH en dos niveles ORTOGONALES (barrido de pacientes + enumeración de salas). Censo fiel ⟺ **ambos** `true`; si cualquiera es `false`, la ausencia del censo es **fallo de adquisición**, no ausencia confirmada (compón los dos bits). `*_complete=true` = "sin fallo DURO observado", no "lista realmente completa". Censo parcial es USABLE (advierte, no bloquea) |
 | `recommended_batch_handles_census_incomplete` (+ `_detail`) | bloque batch de `find --hospitalizados` | presente SOLO bajo censo parcial; `_detail` separa las dos dimensiones (barrido/enumeración) + listas nominales. Omitido bajo censo fiel (byte-idéntico) |
 | `summary.unsafe_handles` / `has_unsafe_handles` | `bundle multi_bundle` | qué componentes del lote tienen `identity_mismatch` (no usar SOLO esos; el resto sigue válido) |
+| `summary.discrepancies[]` | bundles de hospitalización con items `hodom:` | conflicto mecánico SGH vs fuentes vivas con guard temporal; `estado_hodom` SIN `precedence_hint` (SGH tiempo real vs libro con lag: resuelves tú); `fecha_egreso_hodom` con hint `drive`. Solo presente si hay discrepancias |
+| `tab_found` / `rows_total`/`rows_empty`/`rows_unparseable` / `estado_normalizado` | `data` de handles `hodom:*` | higiene de planilla manual: `tab_found:false` = universo trunco (no concluir ausencia); conteos de filas de relleno y RUT no parseables; estado normalizado (typos absorbidos, crudo preservado) |
 
 En bundles de hospitalización, revisa `summary.hospitalizacion`: `critical_gaps`,
 `technical_findings`, `fallbacks`, `doc_ingreso_pdf`, `ingreso_servicio_pdf`. Los
@@ -367,7 +413,10 @@ dato de otra persona.
 ## 10. Caché y `--fresh`
 
 Stateless con caché en disco, TTL por kind (encounter/timeseries/orders/medications
-60s; triage/narrative/diagnosis 5min; lab_history 10min; document 24h; history 12h).
+60s; triage/narrative/diagnosis 5min; lab_history 10min; document 24h; history 12h;
+sheet 10min). Los handles `hodom:*` tienen además un **caché de archivo** (el CSV
+crudo de la planilla, 10 min, una descarga por planilla por lote); `--fresh`
+bypassa **ambos** niveles.
 Usa `--fresh` cuando necesites el estado **ahora** (paciente activo, turno en
 curso) y quieras bypassar la lectura de caché. `--fresh` igual reescribe la
 entrada nueva.
