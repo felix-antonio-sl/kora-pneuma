@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:metodologia-forja-opm-es
 nombre: metodologia-forja-opm-es
-version: 1.5.1
+version: 1.6.0
 estado: publicado
 descripcion: "Metodología Forja — método de modelamiento OPM en opforja: destilación korificada del manual metodológico para la mesa de trabajo deep-opm-pro."
-fuente: "SSOT OPM v1.5.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-forja-es.md (sha256:7a30c72d1ad2c674fb3b29d4f0e01e5350ae66b652fdf932237073e42b8838b4) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.5.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
+fuente: "SSOT OPM v1.5.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-forja-es.md (sha256:7a30c72d1ad2c674fb3b29d4f0e01e5350ae66b652fdf932237073e42b8838b4) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.5.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases). Enmienda v1.6.0 del 2026-07-07 (HITL custodio): A1.5 nueva (arranque bottom-up de primera clase — bosquejo de fragmentos sueltos → reconciliacion → SD0, hermano del SD-primero; rigor de cierre relajado en bosquejo, integridad nunca se relaja, reconciliacion cobra el rigor al graduar, adopcion via spec-forja-opd-es R-OPD-REF-20) + nota de preambulo en A2 (el asistente de 11 etapas es SD-primero; bottom-up entra al asistente en la reconciliacion); realiza la doctrina bottom-up RESUELTA 2026-07-06 y el working-artifact deep-opm-pro 2026-07-06-apuntes-taller-design.md."
 autor: FS
 creado: 2026-05-31
 lang: es
@@ -14,7 +14,7 @@ depende: [urn:fxsl:kb:opm-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:opd-es]
 cita: [urn:fxsl:kb:opm-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:manual-metodologico-opm-es, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-escala]
 ---
 
-# Metodología Forja — método de modelamiento OPM en opforja (v1.5.1)
+# Metodología Forja — método de modelamiento OPM en opforja (v1.6.0)
 
 SSOT **primaria y autónoma** del *método* de modelar OPM con la herramienta
 opforja (deep-opm-pro). Contiene todo el procedimiento (no requiere abrir otra
@@ -91,9 +91,22 @@ Preguntas guía para observar antes de plasmar:
 
 **A1.4 Modos de aplicación real.** Además del diseño forward, Forja reconoce tres modos frecuentes: (a) **task analysis humano-máquina**, donde el OPD debe modelar personas, tecnología, decisiones, feedback y contingencias como un solo sistema procedimental; (b) **modelo prospectivo/To-Be**, donde el OPD describe una arquitectura futura o prototipo digital y debe marcar la fuerza epistémica de sus objetos/procesos; (c) **digital twin / CPS**, donde el OPD combina proceso físico, datos, simulación y predicción sin convertir cada variable en transformee. El modo elegido no cambia las primitivas OPM; cambia la disciplina de evidencia, validación y altitud.
 
+**A1.5 Arranque bottom-up de primera clase (bosquejo → reconciliación → SD0).** Forja reconoce dos arranques **hermanos**, ambos de primera clase y subordinados a la misma ley de equivalencia OPD↔OPL y a la función-semilla (A1.1):
+
+- **SD-primero** (default del asistente guiado, A2): fija la función en el SD y refina hacia abajo (A3). Es el camino disciplinado del diseño forward.
+- **Bottom-up (bosquejo)**: el modelador **PUEDE** trazar **fragmentos sueltos** —OPDs sin padre, hechos OPM locales— sin comprometer aún un SD, y reconciliarlos después hacia el SD0. Hace explícito lo que A1.1 (middle-out) y A1.3 (MBRSE) ya admiten: el arranque **no obliga** a decidir el SD antes del primer hecho.
+
+Reglas de uso:
+- El bosquejo es **OPM legítimo con rigor de cierre relajado**: los juicios de **validez de método** (SD sin proceso principal, densidad, nombres, refinamiento no trivial, preservación de frontera) se **observan**, no bloquean, mientras el material esté en régimen de bosquejo. La **integridad estructural NUNCA se relaja** (referencias colgantes, formato, geometría rechazan igual).
+- La **reconciliación hacia el SD0** es el acto que **cobra el rigor**: al **graduar** el bosquejo a modelo, los juicios de validez vuelven **exigibles** y el reporte los muestra.
+- El bottom-up **NO crea un mecanismo de refinamiento nuevo**: un fragmento suelto se incorpora al árbol por **adopción** (spec-forja-opd-es §10.4 R-OPD-REF-20) — fijar padre + declarar refinamiento en un gesto, **convergente por construcción** con el refinamiento top-down (mismo constructor de vínculo; el contenido del OPD hijo difiere legítimamente: el top-down auto-andamia, adoptar toma el suelto tal cual).
+*(anclaje: A1.1 middle-out; A1.3 MBRSE; realización spec-forja-opd-es §10.4 R-OPD-REF-20; doctrina resuelta HITL custodio 2026-07-06.)*
+
 ## A2. Construcción del SD (asistente agnóstico, 11 etapas)
 
 Cada etapa **DEBE** cerrar con un hecho explícito listo para OPD/OPL. El asistente no termina cuando el usuario "entiende"; termina cuando los hechos mínimos quedaron decididos. Si una etapa no cierra, retroceder a la que bloquea.
+
+> El asistente de las 11 etapas realiza el arranque **SD-primero**. El arranque **bottom-up** (A1.5) es su hermano legítimo para elicitación exploratoria: no pasa por este asistente hasta la **reconciliación** (graduación del bosquejo a modelo), momento en que estas 11 etapas se exigen sobre el SD resultante.
 
 | # | Objetivo | Salida mínima |
 |---|---|---|
