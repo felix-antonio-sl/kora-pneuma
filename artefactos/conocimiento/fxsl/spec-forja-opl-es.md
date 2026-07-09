@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:spec-forja-opl-es
 nombre: spec-forja-opl-es
-version: 1.2.2
+version: 1.3.0
 estado: publicado
 descripcion: "Spec-forja OPL — SSOT del lenguaje OPL de OPFORJA: generación, parsing y roundtrip bimodal del OPL en el modelador deep-opm-pro."
-fuente: "SSOT OPM v1.2.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:753e9d194635416a427674f5a21ebb3cbedb0452ba5c4a8ed87832023e3a946f) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3) y el re-sync v1.2.1 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.2.2: cierre del orden de descomposicion (GAP-CX-PARSER y GAP-FIXTURE-DESCOMPOSICION marcados orden cerrado; opd.ordenInzoom via set-orden-inzoom con verificacion por inversa; roundtrip estricto en invocacion-implicita-bimodal.test.ts)."
+fuente: "SSOT OPM v1.2.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:753e9d194635416a427674f5a21ebb3cbedb0452ba5c4a8ed87832023e3a946f) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3) y el re-sync v1.2.1 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.2.2: cierre del orden de descomposicion (GAP-CX-PARSER y GAP-FIXTURE-DESCOMPOSICION marcados orden cerrado; opd.ordenInzoom via set-orden-inzoom con verificacion por inversa; roundtrip estricto en invocacion-implicita-bimodal.test.ts). Delta v1.3.0 (2026-07-09, firma HITL del custodio): excepcion de apunte a R-ENT-2 (R-ENT-2-APUNTE) — en especie apunte los placeholders emiten OPL en toda la generacion incluida la canonica; neutraliza GAP-PLACEHOLDER-OBJETO para apuntes; origen BUG-76af16 deep-opm-pro."
 autor: FS
 creado: 2026-05-26
 lang: es
@@ -213,6 +213,10 @@ Rationale: `opm-opl-es §3` (descripción de entidades) y `reglas §4.4` separan
 
   Rationale: `nombresCanonicos.ts` define `esNombreProcesoPlaceholder` y `esNombreEstadoCanonico`; un nombre placeholder no es un hecho de modelo afirmable.
 
+- **R-ENT-2-APUNTE (excepción de apunte a R-ENT-2)**: en una **especie apunte**, R-ENT-2 NO aplica: las cosas con nombre placeholder (objeto, proceso, `estado`) DEBEN emitir su OPL — oración de existencia y enlaces — en **toda la generación, incluida la canónica**. La excepción es de **régimen por especie**, no de superficie: panel, editor libre, exports (Markdown, documento canónico), puente skill (`mesa pull`/contexto W6.0) y lectura móvil emiten el mismo texto. El **diagnóstico** de nominación (`reglas` R-NOM-PROC-1, observación por-clase en apuntes) sigue emitiéndose: la mesa acompaña e invita a nombrar con forma verbal, sin bloquear. Al **graduar** el apunte a modelo, R-ENT-2 vuelve a regir por sí sola (el régimen lee la especie viva del workspace). La autoría headless (bundles compilados) permanece en régimen riguroso.
+
+  Rationale: en un modelo, un nombre placeholder no es un hecho afirmable; en un **boceto**, el placeholder ES el hecho — afirma que hay una cosa aún sin nombrar, y la bisimetría canvas↔OPL exige contarla. Coherencia doctrinal: el apunte relaja el **rigor de cierre**, no la semántica (`metodologia-forja-opm-es` A1.5, `spec-forja-opd-es` R-OPD-REF-20); R-ENT-2 es rigor de cierre. Neutraliza GAP-PLACEHOLDER-OBJETO para la especie apunte. Roundtrip verificado: el parser no filtra placeholders y el canónico de apunte re-parsea con cero patches (enmienda 2026-07-09, BUG-76af16 deep-opm-pro).
+
 - **R-ENT-3** (extensión declarada de superficie — eco OPCloud): la emisión OPFORJA de esencia y afiliación de una cosa DEBE **componerse en UNA sola oración** con el sustantivo de tipo, coordinadas con «y»: `**Cosa** es un {objeto|proceso} {esencia} y {afiliacion}.` Es la forma del eco OPCloud, declarada aquí como **extensión de superficie** que operacionaliza las designaciones atómicas D1–D4 de `reglas §4.4` **sin derogarlas**: D1–D4 siguen siendo las plantillas canónicas de la capa suprema y son entrada reverse VÁLIDA (el parser las acepta, `parsear.ts·parsearClasificacionRasgo`). La perseverancia (persistente/transitoria), si se emite, va en oración aparte. Producción `(* ext §2.0 *)` en §18.
 
   Preferida en emisión OPFORJA: `**Sensor** es un objeto físico y ambiental.`
@@ -237,7 +241,7 @@ Rationale: `opm-opl-es §3` (descripción de entidades) y `reglas §4.4` separan
 
 **Traza a código**: `app/src/opl/generadores/estructural.ts·oracionEntidad`; supresión de placeholder en `app/src/modelo/nombresCanonicos.ts`.
 
-> GAP-PLACEHOLDER-OBJETO: la supresión de placeholder (R-ENT-2) está conectada para *procesos* — `refsHints.ts·entidadOplEsEmitible` (en `generar.ts`) suprime procesos placeholder vía `esNombreProcesoPlaceholder` antes de emitir OPL —, pero los **objetos** placeholder no se filtran (rama objeto de R-ENT-2 sin implementar; `checkers.ts` sí los reconoce) — ver §20.
+> GAP-PLACEHOLDER-OBJETO: la supresión de placeholder (R-ENT-2) está conectada para *procesos* — `refsHints.ts·entidadOplEsEmitible` (en `generar.ts`) suprime procesos placeholder vía `esNombreProcesoPlaceholder` antes de emitir OPL —, pero los **objetos** placeholder no se filtran (rama objeto de R-ENT-2 sin implementar; `checkers.ts` sí los reconoce) — ver §20. El GAP rige solo en régimen riguroso: la **especie apunte** queda fuera por R-ENT-2-APUNTE (§2.0, v1.3.0).
 
 Rationale: `reglas §2.2` (R-OBJ-1..7) y `opm-opl-es §3`.
 
