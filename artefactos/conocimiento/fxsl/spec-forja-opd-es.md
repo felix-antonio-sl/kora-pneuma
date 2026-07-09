@@ -829,7 +829,7 @@ Modelo «Lavado de Platos», SD: **Usuario Doméstico** (rect verde, físico sis
 | R-OPD-STR-1..13 | estructurales | §7 |
 | R-OPD-INV-1..9 | invocación y tiempo | §8 |
 | R-OPD-MUL-1..5 | multiplicidad | §9 |
-| R-OPD-REF-1..19 | refinamiento y contexto | §10 |
+| R-OPD-REF-1..20 | refinamiento y contexto | §10 |
 | R-OPD-LAY-1..10 | layout y routing | §11 |
 | R-OPD-ROT-1..9 | composición y rotulado | §12 |
 | R-OPD-UI-1..6 | canvas e interacción | §13 |
