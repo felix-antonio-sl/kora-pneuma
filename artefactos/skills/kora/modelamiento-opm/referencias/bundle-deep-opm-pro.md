@@ -283,6 +283,8 @@ interface Modelo {
 | "estado de entidad inexistente" | `entidadId` del estado roto | revisar consistencia |
 | "extremo de enlace invalido" | `kind` o `id` incorrecto | re-validar con `validarFirmaEnlace` mental antes de emitir |
 | "referencias OPD ciclicas" | refinement tree con ciclo | aplicar `reglas-opm-estrictas-es` y `spec-forja-opd-es` (con V-* base delegadas) |
+| `estereotipoId` irresoluble | `Entidad.estereotipoId` no resuelve a estereotipo de fabrica ni del catalogo `Modelo.estereotipos` | declarar el estereotipo en el catalogo del bundle u omitir el campo (rechazo duro desde 2026-06-23, simetrico a anclas/notasMesa) |
+| `ordenInzoom` con ids no internos | `Opd.ordenInzoom` referencia ids que no son subprocesos internos del in-zoom | emitir solo ids de hermanos internos del OPD (rechazo duro; contrato canonico) |
 
 ## 7. Protocolo de uso desde la skill
 

@@ -2,6 +2,14 @@
 
 Condensado operativo del wizard de System Diagram segun `urn:fxsl:kb:metodologia-forja-opm-es`, con validez gobernada por `urn:fxsl:kb:reglas-opm-estrictas-es` y superficie OPD/OPL gobernada por `spec-forja-opd-es` / `spec-forja-opl-es`. El manual base queda como procedencia delegada, no como autoridad primaria de esta skill.
 
+> **Dos arranques hermanos (metodologia §A1.5, desde v1.6.0).** Este wizard
+> realiza el arranque **SD-primero** (default del asistente guiado A2). El
+> arranque **bottom-up** (bosquejo: fragmentos sueltos → reconciliacion por
+> adopcion → SD0) es su hermano de primera clase y **no pasa por este wizard
+> hasta la reconciliacion** — en ese momento las etapas de este documento se
+> exigen sobre el SD resultante. Ver SKILL.md §Regimen bosquejo y spec-opd
+> `R-OPD-REF-20`. No forzar este wizard a un operador que esta bosquejando.
+
 ## Paso 0 — Verificar aplicabilidad de OPM
 
 Antes de modelar, confirmar que el sistema tiene **funcion transformadora identificable**. Pregunta clave:
