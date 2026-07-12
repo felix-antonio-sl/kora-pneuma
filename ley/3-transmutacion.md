@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v1.4.0
+# KORA/Transmutación — ley pneuma v2.0.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -52,9 +52,16 @@ Reglas:
    no nombra capacidades inexistentes como si existieran. `openclaw` está
    **realizado** desde v1.3.0 (cierra la deuda de `GENESIS §4`, registrada aquí
    sin editar GENESIS).
-3. El identificador del funtor DEBE ser `T-{target}-pneuma-v1`. Funtores
-   vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v1`,
-   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`.
+3. El identificador del funtor DEBE corresponder a la versión de su contrato.
+   Funtores vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
+   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`. La v2 de Codex reemplaza
+   el antiguo colapso agente→skill por custom agents nativos (§7).
+4. `transmutar --target T` exige que la fuente declare `T` en `targets`:
+   proyectar hacia un destino no declarado ampliaría silenciosamente el
+   contrato de despliegue del artefacto.
+5. La emisión histórica puede producirse desde cualquier estado válido, pero
+   `--aplicar` exige `estado: activo`. Un artefacto deprecado o retirado se
+   conserva y resuelve; no se reinstala como si siguiera vigente.
 
 ## 3. Leyes del funtor
 
@@ -248,7 +255,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia `referencias/` conservando su nombre si existe |
 | `claude-code` | agente | `_emision/claude-code/agents/{nombre}.md`; frontmatter `name`, `description`, `tools` (lista separada por comas); body = body fuente; si `arnes` = `persona`, sección final `## Modos de invocacion` con la doctrina dual-mode (modo subagente batch vs modo persona por encarnación) |
 | `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre |
-| `codex` | agente | se emite **como skill**; el colapso de forma se declara en el sello como pérdida adicional: `forma: agente->habilidad :: codex no registra agentes` |
+| `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
@@ -316,7 +323,8 @@ El sello la declara; el runtime la enforce por config. No es pérdida de eje (no
 genera línea `perdidas:`): es arquitectura del target.
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
-`~/.claude/agents/{nombre}.md`; codex → `~/.codex/skills/{nombre}/`;
+`~/.claude/agents/{nombre}.md`; codex → `~/.agents/skills/{nombre}/` y
+`~/.codex/agents/{nombre}.toml`;
 opencode → `~/.config/opencode/skills/{nombre}/` y
 `~/.config/opencode/agents/{nombre}.md`; openclaw → workspace
 `~/openclaw-fleet/workspaces/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`];
@@ -328,14 +336,13 @@ paths `referencias/...` y ningún target exige otro nombre.
 `--proyecto PATH` (requiere `--aplicar`): redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
 claude-code → `PATH/.claude/skills/{nombre}/` y `PATH/.claude/agents/{nombre}.md`;
+codex → `PATH/.agents/skills/{nombre}/` y `PATH/.codex/agents/{nombre}.toml`;
 opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}.md`
 (subdirectorios en **plural**, convención canónica de opencode: el `.opencode/` y
 `~/.config/opencode/` usan nombres plurales; singular solo por retrocompat).
-`codex` y `openclaw` NO soportan nivel proyecto: `codex` sin convención
-verificada; `openclaw` porque sus workspaces son user/fleet-level, no de
-proyecto. `transmutar --proyecto` hacia ellos falla nombrando los targets
-soportados. La emisión canónica en `_emision/` no cambia; `--proyecto` solo
-redirige el destino de `--aplicar`.
+`openclaw` NO soporta nivel proyecto porque sus workspaces son user/fleet-level,
+no de proyecto. La emisión canónica en `_emision/` no cambia; `--proyecto`
+solo redirige el destino de `--aplicar`.
 
 El gesto `--aplicar` **respeta y valida el campo `alcance`** del artefacto (ley/2
 §3; ausente = `ambos`): un artefacto con `alcance: usuario` rechaza `--proyecto`;
@@ -389,10 +396,12 @@ Reglas:
 1. Veredictos por unidad de emisión: `fiel` (instalación byte-idéntica),
    `desviada` (instalación presente que difiere — stale porque la fuente
    avanzó, o editada en el runtime: ambas son drift), `no-instalada`
-   (informativo: el gesto no decide si un artefacto debe estar instalado).
-2. Exit 1 si existe alguna `desviada`; el veredicto es re-transmutar
-   `--aplicar` (o auditar la edición hecha en el runtime). `no-instalada`
-   no falla.
+   (informativo: el gesto no decide si un artefacto debe estar instalado), y
+   `sin-emision` (un artefacto `activo` promete el target pero no tiene la
+   unidad derivada correspondiente).
+2. Exit 1 si existe alguna `desviada` o `sin-emision`; el veredicto es
+   transmutar lo faltante y re-transmutar `--aplicar` lo desviado (o auditar la
+   edición hecha en el runtime). `no-instalada` no falla.
 3. Solo se comparan los archivos que la emisión contiene: el scaffolding del
    workspace y la memoria del runtime quedan fuera (frontera no-emitida,
    §7.1).
@@ -402,6 +411,9 @@ Reglas:
 5. La paridad NO es check de `velar` (registro cerrado, constitución §11):
    `velar` vela el corpus; la paridad mira el mundo. Por eso vive como modo
    del gesto `transmutar`, que ya gobierna la relación IR↔runtime.
+6. La completitud se deriva de los artefactos agénticos `activos` y sus
+   `targets` realizados. Una persona Codex promete dos unidades —custom agent
+   y skill explícita—; un subagente Codex promete una.
 
 Rationale (2026-07-06): cinco agentes corrieron días desactualizados en los
 runtimes de escritorio sin que ningún gesto lo viera — la fuente avanzó, la
@@ -425,6 +437,9 @@ clase de fallos sin fingir que la instalación es corpus.
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Emisión fresca (presencia de sello + `hash-fuente` actual, último bloque) | §9 | mecanizado (`sello-fresco`) |
 | Paridad de despliegue (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
+| Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
+| Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
+| Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
 | Paridad de instalaciones `--proyecto` | §9.1 r4 | declarado |
 | Buena forma completa del sello en emisiones ya escritas | §5, §9 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
@@ -464,3 +479,12 @@ ante drift. Es modo del gesto existente: no altera los seis gestos (`ley/0
 §10`) ni el registro cerrado de checks (`ley/0 §11`). Extensión aditiva
 (constitución §12.1): minor. Motivada por el deploy 2026-07-06, que halló
 cinco instalaciones stale silenciosas en runtimes de escritorio.
+
+v2.0.0 (HITL 2026-07-12): reemplaza `T-codex-pneuma-v1` por
+`T-codex-pneuma-v2`. El target Codex deja de colapsar agentes a skills: usa
+custom agents TOML nativos y conserva el modo persona con un skill explícito
+no invocable implícitamente; adopta las rutas oficiales globales y de proyecto,
+sin fijar modelo. Añade enforcement de `targets`, despliegue solo desde
+`estado: activo` y completitud `activo→emisión` en paridad. Es major porque
+cambia rutas, forma de emisión y el identificador del sello Codex; medió la
+decisión explícita del operador de ejecutar la migración Claude Code→Codex.

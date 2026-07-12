@@ -25,6 +25,7 @@ import json
 import os
 import re
 import shutil
+import tomllib
 from pathlib import Path
 
 # ------------------------------------------------------------------ constantes
@@ -764,6 +765,7 @@ def chk_sello_fresco(arts, raiz):
         agents = target_dir / "agents"
         if agents.is_dir():
             emitidos.extend(sorted(agents.glob("*.md")))
+            emitidos.extend(sorted(agents.glob("*.toml")))
         # openclaw: el agente es un workspace; AGENTS.md y SOUL.md portan sello.
         workspaces = target_dir / "workspaces"
         if workspaces.is_dir():
@@ -772,6 +774,13 @@ def chk_sello_fresco(arts, raiz):
     for path in emitidos:
         rel = path.relative_to(raiz).as_posix()
         texto = path.read_text(encoding="utf-8")
+        if path.suffix == ".toml":
+            try:
+                datos = tomllib.loads(texto)
+                texto = datos.get("developer_instructions", "")
+            except (tomllib.TOMLDecodeError, AttributeError):
+                fallos.append((rel, "emisión TOML inválida"))
+                continue
         # El sello real es el ÚLTIMO bloque: el cuerpo puede citar sellos
         # de ejemplo (docs, la propia ley) sin volver rancia la emisión.
         sellos = list(RE_SELLO.finditer(texto))
@@ -1127,7 +1136,7 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         f"version: {art.campos.get('version')}",
         f"hash-fuente: sha256:{hash_hex}",
         f"target: {target}",
-        f"funtor: T-{target}-pneuma-v1",
+        f"funtor: T-{target}-pneuma-v{'2' if target == 'codex' else '1'}",
         f"vector-fuente: {_fmt_vector(art.campos['vector'], art.campos['sigma'])}",
         f"vector-proyectado: {_fmt_vector(proy['vector'], proy['sigma'])}",
         "fidelidad: " + " ".join(
@@ -1181,6 +1190,57 @@ def _componer_plano(cuerpo: str, sello: str) -> str:
     """Composición sin frontmatter: los workspace files de openclaw (AGENTS.md,
     SOUL.md) son markdown plano + sello. Byte-determinista, sin timestamps."""
     return "\n".join([cuerpo.strip("\n"), "", sello, ""])
+
+
+def _componer_codex_agent(art: Artefacto, sello: str, extra: str) -> str:
+    """Serializa un custom agent Codex como TOML determinista.
+
+    `json.dumps` produce basic strings compatibles con TOML y evita inventar
+    delimitadores que puedan colisionar con el Markdown transportado.
+    """
+    instrucciones = art.cuerpo.strip("\n")
+    if extra:
+        instrucciones += "\n\n" + extra
+    instrucciones += "\n\n" + sello
+    return "\n".join([
+        "name = " + json.dumps(art.campos["nombre"], ensure_ascii=False),
+        "description = " + json.dumps(
+            art.campos.get("descripcion", ""), ensure_ascii=False),
+        "developer_instructions = " + json.dumps(
+            instrucciones, ensure_ascii=False),
+        "",
+    ])
+
+
+def _emitir_codex(art: Artefacto, proy: dict,
+                   hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+    """Codex v2: skills nativas y custom agents TOML.
+
+    Las personas (`forma: agente`) conservan además una entrada explícita como
+    skill para encarnación en el hilo principal. `openai.yaml` impide que ese
+    modo persona sea invocado implícitamente por el runtime.
+    """
+    nombre = art.campos["nombre"]
+    descripcion = art.campos.get("descripcion", "")
+    perdidas_extra: list = []
+    sello = construir_sello(art, "codex", hash_hex, proy, perdidas_extra)
+    if art.tipo == "skill":
+        fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
+        return [(f"codex/skills/{nombre}/SKILL.md",
+                 _componer(fm, art.cuerpo, "", sello))], perdidas_extra
+
+    extra = DOCTRINA_DUAL_MODE if art.campos.get("forma") == "agente" else ""
+    archivos = [(f"codex/agents/{nombre}.toml",
+                 _componer_codex_agent(art, sello, extra))]
+    if art.campos.get("forma") == "agente":
+        fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
+        archivos.extend([
+            (f"codex/skills/{nombre}/SKILL.md",
+             _componer(fm, art.cuerpo, extra, sello)),
+            (f"codex/skills/{nombre}/agents/openai.yaml",
+             "policy:\n  allow_implicit_invocation: false\n"),
+        ])
+    return archivos, perdidas_extra
 
 
 def _extraer_soul(cuerpo: str) -> tuple[str | None, str | None]:
@@ -1244,6 +1304,8 @@ def emitir(art: Artefacto, target: str, proy: dict,
     """
     if target == "openclaw":
         return _emitir_openclaw(art, proy, hash_hex)
+    if target == "codex":
+        return _emitir_codex(art, proy, hash_hex)
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
     herramientas = art.campos.get("herramientas") or []
@@ -1253,12 +1315,6 @@ def emitir(art: Artefacto, target: str, proy: dict,
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
         if target == "claude-code" and herramientas:
             fm.append("allowed-tools: " + ", ".join(herramientas))
-        rel = f"{target}/skills/{nombre}/SKILL.md"
-    elif target == "codex":
-        # Codex no registra agentes: el agente se emite COMO skill.
-        perdidas_extra.append(("forma", "agente", "habilidad",
-                               "codex no registra agentes"))
-        fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
         rel = f"{target}/skills/{nombre}/SKILL.md"
     elif target == "claude-code":
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
@@ -1307,8 +1363,8 @@ def _copiar_referencias(art: Artefacto, destino_dir: Path) -> Path | None:
 RUTAS_APLICAR = {
     ("claude-code", "skill"): "~/.claude/skills/{nombre}",
     ("claude-code", "agente"): "~/.claude/agents/{nombre}.md",
-    ("codex", "skill"): "~/.codex/skills/{nombre}",
-    ("codex", "agente"): "~/.codex/skills/{nombre}",
+    ("codex", "skill"): "~/.agents/skills/{nombre}",
+    ("codex", "agente"): "~/.codex/agents/{nombre}.toml",
     ("opencode", "skill"): "~/.config/opencode/skills/{nombre}",
     ("opencode", "agente"): "~/.config/opencode/agents/{nombre}.md",
     # openclaw: el agente es un WORKSPACE name-keyed (dir con AGENTS.md+SOUL.md);
@@ -1318,14 +1374,13 @@ RUTAS_APLICAR = {
 }
 
 # Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/
-# .claude del proyecto, no en el home del operador. Paths relativos a la raiz
-# del proyecto. opencode y claude-code usan nombres plurales (agents/, skills/)
-# tanto global como por proyecto (doc oficial opencode.ai/docs/config; .claude
-# de este host). codex no expone una convencion de proyecto verificada: se omite
-# (error explicito si se intenta).
+# .claude/.codex/.agents del proyecto, no en el home del operador. Paths
+# relativos a la raiz del proyecto.
 RUTAS_APLICAR_PROYECTO = {
     ("claude-code", "skill"): ".claude/skills/{nombre}",
     ("claude-code", "agente"): ".claude/agents/{nombre}.md",
+    ("codex", "skill"): ".agents/skills/{nombre}",
+    ("codex", "agente"): ".codex/agents/{nombre}.toml",
     ("opencode", "skill"): ".opencode/skills/{nombre}",
     ("opencode", "agente"): ".opencode/agents/{nombre}.md",
 }
@@ -1354,6 +1409,17 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
         print("error: el conocimiento no se transmuta — se consume como "
               "contexto. Solo agentes y skills se proyectan.",
               file=sys.stderr)
+        return 1
+    targets = art.campos.get("targets")
+    if not isinstance(targets, list) or target not in targets:
+        print(f"error: el artefacto '{urn}' no declara el target '{target}'; "
+              "la transmutacion no puede ampliar su contrato de despliegue.",
+              file=sys.stderr)
+        return 1
+    if aplicar and art.campos.get("estado") != "activo":
+        print(f"error: --aplicar exige estado 'activo'; '{urn}' esta "
+              f"'{art.campos.get('estado')}'. La emision historica sigue "
+              "disponible sin --aplicar.", file=sys.stderr)
         return 1
     vector, sigma = art.vector_valido(), art.sigma_valido()
     if art.tipo is None or vector is None or sigma is None or \
@@ -1453,9 +1519,33 @@ def _aplicar(art: Artefacto, target: str,
     else:
         ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
             nombre=nombre_art)).expanduser()
+    if target == "codex" and art.tipo == "agente":
+        if proyecto:
+            agente = ruta
+            skill = base / RUTAS_APLICAR_PROYECTO[("codex", "skill")].format(
+                nombre=nombre_art)
+        else:
+            agente = ruta
+            skill = Path(RUTAS_APLICAR[("codex", "skill")].format(
+                nombre=nombre_art)).expanduser()
+        instalados = []
+        for rel, contenido in archivos:
+            partes = Path(rel).parts
+            if len(partes) >= 3 and partes[1] == "agents":
+                agente.parent.mkdir(parents=True, exist_ok=True)
+                agente.write_text(contenido, encoding="utf-8")
+                instalados.append(agente)
+            elif len(partes) >= 4 and partes[1] == "skills":
+                relativo = Path(*partes[3:])
+                destino = skill / relativo
+                destino.parent.mkdir(parents=True, exist_ok=True)
+                destino.write_text(contenido, encoding="utf-8")
+                instalados.append(skill)
+        for destino in dict.fromkeys(instalados):
+            print(f"aplicado: {destino}")
+        return 0
     dir_based = (art.tipo == "skill"
-                 or (art.tipo, target) in (("agente", "codex"),
-                                           ("agente", "openclaw")))
+                 or (art.tipo, target) == ("agente", "openclaw"))
     if dir_based:
         ruta.mkdir(parents=True, exist_ok=True)
         for rel, contenido in archivos:
@@ -1473,8 +1563,8 @@ def _aplicar(art: Artefacto, target: str,
 
 def _unidades_emision(emision: Path):
     """Unidades de emisión por target: (target, tipo-de-ruta, nombre, path).
-    El agente codex se emite como skill (colapso de forma, §7) y por eso se
-    verifica por la ruta de skill; el agente openclaw es un workspace."""
+    Una persona Codex produce dos unidades (custom agent + skill explícita);
+    el agente openclaw es un workspace."""
     for target_dir in sorted(p for p in emision.iterdir() if p.is_dir()):
         target = target_dir.name
         skills = target_dir / "skills"
@@ -1483,12 +1573,33 @@ def _unidades_emision(emision: Path):
                 yield target, "skill", d.name, d
         agents = target_dir / "agents"
         if agents.is_dir():
-            for f in sorted(agents.glob("*.md")):
+            for f in sorted([*agents.glob("*.md"), *agents.glob("*.toml")]):
                 yield target, "agente", f.stem, f
         workspaces = target_dir / "workspaces"
         if workspaces.is_dir():
             for d in sorted(p for p in workspaces.iterdir() if p.is_dir()):
                 yield target, "agente", d.name, d
+
+
+def _unidades_esperadas(arts: list[Artefacto]):
+    """Unidades que todo artefacto agéntico activo promete por `targets`."""
+    for art in arts:
+        if art.tipo not in ("skill", "agente") or \
+                art.campos.get("estado") != "activo":
+            continue
+        nombre = art.campos.get("nombre")
+        targets = art.campos.get("targets")
+        if not isinstance(nombre, str) or not isinstance(targets, list):
+            continue
+        for target in targets:
+            if target not in TARGETS_REALIZADOS:
+                continue
+            if art.tipo == "skill":
+                yield target, "skill", nombre, art
+            else:
+                yield target, "agente", nombre, art
+                if target == "codex" and art.campos.get("forma") == "agente":
+                    yield target, "skill", nombre, art
 
 
 def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
@@ -1500,21 +1611,30 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     del runtime (workspace scaffolding, memoria) quedan fuera por diseño
     (frontera no-emitida, §7.1). Nivel proyecto fuera del barrido (declarado)."""
     emision = raiz / "_emision"
+    arts = cargar_corpus(raiz)
     nombre_filtro = None
     if urn:
-        art = resolver(cargar_corpus(raiz), urn)
+        art = resolver(arts, urn)
         if art is None:
             print(f"error: el URN '{urn}' no resuelve en el censo.",
                   file=sys.stderr)
             return 1
         nombre_filtro = art.campos.get("nombre")
+    esperadas = list(_unidades_esperadas(arts))
+    esperadas = [u for u in esperadas
+                 if (target is None or u[0] == target)
+                 and (nombre_filtro is None or u[2] == nombre_filtro)]
     unidades = list(_unidades_emision(emision)) if emision.is_dir() else []
     unidades = [u for u in unidades
                 if (target is None or u[0] == target)
                 and (nombre_filtro is None or u[2] == nombre_filtro)]
-    if not unidades:
-        print("paridad: sin emisiones que verificar (transmuta primero).")
+    claves_emitidas = {(t, tipo, nombre) for t, tipo, nombre, _ in unidades}
+    faltantes = [u for u in esperadas if u[:3] not in claves_emitidas]
+    if not unidades and not esperadas:
+        print("paridad: sin artefactos activos que verificar.")
         return 0
+    for tgt, tipo, nombre, _ in faltantes:
+        print(f"paridad: sin-emision    {tgt}  {nombre} ({tipo})")
     fiel = desviadas = ausentes = 0
     for tgt, tipo, nombre, origen in unidades:
         plantilla = RUTAS_APLICAR.get((tgt, tipo))
@@ -1542,10 +1662,10 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
             fiel += 1
             print(f"paridad: fiel          {tgt}  {nombre}")
     print(f"paridad: {fiel} fiel · {desviadas} desviadas · "
-          f"{ausentes} no-instaladas.")
-    if desviadas:
-        print("veredicto: re-transmutar --aplicar las desviadas (o auditar "
-              "la edición hecha en el runtime).")
+          f"{ausentes} no-instaladas · {len(faltantes)} sin-emision.")
+    if desviadas or faltantes:
+        print("veredicto: transmutar las unidades sin-emision y re-transmutar "
+              "--aplicar las desviadas (o auditar la edición runtime).")
         return 1
     return 0
 
@@ -1586,12 +1706,12 @@ def cmd_ciclo(raiz: Path, urn: str, nuevo: str) -> int:
     # Las transiciones hacia deprecado/retirado no exigen gate.
     if nuevo in ("publicado", "activo"):
         resultados = velar_todo(raiz)
-        fallos_art = [(cid, m) for cid, fs in resultados.items()
-                      for p, m in fs if p == art.rel]
-        if fallos_art:
-            for cid, m in fallos_art:
-                print(f"error: promoción rechazada: el artefacto no pasa "
-                      f"velar: [{cid}] :: {m}.", file=sys.stderr)
+        fallos = [(cid, p, m) for cid, fs in resultados.items()
+                  for p, m in fs]
+        if fallos:
+            for cid, p, m in fallos:
+                print("error: promoción rechazada: el corpus completo no "
+                      f"pasa velar: [{cid}] {p} :: {m}.", file=sys.stderr)
             return 1
     # Reescritura quirúrgica: solo cambia el valor del campo estado; el
     # terminador de línea original (LF/CRLF) y cualquier comentario inline

@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import tomllib
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
@@ -494,7 +495,7 @@ class TestTransmutacion(CasoPneuma):
         self.escribir_agente(agente_campos(
             forma="plataforma", arnes="servicio",
             vector=[2, 3, 3, 1, 1], sigma=[2, 1, 2, 1, 1],
-            targets=["openclaw"]))
+            targets=["claude-code", "openclaw"]))
         codigo, _, err = self.correr(
             ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
              "--target", "claude-code"])
@@ -503,7 +504,7 @@ class TestTransmutacion(CasoPneuma):
         self.assertIn("openclaw", err)
 
     def test_determinismo_byte_a_byte(self):
-        self.escribir_skill()
+        self.escribir_skill(skill_campos(targets=["codex"]))
         argv = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
                 "--target", "codex"]
         self.assertEqual(self.correr(argv)[0], 0)
@@ -522,16 +523,69 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("GENESIS", err)
 
-    def test_codex_colapsa_agente_a_skill(self):
-        self.escribir_agente()
+    def test_codex_persona_emite_agente_y_skill_explicito(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
         codigo, _, _ = self.correr(
             ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
              "--target", "codex"])
         self.assertEqual(codigo, 0)
-        emitido = self.raiz / "_emision/codex/skills/agente-x/SKILL.md"
-        texto = emitido.read_text(encoding="utf-8")
-        self.assertIn(
-            "forma: agente->habilidad :: codex no registra agentes", texto)
+        agente = self.raiz / "_emision/codex/agents/agente-x.toml"
+        skill = self.raiz / "_emision/codex/skills/agente-x/SKILL.md"
+        politica = self.raiz / (
+            "_emision/codex/skills/agente-x/agents/openai.yaml")
+        self.assertTrue(agente.is_file())
+        self.assertTrue(skill.is_file())
+        self.assertTrue(politica.is_file())
+        datos = tomllib.loads(agente.read_text(encoding="utf-8"))
+        self.assertEqual(datos["name"], "agente-x")
+        self.assertIn("Texto sintético.", datos["developer_instructions"])
+        self.assertIn("funtor: T-codex-pneuma-v2",
+                      datos["developer_instructions"])
+        self.assertNotIn("codex no registra agentes",
+                         datos["developer_instructions"])
+        self.assertIn("allow_implicit_invocation: false",
+                      politica.read_text(encoding="utf-8"))
+
+    def test_codex_subagente_emite_solo_custom_agent(self):
+        self.escribir_agente(agente_campos(
+            forma="subagente", arnes="delegado",
+            vector=[2, 1, 2, 0, 1], sigma=[1, 1, 1, 1, 1],
+            targets=["codex"]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex"])
+        self.assertEqual(codigo, 0)
+        self.assertTrue((self.raiz /
+                         "_emision/codex/agents/agente-x.toml").is_file())
+        self.assertFalse((self.raiz /
+                          "_emision/codex/skills/agente-x").exists())
+
+    def test_codex_sello_v2_tambien_en_skill(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/codex/skills/util-x/SKILL.md").read_text("utf-8")
+        self.assertIn("funtor: T-codex-pneuma-v2", texto)
+
+    def test_target_no_declarado_falla(self):
+        self.escribir_skill(skill_campos(targets=["claude-code"]))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("no declara el target 'codex'", err)
+
+    def test_aplicar_exige_artefacto_activo(self):
+        self.escribir_skill(skill_campos(
+            estado="deprecado", targets=["codex"]))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex", "--aplicar"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("--aplicar exige estado 'activo'", err)
 
     def test_opencode_emite_modo(self):
         self.escribir_agente()
@@ -817,7 +871,7 @@ class TestEmisionReferencias(CasoPneuma):
     def test_referencias_conserva_nombre_y_enlaces(self):
         cuerpo = ("# Skill\n\nVer referencias/motor.md y "
                   "referencias/sub/extra.md para el detalle.\n")
-        self.escribir_skill(cuerpo=cuerpo)
+        self.escribir_skill(skill_campos(targets=["codex"]), cuerpo=cuerpo)
         self.escribir("artefactos/skills/kora/util-x/referencias/motor.md",
                       "# Motor\n")
         self.escribir(
@@ -1055,6 +1109,17 @@ class TestGatePromocion(CasoPneuma):
         self.assertEqual(codigo, 0)
         self.assertIn("estado: deprecado", path.read_text(encoding="utf-8"))
 
+    def test_promocion_exige_corpus_global_verde(self):
+        path = self.escribir_skill(skill_campos(estado="borrador"))
+        self.escribir_agente(agente_campos(
+            urn="urn:dev:artefacto:roto", nombre="roto",
+            estado="borrador", vector=[2, 0, 2, 0, 2]))  # phi=2 exige mu>=1
+        codigo, _, err = self.correr(
+            ["ciclo", "urn:kora:artefacto:util-x", "activo"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("corpus completo no pasa velar", err)
+        self.assertIn("estado: borrador", path.read_text(encoding="utf-8"))
+
 
 class TestTransmutacionProyecto(CasoPneuma):
     """ley/3 §7: --proyecto instala a nivel proyecto; modo opencode agente=all."""
@@ -1114,15 +1179,27 @@ class TestTransmutacionProyecto(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("--proyecto requiere --aplicar", err)
 
-    def test_proyecto_codex_no_soportado_es_error(self):
+    def test_proyecto_codex_instala_skill_en_dot_agents(self):
         self.escribir_skill(skill_campos(targets=["claude-code", "codex"]))
         proj = self.raiz / "proj"
         proj.mkdir()
         codigo, _, err = self.correr(
             ["transmutar", "--urn", "urn:kora:artefacto:util-x",
              "--target", "codex", "--aplicar", "--proyecto", str(proj)])
-        self.assertEqual(codigo, 1)
-        self.assertIn("no soporta instalacion a nivel proyecto", err)
+        self.assertEqual(codigo, 0, err)
+        self.assertTrue((proj / ".agents/skills/util-x/SKILL.md").is_file())
+
+    def test_proyecto_codex_instala_persona_dual(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        proj = self.raiz / "proj"
+        proj.mkdir()
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex", "--aplicar", "--proyecto", str(proj)])
+        self.assertEqual(codigo, 0, err)
+        self.assertTrue((proj / ".codex/agents/agente-x.toml").is_file())
+        self.assertTrue((proj /
+                         ".agents/skills/agente-x/SKILL.md").is_file())
 
     def test_proyecto_inexistente_es_error(self):
         self.escribir_agente()
@@ -1222,8 +1299,8 @@ class TestParidad(CasoPneuma):
         return {
             ("claude-code", "skill"): str(base / "claude/skills/{nombre}"),
             ("claude-code", "agente"): str(base / "claude/agents/{nombre}.md"),
-            ("codex", "skill"): str(base / "codex/skills/{nombre}"),
-            ("codex", "agente"): str(base / "codex/skills/{nombre}"),
+            ("codex", "skill"): str(base / "agents/skills/{nombre}"),
+            ("codex", "agente"): str(base / "codex/agents/{nombre}.toml"),
             ("opencode", "skill"): str(base / "oc/skills/{nombre}"),
             ("opencode", "agente"): str(base / "oc/agents/{nombre}.md"),
             ("openclaw", "skill"): str(base / "claw/skills/{nombre}"),
@@ -1265,12 +1342,31 @@ class TestParidad(CasoPneuma):
         self.assertEqual(codigo, 0, salida)
         self.assertIn("no-instalada", salida)
 
-    def test_paridad_sin_emision_no_falla(self):
+    def test_paridad_detecta_artefacto_activo_sin_emision(self):
         self.escribir_skill()
         with self.con_rutas():
             codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("sin-emision", salida)
+        self.assertIn("util-x", salida)
+
+    def test_paridad_corpus_sin_activos_no_falla(self):
+        self.escribir_skill(skill_campos(estado="deprecado"))
+        with self.con_rutas():
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
         self.assertEqual(codigo, 0, salida)
-        self.assertIn("sin emisiones", salida)
+        self.assertIn("sin artefactos activos", salida)
+
+    def test_paridad_codex_persona_exige_dos_unidades(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        with self.con_rutas():
+            self.correr(["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                         "--target", "codex"])
+            codigo, salida, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "codex"])
+        self.assertEqual(codigo, 0, salida)
+        self.assertEqual(salida.count("no-instalada"), 3)  # 2 filas + resumen
+        self.assertIn("0 sin-emision", salida)
 
     def test_paridad_workspace_openclaw_detecta_soul_desviado(self):
         campos = agente_campos(targets=["openclaw"])
