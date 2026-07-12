@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.2.2
+version: 1.3.0
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue)."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0)."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -69,7 +69,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 | `python3 kora.py nombre <urn>` | Resolver URN — también deprecados y retirados |
 | `python3 kora.py velar [--estricto]` | Los 13 checks; exit 0 coherente, 1 con fallos |
 | `python3 kora.py transmutar --urn U --target T [--stdout\|--aplicar]` | Proyección funtorial con sello |
-| `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Paridad emisión↔instalación: fiel/desviada/no-instalada (ley/3 §9.1) |
+| `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Completitud y paridad fuente↔emisión↔instalación: sin-emisión/fiel/desviada/no-instalada (ley/3 §9.1) |
 | `python3 kora.py ciclo <urn> <estado>` | Transición de lifecycle, solo adelante |
 | `python3 kora.py ley` | ALMA + ley/0..4 a stdout |
 
@@ -122,20 +122,24 @@ tipo: `cita`, `depende`, `reemplaza`, `refina`.
 | agéntico | `borrador → activo → deprecado → retirado` |
 
 Saltos hacia adelante válidos; inversas inválidas siempre. `ciclo` hacia
-`publicado` o `activo` rechaza si `velar` falla. Retirado no se reactiva: se
+`publicado` o `activo` rechaza si el corpus completo no pasa `velar`.
+`transmutar --aplicar` exige `estado: activo`. Retirado no se reactiva: se
 emite artefacto nuevo con `reemplaza`.
 
 ## Transmutación
 
-- Targets realizados: `claude-code`, `codex`, `opencode`. Reconocidos sin
-  realizar (rechazo con remisión a GENESIS §4): `openclaw`, `hermes` — para
-  Μ=3, usar la bestia.
-- La fuente debe pasar `velar`; eje fuera del dominio del target ⟹ fallo,
-  nunca degradación silenciosa. Μ=3 no proyecta a ninguno de los tres.
-- Agente → codex colapsa a skill; el colapso queda declarado en el sello.
+- Targets realizados: `claude-code`, `codex`, `opencode`, `openclaw`.
+  Reconocido sin realizar (rechazo con remisión a GENESIS §4): `hermes`.
+- La fuente debe pasar `velar` y declarar el target; eje fuera del dominio
+  del target ⟹ fallo, nunca degradación silenciosa. Μ=3 encuentra hogar pleno
+  en `openclaw`.
+- Codex v2 emite skills a `skills/{nombre}/SKILL.md` y agentes como custom
+  agents TOML. Una persona dual-mode emite ambos: TOML para delegación y skill
+  de invocación explícita para encarnación; no fija modelo.
 - Sin `--aplicar`: emisión a `_emision/{target}/` (gitignored, efímera).
   Con `--aplicar`: instala en `~/.claude/{agents,skills}/`,
-  `~/.codex/skills/`, `~/.config/opencode/{agents,skills}/`.
+  `~/.agents/skills/` + `~/.codex/agents/`,
+  `~/.config/opencode/{agents,skills}/` o el workspace/skill OpenClaw.
 - Toda emisión es determinista y termina en `<!-- kora:sello ... -->` con
   fuente, hash sha256, fidelidad por eje, pérdidas con razón y —si el artefacto
   declara `conocimiento`/`componible`— un bloque `contrato-conocimiento:` con el
@@ -161,7 +165,7 @@ fidelidad es obligación declarada del productor contra la fuente.
 
 ## Deudas confesadas
 
-Sin ingesta inversa (`Lift`), sin targets openclaw/hermes, sin verificación
+Sin ingesta inversa (`Lift`), sin target hermes, sin verificación
 coalgebraica de FSM, sin staging de directorios (el estado `borrador`
 in-place es la antesala). La migración es **por demanda**, no masiva
 (GENESIS: pneuma se gana el corpus, no lo hereda por decreto): artefacto por
@@ -174,7 +178,7 @@ pasar a consumirla desde pneuma.
 ## Recetas
 
 1. Skill nueva: crear `SKILL.md` con `estado: borrador` → `velar --estricto`
-   → `ciclo <urn> activo` → `transmutar --urn <urn> --target claude-code
+   → `ciclo <urn> activo` → `transmutar --urn <urn> --target codex
    --aplicar`.
 2. Conocimiento korificado: producir bajo `ley/4` → `velar --estricto` →
    `ciclo <urn> publicado`.

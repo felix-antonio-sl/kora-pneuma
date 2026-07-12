@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:autoria-de-persona
 nombre: autoria-de-persona
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Skill de autoria de la personalidad de un agente: deriva U_phen como triada conductual fin x estilo x registro + direccion de Tektonik, la pasa por el test anti-adjetivo y el filtro N2-N3, corta cosmovision/operativo, censa la vecindad de vector y provee el insumo del mapa de transmutacion. Porta los procedimientos; no decide el contrato del agente (eso es agent-architect)."
-fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos que el audit de agent-architect 2.1.0 mostro NOMBRADOS-NO-PORTADOS: la autoria de U_phen baja de prosa a metodo operable. Funda en urn:kora:kb:aufbau-persona-agente (contenido de U_phen, filtro N2-N3, Tektonik) y urn:kora:kb:cat-agent-modulo (eje de encapsulacion cosmovision/operativo, vector da tipo, U_phen como parametro Para). Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3 (panel personalidad)."
+fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos que el audit de agent-architect 2.1.0 mostro NOMBRADOS-NO-PORTADOS: la autoria de U_phen baja de prosa a metodo operable. Funda en urn:kora:kb:aufbau-persona-agente (contenido de U_phen, filtro N2-N3, Tektonik) y urn:kora:kb:cat-agent-modulo (eje de encapsulacion cosmovision/operativo, vector da tipo, U_phen como parametro Para). Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3 (panel personalidad). v1.1.0 (2026-07-12): sincroniza el insumo de transmutacion con OpenClaw realizado y Codex v2 nativo."
 autor: FS
 creado: 2026-06-30
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 1, 3, 1, 0]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Grep, Glob]
-targets: [claude-code, codex, opencode]
+targets: [claude-code, codex, opencode, openclaw]
 conocimiento: [urn:kora:kb:aufbau-persona-agente, urn:kora:kb:cat-agent-modulo]
 alcance: ambos
 estados: [derivar-u-phen, test-anti-adjetivo, test-corte-cosmovision, censar-vecindad-vector, insumo-transmutacion]
@@ -197,8 +197,8 @@ load-bearing para una persona:
 
 | Que | Proyeccion | Consecuencia |
 |---|---|---|
-| `U_phen` → `SOUL.md` | **openclaw, NO realizado** | en los targets realizados (claude-code, codex, opencode) `U_phen` vive en el **cuerpo + frontmatter** del agente, no en un `SOUL.md` separado; la segregacion `SOUL.md = U_phen` es la realizacion openclaw, aun sin funtor (`cat-agent-modulo`; spec Pieza C) |
-| `mu` = 3 (materia always-on) | `claude-code`/`codex`/`opencode`: 3→∅ **none** | una persona que necesita materia ambiental **no tiene hogar** en los targets realizados; `transmutar` aborta nombrando que openclaw la sostendria (`ley/3 §4`, §3 r3) |
+| `U_phen` → `SOUL.md` | `openclaw`, realizado | `SOUL.md` recibe el span marcado de `U_phen`; `AGENTS.md` conserva el cuerpo completo. Codex v2 transporta el cuerpo al custom agent TOML y, para persona dual-mode, a un skill explícito (`ley/3 §7`) |
+| `mu` = 3 (materia always-on) | `claude-code`/`codex`/`opencode`: 3→∅ **none**; `openclaw`: 3→3 full | una persona ambiental solo tiene hogar en OpenClaw; los otros targets abortan (`ley/3 §4`, §3 r3) |
 | `xi` = 3 / 4 | claude-code 3→2, 4→2; opencode 4→3 (partial) | multi-fase se aplana; operad dinamica no soportada (`ley/3 §4`) |
 | `pi` = 3 | claude-code 3→2 (partial) | fixed-points se aplanan (`ley/3 §4.1`) |
 | `phi` = 3 / 4 | 3→2 partial; 4→∅ none | cognicion hibrida no nativa; co-evolutivo aborta (`ley/3 §4`) |

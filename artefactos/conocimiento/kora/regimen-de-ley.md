@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:regimen-de-ley
 nombre: regimen-de-ley
-version: 1.1.0
+version: 1.2.0
 estado: publicado
-descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; openclaw y hermes son competencia delegada legacy con fecha de revisión."
-fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) que la sesión de auditoría doctrinal aplicó a 5 artefactos (H1/H2/H3) y mecanizó en el contrato de conocimiento de emitir(). Decisión interna al ecosistema, sin hash externo."
+descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; OpenClaw ya es realizado por pneuma y Hermes permanece como competencia legacy pendiente."
+fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) que la sesión de auditoría doctrinal aplicó a 5 artefactos (H1/H2/H3) y mecanizó en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. Decisión interna al ecosistema, sin hash externo."
 autor: FS
 creado: 2026-06-14
 lang: es
@@ -26,7 +26,7 @@ fijando una sola fuente de doctrina y congelando la otra.
 |---|---|
 | 1 | **pneuma es la fuente única de doctrina futura de KORA.** |
 | 2 | **La ley de la encarnación bestia queda congelada.** |
-| 3 | **openclaw y hermes son competencia delegada legacy de la bestia**, con fecha de revisión. |
+| 3 | **OpenClaw ya es realizado por pneuma; Hermes permanece como competencia delegada legacy**, con fecha de revisión. |
 | 4 | **El corpus de la bestia es origen de migración por demanda, nunca destino de resolución**: migrar-o-omitir, jamás enlazar. |
 
 ## 1. Fuente única de doctrina futura
@@ -64,29 +64,26 @@ fijando una sola fuente de doctrina y congelando la otra.
    blindada por `lugar-coincide`) deriva siempre contra el catálogo central de
    pneuma, nunca contra la estructura de la bestia.
 
-## 3. openclaw y hermes — competencia delegada legacy
+## 3. OpenClaw realizado; Hermes delegado legacy
 
-1. La bestia sigue siendo el **único realizador** de los targets `openclaw` y
-   `hermes` mientras pneuma no los encarne. La flota OpenClaw viva corre desde
-   la bestia.
-2. pneuma NO los realiza y NO debe realizarlos reintroduciendo la coraza que
-   soltó (workspace de múltiples archivos, native-first, ACP, clon-montado).
-3. **No-limbo**: en la fecha de revisión se decide uno de dos destinos —
-   (a) pneuma los encarna en forma leve (solo lo que la flota usa), o
-   (b) se declaran competencia permanentemente archivada de la bestia.
+1. pneuma realiza `openclaw` desde ley/3 v1.3.0 mediante una proyección leve:
+   workspace `AGENTS.md` + `SOUL.md`, sin absorber configuración, memoria ni
+   scaffolding del runtime. La fuente doctrinal y la emisión ya viven aquí.
+2. `hermes` sigue reconocido pero no realizado; transmutar falla honestamente
+   y remite a GENESIS mientras esta deuda permanezca.
+3. **No-limbo**: en la fecha de revisión se decide si Hermes se encarna en
+   forma leve o se declara competencia permanentemente archivada de la bestia.
 
 ## 4. Disparadores (forcing functions)
 
 Para que "migración por demanda" no decaiga en estancamiento, el régimen porta
 sus disparadores:
 
-1. **Nacimiento**: todo artefacto agéntico nuevo nace en pneuma. Si pneuma no
-   puede realizarlo (requiere Μ=3 / `openclaw`), eso es señal de prioridad de
-   migración o de que el artefacto no debe existir aún — no es razón para nacer
-   en la bestia.
-2. **Flota**: el próximo agente de flota que se toque se realiza desde pneuma, o
-   se decide el destino de `openclaw` (§3). No se realiza nada nuevo de flota
-   desde la bestia por inercia.
+1. **Nacimiento**: todo artefacto agéntico nuevo nace en pneuma. Si exige Μ=3,
+   se proyecta a `openclaw`; la falta de Hermes no es razón para nacer en la
+   bestia.
+2. **Flota**: todo agente de flota que se toque se realiza desde pneuma. No se
+   realiza nada nuevo desde la bestia por inercia.
 
 ## 5. Rationale
 
@@ -100,6 +97,6 @@ régimen restaura el principio: **una fuente de verdad, proyecciones derivadas.*
 
 ## 6. Revisión
 
-- Fecha de revisión del destino de `openclaw`/`hermes` (§3): **2026-09-14**.
+- Fecha de revisión del destino de `hermes` (§3): **2026-09-14**.
 - El régimen se revisa si cambia el supuesto de coexistencia (p. ej. la flota
   migra de runtime, o pneuma encarna `openclaw` leve).
