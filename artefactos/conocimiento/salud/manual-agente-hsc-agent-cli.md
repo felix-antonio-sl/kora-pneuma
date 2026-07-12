@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:manual-agente-hsc-agent-cli
 nombre: manual-agente-hsc-agent-cli
-version: 1.0.11
+version: 1.0.12
 estado: publicado
 descripcion: "Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-1, handles identity-safe, recetas por contexto, senales mecanicas y limites doctrinales."
 fuente: "Autoria de novo 2026-06-22 sobre hsc-agent-cli@bb2a4ec (CLAUDE.md, contrato beta-1, binario v1.0.14) y la ayuda viva del binario. Sin herencia del manual humano previo (capacitacion-agente). No migrado de la bestia; sin sha256 externo. Actualizado 2026-06-23 (v1.0.1): observabilidad aditiva del envelope (cache_status, error_detail.affected_systems/outage_kind, health latency_ms/checked_at, truncated_keys) y receta de epicrisis via hcc:secundaria, tras deliberacion de panel y spike de viabilidad. Actualizado 2026-06-23 (v1.0.2, TIER 2): bundle multi-handle (kind multi_bundle, producto de sub-envelopes aislados, cota 50) y recommended_batch_handle en find para colapsar el N+1 del censo HODOM. Actualizado 2026-06-24 (v1.0.3, Corte 1): find emite recommended_batch_handles[] particionado por COSTO (~3 min/sub-lote) con estimated_cost_seconds/total, ejecutables en serie; el singular queda como alias del primer sub-lote (retrocompat). Resuelve el timeout del censo atomico (auditoria F2/F3); sobre hsc-agent-cli@4d23e85. Actualizado 2026-06-24 (v1.0.4, Corte 2): gap_kind en cada clinical_gap (confirmed_absence / acquisition_failure / identity_failure / unknown) para distinguir ausencia-confirmada de fallo-de-adquisicion sin reclasificar a mano (auditoria F6); y find ... --fresh ahora da mensaje honesto (no cachea, --fresh solo en get/bundle) en vez de mentir con 'requiere argumento' (F1); sobre hsc-agent-cli@d2331c8. Actualizado 2026-06-24 (v1.0.5, Cortes 3+4): forma normal canonica de la evolucion (texto=coalesce(historia,evolucion), plan_indicacion=coalesce(plan,indicacion), data_keys del sub-objeto, preservando los crudos; mata el falso 'sin evolucion' del jq contra el campo equivocado; auditoria F5) y procedencia de la ubicacion en handoff_view (ubicacion_source/diagnostico_admin_source en {estado-actual, unavailable}; un hueco no se lee como dato real; auditoria F4); sobre hsc-agent-cli@3b9f28d. Actualizado 2026-06-26 (v1.0.6, Corte 5): bundle ... --stream entrega el lote como NDJSON (una linea type:bundle por sub-envelope conforme cierra, en orden de completitud, + linea terminal type:summary con streamed:true y sin bundles[]); opt-in, aditivo, retrocompat, requiere >=2 handles; mata F3 (el lote atomico perdia todo en timeout). Cierra la auditoria del censo (Cortes 1-5). Agregado el suite de aceptacion scripts/eval-contrato-agente.sh (5 escenarios exigentes del contrato, casos vivos auto-descubiertos); sobre hsc-agent-cli@1f4e608. Actualizado 2026-06-30 (v1.0.7, Corte 6 + sub-cortes 1 y 2 del frente faithful find): el censo SGH se vuelve FIEL en sus dos niveles ortogonales y lo declara en data. (Corte 6) hospitalizacion:sgh:<id>/estado-actual agrega sweep_complete/rooms_unavailable (barrido de pacientes por sala). (Sub-corte 1) agrega enumeration_complete/services_unavailable (enumeracion de salas por servicio), ortogonal al barrido. (Sub-corte 2 / Caso A) propaga los CUATRO campos a find --hospitalizados (functor distinto FetchHospitalizados; la fidelidad no es transitiva, hubo que reaplicar el patron) y marca censo-parcial en recommended_batch_handles[] con recommended_batch_handles_census_incomplete (+ _detail con las dos dimensiones por separado), solo bajo censo parcial (omitido bajo censo fiel = byte-identico). Cuando estado-actual concluye ausencia bajo censo incompleto, el clinical_gap de dominio ingreso sale con gap_kind=acquisition_failure (no confirmed_absence). Semantica honesta: *_complete=true significa 'sin fallo DURO observado', no 'lista realmente completa'; censo parcial es USABLE (advierte, no bloquea); el agente compone sweep_complete && enumeration_complete. Sobre hsc-agent-cli@a7b28b9. Actualizado 2026-07-07 (v1.0.8, fase 1 HODOM fuentes vivas, encargo DT 2026-07-06): scope hodom: (hodom:libro-mayor/<rut> + hodom:programacion/<rut>, kind sheet, source drive) — las planillas Drive manuales de la unidad entran a la vitrina como handles identity-safe via export CSV sin credenciales, con cache de archivo 10 min; composicion automatica en bundle hospitalizacion (items aislados) cuando el episodio es HODOM o el servicio no resuelve (servicio resuelto no-HODOM = salida byte-identica); summary.discrepancies[] con guard temporal (estado_hodom SIN precedence_hint — SGH es tiempo real y el libro arrastra lag de cierre; la regla de precedencia del DT queda consagrada como doctrina de agente en 6.2) y gap candidato en clinical_gaps cuando un activo SGH no tiene fila en libro sano; tab_found/rows_total/rows_empty/rows_unparseable/estado_normalizado como higiene de planilla manual; --fresh bypassa tambien el cache de archivo drive; error_detail con sistema DRIVE y reason header_mismatch (retryable=false). Sobre hsc-agent-cli@4e5f225 (tag v1.1.0). Actualizado 2026-07-08 (v1.0.9, ciclo feedback urgencia): imaging_narrative_fallback ahora tambien top-level en bundle --minimal cuando scanner cae con upstream_unavailable (en --compact el objeto data.orders.* existe siempre, triggered:true ante cualquier error del scanner — asimetria documentada); summary.urgencia gana indicaciones_alta_presentes (bool incondicional; presencia mecanica de registro de alta, NO conclusion de egreso — sirve para componer 'activo en board + alta indicada = probable lag upstream') y lab_sources_with_data (lista incondicional [lis, textuales], vacia posible, sin fusionar fuentes) y examen_fisico_terms_in_evolucion (solo con evolucion present; barrido de terminos EF, pista no conclusion) + gap moderate examen-fisico con suggested_handle /evolucion cuando el EF estructurado esta ausente; indicaciones-alta entra a los subhandles del bundle minimal (items 18→19); flag --last N (1..50, solo con --compact) overridea los recortes last_n (defaults 2/2/3/1 intactos sin flag); recetas nuevas: --with-rut en board, lote por medico, y manejo del truncado del canal del runtime (el CLI siempre emite JSON completo). Registro del ciclo (desidentificado) en docs/ciclo-feedback-urgencia-2026-07-08.md del repo. Sobre hsc-agent-cli@15f8902 (tag v1.2.0). Actualizado 2026-07-11 (v1.0.10, ciclo feedback v2 — carril doctrinal, cero cambios de binario): triaje verificado de los reportes forenses de turno urgencia 2026-07-10 y sesiones hospitalista 2026-07-06/07 ([hsc-agent-cli] docs/triaje-reportes-feedback-2026-07-11.md). Seis piezas de doctrina de agente: (1) receta canonica censo→briefs via recommended_batch_handles[] + --stream con prohibicion explicita de orquestar subagentes paralelos contra SGH (la via existia y el consumidor no la conocia: 0/30 briefs en produccion); (2) disciplina anti-tormenta bajo upstream_unavailable (UN probe de health, backoff, jamas fan-out — 5 consumidores concurrentes observados reintentado contra upstream caido); (3) error_code+state del envelope como señal primaria de flujo (los pipes destruyen $?; exit code queda para scripts/CI); (4) abrir el turno con health (barato, en vivo, latency_ms por sistema); (5) heuristica canonica de ubicaciones UEH (hospitalizado-en-UEH vs en-atencion, doctrina de agente hasta que upstream exponga campo tipificado); (6) refuerzo del lote para el barrido DAU (no N+1 de gets atomicos). Sobre hsc-agent-cli@61c3c31 (v1.2.0 + triaje 2026-07-11). Actualizado 2026-07-11 (v1.0.11, ciclo feedback v2 SHIPPEADO — tag v1.3.0): el encargo hd-dt 2026-07-11 completo entra a la superficie. (1) find --nombre: el NOMBRE es llave de entrada de primera clase — standalone (barre board DAU + censo SGH en paralelo, fallo aislado por fuente, contrato 0/1/N con match_scope y best_current_context por match, warning explicito de universo incompleto cuando una fuente cae o el censo viene parcial; AMBAS fuentes caidas → upstream_unavailable exit 4, jamas ausencia; tokens sin comillas se unen mecanicamente) y componible como filtro --nombre en --board/--urgencia/--hospitalizados; matching normalizado (mayusculas/tildes/enie plegadas, orden libre de tokens). (2) <comando> --help|-h responde envelope beta-1 (kind:help, error_code:null, exit 0) y todo usage_error de flag desconocido trae error_detail.supported_flags[] con la whitelist real. (3) --fields <k1,k2,...> en listados de find: proyeccion de columnas por entry con fields_projected[] declarado. (4) get --limit N ampliado a paciente:ambulatorias-osiris y paciente:recetas-historicas (truncado declarado + honestidad de orden: primeras N filas upstream, no las mas recientes; con flag no toca cache). (5) bundle --handoff --budget-bytes N (4096..1048576, por sub-bundle en lote/stream): recorte mecanico del envelope ya construido con escalera declarada (fases de data → slim a whitelist nucleo → drop por peso), summary y handoff_view NUNCA recortados, perdida en compaction/_compaction/truncated_keys; el presupuesto se mide con la MISMA serializacion que se emite. (6) scope completado en find: enum cerrado {rut, atencion, nombre, board, urgencia, hospitalizados}. Gate del corte: TDD (~60 tests nuevos), review adversarial multi-agente (19 hallazgos confirmados → 9 defectos corregidos PRE-tag, incl. panic de --fields sin criterio y presupuesto que media compacto pero emitia indentado), eval-contrato-agente 5/5 vivo, verificacion viva completa. Sobre hsc-agent-cli@3fd3f90 (tag v1.3.0)."
@@ -14,6 +14,10 @@ familia: nota
 ---
 
 # Manual operativo para agentes AI — hsc-agent-cli
+
+Edición `1.0.12`, sincronizada el 2026-07-12 con
+`hsc-agent-cli@297ec1c` (`v1.4.0`) y su
+`docs/triaje-uso-intensivo-2026-07-12.md`.
 
 Manual para un **agente AI** (no un humano) que opera `hsc-agent-cli` para
 reconstruir la historia contextual de un caso clínico del Hospital de San Carlos.
@@ -61,12 +65,14 @@ Cinco comandos, **conjunto cerrado** (no hay otros; no inventes `init`, `login`,
 | `find <criterio>` | medio | Ubicar paciente/episodio activo antes de pedir handles |
 | `health` | barato | Verificar conectividad upstream + versión del binario; reporta por sistema `ok`, `latency_ms` y `checked_at` de esa invocación |
 
-**Salida:** SIEMPRE JSON en stdout (incluso los errores). Un log estructurado
-puede ir a stderr; **parsea solo stdout**.
+**Salida:** SIEMPRE JSON en stdout (incluso los errores). stderr queda
+silencioso por defecto. El logging estructurado es opt-in con
+`HSC_AGENT_CLI_LOG_LEVEL=debug|info|warn|error` y no incluye identificadores;
+**parsea solo stdout**.
 
-**Ayuda embebida (v1.3.0):** `hsc-agent-cli <comando> --help` (o `-h` como
+**Ayuda embebida (v1.4.0):** `hsc-agent-cli <comando> --help` (o `-h` como
 primer arg) responde un envelope beta-1 (`kind:"help"`, `error_code:null`,
-exit 0) con uso, flags y puntero a este manual. Y todo `usage_error` de flag
+exit 0) con uso, versión local, flags por scope y puntero a este manual. Y todo `usage_error` de flag
 o criterio desconocido trae `error_detail.supported_flags[]` con la whitelist
 real del subcomando: **si tanteas un flag, el error te dice cuáles existen**
 — no insistas probando variantes.
@@ -187,6 +193,10 @@ sistema `ok`, `latency_ms` y `checked_at`: sabes desde el minuto cero qué
 fuentes están vivas y cuáles evitar, en vez de descubrir una caída a mitad de
 una síntesis con el médico esperando. Si un sistema está caído al abrir, planea
 la sesión alrededor (fallbacks del §4) en lugar de tropezar con él N veces.
+Lee `beta_ready` para el núcleo requerido y `all_capabilities_ready` para toda
+la superficie. `health_status:degraded` con `degraded_capabilities:[hodom]`
+significa que DAU/SGH/LAB pueden seguir operativos aunque Drive no lo esté;
+HCC figura en `partially_probed_systems` porque su prueba es configuracional.
 
 No empieces pidiendo handles a ciegas. **Ubica primero** con `find`, que además
 te entrega `best_current_context`: un puntero mecánico que indica qué
@@ -215,10 +225,14 @@ homónimos es tuya, nunca del CLI. Ambas fuentes caídas → `upstream_unavailab
 (exit 4), no ausencia. Como filtro (`--urgencia --nombre <txt>`) restringe el
 listado del scope.
 
-**`--fields` (v1.3.0):** en listados, proyecta cada entry a las columnas que
-pides (`fields_projected[]` lo declara). Úsalo cuando tu canal trunca: el
+**`--fields` (v1.4.0):** en listados, proyecta cada entry a las columnas que
+pides (`fields_projected[]` lo declara). `item_path` dice dónde iterar;
+`fields_coverage` cuenta presencia por columna y
+`fields_missing_all_entries` denuncia typos/campos globalmente ausentes. Si
+el listado está vacío, `fields_coverage_status:not_observable_empty_list`
+impide inventar un schema ausente. Úsalo cuando tu canal trunca: el
 board completo pesa ~90 KB; proyectado a `aid,nombre,rut,categoria,box` cabe
-en cualquier contexto. Claves inexistentes se omiten sin error.
+en cualquier contexto.
 
 - `best_current_context` aparece en `find --rut`, `--atencion`, `--urgencia`,
   `--board` y por entry en `--hospitalizados`. Si hay DAU activo **e** ingreso
@@ -298,8 +312,8 @@ get hospitalizacion:sgh:<ingreso_id>/estado-actual --fresh
 bundle hospitalizacion:sgh:<ingreso_id> --minimal
 bundle hospitalizacion:sgh:<ingreso_id> --handoff   # vista compacta para handoff/turno
 bundle hospitalizacion:sgh:<ingreso_id> --handoff --budget-bytes 16384
-                                       # (v1.3.0) presupuesto de bytes del envelope:
-                                       # si tu contexto trunca, pide el handoff acotado
+                                       # presupuesto best-effort del envelope:
+                                       # lee compaction.budget_satisfied/over_budget_bytes
 bundle paciente:<rut> --longitudinal
 ```
 
@@ -321,8 +335,9 @@ sale de cada sub-envelope, que ya compone SGH + `hodom:libro-mayor` +
 **Censo completo en una operación (lotes por costo).** Para pasar la visita a todo
 el censo sin invocar el bundle N veces (un proceso/login por paciente), `find` te
 entrega el censo **ya particionado por costo** en `recommended_batch_handles[]`
-(plural): una lista de sub-lotes, cada uno con su comando `bundle ... --modo` ya
-armado, su `count` y su `estimated_cost_seconds`. No memorices reglas — `find` ya
+(plural): una lista de sub-lotes, cada uno con su comando retrocompatible y
+`command_args[]` como argv estructurado exacto, su `count` y su
+`estimated_cost_seconds`. No memorices reglas — `find` ya
 eligió el modo de cada scope (hospitalizados → `--handoff`, urgencia → `--minimal
 --compact`) y el tamaño de cada sub-lote (apunta a ~3 min para no time-outear).
 
@@ -339,7 +354,7 @@ costaría en total, no de una vez. Cada sub-lote es ~3 min y devuelve su propio
 (~62 s/paciente fresh), más paralelismo de cliente lo satura, no lo acelera.
 
 El singular `recommended_batch_handle` se conserva como **alias del primer sub-lote**
-(retrocompat); para el censo completo usa el plural. Cada sub-lote es `kind:
+(retrocompat) y declara `scope:first_sub_batch_only`; para el censo completo usa el plural. Cada sub-lote es `kind:
 multi_bundle`: un **producto** con un sub-envelope por ingreso en `bundles[]`, cada
 uno idéntico al bundle single (lee cada uno y compón; el sistema no resume). Cada
 componente cierra su propia identidad: un `identity_mismatch` marca SOLO ese handle
@@ -363,7 +378,9 @@ necesitas). La línea final `type:summary` trae el mismo `summary` mecánico del
 **sin** `bundles[]` (ya los recibiste). Es opt-in, retrocompat y requiere ≥2 handles
 (con 1 → `usage_error`). Úsalo cuando un sub-lote es lento (SGH legacy ~62 s/paciente)
 y quieras ir trabajando cada paciente conforme llega, sin que un timeout del último te
-haga perder los ya computados. Procesa cada línea NDJSON por separado.
+haga perder los ya computados. Desde v1.4.0 la primera emisión tampoco espera
+que terminen N-3 componentes cuando el lote supera tres handles. Procesa cada
+línea NDJSON por separado.
 
 **Fidelidad del censo (`sweep_complete` + `enumeration_complete`).** El censo SGH se
 materializa en **dos niveles ortogonales**: (1) **enumerar** las salas del establecimiento
@@ -434,8 +451,10 @@ Reglas de lectura (doctrina de agente, pactada con el DT):
 - **Higiene de planilla**: `data.rows_total`/`rows_empty`/`rows_unparseable`
   cuentan la realidad del CSV (filas de relleno, RUT mal tipeados);
   `estado_normalizado` ∈ {`activo`,`egresado`,`unknown`} absorbe typos
-  (`EGRESADC`) preservando el crudo. En `hodom:programacion`, `tab_found:false` =
-  la pestaña del mes no existe → **universo trunco: NO concluyas ausencia**.
+  (`EGRESADC`) preservando el crudo. Un header no identificable, una pestaña
+  mensual inexistente o cero matches junto con filas de identidad no
+  parseable producen `upstream_unavailable`: **universo trunco, NO ausencia**.
+  No infieras una columna RUT por posición; corrige el header de la fuente.
 - Multi-fila con el mismo RUT = rehospitalizaciones del año;
   `filas_orden_cronologico[]` da el orden mecánico.
 
@@ -473,21 +492,22 @@ usar el CLI a medias.
 | Señal | Dónde | Qué te dice |
 |---|---|---|
 | `clinical_warning` | todo sobre | advertencia mecánica; léela siempre |
-| `decision_safety` | summary de bundles | `safe_to_act_on_bundle` + `blocking_conditions[]` + `cautionary_conditions[]` |
+| `decision_safety` | summary de bundles | seguridad de identidad/adquisición del bundle: `safe_to_act_on_bundle`, condiciones, `safety_scope:bundle_identity_and_acquisition` y `does_not_assert_clinical_safety:true`. NUNCA autorización terapéutica |
 | `clinical_gaps[]` | summary de bundles urgencia/hosp | `{severity, domain, message, gap_kind, suggested_handle}`: brecha + handle para cerrarla. **`gap_kind`** distingue la naturaleza de la falta (eje ortogonal a `severity`): `confirmed_absence` = la fuente respondió y el dato no existe → PUEDES concluir ausencia; `acquisition_failure` = la fuente cayó (`upstream_unavailable`) **o el censo de hospitalización vino incompleto** (`sweep_complete`/`enumeration_complete` en `false`) → NO concluyas ausencia, reintenta o reporta caída; `identity_failure` = `identity_mismatch` (dato de otro paciente); `unknown` = error sin causa clasificable. No reclasifiques con regex: el campo ya lo hace |
 | `usable_clinically` | por item de bundle | `false` + `reason_not_usable` cuando el item no sirve (mismatch, PDF vacío, texto inútil) |
 | `texto` / `plan_indicacion` / `data_keys` | sub-objeto evolución (`/evolucion/<eid>`, `/evolucion-ultima`, entries de `/evoluciones`) | forma normal canónica: `texto` = coalesce(`historia`,`evolucion`), `plan_indicacion` = coalesce(`plan`,`indicacion`/`indicaciones`); los crudos se preservan. `data_keys` lista las claves de contenido pobladas. LEE `texto` en vez de adivinar `.historia` vs `.evolucion` — evita el falso "sin evolución" |
 | `ubicacion_source` / `diagnostico_admin_source` | `handoff_view` (`bundle … --handoff`) | procedencia ∈ {`estado-actual`, `unavailable`}: `unavailable` = la fuente no pobló (no es "sin ubicación", es hueco); `estado-actual` con campo vacío = ausencia confirmada. No leas `ubicacion={}` como dato real |
 | `summary.urgencia.*` | bundles DAU | flags de scanner/lab copiados, `possible_copied_report_in_observaciones`, etc. |
 | `status_normalized` | órdenes/indicaciones | índice de estado operacional (`requested`/`executed`/`resulted`/`reviewed`/...); conserva siempre `estado` original |
-| `compaction` / `_compaction` / `truncated_keys[]` | salidas `--compact` | hubo pérdida mecánica (truncado, `last_n`); `truncated_keys[]` lista las claves exactas truncadas en ese item — pide el handle fuente con `--fresh` para su texto completo |
+| `compaction` / `_compaction` / `truncated_keys[]` | salidas `--compact`/`--budget-bytes` | hubo pérdida mecánica; `budget_satisfied` declara si se alcanzó la cota best-effort y `over_budget_bytes` el exceso; `truncated_keys[]` lista las claves exactas truncadas — pide el handle fuente con `--fresh` para texto completo |
 | `id_semantics` | `find --hospitalizados` | `next_handle_pattern` para construir handles correctos |
-| `recommended_batch_handles[]` | `find --urgencia`/`--board`/`--hospitalizados` (≥2 items) | censo particionado por COSTO en sub-lotes (`handle`, `count`, `estimated_cost_seconds`); ejecuta cada uno EN SERIE. `_total_estimated_cost_seconds` = costo del censo completo. El singular `recommended_batch_handle` es alias del primer sub-lote (retrocompat) |
+| `recommended_batch_handles[]` | `find --urgencia`/`--board`/`--hospitalizados` (≥2 items) | censo particionado por COSTO en sub-lotes (`handle`, `command_args`, `count`, `estimated_cost_seconds`); ejecuta cada uno EN SERIE. El singular es solo `first_sub_batch_only` |
+| `item_path` / `fields_coverage*` | listados de `find --fields` | ruta de entries, cobertura observable por campo y campos ausentes en todo el listado; lista vacía = `not_observable_empty_list`, no schema ausente |
 | `sweep_complete` / `enumeration_complete` (+ `rooms_unavailable` / `services_unavailable`) | `data` de `estado-actual` y `find --hospitalizados` | fidelidad del censo SGH en dos niveles ORTOGONALES (barrido de pacientes + enumeración de salas). Censo fiel ⟺ **ambos** `true`; si cualquiera es `false`, la ausencia del censo es **fallo de adquisición**, no ausencia confirmada (compón los dos bits). `*_complete=true` = "sin fallo DURO observado", no "lista realmente completa". Censo parcial es USABLE (advierte, no bloquea) |
 | `recommended_batch_handles_census_incomplete` (+ `_detail`) | bloque batch de `find --hospitalizados` | presente SOLO bajo censo parcial; `_detail` separa las dos dimensiones (barrido/enumeración) + listas nominales. Omitido bajo censo fiel (byte-idéntico) |
 | `summary.unsafe_handles` / `has_unsafe_handles` | `bundle multi_bundle` | qué componentes del lote tienen `identity_mismatch` (no usar SOLO esos; el resto sigue válido) |
 | `summary.discrepancies[]` | bundles de hospitalización con items `hodom:` | conflicto mecánico SGH vs fuentes vivas con guard temporal; `estado_hodom` SIN `precedence_hint` (SGH tiempo real vs libro con lag: resuelves tú); `fecha_egreso_hodom` con hint `drive`. Solo presente si hay discrepancias |
-| `tab_found` / `rows_total`/`rows_empty`/`rows_unparseable` / `estado_normalizado` | `data` de handles `hodom:*` | higiene de planilla manual: `tab_found:false` = universo trunco (no concluir ausencia); conteos de filas de relleno y RUT no parseables; estado normalizado (typos absorbidos, crudo preservado) |
+| `header_row_index` / `rows_total`/`rows_empty`/`rows_unparseable` / `estado_normalizado` | `data` de handles `hodom:*` | higiene de planilla manual. Header/pestaña inválidos o identidad no parseable que impide una ausencia fiel → `upstream_unavailable`, no `ausente` |
 
 En bundles de hospitalización, revisa `summary.hospitalizacion`: `critical_gaps`,
 `technical_findings`, `fallbacks`, `doc_ingreso_pdf`, `ingreso_servicio_pdf`. Los
