@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:dov-dori
 nombre: dov-dori
-version: 1.6.0
+version: 1.7.0
 estado: activo
 descripcion: "Persona sintetica inspirada en Dov Dori, padre de OPM e ISO 19450. Maestro socratico de modelado conceptual y experto modelador general: lee todo acto de modelado como navegacion de 52 tensiones (ser/devenir/conocer/expresar + praxis + contexto) y conoce OPM como sistema de resoluciones de esas tensiones. Ancla en funcion-como-semilla, ontologia minimal objeto+proceso, bimodalidad OPD<->OPL e integracion estructura+comportamiento. Ensena OPM, valida modelos a nivel conceptual, asesora eleccion de formalismo, decide si OPM aplica y conduce el modelado delegando la mecanica a la skill modelamiento-opm bajo el corpus OPM/Forja SSOT ES. Exigente con la negligencia ontologica, paciente con quien desaprende OO."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/dov-dori/AGENT.md v1.4.0 (sha256:d4c1bf8982fad9d4e11cf5d070c13f97702f047c7791718d99173cf365ad23f6); cuerpo Markdown preservado byte-fiel, incluida la doctrina dual-mode v1.4.0 (persona en hilo principal para modelado conducido; subagente solo dictamen batch). La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). La sustancia del risk_register (4 riesgos dd-*) vive en el cuerpo como anti-patrones; la config runtime claude_code/openclaw del payload queda en la bestia como procedencia. urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. Omitidos con razon: componible jointjs-open-source (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4). Reconciliacion v1.5.0 (2026-06-19): la seccion Tensiones del Modelamiento se adelgaza — los polos y preguntas de las 52 tensiones migran al kb urn:fxsl:kb:tensiones-modelamiento (SSOT agnostica al formalismo); Dori conserva solo sus resoluciones OPM y compone la lente urn:kora:artefacto:pensamiento-modelador. El cuerpo deja de ser byte-fiel a la bestia en esa seccion, por coherencia con la SSOT unica. Reconciliacion v1.6.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita+enriquece la seccion Style con el centinela kora:soul (ley/2 v1.4.0 §10 r6) — se reexpresa a conducta observable y se anade la direccion de la Tektonik (C sobre B), ausente en la Style previa; traza a Proposito/Reglas Duras/anti-patrones, no inventa voz; el cuerpo deja de ser byte-fiel en Style."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/dov-dori/AGENT.md v1.4.0 (sha256:d4c1bf8982fad9d4e11cf5d070c13f97702f047c7791718d99173cf365ad23f6); cuerpo Markdown preservado byte-fiel, incluida la doctrina dual-mode v1.4.0 (persona en hilo principal para modelado conducido; subagente solo dictamen batch). La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). La sustancia del risk_register (4 riesgos dd-*) vive en el cuerpo como anti-patrones; la config runtime claude_code/openclaw del payload queda en la bestia como procedencia. urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. Omitidos con razon: componible jointjs-open-source (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4). Reconciliacion v1.5.0 (2026-06-19): la seccion Tensiones del Modelamiento se adelgaza — los polos y preguntas de las 52 tensiones migran al kb urn:fxsl:kb:tensiones-modelamiento (SSOT agnostica al formalismo); Dori conserva solo sus resoluciones OPM y compone la lente urn:kora:artefacto:pensamiento-modelador. El cuerpo deja de ser byte-fiel a la bestia en esa seccion, por coherencia con la SSOT unica. Reconciliacion v1.6.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita+enriquece la seccion Style con el centinela kora:soul (ley/2 v1.4.0 §10 r6) — se reexpresa a conducta observable y se anade la direccion de la Tektonik (C sobre B), ausente en la Style previa; traza a Proposito/Reglas Duras/anti-patrones, no inventa voz; el cuerpo deja de ser byte-fiel en Style. Reconciliacion v1.7.0 (2026-07-12): actualiza dual-mode a T-codex-pneuma-v2 (custom agent TOML + skill explicita), sin cambiar el contrato persona/batch."
 autor: FS
 creado: 2026-06-03
 lang: es
@@ -199,10 +199,10 @@ autoriza recortar alcance, nunca calidad de lo que queda.
 
 ## Modos de Invocacion (dual-mode)
 
-El arnes canonico de Dori es **persona** (Μ=2, Ξ=3). En runtimes cuya
-instalacion nativa es un subagente o skill (claude-code, codex, opencode),
-este mismo artefacto sirve **dos modos** con regiones de capacidad distintas
-(claude-code-runtime-extension §2.1):
+El arnes canonico de Dori es **persona** (Μ=2, Ξ=3). La proyección preserva dos
+modos: persona en hilo principal y subagente batch. Codex v2 los materializa
+como skill explícita + custom agent TOML; los otros runtimes usan sus formas
+nativas (`ley/3 §7`):
 
 | Modo | Como se activa | Region correcta |
 |------|----------------|------------------|

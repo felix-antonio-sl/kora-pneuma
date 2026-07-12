@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:design
 nombre: design
-version: 1.1.0
+version: 1.2.0
 estado: activo
-descripcion: "Disena de extremo a extremo como Claude Design: de brief/imagen/doc a interfaces, identidad, slides, prototipos y collateral, anclando todo a un design system trazable y entregando codigo frontend funcional con handoff a Claude Code. Usar al construir o iterar cualquier salida visual con gusto y trazabilidad."
-fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Cristaliza, en formato skill ley/2, la esencia operativa del producto Claude Design de Anthropic Labs (research preview; anuncio 2026-04-17, overhaul 2026-06-17; fuentes anthropic.com/news/claude-design-anthropic-labs, support.claude.com get-started + set-up-design-system, venturebeat/thenewstack/techcrunch/engadget/techrepublic 2026). Sucede CONCEPTUALMENTE a graphic-design (urn:kora:artefacto:graphic-design en la bestia ~/kora, sha256:fe261c35387ab98652f19d2e32b599921a930ac3583425eee973dea72c01cbd5): absorbe sus operadores visuales, los design tokens ejecutables (JSON+CSS+Tailwind), el SVG y el axioma info/simpleza, y los amplia a diseno generativo de UI/identidad/prototipos. NO se declara reemplaza ni refina: graphic-design no encarna en el censo pneuma (referencias-resuelven fallaria), de modo que la sucesion se formalizara recien al migrar el target. Vector [2,0,2,0,1] = disciplina (cuerpo de conocimiento procedural, sin materia propia): Pi2 plan ramificado (brief->system->generar->refinar->verificar->entregar), Mu0 el ejecutor provee todo el soporte (el canvas es materia del runtime anfitrion, no de la skill), Xi2 interaccion bidireccional (round-trip diseno<->codigo con Claude Code), Lambda0 individual, Phi1 instrumental. v1.1.0 (2026-06-23): refinamiento por consenso deliberativo (panel steve-jobs/steipete/agent-architect, modo orquestacion, 1 ciclo de refutacion adversarial que cazo 2 criticas). Dos cruces resueltos sin promediar: (1) sustraccion — `verificar` ahora INVOCA (no copia) las preguntas letales del canon ya anclado como guardia binaria, y la regla 9 pasa de anclaje pasivo a anclaje-que-ejecuta (el axioma vinculante estaba muerto: import decorativo); (2) continuabilidad — `verificar` chequea ESTATICAMENTE (Read/Grep, mu=0-safe) que las referencias del artefacto resuelven, mientras el build EJECUTABLE se declara en HANDOFF.md como verificado-por-receptor (ejecutarlo dentro de la skill seria incoherencia cuerpo-vector mu=0). Ademas: bundle como contrato observable en `entregar` con gate de buen-formado pre-handoff, staging aislado, techo de iteracion (3 ciclos). La refutacion corrigio dos defectos antes de aplicar: no redefinir 'funcional' como 'continuable' (regla 5 los separa: continuable=skill, funcional-runtime=receptor) y mover la validacion bundle/manifiesto de `verificar` a `entregar` (orden de estados). Vector [2,0,2,0,1] preservado: ninguna edicion ejecuta build."
+descripcion: "Disena de extremo a extremo con el metodo de Claude Design: de brief/imagen/doc a interfaces, identidad, slides, prototipos y collateral, anclando todo a un design system trazable y entregando codigo frontend continuable mediante un handoff agnostico al agente receptor."
+fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Cristaliza, en formato skill ley/2, la esencia operativa del producto Claude Design de Anthropic Labs (research preview; anuncio 2026-04-17, overhaul 2026-06-17; fuentes anthropic.com/news/claude-design-anthropic-labs, support.claude.com get-started + set-up-design-system, venturebeat/thenewstack/techcrunch/engadget/techrepublic 2026). Sucede CONCEPTUALMENTE a graphic-design (urn:kora:artefacto:graphic-design en la bestia ~/kora, sha256:fe261c35387ab98652f19d2e32b599921a930ac3583425eee973dea72c01cbd5): absorbe sus operadores visuales, los design tokens ejecutables (JSON+CSS+Tailwind), el SVG y el axioma info/simpleza, y los amplia a diseno generativo de UI/identidad/prototipos. NO se declara reemplaza ni refina: graphic-design no encarna en el censo pneuma (referencias-resuelven fallaria), de modo que la sucesion se formalizara recien al migrar el target. Vector [2,0,2,0,1] = disciplina (cuerpo de conocimiento procedural, sin materia propia): Pi2 plan ramificado (brief->system->generar->refinar->verificar->entregar), Mu0 el ejecutor provee todo el soporte (el canvas es materia del runtime anfitrion, no de la skill), Xi2 interaccion bidireccional (round-trip diseno<->codigo con Claude Code), Lambda0 individual, Phi1 instrumental. v1.1.0 (2026-06-23): refinamiento por consenso deliberativo (panel steve-jobs/steipete/agent-architect, modo orquestacion, 1 ciclo de refutacion adversarial que cazo 2 criticas). Dos cruces resueltos sin promediar: (1) sustraccion — `verificar` ahora INVOCA (no copia) las preguntas letales del canon ya anclado como guardia binaria, y la regla 9 pasa de anclaje pasivo a anclaje-que-ejecuta (el axioma vinculante estaba muerto: import decorativo); (2) continuabilidad — `verificar` chequea ESTATICAMENTE (Read/Grep, mu=0-safe) que las referencias del artefacto resuelven, mientras el build EJECUTABLE se declara en HANDOFF.md como verificado-por-receptor (ejecutarlo dentro de la skill seria incoherencia cuerpo-vector mu=0). Ademas: bundle como contrato observable en `entregar` con gate de buen-formado pre-handoff, staging aislado, techo de iteracion (3 ciclos). La refutacion corrigio dos defectos antes de aplicar: no redefinir 'funcional' como 'continuable' (regla 5 los separa: continuable=skill, funcional-runtime=receptor) y mover la validacion bundle/manifiesto de `verificar` a `entregar` (orden de estados). Vector [2,0,2,0,1] preservado: ninguna edicion ejecuta build. v1.2.0 (2026-07-12): conserva Claude Design como procedencia del método pero vuelve el handoff agnóstico al agente receptor (Codex/Claude Code/OpenCode)."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -63,7 +63,8 @@ preguntas letales): consultarlo cuando la decision es de gusto, no de regla.
 - prototipos interactivos (incluida voz/video/3D/IA integrada conceptualmente).
 - slides, pitch decks, one-pagers, landing pages, assets de redes/campana.
 - extraer un design system de un codebase, repo React, archivos de diseno, PPT/PDF.
-- preparar handoff de un diseno a Claude Code (bundle continuable, no screenshot).
+- preparar handoff de un diseno a un agente de codigo receptor (bundle
+  continuable, no screenshot).
 - auditar coherencia de un sistema visual existente contra su design system.
 
 ## Cuando NO usar
@@ -189,7 +190,7 @@ bucle que no converge es deuda, no diligencia (única excepción reglada a
 
 Cerrar con uno de:
 
-- **handoff a Claude Code — bundle continuable con contrato** (no screenshot). El
+- **handoff a agente de codigo — bundle continuable con contrato** (no screenshot). El
   bundle fija roles, no rutas literales: **artefacto** (código frontend / tokens /
   deck), **tokens** (JSON + CSS custom properties + Tailwind) y **`HANDOFF.md`**
   (manifiesto: qué se construyó, contra qué design system, punto de entrada, comando
@@ -198,7 +199,7 @@ Cerrar con uno de:
   formado: existen entrypoint, tokens y manifiesto, y su árbol coincide con lo que
   `HANDOFF.md` declara. Se escribe en staging aislado (el que indique el operador),
   nunca in-place sobre el frontend vivo salvo instrucción explícita. Es el contrato
-  que deja a Claude Code continuar sin reconstruir (regla 6).
+  que deja a Codex, Claude Code u OpenCode continuar sin reconstruir (regla 6).
 - **export**: a HTML standalone, PPTX, PDF, .zip, o el formato que pida el target.
 - **resumen al invocador**: el mismo cierre que recoge `HANDOFF.md` — qué se
   construyó, contra qué sistema, qué quedó como deuda o supuesto, y la siguiente
@@ -232,7 +233,7 @@ Cerrar con uno de:
    código **funcione en runtime** lo prueba el receptor al montarlo (la skill no
    ejecuta el build — regla 10). Continuable ≠ funcional-probado: la skill garantiza
    lo primero, el receptor lo segundo.
-6. **Handoff por bundle, no por screenshot.** Claude Code continua desde el
+6. **Handoff por bundle, no por screenshot.** El agente receptor continúa desde el
    trabajo existente; nunca se reconstruye desde una captura.
 7. **Cambio de token se propaga.** Un ajuste de sistema se aplica en todo el
    diseno de una vez; no se reescribe elemento por elemento.
@@ -261,5 +262,5 @@ Cerrar con uno de:
 - artefacto materializado (codigo frontend / tokens ejecutables / SVG / deck)
   anclado al sistema.
 - reporte de verificacion contra el sistema (tokens, componentes, accesibilidad).
-- cierre: handoff a Claude Code (bundle), export, o resumen con deuda y siguiente
+- cierre: handoff al agente de código (bundle), export, o resumen con deuda y siguiente
   decision.

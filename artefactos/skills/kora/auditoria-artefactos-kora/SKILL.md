@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:auditoria-artefactos-kora
 nombre: auditoria-artefactos-kora
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Evalua, decide y actua sobre el DESTINO de agentes y skills frente a kora-pneuma: tres pilares (formalidad kora, calidad funcional, valor en uso real), cuatro veredictos (migrar/descartar/reubicar/conservar-externo), verificacion adversarial y ejecucion con gate. Usar al auditar el ecosistema agentico, decidir que conservar/descartar, o reconciliar artefactos no-controlados con el corpus."
-fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude (workflow de 54 agentes + fases de migracion): 3 pilares + 4 veredictos + verificacion adversarial de contexto limpio + convergencia con velar como red. No es migracion de la bestia: codifica la experiencia operativa de la sesion, alineada a ley/0..4. Cubre el nicho que kora-agentic-lifecycle (descartada por doctrina bestia) dejo abierto: el JUICIO de evaluacion-decision-accion que velar (forma) y kora.py no mecanizan."
+fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude (workflow de 54 agentes + fases de migracion): 3 pilares + 4 veredictos + verificacion adversarial de contexto limpio + convergencia con velar como red. No es migracion de la bestia: codifica la experiencia operativa de la sesion, alineada a ley/0..4. Cubre el nicho que kora-agentic-lifecycle (descartada por doctrina bestia) dejo abierto: el JUICIO de evaluacion-decision-accion que velar (forma) y kora.py no mecanizan. v1.1.0 (2026-07-12): generaliza el censo y REUBICAR a Codex/OpenCode y a sus rutas oficiales de proyecto."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -37,7 +37,8 @@ pertenece, y qué se hace al respecto?*
 
 ## Cuándo usar
 
-- auditar el ecosistema agéntico de un runtime (`~/.claude`, `~/.config/opencode`) contra el corpus pneuma.
+- auditar el ecosistema agéntico de un runtime (`~/.claude`, `~/.codex`,
+  `~/.agents`, `~/.config/opencode`) contra el corpus pneuma.
 - decidir qué conservar, descartar por redundancia/obsolescencia, o migrar.
 - reconciliar artefactos no-controlados (transmitidos desde la bestia, nativos, o en zona pre-categorial) con el régimen single-source.
 - dictaminar el destino de un artefacto dudoso antes de invertir esfuerzo en él.
@@ -91,7 +92,7 @@ nunca afirmar un veredicto de memoria.
 |---|---|---|
 | **MIGRAR** | valor real + NO redundante + fuente sana o reparable | sublimar a pneuma (shape ley/2, doctrina reanclada a ley/0..4, vector corregido si está fuera de dominio); transmutar a los runtimes |
 | **DESCARTAR** | redundante con pneuma vigente, U obsoleto, U sin valor | retirar la emisión del runtime; NO migrar; la fuente bestia queda congelada in situ (respaldo reversible) |
-| **REUBICAR** | repo-local instalado por error a nivel global | mover al `.claude/` del proyecto dueño; no canonizar en pneuma |
+| **REUBICAR** | repo-local instalado por error a nivel global | mover a la ruta de proyecto del runtime (`.claude/`, `.codex/`, `.agents/` o `.opencode/`); no canonizar en pneuma |
 | **CONSERVAR-EXTERNO** | nativo legítimo del ecosistema del runtime, no-KORA | dejar como está, fuera del régimen pneuma |
 
 Migrar = **reescribir** (forma anidada→plana, reanclar doctrina, corregir vector,
