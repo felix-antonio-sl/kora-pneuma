@@ -560,6 +560,20 @@ class TestTransmutacion(CasoPneuma):
         self.assertFalse((self.raiz /
                           "_emision/codex/skills/agente-x").exists())
 
+    def test_codex_v2_retira_skill_v1_huerfana_de_subagente(self):
+        viejo = self.raiz / "_emision/codex/skills/agente-x/SKILL.md"
+        viejo.parent.mkdir(parents=True)
+        viejo.write_text("derivado v1\n", encoding="utf-8")
+        self.escribir_agente(agente_campos(
+            forma="subagente", arnes="delegado",
+            vector=[2, 1, 2, 0, 1], sigma=[1, 1, 1, 1, 1],
+            targets=["codex"]))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex"])
+        self.assertEqual(codigo, 0)
+        self.assertFalse(viejo.parent.exists())
+
     def test_codex_sello_v2_tambien_en_skill(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
         codigo, _, _ = self.correr(

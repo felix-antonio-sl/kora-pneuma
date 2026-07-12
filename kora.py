@@ -1360,6 +1360,27 @@ def _copiar_referencias(art: Artefacto, destino_dir: Path) -> Path | None:
     return None
 
 
+def _limpiar_derivados_codex_v1(raiz: Path, art: Artefacto,
+                                archivos: list[tuple[str, str]]) -> None:
+    """Retira solo proyecciones Codex incompatibles del mismo nombre.
+
+    El cambio v1→v2 deja un skill huérfano al reemitir un subagente como TOML;
+    `_emision` es derivado, por lo que conservar ambas formas falsificaría la
+    completitud. No toca instalaciones runtime ni nombres ajenos.
+    """
+    nombre = art.campos["nombre"]
+    rels = {rel for rel, _ in archivos}
+    skill = raiz / "_emision/codex/skills" / nombre
+    agente = raiz / "_emision/codex/agents" / f"{nombre}.toml"
+    if not any(rel.startswith(f"codex/skills/{nombre}/") for rel in rels) \
+            and skill.is_dir():
+        shutil.rmtree(skill)
+        print(f"retirado derivado huérfano: {skill.relative_to(raiz)}")
+    if f"codex/agents/{nombre}.toml" not in rels and agente.is_file():
+        agente.unlink()
+        print(f"retirado derivado huérfano: {agente.relative_to(raiz)}")
+
+
 RUTAS_APLICAR = {
     ("claude-code", "skill"): "~/.claude/skills/{nombre}",
     ("claude-code", "agente"): "~/.claude/agents/{nombre}.md",
@@ -1464,6 +1485,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
                 sys.stdout.write(("\n" if i else "") + f"=== {rel} ===\n")
             sys.stdout.write(contenido)
         return 0
+    if target == "codex":
+        _limpiar_derivados_codex_v1(raiz, art, archivos)
     skill_dir = None
     for rel, contenido in archivos:
         destino = raiz / "_emision" / rel
