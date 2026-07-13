@@ -114,6 +114,21 @@ class TestContratoHscAgentCli(unittest.TestCase):
             with self.subTest(fragmento=fragmento):
                 self.assertIn(fragmento, cuerpo_normalizado)
 
+    def test_hospitalista_hace_ejecutable_el_plan_soap(self):
+        campos, cuerpo = self.consumidores["medico-hospitalista"]
+        cuerpo_normalizado = " ".join(cuerpo.split())
+        self.assertEqual("1.5.0", campos["version"])
+        for fragmento in (
+            "Intervención — indicación — contraindicación relevante — monitor — duración/stop",
+            "Disposición — criterios cumplidos — criterios pendientes — responsable — plazo",
+            "`corpus-ref <URN#sección>`",
+            "`evidencia externa <fuente; nivel/calidad; fecha>`",
+            "`inferencia`",
+            "`no verificado`",
+        ):
+            with self.subTest(fragmento=fragmento):
+                self.assertIn(fragmento, cuerpo_normalizado)
+
 
 if __name__ == "__main__":
     unittest.main()
