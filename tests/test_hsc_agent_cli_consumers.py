@@ -83,6 +83,22 @@ class TestContratoHscAgentCli(unittest.TestCase):
             "state` y `error_code",
         )
 
+    def test_hospitalista_no_promete_no_persistencia(self):
+        _, cuerpo = self.consumidores["medico-hospitalista"]
+        cuerpo_normalizado = " ".join(cuerpo.split())
+        self.assertNotIn(
+            "No se almacenan datos de pacientes entre casos",
+            cuerpo_normalizado,
+        )
+        self.assertIn(
+            "no reutiliza evidencia clínica entre pacientes",
+            cuerpo_normalizado,
+        )
+        self.assertIn(
+            "persistencia automática del runtime",
+            cuerpo_normalizado,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
