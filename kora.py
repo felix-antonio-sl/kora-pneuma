@@ -55,7 +55,7 @@ RANGO_EJE = {"pi": 3, "mu": 3, "xi": 4, "lambda": 3, "phi": 4}  # máximo; míni
 SIGMA_NOMBRES = ("safety", "fairness", "transparency",
                  "accountability", "sustainability")
 
-# Dominio de proyección por forma (contrato §3.2; autoria-spec §5).
+# Dominio de proyección por forma; fuente normativa: ley/2-forma.md.
 DOMINIO_FORMA = {
     "habilidad": {"pi": {1, 2}, "mu": {0, 1}, "xi": {1, 2},
                   "lambda": {0}, "phi": {1}},
@@ -67,7 +67,7 @@ DOMINIO_FORMA = {
                    "lambda": {1, 2, 3}, "phi": {1, 2, 3}},
 }
 
-# Compatibilidad arnés × forma (contrato §3.3; autoria-spec §6).
+# Compatibilidad arnés × forma; fuente normativa: ley/2-forma.md.
 ARNES_POR_FORMA = {
     "habilidad": {"utilidad", "disciplina", "delegado"},
     "subagente": {"delegado", "persona"},
@@ -207,7 +207,7 @@ def _parsear_valor(crudo: str, linea: int):
 def parsear_archivo(texto: str) -> tuple[dict, str]:
     """Parsea un artefacto: devuelve (campos del frontmatter, cuerpo).
 
-    Gramática del contrato §2: subconjunto regular de YAML. Sin anidamiento,
+    Gramática de artefacto: subconjunto regular de YAML. Sin anidamiento,
     sin multilínea, sin objetos. Claves duplicadas son error de parse.
     """
     lineas = texto.split("\n")
@@ -857,7 +857,7 @@ def _m(filas):
     return dict(filas)
 
 
-# Matrices de preservación (contrato §6.1, fieles a las runtime-extensions).
+# Matrices de preservación; fuente normativa: ley/3-transmutacion.md.
 MATRICES = {
     "claude-code": {
         "pi": _m({0: (0, "full", None), 1: (1, "full", None),

@@ -30,12 +30,14 @@ Atajos consumibles: `urn:kora:kb:guia-rapida-pneuma` y
 **Los seis gestos** (`kora.py`): `censo`, `nombre <urn>`, `velar [--estricto]`,
 `transmutar`, `ciclo`, `ley`. El censo y `_emision/` son **derivados** (jamás
 autoridad, gitignored): el filesystem con frontmatters válidos es la única
-fuente. Nunca edites un derivado a mano ni hardcodees conteos: apunta al gesto.
+fuente. Nunca edites un derivado a mano. No persistas recuentos ni estimaciones
+de inventario, tamaño o cobertura en docs vivas: obtén el dato bajo demanda con
+el gesto que corresponda.
 
 **Gate de mantenimiento** (correr siempre antes de cerrar):
 
 ```bash
-python3 kora.py velar --estricto    # los 13 checks de coherencia
+python3 kora.py velar --estricto    # gate completo de coherencia
 python3 -m unittest discover -s tests
 ```
 

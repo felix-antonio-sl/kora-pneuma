@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:regimen-de-ley
 nombre: regimen-de-ley
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; OpenClaw ya es realizado por pneuma y Hermes permanece como competencia legacy pendiente."
-fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) que la sesión de auditoría doctrinal aplicó a 5 artefactos (H1/H2/H3) y mecanizó en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. Decisión interna al ecosistema, sin hash externo."
+fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) aplicada en la sesión y mecanizada en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. v1.2.1 (2026-07-13): retira el recuento persistido del corpus legacy; su tamaño se consulta en origen solo cuando una decisión lo requiere. Decisión interna al ecosistema, sin hash externo."
 autor: FS
 creado: 2026-06-14
 lang: es
@@ -50,8 +50,8 @@ fijando una sola fuente de doctrina y congelando la otra.
 3. Es el espejo del freeze que el propio `ALMA.md` venera (§V, freeze ⇄
    evolución): un núcleo quieto para que la periferia gire. Aquí el núcleo
    quieto es la encarnación entera.
-4. La bestia conserva su corpus (≈745 artefactos) y su realización de runtimes;
-   sigue siendo autoritativa para todo lo no migrado. Congelar la ley no jubila
+4. La bestia conserva su corpus y su realización de runtimes; sigue siendo
+   autoritativa para todo lo no migrado. Congelar la ley no jubila
    el cuerpo: lo fija como referencia estable.
 5. El corpus de la bestia es **origen de migración por demanda, nunca destino
    de resolución en runtime**. Un artefacto de pneuma no referencia la bestia

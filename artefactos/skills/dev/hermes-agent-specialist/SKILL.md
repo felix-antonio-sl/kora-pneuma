@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:hermes-agent-specialist
 nombre: hermes-agent-specialist
-version: 1.0.1
+version: 2.0.0
 estado: activo
 descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend (local/docker/ssh/modal/daytona/singularity), mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
-fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI ~50 comandos; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria 20+ con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23, 9/11 claims confirmados verbatim) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva."
+fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI remitido al canon vivo; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva. v2.0.0 (2026-07-13): decisión HITL retira `openclaw` de targets; la migracion OpenClaw→Hermes es un puente de entrada soportado por Hermes, no equivalencia ni destino de ejecucion. Elimina cifras de catalogo persistidas: comandos, proveedores, tools, modelos y canales se consultan bajo demanda en el canon oficial."
 autor: FS
 creado: 2026-05-12
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 0, 2, 2, 0]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Write, Edit, Glob, Grep, Bash, WebFetch]
-targets: [claude-code, codex, opencode, openclaw, hermes]
+targets: [claude-code, codex, opencode, hermes]
 componible: [urn:kora:artefacto:mente-omega, urn:dev:artefacto:ship-discipline]
 estados: [triaje, clasificar-modo, consultar-canon-vivo, producir-artefacto, citar-y-etiquetar, cierre]
 alcance: ambos
@@ -31,8 +31,8 @@ y auto-mejora, vive donde lo pongas (VPS, cluster GPU, serverless).
 **Contrato duro**: antes de afirmar, generar o modificar cualquier artefacto Hermes
 (`SOUL.md`, `config.yaml`, memoria, context files, skills, integraciones, MCP,
 backend de despliegue, comandos CLI), **consulta la doc oficial viva** en
-`https://hermes-agent.nousresearch.com/docs/`. El canon evoluciona rapido (35+
-proveedores, ~50 comandos, todo cambiante); la memoria de entrenamiento no califica
+`https://hermes-agent.nousresearch.com/docs/`. El canon evoluciona rapido:
+proveedores, comandos y capacidades cambian; la memoria de entrenamiento no califica
 como fuente. Esta skill no es un mirror ni un mantenedor con autoridad propia: es la
 disciplina que mantiene a un agente anfitrion alineado al canon vigente, sin deriva
 ni comandos inventados.
@@ -44,7 +44,7 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 
 - crear un agente Hermes desde cero (instalacion, `hermes setup`, proveedor, primer `SOUL.md`).
 - configurar despliegue via `terminal.backend` (local, docker, ssh, modal, daytona, singularity).
-- conectar canales de mensajeria (20+ plataformas) sobre el gateway de Hermes.
+- conectar canales de mensajeria sobre el gateway de Hermes.
 - integrar MCP servers (stdio/HTTP) o exponer Hermes como server MCP.
 - ciclo de vida de skills (agentskills.io, `skill_manage`, hub, curator, bundles).
 - operar memoria/personalidad (`SOUL.md`, `MEMORY.md`, `USER.md`, context files).
@@ -80,8 +80,8 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 ### `consultar-canon-vivo`
 
 Hacer **fetch vivo** (WebFetch) de la URL primaria antes de producir nada; fetch en
-paralelo de las subpaginas que apliquen. Atajo para LLMs: `/docs/llms.txt` (~17KB,
-indice) y `/docs/llms-full.txt` (~1.8MB, completo). Mapa de canon:
+paralelo de las subpaginas que apliquen. Atajo para LLMs: `/docs/llms.txt`
+(indice) y `/docs/llms-full.txt` (completo). Mapa de canon:
 
 | Pagina | Cubre |
 |--------|-------|
@@ -92,7 +92,7 @@ indice) y `/docs/llms-full.txt` (~1.8MB, completo). Mapa de canon:
 | `/docs/user-guide/configuration` | `config.yaml`, `.env`, `terminal.backend`, precedencia |
 | `/docs/user-guide/security` | modelo de seguridad de 7 capas |
 | `/docs/user-guide/features/overview` | catalogo de capacidades |
-| `/docs/user-guide/features/tools` | 60+ tools en toolsets |
+| `/docs/user-guide/features/tools` | catalogo vivo de tools y toolsets |
 | `/docs/user-guide/features/personality` | `SOUL.md` (canonico) |
 | `/docs/user-guide/features/memory` | `MEMORY.md`, `USER.md`, tool `memory` |
 | `/docs/user-guide/features/context-files` | `.hermes.md`/`HERMES.md`/`AGENTS.md`/`CLAUDE.md`/`.cursorrules` |
@@ -100,7 +100,7 @@ indice) y `/docs/llms-full.txt` (~1.8MB, completo). Mapa de canon:
 | `/docs/user-guide/features/mcp` | MCP servers, `hermes mcp` |
 | `/docs/user-guide/features/voice-mode` | voz, TTS |
 | `/docs/user-guide/messaging/` | canales, allowlists, DM pairing |
-| `/docs/reference/cli-commands` | catalogo CLI completo (~50 comandos) |
+| `/docs/reference/cli-commands` | catalogo CLI completo |
 | `/docs/reference/faq` | preguntas frecuentes |
 
 ### `producir-artefacto`
@@ -174,7 +174,8 @@ residual, siguiente paso si la tarea es multi-incremento.
   `lmstudio`, `custom` (la lista crece; verificar viva).
 - Self-hosted critico: **Ollama** debe arrancar con `OLLAMA_CONTEXT_LENGTH=64000` para alcanzar el piso de 64k (la doc lo lista como *recomendado*, no como flag obligatorio; su default es 4096 tokens, que no califica para uso agentico con tools);
   **vLLM** necesita `--enable-auto-tool-choice --tool-call-parser hermes`.
-- **Nous Portal**: un OAuth cubre 300+ modelos + 4 herramientas Tool Gateway.
+- **Nous Portal**: verificar en el canon vivo el catalogo disponible y las
+  herramientas Tool Gateway antes de configurar.
 
 ### Skills (agentskills.io)
 
@@ -196,9 +197,10 @@ residual, siguiente paso si la tarea es multi-incremento.
 
 ### Mensajeria
 
-- Gateway unico, 20+ plataformas (Telegram, Discord, Slack, WhatsApp, Signal, SMS, Email,
-  Matrix, Teams, Mattermost, Home Assistant, BlueBubbles/iMessage, LINE, ntfy, Google Chat,
-  Raft, y asiaticas: DingTalk, Feishu/Lark, WeCom, Weixin, QQ, Yuanbao).
+- Gateway unico, con plataformas documentadas en el indice vivo (Telegram, Discord,
+  Slack, WhatsApp, Signal, SMS, Email, Matrix, Teams, Mattermost, Home Assistant,
+  BlueBubbles/iMessage, LINE, ntfy, Google Chat, Raft, y asiaticas: DingTalk,
+  Feishu/Lark, WeCom, Weixin, QQ, Yuanbao).
 - Autorizacion **deny-by-default**: allowlists (`TELEGRAM_ALLOWED_USERS`, ...) o **DM pairing**
   (codigos de 8 chars, expiran 1h, rate-limited; aprobar via `hermes pairing approve`).
 
@@ -212,9 +214,9 @@ Ademas: **blocklist hardline siempre-on** (wipes irreversibles, fork bombs, escr
 block-device) y **escaneo Tirith** pre-ejecucion (homografos, pipe-to-interpreter, inyeccion
 de terminal). YOLO via `--yolo`, `/yolo` o `HERMES_YOLO_MODE=1`.
 
-## Inventario CLI (catalogo vivo en `/docs/reference/cli-commands`)
+## CLI (catalogo vivo en `/docs/reference/cli-commands`)
 
-~50 comandos top-level. No memorizar: verificar viva. Familias frecuentes:
+No persistir ni memorizar el recuento: verificar el catalogo vivo. Familias frecuentes:
 `setup`, `model`, `chat`, `gateway`, `doctor`, `status`, `logs`, `config`, `update`,
 `uninstall`; `cron`, `kanban`, `webhook`, `checkpoints`, `curator`, `bundles`, `profile`,
 `proxy`, `acp`, `lsp`, `plugins`, `memory`, `secrets` (Bitwarden), `fallback`, `auth`,

@@ -8,9 +8,8 @@ coherentes en el tiempo y los transmuta a encarnaciones concretas declarando
 toda pérdida.
 
 Esta es la **encarnación pneuma**: el cuerpo que quedó cuando la encarnación
-anterior (`~/kora`, "la bestia": 16k líneas de toolchain, 8k de specs, 37
-checks, 24 comandos) ardió hacia adentro y soltó la coraza. La entidad es la
-misma; los URN no cambiaron. Léase en este orden:
+anterior (`~/kora`, "la bestia") ardió hacia adentro y soltó la coraza. La
+entidad es la misma; los URN no cambiaron. Léase en este orden:
 
 1. **`ALMA.md`** — qué es KORA cuando se le quita todo cuerpo. Documento
    fundacional: lo que el alma no exige, este cuerpo no lo carga.
@@ -21,15 +20,15 @@ misma; los URN no cambiaron. Léase en este orden:
    producción korificada en `ley/4` — mismo estrato), transmutación (el
    funtor y sus matrices).
 
-La ley entera más el alma caben en ~17k tokens: **KORA completa es cargable
-como contexto de un LLM**. Ese es el punto.
+`python3 kora.py ley` entrega la ley vigente más el alma bajo demanda: **KORA
+completa es cargable como contexto de un LLM**. Ese es el punto.
 
 ## Los seis gestos
 
 ```bash
 python3 kora.py censo                  # el catálogo, siempre derivado, jamás autoridad
 python3 kora.py nombre <urn>           # resolver un nombre verdadero (también muertos)
-python3 kora.py velar [--estricto]     # los 13 checks: que nada se contradiga
+python3 kora.py velar [--estricto]     # ejecutar el registro vigente de checks
 python3 kora.py transmutar --urn U --target T [--aplicar|--stdout]
                                        # proyección funtorial con sello y pérdida declarada
 python3 kora.py transmutar --paridad   # emisión↔instalación: fiel/desviada/no-instalada (ley/3 §9.1)
@@ -77,8 +76,7 @@ python3 kora.py velar --estricto        # gate de mantenimiento
 
 `~/kora` sigue viva y es autoritativa para su corpus —legacy en
 estrangulamiento, congelada salvo correcciones de verdad (`ley/0` §1)—.
-Pneuma nació el 2026-06-11 con 3 semillas (`alma-de-kora`, `mente-omega`,
-`polymath`) y se gana el corpus artefacto por artefacto, demostrando que la
-ley leve basta en vez de heredarlo por decreto: con URN preservado y
-procedencia con hash, como manda `GENESIS.md`. Cuánto lleva ganado lo dice
-el censo vivo (`python3 kora.py censo`), nunca un número escrito aquí.
+Pneuma se gana el corpus artefacto por artefacto, demostrando que la ley leve
+basta en vez de heredarlo por decreto: con URN preservado y procedencia con
+hash, como manda `GENESIS.md`. Su estado actual se consulta con el censo vivo
+(`python3 kora.py censo`), nunca con un recuento persistido aquí.

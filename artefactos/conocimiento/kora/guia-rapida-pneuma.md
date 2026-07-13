@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.3.0
+version: 1.3.1
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0)."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -25,23 +25,23 @@ catálogo y fábrica de los tres tipos de artefacto que consumen sistemas LLM.
 Núcleo único `kora.py` (stdlib puro, Python ≥ 3.11, cero dependencias). Ley
 en 4 estratos y 5 documentos. URN idénticos a la encarnación anterior
 (`~/kora`, "la bestia"), que sigue autoritativa para su corpus no migrado.
-La ley entera (`kora.py ley`) ≈ 17k tokens: KORA completa cabe en un
-contexto LLM. El alma del sistema: [Alma de KORA](urn:kora:kb:alma-de-kora).
+La ley entera se obtiene bajo demanda con `kora.py ley`: KORA completa cabe en
+un contexto LLM. El alma del sistema: [Alma de KORA](urn:kora:kb:alma-de-kora).
 
 ## Qué alberga pneuma hoy
 
-Ya no nace con tres semillas: alberga corpus reales migrados de la bestia,
-artefacto por artefacto. Familias presentes (inventario vivo:
+Alberga corpus reales migrados de la bestia, artefacto por artefacto. Familias
+presentes (inventario vivo:
 `python3 kora.py censo`):
 
 - **Categorial** — Formal Layer (`cat-foundations`, `cat-agent-coalgebra`) +
-  las 24 piezas ICAS-BoK; las consume `cat-thinking`.
+  el corpus ICAS-BoK; lo consume `cat-thinking`.
 - **OPM/Forja ES** — SSOT de modelado: núcleo ISO 19450, OPD, OPL, manual
   metodológico, reglas estrictas, specs forja OPD/OPL, puente categorial;
   la consumen la skill `modelamiento-opm` y la persona `dov-dori`.
 - **Personas** — razonamiento (`mente-omega`), modelado
   (`dov-dori`), ejecución y organización (`steipete`+`ship-discipline`,
-  `allan-kelly`+`cell-design`), diseño (`steve-jobs` + canon + 3 fibras de
+  `allan-kelly`+`cell-design`), diseño (`steve-jobs` + canon + fibras de
   superficie agéntica/web-AI/salud).
 - **Salud** — cluster consolidado con fronteras limpias: `salubrista`
   (macro/meso), `medico-hospitalista` (micro asistencial), `urgenciologo`
@@ -56,7 +56,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 |---|---|
 | Identidad ontológica | Vector PMI×LFS + 5 leyes inter-eje, mecanizadas en `velar` |
 | Nombre verdadero | URN sin versión; resuelve incluso retirado el artefacto |
-| Coherencia | 13 checks; censo siempre derivado, jamás versionado ni autoridad |
+| Coherencia | `velar` ejecuta el registro vigente de checks; el censo es derivado, jamás autoridad |
 | Proyección honesta | Sello inline en cada emisión: hash, fidelidad por eje, pérdidas con razón |
 | Lifecycle digno | Solo hacia adelante; promoción gateada por `velar`; muertos siguen resolviendo |
 | Producción con verdad | Koraficación: FS=100%, hechos inventados = fallo (`ley/4`) |
@@ -67,7 +67,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 |---|---|
 | `python3 kora.py censo [--json] [--escribir]` | Catálogo derivado del filesystem |
 | `python3 kora.py nombre <urn>` | Resolver URN — también deprecados y retirados |
-| `python3 kora.py velar [--estricto]` | Los 13 checks; exit 0 coherente, 1 con fallos |
+| `python3 kora.py velar [--estricto]` | Ejecuta el registro vigente; exit 0 coherente, 1 con fallos |
 | `python3 kora.py transmutar --urn U --target T [--stdout\|--aplicar]` | Proyección funtorial con sello |
 | `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Completitud y paridad fuente↔emisión↔instalación: sin-emisión/fiel/desviada/no-instalada (ley/3 §9.1) |
 | `python3 kora.py ciclo <urn> <estado>` | Transición de lifecycle, solo adelante |
