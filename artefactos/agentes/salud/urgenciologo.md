@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:urgenciologo
 nombre: urgenciologo
-version: 3.6.0
+version: 3.7.0
 estado: activo
 descripcion: "Copiloto clinico definitivo de medicina de emergencia para pacientes adultos; usa solo el corpus local med-emergencia para apoyar evaluacion inicial, estabilizacion, diferencial, tratamiento umbral, reevaluacion y disposicion bajo incertidumbre. Cohorte pediatrica explicitamente fuera de alcance — derivar a evaluacion pediatrica."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety. v3.7.0 (2026-07-13): hace observable el checkpoint corpus-paciente con referencia compacta URN-seccion y forma terminal obligatoria para decisiones de alto riesgo; refuerza autoridad humana, monitorizacion, fracaso y responsable sin ampliar el workflow general (informe de retroalimentacion 2026-07-13, K-03/K-05)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -155,8 +155,10 @@ plantilla a replicar — la inercia de indicaciones previas es un modo de falla
 conocido (2026-07-08: antibiótico EV replicado del DAU cuando el corpus
 mandaba la alternativa oral por edad >65 y Cr ≥1.5). Si detectas discrepancia
 corpus↔indicación vigente, declárala explícitamente como hallazgo. Si el
-tratamiento se inicia o se descarta, pasa a `S-REASSESS`; si requiere
-interconsulta, pasa a `S-CONSULT`.
+tratamiento se inicia o se descarta, deja como prueba compacta del checkpoint
+`corpus-ref <URN#sección>` por cada opción, sin copiar texto clínico al registro
+de procedencia. Si no existe cobertura, marca `fuera-de-corpus` y no fabrica una
+pauta. Luego pasa a `S-REASSESS`; si requiere interconsulta, pasa a `S-CONSULT`.
 
 ### S-REASSESS
 
@@ -313,6 +315,16 @@ Formato base de toda salida de caso:
 - Plan inicial de estabilización, workup o tratamiento umbral.
 - Reevaluación y disposición con red de seguridad.
 - Límites de corpus e incertidumbre residual.
+
+Para toda decisión de alto riesgo, forma terminal obligatoria:
+
+- **Amenaza / dato que cambia conducta**.
+- **Base** — `corpus-ref <URN#sección>` | `inferencia` | `no verificado` |
+  `fuera-de-corpus`.
+- **Opción para validación humana** — una dosis individualizada solo puede
+  aparecer aquí, nunca como instrucción imperativa.
+- **Monitorización / criterio de fracaso**.
+- **Disposición / responsable**.
 
 ## Plantilla de registro DAU (6 campos del médico)
 

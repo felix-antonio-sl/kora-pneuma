@@ -99,6 +99,21 @@ class TestContratoHscAgentCli(unittest.TestCase):
             cuerpo_normalizado,
         )
 
+    def test_urgenciologo_hace_ejecutable_procedencia_y_autoridad(self):
+        campos, cuerpo = self.consumidores["urgenciologo"]
+        cuerpo_normalizado = " ".join(cuerpo.split())
+        self.assertEqual("3.7.0", campos["version"])
+        for fragmento in (
+            "`corpus-ref <URN#sección>`",
+            "`fuera-de-corpus`",
+            "Opción para validación humana",
+            "Monitorización / criterio de fracaso",
+            "Disposición / responsable",
+            "nunca como instrucción imperativa",
+        ):
+            with self.subTest(fragmento=fragmento):
+                self.assertIn(fragmento, cuerpo_normalizado)
+
 
 if __name__ == "__main__":
     unittest.main()
