@@ -26,10 +26,20 @@ Documento JSON canonico que la skill `modelamiento-opm` emite cuando el destino 
 
 1. Identidades (`id`, `opdId`, `entidadId`, etc.) son strings cualquiera, no necesariamente UUIDs. Deben ser **internamente consistentes**: toda referencia debe resolver dentro del mismo modelo.
 2. `nextSeq` de `Modelo` es un contador interno; emitir `0` o el numero de cosas + 1.
-3. Toda apariencia visual (`Apariencia`, `AparienciaEnlace`) es opcional en sus campos no requeridos: si no hay certeza, **omitir**, no inventar. La app normaliza al hidratar.
+3. Toda `Apariencia` declara `id`, `entidadId`, `opdId`, `x`, `y`,
+   `width` y `height`; toda `AparienciaEnlace` declara `id`, `enlaceId`,
+   `opdId` y `vertices`. Solo sus campos adicionales son opcionales: si no hay
+   certeza, **omitir**, no inventar.
 4. Nombres de cosas son humanos y deben coincidir con los emitidos en OPL-ES y en el OPD.
-5. No referenciar OPDs huerfanos: el OPD raiz es `opdRaizId` y todo OPD declarado debe ser alcanzable desde el (via `padreId`).
-6. `validarReferenciasOpd` se aplica al hidratar: si una entidad referencia un OPD inexistente o un estado pertenece a una entidad ausente, el import falla con error legible.
+5. `opdRaizId` DEBE resolver a un OPD con `padreId: null`. Un segundo OPD con
+   `padreId: null` y `id != opdRaizId` es un **OPD suelto** legítimo del Taller
+   bottom-up (R-OPD-REF-20), no una referencia rota. Puede editarse y emitir OPL;
+   en un modelo bloquea el export canónico hasta adoptarse y en un apunte degrada
+   a observación.
+6. Lo inválido es una referencia colgante: `padreId` que no resuelve,
+   refinamiento hacia un OPD inexistente, enlace sin apariencia o extremo
+   ausente. `validarReferenciasOpd` se aplica al hidratar y falla con error
+   legible ante esas roturas.
 
 ## 3. Extensiones meta opcionales
 
@@ -257,15 +267,23 @@ interface Modelo {
   para multi-edges por transicion dentro de la vista usar
   `aparecerEnlacePorId(opdKey, enlaceId)` (F1) o
   `aparecerEnlacePorTransicion(...)` (H5).
-- `apariencias: Record<Id, Apariencia>` — un slot por entidad visible en este OPD (posicion + tamaño + estilo opcional).
+- `apariencias: Record<Id, Apariencia>` — un slot por entidad visible en este
+  OPD con geometria directa `x`, `y`, `width`, `height`.
 - `enlaces: Record<Id, AparienciaEnlace>` — un slot por enlace visible (vertices, etiqueta, ruta).
 - `ordenLocal?: number` — orden entre OPDs hermanos del mismo padre.
 
 ### 5.5 Apariencia y AparienciaEnlace
 
-- `posicion: { x, y }` cuando se conoce; si no, **omitir** y dejar que el auto-layout de la app la asigne en `fit-to-view`.
-- `tamaño: { ancho, alto }` opcional; el modelador usa 135x60 canonico cuando falta.
-- `vertices`, `rutaEtiqueta`, `ordenPartes`, `modoPlegado`: especialistas — emitir solo cuando ya se exporto desde la propia app o se conoce con certeza.
+- `Apariencia` requiere `id`, `entidadId`, `opdId`, `x`, `y`,
+  `width`, `height`. No existen los campos `posicion`, `tamaño`,
+  `ancho` ni `alto`.
+- `AparienciaEnlace` requiere `id`, `enlaceId`, `opdId` y
+  `vertices: Array<{ x, y }>`.
+- `modoTamano`, `modoPlegado`, `ordenPartes`, `ports`,
+  `rutaEtiqueta` y demás campos especializados se emiten solo cuando ya
+  provienen de la app o se conocen con certeza.
+- En el fallback artesanal, usar geometría explícita mínima; el camino primario
+  por el compilador aplica el layout canónico.
 
 ### 5.6 Abanico
 
@@ -301,7 +319,9 @@ campo `bundle.json` del `ResultadoBundle` ES el documento importable
 1. Construir el `Modelo` en memoria respetando los tipos.
 2. Aplicar `validar-modelo` antes de serializar; corregir bloqueos estructurales.
 3. Serializar con `JSON.stringify(doc, null, 2)` (la app espera 2-space indentation por convencion, pero acepta cualquier whitespace valido).
-4. Adjuntar el bundle al entregable y dar al usuario el camino de import: `cd ~/projects/deep-opm-pro/app && bun run dev` → UI → `Modelo / Importar JSON` → pegar.
+4. Adjuntar el bundle al entregable y dar al usuario el camino de import:
+   `cd ~/projects/deep-opm-pro/app && bun run dev` → gestor **«Modelos»** →
+   acción **«Importar JSON»** → pegar.
 5. Si la sesion ya tiene la app abierta y el bundle es chico, basta con copiar al portapapeles.
 6. Si la mesa entrega `LogDecisiones v0`, ejecutar `re-elicitar` antes de emitir
    un nuevo bundle. Un log sin consumidor operativo queda prohibido por la regla
@@ -315,7 +335,10 @@ campo `bundle.json` del `ResultadoBundle` ES el documento importable
 
 ## 8. Cuando NO emitir bundle
 
-- El destino es un documento estatico (markdown, PDF, lamina): preferir `serializar-opd` via jointjs-open-source.
+- El destino es un documento estatico (markdown, PDF, lamina): preferir
+  `serializar-opd` mediante `bun run render:headless` cuando deep-opm-pro
+  está disponible; usar JointJS como fallback independiente solo sin el
+  modelador.
 - El usuario solo pide OPL-ES: emitir solo la serializacion textual.
 - El modelo es solo conceptual y no se va a editar: documentar OPL + descripcion textual del OPD.
 
@@ -334,13 +357,13 @@ campo `bundle.json` del `ResultadoBundle` ES el documento importable
         "nombre": "SD",
         "padreId": null,
         "apariencias": {
-          "ap-cafe-grano": { "entidadId": "ent-cafe-grano" },
-          "ap-cafe-bebida": { "entidadId": "ent-cafe-bebida" },
-          "ap-preparar": { "entidadId": "ent-preparar" }
+          "ap-cafe-grano": { "id": "ap-cafe-grano", "entidadId": "ent-cafe-grano", "opdId": "opd-sd", "x": 40, "y": 120, "width": 135, "height": 60 },
+          "ap-cafe-bebida": { "id": "ap-cafe-bebida", "entidadId": "ent-cafe-bebida", "opdId": "opd-sd", "x": 420, "y": 120, "width": 135, "height": 60 },
+          "ap-preparar": { "id": "ap-preparar", "entidadId": "ent-preparar", "opdId": "opd-sd", "x": 230, "y": 120, "width": 135, "height": 60 }
         },
         "enlaces": {
-          "ap-l1": { "enlaceId": "l1" },
-          "ap-l2": { "enlaceId": "l2" }
+          "ap-l1": { "id": "ap-l1", "enlaceId": "l1", "opdId": "opd-sd", "vertices": [] },
+          "ap-l2": { "id": "ap-l2", "enlaceId": "l2", "opdId": "opd-sd", "vertices": [] }
         }
       }
     },
