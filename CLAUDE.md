@@ -59,3 +59,8 @@ python3 -m unittest discover -s tests
 muertos (informes, auditorías ya ejecutadas) se desplazan a `_archivo/`
 (gitignored), no se borran. Los **artefactos** no se mueven: se deprecan/retiran
 in-place y su URN sigue resolviendo (KORA no borra: jubila).
+
+**Continuidad operativa.** Antes de retomar trabajo heredado, leer
+`HANDOFF.md`: es la única memoria de sesión vigente y siempre está subordinada
+al canon y al estado verificable del repositorio. Al reemplazarla, mover la
+anterior a `_archivo/` y no mantener dos handoffs activos.
