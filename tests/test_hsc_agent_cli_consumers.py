@@ -36,7 +36,8 @@ class TestContratoHscAgentCli(unittest.TestCase):
                 self.assertIn("Bash", campos["herramientas"])
                 self.assertIn(MANUAL_URN, campos["conocimiento"])
         self.assert_cuerpo_contiene(
-            "data.agent_guide.command_playbook",
+            "data.agent_guide` versión `agent-autonomy-2",
+            "command_playbook",
             "no es requisito del flujo estándar",
         )
 
@@ -49,9 +50,9 @@ class TestContratoHscAgentCli(unittest.TestCase):
 
     def test_eval_2_censo_hodom_sin_alias_singular(self):
         self.assert_cuerpo_contiene(
-            "recommended_batch_handles[].command_args",
-            "recommended_batch_handle` singular",
-            "en serie",
+            "batch_plan.requests[].command_args",
+            "no existen aliases `recommended_*`",
+            "orden secuencial declarado",
         )
 
     def test_eval_3_upstream_unavailable_sin_fan_out(self):
@@ -70,18 +71,32 @@ class TestContratoHscAgentCli(unittest.TestCase):
 
     def test_eval_5_bundle_no_decide_clinica(self):
         self.assert_cuerpo_contiene(
-            "clinical_gaps",
+            "summary.source_issues",
+            "summary.bundle_integrity",
             "compaction",
-            "decision_safety",
-            "seguridad clínica",
+            "does_not_assess_clinical_safety=true",
         )
 
     def test_eval_6_autonomia_desde_ayuda_inline(self):
         self.assert_cuerpo_contiene(
             "hsc-agent-cli <comando> --help",
-            "handles, `command_args` y `next_steps`",
+            "batch_plan.requests[].command_args",
+            "command_playbook.next",
+            "error_detail.alternative_handles",
             "state` y `error_code",
         )
+
+    def test_beta3_no_reintroduce_campos_retirados(self):
+        for nombre, (_, cuerpo) in self.consumidores.items():
+            cuerpo_normalizado = " ".join(cuerpo.split())
+            for campo in (
+                "decision_safety",
+                "clinical_gaps",
+                "usable_clinically",
+                "recommended_batch_handle",
+            ):
+                with self.subTest(consumidor=nombre, campo=campo):
+                    self.assertNotIn(campo, cuerpo_normalizado)
 
     def test_hospitalista_no_promete_no_persistencia(self):
         _, cuerpo = self.consumidores["medico-hospitalista"]
@@ -102,7 +117,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_urgenciologo_hace_ejecutable_procedencia_y_autoridad(self):
         campos, cuerpo = self.consumidores["urgenciologo"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("3.7.0", campos["version"])
+        self.assertEqual("3.8.0", campos["version"])
         for fragmento in (
             "`corpus-ref <URN#sección>`",
             "`fuera-de-corpus`",
@@ -117,7 +132,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_hospitalista_hace_ejecutable_el_plan_soap(self):
         campos, cuerpo = self.consumidores["medico-hospitalista"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("1.5.0", campos["version"])
+        self.assertEqual("1.6.0", campos["version"])
         for fragmento in (
             "Intervención — indicación — contraindicación relevante — monitor — duración/stop",
             "Disposición — criterios cumplidos — criterios pendientes — responsable — plazo",

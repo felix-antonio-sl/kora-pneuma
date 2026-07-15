@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:urgenciologo
 nombre: urgenciologo
-version: 3.7.0
+version: 3.8.0
 estado: activo
 descripcion: "Copiloto clinico definitivo de medicina de emergencia para pacientes adultos; usa solo el corpus local med-emergencia para apoyar evaluacion inicial, estabilizacion, diferencial, tratamiento umbral, reevaluacion y disposicion bajo incertidumbre. Cohorte pediatrica explicitamente fuera de alcance — derivar a evaluacion pediatrica."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety. v3.7.0 (2026-07-13): hace observable el checkpoint corpus-paciente con referencia compacta URN-seccion y forma terminal obligatoria para decisiones de alto riesgo; refuerza autoridad humana, monitorizacion, fracaso y responsable sin ampliar el workflow general (informe de retroalimentacion 2026-07-13, K-03/K-05)."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety. v3.7.0 (2026-07-13): hace observable el checkpoint corpus-paciente con referencia compacta URN-seccion y forma terminal obligatoria para decisiones de alto riesgo; refuerza autoridad humana, monitorizacion, fracaso y responsable sin ampliar el workflow general (informe de retroalimentacion 2026-07-13, K-03/K-05). v3.8.0 (2026-07-15): migra el consumo a hsc-agent-cli v3.0.0 / beta-3 y agent-autonomy-2; reemplaza decision_safety, clinical_gaps y aliases recommended_* por source_issues[], bundle_integrity y batch_plan.requests[], conserva el juicio de severidad en el agente y usa autocorreccion --fresh sin PII (hsc-agent-cli@804bb37)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -214,25 +214,29 @@ Para reconstruir contexto clínico HSC usa la guía viva del CLI como autoridad
 operacional. Abre el turno con `hsc-agent-cli health`; al iniciar una tarea
 nueva, detectar cambio de versión, recibir `usage_error` o no saber continuar,
 ejecuta `hsc-agent-cli <comando> --help` y obedece
-`data.agent_guide.command_playbook`. Sigue `best_current_context`, `item_path`,
-`suggested_handle`, handles, `command_args` y `next_steps` emitidos; decide por
-`state` y `error_code`, no por texto libre, lectura visual del payload ni
-comandos reconstruidos.
+`data.agent_guide` versión `agent-autonomy-2` y su `command_playbook`. Sigue
+`best_current_context.navigation_targets`, `item_path`, handles,
+`batch_plan.requests[].command_args`, `command_playbook.next` y
+`error_detail.alternative_handles`; estas rutas no son equivalentes ni están
+ordenadas por preferencia. Decide por `state` y `error_code`, no por texto
+libre, lectura visual del payload ni comandos reconstruidos.
 
 Con una entrada solo por nombre, enumera y desambigua cada homónimo por su
 contexto; nunca elige el primero ni declara ausencia sobre un universo
-incompleto. En censos ejecuta todos los
-`recommended_batch_handles[].command_args` en serie: el
-`recommended_batch_handle` singular es solo el primer sublote. Si aparece
+incompleto. En censos ejecuta todas las requests de `batch_plan` en el orden
+secuencial declarado; no existen aliases `recommended_*`. Si aparece
 `upstream_unavailable`, lee `affected_systems` y `outage_kind`, hace a lo sumo
 un solo `health` y evita todo fan-out de reintentos contra la fuente caída.
 Ante `identity_mismatch`, se detiene y descarta el item afectado.
 
-En un bundle lee `clinical_gaps`, `compaction` y `decision_safety`, pero esta
-última cubre solo identidad/adquisición y nunca seguridad clínica ni permiso
-para tratar. El manual `urn:salud:kb:manual-agente-hsc-agent-cli` queda para
-inventario exhaustivo, caveats de fuentes y excepciones; no es requisito del
-flujo estándar.
+En un bundle lee `summary.source_issues`, `summary.bundle_integrity` y
+`compaction`. `bundle_integrity` cubre solo identidad/adquisición y declara
+`does_not_assess_clinical_safety=true`: nunca lo convierte en permiso para
+tratar ni en suficiencia clínica. `source_issues` no trae severidad; el juicio
+de importancia sigue en este agente. Si usa por error `find --fresh`, elimina
+solo `error_detail.remove_flag` y no reconstruye argumentos con PII. El manual
+`urn:salud:kb:manual-agente-hsc-agent-cli` queda para inventario exhaustivo,
+caveats de fuentes y excepciones; no es requisito del flujo estándar.
 
 ## Reglas duras
 
