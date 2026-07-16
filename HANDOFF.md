@@ -14,14 +14,18 @@
   manteniendo `elevated` como break-glass del owner.
 - OpenClaw recibe ahora `AGENTS.md` operativo sin duplicar la voz y `SOUL.md`
   con el único span `U_phen`. Los demás targets conservan el cuerpo completo.
-- El sello ya no inventa paths desde el id de la URN: resuelve por el censo
-  (`kora.py nombre`) o por coincidencia exacta y única de frontmatter.
+- El sello ya no inventa paths desde el id de la URN: declara resolución por el
+  censo (`kora.py nombre`) o por coincidencia exacta y única de frontmatter; el
+  consumidor ejecuta ese contrato.
 - Cada sello OpenClaw porta la frontera declarada y confiesa que su realización
   vive en `openclaw.json` y no queda probada por la paridad de archivos.
 - `operator`, `troubleshooter` y `version-manager` fueron retiradas del
   workspace. Esas tres y `openclaw-lifecycle-manager` tienen tombstone
   `skills.entries.<name>.enabled=false`, por lo que una copia reinstalada no
   vuelve silenciosamente al prompt.
+- La emisión Codex `kora-agentic-lifecycle` también fue retirada: Pneuma ya la
+  había dictaminado DESCARTAR (F1/C1/V1) por duplicar `ley/0..4 + kora.py` y
+  conservar rutas/comandos de la bestia. No se creó una fuente sustituta.
 - No se envió ningún mensaje externo ni se reinició el gateway.
 
 ## Correcciones adjudicadas
@@ -36,6 +40,7 @@
 | `TOOLS.md` describía ACP obligatorio, rutas falsas y gateway/systemd obsoletos | Scaffolding reescrito contra el host y runtime instalados. |
 | Tres wrappers operativos repetían comandos volátiles e inexistentes | Retiro físico, reparación de su único consumidor y tombstones globales por nombre. |
 | El retiro de `openclaw-lifecycle-manager` no sobrevivía a una reinstalación o rollback parcial de ClawHub | Tombstone durable; el rollback completo exige quitarlo y restaurar provenance revisada. |
+| Codex aún exponía `kora-agentic-lifecycle`, descartada por la auditoría Pneuma | Retiro de la emisión runtime; el ciclo vigente es ley + `kora.py`, sin segunda skill coordinadora. |
 
 No se añadió `reemplaza` a la nueva URN: el Clawforge histórico de la bestia fue
 retirado sin sucesor jurídico; la fuente vigente reconstruye el agente runtime
@@ -93,7 +98,7 @@ vivo y conserva esa procedencia en `fuente`.
   ejecutó `pwd` bajo Guardian. `gateway`, `cron` y `nodes` fueron filtradas por
   la regla owner-only, como muestran los logs.
 - `skills check --agent main`: los cuatro nombres retirados están ausentes de
-  model-visible; el catálogo bajó en tres entradas activas.
+  model-visible.
 
 ## Aprendizajes destilados
 
@@ -116,6 +121,9 @@ vivo y conserva esa procedencia en `fuente`.
    confirmó ausencia de dependencia para `forjador-openclaw` y
    `transmute-openclaw`; para `openclaw-lifecycle-manager` solo hubo acuse y
    respeto de paths. Este handoff ya no generaliza esa confirmación.
+8. **Una skill instalada no recupera autoridad por estar disponible.** Si el
+   censo Pneuma ya la descartó y su mecánica está legislada, se retira la
+   emisión obsoleta en vez de modernizar una capa redundante.
 
 ## Deuda residual
 
@@ -149,7 +157,9 @@ vivo y conserva esa procedencia en `fuente`.
 4. No reactivar `forjador-openclaw`, `transmute-openclaw`,
    `openclaw-lifecycle-manager`, `operator`, `troubleshooter` ni
    `version-manager` sin una nueva auditoría de uso y provenance.
-5. Diagnosticar Active Memory por separado si vuelve a agotar la ventana.
+5. No reinstalar `kora-agentic-lifecycle`; usar `kora.py ciclo`, `transmutar`,
+   `velar` y `censo` bajo la ley vigente.
+6. Diagnosticar Active Memory por separado si vuelve a agotar la ventana.
 
 ## Rollback
 
