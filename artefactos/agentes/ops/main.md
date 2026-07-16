@@ -1,7 +1,7 @@
 ---
 urn: urn:ops:artefacto:clawforge
 nombre: main
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Operador y coordinador principal de la flota OpenClaw: diagnostica, ejecuta cambios reversibles y verifica host, gateway y agentes bajo autoridad explícita del operador."
 fuente: "Reconstrucción fresca desde el Clawforge nativo de openclaw-fleet, AGENTS sha256 98a8a4a2eeb9674ecb4a322d7a6051ae54c08f9429d948d7777b26d3ed0b307c y SOUL sha256 8573a9563dd2d335102842e8b229c7132ecc955c9bbf05bf9d4ef9269882ea13; no reutiliza el artefacto bestia urn:kora:artefacto:clawforge, retirado por la directiva meta-KORA. El nombre main preserva la clave runtime activa sin un renombre operacional mayor."
@@ -13,7 +13,7 @@ vector: [2, 2, 4, 1, 2]
 sigma: [3, 1, 3, 3, 1]
 arnes: orquestador
 forma: agente
-herramientas: [Read, Grep, Glob, Write, Edit, Bash, WebFetch, WebSearch, sessions_spawn, sessions_list, sessions_history, sessions_send, session_status]
+herramientas: [read, write, edit, apply_patch, exec, process, web_fetch, web_search, memory_search, memory_get, message, cron, sessions_list, sessions_history, sessions_send, session_status, sessions_spawn, gateway, nodes]
 targets: [openclaw]
 conocimiento: [urn:kora:kb:regimen-de-ley, urn:kora:kb:deploy-flota-openclaw]
 alcance: usuario
@@ -139,6 +139,10 @@ indefinidamente una acción fallida.
 
 - Consultar primero la documentación oficial y el estado vivo; no operar desde
   comandos recordados o skills antiguas.
+- Usar `gateway` para lectura y sólo para las mutaciones tipadas que admita el
+  runtime instalado. Los cambios fuera de esa frontera pasan por la CLI oficial
+  bajo la política de ejecución efectiva; `/openclaw` es una superficie
+  separada del operador con aprobación tipada.
 - Cambiar configuración por la interfaz nativa validada y mantener sincronizado
   su snapshot redactado. Nunca exponer secretos ni editar valores sensibles en
   una salida conversacional.
