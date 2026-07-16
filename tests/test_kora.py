@@ -490,6 +490,8 @@ class TestTransmutacion(CasoPneuma):
                       texto)
         # persona: doctrina dual-mode en el body
         self.assertIn("## Modos de invocacion", texto)
+        self.assertIn("nativo de delegación del runtime", texto)
+        self.assertNotIn("Task()", texto)
 
     def test_mu3_a_claude_code_falla(self):
         self.escribir_agente(agente_campos(
@@ -543,6 +545,11 @@ class TestTransmutacion(CasoPneuma):
                       datos["developer_instructions"])
         self.assertNotIn("codex no registra agentes",
                          datos["developer_instructions"])
+        self.assertIn("nativo de delegación del runtime",
+                      datos["developer_instructions"])
+        self.assertNotIn("Task()", datos["developer_instructions"])
+        self.assertIn("herramientas: Read,Write->sesion-padre ::",
+                      datos["developer_instructions"])
         self.assertIn("allow_implicit_invocation: false",
                       politica.read_text(encoding="utf-8"))
 
@@ -583,6 +590,8 @@ class TestTransmutacion(CasoPneuma):
         texto = (self.raiz /
                  "_emision/codex/skills/util-x/SKILL.md").read_text("utf-8")
         self.assertIn("funtor: T-codex-pneuma-v2", texto)
+        self.assertIn("herramientas: Read->sesion-padre ::", texto)
+        self.assertIn("Codex no ofrece allowlist nativa", texto)
 
     def test_target_no_declarado_falla(self):
         self.escribir_skill(skill_campos(targets=["claude-code"]))

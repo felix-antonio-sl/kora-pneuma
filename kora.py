@@ -1012,9 +1012,9 @@ DOCTRINA_DUAL_MODE = """## Modos de invocacion
 
 Este artefacto es dual-mode (arnés persona). Declara su modo efectivo:
 
-- **Modo subagente (batch)**: invocado vía Task() por otro agente. Opera con
-  entrada/salida cerrada, sin diálogo HITL intra-tarea; entrega dictamen y
-  handoff, no conversación.
+- **Modo subagente (batch)**: invocado por otro agente mediante el mecanismo
+  nativo de delegación del runtime. Opera con entrada/salida cerrada, sin
+  diálogo HITL intra-tarea; entrega dictamen y handoff, no conversación.
 - **Modo persona (encarnación)**: cargado como instrucciones del hilo
   principal. Dispone del diálogo HITL nativo, de las skills y de las
   herramientas de la sesión; es el único modo que realiza la fidelidad
@@ -1222,7 +1222,14 @@ def _emitir_codex(art: Artefacto, proy: dict,
     """
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
-    perdidas_extra: list = []
+    herramientas = art.campos.get("herramientas") or []
+    perdidas_extra: list = [(
+        "herramientas",
+        ",".join(str(h) for h in herramientas) or "ninguna",
+        "sesion-padre",
+        "Codex no ofrece allowlist nativa de herramientas built-in por "
+        "artefacto; hereda la superficie y los permisos de la sesión padre",
+    )]
     sello = construir_sello(art, "codex", hash_hex, proy, perdidas_extra)
     if art.tipo == "skill":
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]

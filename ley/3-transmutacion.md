@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.0.0
+# KORA/Transmutación — ley pneuma v2.1.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -195,8 +195,10 @@ Reglas:
 
 1. `hash-fuente`: sha256 del archivo fuente completo (bytes).
 2. `perdidas:` aparece solo si hay alguna; una línea por pérdida con formato
-   `eje: a->b :: razón`. Las pérdidas de `sigma` se nombran por componente
-   (`sigma.accountability`, `sigma.transparency`, ...).
+   `etiqueta: a->b :: razón`. Las pérdidas de eje usan el nombre del eje; las
+   de `sigma` se nombran por componente (`sigma.accountability`,
+   `sigma.transparency`, ...), y las de fronteras no reticulares conservan el
+   nombre del campo afectado (p. ej. `herramientas`).
 3. En un sello emitido la fidelidad solo toma valores `full` o `partial`: un
    eje `none` aborta la emisión (§3 r3); `none` jamás llega al archivo.
 4. Las líneas `preservado-por-construccion` y `declarado-no-mecanizado` son
@@ -215,6 +217,12 @@ Reglas:
    extensión aditiva (constitución §12.1): un artefacto sin corpus no porta el
    bloque y su emisión queda byte-idéntica. Encarna la doctrina de acceso de
    `urn:kora:kb:regimen-de-ley`.
+7. Toda emisión `codex` declara la frontera no realizable de `herramientas`
+   como pérdida `herramientas: <allowlist-kora>->sesion-padre`: el formato de
+   custom agent permite configurar sandbox, MCP y skills, pero no una allowlist
+   nativa de herramientas built-in por artefacto; además, los permisos vivos
+   del turno padre prevalecen al delegar. El funtor preserva la lista fuente en
+   el sello y NO presenta una restricción instruccional como enforcement.
 
 ## 6. La nota de honestidad (heredada)
 
@@ -255,7 +263,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia `referencias/` conservando su nombre si existe |
 | `claude-code` | agente | `_emision/claude-code/agents/{nombre}.md`; frontmatter `name`, `description`, `tools` (lista separada por comas); body = body fuente; si `arnes` = `persona`, sección final `## Modos de invocacion` con la doctrina dual-mode (modo subagente batch vs modo persona por encarnación) |
 | `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre |
-| `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime |
+| `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime. Codex no ofrece allowlist nativa de herramientas built-in por artefacto: la superficie y los permisos se heredan de la sesión padre, y el sello declara esta pérdida sin fingir enforcement |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
@@ -432,6 +440,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
+| Frontera `herramientas` de Codex declarada como heredada de la sesión padre | §5 r7, §7 | mecanizado (`transmutar`) |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
@@ -488,3 +497,11 @@ sin fijar modelo. Añade enforcement de `targets`, despliegue solo desde
 `estado: activo` y completitud `activo→emisión` en paridad. Es major porque
 cambia rutas, forma de emisión y el identificador del sello Codex; medió la
 decisión explícita del operador de ejecutar la migración Claude Code→Codex.
+
+v2.1.0 (2026-07-16): corrige dos pérdidas ocultas del despliegue Codex. La
+doctrina dual-mode deja de nombrar `Task()` (mecanismo exclusivo de Claude
+Code) y pasa a describir la delegación nativa del runtime. Toda emisión Codex
+porta ahora la allowlist KORA `herramientas` como pérdida declarada hacia la
+superficie/permisos heredados de la sesión padre: el runtime no ofrece
+allowlist nativa de built-ins por artefacto. Extensión proof-carrying aditiva y
+precisión compatible; `T-codex-pneuma-v2` conserva su identidad major.
