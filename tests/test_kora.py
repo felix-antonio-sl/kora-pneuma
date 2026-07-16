@@ -434,27 +434,32 @@ class TestTransmutacion(CasoPneuma):
 
     def test_contrato_conocimiento_en_sello(self):
         # Una skill con corpus declarado: el sello porta el contrato
-        # (ancla + regla de derivación + URN), sin materializar paths.
+        # (ancla + resolución por censo + URN), sin materializar paths.
         self.escribir_skill(skill_campos(
+            urn="urn:kora:artefacto:identidad-estable",
             conocimiento=["urn:fxsl:kb:icas-sintesis",
                           "urn:fxsl:kb:icas-efectos"],
-            componible=["urn:kora:artefacto:modelamiento-opm"]))
+            componible=["urn:kora:artefacto:identidad-estable"]))
         codigo, salida, _ = self.correr(
-            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+            ["transmutar", "--urn", "urn:kora:artefacto:identidad-estable",
              "--target", "claude-code", "--stdout"])
         self.assertEqual(codigo, 0)
         self.assertIn("contrato-conocimiento:", salida)
         self.assertIn("ancla: ~/kora-pneuma", salida)
-        # La regla de derivación se declara UNA vez, con sus placeholders.
-        self.assertIn("derivacion: urn:{ns}:kb:{id} -> "
-                      "{ancla}/artefactos/conocimiento/{ns}/{id}.md", salida)
+        self.assertIn("resolucion-bash: python3 {ancla}/kora.py nombre <URN>",
+                      salida)
+        self.assertIn("resolucion-lectura: Grep exacto '^urn: <URN>$' bajo "
+                      "{ancla}/artefactos; exigir coincidencia unica", salida)
+        self.assertNotIn("derivacion:", salida)
         # Los URN van listados; NINGÚN path concreto se hornea.
         self.assertIn("conocimiento: urn:fxsl:kb:icas-sintesis "
                       "urn:fxsl:kb:icas-efectos", salida)
-        self.assertIn("componible: urn:kora:artefacto:modelamiento-opm",
+        self.assertIn("componible: urn:kora:artefacto:identidad-estable",
                       salida)
         self.assertNotIn("artefactos/conocimiento/fxsl/icas-sintesis.md",
                          salida)
+        # URN id != nombre: nunca se inventa un path desde el id estable.
+        self.assertNotIn("artefactos/skills/kora/identidad-estable", salida)
         # El contrato no se interpone entre las dos líneas fijas y el cierre.
         cola = salida[salida.rindex("preservado-por-construccion"):]
         self.assertNotIn("contrato-conocimiento", cola)
@@ -665,7 +670,7 @@ def cuerpo_persona(operativa, voz):
 
 class TestOpenclaw(CasoPneuma):
     """openclaw realizado (ley/3 v1.3.0): emite un WORKSPACE multi-archivo
-    (AGENTS.md = operativa/cuerpo verbatim; SOUL.md = voz/U_phen), no un
+    (AGENTS.md = operativa sin U_phen; SOUL.md = voz/U_phen), no un
     monolito. Conformidad real verificada contra ~/openclaw-fleet."""
 
     def _emitir_persona(self, **over):
@@ -687,10 +692,13 @@ class TestOpenclaw(CasoPneuma):
         self.assertTrue(soul.is_file())
         ta = agents.read_text(encoding="utf-8")
         ts = soul.read_text(encoding="utf-8")
-        # AGENTS.md = cuerpo verbatim (transporte de fibra): operativa + voz.
+        # AGENTS.md = operativa: el span de voz no se duplica ni se filtra a
+        # subagentes que sólo reciben las reglas operativas.
         self.assertFalse(ta.startswith("---"))   # markdown plano, sin frontmatter
         self.assertIn("Regla de operacion uno.", ta)
-        self.assertIn("Tono directo y denso.", ta)
+        self.assertNotIn("Tono directo y denso.", ta)
+        self.assertNotIn(kora.SOUL_ABRE, ta)
+        self.assertNotIn(kora.SOUL_CIERRA, ta)
         self.assertIn("funtor: T-openclaw-pneuma-v1", ta)
         self.assertIn("target: openclaw", ta)
         # SOUL.md = voz PURA: tiene la voz, NO la operativa. La doc de openclaw
@@ -699,11 +707,41 @@ class TestOpenclaw(CasoPneuma):
         self.assertIn("## Voz", ts)
         self.assertNotIn("Regla de operacion uno.", ts)
         self.assertNotIn("## Operativa", ts)
+        self.assertNotIn(kora.SOUL_ABRE, ts)
+        self.assertNotIn(kora.SOUL_CIERRA, ts)
         # Ambos archivos se auto-certifican con el sello.
         self.assertIn("<!-- kora:sello", ta)
         self.assertIn("<!-- kora:sello", ts)
         # sello fresco no reclama sobre el workspace recién emitido.
         self.assertEqual(self.fallos("sello-fresco"), [])
+
+    def test_otros_targets_conservan_el_cuerpo_completo(self):
+        campos = agente_campos(targets=["claude-code", "openclaw"])
+        cuerpo = cuerpo_persona("Regla operativa.", "Voz inconfundible.")
+        self.escribir("artefactos/agentes/dev/agente-x.md",
+                      doc(campos, cuerpo))
+        codigo, _, _ = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "claude-code"])
+        self.assertEqual(codigo, 0)
+        texto = (self.raiz /
+                 "_emision/claude-code/agents/agente-x.md").read_text("utf-8")
+        self.assertIn("Regla operativa.", texto)
+        self.assertIn("Voz inconfundible.", texto)
+        self.assertIn(kora.SOUL_ABRE, texto)
+        self.assertIn(kora.SOUL_CIERRA, texto)
+
+    def test_sello_declara_frontera_sin_fingir_realizacion(self):
+        codigo, _, _ = self._emitir_persona()
+        self.assertEqual(codigo, 0)
+        ws = self.raiz / "_emision/openclaw/workspaces/agente-x"
+        for archivo in ("AGENTS.md", "SOUL.md"):
+            texto = (ws / archivo).read_text(encoding="utf-8")
+            self.assertIn(
+                "frontera-herramientas-declarada: [Read,Write]", texto)
+            self.assertIn(
+                "frontera-herramientas-realizacion: openclaw.json/deploy "
+                "(fuera del funtor; no verificada por este sello)", texto)
 
     def test_matriz_mu3_xi4_full(self):
         # plataforma/servicio con mu=3 y xi=4: openclaw los proyecta FULL —
@@ -854,6 +892,17 @@ class TestCenso(CasoPneuma):
         codigo, _, err = self.correr(["nombre", "urn:kora:kb:fantasma"])
         self.assertEqual(codigo, 1)
         self.assertIn("no resuelve", err)
+
+    def test_nombre_resuelve_sin_confundir_id_urn_con_nombre(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:kora:artefacto:identidad-estable",
+            nombre="nombre-runtime"))
+        codigo, salida, _ = self.correr(
+            ["nombre", "urn:kora:artefacto:identidad-estable"])
+        self.assertEqual(codigo, 0)
+        self.assertIn(
+            "path: artefactos/skills/kora/nombre-runtime/SKILL.md", salida)
+        self.assertNotIn("artefactos/skills/kora/identidad-estable", salida)
 
 
 # ------------------------------------------- 13. velar sobre corpus válido

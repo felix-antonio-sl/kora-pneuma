@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.1.0
+# KORA/Transmutación — ley pneuma v2.2.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -22,18 +22,18 @@ ley, es un acto que viene acompañado de su propia confesión: el sello (§5).
 
 Reglas:
 
-1. La proyección del vector la hace `T` sobre la base (matrices §4). El cuerpo
-   NO se proyecta: se transporta entero al archivo que el target reserva para la
-   operativa (`SKILL.md`, `{nombre}.md`, o `AGENTS.md` en `openclaw`).
+1. La proyección del vector la hace `T` sobre la base (matrices §4). En targets
+   monolíticos el cuerpo NO se proyecta: se transporta entero al archivo que el
+   target reserva para la operativa (`SKILL.md` o `{nombre}.md`).
 2. Este transporte vale para **todos** los targets, sin campo por-emisión que lo
    declare: es la forma del funtor, no un atributo del artefacto.
-3. Un target cuyo objeto-runtime es un **producto de archivos** (un workspace,
-   p. ej. `openclaw`) recibe el cuerpo en su archivo de operativa y PUEDE además
-   proyectar **componentes adicionales** del producto (p. ej. `SOUL.md` = el span
-   de `U_phen`); cada componente adicional sale de un **span marcado** del cuerpo
-   (`ley/2 §10 r6`), nunca de una segmentación de prosa por el núcleo
-   (forma-no-verdad). Esto preserva la bisimulación módulo proyección (§3): el
-   cuerpo completo viaja al archivo de operativa en TODOS los targets.
+3. Un target cuyo objeto-runtime es un **producto de archivos** PUEDE distribuir
+   un componente marcado del cuerpo al archivo nativo que le corresponde. En
+   `openclaw`, `AGENTS.md` recibe la operativa sin el span `U_phen` y `SOUL.md`
+   recibe ese span. El producto conserva la materia completa sin duplicarla;
+   cada componente sale de un **span marcado** (`ley/2 §10 r6`), nunca de una
+   segmentación de prosa por el núcleo (forma-no-verdad). Los demás targets
+   conservan el cuerpo completo verbatim.
 
 ## 2. Targets reconocidos y realizados
 
@@ -186,7 +186,8 @@ además —entre `perdidas:` y las dos líneas fijas— un bloque
 ```text
 contrato-conocimiento:
   ancla: ~/kora-pneuma  (o $KORA_RAIZ)
-  derivacion: urn:{ns}:kb:{id} -> {ancla}/artefactos/conocimiento/{ns}/{id}.md ; urn:{ns}:artefacto:{id} -> {ancla}/artefactos/skills/{ns}/{id}/SKILL.md (skill) | {ancla}/artefactos/agentes/{ns}/{id}.md (agente)
+  resolucion-bash: python3 {ancla}/kora.py nombre <URN>
+  resolucion-lectura: Grep exacto '^urn: <URN>$' bajo {ancla}/artefactos; exigir coincidencia unica
   conocimiento: urn:fxsl:kb:icas-sintesis
   componible: urn:kora:artefacto:cat-thinking
 ```
@@ -209,14 +210,15 @@ Reglas:
 6. `contrato-conocimiento:` aparece **solo si** el artefacto declara
    `conocimiento` o `componible`, e inmediatamente **antes** de las dos líneas
    fijas (r4). Porta `ancla` (raíz del repo central / `$KORA_RAIZ`),
-   `derivacion` y las listas `conocimiento`/`componible` de URN. La regla de
-   derivación URN→path **no se re-legisla aquí: es la biyección de `ley/2 §6`
-   que `lugar-coincide` blinda**; el sello la *imprime* para que un consumidor
-   con solo lectura la evalúe por sustitución, sin acceso a la ley. **Cero
-   paths materializados**: el URN es la autoridad, el path se deriva. Es
-   extensión aditiva (constitución §12.1): un artefacto sin corpus no porta el
-   bloque y su emisión queda byte-idéntica. Encarna la doctrina de acceso de
-   `urn:kora:kb:regimen-de-ley`.
+   `resolucion-bash`, `resolucion-lectura` y las listas
+   `conocimiento`/`componible` de URN. El path NO se deriva del id del URN:
+   `ley/2 §6` lo vincula al campo `nombre`, que puede diferir. Con Bash se usa
+   el gesto canónico `kora.py nombre <URN>`; con acceso de solo lectura se busca
+   la línea de frontmatter exacta `^urn: <URN>$` bajo `artefactos/` y se exige
+   una única coincidencia. **Cero paths materializados**: el URN es la autoridad
+   y el censo vivo resuelve el path. Es extensión aditiva (constitución §12.1):
+   un artefacto sin corpus no porta el bloque y su emisión queda byte-idéntica.
+   Encarna la doctrina de acceso de `urn:kora:kb:regimen-de-ley`.
 7. Toda emisión `codex` declara la frontera no realizable de `herramientas`
    como pérdida `herramientas: <allowlist-kora>->sesion-padre`: el formato de
    custom agent permite configurar sandbox, MCP y skills, pero no una allowlist
@@ -267,7 +269,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
-| `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo verbatim + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
+| `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo sin el span `U_phen` + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
 
 ### 7.1 La emisión de workspace de `openclaw`
 
@@ -277,10 +279,9 @@ doc de openclaw exige segregar **`AGENTS.md`** (operating instructions) de
 **`SOUL.md`** (voz: «Keep AGENTS.md for operating rules. Keep SOUL.md for
 voice»). La emisión:
 
-1. **`AGENTS.md`** = el cuerpo **verbatim** + sello. Siempre. Es el transporte de
-   fibra de §1.1: el mismo cuerpo que reciben todos los targets, en el archivo de
-   operativa. Sin frontmatter (los workspace files de openclaw son markdown
-   plano).
+1. **`AGENTS.md`** = el cuerpo sin el span delimitado de `U_phen` + sello.
+   Siempre. Es la componente operativa del producto, sin frontmatter (los
+   workspace files de openclaw son markdown plano).
 2. **`SOUL.md`** = el span de `U_phen` + sello, emitido **sólo si** el `arnes`
    porta `U_phen` (`persona`, `orquestador`, `servicio`). El span sale del
    **centinela** `<!-- kora:soul -->…<!-- kora:soul:fin -->` del cuerpo
@@ -293,13 +294,12 @@ voice»). La emisión:
    - `arnes` sin `U_phen` (`delegado`): se emite sólo `AGENTS.md`; no hay persona
      que segregar (openclaw tolera el `SOUL.md` ausente con un missing-file
      marker).
-3. **Decisión duplicación, no partición**: el span de `U_phen` permanece en
-   `AGENTS.md` (es parte del cuerpo verbatim) y se **copia** a `SOUL.md`. Así el
-   `AGENTS.md` de openclaw es idéntico al cuerpo que reciben los demás targets, y
-   se preserva la **bisimulación módulo proyección** (§3): el agente no cambia de
-   doctrina según el runtime. La doc de openclaw es asimétrica —prohíbe operativa
-   en `SOUL.md`, no voz en `AGENTS.md`—: la duplicación la honra (`SOUL.md` queda
-   voz pura).
+3. **Partición por rol nativo**: el centinela y su span se retiran de
+   `AGENTS.md`; el contenido del span viaja una sola vez, en `SOUL.md`. El
+   producto `AGENTS.md × SOUL.md` conserva la materia semántica completa y la
+   **bisimulación módulo proyección** (§3), mientras los targets monolíticos
+   conservan el cuerpo fuente verbatim. La voz no se inyecta dos veces ni se
+   hereda como regla operativa por consumidores que sólo cargan `AGENTS.md`.
 4. Ambos archivos portan el **mismo sello** (misma fuente, misma proyección):
    `hash-fuente` y vectores son los del artefacto fuente completo. Cada archivo
    se auto-certifica (§5).
@@ -327,8 +327,17 @@ KORA: son scaffolding de workspace (bootstrap ritual / `openclaw setup`, que
 siembra los faltantes sin sobrescribir) y deploy (operador). La **frontera de
 capacidad** (`herramientas`) NO se materializa en el workspace —`TOOLS.md` es
 guía, no controla disponibilidad—: se realiza en `openclaw.json` a nivel deploy.
-El sello la declara; el runtime la enforce por config. No es pérdida de eje (no
-genera línea `perdidas:`): es arquitectura del target.
+El sello la declara en cada archivo OpenClaw con:
+
+```text
+frontera-herramientas-declarada: [<allowlist KORA>]
+frontera-herramientas-realizacion: openclaw.json/deploy (fuera del funtor; no verificada por este sello)
+```
+
+El runtime la realiza por config. Ni el sello ni la paridad de archivos prueban
+esa realización: el gate de deploy DEBE contrastar la declaración con la config
+viva. No es pérdida de eje (no genera línea `perdidas:`): es arquitectura del
+target.
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
 `~/.claude/agents/{nombre}.md`; codex → `~/.agents/skills/{nombre}/` y
@@ -441,6 +450,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
 | Frontera `herramientas` de Codex declarada como heredada de la sesión padre | §5 r7, §7 | mecanizado (`transmutar`) |
+| Frontera `herramientas` de OpenClaw declarada; realización config diferenciada | §7.1 | declaración mecanizada (`transmutar`); realización verificada en deploy |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
@@ -505,3 +515,12 @@ porta ahora la allowlist KORA `herramientas` como pérdida declarada hacia la
 superficie/permisos heredados de la sesión padre: el runtime no ofrece
 allowlist nativa de built-ins por artefacto. Extensión proof-carrying aditiva y
 precisión compatible; `T-codex-pneuma-v2` conserva su identidad major.
+
+v2.2.0 (2026-07-16): corrige el contrato de resolución del sello: el id del URN
+no se confunde con `nombre`; el consumidor usa `kora.py nombre <URN>` o búsqueda
+exacta y única en el corpus. OpenClaw pasa de duplicar `U_phen` a distribuir el
+producto nativo (`AGENTS.md` operativa, `SOUL.md` voz), sin alterar el cuerpo de
+los demás targets. Cada sello OpenClaw porta además la frontera `herramientas`
+declarada y confiesa que su realización en `openclaw.json` sólo se verifica en
+deploy. Corrección compatible del workspace vigente; conserva
+`T-openclaw-pneuma-v1`.

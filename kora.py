@@ -1082,23 +1082,22 @@ def _fmt_vector(vector: list, sigma: list) -> str:
             + ",".join(str(v) for v in sigma) + "]")
 
 
-# El contrato de conocimiento NO lista paths: el path es función pura del URN
-# (la misma biyección que `lugar-coincide` blinda en cada `velar`). Se declara
-# la regla de derivación una vez; el agente —que solo tiene Read/Grep/Glob, no
-# Bash— resuelve `{ancla}/{path}` por sustitución. URN = autoridad; el path se
-# deriva, nunca se hornea. El ancla nombra la convención del repo central y su
-# override de entorno, sin atarse a un CWD concreto.
+# El contrato de conocimiento NO lista paths: el path se resuelve desde el
+# censo vivo por URN. Con Bash, el consumidor usa el gesto `nombre`; con acceso
+# de solo lectura, localiza la línea de frontmatter exacta y exige unicidad.
+# Esto evita fingir que el id del URN coincide con `nombre` (ley/2 §6 sólo
+# vincula el path a `nombre`). El ancla nombra la convención del repo central y
+# su override de entorno, sin atarse a un CWD concreto.
 ANCLA_CONTRATO = "~/kora-pneuma  (o $KORA_RAIZ)"
-DERIVACION_CONTRATO = (
-    "  derivacion: "
-    "urn:{ns}:kb:{id} -> {ancla}/artefactos/conocimiento/{ns}/{id}.md ; "
-    "urn:{ns}:artefacto:{id} -> "
-    "{ancla}/artefactos/skills/{ns}/{id}/SKILL.md (skill) | "
-    "{ancla}/artefactos/agentes/{ns}/{id}.md (agente)")
+RESOLUCION_BASH_CONTRATO = (
+    "  resolucion-bash: python3 {ancla}/kora.py nombre <URN>")
+RESOLUCION_LECTURA_CONTRATO = (
+    "  resolucion-lectura: Grep exacto '^urn: <URN>$' bajo "
+    "{ancla}/artefactos; exigir coincidencia unica")
 
 
 def _bloque_contrato(art: Artefacto) -> list[str]:
-    """El contrato de conocimiento del sello: ancla + regla de derivación +
+    """El contrato de conocimiento del sello: ancla + resolución por censo +
     los URN declarados, sin materializar paths (ley/3 §5 r6; cierra GENESIS §4).
 
     Proyecta `conocimiento` (kb a leer como contexto) y `componible` (otros
@@ -1116,7 +1115,8 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
     lineas = [
         "contrato-conocimiento:",
         f"  ancla: {ANCLA_CONTRATO}",
-        DERIVACION_CONTRATO.format(ns="{ns}", id="{id}", ancla="{ancla}"),
+        RESOLUCION_BASH_CONTRATO.format(ancla="{ancla}"),
+        RESOLUCION_LECTURA_CONTRATO.format(ancla="{ancla}"),
     ]
     if conocimiento:
         lineas.append("  conocimiento: " + " ".join(conocimiento))
@@ -1158,6 +1158,14 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
             "always-on, sin recorte de min)",
             "difiere: conducta-always-on (gateway/systemd/openclaw.json) -> "
             "deploy del fleet",
+        ]
+    if target == "openclaw":
+        herramientas = art.campos.get("herramientas") or []
+        declaradas = ",".join(str(h) for h in herramientas)
+        lineas += [
+            f"frontera-herramientas-declarada: [{declaradas}]",
+            "frontera-herramientas-realizacion: openclaw.json/deploy "
+            "(fuera del funtor; no verificada por este sello)",
         ]
     # El contrato de conocimiento va ANTES de las dos líneas fijas (ley/3 §5
     # r6, cf. r4): nada se interpone jamás entre ellas y el cierre `-->`.
@@ -1269,10 +1277,9 @@ def _emitir_openclaw(art: Artefacto, proy: dict,
                      hash_hex: str) -> tuple[list[tuple[str, str]], list]:
     """openclaw: el objeto-runtime es un WORKSPACE multi-archivo name-keyed,
     no un archivo único (ley/3 §7.1). skill -> SKILL.md; agente -> workspace con
-    AGENTS.md (cuerpo verbatim, transporte de fibra) + SOUL.md (span de U_phen,
+    AGENTS.md (cuerpo operativo sin el span de U_phen) + SOUL.md (ese span,
     sólo si el arnes lo porta; sale del centinela kora:soul, ley/2 §10 r6).
-    Duplicación, no partición: el span queda en AGENTS.md (cuerpo verbatim) y se
-    COPIA a SOUL.md — preserva la bisimulación módulo proyección (ley/3 §3)."""
+    El producto conserva la materia completa sin duplicar voz en operativa."""
     nombre = art.campos["nombre"]
     perdidas_extra: list = []
     sello = construir_sello(art, "openclaw", hash_hex, proy, perdidas_extra)
@@ -1282,9 +1289,9 @@ def _emitir_openclaw(art: Artefacto, proy: dict,
         contenido = _componer(fm, art.cuerpo, "", sello)
         return [(f"openclaw/skills/{nombre}/SKILL.md", contenido)], perdidas_extra
     # agente / subagente / plataforma -> workspace
-    archivos = [(f"openclaw/workspaces/{nombre}/AGENTS.md",
-                 _componer_plano(art.cuerpo, sello))]
     arnes = art.campos.get("arnes")
+    cuerpo_agents = art.cuerpo
+    span = None
     if arnes in ARNESES_CON_UPHEN:
         span, err = _extraer_soul(art.cuerpo)
         if err:
@@ -1296,6 +1303,13 @@ def _emitir_openclaw(art: Artefacto, proy: dict,
                 f"núcleo no segmenta prosa (forma-no-verdad): delimita el span "
                 f"de U_phen en el cuerpo (ley/2 §10 r6; skill "
                 f"autoria-de-persona) y reintenta. No se fabrica voz.")
+        marca = RE_SOUL.search(art.cuerpo)
+        antes = art.cuerpo[:marca.start()].rstrip("\n")
+        despues = art.cuerpo[marca.end():].lstrip("\n")
+        cuerpo_agents = "\n\n".join(p for p in (antes, despues) if p)
+    archivos = [(f"openclaw/workspaces/{nombre}/AGENTS.md",
+                 _componer_plano(cuerpo_agents, sello))]
+    if span is not None:
         archivos.append((f"openclaw/workspaces/{nombre}/SOUL.md",
                          _componer_plano(span, sello)))
     return archivos, perdidas_extra
@@ -1396,7 +1410,7 @@ RUTAS_APLICAR = {
     ("opencode", "skill"): "~/.config/opencode/skills/{nombre}",
     ("opencode", "agente"): "~/.config/opencode/agents/{nombre}.md",
     # openclaw: el agente es un WORKSPACE name-keyed (dir con AGENTS.md+SOUL.md);
-    # la skill, un managed skill. El gateway hot-reloadea en `gateway restart`.
+    # la skill, un managed skill. Config y runtime se verifican aparte en deploy.
     ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
     ("openclaw", "agente"): "~/openclaw-fleet/workspaces/{nombre}",
 }
