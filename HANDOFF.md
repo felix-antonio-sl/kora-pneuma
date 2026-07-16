@@ -1,176 +1,167 @@
-# Handoff vigente — 2026-07-16 — Clawforge
+# Handoff vigente — 2026-07-16 — Clawforge 1.1.0
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> frontmatters canónicos, Git, GitHub ni el estado vivo. El handoff anterior
-> quedó en `_archivo/HANDOFF-2026-07-16-forjador-openclaw.md`.
+> frontmatters canónicos, Git ni el estado vivo de OpenClaw. Conserva el cierre
+> de la migración iniciada en `_archivo/HANDOFF-2026-07-16-forjador-openclaw.md`.
 
 ## Resultado
 
-- El agente vivo `main` de OpenClaw fue auditado y **MIGRADO** a una fuente
-  KORA-Pneuma fresca: `urn:ops:artefacto:clawforge`.
-- `main` permanece como clave runtime; **Clawforge** es la identidad y el
-  objeto canónico. No hubo renombre, migración de estado ni nuevo workspace.
-- La transmutación desplegó únicamente `workspaces/main/AGENTS.md` y
-  `workspaces/main/SOUL.md`; configuración, memoria, scaffolding y sesiones
-  quedaron bajo gobierno local de la flota.
-- La skill per-agent `openclaw-lifecycle-manager` fue auditada y **RETIRADA**,
-  no migrada: su única función válida ya pertenece a Clawforge, el runbook
-  KORA y la documentación oficial viva.
-- El task encargado de `/home/felix/openclaw-fleet`
-  (`019f66de-905c-77a0-81dc-9c91b998e3a4`) recibió y acusó recibo de la
-  coordinación. Confirmó que no dependía de las skills retiradas ni tocaría
-  los dos bootstraps durante este despliegue.
+- `urn:ops:artefacto:clawforge` permanece como fuente KORA del agente runtime
+  `main`; la identidad visible sigue siendo Clawforge y no hubo migración de id,
+  workspace, estado ni canal.
+- La fuente subió a v1.1.0 y declara la allowlist OpenClaw exacta. El runtime la
+  realiza con perfil `full` cerrado por esa lista y `exec.mode: auto` (Guardian),
+  manteniendo `elevated` como break-glass del owner.
+- OpenClaw recibe ahora `AGENTS.md` operativo sin duplicar la voz y `SOUL.md`
+  con el único span `U_phen`. Los demás targets conservan el cuerpo completo.
+- El sello ya no inventa paths desde el id de la URN: resuelve por el censo
+  (`kora.py nombre`) o por coincidencia exacta y única de frontmatter.
+- Cada sello OpenClaw porta la frontera declarada y confiesa que su realización
+  vive en `openclaw.json` y no queda probada por la paridad de archivos.
+- `operator`, `troubleshooter` y `version-manager` fueron retiradas del
+  workspace. Esas tres y `openclaw-lifecycle-manager` tienen tombstone
+  `skills.entries.<name>.enabled=false`, por lo que una copia reinstalada no
+  vuelve silenciosamente al prompt.
+- No se envió ningún mensaje externo ni se reinició el gateway.
 
-## Dictámenes de auditoría
+## Correcciones adjudicadas
 
-### Clawforge vivo previo
+| Hallazgo | Corrección |
+|---|---|
+| `urn:ops:artefacto:clawforge` usa `nombre: main`; el sello derivaba el path inexistente `ops/clawforge.md` | Resolución por censo, con prueba URN id ≠ `nombre`. |
+| La voz aparecía en `AGENTS.md` y `SOUL.md` | Partición nativa: operativa en AGENTS, voz en SOUL. |
+| La frontera `herramientas` no viajaba en el proof-carrier | Dos líneas nuevas distinguen declaración y realización de deploy. |
+| `main` declaraba tools filtradas por el perfil global `coding` | Perfil per-agent `full` + allowlist exacta; 19 tools en la frontera owner. |
+| `exec` efectivo era `full/off` | `auto` produce `allowlist/on-miss` y Guardian; elevated queda explícito como break-glass. |
+| `TOOLS.md` describía ACP obligatorio, rutas falsas y gateway/systemd obsoletos | Scaffolding reescrito contra el host y runtime instalados. |
+| Tres wrappers operativos repetían comandos volátiles e inexistentes | Retiro físico, reparación de su único consumidor y tombstones globales por nombre. |
+| El retiro de `openclaw-lifecycle-manager` no sobrevivía a una reinstalación o rollback parcial de ClawHub | Tombstone durable; el rollback completo exige quitarlo y restaurar provenance revisada. |
 
-| Pilar | Nota | Hallazgo |
-|---|---:|---|
-| Formalidad KORA | 1/5 | Sin fuente Pneuma, URN ni sello. |
-| Calidad funcional | 3/5 | Núcleo útil, pero alcance excesivo y tooling viejo. |
-| Valor real | 4/5 | Es el agente default y coordinador efectivo de la flota. |
+No se añadió `reemplaza` a la nueva URN: el Clawforge histórico de la bestia fue
+retirado sin sucesor jurídico; la fuente vigente reconstruye el agente runtime
+vivo y conserva esa procedencia en `fuente`.
 
-**Destino: MIGRAR.** Sobrevivieron diagnóstico antes de acción, cambio mínimo,
-reversibilidad, evidencia positiva y coordinación dirigida. Se retiraron
-autorreferencia, comandos volátiles, administración universal y ownership
-doctrinal.
+## Decisiones vigentes
 
-### `openclaw-lifecycle-manager`
-
-| Pilar | Nota | Hallazgo |
-|---|---:|---|
-| Formalidad runtime | 2/5 | Cargable, pero no KORA y con procedencia local derivada. |
-| Calidad funcional | 1/5 | SSOT inexistente, diez rutas `CM-*` ausentes y CLI obsoleta. |
-| Valor vigente | 1/5 | La función coordinadora ya está cubierta sin wrapper. |
-
-**Destino: DESCARTAR la emisión activa.** La refutación adversarial cerró con
-confianza 0,98 y no encontró una conducta operable única que quedara huérfana.
-
-## Decisiones
-
-1. **No reactivar la URN histórica.** `urn:kora:artefacto:clawforge` fue
-   retirada en la bestia y la ley vigente prohíbe reactivarla. La continuidad
-   se registra en `fuente`, no falseando identidad jurídica.
-2. **Separar identidad de clave runtime.** `nombre: main` preserva el
-   `agentId`; la URN y el cuerpo preservan Clawforge. Renombrar habría sido
-   una migración create→canary→cutover→retire sin valor para este objetivo.
-3. **Forma agente, arnés orquestador.** Vector `[2,2,4,1,2]`, sigma
-   `[3,1,3,3,1]`. No es plataforma ni servicio autónomo: coordina por
-   solicitud, sin heartbeat efectivo ni materia ambiental propia.
-4. **Dos autoridades, una frontera.** Pneuma gobierna identidad y conducta;
-   `openclaw-fleet` gobierna config, host, memoria, canales y operación. Para
-   semántica OpenClaw manda `https://docs.openclaw.ai/`.
-5. **Conocimiento por URN, comandos fuera del agente.** La fuente solo ancla
-   `urn:kora:kb:regimen-de-ley` y
-   `urn:kora:kb:deploy-flota-openclaw`; no copia procedimientos volátiles.
-6. **Sin composición ficticia.** No se declararon `componible` skills que
-   Pneuma no pudiera resolver como dependencias canónicas.
-7. **Retiro separado.** La eliminación de `openclaw-lifecycle-manager` fue
-   otro commit, después de probar cobertura y con reversibilidad Git.
+1. **URN y nombre son tipos distintos.** La URN identifica; `nombre` fija el
+   path y la clave de emisión. Un consumidor resuelve por censo, no por fórmula.
+2. **El workspace OpenClaw es un producto.** La materia completa se conserva en
+   `AGENTS.md × SOUL.md`; no hace falta duplicar `U_phen` para ser fiel.
+3. **Proof-carrying no equivale a enforcement.** El sello transporta la
+   allowlist; config viva, sender y runtime deciden la disponibilidad efectiva.
+4. **La frontera declarada es máxima, no universal.** `gateway`, `cron` y
+   `nodes` son además owner-only. Un turno CLI sin identidad de canal debe
+   perderlas; el fail-closed no es drift.
+5. **Mutación por superficie nativa.** `gateway` 2026.7.1 admite lectura y una
+   lista estrecha de mutaciones tipadas, pero no `tools.*`; este hardening se
+   hizo por CLI oficial con dry-run y backup.
+6. **Menos capas, más gobierno.** Clawforge + KORA + `CLAUDE.md` + docs oficiales
+   cubren operación y upgrades sin tres skills que congelaban comandos.
+7. **No ampliar por conveniencia.** `codexDynamicToolsLoading` permanece global
+   en `searchable`; no se cambió a `direct` para toda la flota solo para facilitar
+   un canario local.
 
 ## Estado verificable
 
 ### KORA-Pneuma
 
-- Fuente:
-  `artefactos/agentes/ops/main.md`, v1.0.0,
+- Fuente: `artefactos/agentes/ops/main.md`, v1.1.0,
   `urn:ops:artefacto:clawforge`.
-- Commit fuente publicado:
-  `12e89db3c27ad54fe8515ae9a06c7cead150d152`
-  (`feat(ops): canonizar Clawforge en Pneuma`).
-- El task de flota actualizó después el runbook a v1.1.0 en
-  `cd7dd1f` y cerró paridad proporcional en `369508b`; esos commits son
-  concurrentes y no forman parte del autorado de Clawforge.
-- `python3 kora.py velar --estricto`: 13 checks verdes al cierre.
-- `python3 -m unittest discover -s tests`: 120 tests verdes al cierre.
-- `python3 kora.py transmutar --paridad --urn
-  urn:ops:artefacto:clawforge --target openclaw`: 1 fiel, 0 desviadas,
-  0 no instaladas, 0 sin emisión.
-- Los informes no versionados
-  `informe-desempeno-medico-hospitalista-2026-07-11.md` e
-  `informe-turno-urgenciologo-2026-07-10.md` son ajenos y quedaron fuera.
+- Ley/toolchain: `6939a0b` (`fix(kora): corregir proyeccion OpenClaw`).
+- Fuente Clawforge: `d2c115f` (`feat(ops): endurecer frontera de Clawforge`).
+- `python3 kora.py velar --estricto`: 13 checks verdes.
+- `python3 -m unittest discover -s tests`: 123 tests verdes.
+- Paridad Clawforge: 1 fiel, 0 desviadas, 0 no instaladas, 0 sin emisión.
+- El commit concurrente `f8a79f6` de Salud y los dos informes no versionados
+  de ese dominio son ajenos a este cierre.
 
-### OpenClaw Fleet
+### OpenClaw-Fleet
 
-- Deploy derivado publicado:
-  `f3195b4530468df4ae78f778722ab56f034fb12d`
-  (`refactor(main): desplegar Clawforge desde Pneuma`).
-- Retiro de skill publicado:
-  `df391f8e5d0c5b216a56ad285ce545100a720a57`
-  (`refactor(main): retirar lifecycle OpenClaw obsoleto`).
-- `openclaw health --json`: `ok=true`, plugins sin errores, Telegram
-  conectado y `main` como agente default. No se reinició el gateway.
-- Canario fresco de identidad:
-  Clawforge / `main` / `urn:ops:artefacto:clawforge`, evidencia positiva
-  antes de éxito y gate humano ante un `stop` no autorizado.
-- Canario fresco posterior al retiro: `OK-CLAWFORGE`; 64 skills visibles al
-  modelo y `openclaw-lifecycle-manager` ausente del catálogo inyectado.
-- El lock ClawHub ignorado quedó sin la entrada retirada. El commit conserva
-  los seis archivos versionados eliminados para rollback.
-- Cambios ajenos en memorias y bootstraps clínicos permanecieron sin stagear.
-- La cola outbound conserva 583 fallos históricos; es deuda previa y quedó
-  fuera de alcance.
+- Deploy derivado: `a9864b1` (`refactor(main): desplegar Clawforge 1.1.0`).
+- Frontera runtime y tombstones: `a0ff96f`
+  (`fix(main): cerrar frontera runtime de Clawforge`).
+- Retiro de wrappers: `bf8ac51`
+  (`refactor(main): retirar wrappers operativos obsoletos`).
+- Config viva válida y sin drift contra `openclaw.json.reference`.
+- Backup previo verificado, modo 0600:
+  `/var/backups/openclaw-felix/2026-07-16T04-26-38.642+02-00-openclaw-backup.tar.gz`,
+  SHA-256 `ddade05fb5bc06f3ab7aee3a127db787f4c07f21a68185790d681e67f66d3cb9`.
+- Política efectiva de `main`: `auto`, security `allowlist`, ask `on-miss`.
+- La sesión Telegram owner reporta exactamente las 19 herramientas declaradas
+  en `tools.effective`. No se produjo un turno Telegram ni entrega externa.
+- Canario CLI fresco: cargó identidad Clawforge, principio de voz y workspace;
+  ejecutó `pwd` bajo Guardian. `gateway`, `cron` y `nodes` fueron filtradas por
+  la regla owner-only, como muestran los logs.
+- `skills check --agent main`: los cuatro nombres retirados están ausentes de
+  model-visible; el catálogo bajó en tres entradas activas.
 
 ## Aprendizajes destilados
 
-1. **Identidad humana y clave runtime no son el mismo tipo de cosa.** Separarlas
-   evitó convertir una mejora conductual en una migración operativa mayor.
-2. **Canonizar no significa absorber el runtime.** Una fuente KORA puede
-   gobernar AGENTS/SOUL sin apropiarse de config, memoria, modelos o canales.
-3. **Paridad de archivos no prueba encarnación.** Solo una sesión nueva
-   demuestra que OpenClaw cargó el bootstrap; las sesiones conservan snapshots.
-4. **Elegible no significa operable.** OpenClaw cargaba una skill cuyos
-   preflight, router y comando central estaban rotos.
-5. **Benigno no significa vigente.** Un gate de distribución ClawHub puede
-   aprobar seguridad del paquete sin validar actualidad semántica ni drift
-   local.
-6. **La solución más KORA puede quitar una capa.** Clawforge + conocimiento +
-   CLI oficial cubren el lifecycle; reautorar otro coordinador duplicaría
-   autoridad.
-7. **La concurrencia se gobierna por path.** Reservar dos archivos y stagear
-   pathspecs concretos permitió publicar sin mezclar cambios clínicos ni el
-   upgrade paralelo.
-8. **Los comandos envejecen más rápido que los contratos.** El agente conserva
-   invariantes y gates; el runbook y la documentación viva conservan la
-   mecánica.
+1. **Una fórmula elegante pero falsa es peor que una búsqueda explícita.** El
+   censo ya era la autoridad; el sello debía señalarlo, no duplicar un esquema.
+2. **Fidelidad no exige repetición textual.** En un target producto, distribuir
+   por rol nativo preserva más semántica que copiar todo a cada componente.
+3. **Paridad de bytes, política efectiva y sender son gates distintas.** Las
+   tres deben nombrarse por separado para no confundir presencia con permiso.
+4. **El binario instalado arbitra contradicciones documentales de su versión.**
+   La guía de seguridad llama read-only a `gateway`, mientras 2026.7.1 registra
+   mutaciones fail-closed; el hardening usó el schema/código efectivo y evitó
+   atribuirle cambios de `tools.*` que no admite.
+5. **Un tombstone convierte un retiro local en una decisión reproducible.** Git
+   conserva bytes; config impide reactivación silenciosa; provenance sigue
+   siendo un problema separado.
+6. **Los canarios deben probar también los filtros esperados.** Que una tool
+   owner-only desaparezca de un turno CLI es evidencia positiva, no fallo.
+7. **La memoria auxiliar también puede sobreafirmar.** La coordinación previa
+   confirmó ausencia de dependencia para `forjador-openclaw` y
+   `transmute-openclaw`; para `openclaw-lifecycle-manager` solo hubo acuse y
+   respeto de paths. Este handoff ya no generaliza esa confirmación.
+
+## Deuda residual
+
+- Active Memory agotó su ventana de 30 s en los dos canarios de `main` y omitió
+  recall; ambos turnos principales terminaron. Diagnosticarlo corresponde a la
+  gobernanza del plugin/memoria, no a la transmutación Clawforge.
+- La prueba de tool control-plane fue read-only: `tools.effective` sobre la
+  sesión Telegram owner. Invocarla exigiría un turno owner; no se envió porque
+  no hubo autorización de mensajería externa.
+- Los warnings y deuda generales de la flota (backup full-state, dead-letter,
+  paridad global y material legacy) permanecen bajo el handoff del fleet.
 
 ## Artefactos relevantes
 
-- Fuente Clawforge:
-  `artefactos/agentes/ops/main.md`.
-- Ley de transmutación: `ley/3-transmutacion.md`.
+- Fuente: `artefactos/agentes/ops/main.md`.
+- Ley: `ley/3-transmutacion.md`.
 - Régimen: `artefactos/conocimiento/kora/regimen-de-ley.md`.
-- Runbook vigente:
-  `artefactos/conocimiento/kora/deploy-flota-openclaw.md`, v1.1.0.
-- Emisión instalada:
-  `~/openclaw-fleet/workspaces/main/AGENTS.md` y `SOUL.md`.
-- Gobernanza runtime: `~/openclaw-fleet/CLAUDE.md` y
-  `~/openclaw-fleet/docs/fleet-canon-policy.md`.
-- Canon oficial: `https://docs.openclaw.ai/`, especialmente
-  `/cli/agents`, `/cli/skills`, `/automation/standing-orders` y
-  `/concepts/soul`.
+- Runbook: `artefactos/conocimiento/kora/deploy-flota-openclaw.md`.
+- Derivados: `~/openclaw-fleet/workspaces/main/AGENTS.md` y `SOUL.md`.
+- Scaffolding: `~/openclaw-fleet/workspaces/main/TOOLS.md`.
+- Runtime versionado: `~/openclaw-fleet/openclaw.json.reference`.
+- Handoff fleet vigente: `~/openclaw-fleet/docs/handoffs/handoff-2026-07-16-3.md`.
 
 ## Cómo retomar
 
-1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Para cambiar conducta de Clawforge, editar
-   `urn:ops:artefacto:clawforge` en Pneuma, ejecutar gates, transmutar,
-   revisar diff anti-despotenciación, aplicar y probar con sesión nueva.
-3. No editar directamente un `AGENTS.md` o `SOUL.md` sellado y no
-   reinstalar `openclaw-lifecycle-manager`, `forjador-openclaw` ni
-   `transmute-openclaw`.
-4. Auditar por separado `operator`, `troubleshooter`,
-   `version-manager` y `KORA-PROVENANCE.md`; fueron observados como posible
-   deuda legacy, pero no se adjudicaron ni modificaron en esta sesión.
-5. Verificar que el cierre documental concurrente de la flota actualice el
-   inventario de Pneuma a 8/10 agentes emitidos; si no, corregir solo esa frase.
-6. Tratar dead-letter, modelos, Node, backup, Telegram y config como trabajo de
-   flota independiente.
+1. Leer `CLAUDE.md`, este handoff y el estado Git vivo de ambos repos.
+2. Cambiar conducta en Pneuma, ejecutar gates, transmutar, revisar el diff,
+   aplicar y validar en sesión fresca.
+3. Contrastar `frontera-herramientas-declarada` con config viva y con el sender
+   del canario; paridad no realiza ese contrato.
+4. No reactivar `forjador-openclaw`, `transmute-openclaw`,
+   `openclaw-lifecycle-manager`, `operator`, `troubleshooter` ni
+   `version-manager` sin una nueva auditoría de uso y provenance.
+5. Diagnosticar Active Memory por separado si vuelve a agotar la ventana.
 
 ## Rollback
 
-- Fuente: `git revert 12e89db` solo si también se adjudica el derivado vivo.
-- Deploy: `git revert f3195b4`.
-- Skill retirada: `git revert df391f8`.
-- No usar `reset --hard` ni restaurar estado OpenClaw por copia manual.
+- Ley/toolchain KORA: `git revert 6939a0b` solo después de adjudicar emisiones
+  producidas con v2.2.0.
+- Fuente KORA: `git revert d2c115f` y retransmutar.
+- Fleet: revertir en orden `bf8ac51`, `a0ff96f`, `a9864b1` según la superficie
+  que se quiera deshacer; no usar `reset --hard`.
+- Config viva: aplicar por CLI el inverso versionado, validar y sincronizar el
+  reference. Restaurar `security: full/ask: off` elimina Guardian y requiere una
+  decisión explícita, no es un rollback inocuo.
+- Skills: revertir archivos no quita tombstones. Para reactivar una, retirar
+  también su entrada `skills.entries`; para `openclaw-lifecycle-manager`, una
+  recuperación completa requiere reinstalación owner-qualified/version-pinned
+  tras revisar provenance, no solo `git revert df391f8`.
