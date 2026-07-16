@@ -46,9 +46,17 @@ python3 -m unittest discover -s tests
 - pneuma es la **fuente única** de doctrina futura; `~/kora` (la bestia) es
   **legacy congelada**. Para traer algo de la bestia: **migrar-o-omitir**, nunca
   desarrollar nuevo conocimiento allí.
-- **Transmutar solo tras `velar` verde.** La emisión porta su sello con la
-  versión y el `hash-fuente`; los consumidores externos leen ese sello, no el
-  frontmatter.
+- **Reemitir no es desplegar.** La reemisión local sin `--aplicar` solo renueva
+  un derivado: no sustituye las gates ni autoriza desplegar. `--aplicar` exige
+  las gates verdes. La emisión porta su versión y `hash-fuente`; los
+  consumidores externos leen ese sello, no el frontmatter.
+- **Cierre de despliegue proporcional.** Tras las gates, verificar cada
+  artefacto agéntico modificado con `transmutar --paridad --urn <URN>`. Si
+  cambia el contrato o la implementación de transmutación (`ley/3` o el tramo
+  correspondiente de `kora.py`), ejecutar paridad global; usar `--target` solo
+  si el cambio está contenido en un target. `desviada` y `sin-emision`
+  bloquean; `no-instalada` solo informa. La paridad permanece fuera de `velar`
+  porque observa instalaciones externas.
 - **Verificar contra el estado real** (censo, `git diff`, line-refs), no contra
   el reporte ni la hipótesis de un subagente.
 - **`velar` valida forma, no verdad.** La fidelidad semántica (FS=100% de una
