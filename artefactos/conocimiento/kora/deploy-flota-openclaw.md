@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:deploy-flota-openclaw
 nombre: deploy-flota-openclaw
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Runbook del deploy pneuma→flota openclaw viva: gate de canon del runtime, diff anti-despotenciación, escalones por riesgo con HITL clínico, renombre atómico de agente, guardias path-dependientes y paridad de cierre. Destilado de la ejecución real 2026-07-06."
-fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4): 9 escalones, 3 renombres, 4 absorciones upstream con HITL, 2 hallazgos post-gate (guardias PII, identidad en preservados). Directivas duraderas del operador (FS): canon del runtime en cada transmutación; anti-despotenciación. El procedimiento vivía solo en la memoria del agente ejecutor y en un ledger gitignored; este kb lo hace resoluble por URN."
+descripcion: "Runbook del deploy pneuma→flota OpenClaw viva: documentación oficial como canon del runtime, diff anti-despotenciación, cambios por superficies soportadas, HITL clínico, canarios frescos, rollback trazable y paridad de cierre."
+fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4) y corregido el 2026-07-16 contra la documentación oficial viva de OpenClaw 2026.7.1 y el retiro de las skills legacy forjador-openclaw/transmute-openclaw."
 autor: FS
 creado: 2026-07-06
 lang: es
@@ -17,101 +17,148 @@ familia: nota
 
 Runbook del despliegue de agentes pneuma a la flota OpenClaw viva
 (`~/openclaw-fleet/workspaces/`, gateway systemd `:18790`). El funtor emite
-(`ley/3 §7.1`); **desplegar es otra cosa**: instala sobre un runtime con
-estado, memoria y gobernanza propios. Sobrescribir un bot vivo es
+(`ley/3 §7.1`); **desplegar es otra cosa**: instala un derivado sobre un
+runtime con estado, memoria y gobernanza propios. Sobrescribir un bot vivo es
 producción.
 
-## Precondiciones (gates de entrada)
+Ruta única: agente capaz → `urn:kora:kb:deploy-flota-openclaw` → `kora.py`
+→ `~/openclaw-fleet/CLAUDE.md`. No reinstalar ni invocar
+`forjador-openclaw` o `transmute-openclaw`: sus responsabilidades ya tienen
+dueño vigente.
 
-1. `python3 kora.py velar --estricto` → 13/13. Nunca transmutar en rojo.
-2. **Canon del runtime, leído en cada corrida** (directiva del operador): el
-   canon muta. Mirror local `~/openclaw-fleet/docs/openclaw/` (sync diario;
-   verificar frescura < 48 h). Páginas clave: `concepts/system-prompt.md`
-   (bootstrap files y **límites de inyección**: `bootstrapMaxChars` 20000
-   chars/archivo, 60000/workspace — medir las emisiones SIEMPRE; si un
-   AGENTS.md excede, override per-agent `agents.list[].bootstrapMaxChars`
-   ANTES de aplicar, o el runtime trunca en silencio),
-   `gateway/config-agents.md` (registro `agents.list[]`).
-3. **Gobernanza de la flota**: leer `~/openclaw-fleet/CLAUDE.md` (config viva
-   vía CLI y nunca a mano; el reference se sincroniza DESPUÉS con
-   `scripts/diff-reference.sh`; hook PII pre-commit activo).
+## Autoridad y gates de entrada
 
-## Diff anti-despotenciación (antes de pisar nada)
+1. `python3 kora.py velar --estricto` debe cerrar en verde. Nunca transmutar
+   con el canon en rojo y nunca fijar en este runbook una cantidad esperada de
+   checks: el canon crece.
+2. Leer en cada corrida `https://docs.openclaw.ai/` y la página de la versión
+   instalada. La web oficial viva es la autoridad del runtime. El mirror
+   `~/openclaw-fleet/docs/openclaw/` es solo caché verificable: sincronizarlo y
+   contrastar su commit upstream antes de usarlo; su antigüedad no lo convierte
+   en canon.
+3. Leer `~/openclaw-fleet/CLAUDE.md`, el `AGENTS.md` aplicable y el handoff
+   vigente. Inventariar `git status --short` en ambos repos y acordar exclusión
+   de archivos con cualquier trabajo concurrente. Los cambios ajenos se
+   preservan.
+4. Confirmar la superficie exacta del runtime con el CLI instalado
+   (`openclaw --version`, `openclaw <comando> --help`) y consultar el schema
+   oficial antes de cualquier config. Una página adelantada al binario no
+   autoriza a usar un subcomando ausente.
+5. Crear un rollback proporcional mediante `openclaw backup create --verify`.
+   Si la operación solo cambia config, al menos
+   `openclaw backup create --only-config --verify`; si toca estado, exigir el
+   respaldo que cubra ese estado. Proteger el artefacto como secreto. Si el
+   comando oficial falla, reducir el alcance o bloquear: no sustituirlo en
+   silencio por copias crudas de SQLite.
 
-Por cada agente, comparar el `AGENTS.md`/`SOUL.md` **vivo** contra la
-emisión, clasificando cada capacidad del vivo: **cubierta** (equivalente en
-la emisión) · **preservada** (vive en archivo que no se pisa) ·
-**legacy-reemplazada** (infraestructura obsoleta; adjudicar) · **EN RIESGO**
-(solo en el vivo). Un ítem EN RIESGO bloquea su escalón hasta resolverse con
-HITL: **absorber upstream** (editar la fuente pneuma, `velar`,
-re-transmutar) o **pérdida aceptada declarada**. Jamás editar workspace o
-emisión a mano. Dos superficies que el diff de capacidades no cubre y se
-barren aparte:
+## Diff anti-despotenciación
 
-- **Identidad en preservados**: `USER.md`/`IDENTITY.md`/`BOOT.md` se
-  inyectan al prompt y pueden portar nomenclatura vieja (caso real: un
-  `USER.md` decía «usa KORA como copiloto» y el agente se presentaba como
-  KORA). Barrer `rg` de nombres viejos/genéricos.
-- **Parches del operador en el vivo** (secciones añadidas a mano): detectar,
-  y decidir destino con HITL antes del deploy.
+Antes de aplicar, emitir o inspeccionar la transmutación y comparar
+`AGENTS.md`/`SOUL.md` contra el workspace vivo. Clasificar cada capacidad del
+vivo como **cubierta** (equivalente en la fuente), **preservada** (vive en un
+archivo no reemplazado), **legacy-reemplazada** (infraestructura obsoleta con
+destino adjudicado) o **EN RIESGO** (solo existe en el vivo).
 
-## Escalones (orden por riesgo, uno a la vez)
+Un ítem EN RIESGO bloquea el escalón hasta resolverlo con HITL: absorberlo en
+la fuente pneuma, ejecutar `velar`, re-transmutar; o registrar una pérdida
+aceptada. Nunca parchear como fuente el workspace derivado. Barrer además:
 
-1. Piloto: blueprint no-vivo, nombre ya alineado.
-2. Renombres solo-filesystem (workspaces sin registro en gateway).
-3. Vivos nombre-alineado, no clínicos.
-4. Clínicos e íntimos AL FINAL, cada uno con pausa HITL del operador.
+- identidad o nomenclatura vieja en `USER.md`, `IDENTITY.md`, `BOOT.md` y
+  otros preservados que entren al prompt;
+- parches del operador presentes solo en el vivo;
+- tamaño de cada bootstrap contra los límites documentados para la versión
+  instalada; una excepción se configura por la superficie oficial, no
+  recortando contenido sin adjudicación;
+- referencias path-dependientes y guardias PII mediante `rg`, leyendo y
+  adjudicando cada match.
 
-Ciclo por escalón: `transmutar --urn U --target openclaw --aplicar` (escribe
-SOLO `AGENTS.md`+`SOUL.md`; preserva el resto) → verificar con
-`git -C ~/openclaw-fleet status --short workspaces/<n>/` que NADA más cambió
-→ `openclaw gateway restart` → `openclaw health` verde → sonda de un turno
-(`openclaw agent --agent <id> -m "..."`: identidad, frontera, capacidad
-rescatada) → commit en la flota **stageando solo los 2 archivos por
-pathspec** (jamás el directorio: riesgo PII en `MEMORY.md` clínicos).
-Rollback: `git checkout <commit> -- workspaces/<n>/ && openclaw gateway
-restart`.
+## Escalones y ciclo de despliegue
 
-## Renombre de agente (operación mayor)
+Ordenar de menor a mayor riesgo y ejecutar uno por vez:
 
-`--aplicar` es name-keyed: sin renombrar antes el workspace vivo, crea un
-huérfano duplicado. Con **gateway detenido**:
+1. blueprint no vivo, con `agentId` y nombre ya alineados;
+2. agente vivo no clínico, nombre alineado;
+3. agentes clínicos o íntimos al final, cada uno con pausa HITL explícita.
 
-1. `git mv workspaces/<viejo> workspaces/<nuevo>` (preserva historia y
-   memoria).
-2. `mv ~/.openclaw/agents/<viejo> ~/.openclaw/agents/<nuevo>` (estado
-   runtime; `agentDir` por defecto deriva del id).
-3. Config viva: el renombre es **multi-campo** (`agents.list[].id/name/
-   workspace/agentDir/identity.name`, `tools.agentToAgent.allow[]`,
-   `bindings[].agentId`, listas de plugins como `active-memory.agents[]`) y
-   `openclaw config set` valida atómicamente POR CAMPO — rechaza todo estado
-   intermedio. Editar el JSON vivo en **una sola escritura atómica**, luego
-   `openclaw config validate` y espejar al reference
-   (`scripts/diff-reference.sh` debe dar OK).
-4. Las **cuentas Telegram conservan su nombre** (`match.accountId`): son
-   canal de entrega, no identidad del agente.
-5. **Barrer el nombre viejo en artefactos operativos path-dependientes**:
-   `.gitignore` (guardias de `memory/` clínicos), hooks
-   (`scripts/check-pii.sh`), scripts, workspaces vecinos, autorreferencias
-   de los preservados. Regla: `rg <nombre-viejo>` y repuntar cada match
-   leído — la config del gateway no es la única superficie.
+Ciclo de cada escalón:
 
-## Gates de cierre
+1. `python3 kora.py transmutar --urn <URN> --target openclaw --aplicar`.
+2. Verificar con pathspec que cambiaron solo los derivados esperados. En la
+   flota, stagear archivos concretos; jamás el directorio clínico completo,
+   porque puede contener memoria PII no versionable.
+3. No reiniciar el gateway por un cambio de archivos del workspace. Abrir un
+   canario con `openclaw agent --agent <id> --session-key <clave-nueva> ...`
+   para forzar bootstrap fresco y comprobar identidad, frontera y capacidades
+   rescatadas. Una sesión antigua no demuestra que el nuevo bootstrap cargó.
+4. Si el escalón requiere config, tratarla como transacción separada: consultar
+   schema y valor actual; preparar `openclaw config patch` o
+   `openclaw config set --batch-json`; ejecutar primero `--dry-run`; aplicar el
+   mismo payload; cerrar con `openclaw config validate`. Nunca editar
+   `~/.openclaw/openclaw.json` a mano.
+5. Respetar el plan de recarga que informa OpenClaw. Reiniciar solo cuando la
+   superficie lo requiera o la recarga no se materialice, y entonces usar
+   `openclaw gateway restart --safe`; no encadenar reinicios preventivos.
+6. Espejar la config ya aplicada en `openclaw.json.reference` y exigir
+   `bash scripts/diff-reference.sh` verde.
+7. Ejecutar sondas de gateway, agente y canal acordes al blast radius antes de
+   commit y push atómicos.
 
-- Cero workspaces duplicados; sellos `kora:sello` presentes en todos los
-  desplegados; `openclaw health` verde; `velar --estricto` 13/13.
-- **Paridad de despliegue** (`ley/3 §9.1`): `python3 kora.py transmutar
-  --paridad` → 0 desviadas en TODOS los targets — `velar` no ve las
-  instalaciones; solo la paridad detecta stale silencioso o edición manual
-  del runtime.
-- Actualizar `~/openclaw-fleet/CLAUDE.md` (inventario, nombres) y pushear
-  ambos repos al cerrar: un remote a medias hace que otra sesión diagnostique
-  sobre una foto incompleta.
+## Cambios de nombre e identidad
 
-## Fronteras de este runbook
+No existe una operación genérica de «renombre atómico» del `agentId` vivo.
+Separar tres casos:
 
-No gobierna: la config de deploy del gateway (modelos, bindings nuevos,
-canales — gobernanza de la flota), la memoria de los agentes (memory-policy
-de la flota), ni la autoría de fuentes (ley/2 y `agent-architect`). El
-régimen de fondo es `urn:kora:kb:regimen-de-ley`: pneuma es la fuente única;
-el workspace desplegado es derivado — editarlo a mano es drift.
+- **Identidad visible**: usar `openclaw agents set-identity --agent <id> ...`;
+  no cambiar el id para corregir un nombre mostrado.
+- **Blueprint no registrado**: `git mv` del workspace es una operación de
+  repositorio; verificar todas sus referencias y paridad antes de publicar.
+- **`agentId` vivo**: operación mayor create→canary→cutover→retire. Crear el
+  id nuevo con `openclaw agents add`, desplegar y probar en sesión aislada,
+  transferir bindings con `openclaw agents unbind/bind`, observar, y retirar el
+  anterior solo con HITL y respaldo. `openclaw agents delete` poda workspace y
+  estado: no ejecutarlo como simple paso de renombre.
+
+No mover `~/.openclaw/agents/<id>` ni editar registros SQLite. Las cuentas de
+canal y el `agentId` son conceptos distintos; conservar o cambiar un
+`accountId` se decide en el cutover y se valida con entrega real.
+
+## Verificación y cierre
+
+La verificación es estratificada; una capa verde no sustituye a la siguiente:
+
+1. canon: `python3 kora.py velar --estricto`;
+2. derivación: `python3 kora.py transmutar --paridad` sin desviaciones;
+3. config y proceso: `openclaw config validate`, `openclaw doctor --lint`,
+   `openclaw gateway status --deep --require-rpc` y `openclaw health`;
+4. transporte: probe del canal correspondiente;
+5. agente: sesión nueva, sin fallback oculto, validando identidad y capacidad;
+6. entrega: canario saliente al destino real cuando el cambio afecta canal;
+7. ingreso: mensaje humano benigno cuando se declara E2E. Un probe del token o
+   una entrega saliente no demuestra Telegram→gateway→agente→Telegram.
+
+Actualizar el handoff y `~/openclaw-fleet/CLAUDE.md`, revisar
+`scripts/diff-reference.sh`, stagear solo el alcance propio, crear commits
+semánticos y pushear ambos repos. Cerrar con ambos remotos alineados; un remote
+a medias deja al siguiente operador sobre una foto falsa.
+
+## Rollback
+
+- Derivados versionados: revertir el commit causal con `git revert`; no usar
+  `checkout`, `reset --hard` ni reescritura de historia como procedimiento.
+- Config: aplicar por CLI el parche inverso registrado, validar y obedecer su
+  plan de recarga. El backup oficial es la red de seguridad, no permiso para
+  editar JSON a mano.
+- Bindings: ejecutar la operación inversa con `agents unbind/bind` mientras el
+  agente anterior aún existe.
+- Estado: no restaurar SQLite en caliente ni copiar sidecars. Usar solamente la
+  superficie de verify/restore disponible en el CLI instalado y activar una
+  restauración como paso offline explícito.
+
+## Fronteras
+
+Este runbook gobierna la instalación fiel de derivados KORA y solo la config
+indispensable para registrar o enrutar esos agentes. No decide upgrades de
+OpenClaw o Node, modelos, autenticación, secretos, políticas de Telegram,
+retención ni memoria: esas decisiones pertenecen a la gobernanza de la flota,
+su `CLAUDE.md` y la documentación oficial viva. El régimen de fondo es
+`urn:kora:kb:regimen-de-ley`: pneuma es fuente; la instalación es derivada.
