@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opm-categorial-es
 nombre: opm-categorial-es
-version: 1.2.5
+version: 1.2.6
 estado: publicado
 descripcion: "Puente formal OPM ↔ teoría de categorías: lectura categorial del corpus OPM-ES anclada a las piezas del ICAS-BoK."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-categorial-es.md (sha256:431aa94ce86223e58ceba3faa3731fe9eefd4bba6ea549f22a1621475a9eb60b) el 2026-06-12; cuerpo byte-fiel. Correccion 1.2.5 (2026-06-15): la fuente original /home/felix/projects/deep-opm-pro/docs/capa-categorial.md fue retirada de deep-opm-pro; bajo el regimen pneuma-toma-la-posta de la SSOT OPM (urn:kora:kb:regimen-de-ley), la sintesis viva de la capa categorial es ahora este kb mas la implementacion falsable en deep-opm-pro (app/src/modelo, app/src/leyes). Se corrige la referencia muerta del cuerpo."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-categorial-es.md (sha256:431aa94ce86223e58ceba3faa3731fe9eefd4bba6ea549f22a1621475a9eb60b) el 2026-06-12; cuerpo byte-fiel. Correccion 1.2.5 (2026-06-15): la fuente original /home/felix/projects/deep-opm-pro/docs/capa-categorial.md fue retirada de deep-opm-pro; bajo el regimen pneuma-toma-la-posta de la SSOT OPM (urn:kora:kb:regimen-de-ley), la sintesis viva de la capa categorial es ahora este kb mas la implementacion falsable en deep-opm-pro (app/src/modelo, app/src/leyes). Se corrige la referencia muerta del cuerpo. Correccion 1.2.6 (2026-07-16): retira la derivacion a custodio-kora de la bestia y devuelve las propuestas a la capa propietaria de ley/0..4 con decision del operador."
 autor: FS
 creado: 2026-06-03
 lang: es
@@ -73,4 +73,4 @@ Este puente es conocimiento; las **reglas normativas** correspondientes viven en
 
 - Para **modelar** (humano): usar OPM/OPD/OPL en lenguaje de dominio; este artefacto NO se cita al modelador.
 - Para **diseñar o auditar** la capa formal de opforja (agente/arquitecto): este puente da el vocabulario y la trazabilidad a ICAS-BoK; cada afirmación categorial DEBE poder anclarse a una URN ICAS específica y, donde se vuelve regla, a su capa propietaria opforja y a una ley ejecutable.
-- Cambios a este puente o a las capas que referencia = **propuestas** vía `custodio-kora` + operador; nunca contaminar las capas ISO (`opm-es`/`opd-es`/`opl-es`).
+- Cambios a este puente o a las capas que referencia = **propuestas** en la capa propietaria bajo `ley/0..4`, con decisión del operador; nunca contaminar las capas ISO (`opm-es`/`opd-es`/`opl-es`).
