@@ -55,8 +55,8 @@ vivo y conserva esa procedencia en `fuente`.
 3. **Proof-carrying no equivale a enforcement.** El sello transporta la
    allowlist; config viva, sender y runtime deciden la disponibilidad efectiva.
 4. **La frontera declarada es máxima, no universal.** `gateway`, `cron` y
-   `nodes` son además owner-only. Un turno CLI sin identidad de canal debe
-   perderlas; el fail-closed no es drift.
+   `nodes` son además owner-only. La CLI local/token compartido parte como owner;
+   sólo una identidad explícita no-owner debe perderlas.
 5. **Mutación por superficie nativa.** `gateway` 2026.7.1 admite lectura y una
    lista estrecha de mutaciones tipadas, pero no `tools.*`; este hardening se
    hizo por CLI oficial con dry-run y backup.
@@ -94,9 +94,10 @@ vivo y conserva esa procedencia en `fuente`.
 - Política efectiva de `main`: `auto`, security `allowlist`, ask `on-miss`.
 - La sesión Telegram owner reporta exactamente las 19 herramientas declaradas
   en `tools.effective`. No se produjo un turno Telegram ni entrega externa.
-- Canario CLI fresco: cargó identidad Clawforge, principio de voz y workspace;
-  ejecutó `pwd` bajo Guardian. `gateway`, `cron` y `nodes` fueron filtradas por
-  la regla owner-only, como muestran los logs.
+- Canario CLI fresco: cargó identidad Clawforge, principio de voz y workspace,
+  y ejecutó `pwd` bajo Guardian. Otro canario observó un filtro owner-only, pero
+  no conservó provenance suficiente del sender y no prueba que la CLI local sea
+  no-owner.
 - `skills check --agent main`: los cuatro nombres retirados están ausentes de
   model-visible.
 
@@ -115,8 +116,9 @@ vivo y conserva esa procedencia en `fuente`.
 5. **Un tombstone convierte un retiro local en una decisión reproducible.** Git
    conserva bytes; config impide reactivación silenciosa; provenance sigue
    siendo un problema separado.
-6. **Los canarios deben probar también los filtros esperados.** Que una tool
-   owner-only desaparezca de un turno CLI es evidencia positiva, no fallo.
+6. **Un filtro sin provenance del sender no es una gate.** Un canario negativo
+   debe entrar con identidad no-owner explícita; la CLI local es owner por
+   defecto.
 7. **La memoria auxiliar también puede sobreafirmar.** La coordinación previa
    confirmó ausencia de dependencia para `forjador-openclaw` y
    `transmute-openclaw`; para `openclaw-lifecycle-manager` solo hubo acuse y
@@ -131,8 +133,8 @@ vivo y conserva esa procedencia en `fuente`.
   recall; ambos turnos principales terminaron. Diagnosticarlo corresponde a la
   gobernanza del plugin/memoria, no a la transmutación Clawforge.
 - La prueba de tool control-plane fue read-only: `tools.effective` sobre la
-  sesión Telegram owner. Invocarla exigiría un turno owner; no se envió porque
-  no hubo autorización de mensajería externa.
+  sesión Telegram owner. Falta tanto la invocación owner como un negativo con
+  identidad no-owner explícita; no se generaron turnos de canal.
 - Los warnings y deuda generales de la flota (backup full-state, dead-letter,
   paridad global y material legacy) permanecen bajo el handoff del fleet.
 
