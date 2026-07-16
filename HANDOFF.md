@@ -88,7 +88,8 @@ vivo y conserva esa procedencia en `fuente`.
 - Retiro de wrappers: `bf8ac51`
   (`refactor(main): retirar wrappers operativos obsoletos`).
 - Config viva válida y sin drift contra `openclaw.json.reference`.
-- Backup previo verificado, modo 0600:
+- Archive config-only previo, modo 0600 y verificado en integridad/layout —no
+  restaurado—:
   `/var/backups/openclaw-felix/2026-07-16T04-26-38.642+02-00-openclaw-backup.tar.gz`,
   SHA-256 `ddade05fb5bc06f3ab7aee3a127db787f4c07f21a68185790d681e67f66d3cb9`.
 - Política efectiva de `main`: `auto`, security `allowlist`, ask `on-miss`.
