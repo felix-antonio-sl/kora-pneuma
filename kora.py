@@ -751,6 +751,16 @@ def chk_targets_conocidos(arts, raiz):
 RE_SELLO = re.compile(r"<!-- kora:sello\n(.*?)\n-->", re.DOTALL)
 
 
+def _mapa_archivos(raiz: Path) -> dict[str, bytes]:
+    """Mapa relativo→bytes de una fibra; los directorios vacíos no son materia."""
+    if not raiz.is_dir():
+        return {}
+    return {
+        p.relative_to(raiz).as_posix(): p.read_bytes()
+        for p in sorted(raiz.rglob("*")) if p.is_file()
+    }
+
+
 def chk_sello_fresco(arts, raiz):
     fallos = []
     emision = raiz / "_emision"
@@ -771,12 +781,14 @@ def chk_sello_fresco(arts, raiz):
         if workspaces.is_dir():
             emitidos.extend(sorted(workspaces.glob("*/AGENTS.md")))
             emitidos.extend(sorted(workspaces.glob("*/SOUL.md")))
+    pares: dict[tuple[str, str], dict] = {}
     for path in emitidos:
         rel = path.relative_to(raiz).as_posix()
-        texto = path.read_text(encoding="utf-8")
+        crudo = path.read_text(encoding="utf-8")
+        texto = crudo
         if path.suffix == ".toml":
             try:
-                datos = tomllib.loads(texto)
+                datos = tomllib.loads(crudo)
                 texto = datos.get("developer_instructions", "")
             except (tomllib.TOMLDecodeError, AttributeError):
                 fallos.append((rel, "emisión TOML inválida"))
@@ -793,15 +805,121 @@ def chk_sello_fresco(arts, raiz):
             if ": " in l and not l.startswith(" "))
         urn = lineas.get("fuente", "")
         hash_decl = lineas.get("hash-fuente", "")
+        target_ruta = path.relative_to(emision).parts[0]
+        target_sello = lineas.get("target", "")
         fuente = por_urn.get(urn)
         if fuente is None:
             fallos.append((rel, f"la fuente del sello no resuelve: '{urn}'"))
             continue
+        info = pares.setdefault(
+            (urn, target_ruta),
+            {"fuente": fuente, "paths": [], "regenerable": True},
+        )
+        info["paths"].append(path)
+        if target_sello != target_ruta:
+            fallos.append((rel, f"target del sello '{target_sello}' no coincide "
+                           f"con la ruta de emisión '{target_ruta}'"))
+            info["regenerable"] = False
+        targets_fuente = fuente.campos.get("targets")
+        if not isinstance(targets_fuente, list) or \
+                target_ruta not in targets_fuente:
+            fallos.append((rel, f"target de emisión '{target_ruta}' no "
+                           "declarado por la fuente"))
+            info["regenerable"] = False
         actual = "sha256:" + hashlib.sha256(
             fuente.path.read_bytes()).hexdigest()
         if hash_decl != actual:
             fallos.append((rel, "emisión rancia, re-transmutar (hash-fuente "
                            "no coincide con la fuente actual)"))
+            info["regenerable"] = False
+
+    # El hash prueba identidad de la fuente principal, no identidad del
+    # generador. Regenerar en memoria cierra ese segundo diagrama y cubre el
+    # producto completo: factores doctrinales, sidecars y fibra referencias/.
+    for (urn, target), info in sorted(pares.items()):
+        if not info["regenerable"]:
+            continue
+        fuente = info["fuente"]
+        if target not in TARGETS_REALIZADOS:
+            rel = info["paths"][0].relative_to(raiz).as_posix()
+            fallos.append((rel, f"emisión residual para target no realizado: "
+                           f"'{target}'; retirar o realizar el target"))
+            continue
+        vector, sigma = fuente.vector_valido(), fuente.sigma_valido()
+        if vector is None or sigma is None:
+            continue  # los checks propietarios reportan la fuente inválida
+        try:
+            proy = proyectar(vector, sigma, target)
+            hash_hex = hashlib.sha256(fuente.path.read_bytes()).hexdigest()
+            archivos, _ = emitir(fuente, target, proy, hash_hex)
+        except (ErrorTransmutacion, KeyError, TypeError) as exc:
+            rel = info["paths"][0].relative_to(raiz).as_posix()
+            fallos.append((rel, f"emisión no regenerable con el generador "
+                           f"vigente: {exc}"))
+            continue
+
+        esperados = {rel: contenido.encode("utf-8")
+                     for rel, contenido in archivos}
+        for rel_esperado, bytes_esperados in sorted(esperados.items()):
+            path = emision / rel_esperado
+            rel = path.relative_to(raiz).as_posix()
+            if not path.is_file():
+                fallos.append((rel, "factor de emisión ausente; re-transmutar"))
+            elif path.read_bytes() != bytes_esperados:
+                fallos.append((rel, "emisión no coincide con el generador "
+                               "vigente; re-transmutar"))
+        # El par es dueño de todas las formas homónimas del espacio plano. Así
+        # también se ven sidecars extra y formas residuales sin sello propio.
+        nombre = fuente.campos["nombre"]
+        observados = set(info["paths"])
+        for sufijo in (".md", ".toml"):
+            candidato = emision / target / "agents" / f"{nombre}{sufijo}"
+            if candidato.is_file():
+                observados.add(candidato)
+        for directorio in (
+            emision / target / "skills" / nombre,
+            emision / target / "workspaces" / nombre,
+        ):
+            if not directorio.is_dir():
+                continue
+            for path in directorio.rglob("*"):
+                if not path.is_file():
+                    continue
+                relativo = path.relative_to(directorio)
+                if fuente.tipo == "skill" and \
+                        directorio.parent.name == "skills" and \
+                        relativo.parts[0] == "referencias":
+                    continue  # se compara como fibra, con diagnóstico propio
+                observados.add(path)
+        for path in sorted(observados):
+            rel_producto = path.relative_to(emision).as_posix()
+            if rel_producto not in esperados:
+                fallos.append((path.relative_to(raiz).as_posix(),
+                               "factor obsoleto para el generador vigente; "
+                               "re-transmutar"))
+
+        if fuente.tipo == "skill":
+            origen_refs = fuente.path.parent / "referencias"
+            destino_refs = (emision / target / "skills" /
+                            fuente.campos["nombre"] / "referencias")
+            refs_fuente = _mapa_archivos(origen_refs)
+            refs_emision = _mapa_archivos(destino_refs)
+            if refs_fuente != refs_emision:
+                faltan = sorted(refs_fuente.keys() - refs_emision.keys())
+                sobran = sorted(refs_emision.keys() - refs_fuente.keys())
+                cambian = sorted(k for k in refs_fuente.keys() & refs_emision.keys()
+                                 if refs_fuente[k] != refs_emision[k])
+                detalle = []
+                if faltan:
+                    detalle.append("faltan " + ", ".join(faltan))
+                if sobran:
+                    detalle.append("sobran " + ", ".join(sobran))
+                if cambian:
+                    detalle.append("difieren " + ", ".join(cambian))
+                rel = (destino_refs.relative_to(raiz).as_posix() + "/")
+                fallos.append((rel, "fibra referencias/ no coincide con la "
+                               "fuente; re-transmutar (" + "; ".join(detalle)
+                               + ")"))
     return fallos
 
 
@@ -1128,7 +1246,8 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
 def construir_sello(art: Artefacto, target: str, hash_hex: str,
                     proy: dict, perdidas_extra: list | None = None) -> str:
     """El sello proof-carrying inline (ley/3 §5). Sin timestamps."""
-    perdidas = list(proy["perdidas"]) + list(perdidas_extra or [])
+    perdidas_extra = list(perdidas_extra or [])
+    perdidas = list(proy["perdidas"]) + perdidas_extra
     fid = proy["fidelidad"]
     lineas = [
         "<!-- kora:sello",
@@ -1142,6 +1261,10 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         "fidelidad: " + " ".join(
             f"{eje}:{fid[eje]}" for eje in EJES + ("sigma",)),
     ]
+    if perdidas_extra:
+        campos = dict.fromkeys(p[0] for p in perdidas_extra)
+        lineas.append("fidelidad-campos: " + " ".join(
+            f"{campo}:partial" for campo in campos))
     if perdidas:
         lineas.append("perdidas:")
         for etiqueta, a, b, razon in perdidas:
@@ -1233,10 +1356,11 @@ def _emitir_codex(art: Artefacto, proy: dict,
     herramientas = art.campos.get("herramientas") or []
     perdidas_extra: list = [(
         "herramientas",
-        ",".join(str(h) for h in herramientas) or "ninguna",
-        "sesion-padre",
-        "Codex no ofrece allowlist nativa de herramientas built-in por "
-        "artefacto; hereda la superficie y los permisos de la sesión padre",
+        "allowlist[" + ",".join(str(h) for h in herramientas) + "]",
+        "sin-allowlist-builtins-local",
+        "Codex permite estrechar sandbox, MCP y skills por custom agent, pero "
+        "no ofrece una allowlist exacta de herramientas built-in; las "
+        "overrides vivas de la sesión padre prevalecen al delegar",
     )]
     sello = construir_sello(art, "codex", hash_hex, proy, perdidas_extra)
     if art.tipo == "skill":
@@ -1371,11 +1495,13 @@ def _copiar_referencias(art: Artefacto, destino_dir: Path) -> Path | None:
     El cuerpo emitido cita paths `referencias/...`; renombrar el directorio
     rompería todos los enlaces, y ningún target exige otro nombre.
     """
+    if art.tipo != "skill":
+        return None
     origen = art.path.parent / "referencias"
-    if art.tipo == "skill" and origen.is_dir():
-        destino = destino_dir / "referencias"
-        if destino.exists():
-            shutil.rmtree(destino)
+    destino = destino_dir / "referencias"
+    if destino.exists():
+        shutil.rmtree(destino)
+    if origen.is_dir():
         shutil.copytree(origen, destino)
         return destino
     return None
@@ -1426,6 +1552,18 @@ RUTAS_APLICAR_PROYECTO = {
     ("opencode", "skill"): ".opencode/skills/{nombre}",
     ("opencode", "agente"): ".opencode/agents/{nombre}.md",
 }
+
+
+def _skill_personal_sombrea_openclaw(nombre: str) -> Path | None:
+    """Detecta la colisión global creada por la ruta personal de Codex.
+
+    OpenClaw prioriza ~/.agents/skills sobre ~/.openclaw/skills. KORA conoce
+    exactamente su layout directo; el discovery agrupado o por workspace
+    pertenece al gate de deploy del runtime, no a esta comprobación.
+    """
+    ruta = Path(RUTAS_APLICAR[("codex", "skill")].format(
+        nombre=nombre)).expanduser()
+    return ruta if (ruta / "SKILL.md").is_file() else None
 
 
 def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
@@ -1563,6 +1701,14 @@ def _aplicar(art: Artefacto, target: str,
     else:
         ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
             nombre=nombre_art)).expanduser()
+    if not proyecto and target == "openclaw" and art.tipo == "skill":
+        sombra = _skill_personal_sombrea_openclaw(nombre_art)
+        if sombra is not None:
+            print("error: la skill personal de mayor precedencia "
+                  f"'{sombra}' ya sombrea la instalación managed OpenClaw "
+                  f"'{ruta}'. No se aplicó una copia inefectiva; resuelve el "
+                  "owner del target en el deploy por agente.", file=sys.stderr)
+            return 1
     if target == "codex" and art.tipo == "agente":
         if proyecto:
             agente = ruta
@@ -1614,7 +1760,8 @@ def _unidades_emision(emision: Path):
         skills = target_dir / "skills"
         if skills.is_dir():
             for d in sorted(p for p in skills.iterdir() if p.is_dir()):
-                yield target, "skill", d.name, d
+                if (d / "SKILL.md").is_file():
+                    yield target, "skill", d.name, d
         agents = target_dir / "agents"
         if agents.is_dir():
             for f in sorted([*agents.glob("*.md"), *agents.glob("*.toml")]):
@@ -1622,7 +1769,8 @@ def _unidades_emision(emision: Path):
         workspaces = target_dir / "workspaces"
         if workspaces.is_dir():
             for d in sorted(p for p in workspaces.iterdir() if p.is_dir()):
-                yield target, "agente", d.name, d
+                if (d / "AGENTS.md").is_file():
+                    yield target, "agente", d.name, d
 
 
 def _unidades_esperadas(arts: list[Artefacto]):
@@ -1696,6 +1844,13 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
             ausentes += 1
             print(f"paridad: no-instalada  {tgt}  {nombre}")
             continue
+        if tgt == "openclaw" and tipo == "skill":
+            sombra = _skill_personal_sombrea_openclaw(nombre)
+            if sombra is not None:
+                desviadas += 1
+                print(f"paridad: desviada      {tgt}  {nombre} :: "
+                      f"instalación managed sombreada globalmente por {sombra}")
+                continue
         difieren = [d.name for o, d in pares
                     if not d.is_file() or o.read_bytes() != d.read_bytes()]
         if difieren:

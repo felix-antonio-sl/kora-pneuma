@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.2.0
+# KORA/Transmutación — ley pneuma v2.3.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -80,8 +80,10 @@ Reglas:
 3. Si algún eje proyecta a ∅ (sin valor target), la transmutación DEBE fallar
    (exit 1) con mensaje que nombre el eje, el valor fuente y el runtime que
    sí lo soporta. NUNCA degradación silenciosa.
-4. Toda pérdida (fidelidad `partial`) DEBE declararse en el sello con razón.
-5. NO DEBE declararse fidelidad `full` cuando hay pérdida real.
+4. Toda pérdida —reticular o de campo no reticular— DEBE declarar fidelidad
+   `partial` en su régimen y aparecer en el sello con razón.
+5. NO DEBE declararse fidelidad `full` para la dimensión donde hay pérdida
+   real. La fidelidad de campos no inventa ejes nuevos (§5 r3).
 
 Garantía declarada adicional, heredada de la bestia — **bisimulación módulo
 proyección**: si `A₁ ∼ A₂` en el IR (equivalencia observacional), entonces
@@ -158,9 +160,11 @@ aborta (none, igual que el resto).
 
 ## 5. El sello
 
-Todo archivo emitido DEBE terminar con un sello proof-carrying: comentario
-HTML, formato EXACTO, **sin timestamp** — el hash ancla la identidad, el
-tiempo es mundano.
+Todo factor doctrinal emitido (`SKILL.md`, agente, `AGENTS.md`, `SOUL.md`) DEBE
+terminar con un sello proof-carrying: comentario HTML, formato EXACTO, **sin
+timestamp** — el hash ancla la identidad, el tiempo es mundano. Los sidecars
+de runtime y la fibra `referencias/` no duplican el sello; pertenecen al mismo
+producto y `sello-fresco` prueba sus bytes contra el generador (§9).
 
 ```text
 <!-- kora:sello
@@ -200,8 +204,12 @@ Reglas:
    de `sigma` se nombran por componente (`sigma.accountability`,
    `sigma.transparency`, ...), y las de fronteras no reticulares conservan el
    nombre del campo afectado (p. ej. `herramientas`).
-3. En un sello emitido la fidelidad solo toma valores `full` o `partial`: un
-   eje `none` aborta la emisión (§3 r3); `none` jamás llega al archivo.
+3. `fidelidad:` contiene exclusivamente los cinco ejes reticulares y `sigma`.
+   Si una frontera no reticular pierde fidelidad, aparece además
+   `fidelidad-campos: <campo>:partial`; cada campo listado DEBE tener su línea
+   homónima en `perdidas:`. No se convierte ese campo en un eje. En ambos
+   regímenes la fidelidad emitida solo toma `full` o `partial`: un eje `none`
+   aborta (§3 r3) y `none` jamás llega al archivo.
 4. Las líneas `preservado-por-construccion` y `declarado-no-mecanizado` son
    **FIJAS**, carácter por carácter. NO DEBE moverse jamás una ley declarada
    a la lista de preservadas (§6).
@@ -219,12 +227,13 @@ Reglas:
    y el censo vivo resuelve el path. Es extensión aditiva (constitución §12.1):
    un artefacto sin corpus no porta el bloque y su emisión queda byte-idéntica.
    Encarna la doctrina de acceso de `urn:kora:kb:regimen-de-ley`.
-7. Toda emisión `codex` declara la frontera no realizable de `herramientas`
-   como pérdida `herramientas: <allowlist-kora>->sesion-padre`: el formato de
-   custom agent permite configurar sandbox, MCP y skills, pero no una allowlist
-   nativa de herramientas built-in por artefacto; además, los permisos vivos
-   del turno padre prevalecen al delegar. El funtor preserva la lista fuente en
-   el sello y NO presenta una restricción instruccional como enforcement.
+7. Toda emisión `codex` declara
+   `fidelidad-campos: herramientas:partial` y la pérdida tipada
+   `herramientas: allowlist[<tools KORA>]->sin-allowlist-builtins-local`.
+   Un custom agent puede estrechar sandbox, MCP y skills, pero no expresa una
+   allowlist exacta de herramientas built-in por artefacto; además, las
+   overrides vivas del turno padre prevalecen al delegar. El funtor preserva la
+   lista fuente sin presentar una restricción instruccional como enforcement.
 
 ## 6. La nota de honestidad (heredada)
 
@@ -265,7 +274,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 | `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia `referencias/` conservando su nombre si existe |
 | `claude-code` | agente | `_emision/claude-code/agents/{nombre}.md`; frontmatter `name`, `description`, `tools` (lista separada por comas); body = body fuente; si `arnes` = `persona`, sección final `## Modos de invocacion` con la doctrina dual-mode (modo subagente batch vs modo persona por encarnación) |
 | `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre |
-| `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime. Codex no ofrece allowlist nativa de herramientas built-in por artefacto: la superficie y los permisos se heredan de la sesión padre, y el sello declara esta pérdida sin fingir enforcement |
+| `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y el sidecar `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime. Codex permite estrechar configuración del custom agent, pero no una allowlist exacta de built-ins; el sello declara la pérdida de campo sin fingir enforcement |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
@@ -336,8 +345,8 @@ frontera-herramientas-realizacion: openclaw.json/deploy (fuera del funtor; no ve
 
 El runtime la realiza por config. Ni el sello ni la paridad de archivos prueban
 esa realización: el gate de deploy DEBE contrastar la declaración con la config
-viva. No es pérdida de eje (no genera línea `perdidas:`): es arquitectura del
-target.
+viva. `--aplicar` solo instala los factores emitidos y NO constituye ese gate.
+No es pérdida de eje (no genera línea `perdidas:`): es arquitectura del target.
 
 `--aplicar`: claude-code → `~/.claude/skills/{nombre}/` y
 `~/.claude/agents/{nombre}.md`; codex → `~/.agents/skills/{nombre}/` y
@@ -360,6 +369,15 @@ opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}
 `openclaw` NO soporta nivel proyecto porque sus workspaces son user/fleet-level,
 no de proyecto. La emisión canónica en `_emision/` no cambia; `--proyecto`
 solo redirige el destino de `--aplicar`.
+
+Codex y OpenClaw comparten la raíz personal Agent Skills
+`~/.agents/skills`. OpenClaw le da mayor precedencia que a su raíz managed
+`~/.openclaw/skills`. Por eso `--aplicar` rechaza una skill OpenClaw cuando ya
+existe el homónimo en el layout directo que KORA usa para Codex
+(`~/.agents/skills/{nombre}/SKILL.md`): instalar debajo no cambiaría la skill
+efectiva en ningún agente. Este guard NO pretende resolver layouts personales
+agrupados ni precedencias por workspace; el gate de deploy DEBE inspeccionar el
+discovery efectivo por agente.
 
 El gesto `--aplicar` **respeta y valida el campo `alcance`** del artefacto (ley/2
 §3; ausente = `ambos`): un artefacto con `alcance: usuario` rechaza `--proyecto`;
@@ -389,16 +407,26 @@ cuerpo, no capacidad fingida.
 
 ## 9. Frescura
 
-Si existe `_emision/`, cada emisión DEBE portar un sello cuyo `hash-fuente`
-coincida con el sha256 **actual** de su fuente. Si no coincide, la emisión
-está rancia y el veredicto es: re-transmutar. Check: `sello-fresco`.
+Si existe `_emision/`, cada unidad descubierta DEBE ser congruente con tres
+fuentes de identidad: archivo fuente actual, target de su ruta y generador
+vigente. Check: `sello-fresco`.
 
-Alcance honesto del check: `sello-fresco` verifica **presencia del sello y
-frescura del `hash-fuente`**, leyendo el **último** bloque `kora:sello` del
-archivo (el cuerpo puede citar sellos de ejemplo sin volver rancia la
-emisión). NO verifica la buena forma completa del sello — formato exacto y
-líneas fijas de §5 quedan garantizados al emitir y declarados después, no
-mecanizados sobre emisiones ya escritas.
+El check lee el **último** bloque `kora:sello` de cada factor doctrinal —el
+cuerpo puede citar sellos de ejemplo— y verifica:
+
+1. el sello existe, su `target` coincide con la ruta, está declarado por la
+   fuente y realizado por esta encarnación, y `hash-fuente` coincide con el
+   sha256 actual del archivo fuente principal;
+2. al regenerar en memoria el par `(URN,target)`, el conjunto y los bytes de
+   todos los factores coinciden, incluidos sidecars sin sello;
+3. para skills, los paths y bytes de `referencias/` coinciden con la fibra
+   fuente, aunque esos archivos no participen en `hash-fuente`.
+
+Una diferencia implica re-transmutar. Alcance honesto: si una unidad completa
+no existe, este check no tiene un sello desde el cual descubrirla; la
+completitud `activo→emisión` sigue perteneciendo a paridad (§9.1). La
+congruencia byte a byte prueba forma producida, no verdad semántica ni las leyes
+declaradas de §6.
 
 ### 9.1 Paridad de despliegue
 
@@ -430,8 +458,11 @@ Reglas:
    del gesto `transmutar`, que ya gobierna la relación IR↔runtime.
 6. La completitud se deriva de los artefactos agénticos `activos` y sus
    `targets` realizados. Una persona Codex promete dos unidades —custom agent
-   y skill explícita—; un subagente Codex promete una.
-
+   y skill explícita—; un subagente Codex promete una. Un directorio sin su
+   archivo raíz (`SKILL.md` o `AGENTS.md`) no constituye una unidad emitida.
+7. Si una skill managed OpenClaw existe pero el homónimo del layout personal
+   Codex/KORA también existe, la unidad es `desviada`, no `fiel`. Otras fuentes
+   de precedencia permanecen fuera de este barrido y pertenecen al deploy.
 Rationale (2026-07-06): cinco agentes corrieron días desactualizados en los
 runtimes de escritorio sin que ningún gesto lo viera — la fuente avanzó, la
 emisión se regeneró, la instalación quedó atrás. `velar` verde no lo detecta
@@ -449,18 +480,17 @@ clase de fallos sin fingir que la instalación es corpus.
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
-| Frontera `herramientas` de Codex declarada como heredada de la sesión padre | §5 r7, §7 | mecanizado (`transmutar`) |
+| Frontera `herramientas` de Codex declarada como pérdida no reticular tipada | §5 r3/r7, §7 | mecanizado (`transmutar`) |
 | Frontera `herramientas` de OpenClaw declarada; realización config diferenciada | §7.1 | declaración mecanizada (`transmutar`); realización verificada en deploy |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
-| Emisión fresca (presencia de sello + `hash-fuente` actual, último bloque) | §9 | mecanizado (`sello-fresco`) |
+| Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
 | Paridad de despliegue (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
 | Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
 | Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
 | Paridad de instalaciones `--proyecto` | §9.1 r4 | declarado |
-| Buena forma completa del sello en emisiones ya escritas | §5, §9 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
 | `naturalidad-xi` | §6 | declarado |
 | `cierre-safety` | §6 | declarado |
@@ -524,3 +554,13 @@ los demás targets. Cada sello OpenClaw porta además la frontera `herramientas`
 declarada y confiesa que su realización en `openclaw.json` sólo se verifica en
 deploy. Corrección compatible del workspace vigente; conserva
 `T-openclaw-pneuma-v1`.
+
+v2.3.0 (2026-07-16): separa la fidelidad reticular de la fidelidad de campos;
+Codex declara `herramientas:partial` con codominio homogéneo
+`sin-allowlist-builtins-local`. `sello-fresco` regenera cada par `(URN,target)`
+y compara el producto completo, incluidos sidecars y `referencias/`, cerrando
+el drift silencioso del generador; también rechaza targets no declarados o no
+realizados. Paridad deja de contar como emitida una unidad sin archivo raíz.
+La aplicación/paridad evita además la copia managed OpenClaw que quedaría bajo
+la skill personal Codex homónima. Precisión compatible; conserva los ids de
+funtor y del check.

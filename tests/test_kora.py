@@ -11,6 +11,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import kora  # noqa: E402
@@ -553,8 +554,13 @@ class TestTransmutacion(CasoPneuma):
         self.assertIn("nativo de delegación del runtime",
                       datos["developer_instructions"])
         self.assertNotIn("Task()", datos["developer_instructions"])
-        self.assertIn("herramientas: Read,Write->sesion-padre ::",
+        self.assertIn("fidelidad-campos: herramientas:partial",
                       datos["developer_instructions"])
+        self.assertIn(
+            "herramientas: allowlist[Read,Write]->"
+            "sin-allowlist-builtins-local ::",
+                      datos["developer_instructions"])
+        self.assertNotIn("->sesion-padre", datos["developer_instructions"])
         self.assertIn("allow_implicit_invocation: false",
                       politica.read_text(encoding="utf-8"))
 
@@ -595,8 +601,11 @@ class TestTransmutacion(CasoPneuma):
         texto = (self.raiz /
                  "_emision/codex/skills/util-x/SKILL.md").read_text("utf-8")
         self.assertIn("funtor: T-codex-pneuma-v2", texto)
-        self.assertIn("herramientas: Read->sesion-padre ::", texto)
-        self.assertIn("Codex no ofrece allowlist nativa", texto)
+        self.assertIn("fidelidad-campos: herramientas:partial", texto)
+        self.assertIn("herramientas: allowlist[Read]->"
+                      "sin-allowlist-builtins-local ::", texto)
+        self.assertIn("no ofrece una allowlist exacta", texto)
+        self.assertNotIn("->sesion-padre", texto)
 
     def test_target_no_declarado_falla(self):
         self.escribir_skill(skill_campos(targets=["claude-code"]))
@@ -1064,6 +1073,108 @@ class TestSelloUltimoBloque(CasoPneuma):
                          "el sello real (último) está fresco")
 
 
+class TestCongruenciaGenerador(CasoPneuma):
+    """sello-fresco prueba fuente, generador, sidecars y referencias/."""
+
+    def test_detecta_cambio_del_generador_sin_cambio_de_fuente(self):
+        self.escribir_agente(agente_campos(targets=["claude-code"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "claude-code"])[0], 0)
+        doctrina_nueva = kora.DOCTRINA_DUAL_MODE + "\n\nCambio del generador."
+        with mock.patch.object(kora, "DOCTRINA_DUAL_MODE", doctrina_nueva):
+            self.assert_fallo("sello-fresco",
+                              "no coincide con el generador vigente")
+
+    def test_detecta_derivado_manipulado_con_hash_valido(self):
+        self.escribir_skill()
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code"])[0], 0)
+        emitido = self.raiz / "_emision/claude-code/skills/util-x/SKILL.md"
+        emitido.write_text(
+            emitido.read_text("utf-8").replace(
+                "Texto sintético.", "Texto manipulado.", 1), "utf-8")
+        self.assert_fallo("sello-fresco",
+                          "no coincide con el generador vigente")
+
+    def test_detecta_sidecar_codex_rancio(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex"])[0], 0)
+        sidecar = self.raiz / (
+            "_emision/codex/skills/agente-x/agents/openai.yaml")
+        sidecar.write_text("policy:\n  allow_implicit_invocation: true\n",
+                           "utf-8")
+        self.assert_fallo("sello-fresco",
+                          "no coincide con el generador vigente")
+
+    def test_detecta_sidecar_codex_extra(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex"])[0], 0)
+        extra = self.raiz / (
+            "_emision/codex/skills/agente-x/agents/obsoleto.yaml")
+        extra.write_text("policy: {}\n", "utf-8")
+        self.assert_fallo("sello-fresco", "factor obsoleto")
+
+    def test_rechaza_emision_de_target_no_realizado(self):
+        self.escribir_agente(
+            agente_campos(targets=["claude-code", "hermes"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "claude-code"])[0], 0)
+        origen = self.raiz / "_emision/claude-code/agents/agente-x.md"
+        destino = self.raiz / "_emision/hermes/agents/agente-x.md"
+        destino.parent.mkdir(parents=True)
+        destino.write_text(
+            origen.read_text("utf-8").replace(
+                "target: claude-code", "target: hermes"), "utf-8")
+        self.assert_fallo("sello-fresco", "target no realizado")
+
+    def test_rechaza_emision_de_target_no_declarado(self):
+        self.escribir_skill(skill_campos(targets=["claude-code"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code"])[0], 0)
+        origen = self.raiz / (
+            "_emision/claude-code/skills/util-x/SKILL.md")
+        destino = self.raiz / "_emision/codex/skills/util-x/SKILL.md"
+        destino.parent.mkdir(parents=True)
+        destino.write_text(
+            origen.read_text("utf-8").replace(
+                "target: claude-code", "target: codex"), "utf-8")
+        self.assert_fallo("sello-fresco", "no declarado por la fuente")
+
+    def test_detecta_referencia_rancia(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        ref = self.escribir(
+            "artefactos/skills/kora/util-x/referencias/motor.md", "v1\n")
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex"])[0], 0)
+        ref.write_text("v2\n", "utf-8")
+        self.assert_fallo("sello-fresco",
+                          "fibra referencias/ no coincide")
+
+    def test_retransmutar_retira_referencias_eliminadas(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        ref = self.escribir(
+            "artefactos/skills/kora/util-x/referencias/motor.md", "v1\n")
+        gesto = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "codex"]
+        self.assertEqual(self.correr(gesto)[0], 0)
+        destino = self.raiz / "_emision/codex/skills/util-x/referencias"
+        self.assertTrue(destino.is_dir())
+        ref.unlink()
+        ref.parent.rmdir()
+        self.assertEqual(self.correr(gesto)[0], 0)
+        self.assertFalse(destino.exists())
+        self.assertEqual(self.fallos("sello-fresco"), [])
+
+
 class TestListaEstricta(unittest.TestCase):
     """Fix 6: la forma de lista es estricta; corchetes de más son error."""
 
@@ -1359,9 +1470,6 @@ if __name__ == "__main__":
 
 # ------------------------------------------------------------- paridad (ley/3 §9.1)
 
-from unittest import mock  # noqa: E402
-
-
 class TestParidad(CasoPneuma):
     """ley/3 §9.1: `transmutar --paridad` compara emisión↔instalación
     (nivel usuario) y reporta fiel / desviada / no-instalada."""
@@ -1467,6 +1575,45 @@ class TestParidad(CasoPneuma):
             codigo_todo, _, _ = self.correr(["transmutar", "--paridad"])
         self.assertEqual(codigo_oc, 0)
         self.assertEqual(codigo_todo, 1)
+
+    def test_directorio_skill_sin_archivo_raiz_es_sin_emision(self):
+        self.escribir_skill(skill_campos(targets=["claude-code"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "claude-code"])[0], 0)
+        (self.raiz /
+         "_emision/claude-code/skills/util-x/SKILL.md").unlink()
+        with self.con_rutas():
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("sin-emision    claude-code  util-x (skill)", salida)
+
+    def test_openclaw_no_aplica_bajo_skill_personal_codex(self):
+        self.escribir_skill(skill_campos(targets=["openclaw"]))
+        sombra = self.raiz / "runtime/agents/skills/util-x/SKILL.md"
+        sombra.parent.mkdir(parents=True)
+        sombra.write_text("---\nname: util-x\n---\n", "utf-8")
+        with self.con_rutas():
+            codigo, _, err = self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "openclaw", "--aplicar"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("sombrea la instalación managed", err)
+        self.assertFalse((self.raiz /
+                          "runtime/claw/skills/util-x").exists())
+
+    def test_paridad_detecta_managed_sombreada_por_skill_personal(self):
+        self.escribir_skill(skill_campos(targets=["openclaw"]))
+        with self.con_rutas():
+            self.assertEqual(self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "openclaw", "--aplicar"])[0], 0)
+            sombra = self.raiz / "runtime/agents/skills/util-x/SKILL.md"
+            sombra.parent.mkdir(parents=True)
+            sombra.write_text("---\nname: util-x\n---\n", "utf-8")
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("sombreada globalmente", salida)
 
     def test_paridad_excluye_aplicar(self):
         self.escribir_skill()

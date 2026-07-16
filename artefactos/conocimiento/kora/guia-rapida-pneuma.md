@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.4.0
+version: 1.5.0
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0)."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0). v1.5.0 (2026-07-16): sincroniza ley/3 v2.3.0: fidelidad separada para campos no reticulares, resolución URN por censo, congruencia con el generador incluyendo sidecars/referencias y guard de la colisión personal Codex→managed OpenClaw."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -57,7 +57,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 | Identidad ontológica | Vector PMI×LFS + 5 leyes inter-eje, mecanizadas en `velar` |
 | Nombre verdadero | URN sin versión; resuelve incluso retirado el artefacto |
 | Coherencia | `velar` ejecuta el registro vigente de checks; el censo es derivado, jamás autoridad |
-| Proyección honesta | Sello inline en cada emisión: hash, fidelidad por eje, pérdidas con razón |
+| Proyección honesta | Sello inline: hash, fidelidad por eje/campo y pérdidas con razón; congruencia byte a byte con el generador |
 | Lifecycle digno | Solo hacia adelante; promoción gateada por `velar`; muertos siguen resolviendo |
 | Producción con verdad | Koraficación: FS=100%, hechos inventados = fallo (`ley/4`) |
 
@@ -69,7 +69,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 | `python3 kora.py nombre <urn>` | Resolver URN — también deprecados y retirados |
 | `python3 kora.py velar [--estricto]` | Ejecuta el registro vigente; exit 0 coherente, 1 con fallos |
 | `python3 kora.py transmutar --urn U --target T [--stdout\|--aplicar]` | Proyección funtorial con sello |
-| `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Completitud y paridad fuente↔emisión↔instalación: sin-emisión/fiel/desviada/no-instalada (ley/3 §9.1) |
+| `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Completitud activo→emisión y paridad emisión↔instalación: sin-emisión/fiel/desviada/no-instalada (ley/3 §9.1) |
 | `python3 kora.py ciclo <urn> <estado>` | Transición de lifecycle, solo adelante |
 | `python3 kora.py ley` | ALMA + ley/0..4 a stdout |
 
@@ -136,18 +136,22 @@ emite artefacto nuevo con `reemplaza`.
 - Codex v2 emite skills a `skills/{nombre}/SKILL.md` y agentes como custom
   agents TOML. Una persona dual-mode emite ambos: TOML para delegación y skill
   de invocación explícita para encarnación; no fija modelo.
-- Codex hereda la superficie y los permisos de herramientas de la sesión padre:
-  no ofrece una allowlist nativa de built-ins por artefacto. El sello conserva
-  la lista KORA y declara esa pérdida; no finge enforcement inexistente.
+- Codex permite estrechar sandbox, MCP y skills en un custom agent, pero no una
+  allowlist exacta de built-ins por artefacto; además, las overrides vivas del
+  padre prevalecen. El sello conserva la lista KORA y declara
+  `fidelidad-campos: herramientas:partial`; no finge enforcement inexistente.
 - Sin `--aplicar`: emisión a `_emision/{target}/` (gitignored, efímera).
   Con `--aplicar`: instala en `~/.claude/{agents,skills}/`,
   `~/.agents/skills/` + `~/.codex/agents/`,
   `~/.config/opencode/{agents,skills}/` o el workspace/skill OpenClaw.
-- Toda emisión es determinista y termina en `<!-- kora:sello ... -->` con
-  fuente, hash sha256, fidelidad por eje, pérdidas con razón y —si el artefacto
-  declara `conocimiento`/`componible`— un bloque `contrato-conocimiento:` con el
-  ancla al repo central y la regla de derivación URN→path (`ley/3 §5 r6`); el
-  path es función pura del URN, no se hornea.
+- Codex y OpenClaw comparten `~/.agents/skills`; como OpenClaw la prioriza
+  sobre `~/.openclaw/skills`, KORA no instala debajo un homónimo managed. Las
+  sombras agrupadas o por workspace se resuelven en el deploy por agente.
+- Todo factor doctrinal es determinista y termina en `<!-- kora:sello ... -->`
+  con fuente, hash, fidelidad y pérdidas. Sidecars y `referencias/` quedan
+  certificados por congruencia del producto. Si declara
+  `conocimiento`/`componible`, `contrato-conocimiento:` resuelve cada URN por
+  `kora.py nombre` o búsqueda exacta y única; nunca inventa el path desde el id.
 
 ## Koraficación
 

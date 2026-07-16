@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.4.0
+# KORA/Constitución — ley pneuma v1.5.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -200,7 +200,7 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 | 9 | `referencias-resuelven` | toda referencia URN resuelve en el censo | ley/2 |
 | 10 | `relaciones-legales` | aciclicidad, antisimetría, estado del target de `reemplaza` | ley/2 |
 | 11 | `targets-conocidos` | `targets` ⊆ los cinco reconocidos | ley/3 |
-| 12 | `sello-fresco` | presencia del sello y frescura del `hash-fuente` en emisiones; no su buena forma completa, que queda declarada (ley/3 §9) | ley/3 |
+| 12 | `sello-fresco` | congruencia fuente↔generador↔producto emitido: sello/hash actuales, factores auxiliares y fibra `referencias/` (ley/3 §9) | ley/3 |
 | + | `publicacion-digna` | solo con `--estricto`: exigencias de publicación | ley/2 |
 
 ## 12. Cambio de la propia ley
@@ -244,3 +244,9 @@ y congela la ley de la bestia; régimen completo en `urn:kora:kb:regimen-de-ley`
 v1.4.0 (HITL 2026-06-15): §12.1 distingue **ruptura** del formato del sello
 (major) de **extensión aditiva byte-idéntica** (minor), cerrando la categoría
 que faltaba; habilita el bump minor de `ley/3` v1.2.0 (contrato-conocimiento).
+
+v1.5.0 (2026-07-16): precisa el alcance del check existente `sello-fresco`
+sin añadir ni renombrar ids: además del hash de fuente, verifica congruencia
+byte a byte con el generador vigente y el producto completo, incluidos
+sidecars y `referencias/`. Cierra la posibilidad de que emisión e instalación
+coincidan entre sí pero ambas estén obsoletas respecto del transmutador.
