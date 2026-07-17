@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-17 — cierre Codex y mantenimiento KORA
+# Handoff vigente — 2026-07-18 — cierre Codex y mantenimiento KORA
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > frontmatters canónicos, Git ni el estado vivo de los runtimes. El informe
@@ -11,8 +11,8 @@ El ciclo de revisión y transición **Claude Code → Codex** permanece cerrado 
 `master`. El mantenimiento posterior fortaleció la paridad de las superficies
 gestionadas y separó nombre de propiedad sin reabrir esa migración.
 
-- La base de paridad exacta nació en `1f0691a`; el estado vigente se verifica
-  en `ley/3-transmutacion.md` y `kora.py`.
+- La paridad exacta vigente se define en `ley/3-transmutacion.md` y `kora.py`;
+  su historia se consulta en Git cuando sea necesaria.
 - Los informes operativos fechados quedaron fuera del corpus vivo y fueron
   desplazados posteriormente a `_archivo/`, conforme a la política documental.
 - La única reconciliación externa de este mantenimiento reconstruyó la skill
@@ -45,7 +45,7 @@ gestionadas y separó nombre de propiedad sin reabrir esa migración.
    `default_permissions = ":workspace"` sin el `sandbox_mode` incompatible;
    los artefactos legacy/absorbidos identificados quedaron deshabilitados
    mediante tombstones.
-   `gpt-5.6-sol` y esfuerzo `max` se preservaron como decisión explícita del
+   `gpt-5.6-sol` y esfuerzo `xhigh` se preservaron como decisión explícita del
    operador.
 6. **Frontera Codex/OpenClaw visible.** KORA impide instalar una skill managed
    OpenClaw debajo del homónimo personal directo en `~/.agents/skills`, pero no
@@ -125,23 +125,22 @@ de OpenClaw. Hermes queda fuera del alcance operativo hasta una decisión
 explícita posterior. Nombrar esas fronteras evita convertir gates verdes en
 afirmaciones falsas.
 
-## Artefactos y commits relevantes
+## Superficies canónicas y trazabilidad bajo demanda
 
-- `37e1f01` — `fix(artefactos): absorber valor legado para Codex`.
-- `83a15f0` — `fix(kora): probar congruencia del producto emitido`.
-- `1f0691a` — `fix(kora): cerrar paridad de superficies gestionadas`.
-- `ab00f6f` — `docs(kora): memorizar transición a Codex`.
-- Núcleo: `kora.py`.
-- Ley afectada: `ley/0-constitucion.md`, `ley/2-forma.md` y
-  `ley/3-transmutacion.md`.
+- Núcleo y contrato: `kora.py`, `ley/0-constitucion.md`,
+  `ley/2-forma.md` y `ley/3-transmutacion.md`.
 - Guía: `artefactos/conocimiento/kora/guia-rapida-pneuma.md`.
 - Valor migrado:
   `artefactos/skills/kora/consenso-deliberativo/{SKILL.md,referencias/}`.
 - Config externa: `/home/felix/.codex/config.toml`.
-- Evidencia del incidente ya corregido:
+- Evidencia preservada:
   `/home/felix/.codex/backups/kora-pneuma-2026-07-16-openclaw-profile-audit/`.
 
-## Verificación del cierre — 2026-07-17
+Usar `git log --oneline -- <ruta>` y `git show <commit> -- <ruta>` para
+reconstruir historia o autoría; no mantener catálogos de commits en esta
+memoria viva.
+
+## Verificación del cierre — 2026-07-18
 
 Al cerrar se ejecutaron:
 
@@ -159,12 +158,15 @@ conocer el estado vigente.
 
 ### P1 — OpenClaw
 
-- `autoria-de-persona` y `consenso-deliberativo` carecen de instalación managed
-  target-correcta; los homónimos de mayor precedencia siguen ganando.
-- `main/consenso` conserva una copia workspace legacy con URNs antiguos.
-- `agent-architect` y `steve-jobs` tienen workspaces fieles, pero no están
-  registrados en `agents.list[]`.
-- Las tool policies vivas no realizan necesariamente la allowlist KORA exacta.
+- La paridad KORA solo prueba emisión↔instalación gestionada; no prueba
+  discovery efectivo, roster, precedencia entre raíces, tool policies ni el
+  workspace runtime privado.
+- Obtener las unidades ausentes o desviadas bajo demanda con
+  `python3 kora.py transmutar --paridad --target openclaw`; no conservar aquí
+  una lista nominal que envejezca.
+- Contrastar después el resultado con la configuración y los workspaces vivos
+  mediante inspección estática segura. No invocar comandos OpenClaw que puedan
+  auto-migrar estado solo para consultar.
 
 Orden recomendado: auditar discovery efectivo por agente → adjudicar la raíz
 personal compartida → registrar solo agentes desplegables → contrastar tools y
@@ -194,12 +196,13 @@ duplicación dual-mode de `dov-dori`. Cambios separados, con evals.
 
 ## Rollback
 
-- Memoria: revertir solo el commit documental de este cierre restaura el
-  handoff exhaustivo anterior desde Git; el archivo también queda en `_archivo/`.
-- Núcleo/ley: revertir `1f0691a` y adjudicar después las emisiones creadas bajo
-  ley/3 v2.4.0. El duplicado externo retirado de `cat-thinking` no contenía
-  valor único y no requiere restauración.
-- Artefactos: `git revert 37e1f01` solo tras preservar el valor rico de
+- Resolver el commit exacto bajo demanda con
+  `git log --oneline -- <rutas-afectadas>` y revisarlo con
+  `git show <commit> -- <rutas-afectadas>`; revertir en orden cronológico
+  inverso. No usar hashes guardados en este handoff.
+- Tras revertir núcleo o ley, repetir gates y adjudicar cualquier emisión
+  afectada antes de aplicar cambios a un runtime.
+- Antes de revertir artefactos, preservar cualquier valor único absorbido en
   `consenso-deliberativo`.
 - Config Codex: reactivar una skill exige retirar/cambiar su tombstone y
   reiniciar. No reintroducir `sandbox_mode="danger-full-access"` como rollback
