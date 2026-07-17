@@ -5,6 +5,20 @@
 > exhaustivo de la transición quedó archivado en
 > `_archivo/HANDOFF-2026-07-16-transicion-claude-code-a-codex.md`.
 
+## Objetivo y alcance
+
+El objetivo fue poner el repositorio al día, ejecutar su secuencia de entrada,
+auditar su calidad y alineamiento Pneuma, simplificar sin perder garantías y
+cerrar la continuidad Claude Code → Codex de forma reversible.
+
+Incluyó el núcleo de transmutación, su ley y pruebas; la propiedad/paridad de
+superficies gestionadas; la higiene documental; la configuración Codex
+directamente relacionada y la memoria operativa del trabajo. No incluyó
+desplegar en todos los runtimes, demostrar la efectividad completa de OpenClaw
+ni desarrollar Hermes. Trabajo que aterrizó de forma independiente en el mismo
+periodo se verificó por integración, pero no se absorbió artificialmente en
+este alcance.
+
 ## Estado al cierre
 
 El ciclo de revisión y transición **Claude Code → Codex** permanece cerrado en
@@ -126,15 +140,60 @@ de OpenClaw. Hermes queda fuera del alcance operativo hasta una decisión
 explícita posterior. Nombrar esas fronteras evita convertir gates verdes en
 afirmaciones falsas.
 
-## Superficies canónicas y trazabilidad bajo demanda
+### 8. Clasificar nodos precede a leer contenido
 
-- Núcleo y contrato: `kora.py`, `ley/0-constitucion.md`,
-  `ley/2-forma.md` y `ley/3-transmutacion.md`.
-- Guía: `artefactos/conocimiento/kora/guia-rapida-pneuma.md`.
-- Valor migrado:
-  `artefactos/skills/kora/consenso-deliberativo/{SKILL.md,referencias/}`.
-- Config externa: `/home/felix/.codex/config.toml`.
-- Evidencia preservada:
+Un gate que inspecciona emisiones o instalaciones no puede usar
+`is_file()`, `is_dir()` o globbing como frontera de seguridad: esas operaciones
+pueden seguir enlaces. La solución verificada es inventariar primero mediante
+`lstat`/`scandir`, rechazar symlinks y nodos especiales, y solo entonces leer
+bytes. Fuentes: `kora.py`, `ley/3-transmutacion.md §9` y
+`tests/test_kora.py::TestSelloUltimoBloque`.
+
+### 9. El entrypoint de pruebas debe cerrar el módulo
+
+`unittest.main()` situado antes de las últimas clases produjo una ejecución
+directa verde pero incompleta. El guard `if __name__ == "__main__"` debe quedar
+al final del archivo, o usarse discovery como gate canónico. Ambas rutas se
+ejecutaron después de la corrección.
+
+## Alternativas descartadas
+
+- Integrar paridad dentro de `velar`: mezclaría corpus y mundo externo.
+- Persistir recuentos, inventarios o catálogos de commits: envejecen; usar los
+  comandos vivos y Git bajo demanda.
+- Forzar el mismo despliegue en todos los runtimes: una ausencia puede ser una
+  decisión válida y permanece informativa.
+- Reconciliar por nombre: un homónimo no prueba propiedad; solo el sello
+  `(URN,target)` autoriza mutación destructiva.
+- Consultar OpenClaw con comandos de semántica no demostrada como read-only:
+  una consulta ya produjo auto-migración; preferir inspección estática segura.
+- Aprovechar el mantenimiento para ampliar Hermes: frente explícitamente
+  congelado.
+
+## Artefactos modificados y propósito
+
+- `CLAUDE.md`: puerta de entrada, gate de mantenimiento, paridad condicional y
+  política contra recuentos persistidos.
+- `README.md`: puntero mínimo a `CLAUDE.md`.
+- `kora.py`: frescura, propiedad, reconciliación y paridad seguras.
+- `ley/0-constitucion.md`, `ley/2-forma.md` y
+  `ley/3-transmutacion.md`: contrato normativo correspondiente.
+- `tests/test_kora.py`: regresiones de producto exacto, propiedad, tipos,
+  symlinks y cobertura de ejecución directa.
+- `artefactos/skills/kora/consenso-deliberativo/{SKILL.md,referencias/}`:
+  absorción del valor único previo a reconciliar instalaciones.
+- `artefactos/conocimiento/kora/guia-rapida-pneuma.md`: guía alineada con el
+  contrato vigente.
+- `HANDOFF.md`: única continuidad y memoria operativa versionada.
+- `.remember/{remember.md,now.md,recent.md}`: punteros locales gitignored hacia
+  la memoria canónica; reemplazan resúmenes activos obsoletos sin duplicarla.
+- `/home/felix/.codex/config.toml`: permisos/tombstones de la superficie Codex;
+  configuración externa al repositorio.
+- `_archivo/informe-desempeno-medico-hospitalista-2026-07-11.md`,
+  `_archivo/informe-retroalimentacion-agentes-salud-openclaw-2026-07-13.md` y
+  `_archivo/informe-turno-urgenciologo-2026-07-10.md`: informes retirados del
+  árbol vivo conforme a la política documental.
+- Evidencia externa preservada en
   `/home/felix/.codex/backups/kora-pneuma-2026-07-16-openclaw-profile-audit/`.
 
 Usar `git log --oneline -- <ruta>` y `git show <commit> -- <ruta>` para
@@ -146,14 +205,17 @@ memoria viva.
 Al cerrar se ejecutaron:
 
 - `python3 kora.py velar --estricto`
+- `python3 tests/test_kora.py`
 - `python3 -m unittest discover -s tests`
 - `python3 kora.py transmutar --paridad`
+- `python3 -m py_compile kora.py tests/test_kora.py`
+- `git diff --check`
 - `codex doctor --summary`
 
 Los gates del repositorio quedaron verdes, la paridad no presentó bloqueos y
 Codex Doctor no informó fallos; persistió la advertencia ambiental previa
-sobre rollout files. Son veredictos históricos: repetir los comandos para
-conocer el estado vigente.
+sobre rollout files. La rama publicada se confirmó contra el remoto. Son
+veredictos históricos: repetir los comandos para conocer el estado vigente.
 
 ## Deuda residual y siguiente orden
 
@@ -179,11 +241,18 @@ Hermes queda fuera del alcance operativo. No modificar su artefacto canónico,
 emisiones ni instalaciones, ni realizar T-Hermes, salvo decisión explícita
 posterior del operador.
 
-### P2 — eficiencia Codex
+### Hipótesis evaluables — eficiencia Codex
 
 Medir en tareas nuevas: costo de descripciones, precisión de discovery,
 `medium` frente a `max`, defaults read-only para agentes sanitarios y la
 duplicación dual-mode de `dov-dori`. Cambios separados, con evals.
+
+### Supuesto de seguridad
+
+El corpus local se trata como fuente confiable y no se promete aislamiento
+frente a una mutación hostil concurrente entre preflight y lectura. Si cambia
+ese threat model, endurecer también la fibra fuente `referencias/` como una
+unidad compuesta exclusivamente por directorios y archivos regulares reales.
 
 ## Cómo retomar
 
