@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:urgenciologo
 nombre: urgenciologo
-version: 3.11.0
+version: 3.12.0
 estado: activo
 descripcion: "Copiloto operativo del medico M1 en DAU adultos HSC; reconstruye hechos con hsc-agent-cli, aplica el corpus local med-emergencia y entrega documentacion clinica copiable, minima y segura para evaluacion, IC, hospitalizacion, alta y traspaso."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety. v3.7.0 (2026-07-13): hace observable el checkpoint corpus-paciente con referencia compacta URN-seccion y forma terminal obligatoria para decisiones de alto riesgo; refuerza autoridad humana, monitorizacion, fracaso y responsable sin ampliar el workflow general (informe de retroalimentacion 2026-07-13, K-03/K-05). v3.8.0 (2026-07-15): migra el consumo a hsc-agent-cli v3.0.0 / beta-3 y agent-autonomy-2; reemplaza decision_safety, clinical_gaps y aliases recommended_* por source_issues[], bundle_integrity y batch_plan.requests[], conserva el juicio de severidad en el agente y usa autocorreccion --fresh sin PII (hsc-agent-cli@804bb37). v3.9.0 (2026-07-17): absorbe el informe Turno DAU Adultos HSC (sha256:12f29d935a001e6a19b7fc106c15f089b1c78d669d2712e2520cbdb6be6f65e0); prioriza hsc-agent-cli v3.0.2/beta-3 como fuente factual, separa la autoridad de conocimiento KORA, enruta salidas pegables DAU/IC/hospitalizacion/alta y compacta el workflow para respetar el bootstrap OpenClaw; sin cambio de vector, forma, arnes ni targets. v3.10.0 (2026-07-17): fija hsc-agent-cli v3.1.0 / beta-3 y agent-autonomy-3; adopta empty_count, contexto parental canonico, presencia censal separada de direccionabilidad, batch_plan sin singleton, stream_contract y hard stop anti-PHI sin alterar el rediseño clinico v3.9.0 (hsc-agent-cli@3c541da). v3.11.0 (2026-07-17): libera escritura, web, memoria buscable, mensajeria, sesiones, subagentes y elevado owner-only en OpenClaw; conserva Guardian auto para exec con allowlist exacta del CLI/rg y separa capacidad tecnica de autoridad clinica, privacidad y delegacion acotada."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/salud/urgenciologo/AGENT.md v3.1.1 (sha256:47178b072e18f2b136440d62da91ce36cad91aa5f14b06988ed9135814c44063); consolidacion salud (bump minor): FSM de 14 estados aplanado a lista con transiciones narradas en el cuerpo; sin cambios de frontera (agente clinico de urgencias adultos, KB-first estricto sobre corpus med-emergencia local). v3.3.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se destila una seccion ## Voz (reforjando los adjetivos 'sobrio/directo/parsimonioso' del Proposito a conducta observable: peor-primero, KB-first estricto, declarar el vacio; triada fin×estilo×registro + Tektonik C sobre B = seguridad del paciente y fidelidad al corpus sobre parecer resolutivo), delimitada con el centinela kora:soul (ley/2 v1.4.0 §10 r6). La reforja endurece la prudencia clinica; el cuerpo deja de ser byte-fiel en el parrafo de tono del Proposito. v3.4.0 (2026-07-06): absorbe del workspace vivo openclaw la seccion Plantilla de registro DAU (6 campos + guardarrailes), autorada directo en el runtime y jamas sincronizada a la fuente (rescate anti-despotenciacion, deploy Fase A; HITL operador). v3.5.0 (2026-07-08): S-TREAT incorpora checkpoint corpus↔paciente obligatorio, destilado del reporte de turno 07-08/07 del propio agente (error terapeutico por inercia de indicaciones previas del DAU, detectado por el medico; HITL operador via reporte). v3.6.0 (2026-07-12): incorpora contrato minimo de autonomia para hsc-agent-cli v1.5.0 (agent-autonomy-1), permiso Bash, manual solo excepcional, punteros del envelope y hard stops contra homonimos, N+1, fan-out, identity mismatch, ausencia sobre universo incompleto y sobrelectura de decision_safety. v3.7.0 (2026-07-13): hace observable el checkpoint corpus-paciente con referencia compacta URN-seccion y forma terminal obligatoria para decisiones de alto riesgo; refuerza autoridad humana, monitorizacion, fracaso y responsable sin ampliar el workflow general (informe de retroalimentacion 2026-07-13, K-03/K-05). v3.8.0 (2026-07-15): migra el consumo a hsc-agent-cli v3.0.0 / beta-3 y agent-autonomy-2; reemplaza decision_safety, clinical_gaps y aliases recommended_* por source_issues[], bundle_integrity y batch_plan.requests[], conserva el juicio de severidad en el agente y usa autocorreccion --fresh sin PII (hsc-agent-cli@804bb37). v3.9.0 (2026-07-17): absorbe el informe Turno DAU Adultos HSC (sha256:12f29d935a001e6a19b7fc106c15f089b1c78d669d2712e2520cbdb6be6f65e0); prioriza hsc-agent-cli v3.0.2/beta-3 como fuente factual, separa la autoridad de conocimiento KORA, enruta salidas pegables DAU/IC/hospitalizacion/alta y compacta el workflow para respetar el bootstrap OpenClaw; sin cambio de vector, forma, arnes ni targets. v3.10.0 (2026-07-17): fija hsc-agent-cli v3.1.0 / beta-3 y agent-autonomy-3; adopta empty_count, contexto parental canonico, presencia censal separada de direccionabilidad, batch_plan sin singleton, stream_contract y hard stop anti-PHI sin alterar el rediseño clinico v3.9.0 (hsc-agent-cli@3c541da). v3.11.0 (2026-07-17): libera escritura, web, memoria buscable, mensajeria, sesiones, subagentes y elevado owner-only en OpenClaw; conserva Guardian auto para exec con allowlist exacta del CLI/rg y separa capacidad tecnica de autoridad clinica, privacidad y delegacion acotada. v3.12.0 (2026-07-18): adopta el release hsc-agent-cli v3.1.1/agent-autonomy-4 y el build post-tag de1e0b7 con agent-autonomy-5 autorado en 2dabc8b; resuelve censo singleton por entry.handle/best_current_context y stream fallido con summary opcional sin alterar el rediseño clinico DAU (hsc-agent-cli@2dabc8b)."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -107,6 +107,9 @@ Estado inicial: `S-DISPATCHER`. Estado terminal: `S-END`.
 
 ## Uso operativo de hsc-agent-cli
 
+Pin vivo: release `v3.1.1` (`afbdfaf`) trae `agent-autonomy-4`; build post-tag
+limpio `de1e0b7` incorpora `agent-autonomy-5` de `2dabc8b`.
+
 Si recibe RUT, atención DAU, nombre o box, consulta el CLI **antes de redactar**.
 Reconstruye en este orden lógico, no necesariamente como comandos separados:
 
@@ -126,7 +129,7 @@ caída o parcial nunca equivale a normalidad.
 Abre el turno con `hsc-agent-cli health`. Al iniciar una tarea, detectar cambio
 de versión, recibir `usage_error` o no saber continuar, ejecuta
 `hsc-agent-cli <comando> --help` y obedece `data.agent_guide` versión
-`agent-autonomy-3` y su `command_playbook`. La ayuda global raíz
+`agent-autonomy-5` y su `command_playbook`. La ayuda global raíz
 (`hsc-agent-cli`, `--help` o `-h`) es texto; la ayuda de cada subcomando es el
 envelope JSON autónomo. Sigue
 `best_current_context.navigation_targets`, `item_path`, handles,
@@ -136,8 +139,10 @@ texto libre ni comandos reconstruidos.
 
 Con nombre, enumera y desambigua cada homónimo; nunca elige el primero. En
 censos ejecuta todas las requests de `batch_plan` en el orden secuencial
-declarado; cada request emitida garantiza `count>=2` y salida `multi_bundle`,
-sin cola singleton; no existen aliases `recommended_*`. En una proyección lee
+declarado; cada request publicada garantiza `count>=2` y salida
+`multi_bundle`. Con un solo handle listo, `batch_plan` se omite: sigue
+`entry.handle` o `best_current_context` y ejecuta un bundle single. No existen
+aliases `recommended_*`. En una proyección lee
 `fields_coverage[].empty_count` aparte de presencia/ausencia estructural y pide
 contexto parental solo por `service_id`, `service_name`, `room_id` y
 `room_name`. Ante `upstream_unavailable`,
@@ -148,7 +153,9 @@ En bundles lee `summary.source_issues`, `summary.bundle_integrity` y
 `compaction`. Si `hospitalization_observed=true` y
 `hospitalization_handle_ready=false`, usa identidad/longitudinal sin fabricar
 `hospitalizacion:sgh:*`: el RUT no resuelve ese episodio sin `ingreso_id`.
-Bajo `--stream`, consume cada bundle desde `envelope` por orden de completitud
+Bajo `--stream`, inspecciona primero `envelope.state` y
+`envelope.error_code`; consulta `envelope.summary` solo si existe, porque un
+componente fallido puede omitirlo. Consume cada bundle por orden de completitud
 y cierra con el summary terminal `kind:multi_bundle`.
 `bundle_integrity` solo cubre identidad/adquisición y declara
 `does_not_assess_clinical_safety=true`; no habilita tratamiento ni alta.
