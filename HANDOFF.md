@@ -14,10 +14,8 @@ probar el estado publicado.
 
 - `HEAD` y `origin/master` coincidían en `ab00f6f` antes de este commit de
   memoria.
-- El worktree estaba limpio salvo dos informes médicos del operador, intactos y
-  deliberadamente fuera de Git:
-  - `informe-desempeno-medico-hospitalista-2026-07-11.md`;
-  - `informe-turno-urgenciologo-2026-07-10.md`.
+- Los informes operativos fechados quedaron fuera del corpus vivo y fueron
+  desplazados posteriormente a `_archivo/`, conforme a la política documental.
 - No se mutaron runtimes ni configuración en este cierre documental.
 
 ## Valor entregado durante la sesión

@@ -12,7 +12,9 @@ repositorio que produce, cataloga y mantiene los **tres tipos de artefacto, y
 solo tres** —conocimiento (se lee), agentes y skills (se proyectan a runtimes)—
 resolviéndolos por URN y transmutándolos con pérdida declarada. Arquetipo:
 **conocimiento**. No es una app: no hay build; el «núcleo» es `kora.py` (stdlib
-puro). KORA completa cabe en un contexto LLM (`python3 kora.py ley`).
+puro, Python ≥ 3.11). Es la encarnación **pneuma**: conserva la identidad y los
+URN de KORA mientras sustituye el cuerpo anterior (`~/kora`, «la bestia»).
+KORA completa cabe en un contexto LLM (`python3 kora.py ley`).
 
 **Fuente única de verdad (en este orden).** No la repitas; léela:
 
@@ -22,17 +24,56 @@ puro). KORA completa cabe en un contexto LLM (`python3 kora.py ley`).
 3. `ley/0..4` — la ley, con **precedencia**: constitución › ontología ›
    forma+koraficación › transmutación › derivados. Un estrato inferior puede
    estrechar, nunca relajar.
-4. `README.md` — la puerta de entrada y la topología.
+
+Este `CLAUDE.md` es la puerta de entrada y el mapa operativo, siempre
+subordinado a esas fuentes; `README.md` y `AGENTS.md` solo redirigen aquí.
 
 Atajos consumibles: `urn:kora:kb:guia-rapida-pneuma` y
 `urn:kora:kb:regimen-de-ley` (régimen de estrangulamiento bestia→pneuma).
 
-**Los seis gestos** (`kora.py`): `censo`, `nombre <urn>`, `velar [--estricto]`,
-`transmutar`, `ciclo`, `ley`. El censo y `_emision/` son **derivados** (jamás
-autoridad, gitignored): el filesystem con frontmatters válidos es la única
-fuente. Nunca edites un derivado a mano. No persistas recuentos ni estimaciones
-de inventario, tamaño o cobertura en docs vivas: obtén el dato bajo demanda con
-el gesto que corresponda.
+**Los seis gestos** (`kora.py`):
+
+```bash
+python3 kora.py censo                  # catálogo derivado, jamás autoridad
+python3 kora.py nombre <urn>           # resolver un nombre verdadero
+python3 kora.py velar [--estricto]     # ejecutar el registro vigente de checks
+python3 kora.py transmutar --urn U --target T [--aplicar|--stdout]
+                                       # proyectar con sello y pérdida declarada
+python3 kora.py transmutar --paridad   # comparar emisión e instalación
+python3 kora.py ciclo <urn> <estado>   # lifecycle solo hacia adelante
+python3 kora.py ley                    # alma y ley vigentes a stdout
+```
+
+El censo, `censo.json` y `_emision/` son **derivados** (jamás autoridad,
+gitignored): el filesystem con frontmatters válidos es la única fuente. Nunca
+edites un derivado a mano. No persistas recuentos ni estimaciones de inventario,
+tamaño o cobertura en docs vivas: obtén el dato bajo demanda con el gesto que
+corresponda.
+
+**Topología operativa:**
+
+```text
+ALMA.md                  fundamento
+GENESIS.md               acta proof-carrying de la reencarnación
+ley/0-constitucion.md    identidad, precedencia, lifecycle y URN
+ley/1-ontologia.md       retículo, leyes inter-eje y arnés
+ley/2-forma.md           gramática y forma material
+ley/3-transmutacion.md   proyección, matrices, sello y paridad
+ley/4-koraficacion.md    producción de conocimiento
+kora.py                  núcleo ejecutable
+artefactos/
+  conocimiento/{ns}/{id}.md
+  agentes/{ns}/{nombre}.md
+  skills/{ns}/{nombre}/SKILL.md
+tests/test_kora.py       pruebas del núcleo
+_emision/                producto derivado, gitignored
+censo.json               vista derivada opcional, gitignored
+```
+
+Cada artefacto tiene un archivo raíz canónico: frontmatter plano más cuerpo
+Markdown; una skill puede añadir la fibra `referencias/`. El tipo se deriva de
+su posición y forma, no de una declaración paralela. La gramática exacta
+pertenece a `ley/2`.
 
 **Gate de mantenimiento** (correr siempre antes de cerrar):
 
