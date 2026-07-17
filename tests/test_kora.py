@@ -1000,6 +1000,20 @@ class TestTransmutarVelaFuente(CasoPneuma):
         self.assertFalse((self.raiz / "_emision").exists(),
                          "una violación de sigma no se normaliza como pérdida")
 
+    def test_nombre_inseguro_falla_antes_de_recrear_directorios(self):
+        self.escribir_agente(agente_campos(
+            nombre="..", targets=["codex"]))
+        self.assert_fallo("forma-valida", "nombre inseguro para una ruta")
+        centinela = self.escribir(
+            "_emision/codex/NO-BORRAR.md", "producto ajeno al intento\n")
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "codex"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("nombre inseguro para una ruta", err)
+        self.assertEqual(centinela.read_text("utf-8"),
+                         "producto ajeno al intento\n")
+
 
 class TestColisionEmision(CasoPneuma):
     """Fix 3: dos artefactos con el mismo nombre no se pisan en _emision/."""
@@ -1172,6 +1186,19 @@ class TestCongruenciaGenerador(CasoPneuma):
         ref.parent.rmdir()
         self.assertEqual(self.correr(gesto)[0], 0)
         self.assertFalse(destino.exists())
+        self.assertEqual(self.fallos("sello-fresco"), [])
+
+    def test_retransmutar_retira_factor_obsoleto_del_producto(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                 "--target", "codex"]
+        self.assertEqual(self.correr(gesto)[0], 0)
+        extra = self.raiz / (
+            "_emision/codex/skills/agente-x/agents/obsoleto.yaml")
+        extra.write_text("policy: {}\n", "utf-8")
+        self.assert_fallo("sello-fresco", "factor obsoleto")
+        self.assertEqual(self.correr(gesto)[0], 0)
+        self.assertFalse(extra.exists())
         self.assertEqual(self.fallos("sello-fresco"), [])
 
 
@@ -1513,6 +1540,58 @@ class TestParidad(CasoPneuma):
         self.assertIn("desviada", salida)
         self.assertIn("SKILL.md", salida)
 
+    def test_paridad_detecta_factor_extra_en_skill(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                     "--target", "claude-code", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            extra = self.raiz / (
+                "runtime/claude/skills/util-x/recursos/obsoleto.md")
+            extra.parent.mkdir()
+            extra.write_text("residuo\n", "utf-8")
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("sobra recursos/obsoleto.md", salida)
+
+    def test_reaplicar_skill_retira_factor_extra(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                     "--target", "claude-code", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            extra = self.raiz / (
+                "runtime/claude/skills/util-x/recursos/obsoleto.md")
+            extra.parent.mkdir()
+            extra.write_text("residuo\n", "utf-8")
+            self.assertEqual(self.correr(gesto)[0], 0)
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertFalse(extra.exists())
+        self.assertEqual(codigo, 0, salida)
+
+    def test_paridad_reporta_factor_ilegible_sin_traceback(self):
+        self.escribir_skill()
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                     "--target", "claude-code", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            extra = self.raiz / (
+                "runtime/claude/skills/util-x/recursos/ilegible.md")
+            extra.parent.mkdir()
+            extra.write_text("residuo\n", "utf-8")
+            read_bytes = Path.read_bytes
+
+            def leer(path):
+                if path == extra:
+                    raise PermissionError(
+                        13, "permiso denegado", str(path))
+                return read_bytes(path)
+
+            with mock.patch.object(Path, "read_bytes", leer):
+                codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("ilegible ilegible.md", salida)
+
     def test_paridad_no_instalada_es_informativa(self):
         self.escribir_skill()
         with self.con_rutas():
@@ -1561,6 +1640,89 @@ class TestParidad(CasoPneuma):
         self.assertEqual(codigo, 1, salida)
         self.assertIn("desviada", salida)
         self.assertIn("SOUL.md", salida)
+
+    def test_workspace_openclaw_preserva_runtime_y_retira_soul_propio(self):
+        fuente = self.escribir(
+            "artefactos/agentes/dev/agente-x.md",
+            doc(agente_campos(targets=["openclaw"]),
+                cuerpo_persona("Hace X.", "Voz sobria.")))
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                     "--target", "openclaw", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            workspace = self.raiz / "runtime/fleet/workspaces/agente-x"
+            memoria = workspace / "memory/nota.md"
+            memoria.parent.mkdir()
+            memoria.write_text("propia del runtime\n", "utf-8")
+            fuente.write_text(doc(agente_campos(
+                targets=["openclaw"], forma="subagente", arnes="delegado",
+                vector=[2, 1, 2, 0, 2]), "# Operativa\n"), "utf-8")
+            self.assertEqual(self.correr(gesto)[0], 0)
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertFalse((workspace / "SOUL.md").exists())
+        self.assertEqual(memoria.read_text("utf-8"), "propia del runtime\n")
+        self.assertEqual(codigo, 0, salida)
+
+    def test_workspace_openclaw_preserva_soul_ajeno_no_emitido(self):
+        self.escribir_agente(agente_campos(
+            targets=["openclaw"], forma="subagente", arnes="delegado",
+            vector=[2, 1, 2, 0, 2]))
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                     "--target", "openclaw", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            soul = self.raiz / "runtime/fleet/workspaces/agente-x/SOUL.md"
+            soul.write_text("voz local sin sello KORA\n", "utf-8")
+            self.assertEqual(self.correr(gesto)[0], 0)
+            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
+        self.assertEqual(soul.read_text("utf-8"), "voz local sin sello KORA\n")
+        self.assertEqual(codigo, 0, salida)
+
+    def test_codex_companion_es_exacto_y_reaplicar_lo_reconcilia(self):
+        self.escribir_agente(agente_campos(targets=["codex"]))
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                     "--target", "codex", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            extra = self.raiz / (
+                "runtime/agents/skills/agente-x/agents/obsoleto.yaml")
+            extra.write_text("policy: {}\n", "utf-8")
+            codigo_roto, salida_rota, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "codex"])
+            self.assertEqual(self.correr(gesto)[0], 0)
+            codigo_fiel, salida_fiel, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "codex"])
+        self.assertEqual(codigo_roto, 1, salida_rota)
+        self.assertIn("sobra agents/obsoleto.yaml", salida_rota)
+        self.assertFalse(extra.exists())
+        self.assertEqual(codigo_fiel, 0, salida_fiel)
+
+    def test_codex_subagente_retira_solo_companion_propio(self):
+        fuente = self.escribir_agente(agente_campos(targets=["codex"]))
+        with self.con_rutas():
+            gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                     "--target", "codex", "--aplicar"]
+            self.assertEqual(self.correr(gesto)[0], 0)
+            fuente.write_text(doc(agente_campos(
+                targets=["codex"], forma="subagente", arnes="delegado",
+                vector=[2, 1, 2, 0, 2])), "utf-8")
+            self.assertEqual(self.correr(gesto[:-1])[0], 0)
+            codigo_roto, salida_rota, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "codex"])
+            self.assertEqual(self.correr(gesto)[0], 0)
+            skill = self.raiz / "runtime/agents/skills/agente-x"
+            self.assertFalse(skill.exists())
+            skill.mkdir(parents=True)
+            ajeno = skill / "SKILL.md"
+            ajeno.write_text("---\nname: agente-x\n---\n\nAjeno.\n", "utf-8")
+            self.assertEqual(self.correr(gesto)[0], 0)
+            codigo, salida, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "codex"])
+        self.assertEqual(codigo_roto, 1, salida_rota)
+        self.assertIn("sobra skill complementaria gestionada", salida_rota)
+        self.assertEqual(ajeno.read_text("utf-8"),
+                         "---\nname: agente-x\n---\n\nAjeno.\n")
+        self.assertEqual(codigo, 0, salida)
 
     def test_paridad_filtra_por_target(self):
         self.escribir_skill(skill_campos(targets=["claude-code", "opencode"]))

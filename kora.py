@@ -82,6 +82,12 @@ RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 RE_CLAVE = re.compile(r"^([a-z][a-z0-9-]*):(.*)$")
 RE_ENTERO = re.compile(r"^-?\d+$")
 
+
+def _nombre_ruta_seguro(nombre: str) -> bool:
+    return bool(nombre) and nombre not in (".", "..") \
+        and "\x00" not in nombre and Path(nombre).name == nombre
+
+
 CAMPOS_COMUNES = {
     "urn", "nombre", "version", "estado", "descripcion", "fuente",
     "autor", "creado", "lang", "tags", "cita", "depende", "reemplaza", "refina",
@@ -405,6 +411,10 @@ def chk_forma_valida(arts, raiz):
                       "familia"):
             if clave in art.campos and not isinstance(art.campos[clave], str):
                 f(art, f"el campo '{clave}' debe ser un string escalar")
+        nombre = art.campos.get("nombre")
+        if isinstance(nombre, str) and not _nombre_ruta_seguro(nombre):
+            f(art, "nombre inseguro para una ruta: debe ser un único "
+              "componente no vacío")
         for clave in CAMPOS_LISTA:
             if clave in art.campos and not isinstance(art.campos[clave], list):
                 f(art, f"el campo '{clave}' debe ser una lista inline")
@@ -759,6 +769,23 @@ def _mapa_archivos(raiz: Path) -> dict[str, bytes]:
         p.relative_to(raiz).as_posix(): p.read_bytes()
         for p in sorted(raiz.rglob("*")) if p.is_file()
     }
+
+
+def _sello_atribuye(path: Path, urn: str, target: str) -> bool:
+    """Verdadero si el último sello atribuye el factor a ese par KORA."""
+    if not path.is_file():
+        return False
+    try:
+        sellos = list(RE_SELLO.finditer(path.read_text(encoding="utf-8")))
+    except (OSError, UnicodeDecodeError):
+        return False
+    if not sellos:
+        return False
+    lineas = dict(
+        linea.split(": ", 1) for linea in sellos[-1].group(1).split("\n")
+        if ": " in linea and not linea.startswith(" ")
+    )
+    return lineas.get("fuente") == urn and lineas.get("target") == target
 
 
 def chk_sello_fresco(arts, raiz):
@@ -1528,6 +1555,32 @@ def _limpiar_derivados_codex_v1(raiz: Path, art: Artefacto,
         print(f"retirado derivado huérfano: {agente.relative_to(raiz)}")
 
 
+def _retirar_ruta_gestionada(path: Path) -> None:
+    """Retira solo la ruta de producto que KORA está reconciliando."""
+    if path.is_symlink() or path.is_file():
+        path.unlink()
+    elif path.is_dir():
+        shutil.rmtree(path)
+
+
+def _recrear_directorio_gestionado(path: Path) -> None:
+    """Materializa un directorio cerrado sin conservar factores anteriores."""
+    _retirar_ruta_gestionada(path)
+    path.mkdir(parents=True)
+
+
+def _directorios_emitidos(raiz: Path,
+                          archivos: list[tuple[str, str]]) -> list[Path]:
+    """Directorios que constituyen una unidad cerrada de emisión."""
+    directorios = set()
+    for rel, _ in archivos:
+        partes = Path(rel).parts
+        if len(partes) >= 4 and partes[1] in ("skills", "workspaces"):
+            directorios.add(
+                raiz / "_emision" / partes[0] / partes[1] / partes[2])
+    return sorted(directorios)
+
+
 RUTAS_APLICAR = {
     ("claude-code", "skill"): "~/.claude/skills/{nombre}",
     ("claude-code", "agente"): "~/.claude/agents/{nombre}.md",
@@ -1611,6 +1664,10 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
     # Los espacios de emisión por runtime son planos: dos artefactos con el
     # mismo nombre se pisarían en silencio. Colisión = error, no sobrescritura.
     nombre = art.campos["nombre"]
+    if not _nombre_ruta_seguro(nombre):
+        print(f"error: nombre inseguro para una ruta de runtime: '{nombre}'; "
+              "debe ser un único componente no vacío.", file=sys.stderr)
+        return 1
     for otro in arts:
         if otro.urn and otro.urn != urn and \
                 otro.tipo in ("skill", "agente") and \
@@ -1646,6 +1703,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
         return 0
     if target == "codex":
         _limpiar_derivados_codex_v1(raiz, art, archivos)
+    for directorio in _directorios_emitidos(raiz, archivos):
+        _recrear_directorio_gestionado(directorio)
     skill_dir = None
     for rel, contenido in archivos:
         destino = raiz / "_emision" / rel
@@ -1669,9 +1728,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
 def _aplicar(art: Artefacto, target: str,
              archivos: list[tuple[str, str]], proyecto: str | None) -> int:
     """Instala la emisión en el runtime real, honrando el `alcance` (ley/3 §7).
-    Destinos dir-based (skill, codex-agente, openclaw-workspace) reciben cada
-    archivo por su nombre base; file-based (claude-code/opencode agente) un solo
-    archivo."""
+    Las skills son productos cerrados; el workspace OpenClaw preserva todo lo
+    ajeno a sus factores KORA; los agentes file-based solo pisan su archivo."""
     nombre_art = art.campos["nombre"]
     alcance = art.campos.get("alcance", "ambos")
     if proyecto and alcance == "usuario":
@@ -1718,6 +1776,16 @@ def _aplicar(art: Artefacto, target: str,
             agente = ruta
             skill = Path(RUTAS_APLICAR[("codex", "skill")].format(
                 nombre=nombre_art)).expanduser()
+        hay_skill = any(
+            len(Path(rel).parts) >= 4 and Path(rel).parts[1] == "skills"
+            for rel, _ in archivos
+        )
+        if hay_skill:
+            _recrear_directorio_gestionado(skill)
+        elif _sello_atribuye(
+                skill / "SKILL.md", art.urn or "", "codex"):
+            _retirar_ruta_gestionada(skill)
+            print(f"retirado: {skill}")
         instalados = []
         for rel, contenido in archivos:
             partes = Path(rel).parts
@@ -1737,7 +1805,15 @@ def _aplicar(art: Artefacto, target: str,
     dir_based = (art.tipo == "skill"
                  or (art.tipo, target) == ("agente", "openclaw"))
     if dir_based:
-        ruta.mkdir(parents=True, exist_ok=True)
+        if art.tipo == "skill":
+            _recrear_directorio_gestionado(ruta)
+        else:
+            ruta.mkdir(parents=True, exist_ok=True)
+            emitidos = {Path(rel).name for rel, _ in archivos}
+            soul = ruta / "SOUL.md"
+            if "SOUL.md" not in emitidos and _sello_atribuye(
+                    soul, art.urn or "", "openclaw"):
+                soul.unlink()
         for rel, contenido in archivos:
             (ruta / Path(rel).name).write_text(contenido, encoding="utf-8")
         if art.tipo == "skill":
@@ -1796,12 +1872,13 @@ def _unidades_esperadas(arts: list[Artefacto]):
 
 def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     """Paridad emisión↔instalación de nivel usuario (ley/3 §9.1). Solo
-    lectura: `fiel` = instalación byte-idéntica a la emisión; `desviada` =
-    instalación presente que difiere (stale o editada en el runtime);
+    lectura: `fiel` = frontera KORA gestionada byte-idéntica a la emisión;
+    `desviada` = instalación presente que difiere (stale o editada);
     `no-instalada` = informativo (el gesto no decide si debe instalarse).
-    Solo compara los archivos que la emisión contiene: los archivos propios
-    del runtime (workspace scaffolding, memoria) quedan fuera por diseño
-    (frontera no-emitida, §7.1). Nivel proyecto fuera del barrido (declarado)."""
+    Las skills se comparan como directorios cerrados. En workspaces OpenClaw
+    solo gobierna AGENTS.md y el SOUL.md atribuible al mismo par KORA; el
+    scaffolding y la memoria del runtime quedan fuera. Nivel proyecto fuera
+    del barrido (declarado)."""
     emision = raiz / "_emision"
     arts = cargar_corpus(raiz)
     nombre_filtro = None
@@ -1820,6 +1897,8 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     unidades = [u for u in unidades
                 if (target is None or u[0] == target)
                 and (nombre_filtro is None or u[2] == nombre_filtro)]
+    fuentes = {(t, tipo, nombre): art
+               for t, tipo, nombre, art in esperadas}
     claves_emitidas = {(t, tipo, nombre) for t, tipo, nombre, _ in unidades}
     faltantes = [u for u in esperadas if u[:3] not in claves_emitidas]
     if not unidades and not esperadas:
@@ -1834,11 +1913,8 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
             continue
         destino = Path(plantilla.format(nombre=nombre)).expanduser()
         if origen.is_dir():
-            pares = [(f, destino / f.relative_to(origen))
-                     for f in sorted(origen.rglob("*")) if f.is_file()]
             existe = destino.is_dir()
         else:
-            pares = [(origen, destino)]
             existe = destino.is_file()
         if not existe:
             ausentes += 1
@@ -1851,8 +1927,44 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                 print(f"paridad: desviada      {tgt}  {nombre} :: "
                       f"instalación managed sombreada globalmente por {sombra}")
                 continue
-        difieren = [d.name for o, d in pares
-                    if not d.is_file() or o.read_bytes() != d.read_bytes()]
+        try:
+            if origen.is_dir():
+                esperados_archivos = _mapa_archivos(origen)
+                if tipo == "skill":
+                    observados = _mapa_archivos(destino)
+                else:
+                    observados = {
+                        rel: (destino / rel).read_bytes()
+                        for rel in esperados_archivos
+                        if (destino / rel).is_file()
+                    }
+                    fuente = fuentes.get((tgt, tipo, nombre))
+                    soul = destino / "SOUL.md"
+                    if tgt == "openclaw" \
+                            and "SOUL.md" not in esperados_archivos \
+                            and fuente is not None and _sello_atribuye(
+                                soul, fuente.urn or "", tgt):
+                        observados["SOUL.md"] = soul.read_bytes()
+                faltan_archivos = sorted(
+                    esperados_archivos.keys() - observados.keys())
+                sobran_archivos = sorted(
+                    observados.keys() - esperados_archivos.keys())
+                cambian_archivos = sorted(
+                    rel for rel in esperados_archivos.keys()
+                    & observados.keys()
+                    if esperados_archivos[rel] != observados[rel])
+                difieren = (
+                    [f"falta {rel}" for rel in faltan_archivos]
+                    + [f"difiere {rel}" for rel in cambian_archivos]
+                    + [f"sobra {rel}" for rel in sobran_archivos]
+                )
+            elif origen.read_bytes() != destino.read_bytes():
+                difieren = [f"difiere {destino.name}"]
+            else:
+                difieren = []
+        except OSError as exc:
+            ilegible = Path(exc.filename).name if exc.filename else destino.name
+            difieren = [f"ilegible {ilegible}"]
         if difieren:
             desviadas += 1
             print(f"paridad: desviada      {tgt}  {nombre} :: "
@@ -1860,6 +1972,20 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
         else:
             fiel += 1
             print(f"paridad: fiel          {tgt}  {nombre}")
+    for tgt, tipo, nombre, fuente in esperadas:
+        if tgt != "codex" or tipo != "agente" \
+                or fuente.campos.get("forma") == "agente" \
+                or (tgt, "skill", nombre) in claves_emitidas:
+            continue
+        plantilla = RUTAS_APLICAR.get(("codex", "skill"))
+        if plantilla is None:
+            continue
+        skill = Path(plantilla.format(nombre=nombre)).expanduser()
+        if _sello_atribuye(
+                skill / "SKILL.md", fuente.urn or "", "codex"):
+            desviadas += 1
+            print(f"paridad: desviada      codex  {nombre} :: "
+                  "sobra skill complementaria gestionada")
     print(f"paridad: {fiel} fiel · {desviadas} desviadas · "
           f"{ausentes} no-instaladas · {len(faltantes)} sin-emision.")
     if desviadas or faltantes:

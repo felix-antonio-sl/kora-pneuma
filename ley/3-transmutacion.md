@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.3.0
+# KORA/Transmutación — ley pneuma v2.4.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -359,6 +359,20 @@ name-keyed, sobrescribe por nombre, sin never-overwrite) para el agente, y
 aplicación la fibra `referencias/` conserva su nombre: el cuerpo emitido cita
 paths `referencias/...` y ningún target exige otro nombre.
 
+Una **skill** es un producto cerrado: KORA administra el directorio
+`skills/{nombre}/` completo, tanto en `_emision` como en el destino de
+`--aplicar`. Re-transmutar y reaplicar lo materializan como el mapa exacto
+`ruta-relativa → bytes` del producto vigente; ningún factor anterior sobrevive.
+La skill complementaria de una persona Codex obedece la misma regla.
+
+Toda unidad bajo `_emision/` es un derivado cerrado. El **workspace OpenClaw
+instalado**, en cambio, es una superficie abierta: KORA sobrescribe `AGENTS.md`
+y el `SOUL.md` emitido; si una nueva emisión deja de producir `SOUL.md`, solo
+retira el anterior cuando su sello lo atribuye al mismo `(URN,target)`.
+Preserva memoria, scaffolding y cualquier factor no atribuible a KORA. Los
+agentes de archivo único solo administran su archivo exacto y no tocan hermanos
+del directorio.
+
 `--proyecto PATH` (requiere `--aplicar`): redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
 claude-code → `PATH/.claude/skills/{nombre}/` y `PATH/.claude/agents/{nombre}.md`;
@@ -389,6 +403,9 @@ honra. La emisión canónica en `_emision/` es siempre alcance-neutral.
 Los espacios de emisión por runtime son **planos** (un directorio por
 `nombre`): dos artefactos con el mismo `nombre` y URN distinto NO DEBEN
 emitirse — `transmutar` falla nombrando la colisión; renombra uno.
+Antes de construir o retirar una ruta, `transmutar` exige que `nombre` sea un
+único componente no vacío: `.`/`..`, separadores y NUL abortan sin mutar el
+producto. `forma-valida` denuncia la misma incoherencia en el corpus.
 
 ## 8. El gesto inverso (Lift)
 
@@ -431,25 +448,30 @@ declaradas de §6.
 ### 9.1 Paridad de despliegue
 
 La frescura tiene dos aguas. `sello-fresco` (§9) vigila **emisión↔fuente**;
-la **paridad** vigila **emisión↔instalación**: que lo que corre en el runtime
-de nivel usuario sea byte-idéntico a lo emitido. Gesto:
+la **paridad** vigila **emisión↔instalación**: que la frontera KORA gestionada
+en el runtime de nivel usuario sea byte-idéntica a lo emitido. Gesto:
 `transmutar --paridad [--urn U] [--target T]` — solo lectura; sin filtros
 barre todas las emisiones.
 
 Reglas:
 
-1. Veredictos por unidad de emisión: `fiel` (instalación byte-idéntica),
-   `desviada` (instalación presente que difiere — stale porque la fuente
-   avanzó, o editada en el runtime: ambas son drift), `no-instalada`
-   (informativo: el gesto no decide si un artefacto debe estar instalado), y
-   `sin-emision` (un artefacto `activo` promete el target pero no tiene la
-   unidad derivada correspondiente).
+1. Veredictos por unidad de emisión: `fiel` (frontera KORA gestionada
+   byte-idéntica), `desviada` (instalación presente que difiere — stale porque
+   la fuente avanzó, editada en el runtime o con factor gestionado sobrante:
+   todos son drift), `no-instalada` (informativo: el gesto no decide si un
+   artefacto debe estar instalado), y `sin-emision` (un artefacto `activo`
+   promete el target pero no tiene la unidad derivada correspondiente).
 2. Exit 1 si existe alguna `desviada` o `sin-emision`; el veredicto es
    transmutar lo faltante y re-transmutar `--aplicar` lo desviado (o auditar la
    edición hecha en el runtime). `no-instalada` no falla.
-3. Solo se comparan los archivos que la emisión contiene: el scaffolding del
-   workspace y la memoria del runtime quedan fuera (frontera no-emitida,
-   §7.1).
+3. En una skill, `fiel` exige igualdad exacta del mapa
+   `ruta-relativa → bytes`: un factor instalado sobrante también es drift. En
+   un workspace OpenClaw solo se comparan los factores emitidos y un
+   `SOUL.md` residual cuyo sello lo atribuya al mismo `(URN,target)`; el
+   scaffolding, la memoria y los factores ajenos quedan fuera (§7.1). Tras
+   reemitir una persona Codex como subagente, una skill complementaria
+   instalada que siga sellada por la misma fuente sin unidad esperada es
+   `desviada`.
 4. Alcance honesto: la paridad cubre las instalaciones de **nivel
    usuario/flota** (las rutas de `--aplicar`); las instalaciones `--proyecto`
    quedan fuera del barrido (declarado, no mecanizado).
@@ -480,13 +502,14 @@ clase de fallos sin fingir que la instalación es corpus.
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
+| `nombre` seguro como componente de ruta antes de reconciliar | §7 | mecanizado (`forma-valida`, `transmutar`) |
 | Frontera `herramientas` de Codex declarada como pérdida no reticular tipada | §5 r3/r7, §7 | mecanizado (`transmutar`) |
 | Frontera `herramientas` de OpenClaw declarada; realización config diferenciada | §7.1 | declaración mecanizada (`transmutar`); realización verificada en deploy |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
-| Paridad de despliegue (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
+| Paridad exacta de la superficie KORA (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
 | Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
 | Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
@@ -564,3 +587,13 @@ realizados. Paridad deja de contar como emitida una unidad sin archivo raíz.
 La aplicación/paridad evita además la copia managed OpenClaw que quedaría bajo
 la skill personal Codex homónima. Precisión compatible; conserva los ids de
 funtor y del check.
+
+v2.4.0 (2026-07-17): hace cerrados y exactos los directorios de skills en
+emisión, aplicación y paridad; un factor instalado sobrante deja de producir
+un falso `fiel`, y re-transmutar/reaplicar cierra el ciclo retirándolo. Mantiene
+abiertos los workspaces OpenClaw: solo retira un `SOUL.md` no emitido cuando el
+sello lo atribuye al mismo par KORA, y preserva memoria,
+scaffolding y material ajeno. También retira de forma atribuida la skill
+complementaria Codex que queda obsoleta al pasar persona→subagente, y rechaza
+nombres que no sean componentes de ruta seguros antes de cualquier limpieza.
+Endurece la frontera name-keyed sin cambiar los ids de funtor ni del check.
