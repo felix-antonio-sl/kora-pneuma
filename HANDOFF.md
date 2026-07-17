@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-17 — cierre del ciclo Codex
+# Handoff vigente — 2026-07-17 — cierre Codex y mantenimiento KORA
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > frontmatters canónicos, Git ni el estado vivo de los runtimes. El informe
@@ -7,16 +7,17 @@
 
 ## Estado al cierre
 
-El ciclo de revisión y transición **Claude Code → Codex** queda cerrado en
-`master`. No se identificó trabajo técnico adicional que justificara modificar
-el corpus después de `ab00f6f`; este cierre solo destila memoria y vuelve a
-probar el estado publicado.
+El ciclo de revisión y transición **Claude Code → Codex** permanece cerrado en
+`master`. El mantenimiento posterior fortaleció la paridad de las superficies
+gestionadas sin reabrir esa migración.
 
-- `HEAD` y `origin/master` coincidían en `ab00f6f` antes de este commit de
-  memoria.
+- La corrección técnica quedó publicada en `1f0691a`.
 - Los informes operativos fechados quedaron fuera del corpus vivo y fueron
   desplazados posteriormente a `_archivo/`, conforme a la política documental.
-- No se mutaron runtimes ni configuración en este cierre documental.
+- La única reconciliación externa de este mantenimiento reconstruyó la skill
+  Claude Code `cat-thinking` y retiró un duplicado byte-idéntico sin valor único.
+- Hermes queda congelado: no se modificaron su canon, emisiones ni
+  instalaciones.
 
 ## Valor entregado durante la sesión
 
@@ -29,12 +30,14 @@ probar el estado publicado.
 3. **Completitud y tipos honestos.** Se rechazan targets no declarados/no
    realizados, unidades sin archivo raíz y factores residuales. La pérdida
    Codex de `herramientas` se declara como fidelidad parcial no reticular.
-4. **Reconciliación.** Se reemitieron las 119 parejas realizadas y se aplicaron
-   114 parejas desviadas. El corte final conserva 125 unidades fieles, ninguna
-   desviada y ninguna sin emisión.
+4. **Reconciliación y paridad exacta.** Las skills son directorios cerrados:
+   un factor instalado sobrante es drift y reaplicar lo retira. Los workspaces
+   OpenClaw permanecen abiertos; KORA solo gobierna sus factores atribuibles.
+   El estado vigente se consulta bajo demanda.
 5. **Superficie Codex saneada.** En `/home/felix/.codex/config.toml` quedó
-   `default_permissions = ":workspace"` sin el `sandbox_mode` incompatible; 12
-   artefactos legacy/absorbidos quedaron deshabilitados mediante tombstones.
+   `default_permissions = ":workspace"` sin el `sandbox_mode` incompatible;
+   los artefactos legacy/absorbidos identificados quedaron deshabilitados
+   mediante tombstones.
    `gpt-5.6-sol` y esfuerzo `max` se preservaron como decisión explícita del
    operador.
 6. **Frontera Codex/OpenClaw visible.** KORA impide instalar una skill managed
@@ -79,10 +82,9 @@ contrato verificable aunque no repitan el proof-carrier.
 
 ### 3. La migración correcta empieza por el valor, no por los archivos
 
-Antes de reaplicar 122 unidades desviadas se auditó si el runtime conservaba
-conocimiento único. Trece desviaciones eran versiones antiguas; una contenía
-valor real. Migrarlo primero evitó que una sincronización técnicamente correcta
-destruyera capacidad.
+Antes de reconciliar las instalaciones se auditó si el runtime conservaba
+conocimiento único. `consenso-deliberativo` sí lo contenía; migrarlo primero
+evitó que una sincronización técnicamente correcta destruyera capacidad.
 
 ### 4. Los estándares compartidos crean acoplamiento entre runtimes
 
@@ -107,13 +109,15 @@ cerrar el loop o declarar la intervención manual necesaria.
 ### 7. La honestidad del alcance es una propiedad de calidad
 
 Este ciclo cierra Codex y el núcleo Pneuma. No cierra la configuración efectiva
-de OpenClaw ni realiza T-Hermes. Nombrar esa frontera evita convertir métricas
-verdes en afirmaciones falsas.
+de OpenClaw. Hermes queda fuera del alcance operativo hasta una decisión
+explícita posterior. Nombrar esas fronteras evita convertir gates verdes en
+afirmaciones falsas.
 
 ## Artefactos y commits relevantes
 
 - `37e1f01` — `fix(artefactos): absorber valor legado para Codex`.
 - `83a15f0` — `fix(kora): probar congruencia del producto emitido`.
+- `1f0691a` — `fix(kora): cerrar paridad de superficies gestionadas`.
 - `ab00f6f` — `docs(kora): memorizar transición a Codex`.
 - Núcleo: `kora.py`.
 - Ley afectada: `ley/0-constitucion.md` y `ley/3-transmutacion.md`.
@@ -124,15 +128,19 @@ verdes en afirmaciones falsas.
 - Evidencia del incidente ya corregido:
   `/home/felix/.codex/backups/kora-pneuma-2026-07-16-openclaw-profile-audit/`.
 
-## Verificación repetida el 2026-07-17
+## Verificación del cierre — 2026-07-17
 
-- `python3 kora.py velar --estricto`: **13/13**.
-- `python3 -m unittest discover -s tests`: **134/134**.
-- `python3 kora.py transmutar --paridad`:
-  **125 fieles · 0 desviadas · 2 no instaladas · 0 sin emisión**.
-- `codex doctor --summary`: **17 correctos · 0 fallos**; persiste únicamente la
-  advertencia ambiental previa sobre rollout files ausentes de la base de
-  tasks.
+Al cerrar se ejecutaron:
+
+- `python3 kora.py velar --estricto`
+- `python3 -m unittest discover -s tests`
+- `python3 kora.py transmutar --paridad`
+- `codex doctor --summary`
+
+Los gates del repositorio quedaron verdes, la paridad no presentó bloqueos y
+Codex Doctor no informó fallos; persistió la advertencia ambiental previa
+sobre rollout files. Son veredictos históricos: repetir los comandos para
+conocer el estado vigente.
 
 ## Deuda residual y siguiente orden
 
@@ -149,12 +157,11 @@ Orden recomendado: auditar discovery efectivo por agente → adjudicar la raíz
 personal compartida → registrar solo agentes desplegables → contrastar tools y
 config viva → recién entonces aplicar/canariar.
 
-### P1 — Hermes
+### Frente congelado — Hermes
 
-T-Hermes sigue reconocido y no realizado. Los tres bridges clínicos externos
-de hospitalista/urgencia son valor vivo sin backup completo verificado; dos
-conservan `clinical_warning` ya retirado y los perfiles usan `SOUL.md` genérico.
-Veredicto vigente: **CONSERVAR-EXTERNO**, respaldar y auditar antes de transmutar.
+Hermes queda fuera del alcance operativo. No modificar su artefacto canónico,
+emisiones ni instalaciones, ni realizar T-Hermes, salvo decisión explícita
+posterior del operador.
 
 ### P2 — eficiencia Codex
 
@@ -167,17 +174,18 @@ duplicación dual-mode de `dov-dori`. Cambios separados, con evals.
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
 2. Abrir una tarea Codex nueva o reiniciar la app para asegurar que el catálogo
    use los tombstones configurados.
-3. Repetir 13/13, 134/134 y paridad antes de tocar ley, generador o artefactos
-   agénticos.
-4. Tratar OpenClaw y Hermes como frentes separados; no ampliar el alcance del
-   cierre Codex por conveniencia.
+3. Repetir los gates de mantenimiento y la paridad antes de tocar ley,
+   generador o artefactos agénticos.
+4. Tratar OpenClaw como un frente separado y mantener Hermes congelado; no
+   ampliar el alcance del cierre Codex por conveniencia.
 
 ## Rollback
 
 - Memoria: revertir solo el commit documental de este cierre restaura el
   handoff exhaustivo anterior desde Git; el archivo también queda en `_archivo/`.
-- Núcleo/ley: `git revert 83a15f0` y adjudicar después todas las emisiones
-  creadas bajo ley/3 v2.3.0.
+- Núcleo/ley: revertir `1f0691a` y adjudicar después las emisiones creadas bajo
+  ley/3 v2.4.0. El duplicado externo retirado de `cat-thinking` no contenía
+  valor único y no requiere restauración.
 - Artefactos: `git revert 37e1f01` solo tras preservar el valor rico de
   `consenso-deliberativo`.
 - Config Codex: reactivar una skill exige retirar/cambiar su tombstone y
