@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:gestion-redes-indice
 nombre: gestion-redes-indice
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes Asistenciales — Índice General: **Qué ES este corpus**: blueprint operativo para diseño, operación y mejora continua de redes y unidades asistenciales"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/00-indice.md (sha256:6b233275d51c8a951b0ed6aabddc85e159e321d61f99fbffdad508685b1e7e18) el 2026-06-12; cuerpo byte-fiel (renombrado de 00-indice.md a gestion-redes-indice.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM 46 fuentes HaH"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/00-indice.md (sha256:6b233275d51c8a951b0ed6aabddc85e159e321d61f99fbffdad508685b1e7e18) el 2026-06-12; cuerpo byte-fiel (renombrado de 00-indice.md a gestion-redes-indice.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM 46 fuentes HaH. Corrección normativa 2026-07-17 verificada contra BCN/LeyChile: DS 140/2004 idNorma=237231 y DS 15/2007 idNorma=262240."
 autor: FS
 creado: 2026-03-03
 lang: es
@@ -294,7 +294,8 @@ Cada bloque Ref combina: normativa chilena + guideline internacional + estándar
 | DFL 1/2005 MINSAL | DFL | Fija texto refundido Ley 18.933 (ISAPRES) y Ley 18.469 (FONASA) | 5, financiamiento | Vigente |
 | DS 4/2009 MINSAL | Decreto | Reglamento prestadores institucionales: requisitos infraestructura, RRHH, procesos | 1–17 | Vigente |
 | DS 38/2005 MINSAL | Decreto | Reglamento derechos pacientes hospitalizados | 15–17 | Vigente |
-| DS 140/2004 MINSAL | Decreto | Reglamento del Sistema de Acreditación de prestadores | Todos | Vigente |
+| DS 140/2004 MINSAL | Decreto | Reglamento Orgánico de los Servicios de Salud | 1–5 | Vigente |
+| DS 15/2007 MINSAL | Decreto | Reglamento del Sistema de Acreditación para los Prestadores Institucionales de Salud | Todos | Vigente |
 | DS 58/2008 MINSAL | Decreto | Reglamento de prestaciones de urgencia | 18–26 | Vigente |
 | NT Acreditación (Superintendencia de Salud) | Norma Técnica | Estándares acreditación: ámbitos dignidad, gestión clínica, RRHH, registros, seguridad | Todos | Vigente (v3, 2023) |
 | GES/AUGE (85 problemas, 2024) | Garantía | Garantías explícitas acceso, oportunidad, protección financiera, calidad | 1–5, 15–26 | Vigente (actualización anual) |
@@ -308,7 +309,6 @@ Cada bloque Ref combina: normativa chilena + guideline internacional + estándar
 | Orientaciones Red de Urgencia (MINSAL) | Orientación | Organización funcional red urgencia: SAPU, SAR, SUH, SAMU | 18–26 | Vigente |
 | Política Nacional de Medicamentos (MINSAL) | Política | Acceso, calidad, uso racional de medicamentos | 10, 16 | Vigente |
 | Plan Nacional de Salud Mental (MINSAL, 2017–2025) | Plan | Objetivos estratégicos SM: modelo comunitario, SM infanto-juvenil, TUS, suicidio | 27–36 | Vigente |
-| Reglamento Orgánico Servicios de Salud (DFL 1/2005) | DFL | Estructura, funciones y atribuciones de los Servicios de Salud | 1–5 | Vigente |
 | NT Programa Nacional Prevención Suicidio (MINSAL, 2023) | Norma Técnica | Detección, intervención y postvención suicidio en red | 30, 32 | Vigente |
 | Orientación Técnica HaH (MINSAL, 2021) | Orientación | Criterios inclusión/exclusión, dotación, monitoreo, alta domiciliaria | 17 | Vigente |
 | NT Reanimación Cardiopulmonar (MINSAL) | Norma Técnica | Cadena supervivencia, DEA, soporte vital básico/avanzado | 18–22 | Vigente |
