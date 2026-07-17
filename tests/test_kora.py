@@ -1079,6 +1079,28 @@ class TestCicloQuirurgico(CasoPneuma):
 class TestSelloUltimoBloque(CasoPneuma):
     """Fix 5: sello-fresco lee el ÚLTIMO bloque; los citados no dan rancia."""
 
+    def test_sello_fresco_no_sigue_raiz_emision_symlink(self):
+        externo = self.raiz / "externo"
+        externo.mkdir()
+        (self.raiz / "_emision").symlink_to(externo)
+        self.assert_fallo(
+            "sello-fresco",
+            "emisión es enlace simbólico; no se recorrió",
+        )
+
+    def test_sello_fresco_no_sigue_symlink_de_emision(self):
+        self.escribir_skill()
+        externo = self.raiz / "externo/skills"
+        (externo / "util-x").mkdir(parents=True)
+        (externo / "util-x/SKILL.md").write_text("no leer\n", "utf-8")
+        target = self.raiz / "_emision/claude-code"
+        target.mkdir(parents=True)
+        (target / "skills").symlink_to(externo)
+        self.assert_fallo(
+            "sello-fresco",
+            "emisión contiene enlace simbólico; no se siguió",
+        )
+
     def test_sello_citado_en_cuerpo_no_da_rancia(self):
         cuerpo = (
             "# Doc\n\nEjemplo de sello citado de la ley:\n\n"
@@ -1501,10 +1523,6 @@ class TestTransmutacionProyecto(CasoPneuma):
             ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
              "--target", "opencode", "--aplicar", "--proyecto", str(proj)])
         self.assertEqual(codigo, 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 # ------------------------------------------------------------- paridad (ley/3 §9.1)
@@ -2334,3 +2352,7 @@ class TestParidad(CasoPneuma):
             ["transmutar", "--paridad", "--aplicar"])
         self.assertEqual(codigo, 1)
         self.assertIn("--paridad", err)
+
+
+if __name__ == "__main__":
+    unittest.main()

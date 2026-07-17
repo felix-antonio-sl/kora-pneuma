@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.6.0
+# KORA/Transmutación — ley pneuma v2.6.1
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -455,6 +455,10 @@ Si existe `_emision/`, cada unidad descubierta DEBE ser congruente con tres
 fuentes de identidad: archivo fuente actual, target de su ruta y generador
 vigente. Check: `sello-fresco`.
 
+Antes de leer contenido, el check enumera `_emision/` sin seguir enlaces:
+la raíz y todos sus descendientes DEBEN ser directorios o archivos regulares
+reales. Un symlink, nodo especial o nodo ilegible invalida la frescura.
+
 El check lee el **último** bloque `kora:sello` de cada factor doctrinal —el
 cuerpo puede citar sellos de ejemplo— y verifica:
 
@@ -667,3 +671,7 @@ informativo y el despliegue independiente por runtime. Precisa además la
 frontera abierta OpenClaw —un blueprint vacío sigue no instalado—, preflighta
 emisión e instalación sin seguir ancestros y describe la limpieza de companions
 históricos sin normalizar la democión prohibida por `ley/2`.
+
+v2.6.1 (2026-07-18): corrige `sello-fresco` para preflightar `_emision/` con
+`lstat` antes de leerla. Enlaces simbólicos, nodos especiales o ilegibles ya no
+pueden producir frescura aparente ni provocar lectura fuera de la emisión.

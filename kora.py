@@ -842,8 +842,28 @@ def _sello_atribuye(path: Path, urn: str, target: str) -> bool:
 def chk_sello_fresco(arts, raiz):
     fallos = []
     emision = raiz / "_emision"
-    if not emision.is_dir():
+    try:
+        tipo_emision = _tipo_nodo(emision)
+    except OSError:
+        return [("_emision", "emisión ilegible; no se recorrió")]
+    if tipo_emision is None:
         return fallos
+    if tipo_emision != "directorio":
+        return [("_emision", f"emisión es {tipo_emision}; no se recorrió")]
+    try:
+        inventario = _inventario_nodos(emision)
+    except OSError:
+        return [("_emision", "emisión ilegible; no se recorrió")]
+    irregulares = [
+        (rel, tipo) for rel, tipo in inventario.items()
+        if tipo not in ("directorio", "archivo regular")
+    ]
+    if irregulares:
+        return [
+            (f"_emision/{rel}",
+             f"emisión contiene {tipo}; no se siguió")
+            for rel, tipo in irregulares
+        ]
     por_urn = {a.urn: a for a in arts if a.urn}
     emitidos: list[Path] = []
     for target_dir in sorted(p for p in emision.iterdir() if p.is_dir()):
