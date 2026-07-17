@@ -117,7 +117,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_urgenciologo_hace_ejecutable_procedencia_y_autoridad(self):
         campos, cuerpo = self.consumidores["urgenciologo"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("3.8.0", campos["version"])
+        self.assertEqual("3.9.0", campos["version"])
         for fragmento in (
             "`corpus-ref <URN#sección>`",
             "`fuera-de-corpus`",
@@ -128,6 +128,51 @@ class TestContratoHscAgentCli(unittest.TestCase):
         ):
             with self.subTest(fragmento=fragmento):
                 self.assertIn(fragmento, cuerpo_normalizado)
+
+    def test_urgenciologo_prioriza_fuentes_hsc_y_salida_pegable(self):
+        _, cuerpo = self.consumidores["urgenciologo"]
+        cuerpo_normalizado = " ".join(cuerpo.split())
+        for fragmento in (
+            "médico M1",
+            "`hsc-agent-cli` es la fuente primaria de hechos del paciente",
+            "DAU, LAB y SGH",
+            "HCC",
+            "La memoria no es fuente factual del paciente",
+            "texto pegable",
+            "No explica el razonamiento salvo solicitud explícita",
+            "`ALERTA:",
+            "`BRECHA:`",
+            "dato ausente = `pendiente`",
+        ):
+            with self.subTest(fragmento=fragmento):
+                self.assertIn(fragmento, cuerpo_normalizado)
+
+    def test_urgenciologo_define_rutas_dau_ic_hospitalizacion_y_alta(self):
+        _, cuerpo = self.consumidores["urgenciologo"]
+        cuerpo_normalizado = " ".join(cuerpo.split())
+        for fragmento in (
+            "`DAU alta + RUT/DAU`",
+            "`IC medicina + RUT/DAU`",
+            "`DAU hosp + RUT/DAU`",
+            "Se solicita IC [especialidad] por [problema concreto]",
+            "Se hospitaliza en [servicio] por [problema activo/riesgo]",
+            "Se deja pcte [estable/inestable]",
+            "INDICACIONES:",
+            "Alta domicilio.",
+            "Reconsultar SU ante",
+        ):
+            with self.subTest(fragmento=fragmento):
+                self.assertIn(fragmento, cuerpo_normalizado)
+        for rotulo in (
+            "ANAMNESIS:",
+            "EXAMEN FÍSICO:",
+            "HIPÓTESIS:",
+            "OBSERVACIONES:",
+            "DIAGNÓSTICOS:",
+            "INDICACIONES DE ALTA:",
+        ):
+            with self.subTest(rotulo=rotulo):
+                self.assertIn(rotulo, cuerpo)
 
     def test_hospitalista_hace_ejecutable_el_plan_soap(self):
         campos, cuerpo = self.consumidores["medico-hospitalista"]
