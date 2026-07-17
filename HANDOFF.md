@@ -107,10 +107,11 @@ suponer aislamiento, sino gobernar precedencia y visibilidad por runtime.
 ### 5. “Read-only” debe verificarse contra el comportamiento del CLI
 
 Una consulta OpenClaw con el flag incorrecto activó una auto-migración de
-estado. Se restauró byte-idéntico el archivo original y se conservó evidencia.
-Lección operativa: para CLIs con migraciones automáticas, inspección estática,
-dry-run, backup y sintaxis exacta preceden incluso a comandos nominalmente de
-lectura.
+estado. La sesión registró una restauración byte-idéntica y preservó una copia
+del archivo auto-migrado; esta revisión confirmó la evidencia, pero el estado
+actual no basta para volver a demostrar aquella identidad histórica. Lección
+operativa: para CLIs con migraciones automáticas, inspección estática, dry-run,
+backup y sintaxis exacta preceden incluso a comandos nominalmente de lectura.
 
 ### 6. Un gate debe poder materializar su propia recomendación
 
