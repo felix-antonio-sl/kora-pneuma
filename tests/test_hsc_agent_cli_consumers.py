@@ -131,6 +131,9 @@ class TestContratoHscAgentCli(unittest.TestCase):
         )
 
     def test_capacidades_full_supervisadas(self):
+        for nombre, (campos, _) in self.consumidores.items():
+            with self.subTest(consumidor=nombre):
+                self.assertIn(f"v{campos['version']}", campos["fuente"])
         self.assert_cuerpo_contiene(
             "perfil `full`",
             "`exec` usa modo `auto` (Guardian)",
