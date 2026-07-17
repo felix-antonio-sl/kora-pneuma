@@ -1,15 +1,15 @@
 ---
 urn: urn:salud:artefacto:apoyo-decision-sanitaria
 nombre: apoyo-decision-sanitaria
-version: 1.0.0
+version: 1.1.0
 estado: activo
 reemplaza: [urn:salud:artefacto:analista-redes, urn:salud:artefacto:constructor-tableros]
-descripcion: "Produce artefactos de apoyo a decision sanitaria (gap map, risk map, analisis de red, dashboard, policy brief, escenarios) fundados en analisis de sistemas/redes, con anatomia operable por artefacto."
-fuente: "Fusion de analista-redes + constructor-tableros (skills debiles, evaluacion 2026-06-22), inyectando metodo operable; consolida analisis de red + produccion de artefactos de decision."
+descripcion: "Produce artefactos de apoyo a decision sanitaria (gap map, risk map, analisis de red, dashboard, policy brief, escenarios y plan de implementacion) fundados en analisis de sistemas/redes, con anatomia operable por artefacto."
+fuente: "Fusion de analista-redes + constructor-tableros (skills debiles, evaluacion 2026-06-22), inyectando metodo operable; consolida analisis de red + produccion de artefactos de decision. Version 1.1.0 (2026-07-17): absorbe el unico valor no redundante de la skill fleet-local implementation-planner antes de retirarla: factibilidad, responsables, secuencia preparacion-piloto-escalamiento-estabilizacion, gestion del cambio, indicadores y gates avanzar/mantener/corregir/rollback."
 autor: FS
 creado: 2026-06-22
 lang: es
-tags: [salud, redes-asistenciales, decision-support, gap-map, risk-map, dashboards, policy-brief, escenarios]
+tags: [salud, redes-asistenciales, decision-support, gap-map, risk-map, dashboards, policy-brief, escenarios, implementacion]
 vector: [2, 0, 2, 0, 1]
 sigma: [2, 1, 3, 2, 1]
 arnes: disciplina
@@ -36,8 +36,9 @@ sustrato; los artefactos de decisión son la salida.
 Cuando hay que convertir una situación de red de salud en un producto que
 soporta una decisión: dimensionar una brecha, priorizar un riesgo, evaluar la
 accesibilidad/capacidad de una red, montar un tablero de monitoreo, redactar un
-policy brief o plantear escenarios. Entrada: la solicitud + su contexto + los
-datos disponibles (aunque sean parciales).
+policy brief, plantear escenarios o convertir una intervención elegida en un
+plan de implementación. Entrada: la solicitud + su contexto + los datos
+disponibles (aunque sean parciales).
 
 ## Regla maestra (heredada, conservada)
 
@@ -202,6 +203,54 @@ Método de exploración bajo incertidumbre.
 
 No es predicción: es un rango de planificación. Declararlo como tal.
 
+### 7. Plan de implementación
+
+Convierte una intervención ya encuadrada en una secuencia gobernable. No
+reemplaza la decisión clínica, sanitaria ni presupuestaria que selecciona la
+intervención.
+
+**Contrato de factibilidad**, antes de calendarizar:
+
+| Dimensión | Evidencia actual | Restricción | Condición mínima | Responsable de resolver |
+|---|---|---|---|---|
+| Capacidad | recursos y carga disponibles | brecha que impide operar | umbral verificable para iniciar | rol con autoridad |
+| Dependencias | sistemas, contratos y equipos necesarios | dependencia no controlada | compromiso o alternativa | dueño de la dependencia |
+| Madurez | práctica actual y capacidad de adopción | habilidad/proceso faltante | preparación demostrable | responsable de habilitación |
+| Tiempo | ventanas clínicas, operativas y normativas | fecha o secuencia rígida | ventana realista | sponsor |
+
+Si una condición mínima no tiene evidencia ni dueño, el plan queda en
+**mantener/corregir**, no en piloto.
+
+**Fases obligatorias**:
+
+| Fase | Entrega verificable | Gate de salida |
+|---|---|---|
+| Preparación | objetivo, baseline, sponsor, responsables, dependencias y riesgos confirmados | condiciones mínimas de factibilidad cumplidas |
+| Piloto | alcance pequeño, población/nodo definido, soporte y captura de incidentes | criterios de éxito, seguridad y adopción alcanzados |
+| Escalamiento | expansión por cohortes o nodos con capacidad explícita | desempeño preservado sin sobrecargar el sistema |
+| Estabilización | operación ordinaria, ownership permanente y retiro de soportes transitorios | indicadores sostenidos y rollback ya innecesario o redefinido |
+
+Cada fase declara:
+
+- responsable de decisión y responsables de ejecución;
+- nodos de coordinación y cadencia;
+- riesgos, mitigación y gatillo de rollback;
+- gestión del cambio: quién debe adoptar qué conducta y qué soporte recibe;
+- indicadores de **proceso**, **resultado** y **seguridad**, cada uno con
+  baseline, fuente, frecuencia y umbral;
+- evidencia necesaria para el gate siguiente.
+
+**Decisión de gate**:
+
+- **avanzar**: criterios cumplidos y riesgo residual aceptado por el dueño;
+- **mantener**: evidencia aún insuficiente dentro de una ventana definida;
+- **corregir**: falla recuperable con acción, responsable y nuevo plazo;
+- **rollback**: riesgo de seguridad, pérdida de control o incumplimiento de una
+  condición no negociable.
+
+No escalar por calendario. Escalar solo cuando el piloto conserva resultado y
+seguridad bajo la capacidad real del siguiente ámbito.
+
 ---
 
 ## Composición
@@ -213,9 +262,9 @@ decisión que la audiencia necesita, con su anatomía completa.
 ## Salidas
 
 Uno o más artefactos estructurados (gap map, risk map, análisis de red,
-dashboard, policy brief, escenarios) — cada uno con su anatomía completa, su
-bloque de límites (qué muestra / qué no muestra), supuestos, fuentes y los
-tradeoffs eficiencia/equidad/resiliencia explícitos.
+dashboard, policy brief, escenarios o plan de implementación) — cada uno con
+su anatomía completa, su bloque de límites (qué muestra / qué no muestra),
+supuestos, fuentes y los tradeoffs eficiencia/equidad/resiliencia explícitos.
 
 ## Compromisos
 
