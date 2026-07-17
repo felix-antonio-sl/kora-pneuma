@@ -15,15 +15,17 @@ familia: nota
 
 # Manual operativo para agentes AI — hsc-agent-cli
 
-Edición `1.0.16`, sincronizada el 2026-07-16 con la fuente viva de
-`hsc-agent-cli` (contrato `beta-3`; base publicada `v3.0.1`) y su guía inline
-`agent-autonomy-2`. El flujo estándar es autoritativo en
+Edición `1.0.16`, sincronizada el 2026-07-17 con la fuente viva de
+`hsc-agent-cli` (contrato `beta-3`; base publicada `v3.1.0`) y su guía inline
+`agent-autonomy-3`. El flujo estándar es autoritativo en
 `<comando> --help`; este manual conserva inventario exhaustivo, caveats de
 fuente y doctrina excepcional.
 
-La edición `1.0.16` incorpora el cierre de verdad operacional de `v3.0.1`:
-autenticación viva en `health`, adquisición HTTP fail-closed y ausencia SGH
-concluyente solo bajo censo completo.
+La edición `1.0.16` incorpora la recuperación autónoma y los contratos
+masivos de `v3.1.0`: cobertura estructural separada de strings vacíos,
+contexto parental proyectable, presencia censal separada de direccionabilidad,
+planes sin sub-lotes singleton, protocolo stream autocontenido y hard stop
+anti-PHI en la ayuda viva.
 
 Manual para un **agente AI** (no un humano) que opera `hsc-agent-cli` para
 reconstruir la historia contextual de un caso clínico del Hospital de San Carlos.
@@ -33,14 +35,15 @@ Estructura recuperable: ve a la sección que necesitas, no lo leas en orden.
 
 `hsc-agent-cli` es una **vitrina**: lee los sistemas clínicos del hospital (DAU
 urgencia, SGH hospitalización, LIS laboratorio, HCC APS) y los expone como
-**handles direccionables** en **JSON puro por stdout**. Tú recorres la vitrina,
-eliges items y compones tu lectura del caso.
+**handles direccionables**. Los comandos y subcomandos responden en **JSON puro
+por stdout**; la ayuda global raíz es la excepción deliberada y se imprime
+como texto. Tú recorres la vitrina, eliges items y compones tu lectura del caso.
 
 | Es | No es |
 |---|---|
 | Selecciona y presenta datos crudos parseados | No interpreta, resume ni prioriza clínicamente |
 | Se hace cargo de infra (login, sesiones, cookies, HTTP, parseo HTML/PDF) | No es una base de datos (stateless + caché) |
-| CLI de comandos cerrados, salida JSON estable | No es daemon, servidor ni endpoint de escritura |
+| CLI de comandos cerrados, salida JSON estable salvo ayuda global | No es daemon, servidor ni endpoint de escritura |
 | Identity-safe por construcción | No adivina: si un fetcher no existe → `not_implemented_yet` |
 
 **Regla madre:** el sistema **selecciona, presenta y garantiza la
@@ -74,8 +77,10 @@ Cinco comandos, **conjunto cerrado** (no hay otros; no inventes `init`, `login`,
 `hsc-agent-cli --version` es un flag raíz local, no un sexto comando. Devuelve
 versión, commit, contrato y estado `modified` sin tocar upstream.
 
-**Salida:** SIEMPRE JSON en stdout (incluso los errores). stderr queda
-silencioso por defecto. El logging estructurado es opt-in con
+**Salida:** JSON en stdout para comandos, subcomandos, `--version` y errores.
+`hsc-agent-cli`, `hsc-agent-cli --help` y `hsc-agent-cli -h` son ayuda global
+raíz en texto; no intentes parsearla como JSON. stderr queda silencioso por
+defecto. El logging estructurado es opt-in con
 `HSC_AGENT_CLI_LOG_LEVEL=debug|info|warn|error` y no incluye identificadores;
 **parsea solo stdout**.
 
@@ -86,10 +91,13 @@ o criterio desconocido trae `error_detail.supported_flags[]` con la whitelist
 real del subcomando: **si tanteas un flag, el error te dice cuáles existen**
 — no insistas probando variantes.
 
-**Autonomía inline:** cada help agrega `data.agent_guide` versión
-`agent-autonomy-2`, con flujo completo, selección de primitive, protocolo por
-`state/error_code`, hard stops y playbook del comando (`use_when`, `inspect`,
-`next`, `avoid`, `examples`). La ayuda declara
+**Autonomía inline:** cada help de subcomando agrega `data.agent_guide`
+versión `agent-autonomy-3`, con flujo completo, selección de primitive,
+protocolo por `state/error_code`, hard stops —incluido anti-PHI— y playbook del
+comando (`use_when`, `inspect`, `next`, `avoid`, `examples`). El playbook de
+`bundle` incluye `stream_contract`: formato NDJSON, orden de completitud,
+`index` según entrada, bundle en `envelope` y summary terminal sin
+`bundles[]`. La ayuda declara
 `manual_required_for_standard_flow:false`: úsala como autoridad operacional
 del flujo normal. Vuelve a este manual solo para inventario exhaustivo de
 handles, caveats de fuente o un caso que `command_playbook.next`,
@@ -247,18 +255,33 @@ homónimos es tuya, nunca del CLI. Ambas fuentes caídas → `upstream_unavailab
 (exit 4), no ausencia. Como filtro (`--urgencia --nombre <txt>`) restringe el
 listado del scope.
 
-**`--fields` (v1.4.0):** en listados, proyecta cada entry a las columnas que
-pides (`fields_projected[]` lo declara). `item_path` dice dónde iterar;
-`fields_coverage` cuenta presencia por columna y
-`fields_missing_all_entries` denuncia typos/campos globalmente ausentes. Si
-el listado está vacío, `fields_coverage_status:not_observable_empty_list`
-impide inventar un schema ausente. Úsalo cuando tu canal trunca: el
-board completo pesa ~90 KB; proyectado a `aid,nombre,rut,categoria,box` cabe
-en cualquier contexto.
+**`--fields` (v1.4.0; cobertura afinada en v3.1.0):** en listados, proyecta
+cada entry a las columnas que pides (`fields_projected[]` lo declara).
+`item_path` dice dónde iterar. Por campo, `fields_coverage` separa:
+`present_count` (la clave existe, incluso si su string está vacío),
+`missing_count` (la clave no existe) y `empty_count` (la clave existe y su
+valor string queda vacío tras `TrimSpace`). `empty_count` no reclasifica
+ceros, booleanos ni colecciones. `fields_missing_all_entries` denuncia
+typos/campos globalmente ausentes. Si el listado está vacío,
+`fields_coverage_status:not_observable_empty_list` impide inventar un schema
+ausente.
+
+En `find --hospitalizados`, el censo sin `--fields` conserva su shape anidado
+por sala. Al proyectar, puedes pedir las cuatro claves parentales canónicas
+`service_id`, `service_name`, `room_id` y `room_name`; el CLI las incorpora a
+cada entry proyectada sin inferirlas. No uses aliases `servicio` o `sala`.
+Úsalo cuando tu canal trunca: el board completo pesa ~90 KB; proyectado a
+`aid,nombre,rut,categoria,box` cabe en cualquier contexto.
 
 - `best_current_context` aparece en `find --rut`, `--atencion`, `--urgencia`,
   `--board` y por entry en `--hospitalizados`. Si hay DAU activo **e** ingreso
   activo a la vez, expone ambos + `conflict_note`.
+- En hospitalización, lee por separado `hospitalization_observed` y
+  `hospitalization_handle_ready`. `true/false` significa presencia confirmada
+  en el censo sin `ingreso_id`: puedes navegar por identidad/longitudinal, pero
+  esa ruta **no resuelve el episodio SGH**. No fabriques
+  `hospitalizacion:sgh:*`, y no leas `catalog --active-only` vacío como
+  ausencia censal.
 - `find --urgencia --with-rut` enriquece cada entry con `rut` canónico
   (FetchAtencion paralelo, más lento); default off por latencia.
 - `tiempo_minutos` es un int siempre presente (parseo de "18h10m"→1090).
@@ -342,6 +365,13 @@ La presencia censal HODOM es trivalente: `observed_present`,
 evoluciones si el puntero censal falla, proviene de censo parcial o es inválido;
 declara `fallback_source` como procedencia técnica y conserva los errores
 tipados. Solo una consulta exitosa sin contenido se vuelve `ausente`.
+Presencia y direccionabilidad son hechos distintos:
+`hospitalization_observed=true` con
+`hospitalization_handle_ready=false` confirma una entry censal cuyo
+`ingreso_id` falta. `handle_status=missing_ingreso_id` y su warning explican
+por qué no existe handle hospitalario; `paciente:identidad:<rut>` y el bundle
+longitudinal siguen disponibles, pero **no recuperan ni resuelven ese episodio
+SGH**.
 
 **«Censo + brief de cada paciente» (el pedido más frecuente del operador): esta
 ES la vía de primera clase. No la compongas a mano, no orquestes subagentes.**
@@ -361,6 +391,13 @@ su `count` y su
 `estimated_cost_seconds`. No memorices reglas — `find` ya
 eligió el modo de cada scope (hospitalizados → `--handoff`, urgencia → `--minimal
 --compact`) y el tamaño de cada sub-lote (apunta a ~3 min para no time-outear).
+El plan solo se emite para al menos dos handles y garantiza
+`batch_plan.requests[].count >= 2`: toda request produce `kind:multi_bundle`.
+Si el greedy deja una cola singleton, la rebalancea sin cambiar orden,
+cobertura, cantidad de requests ni costo total (por ejemplo,
+`[3,3,1] → [3,2,2]`). Un comando directo con un solo handle conserva
+`kind:bundle`; la garantía multi aplica a las requests publicadas por
+`batch_plan`.
 
 ```
 find --hospitalizados --hodom                  # mira batch_plan.requests[]
@@ -389,7 +426,7 @@ sub-lote (`bundle <h1> <h2> ... --handoff --stream`) para recibir cada bundle
 ```
 {"type":"bundle","index":1,"handle":"hospitalizacion:sgh:<id>","envelope":{…}}
 {"type":"bundle","index":0,"handle":"hospitalizacion:sgh:<id>","envelope":{…}}
-{"type":"summary","streamed":true,"summary":{…}}   ← línea terminal, SIEMPRE la última
+{"type":"summary","kind":"multi_bundle","streamed":true,"summary":{…}}   ← línea terminal, SIEMPRE la última
 ```
 
 Cada línea `type:bundle` lleva el sub-envelope **intacto** en `envelope` (idéntico al
@@ -526,8 +563,10 @@ usar el CLI a medias.
 | `status_normalized` | órdenes/indicaciones | índice de estado operacional (`requested`/`executed`/`resulted`/`reviewed`/...); conserva siempre `estado` original |
 | `compaction` / `_compaction` / `truncated_keys[]` | salidas `--compact`/`--budget-bytes` | hubo pérdida mecánica; `budget_satisfied` declara si se alcanzó la cota best-effort y `over_budget_bytes` el exceso; `truncated_keys[]` lista las claves exactas truncadas — pide el handle fuente con `--fresh` para texto completo |
 | `id_semantics` | `find --hospitalizados` | `next_handle_pattern` para construir handles correctos |
-| `batch_plan.requests[]` | `find --urgencia`/`--board`/`--hospitalizados` (≥2 items) | partición factual por costo (`command_args`, `count`, `estimated_cost_seconds`); ejecuta todas las requests en el `execution_order` declarado |
-| `item_path` / `fields_coverage*` | listados de `find --fields` | ruta de entries, cobertura observable por campo y campos ausentes en todo el listado; lista vacía = `not_observable_empty_list`, no schema ausente |
+| `batch_plan.requests[]` | `find --urgencia`/`--board`/`--hospitalizados` (≥2 handles) | partición factual por costo (`command_args`, `count`, `estimated_cost_seconds`); cada request garantiza `count>=2` y salida `multi_bundle`; ejecuta todas en el `execution_order` declarado |
+| `item_path` / `fields_coverage[]` | listados de `find --fields` | ruta de entries; `present_count` mide existencia de clave, `missing_count` ausencia y `empty_count` string vacío. Lista vacía = `not_observable_empty_list`, no schema ausente |
+| `service_id` / `service_name` / `room_id` / `room_name` | entries proyectadas de `find --hospitalizados --fields ...` | contexto parental factual de servicio/sala; usa estas claves canónicas, no aliases `servicio`/`sala` |
+| `hospitalization_observed` / `hospitalization_handle_ready` | `find --rut`, entries y `best_current_context` de hospitalizados | separa presencia censal de handle construible. `true/false` permite identidad/longitudinal, pero no resuelve el episodio ni autoriza fabricar `hospitalizacion:sgh:*` |
 | `sweep_complete` / `enumeration_complete` (+ `rooms_unavailable` / `services_unavailable`) | `data` de `estado-actual` y `find --hospitalizados` | alcance del censo SGH en dos niveles. Censo fiel ⟺ ambos `true`; si cualquiera es `false` y no hubo match, el envelope es `state=error`, no ausencia |
 | `batch_plan.census_incomplete` (+ `_detail`) | `find --hospitalizados` | el plan cubre solo los handles enumerados por un censo parcial; el detalle separa barrido y enumeración |
 | `summary.identity_mismatch_handles[]` | `bundle multi_bundle` | componentes exactos con mismatch; inspecciona cada sub-envelope y no extrapoles seguridad al resto |
@@ -598,7 +637,7 @@ del argv; no esperes `suggested_command_args`.
 
 - **PHI:** no pegues datos identificables (nombre, RUT, texto clínico completo)
   en documentos de ingeniería, logs ni repos. Reporta agregados, conteos o
-  brechas desidentificadas.
+  brechas desidentificadas y usa fixtures/evals sintéticos.
 - **Compón, no negocies:** toma el subconjunto de handles que tu caso requiere;
   el CLI no decide cuáles son "relevantes".
 - **Verifica el `ausente`:** una brecha documental obliga a confirmar con fuente
