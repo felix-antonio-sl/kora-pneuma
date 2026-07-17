@@ -25,6 +25,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import tomllib
 from pathlib import Path
 
@@ -81,11 +82,11 @@ RE_SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 RE_FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 RE_CLAVE = re.compile(r"^([a-z][a-z0-9-]*):(.*)$")
 RE_ENTERO = re.compile(r"^-?\d+$")
+RE_NOMBRE_RUTA = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 def _nombre_ruta_seguro(nombre: str) -> bool:
-    return bool(nombre) and nombre not in (".", "..") \
-        and "\x00" not in nombre and Path(nombre).name == nombre
+    return RE_NOMBRE_RUTA.fullmatch(nombre) is not None
 
 
 CAMPOS_COMUNES = {
@@ -413,8 +414,8 @@ def chk_forma_valida(arts, raiz):
                 f(art, f"el campo '{clave}' debe ser un string escalar")
         nombre = art.campos.get("nombre")
         if isinstance(nombre, str) and not _nombre_ruta_seguro(nombre):
-            f(art, "nombre inseguro para una ruta: debe ser un único "
-              "componente no vacío")
+            f(art, "nombre inseguro para una ruta: debe ser un slug "
+              "minúsculo con segmentos alfanuméricos separados por guiones")
         for clave in CAMPOS_LISTA:
             if clave in art.campos and not isinstance(art.campos[clave], list):
                 f(art, f"el campo '{clave}' debe ser una lista inline")
@@ -771,20 +772,70 @@ def _mapa_archivos(raiz: Path) -> dict[str, bytes]:
     }
 
 
-def _sello_atribuye(path: Path, urn: str, target: str) -> bool:
-    """Verdadero si el último sello atribuye el factor a ese par KORA."""
-    if not path.is_file():
-        return False
+def _tipo_nodo(path: Path) -> str | None:
+    """Tipo POSIX sin seguir enlaces; `None` significa ausencia real."""
     try:
-        sellos = list(RE_SELLO.finditer(path.read_text(encoding="utf-8")))
-    except (OSError, UnicodeDecodeError):
-        return False
+        modo = path.lstat().st_mode
+    except FileNotFoundError:
+        return None
+    if stat.S_ISLNK(modo):
+        return "enlace simbólico"
+    if stat.S_ISDIR(modo):
+        return "directorio"
+    if stat.S_ISREG(modo):
+        return "archivo regular"
+    return "nodo especial"
+
+
+def _inventario_nodos(raiz: Path) -> dict[str, str]:
+    """Inventario relativo→tipo sin seguir enlaces ni leer contenido."""
+    inventario: dict[str, str] = {}
+    pendientes = [(raiz, Path())]
+    while pendientes:
+        actual, prefijo = pendientes.pop()
+        with os.scandir(actual) as entradas:
+            ordenadas = sorted(entradas, key=lambda entrada: entrada.name)
+        for entrada in ordenadas:
+            rel = prefijo / entrada.name
+            path = Path(entrada.path)
+            tipo = _tipo_nodo(path)
+            if tipo is None:
+                continue
+            inventario[rel.as_posix()] = tipo
+            if tipo == "directorio":
+                pendientes.append((path, rel))
+    return inventario
+
+
+def _campos_ultimo_sello(path: Path) -> dict[str, str]:
+    """Campos escalares del último sello de un archivo regular real."""
+    try:
+        tipo = _tipo_nodo(path)
+    except OSError:
+        return {}
+    if tipo != "archivo regular":
+        return {}
+    try:
+        texto = path.read_text(encoding="utf-8")
+        if path.suffix == ".toml":
+            texto = tomllib.loads(texto).get("developer_instructions", "")
+        if not isinstance(texto, str):
+            return {}
+        sellos = list(RE_SELLO.finditer(texto))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError,
+            AttributeError):
+        return {}
     if not sellos:
-        return False
-    lineas = dict(
+        return {}
+    return dict(
         linea.split(": ", 1) for linea in sellos[-1].group(1).split("\n")
         if ": " in linea and not linea.startswith(" ")
     )
+
+
+def _sello_atribuye(path: Path, urn: str, target: str) -> bool:
+    """Verdadero si el último sello atribuye el factor a ese par KORA."""
+    lineas = _campos_ultimo_sello(path)
     return lineas.get("fuente") == urn and lineas.get("target") == target
 
 
@@ -818,6 +869,9 @@ def chk_sello_fresco(arts, raiz):
                 datos = tomllib.loads(crudo)
                 texto = datos.get("developer_instructions", "")
             except (tomllib.TOMLDecodeError, AttributeError):
+                fallos.append((rel, "emisión TOML inválida"))
+                continue
+            if not isinstance(texto, str):
                 fallos.append((rel, "emisión TOML inválida"))
                 continue
         # El sello real es el ÚLTIMO bloque: el cuerpo puede citar sellos
@@ -1547,26 +1601,85 @@ def _limpiar_derivados_codex_v1(raiz: Path, art: Artefacto,
     skill = raiz / "_emision/codex/skills" / nombre
     agente = raiz / "_emision/codex/agents" / f"{nombre}.toml"
     if not any(rel.startswith(f"codex/skills/{nombre}/") for rel in rels) \
-            and skill.is_dir():
-        shutil.rmtree(skill)
+            and _tipo_nodo(skill) is not None:
+        _retirar_ruta_gestionada(skill)
         print(f"retirado derivado huérfano: {skill.relative_to(raiz)}")
-    if f"codex/agents/{nombre}.toml" not in rels and agente.is_file():
-        agente.unlink()
+    if f"codex/agents/{nombre}.toml" not in rels \
+            and _tipo_nodo(agente) is not None:
+        _retirar_ruta_gestionada(agente)
         print(f"retirado derivado huérfano: {agente.relative_to(raiz)}")
 
 
 def _retirar_ruta_gestionada(path: Path) -> None:
     """Retira solo la ruta de producto que KORA está reconciliando."""
-    if path.is_symlink() or path.is_file():
-        path.unlink()
-    elif path.is_dir():
+    tipo = _tipo_nodo(path)
+    if tipo == "directorio":
         shutil.rmtree(path)
+    elif tipo is not None:
+        path.unlink()
 
 
 def _recrear_directorio_gestionado(path: Path) -> None:
     """Materializa un directorio cerrado sin conservar factores anteriores."""
     _retirar_ruta_gestionada(path)
     path.mkdir(parents=True)
+
+
+def _conflicto_propiedad_skill(path: Path, urn: str,
+                               target: str) -> str | None:
+    """Rechaza adquirir por homonimia una ruta que KORA no puede atribuirse."""
+    try:
+        tipo = _tipo_nodo(path)
+    except OSError:
+        tipo = "nodo ilegible"
+    if tipo is None:
+        return None
+    if tipo != "directorio" or not _sello_atribuye(
+            path / "SKILL.md", urn, target):
+        return (
+            f"conflicto de propiedad en '{path}': la skill existente "
+            f"no porta un sello atribuible a ({urn}, {target}); "
+            "no se reemplazó"
+        )
+    return None
+
+
+def _conflicto_propiedad_archivo(path: Path, urn: str,
+                                 target: str) -> str | None:
+    """Rechaza sobrescribir un factor file-based no atribuible a KORA."""
+    try:
+        tipo = _tipo_nodo(path)
+    except OSError:
+        tipo = "nodo ilegible"
+    if tipo is None:
+        return None
+    if tipo != "archivo regular" or not _sello_atribuye(path, urn, target):
+        return (
+            f"conflicto de propiedad en '{path}': el factor existente "
+            f"({tipo}) no porta un sello atribuible a ({urn}, {target}); "
+            "no se reemplazó"
+        )
+    return None
+
+
+def _conflicto_ancestros(path: Path) -> str | None:
+    """Exige directorios reales en toda la jerarquía previa al destino."""
+    absoluta = path if path.is_absolute() else Path.cwd() / path
+    actual = Path(absoluta.anchor)
+    for parte in absoluta.parent.parts[1:]:
+        actual /= parte
+        try:
+            tipo = _tipo_nodo(actual)
+        except OSError:
+            tipo = "nodo ilegible"
+        if tipo is None:
+            return None
+        if tipo != "directorio":
+            return (
+                f"jerarquía insegura: el ancestro '{actual}' es {tipo}; "
+                "no se siguió"
+            )
+    return None
 
 
 def _directorios_emitidos(raiz: Path,
@@ -1639,6 +1752,15 @@ def _validar_blueprint_openclaw(nombre: str, ruta: Path) -> str | None:
 
     reference = ruta.parent.parent / "openclaw.json.reference"
     try:
+        tipo_reference = _tipo_nodo(reference)
+    except OSError:
+        tipo_reference = "nodo ilegible"
+    if tipo_reference != "archivo regular":
+        return (
+            "no se pudo derivar una roster válida desde un archivo regular "
+            f"real en '{reference}'; aplicación bloqueada"
+        )
+    try:
         datos = json.loads(reference.read_text(encoding="utf-8"))
         agentes = datos["agents"]["list"]
         ids = [agente["id"] for agente in agentes]
@@ -1708,7 +1830,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
     nombre = art.campos["nombre"]
     if not _nombre_ruta_seguro(nombre):
         print(f"error: nombre inseguro para una ruta de runtime: '{nombre}'; "
-              "debe ser un único componente no vacío.", file=sys.stderr)
+              "debe ser un slug minúsculo con segmentos alfanuméricos "
+              "separados por guiones.", file=sys.stderr)
         return 1
     for otro in arts:
         if otro.urn and otro.urn != urn and \
@@ -1743,6 +1866,24 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
                 sys.stdout.write(("\n" if i else "") + f"=== {rel} ===\n")
             sys.stdout.write(contenido)
         return 0
+    destinos_emision = [
+        raiz / "_emision" / rel for rel, _ in archivos
+    ]
+    if target == "codex":
+        rels = {rel for rel, _ in archivos}
+        skill_anterior = raiz / "_emision/codex/skills" / nombre
+        agente_anterior = (
+            raiz / "_emision/codex/agents" / f"{nombre}.toml")
+        if not any(
+                rel.startswith(f"codex/skills/{nombre}/") for rel in rels):
+            destinos_emision.append(skill_anterior)
+        if f"codex/agents/{nombre}.toml" not in rels:
+            destinos_emision.append(agente_anterior)
+    for destino in destinos_emision:
+        conflicto = _conflicto_ancestros(destino)
+        if conflicto is not None:
+            print(f"error: emisión bloqueada: {conflicto}.", file=sys.stderr)
+            return 1
     if target == "codex":
         _limpiar_derivados_codex_v1(raiz, art, archivos)
     for directorio in _directorios_emitidos(raiz, archivos):
@@ -1751,6 +1892,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
     for rel, contenido in archivos:
         destino = raiz / "_emision" / rel
         destino.parent.mkdir(parents=True, exist_ok=True)
+        if _tipo_nodo(destino) not in (None, "archivo regular"):
+            _retirar_ruta_gestionada(destino)
         destino.write_text(contenido, encoding="utf-8")
         print(f"emitido: _emision/{rel}")
         if rel.endswith("/SKILL.md"):
@@ -1770,7 +1913,7 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
 def _aplicar(art: Artefacto, target: str,
              archivos: list[tuple[str, str]], proyecto: str | None) -> int:
     """Instala la emisión en el runtime real, honrando el `alcance` (ley/3 §7).
-    Las skills son productos cerrados; el workspace OpenClaw preserva todo lo
+    Las skills son productos cerrados; el blueprint OpenClaw preserva todo lo
     ajeno a sus factores KORA; los agentes file-based solo pisan su archivo."""
     nombre_art = art.campos["nombre"]
     alcance = art.campos.get("alcance", "ambos")
@@ -1801,6 +1944,10 @@ def _aplicar(art: Artefacto, target: str,
     else:
         ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
             nombre=nombre_art)).expanduser()
+    conflicto_jerarquia = _conflicto_ancestros(ruta)
+    if conflicto_jerarquia is not None:
+        print(f"error: {conflicto_jerarquia}.", file=sys.stderr)
+        return 1
     if not proyecto and target == "openclaw" and art.tipo == "agente":
         error_blueprint = _validar_blueprint_openclaw(nombre_art, ruta)
         if error_blueprint is not None:
@@ -1812,7 +1959,8 @@ def _aplicar(art: Artefacto, target: str,
             print("error: la skill personal de mayor precedencia "
                   f"'{sombra}' ya sombrea la instalación managed OpenClaw "
                   f"'{ruta}'. No se aplicó una copia inefectiva; resuelve el "
-                  "owner del target en el deploy por agente.", file=sys.stderr)
+                  "propietario del target en el deploy por agente.",
+                  file=sys.stderr)
             return 1
     if target == "codex" and art.tipo == "agente":
         if proyecto:
@@ -1823,13 +1971,34 @@ def _aplicar(art: Artefacto, target: str,
             agente = ruta
             skill = Path(RUTAS_APLICAR[("codex", "skill")].format(
                 nombre=nombre_art)).expanduser()
+        conflicto_jerarquia = _conflicto_ancestros(skill)
+        if conflicto_jerarquia is not None:
+            print(f"error: {conflicto_jerarquia}.", file=sys.stderr)
+            return 1
         hay_skill = any(
             len(Path(rel).parts) >= 4 and Path(rel).parts[1] == "skills"
             for rel, _ in archivos
         )
+        factores_agente = [
+            (agente, contenido)
+            for rel, contenido in archivos
+            if len(Path(rel).parts) >= 3
+            and Path(rel).parts[1] == "agents"
+        ]
+        for destino, _ in factores_agente:
+            conflicto = _conflicto_propiedad_archivo(
+                destino, art.urn or "", "codex")
+            if conflicto is not None:
+                print(f"error: {conflicto}.", file=sys.stderr)
+                return 1
         if hay_skill:
+            conflicto = _conflicto_propiedad_skill(
+                skill, art.urn or "", "codex")
+            if conflicto is not None:
+                print(f"error: {conflicto}.", file=sys.stderr)
+                return 1
             _recrear_directorio_gestionado(skill)
-        elif _sello_atribuye(
+        elif _tipo_nodo(skill) == "directorio" and _sello_atribuye(
                 skill / "SKILL.md", art.urn or "", "codex"):
             _retirar_ruta_gestionada(skill)
             print(f"retirado: {skill}")
@@ -1853,8 +2022,20 @@ def _aplicar(art: Artefacto, target: str,
                  or (art.tipo, target) == ("agente", "openclaw"))
     if dir_based:
         if art.tipo == "skill":
+            conflicto = _conflicto_propiedad_skill(
+                ruta, art.urn or "", target)
+            if conflicto is not None:
+                print(f"error: {conflicto}.", file=sys.stderr)
+                return 1
             _recrear_directorio_gestionado(ruta)
         else:
+            for rel, _ in archivos:
+                destino = ruta / Path(rel).name
+                conflicto = _conflicto_propiedad_archivo(
+                    destino, art.urn or "", "openclaw")
+                if conflicto is not None:
+                    print(f"error: {conflicto}.", file=sys.stderr)
+                    return 1
             emitidos = {Path(rel).name for rel, _ in archivos}
             soul = ruta / "SOUL.md"
             if "SOUL.md" not in emitidos and _sello_atribuye(
@@ -1865,6 +2046,11 @@ def _aplicar(art: Artefacto, target: str,
         if art.tipo == "skill":
             _copiar_referencias(art, ruta)
     else:
+        conflicto = _conflicto_propiedad_archivo(
+            ruta, art.urn or "", target)
+        if conflicto is not None:
+            print(f"error: {conflicto}.", file=sys.stderr)
+            return 1
         ruta.parent.mkdir(parents=True, exist_ok=True)
         ruta.write_text(archivos[0][1], encoding="utf-8")
     print(f"aplicado: {ruta}")
@@ -1874,25 +2060,88 @@ def _aplicar(art: Artefacto, target: str,
 # ---------------------------------------------------- paridad (ley/3 §9.1)
 
 def _unidades_emision(emision: Path):
-    """Unidades de emisión por target: (target, tipo-de-ruta, nombre, path).
-    Una persona Codex produce dos unidades (custom agent + skill explícita);
-    el agente openclaw es un workspace."""
-    for target_dir in sorted(p for p in emision.iterdir() if p.is_dir()):
+    """Descubre unidades sin seguir enlaces.
+
+    Devuelve `(unidades, anomalías)`. Una anomalía es
+    `(target|None, nombre|None, detalle)` y nunca deriva rutas runtime.
+    """
+    unidades = []
+    anomalias = []
+    try:
+        tipo_emision = _tipo_nodo(emision)
+    except OSError:
+        tipo_emision = "nodo ilegible"
+    if tipo_emision is None:
+        return unidades, anomalias
+    if tipo_emision != "directorio":
+        anomalias.append((
+            None, None, f"_emision es {tipo_emision}; no se recorrió"))
+        return unidades, anomalias
+
+    try:
+        targets = sorted(Path(e.path) for e in os.scandir(emision))
+    except OSError:
+        anomalias.append((None, None, "_emision es ilegible"))
+        return unidades, anomalias
+    for target_dir in targets:
         target = target_dir.name
-        skills = target_dir / "skills"
-        if skills.is_dir():
-            for d in sorted(p for p in skills.iterdir() if p.is_dir()):
-                if (d / "SKILL.md").is_file():
-                    yield target, "skill", d.name, d
-        agents = target_dir / "agents"
-        if agents.is_dir():
-            for f in sorted([*agents.glob("*.md"), *agents.glob("*.toml")]):
-                yield target, "agente", f.stem, f
-        workspaces = target_dir / "workspaces"
-        if workspaces.is_dir():
-            for d in sorted(p for p in workspaces.iterdir() if p.is_dir()):
-                if (d / "AGENTS.md").is_file():
-                    yield target, "agente", d.name, d
+        try:
+            tipo_target = _tipo_nodo(target_dir)
+        except OSError:
+            tipo_target = "nodo ilegible"
+        if tipo_target != "directorio":
+            anomalias.append((
+                target, None,
+                f"raíz de target es {tipo_target}; no se recorrió"))
+            continue
+        for coleccion, tipo_unidad, raiz_unidad, extensiones in (
+                ("skills", "skill", "SKILL.md", ()),
+                ("agents", "agente", None, (".md", ".toml")),
+                ("workspaces", "agente", "AGENTS.md", ())):
+            contenedor = target_dir / coleccion
+            try:
+                tipo_contenedor = _tipo_nodo(contenedor)
+            except OSError:
+                tipo_contenedor = "nodo ilegible"
+            if tipo_contenedor is None:
+                continue
+            if tipo_contenedor != "directorio":
+                anomalias.append((
+                    target, None,
+                    f"{coleccion}/ es {tipo_contenedor}; no se recorrió"))
+                continue
+            try:
+                entradas = sorted(Path(e.path) for e in os.scandir(contenedor))
+            except OSError:
+                anomalias.append((
+                    target, None, f"{coleccion}/ es ilegible"))
+                continue
+            for entrada in entradas:
+                nombre = entrada.stem if extensiones else entrada.name
+                if extensiones and entrada.suffix not in extensiones:
+                    continue
+                if not _nombre_ruta_seguro(nombre):
+                    anomalias.append((
+                        target, nombre,
+                        f"nombre inseguro en {coleccion}/; no se derivó ruta"))
+                    continue
+                try:
+                    tipo_entrada = _tipo_nodo(entrada)
+                    tipo_raiz = (
+                        _tipo_nodo(entrada / raiz_unidad)
+                        if raiz_unidad is not None
+                        and tipo_entrada == "directorio"
+                        else None
+                    )
+                except OSError:
+                    tipo_entrada = "nodo ilegible"
+                    tipo_raiz = None
+                if raiz_unidad is not None \
+                        and tipo_entrada == "directorio" \
+                        and tipo_raiz is None:
+                    continue
+                unidades.append((target, tipo_unidad, nombre, entrada))
+    return unidades, anomalias
 
 
 def _unidades_esperadas(arts: list[Artefacto]):
@@ -1916,12 +2165,149 @@ def _unidades_esperadas(arts: list[Artefacto]):
                     yield target, "skill", nombre, art
 
 
+def _unidades_runtime_posibles(arts: list[Artefacto]):
+    """Rutas user-level de toda forma donde el mismo URN puede persistir."""
+    for art in arts:
+        nombre = art.campos.get("nombre")
+        if art.tipo not in ("skill", "agente") or not art.urn \
+                or not isinstance(nombre, str) \
+                or not _nombre_ruta_seguro(nombre):
+            continue
+        for target in TARGETS_REALIZADOS:
+            for tipo in ("skill", "agente"):
+                if (target, tipo) in RUTAS_APLICAR:
+                    yield target, tipo, nombre, art
+
+
+def _campos_sello_unidad(path: Path, tipo: str) -> dict[str, str]:
+    """Lee el proof-carrier de una unidad solo tras validar su raíz real."""
+    try:
+        tipo_path = _tipo_nodo(path)
+    except OSError:
+        return {}
+    if tipo == "skill":
+        if tipo_path != "directorio":
+            return {}
+        sello = path / "SKILL.md"
+    elif tipo_path == "directorio":
+        sello = path / "AGENTS.md"
+    elif tipo_path == "archivo regular":
+        sello = path
+    else:
+        return {}
+    return _campos_ultimo_sello(sello)
+
+
+def _sello_atribuye_unidad(path: Path, tipo: str,
+                            urn: str, target: str) -> bool:
+    campos = _campos_sello_unidad(path, tipo)
+    return campos.get("fuente") == urn and campos.get("target") == target
+
+
+def _sello_atribuye_residuo(path: Path, tipo: str,
+                             urn: str, target: str) -> bool:
+    """Atribuye una unidad histórica por cualquiera de sus proof-carriers."""
+    if _sello_atribuye_unidad(path, tipo, urn, target):
+        return True
+    try:
+        es_directorio = _tipo_nodo(path) == "directorio"
+    except OSError:
+        es_directorio = False
+    return tipo == "agente" and es_directorio \
+        and _sello_atribuye(path / "SOUL.md", urn, target)
+
+
+def _conflictos_propiedad_blueprint(origen: Path, destino: Path,
+                                     urn: str, target: str) -> list[str]:
+    """Replica el preflight factor-a-factor de `--aplicar` en paridad."""
+    conflictos = []
+    for nombre in ("AGENTS.md", "SOUL.md"):
+        try:
+            tipo_origen = _tipo_nodo(origen / nombre)
+            tipo = _tipo_nodo(destino / nombre)
+        except OSError:
+            conflictos.append(f"nodo ilegible {nombre}")
+            continue
+        if tipo_origen is None:
+            continue
+        if tipo is not None and (
+                tipo != "archivo regular"
+                or not _sello_atribuye(destino / nombre, urn, target)):
+            conflictos.append(f"{tipo} {nombre} no atribuible")
+    return conflictos
+
+
+def _archivos_iguales(origen: Path, destino: Path) -> bool:
+    """Igualdad byte a byte con memoria acotada."""
+    with origen.open("rb") as fuente, destino.open("rb") as instalado:
+        while True:
+            bloque_fuente = fuente.read(64 * 1024)
+            bloque_instalado = instalado.read(64 * 1024)
+            if bloque_fuente != bloque_instalado:
+                return False
+            if not bloque_fuente:
+                return True
+
+
+def _diferencias_materia(origen: Path, destino: Path,
+                         esperados: dict[str, str],
+                         observados: dict[str, str]) -> list[str]:
+    materia_esperada = {
+        rel for rel, tipo in esperados.items() if tipo != "directorio"
+    }
+    difieren: list[str] = []
+    for rel in sorted(materia_esperada):
+        tipo_esperado = esperados[rel]
+        tipo_observado = observados.get(rel)
+        if tipo_observado is None:
+            difieren.append(f"falta {rel}")
+        elif tipo_esperado != "archivo regular":
+            difieren.append(f"emisión contiene {tipo_esperado} {rel}")
+        elif tipo_observado != "archivo regular":
+            difieren.append(f"{tipo_observado} {rel}")
+        elif not _archivos_iguales(origen / rel, destino / rel):
+            difieren.append(f"difiere {rel}")
+    return difieren
+
+
+def _diferencias_skill_cerrada(origen: Path, destino: Path) -> list[str]:
+    """Compara la fibra cerrada sin seguir enlaces ni leer sus sobrantes."""
+    esperados = _inventario_nodos(origen)
+    observados = _inventario_nodos(destino)
+    difieren = _diferencias_materia(
+        origen, destino, esperados, observados)
+    materia_esperada = {
+        rel for rel, tipo in esperados.items() if tipo != "directorio"
+    }
+    materia_observada = {
+        rel for rel, tipo in observados.items() if tipo != "directorio"
+    }
+    for rel in sorted(materia_observada - materia_esperada):
+        tipo = observados[rel]
+        etiqueta = rel if tipo == "archivo regular" else f"{tipo} {rel}"
+        difieren.append(f"sobra {etiqueta}")
+    return difieren
+
+
+def _diferencias_blueprint(origen: Path, destino: Path) -> list[str]:
+    """Compara solo factores emitidos; el resto del blueprint es runtime."""
+    esperados = _inventario_nodos(origen)
+    observados = {}
+    for rel, tipo in esperados.items():
+        if tipo == "directorio":
+            continue
+        observado = _tipo_nodo(destino / rel)
+        if observado is not None:
+            observados[rel] = observado
+    return _diferencias_materia(origen, destino, esperados, observados)
+
+
 def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     """Paridad emisión↔instalación de nivel usuario (ley/3 §9.1). Solo
     lectura: `fiel` = frontera KORA gestionada byte-idéntica a la emisión;
     `desviada` = instalación presente que difiere (stale o editada);
     `no-instalada` = informativo (el gesto no decide si debe instalarse).
-    Las skills se comparan como directorios cerrados. En workspaces OpenClaw
+    Las skills se comparan como directorios cerrados. En blueprints OpenClaw
     solo gobierna AGENTS.md y el SOUL.md atribuible al mismo par KORA; el
     scaffolding y la memoria del runtime quedan fuera. Nivel proyecto fuera
     del barrido (declarado)."""
@@ -1935,36 +2321,149 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                   file=sys.stderr)
             return 1
         nombre_filtro = art.campos.get("nombre")
+    for fuente in arts:
+        if fuente.tipo not in ("skill", "agente"):
+            continue
+        nombre = fuente.campos.get("nombre")
+        if nombre_filtro is not None and nombre != nombre_filtro:
+            continue
+        if not isinstance(nombre, str) or not _nombre_ruta_seguro(nombre):
+            print("error: paridad no deriva rutas desde un nombre inseguro: "
+                  f"'{nombre}'. Corrige `forma-valida` primero.",
+                  file=sys.stderr)
+            return 1
     esperadas = list(_unidades_esperadas(arts))
     esperadas = [u for u in esperadas
                  if (target is None or u[0] == target)
                  and (nombre_filtro is None or u[2] == nombre_filtro)]
-    unidades = list(_unidades_emision(emision)) if emision.is_dir() else []
+    unidades, anomalias_emision = _unidades_emision(emision)
     unidades = [u for u in unidades
                 if (target is None or u[0] == target)
                 and (nombre_filtro is None or u[2] == nombre_filtro)]
+    anomalias_emision = [
+        a for a in anomalias_emision
+        if (target is None or a[0] is None or a[0] == target)
+        and (nombre_filtro is None or a[1] is None
+             or a[1] == nombre_filtro)
+    ]
     fuentes = {(t, tipo, nombre): art
                for t, tipo, nombre, art in esperadas}
-    claves_emitidas = {(t, tipo, nombre) for t, tipo, nombre, _ in unidades}
+    grupos_emision = {}
+    for unidad in unidades:
+        grupos_emision.setdefault(unidad[:3], []).append(unidad)
+    ambiguas = {
+        clave: grupo for clave, grupo in grupos_emision.items()
+        if len(grupo) > 1
+    }
+    unidades = [
+        grupo[0] for clave, grupo in grupos_emision.items()
+        if clave not in ambiguas
+    ]
+    sellos_emision = {}
+    historicas = []
+    for tgt, tipo, nombre, origen in unidades:
+        sello = _campos_sello_unidad(origen, tipo)
+        sellos_emision[(tgt, tipo, nombre)] = sello
+    claves_emitidas = set(grupos_emision)
+    claves_emitidas_validas = {
+        clave for clave, sello in sellos_emision.items()
+        if clave in fuentes
+        and sello.get("fuente") == (fuentes[clave].urn or "")
+        and sello.get("target") == clave[0]
+    }
     faltantes = [u for u in esperadas if u[:3] not in claves_emitidas]
-    if not unidades and not esperadas:
-        print("paridad: sin artefactos activos que verificar.")
-        return 0
+    sin_unidades_activas = not grupos_emision and not esperadas
     for tgt, tipo, nombre, _ in faltantes:
         print(f"paridad: sin-emision    {tgt}  {nombre} ({tipo})")
-    fiel = desviadas = ausentes = 0
+    fiel = ausentes = 0
+    desviadas = len(anomalias_emision) + len(ambiguas)
+    for tgt, nombre, detalle in anomalias_emision:
+        print(f"paridad: desviada      {tgt or '_emision'}  "
+              f"{nombre or '(estructura)'} :: {detalle}")
+    for (tgt, _tipo, nombre), grupo in ambiguas.items():
+        rutas = ", ".join(
+            p.relative_to(emision).as_posix() for *_, p in grupo)
+        print(f"paridad: desviada      {tgt}  {nombre} :: "
+              f"emisión ambigua: {rutas}")
+    jerarquias_inseguras = set()
     for tgt, tipo, nombre, origen in unidades:
+        clave = (tgt, tipo, nombre)
         plantilla = RUTAS_APLICAR.get((tgt, tipo))
         if plantilla is None:
             continue
         destino = Path(plantilla.format(nombre=nombre)).expanduser()
-        if origen.is_dir():
-            existe = destino.is_dir()
-        else:
-            existe = destino.is_file()
-        if not existe:
+        conflicto_jerarquia = _conflicto_ancestros(destino)
+        if conflicto_jerarquia is not None:
+            jerarquias_inseguras.add(conflicto_jerarquia)
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  f"{conflicto_jerarquia}")
+            continue
+        fuente_esperada = fuentes.get(clave)
+        if fuente_esperada is not None and clave not in claves_emitidas_validas:
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  "el sello de emisión no atribuye la unidad activa "
+                  f"a ({fuente_esperada.urn}, {tgt})")
+            continue
+        try:
+            tipo_origen = _tipo_nodo(origen)
+            tipo_destino = _tipo_nodo(destino)
+        except OSError as exc:
+            ilegible = Path(exc.filename).name if exc.filename else nombre
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  f"ilegible {ilegible}")
+            continue
+        if fuente_esperada is None:
+            historicas.append(clave)
+            continue
+        if tipo_destino is None:
             ausentes += 1
             print(f"paridad: no-instalada  {tgt}  {nombre}")
+            continue
+        if tipo_destino != tipo_origen:
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  f"tipo incompatible: esperado {tipo_origen}, "
+                  f"observado {tipo_destino}")
+            continue
+        es_blueprint = tgt == "openclaw" and tipo == "agente" \
+            and tipo_destino == "directorio"
+        if es_blueprint:
+            factores_emitidos = [
+                factor for factor in ("AGENTS.md", "SOUL.md")
+                if _tipo_nodo(origen / factor) is not None
+            ]
+            hay_factor_emitido = any(
+                _tipo_nodo(destino / factor) is not None
+                for factor in factores_emitidos
+            )
+            hay_soul_residual = "SOUL.md" not in factores_emitidos \
+                and _sello_atribuye(
+                    destino / "SOUL.md",
+                    fuente_esperada.urn or "", tgt)
+            if not hay_factor_emitido and not hay_soul_residual:
+                ausentes += 1
+                print(f"paridad: no-instalada  {tgt}  {nombre}")
+                continue
+        conflictos_blueprint = (
+            _conflictos_propiedad_blueprint(
+                origen, destino, fuente_esperada.urn or "", tgt)
+            if es_blueprint else []
+        )
+        if conflictos_blueprint:
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  "conflicto de propiedad: "
+                  + ", ".join(conflictos_blueprint))
+            continue
+        if not es_blueprint and not _sello_atribuye_unidad(
+                destino, tipo, fuente_esperada.urn or "", tgt):
+            desviadas += 1
+            print(f"paridad: desviada      {tgt}  {nombre} :: "
+                  "conflicto de propiedad: el proof-carrier no atribuye la "
+                  f"instalación a ({fuente_esperada.urn}, {tgt})")
             continue
         if tgt == "openclaw" and tipo == "skill":
             sombra = _skill_personal_sombrea_openclaw(nombre)
@@ -1974,37 +2473,19 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                       f"instalación managed sombreada globalmente por {sombra}")
                 continue
         try:
-            if origen.is_dir():
-                esperados_archivos = _mapa_archivos(origen)
+            if tipo_origen == "directorio":
                 if tipo == "skill":
-                    observados = _mapa_archivos(destino)
+                    difieren = _diferencias_skill_cerrada(origen, destino)
                 else:
-                    observados = {
-                        rel: (destino / rel).read_bytes()
-                        for rel in esperados_archivos
-                        if (destino / rel).is_file()
-                    }
+                    difieren = _diferencias_blueprint(origen, destino)
                     fuente = fuentes.get((tgt, tipo, nombre))
                     soul = destino / "SOUL.md"
                     if tgt == "openclaw" \
-                            and "SOUL.md" not in esperados_archivos \
+                            and _tipo_nodo(origen / "SOUL.md") is None \
                             and fuente is not None and _sello_atribuye(
                                 soul, fuente.urn or "", tgt):
-                        observados["SOUL.md"] = soul.read_bytes()
-                faltan_archivos = sorted(
-                    esperados_archivos.keys() - observados.keys())
-                sobran_archivos = sorted(
-                    observados.keys() - esperados_archivos.keys())
-                cambian_archivos = sorted(
-                    rel for rel in esperados_archivos.keys()
-                    & observados.keys()
-                    if esperados_archivos[rel] != observados[rel])
-                difieren = (
-                    [f"falta {rel}" for rel in faltan_archivos]
-                    + [f"difiere {rel}" for rel in cambian_archivos]
-                    + [f"sobra {rel}" for rel in sobran_archivos]
-                )
-            elif origen.read_bytes() != destino.read_bytes():
+                        difieren.append("sobra SOUL.md")
+            elif not _archivos_iguales(origen, destino):
                 difieren = [f"difiere {destino.name}"]
             else:
                 difieren = []
@@ -2018,25 +2499,56 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
         else:
             fiel += 1
             print(f"paridad: fiel          {tgt}  {nombre}")
-    for tgt, tipo, nombre, fuente in esperadas:
-        if tgt != "codex" or tipo != "agente" \
-                or fuente.campos.get("forma") == "agente" \
-                or (tgt, "skill", nombre) in claves_emitidas:
+    posibles = list(_unidades_runtime_posibles(arts))
+    posibles = [
+        unidad for unidad in posibles
+        if (target is None or unidad[0] == target)
+        and (nombre_filtro is None or unidad[2] == nombre_filtro)
+    ]
+    residuos_reportados = set()
+    for tgt, tipo, nombre, fuente in posibles:
+        clave = (tgt, tipo, nombre)
+        if clave in fuentes:
             continue
-        plantilla = RUTAS_APLICAR.get(("codex", "skill"))
+        plantilla = RUTAS_APLICAR.get((tgt, tipo))
         if plantilla is None:
             continue
-        skill = Path(plantilla.format(nombre=nombre)).expanduser()
-        if _sello_atribuye(
-                skill / "SKILL.md", fuente.urn or "", "codex"):
+        destino = Path(plantilla.format(nombre=nombre)).expanduser()
+        conflicto_jerarquia = _conflicto_ancestros(destino)
+        if conflicto_jerarquia is not None:
+            if conflicto_jerarquia not in jerarquias_inseguras:
+                jerarquias_inseguras.add(conflicto_jerarquia)
+                desviadas += 1
+                print(f"paridad: desviada      {tgt}  (estructura) :: "
+                      f"{conflicto_jerarquia}")
+            continue
+        if _sello_atribuye_residuo(
+                destino, tipo, fuente.urn or "", tgt):
+            if clave in residuos_reportados:
+                continue
+            residuos_reportados.add(clave)
             desviadas += 1
-            print(f"paridad: desviada      codex  {nombre} :: "
-                  "sobra skill complementaria gestionada")
+            if tgt == "codex" and tipo == "skill" \
+                    and fuente.tipo == "agente":
+                detalle = "sobra skill complementaria gestionada"
+            else:
+                detalle = "instalación residual de unidad no vigente"
+            print(f"paridad: desviada      {tgt}  {nombre} :: {detalle}")
+    for tgt, tipo, nombre in dict.fromkeys(historicas):
+        if (tgt, tipo, nombre) in residuos_reportados:
+            continue
+        ausentes += 1
+        print(f"paridad: no-instalada  {tgt}  {nombre} "
+              "(emisión histórica)")
+    if sin_unidades_activas and not desviadas:
+        print("paridad: sin artefactos activos que verificar.")
+        return 0
     print(f"paridad: {fiel} fiel · {desviadas} desviadas · "
           f"{ausentes} no-instaladas · {len(faltantes)} sin-emision.")
     if desviadas or faltantes:
-        print("veredicto: transmutar las unidades sin-emision y re-transmutar "
-              "--aplicar las desviadas (o auditar la edición runtime).")
+        print("veredicto: transmutar las unidades sin-emision; reaplicar solo "
+              "drift activo atribuible; adjudicar los conflictos de propiedad "
+              "y retirar manualmente las unidades residuales.")
         return 1
     return 0
 

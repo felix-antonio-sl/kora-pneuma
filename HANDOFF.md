@@ -9,9 +9,10 @@
 
 El ciclo de revisión y transición **Claude Code → Codex** permanece cerrado en
 `master`. El mantenimiento posterior fortaleció la paridad de las superficies
-gestionadas sin reabrir esa migración.
+gestionadas y separó nombre de propiedad sin reabrir esa migración.
 
-- La corrección técnica quedó publicada en `1f0691a`.
+- La base de paridad exacta nació en `1f0691a`; el estado vigente se verifica
+  en `ley/3-transmutacion.md` y `kora.py`.
 - Los informes operativos fechados quedaron fuera del corpus vivo y fueron
   desplazados posteriormente a `_archivo/`, conforme a la política documental.
 - La única reconciliación externa de este mantenimiento reconstruyó la skill
@@ -30,10 +31,16 @@ gestionadas sin reabrir esa migración.
 3. **Completitud y tipos honestos.** Se rechazan targets no declarados/no
    realizados, unidades sin archivo raíz y factores residuales. La pérdida
    Codex de `herramientas` se declara como fidelidad parcial no reticular.
-4. **Reconciliación y paridad exacta.** Las skills son directorios cerrados:
-   un factor instalado sobrante es drift y reaplicar lo retira. Los workspaces
-   OpenClaw permanecen abiertos; KORA solo gobierna sus factores atribuibles.
-   El estado vigente se consulta bajo demanda.
+4. **Reconciliación y paridad exacta.** Toda ruta gestionada se reconcilia
+   después de demostrar su propiedad por sello: un homónimo ajeno se preserva
+   y bloquea en vez de ser reemplazado. Las skills son directorios cerrados;
+   factores sobrantes, emisiones ambiguas, residuos atribuibles y nodos
+   incompatibles —también en ancestros— son drift. El barrido residual cubre
+   formas históricas del mismo URN sin obligar despliegues ausentes. Los
+   blueprints OpenClaw aplicados permanecen abiertos: un contenedor vacío no
+   cuenta como instalación y KORA solo gobierna los nombres emitidos y sus
+   residuos atribuibles. El workspace runtime privado queda fuera y lo
+   materializa el deploy fleet. El estado vigente se consulta bajo demanda.
 5. **Superficie Codex saneada.** En `/home/felix/.codex/config.toml` quedó
    `default_permissions = ":workspace"` sin el `sandbox_mode` incompatible;
    los artefactos legacy/absorbidos identificados quedaron deshabilitados
@@ -62,6 +69,10 @@ gestionadas sin reabrir esa migración.
    reversibilidad y evita reactivaciones por rollback o reinstalación.
 7. **No cambiar modelo por intuición.** La eficiencia de `medium` frente a
    `max` debe decidirse con evals representativos, no con preferencia general.
+8. **Nombre no equivale a propiedad.** El slug selecciona una ruta candidata;
+   solo el sello `(URN,target)` autoriza reconciliación destructiva. La ausencia
+   en otro runtime sigue siendo informativa: emitir capacidad no obliga a
+   desplegarla en todos los targets.
 
 ## Aprendizajes destilados
 
@@ -72,7 +83,8 @@ El hash de la fuente solo prueba identidad de entrada. La garantía útil exige:
 `fuente actual → generador vigente → producto completo → instalación`.
 
 `velar` gobierna los tres primeros términos; paridad gobierna el último. Una
-gate no sustituye a la otra.
+gate no sustituye a la otra ni se ejecuta implícitamente dentro de
+`--aplicar`.
 
 ### 2. Sidecars y referencias también son producto
 
@@ -120,7 +132,8 @@ afirmaciones falsas.
 - `1f0691a` — `fix(kora): cerrar paridad de superficies gestionadas`.
 - `ab00f6f` — `docs(kora): memorizar transición a Codex`.
 - Núcleo: `kora.py`.
-- Ley afectada: `ley/0-constitucion.md` y `ley/3-transmutacion.md`.
+- Ley afectada: `ley/0-constitucion.md`, `ley/2-forma.md` y
+  `ley/3-transmutacion.md`.
 - Guía: `artefactos/conocimiento/kora/guia-rapida-pneuma.md`.
 - Valor migrado:
   `artefactos/skills/kora/consenso-deliberativo/{SKILL.md,referencias/}`.

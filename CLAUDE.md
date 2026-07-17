@@ -89,8 +89,10 @@ python3 -m unittest discover -s tests
   desarrollar nuevo conocimiento allí.
 - **Reemitir no es desplegar.** La reemisión local sin `--aplicar` solo renueva
   un derivado: no sustituye las gates ni autoriza desplegar. `--aplicar` exige
-  las gates verdes. La emisión porta su versión y `hash-fuente`; los
-  consumidores externos leen ese sello, no el frontmatter.
+  las gates verdes como **precondición operacional externa**: no ejecuta
+  `velar --estricto`, la suite ni paridad dentro del gesto. La emisión porta su
+  versión y `hash-fuente`; los consumidores externos leen ese sello, no el
+  frontmatter.
 - **Cierre de despliegue proporcional.** Tras las gates, verificar cada
   artefacto agéntico modificado con `transmutar --paridad --urn <URN>`. Si
   cambia el contrato o la implementación de transmutación (`ley/3` o el tramo

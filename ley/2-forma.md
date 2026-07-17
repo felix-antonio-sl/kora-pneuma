@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.4.0
+# KORA/Forma — ley pneuma v1.5.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -69,7 +69,7 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | Clave | Oblig. | Tipo | Notas |
 |---|---|---|---|
 | `urn` | sí | string | regex de constitución §7; SIN versión embebida |
-| `nombre` | sí | string | slug humano |
+| `nombre` | sí | string | slug ASCII seguro (§2.1) |
 | `version` | sí | semver `X.Y.Z` | fuera del URN |
 | `estado` | sí | enum | según la cadena del tipo (constitución §8) |
 | `descripcion` | sí | string 1 línea | disparador y uso |
@@ -82,6 +82,26 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | `depende` | no | lista URNs | DAG estricto (§9) |
 | `reemplaza` | no | lista URNs | poset estricto; target muerto (§9) |
 | `refina` | no | lista URNs | acíclico (§9) |
+
+### 2.1 Nombre material
+
+El `nombre` de **todo artefacto**, sin distinción de tipo, DEBE cumplir la
+regex:
+
+```text
+^[a-z0-9]+(?:-[a-z0-9]+)*$
+```
+
+Es un slug ASCII minúsculo formado por segmentos alfanuméricos no vacíos
+separados por un solo guion. Por construcción es un único componente de ruta:
+no admite espacios, controles, puntos, separadores, NUL, `.` ni `..`.
+`forma-valida` mecaniza esta gramática antes de que cualquier gesto derive una
+ruta; `lugar-coincide` verifica después su correspondencia con el filesystem
+(§6).
+
+El nombre localiza una ruta candidata, pero **no prueba su propiedad**. Cuando
+esa ruta ya existe en una instalación, la atribución a KORA se demuestra por
+el sello `(URN,target)` conforme a `ley/3 §7`.
 
 ## 3. Campos agénticos (agentes y skills)
 
@@ -284,6 +304,7 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | Regla | Detalle | Enforcement |
 |---|---|---|
 | Gramática y campos del shape | §§1-5: parse, obligatorios por tipo, claves desconocidas, enums, semver | mecanizado (`forma-valida`) |
+| `nombre` seguro para todo tipo | §2.1: slug ASCII y componente único de ruta | mecanizado (`forma-valida`) |
 | URN: gramática, régimen, unicidad | constitución §7 | mecanizado (`nombre-verdadero`) |
 | Zona, namespace y nombre de archivo | §6 | mecanizado (`lugar-coincide`) |
 | Rangos del vector | §3 | mecanizado (`vector-en-reticulo`) |
@@ -315,3 +336,9 @@ el cuerpo, para los targets que segregan voz (`openclaw`, `ley/3 §7`). Aditivo:
 sin centinela el cuerpo queda byte-idéntico. Predicado literal decidible
 (forma-no-verdad: el núcleo no segmenta prosa). Sin campo, sin check; validado al
 emitir, no por `velar`. Habilita la realización de `T-openclaw-pneuma-v1`.
+
+v1.5.0 (2026-07-17): §2.1 precisa de forma compatible la gramática de
+`nombre` para los tres tipos: slug ASCII minúsculo y componente único de ruta.
+`forma-valida` la mecaniza antes de derivar paths; la propiedad de una
+instalación homónima sigue siendo una cuestión distinta, demostrada por sello
+en `ley/3`.

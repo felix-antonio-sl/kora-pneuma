@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.5.0
+# KORA/Transmutación — ley pneuma v2.6.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -370,14 +370,33 @@ runtime privado, preservando memoria y estado mutable.
 Una **skill** es un producto cerrado: KORA administra el directorio
 `skills/{nombre}/` completo, tanto en `_emision` como en el destino de
 `--aplicar`. Re-transmutar y reaplicar lo materializan como el mapa exacto
-`ruta-relativa → bytes` del producto vigente; ningún factor anterior sobrevive.
-La skill complementaria de una persona Codex obedece la misma regla.
+`ruta-relativa → bytes` del producto vigente; ningún factor KORA anterior
+sobrevive.
 
-Toda unidad bajo `_emision/` es un derivado cerrado. El **workspace OpenClaw
-instalado**, en cambio, es una superficie abierta: KORA sobrescribe `AGENTS.md`
-y el `SOUL.md` emitido; si una nueva emisión deja de producir `SOUL.md`, solo
-retira el anterior cuando su sello lo atribuye al mismo `(URN,target)`.
-Preserva memoria, scaffolding y cualquier factor no atribuible a KORA. Los
+La exactitud comienza **después de adquirir la propiedad**, no antes. `nombre`
+selecciona una ruta candidata; el último bloque `kora:sello` legible del
+proof-carrier raíz debe atribuir la instalación al mismo `(URN,target)`.
+`--aplicar` PUEDE crear una ruta ausente y PUEDE reemplazar o retirar una ruta
+ya atribuida a ese par. Si el destino existe pero carece de ese sello —o porta
+otro par— es un homónimo no atribuible: conflicto bloqueante, preservado sin
+mutación. La regla cubre el `SKILL.md` raíz, los agentes de archivo único, el
+TOML Codex y cada `AGENTS.md`/`SOUL.md` emitido para OpenClaw. Todos los
+factores se validan antes de mutar uno; un directorio incompatible, symlink o
+nodo especial tampoco transfiere propiedad y NUNCA se sigue, aunque aparezca
+en un ancestro de la ruta final. La skill complementaria Codex obedece la misma
+regla. Esta adquisición rige destinos instalados; `_emision/` ya es una zona
+derivada y cerrada propiedad de KORA (constitución §6).
+Esa propiedad autoriza reemplazar con `lstat` un leaf incompatible dentro de
+`_emision/`, pero no atravesar un ancestro enlazado: todos los destinos de
+emisión y toda limpieza de derivados se preflightan antes de mutar uno.
+
+Toda unidad bajo `_emision/` es un derivado cerrado. El **blueprint OpenClaw
+aplicado**, en cambio, es una superficie abierta: KORA gobierna por nombre
+únicamente `AGENTS.md` y el `SOUL.md` efectivamente emitido. Si el producto
+vigente deja de emitir `SOUL.md`, solo retira el residual cuando su sello lo
+atribuye al mismo `(URN,target)`. Preserva los demás nombres del blueprint,
+incluidos scaffolding y material ajeno. El workspace runtime privado queda
+fuera: lo materializa el deploy fleet preservando memoria y estado mutable. Los
 agentes de archivo único solo administran su archivo exacto y no tocan hermanos
 del directorio.
 
@@ -411,9 +430,9 @@ honra. La emisión canónica en `_emision/` es siempre alcance-neutral.
 Los espacios de emisión por runtime son **planos** (un directorio por
 `nombre`): dos artefactos con el mismo `nombre` y URN distinto NO DEBEN
 emitirse — `transmutar` falla nombrando la colisión; renombra uno.
-Antes de construir o retirar una ruta, `transmutar` exige que `nombre` sea un
-único componente no vacío: `.`/`..`, separadores y NUL abortan sin mutar el
-producto. `forma-valida` denuncia la misma incoherencia en el corpus.
+Antes de construir o retirar una ruta, `transmutar` exige el slug canónico
+definido en `ley/2 §2.1`; cualquier otro `nombre` aborta sin mutar el producto.
+`forma-valida` denuncia la misma incoherencia en el corpus.
 
 ## 8. El gesto inverso (Lift)
 
@@ -463,23 +482,43 @@ barre todas las emisiones.
 
 Reglas:
 
-1. Veredictos por unidad de emisión: `fiel` (frontera KORA gestionada
-   byte-idéntica), `desviada` (instalación presente que difiere — stale porque
-   la fuente avanzó, editada en el runtime o con factor gestionado sobrante:
-   todos son drift), `no-instalada` (informativo: el gesto no decide si un
-   artefacto debe estar instalado), y `sin-emision` (un artefacto `activo`
-   promete el target pero no tiene la unidad derivada correspondiente).
+1. Veredictos por unidad: `fiel` (frontera KORA gestionada byte-idéntica),
+   `desviada` (drift bloqueante), `no-instalada` (la unidad KORA no está
+   materializada; informativo, porque el gesto no decide dónde desplegar) y
+   `sin-emision` (un artefacto `activo` promete el target pero no tiene la
+   unidad derivada correspondiente). Son `desviada`, entre otros: bytes distintos, factor
+   gestionado sobrante, nodo de tipo incompatible, symlink o nodo especial,
+   homónimo no atribuible en una ruta que KORA necesitaría adquirir y residuo
+   atribuible de una fuente que ya no está activa o cuyo producto vigente ya no
+   contiene esa unidad.
+   La enumeración tampoco sigue enlaces en `_emision/`: una raíz, colección o
+   unidad no regular produce drift. Dos productos emitidos que colapsen al
+   mismo `(target,tipo,nombre)` producen un único veredicto `desviada` por
+   emisión ambigua, nunca veredictos contradictorios. La inspección runtime
+   aplica el mismo no-seguimiento a todos los ancestros de la ruta.
 2. Exit 1 si existe alguna `desviada` o `sin-emision`; el veredicto es
-   transmutar lo faltante y re-transmutar `--aplicar` lo desviado (o auditar la
-   edición hecha en el runtime). `no-instalada` no falla.
+   transmutar lo faltante y, solo para drift activo en una ruta ausente o
+   atribuida, re-transmutar `--aplicar`. Un conflicto de propiedad exige
+   adjudicación y un residual no vigente exige retirada manual: la recomendación
+   automática NO DEBE destruir un homónimo ni fingir que una fuente inactiva
+   admite reaplicación. `no-instalada` no falla.
 3. En una skill, `fiel` exige igualdad exacta del mapa
-   `ruta-relativa → bytes`: un factor instalado sobrante también es drift. En
-   un workspace OpenClaw solo se comparan los factores emitidos y un
-   `SOUL.md` residual cuyo sello lo atribuya al mismo `(URN,target)`; el
-   scaffolding, la memoria y los factores ajenos quedan fuera (§7.1). Tras
-   reemitir una persona Codex como subagente, una skill complementaria
-   instalada que siga sellada por la misma fuente sin unidad esperada es
-   `desviada`.
+   `ruta-relativa → bytes`, una vez demostrada la atribución del directorio: un
+   factor instalado sobrante también es drift. En un blueprint OpenClaw
+   aplicado solo se comparan los nombres emitidos y un `SOUL.md` residual cuyo
+   sello lo atribuya al mismo `(URN,target)`; los demás nombres y el workspace
+   runtime privado quedan fuera (§7.1). Una skill complementaria Codex
+   histórica que siga atribuida a la misma fuente pero ya no forme parte del
+   producto vigente es
+   `desviada`; su limpieza no presupone ni legitima una democión de forma
+   (`ley/2 §7.1`). El barrido residual prueba ambos tipos de ruta por cada URN:
+   así una promoción legal de forma no oculta el producto anterior, sin
+   convertir su ausencia en obligación de despliegue. La atribución se deriva
+   del corpus y la instalación, no de la presencia ni salud de `_emision/`.
+   En la superficie abierta OpenClaw, un blueprint preexistente sin ninguno de
+   los factores KORA emitidos ni residuales atribuibles es `no-instalada`: el
+   scaffolding contenedor no equivale a despliegue. Un factor ajeno presente
+   bloquea solo si ocupa un nombre que el producto intenta gestionar.
 4. Alcance honesto: la paridad cubre las instalaciones de **nivel
    usuario/flota** (las rutas de `--aplicar`); las instalaciones `--proyecto`
    quedan fuera del barrido (declarado, no mecanizado).
@@ -490,6 +529,9 @@ Reglas:
    `targets` realizados. Una persona Codex promete dos unidades —custom agent
    y skill explícita—; un subagente Codex promete una. Un directorio sin su
    archivo raíz (`SKILL.md` o `AGENTS.md`) no constituye una unidad emitida.
+   Esta promesa exige **emisión**, no instalación: cada runtime se despliega de
+   forma independiente y una unidad ausente puede seguir siendo
+   `no-instalada` sin conflicto.
 7. Si una skill managed OpenClaw existe pero el homónimo del layout personal
    Codex/KORA también existe, la unidad es `desviada`, no `fiel`. Otras fuentes
    de precedencia permanecen fuera de este barrido y pertenecen al deploy.
@@ -510,14 +552,15 @@ clase de fallos sin fingir que la instalación es corpus.
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
-| `nombre` seguro como componente de ruta antes de reconciliar | §7 | mecanizado (`forma-valida`, `transmutar`) |
+| `nombre` seguro como componente de ruta antes de reconciliar | ley/2 §2.1, §7 | mecanizado (`forma-valida`, `transmutar`) |
+| Propiedad de toda ruta instalada antes de reemplazar o retirar | §7: sello `(URN,target)`; homónimo preservado; preflight de factores y ancestros | mecanizado (`transmutar --aplicar`) |
 | Frontera `herramientas` de Codex declarada como pérdida no reticular tipada | §5 r3/r7, §7 | mecanizado (`transmutar`) |
 | Frontera `herramientas` de OpenClaw declarada; realización config diferenciada | §7.1 | declaración mecanizada (`transmutar`); realización verificada en deploy |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
-| Paridad exacta de la superficie KORA (emisión↔instalación de nivel usuario) | §9.1 | mecanizado (`transmutar --paridad`) |
+| Paridad exacta y tipada de la superficie KORA (emisión↔instalación de nivel usuario) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
 | Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
 | Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
@@ -599,12 +642,12 @@ funtor y del check.
 v2.4.0 (2026-07-17): hace cerrados y exactos los directorios de skills en
 emisión, aplicación y paridad; un factor instalado sobrante deja de producir
 un falso `fiel`, y re-transmutar/reaplicar cierra el ciclo retirándolo. Mantiene
-abiertos los workspaces OpenClaw: solo retira un `SOUL.md` no emitido cuando el
+abiertas las superficies OpenClaw: solo retira un `SOUL.md` no emitido cuando el
 sello lo atribuye al mismo par KORA, y preserva memoria,
-scaffolding y material ajeno. También retira de forma atribuida la skill
-complementaria Codex que queda obsoleta al pasar persona→subagente, y rechaza
-nombres que no sean componentes de ruta seguros antes de cualquier limpieza.
-Endurece la frontera name-keyed sin cambiar los ids de funtor ni del check.
+scaffolding y material ajeno. También retira de forma atribuida una skill
+complementaria Codex histórica ausente del producto vigente, y rechaza nombres
+que no sean componentes de ruta seguros antes de cualquier limpieza. Endurece
+la frontera name-keyed sin cambiar los ids de funtor ni del check.
 
 v2.5.0 (2026-07-17): distingue capacidad global de proyección y membresía de
 una flota. Un agente con `target: openclaw` puede emitirse para cualquier
@@ -613,3 +656,14 @@ consumidor, pero `--aplicar` sobre `openclaw-fleet` exige roster positiva en
 membresía por efecto colateral. La aplicación escribe el blueprint declarativo
 y deja la materialización del workspace privado al deploy fleet. No cambia los
 ids de funtor ni el carácter informativo de `no-instalada`.
+
+v2.6.0 (2026-07-17): separa identidad nominal de propiedad operacional. Toda
+ruta instalada solo puede reconciliarse destructivamente tras atribuir su sello
+al mismo `(URN,target)`; el preflight es completo y un homónimo no atribuible se
+preserva y bloquea. Paridad trata como drift los conflictos de tipo o propiedad,
+symlinks, nodos especiales, emisiones ambiguas y residuos atribuibles aun sin
+derivado local o tras promoción de forma, manteniendo `no-instalada`
+informativo y el despliegue independiente por runtime. Precisa además la
+frontera abierta OpenClaw —un blueprint vacío sigue no instalado—, preflighta
+emisión e instalación sin seguir ancestros y describe la limpieza de companions
+históricos sin normalizar la democión prohibida por `ley/2`.
