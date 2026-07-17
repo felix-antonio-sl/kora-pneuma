@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.4.0
+# KORA/Transmutación — ley pneuma v2.5.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
 artefacto agéntico desde el espacio ideal hacia un runtime concreto.
@@ -352,12 +352,20 @@ No es pérdida de eje (no genera línea `perdidas:`): es arquitectura del target
 `~/.claude/agents/{nombre}.md`; codex → `~/.agents/skills/{nombre}/` y
 `~/.codex/agents/{nombre}.toml`;
 opencode → `~/.config/opencode/skills/{nombre}/` y
-`~/.config/opencode/agents/{nombre}.md`; openclaw → workspace
-`~/openclaw-fleet/workspaces/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`];
-name-keyed, sobrescribe por nombre, sin never-overwrite) para el agente, y
+`~/.config/opencode/agents/{nombre}.md`; openclaw →
+`~/openclaw-fleet/blueprints/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`])
+para el agente, y
 `~/.openclaw/skills/{nombre}/` (managed skills) para la skill. En toda emisión y
 aplicación la fibra `referencias/` conserva su nombre: el cuerpo emitido cita
 paths `referencias/...` y ningún target exige otro nombre.
+
+La aplicación de un agente OpenClaw es **fail-closed**: el nombre debe figurar
+en `openclaw.json.reference.agents.list` de esa flota y el directorio
+`blueprints/{nombre}/` debe preexistir como directorio real. KORA no lo crea.
+Así `targets: [openclaw]` conserva la capacidad global de proyección sin
+convertirse en membresía accidental de una flota. El blueprint sigue siendo
+derivado declarativo; el deploy fleet lo materializa por copia en un workspace
+runtime privado, preservando memoria y estado mutable.
 
 Una **skill** es un producto cerrado: KORA administra el directorio
 `skills/{nombre}/` completo, tanto en `_emision` como en el destino de
@@ -597,3 +605,11 @@ scaffolding y material ajeno. También retira de forma atribuida la skill
 complementaria Codex que queda obsoleta al pasar persona→subagente, y rechaza
 nombres que no sean componentes de ruta seguros antes de cualquier limpieza.
 Endurece la frontera name-keyed sin cambiar los ids de funtor ni del check.
+
+v2.5.0 (2026-07-17): distingue capacidad global de proyección y membresía de
+una flota. Un agente con `target: openclaw` puede emitirse para cualquier
+consumidor, pero `--aplicar` sobre `openclaw-fleet` exige roster positiva en
+`openclaw.json.reference` y un blueprint real preexistente; nunca crea
+membresía por efecto colateral. La aplicación escribe el blueprint declarativo
+y deja la materialización del workspace privado al deploy fleet. No cambia los
+ids de funtor ni el carácter informativo de `no-instalada`.

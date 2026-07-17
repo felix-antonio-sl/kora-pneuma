@@ -1588,10 +1588,10 @@ RUTAS_APLICAR = {
     ("codex", "agente"): "~/.codex/agents/{nombre}.toml",
     ("opencode", "skill"): "~/.config/opencode/skills/{nombre}",
     ("opencode", "agente"): "~/.config/opencode/agents/{nombre}.md",
-    # openclaw: el agente es un WORKSPACE name-keyed (dir con AGENTS.md+SOUL.md);
-    # la skill, un managed skill. Config y runtime se verifican aparte en deploy.
+    # openclaw: KORA aplica agentes solo sobre blueprints fleet autorizados;
+    # el materializador fleet los proyecta luego al workspace runtime privado.
     ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
-    ("openclaw", "agente"): "~/openclaw-fleet/workspaces/{nombre}",
+    ("openclaw", "agente"): "~/openclaw-fleet/blueprints/{nombre}",
 }
 
 # Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/
@@ -1617,6 +1617,48 @@ def _skill_personal_sombrea_openclaw(nombre: str) -> Path | None:
     ruta = Path(RUTAS_APLICAR[("codex", "skill")].format(
         nombre=nombre)).expanduser()
     return ruta if (ruta / "SKILL.md").is_file() else None
+
+
+def _validar_blueprint_openclaw(nombre: str, ruta: Path) -> str | None:
+    """Gate fail-closed de pertenencia a la flota OpenClaw.
+
+    `targets: [openclaw]` expresa capacidad global de proyección. Aplicar sobre
+    esta flota exige además pertenecer a su roster positiva y que el blueprint
+    ya exista; KORA nunca crea membresía por efecto colateral.
+    """
+    if ruta.name != nombre or ruta.parent.name != "blueprints":
+        return (
+            "el destino OpenClaw de agentes debe ser "
+            f"<fleet>/blueprints/{nombre}; recibido '{ruta}'"
+        )
+    if ruta.is_symlink() or not ruta.is_dir():
+        return (
+            f"el blueprint autorizado debe preexistir como directorio real: "
+            f"'{ruta}'"
+        )
+
+    reference = ruta.parent.parent / "openclaw.json.reference"
+    try:
+        datos = json.loads(reference.read_text(encoding="utf-8"))
+        agentes = datos["agents"]["list"]
+        ids = [agente["id"] for agente in agentes]
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError,
+            TypeError):
+        return (
+            "no se pudo derivar una roster válida desde "
+            f"'{reference}'; aplicación bloqueada"
+        )
+    if not isinstance(agentes, list) or any(
+            not isinstance(agent_id, str) or not agent_id for agent_id in ids):
+        return f"roster inválida en '{reference}'; aplicación bloqueada"
+    if len(ids) != len(set(ids)):
+        return f"roster con IDs duplicados en '{reference}'; aplicación bloqueada"
+    if nombre not in ids:
+        return (
+            f"'{nombre}' puede emitirse para OpenClaw, pero no pertenece a la "
+            f"roster de esta flota ({reference})"
+        )
+    return None
 
 
 def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
@@ -1759,6 +1801,11 @@ def _aplicar(art: Artefacto, target: str,
     else:
         ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
             nombre=nombre_art)).expanduser()
+    if not proyecto and target == "openclaw" and art.tipo == "agente":
+        error_blueprint = _validar_blueprint_openclaw(nombre_art, ruta)
+        if error_blueprint is not None:
+            print(f"error: {error_blueprint}", file=sys.stderr)
+            return 1
     if not proyecto and target == "openclaw" and art.tipo == "skill":
         sombra = _skill_personal_sombrea_openclaw(nombre_art)
         if sombra is not None:
@@ -1808,7 +1855,6 @@ def _aplicar(art: Artefacto, target: str,
         if art.tipo == "skill":
             _recrear_directorio_gestionado(ruta)
         else:
-            ruta.mkdir(parents=True, exist_ok=True)
             emitidos = {Path(rel).name for rel, _ in archivos}
             soul = ruta / "SOUL.md"
             if "SOUL.md" not in emitidos and _sello_atribuye(

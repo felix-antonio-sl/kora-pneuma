@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:deploy-flota-openclaw
 nombre: deploy-flota-openclaw
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Runbook del deploy pneuma→flota OpenClaw viva: documentación oficial como canon del runtime, diff anti-despotenciación, cambios por superficies soportadas, HITL clínico, canarios frescos, rollback trazable y paridad de cierre."
-fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4) y corregido el 2026-07-16 contra la documentación oficial viva de OpenClaw 2026.7.1 y el retiro de las skills legacy forjador-openclaw/transmute-openclaw."
+fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4); corregido el 2026-07-16 contra OpenClaw 2026.7.1 y el retiro de las skills legacy; v1.2.0 separa capacidad global, membresía fleet, blueprint declarativo y workspace runtime privado."
 autor: FS
 creado: 2026-07-06
 lang: es
@@ -16,7 +16,8 @@ familia: nota
 # deploy-flota-openclaw
 
 Runbook del despliegue de agentes pneuma a la flota OpenClaw viva
-(`~/openclaw-fleet/workspaces/`, gateway systemd `:18790`). El funtor emite
+(`~/openclaw-fleet/blueprints/` → `~/.openclaw/workspaces/`, gateway systemd
+`:18790`). El funtor emite
 (`ley/3 §7.1`); **desplegar es otra cosa**: instala un derivado sobre un
 runtime con estado, memoria y gobernanza propios. Sobrescribir un bot vivo es
 producción.
@@ -31,11 +32,10 @@ dueño vigente.
 1. `python3 kora.py velar --estricto` debe cerrar en verde. Nunca transmutar
    con el canon en rojo y nunca fijar en este runbook una cantidad esperada de
    checks: el canon crece.
-2. Leer en cada corrida `https://docs.openclaw.ai/` y la página de la versión
-   instalada. La web oficial viva es la autoridad del runtime. El mirror
-   `~/openclaw-fleet/docs/openclaw/` es solo caché verificable: sincronizarlo y
-   contrastar su commit upstream antes de usarlo; su antigüedad no lo convierte
-   en canon.
+2. Leer en cada corrida `~/openclaw-fleet/docs/openclaw/`, SSOT oficial local
+   de OpenClaw. Antes de usarla, verificar `.upstream-source`,
+   `.web-overlay-manifest` y frescura contra Git/web oficiales; una divergencia
+   bloquea el deploy y obliga a reparar el sync.
 3. Leer `~/openclaw-fleet/CLAUDE.md`, el `AGENTS.md` aplicable y el handoff
    vigente. Inventariar `git status --short` en ambos repos y acordar exclusión
    de archivos con cualquier trabajo concurrente. Los cambios ajenos se
@@ -82,25 +82,31 @@ Ordenar de menor a mayor riesgo y ejecutar uno por vez:
 
 Ciclo de cada escalón:
 
-1. `python3 kora.py transmutar --urn <URN> --target openclaw --aplicar`.
-2. Verificar con pathspec que cambiaron solo los derivados esperados. En la
+1. Confirmar que el `agentId` ya pertenece a
+   `openclaw.json.reference.agents.list` y que su blueprint preexiste. Un
+   `target: openclaw` declara capacidad global, no membresía en esta flota.
+2. `python3 kora.py transmutar --urn <URN> --target openclaw --aplicar`.
+   El gate actualiza el blueprint autorizado o falla antes de escribir.
+3. Materializar el blueprint con el deploy de la flota; KORA nunca escribe
+   directamente en el workspace runtime privado.
+4. Verificar con pathspec que cambiaron solo los derivados esperados. En la
    flota, stagear archivos concretos; jamás el directorio clínico completo,
    porque puede contener memoria PII no versionable.
-3. No reiniciar el gateway por un cambio de archivos del workspace. Abrir un
+5. No reiniciar el gateway por un cambio de archivos del workspace. Abrir un
    canario con `openclaw agent --agent <id> --session-key <clave-nueva> ...`
    para forzar bootstrap fresco y comprobar identidad, frontera y capacidades
    rescatadas. Una sesión antigua no demuestra que el nuevo bootstrap cargó.
-4. Si el escalón requiere config, tratarla como transacción separada: consultar
+6. Si el escalón requiere config, tratarla como transacción separada: consultar
    schema y valor actual; preparar `openclaw config patch` o
    `openclaw config set --batch-json`; ejecutar primero `--dry-run`; aplicar el
    mismo payload; cerrar con `openclaw config validate`. Nunca editar
    `~/.openclaw/openclaw.json` a mano.
-5. Respetar el plan de recarga que informa OpenClaw. Reiniciar solo cuando la
+7. Respetar el plan de recarga que informa OpenClaw. Reiniciar solo cuando la
    superficie lo requiera o la recarga no se materialice, y entonces usar
    `openclaw gateway restart --safe`; no encadenar reinicios preventivos.
-6. Espejar la config ya aplicada en `openclaw.json.reference` y exigir
+8. Espejar la config ya aplicada en `openclaw.json.reference` y exigir
    `bash scripts/diff-reference.sh` verde.
-7. Ejecutar sondas de gateway, agente y canal acordes al blast radius antes de
+9. Ejecutar sondas de gateway, agente y canal acordes al blast radius antes de
    commit y push atómicos.
 
 ## Cambios de nombre e identidad

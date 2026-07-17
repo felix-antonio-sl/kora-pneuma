@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Tests del núcleo kora.py — corpus sintéticos en tempdir (contrato §7)."""
 import hashlib
+import json
 import os
 import re
 import subprocess
@@ -1511,10 +1512,15 @@ class TestParidad(CasoPneuma):
             ("opencode", "skill"): str(base / "oc/skills/{nombre}"),
             ("opencode", "agente"): str(base / "oc/agents/{nombre}.md"),
             ("openclaw", "skill"): str(base / "claw/skills/{nombre}"),
-            ("openclaw", "agente"): str(base / "fleet/workspaces/{nombre}"),
+            ("openclaw", "agente"): str(base / "fleet/blueprints/{nombre}"),
         }
 
     def con_rutas(self):
+        fleet = self.raiz / "runtime/fleet"
+        (fleet / "blueprints/agente-x").mkdir(parents=True, exist_ok=True)
+        (fleet / "openclaw.json.reference").write_text(json.dumps({
+            "agents": {"list": [{"id": "agente-x"}]}
+        }), encoding="utf-8")
         return mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True)
 
     def test_paridad_fiel_exit_0(self):
@@ -1634,12 +1640,47 @@ class TestParidad(CasoPneuma):
         with self.con_rutas():
             self.correr(["transmutar", "--urn", "urn:dev:artefacto:agente-x",
                          "--target", "openclaw", "--aplicar"])
-            soul = self.raiz / "runtime/fleet/workspaces/agente-x/SOUL.md"
+            soul = self.raiz / "runtime/fleet/blueprints/agente-x/SOUL.md"
             soul.write_text(soul.read_text("utf-8") + "\nDRIFT\n", "utf-8")
             codigo, salida, _ = self.correr(["transmutar", "--paridad"])
         self.assertEqual(codigo, 1, salida)
         self.assertIn("desviada", salida)
         self.assertIn("SOUL.md", salida)
+
+    def test_workspace_openclaw_bloquea_agente_fuera_de_roster(self):
+        self.escribir(
+            "artefactos/agentes/dev/agente-x.md",
+            doc(agente_campos(targets=["openclaw"]),
+                cuerpo_persona("Hace X.", "Voz sobria.")))
+        with self.con_rutas():
+            reference = self.raiz / "runtime/fleet/openclaw.json.reference"
+            reference.write_text(json.dumps({
+                "agents": {"list": [{"id": "otro-agente"}]}
+            }), encoding="utf-8")
+            codigo, _, err = self.correr([
+                "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "openclaw", "--aplicar",
+            ])
+        blueprint = self.raiz / "runtime/fleet/blueprints/agente-x"
+        self.assertEqual(codigo, 1)
+        self.assertIn("no pertenece a la roster", err)
+        self.assertFalse((blueprint / "AGENTS.md").exists())
+
+    def test_workspace_openclaw_no_crea_blueprint_ausente(self):
+        self.escribir(
+            "artefactos/agentes/dev/agente-x.md",
+            doc(agente_campos(targets=["openclaw"]),
+                cuerpo_persona("Hace X.", "Voz sobria.")))
+        with self.con_rutas():
+            blueprint = self.raiz / "runtime/fleet/blueprints/agente-x"
+            blueprint.rmdir()
+            codigo, _, err = self.correr([
+                "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "openclaw", "--aplicar",
+            ])
+        self.assertEqual(codigo, 1)
+        self.assertIn("debe preexistir", err)
+        self.assertFalse(blueprint.exists())
 
     def test_workspace_openclaw_preserva_runtime_y_retira_soul_propio(self):
         fuente = self.escribir(
@@ -1650,7 +1691,7 @@ class TestParidad(CasoPneuma):
             gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
                      "--target", "openclaw", "--aplicar"]
             self.assertEqual(self.correr(gesto)[0], 0)
-            workspace = self.raiz / "runtime/fleet/workspaces/agente-x"
+            workspace = self.raiz / "runtime/fleet/blueprints/agente-x"
             memoria = workspace / "memory/nota.md"
             memoria.parent.mkdir()
             memoria.write_text("propia del runtime\n", "utf-8")
@@ -1671,7 +1712,7 @@ class TestParidad(CasoPneuma):
             gesto = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
                      "--target", "openclaw", "--aplicar"]
             self.assertEqual(self.correr(gesto)[0], 0)
-            soul = self.raiz / "runtime/fleet/workspaces/agente-x/SOUL.md"
+            soul = self.raiz / "runtime/fleet/blueprints/agente-x/SOUL.md"
             soul.write_text("voz local sin sello KORA\n", "utf-8")
             self.assertEqual(self.correr(gesto)[0], 0)
             codigo, salida, _ = self.correr(["transmutar", "--paridad"])
