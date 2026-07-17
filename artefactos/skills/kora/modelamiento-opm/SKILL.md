@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:modelamiento-opm
 nombre: modelamiento-opm
-version: 1.14.0
+version: 1.15.0
 estado: activo
 descripcion: "Skill horizontal y dialectica para co-construir, refinar, validar y serializar modelos OPM (Object-Process Methodology, ISO 19450) con un operador humano. Anclada primero al corpus OPM/Forja SSOT ES y al modelador deep-opm-pro como mesa de trabajo interactiva; lee y escribe la mesa directamente via CLI (mesa pull/push) ademas del puente W6.0. Anti-complacencia: bloquea avance ante ambiguedad, fuerza aclaracion antes de plasmar, no construye sobre barro."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15). Actualizacion 1.9.0 (2026-06-15): el corpus OPM declarado se re-sincronizo a la SSOT consolidada v1.4.0 (sexta familia de enlace Excepcion, abanicos convergentes, ruta sobre habilitadores; reglas v1.4.0, spec-opd v1.1.1, spec-opl v1.2.1, bases v3.0.x) bajo el regimen 'pneuma toma la posta de la SSOT OPM' (urn:kora:kb:regimen-de-ley). El render estatico secundario, antes delegado a la skill no migrada jointjs-open-source, ahora se hace con la libreria JointJS consultando su doc web viva urn:dev:kb:jointjs-docs (conocimiento web por convencion, declarado en el campo conocimiento); componible_con jointjs-open-source ya no aplica. Actualizacion 1.10.0 (2026-06-30): se anade el §Regimen apunte (modo borrador) — modula la Postura Dialectica como reflejo del bit esApunte del modelo activo en la mesa opforja (gemelo de esBiblioteca); suspende EXACTAMENTE las Reglas Duras #12/#13 y mantiene #1/#14/#15/#17 + integridad estructural (fence etico). Cambio menor aditivo, sin reescritura del metodo; nace en deep-opm-pro (corte modo apunte) y se eleva por solicitudes-upstream. Correccion 1.10.1 (2026-07-05): se absorbe el delta bestia aa2e2f14 (2026-06-16) en la fibra referencias/bundle-deep-opm-pro.md — el wrapper LogDecisiones v0 alinea el campo emitidoEn->generadoEl al emisor real (deep-opm-pro app/src/modelo/logDecisiones.ts, hallazgo logdec-01 de la auditoria adversarial 2026-06-15); correccion de verdad, la SSOT del shape JSON es el codigo del modelador. Ultimo delta post-migracion pendiente; los 9 KB OPM ya estaban reconciliados al sync del 2026-06-16. Actualizacion 1.11.0 (2026-07-06, corte D3 del compuesto opforja, HITL custodio): anclaje canonico con versiones vivas adjuntas (reglas v1.4.1, spec-opd v1.2.0 —enmienda que amplia R-OPD-ROT-6 estereotipos y agrega R-OPD-ROT-9 Anclaje a Pieza/Centinela—, spec-opl v1.2.2, metodologia v1.5.1); nueva seccion Limites de la mesa (frontera de capacidad, con el estado real del frente Anclaje tras PUERTA+C4); tabla de capacidades actualizada (estereotipos/vitrinas D6, superficie Piezas con Calcar/Anclar y Centinela de Drift; el dock de biblioteca fue retirado por la PUERTA). Cierra la solicitud D3 de deep-opm-pro (2026-06-24) y la peticion 2 de la solicitud de estereotipos (2026-06-22). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.12.0 (2026-07-07, enmienda bottom-up, HITL custodio): re-sync de versiones vivas citadas (spec-opd v1.2.0->v1.3.0 con R-OPD-REF-20 Taller bottom-up, metodologia v1.5.1->v1.6.0 con A1.5 arranque bottom-up de primera clase) + nueva subseccion §Regimen bosquejo dentro de §Regimen apunte (relaja la Regla Dura #5 SD-primero durante el bosquejo; acompana OPDs sueltos sin exigir SD, integridad nunca se relaja; cuando proponer reconciliacion/graduar; adopcion via el gesto «adoptar» de la mesa, mismo constructor que el top-down, convergencia en el vinculo no en el contenido) + nota de excepcion en la Regla Dura #5. Realiza la peticion 2 de la solicitud del puente v1.12.0 y la doctrina bottom-up RESUELTA 2026-07-06; nace en deep-opm-pro (corte de apuntes + Taller bottom-up). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.13.0 (2026-07-09, auditoria integral skill↔mesa↔SSOT↔ecosistema): nueva seccion §Puente directo mesa↔skill — CLI mesa (bun run mesa modelos|pull|push desde deep-opm-pro/app, token Bearer ~/.config/opforja/agent-token contra la instancia productiva; verificado contra app/scripts/mesa-cli.ts + src/mesa/{contextoPull,validarPush,esSinDelta}.ts): pull emite el MISMO contexto W6.0 (ley de determinismo del generador — un generador, dos consumidores) con encabezado Especie/Fuente; push con disciplina de escritura (contrato de import duro, biblioteca solo-lectura, carril por procedencia —destino sellado exige bundle del compilador—, base autosave exige confirmacion del operador, clausura sin-delta = no-op exit 4, 409 = re-pull exit 3, version etiquetada agente·nota que la vitrina colapsa como hito). W6.0 copy/paste queda como transporte fallback. Nueva Regla Dura #29 (disciplina de no-clobber del push). Tabla de capacidades actualizada: todo-nace-apunte + graduacion + gestor «Modelos» dos zonas (B'⊕D), Taller bottom-up en UI (banda «Taller», + OPD suelto, Adoptar), vitrina de revision del agente (chip + Sesion de agente · N revisiones), version visible en footer. Protocolo de handoff: push directo como camino primario con carril disponible; manual = dialogo «Modelos» → «Importar JSON». Limites de la mesa re-fechados 2026-07-09 (T1-T4 intactos; el puente directo serializa agente/operador via optimistic locking + vitrina, no es multiusuario). Higiene: §Scripts retirada (autodescripcion v1.0.0 fosil; scripts/ no existe en la fuente pneuma), anti-patrones-opforja.md indexada en §Referencias (estaba distribuida pero invisible), fibra wizard-sd.md con nota de arranques hermanos (A1.5), fibra bundle-deep-opm-pro.md con los 2 rechazos de import vigentes (estereotipoId irresoluble, ordenInzoom con ids no internos). Nace del cierre del programa mesa↔skill en deep-opm-pro (4 lineas integradas y desplegadas 2026-07-08). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.14.0 (2026-07-14, issue #1): resincroniza spec-forja-opl-es v1.3.0/R-ENT-2-APUNTE desde kora-pneuma 4ae6428 y su realizacion opforja 6ae55b52; corrige UI contra ficha continua, CintaApunte->DialogoGraduar y el comando visible en deep-opm-pro be3ac65c; actualiza la fibra bundle contra app/src/modelo/tipos y R-OPD-REF-20. Cambio minor compatible: doctrina operacional y fibras, sin semantica OPM nueva."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/modelamiento-opm/SKILL.md v1.8.0 (sha256:18fc69305fe81700a9d5f62594267847023095338d905bee66054f891e2fa19c); cuerpo Markdown preservado salvo el path de la fibra ejemplo (recursos/ consolidada en referencias/, 9 archivos byte-identicos). El historial de versiones v1.0-v1.8 y el update_reason extenso quedan en la bestia como procedencia historica. El contrato con deep-opm-pro (sistemas_externos del payload original) vive integro en el cuerpo, seccion Composicion con deep-opm-pro. Omitidos con razon: componible_con jointjs-open-source (no encarna aun en pneuma) y target openclaw (no realizado, GENESIS seccion 4); scripts/ de la bestia estaba vacio (reservado, nunca implementado). Correccion 1.8.1 (2026-06-15): 2 de las 9 fibras (bundle-deep-opm-pro, catalogo-de-barro) portaban frontmatter _manifest anidado estilo bestia con URN no catalogado; se les retiro para dejarlas como material de apoyo en markdown puro (como el resto), coherente con que pneuma abolio los manifests anidados (GENESIS seccion 2). Esas 2 dejan de ser byte-identicas a la bestia (H3, auditoria 2026-06-15). Actualizacion 1.9.0 (2026-06-15): el corpus OPM declarado se re-sincronizo a la SSOT consolidada v1.4.0 (sexta familia de enlace Excepcion, abanicos convergentes, ruta sobre habilitadores; reglas v1.4.0, spec-opd v1.1.1, spec-opl v1.2.1, bases v3.0.x) bajo el regimen 'pneuma toma la posta de la SSOT OPM' (urn:kora:kb:regimen-de-ley). El render estatico secundario, antes delegado a la skill no migrada jointjs-open-source, ahora se hace con la libreria JointJS consultando su doc web viva urn:dev:kb:jointjs-docs (conocimiento web por convencion, declarado en el campo conocimiento); componible_con jointjs-open-source ya no aplica. Actualizacion 1.10.0 (2026-06-30): se anade el §Regimen apunte (modo borrador) — modula la Postura Dialectica como reflejo del bit esApunte del modelo activo en la mesa opforja (gemelo de esBiblioteca); suspende EXACTAMENTE las Reglas Duras #12/#13 y mantiene #1/#14/#15/#17 + integridad estructural (fence etico). Cambio menor aditivo, sin reescritura del metodo; nace en deep-opm-pro (corte modo apunte) y se eleva por solicitudes-upstream. Correccion 1.10.1 (2026-07-05): se absorbe el delta bestia aa2e2f14 (2026-06-16) en la fibra referencias/bundle-deep-opm-pro.md — el wrapper LogDecisiones v0 alinea el campo emitidoEn->generadoEl al emisor real (deep-opm-pro app/src/modelo/logDecisiones.ts, hallazgo logdec-01 de la auditoria adversarial 2026-06-15); correccion de verdad, la SSOT del shape JSON es el codigo del modelador. Ultimo delta post-migracion pendiente; los 9 KB OPM ya estaban reconciliados al sync del 2026-06-16. Actualizacion 1.11.0 (2026-07-06, corte D3 del compuesto opforja, HITL custodio): anclaje canonico con versiones vivas adjuntas (reglas v1.4.1, spec-opd v1.2.0 —enmienda que amplia R-OPD-ROT-6 estereotipos y agrega R-OPD-ROT-9 Anclaje a Pieza/Centinela—, spec-opl v1.2.2, metodologia v1.5.1); nueva seccion Limites de la mesa (frontera de capacidad, con el estado real del frente Anclaje tras PUERTA+C4); tabla de capacidades actualizada (estereotipos/vitrinas D6, superficie Piezas con Calcar/Anclar y Centinela de Drift; el dock de biblioteca fue retirado por la PUERTA). Cierra la solicitud D3 de deep-opm-pro (2026-06-24) y la peticion 2 de la solicitud de estereotipos (2026-06-22). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.12.0 (2026-07-07, enmienda bottom-up, HITL custodio): re-sync de versiones vivas citadas (spec-opd v1.2.0->v1.3.0 con R-OPD-REF-20 Taller bottom-up, metodologia v1.5.1->v1.6.0 con A1.5 arranque bottom-up de primera clase) + nueva subseccion §Regimen bosquejo dentro de §Regimen apunte (relaja la Regla Dura #5 SD-primero durante el bosquejo; acompana OPDs sueltos sin exigir SD, integridad nunca se relaja; cuando proponer reconciliacion/graduar; adopcion via el gesto «adoptar» de la mesa, mismo constructor que el top-down, convergencia en el vinculo no en el contenido) + nota de excepcion en la Regla Dura #5. Realiza la peticion 2 de la solicitud del puente v1.12.0 y la doctrina bottom-up RESUELTA 2026-07-06; nace en deep-opm-pro (corte de apuntes + Taller bottom-up). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.13.0 (2026-07-09, auditoria integral skill↔mesa↔SSOT↔ecosistema): nueva seccion §Puente directo mesa↔skill — CLI mesa (bun run mesa modelos|pull|push desde deep-opm-pro/app, token Bearer ~/.config/opforja/agent-token contra la instancia productiva; verificado contra app/scripts/mesa-cli.ts + src/mesa/{contextoPull,validarPush,esSinDelta}.ts): pull emite el MISMO contexto W6.0 (ley de determinismo del generador — un generador, dos consumidores) con encabezado Especie/Fuente; push con disciplina de escritura (contrato de import duro, biblioteca solo-lectura, carril por procedencia —destino sellado exige bundle del compilador—, base autosave exige confirmacion del operador, clausura sin-delta = no-op exit 4, 409 = re-pull exit 3, version etiquetada agente·nota que la vitrina colapsa como hito). W6.0 copy/paste queda como transporte fallback. Nueva Regla Dura #29 (disciplina de no-clobber del push). Tabla de capacidades actualizada: todo-nace-apunte + graduacion + gestor «Modelos» dos zonas (B'⊕D), Taller bottom-up en UI (banda «Taller», + OPD suelto, Adoptar), vitrina de revision del agente (chip + Sesion de agente · N revisiones), version visible en footer. Protocolo de handoff: push directo como camino primario con carril disponible; manual = dialogo «Modelos» → «Importar JSON». Limites de la mesa re-fechados 2026-07-09 (T1-T4 intactos; el puente directo serializa agente/operador via optimistic locking + vitrina, no es multiusuario). Higiene: §Scripts retirada (autodescripcion v1.0.0 fosil; scripts/ no existe en la fuente pneuma), anti-patrones-opforja.md indexada en §Referencias (estaba distribuida pero invisible), fibra wizard-sd.md con nota de arranques hermanos (A1.5), fibra bundle-deep-opm-pro.md con los 2 rechazos de import vigentes (estereotipoId irresoluble, ordenInzoom con ids no internos). Nace del cierre del programa mesa↔skill en deep-opm-pro (4 lineas integradas y desplegadas 2026-07-08). Cambio menor aditivo, sin reescritura del metodo. Actualizacion 1.14.0 (2026-07-14, issue #1): resincroniza spec-forja-opl-es v1.3.0/R-ENT-2-APUNTE desde kora-pneuma 4ae6428 y su realizacion opforja 6ae55b52; corrige UI contra ficha continua, CintaApunte->DialogoGraduar y el comando visible en deep-opm-pro be3ac65c; actualiza la fibra bundle contra app/src/modelo/tipos y R-OPD-REF-20. Cambio minor compatible: doctrina operacional y fibras, sin semantica OPM nueva. Actualizacion 1.15.0 (2026-07-17, cierre Testigo-Base): el puente directo liga cada actualizacion al pull que origino el bundle mediante un testigo opaco de guardado y autosave (incluida su ausencia); el servidor lo revalida dentro del commit atomico de modelo + version + consolidacion del autosave; 409 queda definido como deriva de cualquiera de ambas ramas sin escritura. La creacion omite --base y mantiene la marca apunte como segundo gesto explicito del workspace. Cambio minor compatible de disciplina operacional, sin semantica OPM nueva."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -44,7 +44,7 @@ corpus Forja las delega; no se usan para saltarse una regla Forja vigente.
 | Puente formal | `urn:fxsl:kb:opm-categorial-es` | Lectura categorial no normativa para el modelador; explica linealidad, equivalencia, composicion y eje vertical sin introducir vocabulario operativo. |
 | Capas base delegadas | `urn:fxsl:kb:opm-es`, `urn:fxsl:kb:opd-es`, `urn:fxsl:kb:opl-es`, `urn:fxsl:kb:manual-metodologico-opm-es` | Procedencia OPM general. Se consultan solo bajo la precedencia y fronteras documentales de la familia Forja. |
 
-Las versiones adjuntas son las vivas al momento de esta emision (v1.14.0, 2026-07-14);
+Las versiones adjuntas son las vivas al momento de esta emision (v1.15.0, 2026-07-17);
 el resolutor vivo por URN es `docs/canon-opm/resolutor-urn.json` en deep-opm-pro.
 
 ## Cuando Usar
@@ -555,7 +555,8 @@ emisor. La skill (herramientas `Write` + `Bash`):
    skill→app** (g3) y habilita panel de procedencia, registro [RATIFICAR] y
    export de LogDecisiones.
 5. Con el carril de agente disponible, la entrega puede ser **directa**:
-   `bun run mesa push <ref> <bundle.json> --nota "…"` (ver §Puente directo).
+   `bun run mesa push <ref> <bundle.json> --base <Testigo-Base> --nota "…"`
+   (ver §Puente directo; `Testigo-Base` proviene del pull que originó el bundle).
    El carril por procedencia del push se satisface por construccion en este
    camino (bundle sellado del compilador); un destino sellado **rechaza**
    bundles artesanales — coherente con la Regla Dura #25.
@@ -789,7 +790,7 @@ marcada con chip de persistencia `Importado` (ver ronda 19/L5 de deep-opm-pro).
 26. **El contexto W6.0 es derivado**: el «Contexto de modelado» del puente se consume, no se edita — llegue pegado por el operador o traido por `mesa pull` (es el mismo documento). Toda correccion va al proto (fuente unica) y se recompila.
 27. **Notas de mesa desechables**: una `NotaMesa` registra que se pregunta la mesa, no que es la cosa. Se consume en `re-elicitar` corrigiendo el proto o respondiendo con aclaracion dirigida; nunca se fosiliza como definicion, hecho OPM ni ancla. El paso de un ancla a `vigente` ocurre solo en esta skill sobre el proto — las transiciones registradas por la app (W6.5-b) son registro, no mutacion.
 28. **Regimen apunte = reflejo del flag, fence de dos reglas**: cuando el modelo de la mesa lleva `esApunte`, la skill acompana sin bloquear (ver §Regimen apunte). Suspende **EXACTAMENTE** #12 (Anti-barro) y #13 (Anti-complacencia); **mantiene** #1, #14, #15 (jamas rellena huecos), #17 y la integridad estructural. La validez OPM se degrada a observacion al margen; la integridad **sigue bloqueando**. Por R-ENT-2-APUNTE los placeholders emiten OPL en todas las superficies, con diagnostico de nominacion preservado. El flag persistido es la unica verdad: el triaje oye sinonimos y propone, el flag decide. Graduacion = `CintaApunte → DialogoGraduar`; el toggle es interno, no gesto alternativo.
-29. **Puente directo con disciplina de no-clobber**: nunca `mesa push` sin `validar-modelo` local verde (en apunte: sin bloqueos de integridad); todo push parte de un `mesa pull` fresco de esta sesion; jamas push a una biblioteca (solo-lectura); un destino con sello solo recibe bundle sellado del compilador (el proto sigue siendo la fuente); una base autosave exige `--confirmado-por-operador` (decision del operador, la skill no la asume); un push sin delta semantico es no-op deliberado (no fabrica revisiones); un 409 se resuelve con re-pull y reintento, jamas forzando; `--nota` siempre significativa (rotulo del hito que vera el humano); crear nuevo declara `--especie` y los bosquejos nacen `apunte`. Sin carril/token, degradar a W6.0 manual sin improvisar transportes.
+29. **Puente directo con disciplina de no-clobber**: nunca `mesa push` sin `validar-modelo` local verde (en apunte: sin bloqueos de integridad); todo push a un destino existente porta, sin modificar, el `Testigo-Base` emitido por el `mesa pull` que originó ese bundle; jamas push a una biblioteca (solo-lectura); un destino con sello solo recibe bundle sellado del compilador (el proto sigue siendo la fuente); si la fuente elegida por ese pull fue autosave exige `--confirmado-por-operador` (decision del operador, la skill no la asume); un push sin delta semantico es no-op deliberado (no fabrica revisiones); un 409 significa que cambió el guardado o el autosave y se resuelve con re-pull, jamas forzando; `--nota` siempre significativa (rotulo del hito que vera el humano); crear nuevo omite `--base`, declara `--especie` y los bosquejos nacen `apunte`. Sin carril/token, degradar a W6.0 manual sin improvisar transportes.
 
 ## Composicion con deep-opm-pro (mesa de trabajo primaria)
 
@@ -812,10 +813,10 @@ ofrecer al agente invocador estas garantias operativas:
 | **Superficie «Piezas»: Calcar / Anclar desde bibliotecas** (2026-06-30, la PUERTA; retira el dock de biblioteca de ronda 20 / L3) | La skill puede asumir cosas reusables desde bibliotecas designadas (`esBiblioteca`, solo-lectura): **Calcar** trae una copia desacoplada (default); **Anclar** crea una referencia viva vigilada. El bundle solo declara las usadas en el modelo. |
 | **Estereotipos en vitrinas + injerto de plantillas de subgrafo** (D6, 2026-06-22/23) | Catalogo aditivo `Modelo.estereotipos?` con vitrinas e injerto 1-clic (`injertarEstereotipo` clona-e-injerta con identidad fresca) + captura de seleccion como estereotipo nuevo. Contenido meta: se realiza `<<Nombre>>` en canvas y NO emite OPL nuclear (R-OPD-ROT-6); un `estereotipoId` irresoluble rechaza al importar. |
 | **Anclaje a Pieza + Centinela de Drift** (2026-06-29/30, R-OPD-ROT-9) | Una cosa anclada a una Pieza de una biblioteca gobernada porta chip de 3 estados (`sincronizado` / `no-resuelto` / `divergente`); el drift se evalua a grano biblioteca (`frozenAtHash`) o Pieza (`frozenAtPieza`, vecindad radio-1); Re-sincronizar re-congela, Soltar desancla irreversible. El Anclaje NO emite OPL nuclear. |
-| **Puente directo mesa↔skill — CLI `mesa`** (A′, 2026-07-06/08) | La skill lee (`mesa pull` = contexto W6.0 + encabezado Especie/Fuente) y escribe (`mesa push` con veredicto de disciplina) la mesa por token, sin transporte humano. Ver §Puente directo. |
+| **Puente directo mesa↔skill — CLI `mesa`** (A′, 2026-07-06/08; cierre transaccional 2026-07-17) | La skill lee (`mesa pull` = contexto W6.0 + encabezado Especie/Fuente/Testigo-Base) y escribe (`mesa push --base <Testigo-Base>`) la mesa por token, sin transporte humano. El servidor revalida guardado + autosave y consolida modelo + versión + autosave en una transacción. Ver §Puente directo. |
 | **Todo nace apunte + graduacion** (B′⊕D, 2026-07-08) | La puerta «Nuevo» crea un apunte instantaneo (`Apunte AAAA-MM-DD`, autosave desde el primer trazo); la unica ruta visible de graduacion es `CintaApunte → DialogoGraduar` (nombre/carpeta + validez exigible); gestor **«Modelos»** de dos zonas rigor×rol (Trabajo con chip de rigor que muta in-situ · Bibliotecas) con accion «Importar JSON». |
 | **Taller bottom-up en la UI** (B′⊕D, 2026-07-08; R-OPD-REF-20) | Banda «Taller» al pie del arbol OPD (region derivada), gesto «+ OPD suelto», verbo «Adoptar» (mismo constructor que el top-down); «OPD sin adoptar» bloquea el export canonico como condicion del gate existente, no como severidad nueva. |
-| **Vitrina de revision del agente** (A′-vitrina, 2026-07-08) | Cada `mesa push` aparece al operador como chip de revision en el chrome (recargar sin perdida / ver la del agente / descartar con costo explicito, segun haya cambios locales); el historial colapsa corridas `agente·` en «Sesion de agente · N revisiones». El push jamas pisa al operador (409 + dirty-bit honesto). |
+| **Vitrina de revision del agente** (A′-vitrina, 2026-07-08) | Cada `mesa push` aparece al operador como chip de revision en el chrome (recargar sin perdida / ver la del agente / descartar con costo explicito, segun haya cambios locales); el historial colapsa corridas `agente·` en «Sesion de agente · N revisiones». El push jamas pisa al operador (`Testigo-Base` + 409 + dirty-bit honesto). |
 | **Persistencia backend-only** (cortes C1-C5, 2026-06-06) | Modelos, versiones, workspace/carpetas, autosave y revision viven en Postgres/API con optimistic locking; no hay storage de navegador. Al importar el bundle, la app marca la pestana como `Importado` y permite `Guardar como` + versionado. |
 | **Modo enlace canvas con feedback visual** (ronda 19 / L2) | La skill puede dejar enlaces declarados sin temer ambiguedad de gesto: la app refuerza la firma de enlace al editarlos. |
 | **Auto-layout + fit-to-view** (Fase 0 / P0-5) | La skill no necesita resolver layout: emite cosas y enlaces, la app distribuye. |
@@ -851,7 +852,7 @@ agente que ejerce esta skill NO debe prometer:
 - **diff de modelos / versiones** (comparacion estructural visual): `diff.ts` fue retirado como cola colgante.
 - **export a PDF real**: la exportacion canonica es Markdown determinista (`emitirDocumentoCanonico`).
 - **cosimulacion numerica federada** (techo T2): la simulacion es de un modelo a la vez, no co-simulacion.
-- **federacion de modelos** (techo T3) ni **multiusuario concurrente por modelo** (techo T1). El puente directo NO lo cambia: agente y operador se **serializan** (optimistic locking 409 + vitrina de revision), no co-editan en vivo.
+- **federacion de modelos** (techo T3) ni **multiusuario concurrente por modelo** (techo T1). El puente directo NO lo cambia: agente y operador se **serializan** (`Testigo-Base` + 409 + vitrina de revision), no co-editan en vivo.
 - **razonamiento / inferencia automatica** OWL-DL u OPM (techo T4): la mesa modela y valida, no infiere.
 - Del frente **Anclaje** (Calco/Anclaje/Pieza): anclar por el gesto, Calcar, el Centinela de Drift (grano biblioteca y grano Pieza) y las bibliotecas pragmaticas (`esBiblioteca`) SI estan desplegados; NO existen aun el verbo de fundacion formal `promover-a-Pieza` (registro global gobernado, admin-only), la forma OPL/render del Anclaje (C6/C7), la resolucion completa de bibliotecas externas ni la herencia mutacional (C9/C10).
 
@@ -865,8 +866,9 @@ con la instancia (productiva por defecto) por el carril de token del agente:
 ```bash
 cd ~/projects/deep-opm-pro/app
 bun run mesa modelos                    # listar: id · especie · rev · nombre
-bun run mesa pull <ref>                 # ref = id o nombre exacto → contexto W6.0 a stdout
-bun run mesa push <ref> <bundle.json> --nota "…" [--especie apunte|modelo] [--confirmado-por-operador]
+bun run mesa pull <ref>                 # contexto W6.0 + Testigo-Base a stdout
+bun run mesa push <ref> <bundle.json> --base <Testigo-Base> --nota "…" [--confirmado-por-operador]
+# crear nuevo: omitir --base y declarar --especie apunte|modelo
 ```
 
 Configuracion: `OPFORJA_API_URL` (default `https://opforja.sanixai.com`) +
@@ -874,12 +876,15 @@ token Bearer en `~/.config/opforja/agent-token` (chmod 600; override
 `OPFORJA_AGENT_TOKEN_FILE`). El carril se habilita del lado servidor con
 `MODEL_AGENT_TOKEN`; si esta deshabilitado o no hay token, **degradar sin
 drama al transporte manual W6.0** (siguiente seccion) — el formato es el mismo.
+Si el backend aun no expone el commit atomico de revisiones, `push` recibe
+404/405 y aborta sin escribir: usar tambien W6.0, nunca recurrir al endpoint
+antiguo ni simular atomicidad con dos llamadas.
 
 **`pull` ES el contexto W6.0.** Ley de determinismo del generador (un
 generador, dos consumidores): el cuerpo del pull, quitando el encabezado, es
 byte-igual a `exportarContextoSkill` — el mismo markdown del comando de paleta
 «Copiar contexto para la skill». Se rutea con la MISMA tabla del §Puente W6.0.
-El encabezado agrega dos hechos que la skill debe honrar:
+El encabezado agrega tres hechos que la skill debe honrar:
 
 - `Especie: apunte|modelo|biblioteca` — activa/desactiva el §Regimen apunte y
   el carril de solo-lectura (biblioteca).
@@ -887,6 +892,10 @@ El encabezado agrega dos hechos que la skill debe honrar:
   ratificado) — <fecha>` — la base del pull es el autosave **solo** si es
   estrictamente mas nuevo que lo guardado; una base autosave exigira
   confirmacion del operador al hacer push.
+- `Testigo-Base: mesa-v1.…` — testigo opaco del modelo, del guardado y del
+  autosave observado (incluida su ausencia). Conservarlo sin modificar junto
+  al bundle: no es secreto ni permiso, sino la base que el servidor volvera a
+  comprobar.
 
 **`push` = escritura con disciplina.** El veredicto (`src/mesa/validarPush.ts`)
 aplica, en orden: (1) contrato de import duro — el bundle debe hidratar a
@@ -896,12 +905,16 @@ resuelto) es obligatorio declarar `--especie apunte|modelo`; (3) destino
 destino con sello (nacido de proto) solo acepta bundle sellado del compilador
 — «edita el proto y recompila», jamas un artesanal encima; (5) base autosave
 no ratificada exige `--confirmado-por-operador` (decision HITL del operador,
-no de la skill). Ademas, del lado cliente: **clausura sin-delta** — un push
-semanticamente identico al remoto NO crea revision (exit 4, no-op deliberado);
-un **409** significa «la mesa avanzo bajo tus pies»: re-pull y reintentar
-(exit 3), jamas forzar. Cada push exitoso etiqueta una version
-`agente·<nota>` — poner en `--nota` un rotulo util para el humano: es lo que
-la mesa muestra al colapsar la corrida como «Sesion de agente · N revisiones».
+no de la skill). Ademas, del lado cliente: **clausura sin-delta** — el bundle
+se compara con la fuente exacta elegida por ese pull y, si es semanticamente
+identico, NO crea revision (exit 4, no-op deliberado). Para un destino
+existente, `--base <Testigo-Base>` es obligatorio. El CLI comprueba el testigo
+y el servidor vuelve a comprobar guardado y autosave dentro de la misma
+transaccion que guarda modelo, crea la version `agente·<nota>` y consolida el
+autosave. Si cualquiera cambió, responde **409** sin escribir (exit 3):
+re-pull y reintentar, jamas forzar. En `--nota`, usar un rotulo util para el
+humano: es lo que la mesa muestra al colapsar la corrida como
+«Sesion de agente · N revisiones».
 
 **El operador ve llegar el push (vitrina de revision).** El push no interrumpe
 ni pisa al operador: la mesa muestra un chip de revision del agente en el
@@ -909,19 +922,21 @@ chrome (sin cambios locales → recargar sin perdida; con cambios locales → ve
 la version del agente o descartar lo propio con costo explicito); el historial
 colapsa la sesion del agente en un hito expandible. La skill no gestiona ese
 lado: le basta saber que **empujar no es publicar sobre el operador** — el
-optimistic locking (409) + la vitrina garantizan el no-clobber en ambas
-direcciones.
+`Testigo-Base`, el commit transaccional y la vitrina garantizan el no-clobber
+en ambas direcciones.
 
 Reglas del puente directo:
 
-- **Pull fresco antes de push**: la base de trabajo se toma de un `mesa pull`
-  de esta sesion, no de memoria de sesiones previas.
+- **Preservar el testigo**: cada push a un destino existente usa, sin
+  modificar, el `Testigo-Base` del pull que originó ese bundle. Ante 409,
+  re-pull; nunca sustituir el testigo ni forzar.
 - El pull es **producto derivado** (mismas reglas que el contexto W6.0):
   jamas fuente de verdad ni destino de ediciones; con sello, la correccion va
   al proto y se recompila.
 - `--nota` siempre significativa (es el rotulo del hito para el humano).
 - Un bosquejo nuevo se crea `--especie apunte`; `--especie modelo` solo para
-  un modelo que ya cierra (o que el operador ordeno crear como tal).
+  un modelo que ya cierra (o que el operador ordeno crear como tal). La
+  creación omite `--base`.
 - El CLI preserva metadata del record (descripcion, carpeta, archivado,
   versiones) por construccion — la skill no la re-declara ni la limpia.
 
@@ -971,8 +986,10 @@ Reglas del puente:
 2. Pasar a `serializar-bundle` y producir el JSON `deep-opm-pro.modelo.v0`.
 3. Adjuntar el bundle al entregable, junto con OPL-ES y reporte de validacion tripartita.
 4. **Camino primario con carril de agente**: entregar directo a la mesa con
-   `bun run mesa push <ref> <bundle.json> --nota "…"` (§Puente directo; crear
-   nuevo exige `--especie`). El operador ve llegar la revision por la vitrina.
+   `bun run mesa push <ref> <bundle.json> --base <Testigo-Base> --nota "…"`
+   (§Puente directo; el testigo viene del pull que originó el bundle; crear
+   nuevo omite `--base` y exige `--especie`). El operador ve llegar la revision
+   por la vitrina.
 4a. **Camino manual (sin carril/token)**: indicar la apertura al usuario —
    `cd ~/projects/deep-opm-pro/app && bun run dev` (o la instancia productiva
    `https://opforja.sanixai.com`), gestor **«Modelos»** → accion **«Importar
