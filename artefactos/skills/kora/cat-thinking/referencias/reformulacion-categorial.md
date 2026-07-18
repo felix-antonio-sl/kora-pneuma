@@ -17,6 +17,8 @@ Modelos candidatos:
 | tipos en un lenguaje | tipos | funciones |
 | valores con efectos | tipos efectados (T A) | funciones Kleisli |
 | sistemas dinamicos | estados | transiciones / observaciones |
+| agentes reactivos ya modelados | coálgebras `U -> H(U)` para un `H` fijo | morfismos coalgebraicos; no delegaciones |
+| redes de agentes con interfaces | cajas/puertos tipados | wiring diagrams, si su composición y semántica están definidas |
 | modelos de un sistema | versiones | migraciones |
 | espacios de configuracion | configuraciones | refinamientos |
 
@@ -37,6 +39,8 @@ Antes de llamar categoria al modelo, comprueba tipos, identidades y composicion 
 | "X tiene efecto colateral" | monada, Kleisli |
 | "X observa estado interno" | comonada, coalgebra |
 | "X corre sobre Y" | *Pattern Runs on Matter* solo tras construir los polinomios y las estructuras en `Poly` |
+| "el agente A compone con B" | pedir puertos, wiring, álgebra semántica y compatibilidad de efectos; `componible` solo propone candidato |
+| "el agente está limitado/seguro" | separar capacidad declarada, autoridad efectiva e invariante cerrado bajo transición |
 | "X tiene grados de verdad" | empezar por un poset o algebra de Heyting; usar topos solo si se exhibe su estructura |
 | "X dura en el tiempo" | posible presheaf/sheaf sobre un sitio temporal, con restricciones y pegado explicitos |
 
@@ -52,6 +56,8 @@ Convertir la pregunta de ingenieria en una pregunta categorial. Ejemplos:
 | "¿como migro este schema sin romper datos?" | "¿hay un funtor `F: schema_viejo → schema_nuevo` que preserve constraints? ¿cual es la triple Sigma-Delta-Pi inducida?" |
 | "¿como compongo dos servicios sin acoplarlos?" | "¿hay una categoria de servicios bien definida y un cospan tipado cuya propiedad universal produzca el pushout? Si no, ¿que contrato de interfaz basta?" |
 | "¿como verifico que el refactor preservo el comportamiento?" | "¿que equivalencia observacional pide el sistema? Si hay coalgebras y lifting relacional explicitos, ¿existe una bisimulacion?" |
+| "¿puedo encadenar estos agentes?" | "¿cuáles son sus interfaces tipadas y qué wiring con semántica functorial interpreta la conexión? ¿cómo combinan sus efectos y autoridad?" |
+| "¿el allowlist hace seguro al agente?" | "¿qué capacidades son efectivas en runtime y qué subobjeto de estados seguros queda cerrado bajo la transición?" |
 | "¿que tipo es el schema de mi base?" | "¿que categoria finitamente presentada modela este schema? ¿cuales son las path equivalences?" |
 | "¿como modelo permisos ricos?" | "¿basta un reticulo/algebra de Heyting? Solo si no basta: ¿hay un topos identificado cuyo clasificador modela estos permisos?" |
 

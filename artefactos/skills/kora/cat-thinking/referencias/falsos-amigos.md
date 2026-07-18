@@ -119,6 +119,20 @@ Un DSL de comandos puede **implementarse** como monada libre cuando se especific
 | "una API" | un polinomio `Σ_{i∈I} y^{A_i}` donde `I` son posiciones (lo que la API muestra) y `A_i` son direcciones (lo que la API acepta). |
 | "un product type" | un product type puede ser polynomial; no todo product type lo es ni todo polynomial es product. |
 
+## Declaraciones agénticas
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| `componible: [b]` | arista que declara un candidato; no aporta puertos, wiring, álgebra semántica ni compatibilidad de efectos. |
+| `estados: [x,y,z]` | lista de etiquetas de workflow; sin eventos y aristas no es FSM ni estado coalgebraico. |
+| `herramientas: [Read]` | conjunto fuente declarado; no prueba qué autoridad efectiva concede el runtime. |
+| sello/paridad fiel | procedencia e igualdad material de la frontera gestionada; no bisimulación, safety ni preservación semántica. |
+| misma firma PMI × LFS | misma celda clasificatoria; no mismo agente, interfaz, coálgebra ni conducta. |
+| morfismo de coálgebras | mapa que preserva estructura entre coálgebras de un mismo funtor; no cableado serial de agentes. |
+
+**Antes de afirmar conducta**, separar `Spec`, `Model` y `Runtime` y exhibir
+los testigos de `urn:kora:kb:cat-contrato-ingenieria-agentica`.
+
 ## Otros colapsos frecuentes
 
 | Confusion | Distincion estricta |

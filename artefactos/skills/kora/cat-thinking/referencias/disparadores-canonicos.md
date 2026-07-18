@@ -78,6 +78,9 @@ Tabla de routing rapida desde el sintoma practico hacia una pieza candidata del 
 | "un patron corre sobre cualquier motor" | `urn:fxsl:kb:icas-agencia` | el teorema de `Poly` da compatibilidad bajo hipotesis; no significa "cualquier" patron o motor |
 | "delegacion entre agentes" | `urn:fxsl:kb:icas-agencia` + `urn:fxsl:kb:icas-protocolos` | session types, coreografia |
 | "tolerancia a fallas en orquestacion" | `urn:fxsl:kb:icas-protocolos` | sagas, compensaciones |
+| "`componible` dice que A y B componen" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | exigir puertos, wiring, semántica y efectos; el campo solo declara candidato |
+| "el allowlist prueba least-privilege o safety" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | separar capacidades declaradas, autoridad runtime e invariante conductual |
+| "la emisión conserva el comportamiento del agente" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | hace falta interpretación runtime y un criterio de preservación |
 
 ## Tiempo y lifecycle
 
@@ -89,6 +92,7 @@ Tabla de routing rapida desde el sintoma practico hacia una pieza candidata del 
 | "drift entre version desplegada y especificada" | `urn:fxsl:kb:icas-lifecycle` | cuadrado de naturalidad como modelo solo si existen funtores y componentes |
 | "deuda tecnica medida formalmente" | `urn:fxsl:kb:icas-lifecycle` | posible metrica/orden respecto de un ideal declarado |
 | "DevOps como bucle" | `urn:fxsl:kb:icas-lifecycle` | traza solo si se exhibe una categoria monoidal trazada; un loop no basta |
+| "el lifecycle de KORA es un funtor" | `urn:kora:kb:cat-kora-semantica-operacional` | la cadena es delgada, pero los gates hacen parcial y no functorial la acción sobre snapshots |
 
 ## Escala y SoS
 

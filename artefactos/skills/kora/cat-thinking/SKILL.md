@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:cat-thinking
 nombre: cat-thinking
-version: 2.0.0
+version: 2.1.0
 estado: activo
 descripcion: "Skill de pensamiento categorial. Dota al agente de la capacidad de pensar sobre arquitectura, integracion, refactor, modelado de efectos y diseno de sistemas agenticos usando teoria de categorias aplicada, anclada al corpus ICAS-BoK (Arquitecto de Sistemas Categorial)."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa; instaura tipado previo, escala formal/modelo/heurística/metáfora, autoridad primaria por encima de la trazabilidad URN y el núcleo categorial demostrado de KORA."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la semántica operacional integral y el contrato de testigos para ingeniería agéntica."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob]
 targets: [claude-code, codex, opencode]
 estados: [triaje, reformular-categorialmente, localizar-corpus, aplicar-patron, validar-coherencia, entregar]
-conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales, urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension, urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment, urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura, urn:kora:kb:cat-kora-kernel]
+conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales, urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension, urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment, urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura, urn:kora:kb:cat-kora-kernel, urn:kora:kb:cat-kora-semantica-operacional, urn:kora:kb:cat-contrato-ingenieria-agentica]
 componible: [urn:kora:artefacto:modelamiento-opm]
 ---
 
@@ -30,9 +30,14 @@ No es una skill de programación ni de ejecución. Es una skill
 **introspectiva y adversarial**: intenta tipar un problema, elige la lectura
 epistémica más débil que baste y solo entonces aplica teoría de categorías.
 
-Anclaje canónico: las **24 URNs ICAS-BoK** y
-`urn:kora:kb:cat-kora-kernel` para afirmaciones propias de KORA. Las URNs
-resuelven la versión viva y dan trazabilidad. No confieren autoridad
+Anclaje canónico: las **24 URNs ICAS-BoK** y tres piezas propias para KORA:
+
+- `urn:kora:kb:cat-kora-kernel` — firma, coreflexión y fidelidad;
+- `urn:kora:kb:cat-kora-semantica-operacional` — todos los gestos;
+- `urn:kora:kb:cat-contrato-ingenieria-agentica` — testigos de conducta,
+  efectos, composición, capacidades y runtime.
+
+Las URNs resuelven la versión viva y dan trazabilidad. No confieren autoridad
 matemática: una afirmación formal necesita prueba o fuente primaria precisa.
 
 ## Cuando Usar
@@ -87,7 +92,9 @@ Mapa abreviado (detalle navegacional en `referencias/mapa-corpus.md`):
 | 18 | `icas-calidad-riesgo` | quality attrs, RAM, riesgo, garantias |
 | 19 | `icas-patrones` | patrones arquitectonicos, agenticos, anti-patrones |
 | 20 | `icas-infraestructura` | tool use, self-improvement, SoS, infra autonoma |
-| KORA | `cat-kora-kernel` | retículo de firmas, coreflexión por target, sello y grafos relacionales |
+| KORA | `cat-kora-kernel` | retículo de firmas, coreflexión por target, fidelidad y grafos relacionales |
+| KORA-op | `cat-kora-semantica-operacional` | validación, censo, lifecycle, emisión, paridad, ley y fronteras |
+| KORA-agent | `cat-contrato-ingenieria-agentica` | coálgebra, efectos, wiring, capacidades, safety y testigos runtime |
 
 ## Workflow
 
@@ -136,6 +143,9 @@ Instanciar el patron canonico al problema concreto. Trabajo:
 - mapear las relaciones del problema a morfismos.
 - identificar las leyes que el diseno debe satisfacer (asociatividad, identidad, naturalidad, functorialidad, conmutatividad).
 - detectar lo que el corpus llama el "patron canonico mas estable" para esta clase de problema.
+- en ingeniería agéntica, separar `Spec`, `Model` y `Runtime`; exigir los
+  testigos exactos de la afirmación antes de hablar de coálgebra,
+  bisimulación, composición o safety.
 - si no cierran tipos o leyes, bajar explícitamente a modelo/heurística y
   retirar la garantía teoremática.
 
@@ -175,8 +185,9 @@ afirmación.
    aporta además prueba o fuente primaria precisa.
 2. **Reformula antes de aplicar**. Aplicar un patron sin haber traducido el problema al vocabulario categorial es el primer error.
 3. **Declara estatus**: formal, modelo bajo hipótesis, heurística o metáfora.
-4. **Corpus delimitado**. Usa las 24 URNs ICAS-BoK; para KORA usa además
-   `urn:kora:kb:cat-kora-kernel`. No inventes piezas ni teoremas.
+4. **Corpus delimitado**. Usa las 24 URNs ICAS-BoK; para KORA usa además las
+   tres piezas propias listadas en el anclaje canónico. No inventes piezas ni
+   teoremas.
 5. **Consulta el corpus en tiempo de skill**. Para formalismo dudoso o ausente,
    contrasta una fuente primaria; no respondas de memoria ni conviertas la SSOT
    interna en autoridad externa.
@@ -184,6 +195,9 @@ afirmación.
 7. **No invadas dominio**. La skill da estructura; el agente aporta semantica de dominio.
 8. **Aborta si no aplica**. Si el problema no admite lectura categorial sustantiva, declararlo y delegar.
 9. **Elige la lectura mas debil** que cumpla el trabajo. No sobre-formalizar.
+10. **No colapses declaración y conducta**. `componible`, `estados`,
+    `herramientas`, firma o sello no sustituyen interfaces, transición,
+    enforcement ni interpretación runtime.
 
 ## Composicion con otras skills
 

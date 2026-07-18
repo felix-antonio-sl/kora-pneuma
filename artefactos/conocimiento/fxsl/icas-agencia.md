@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-agencia
 nombre: icas-agencia
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Pieza 14 del ICAS-BoK: agencia categorial — free monad como plan, cofree comonad como sustrato, emparejamiento plan-sustrato y el patrón Percepción-Decisión-Acción para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12. Corrección 1.1.0 contrastada con Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12. Corrección 1.1.0 contrastada con Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.2.0 (2026-07-18) contrastada con Shapiro y Spivak, Dynamic Operads, Dynamic Categories, https://arxiv.org/abs/2205.03906; Libkind y Spivak, Dynamic task delegation for hierarchical agents, https://arxiv.org/abs/2410.08373; Niu y Spivak, Polynomial Functors, https://arxiv.org/abs/2312.00990; Fukada, Action is the primary key, https://arxiv.org/abs/2409.04793."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -104,15 +104,28 @@ El prediction market es el ejemplo canonico. Cada participante tiene una interfa
 
 ## Delegacion jerarquica: el operad Org^#_m
 
-Libkind y Spivak extienden esta maquinaria al problema de la delegacion dinamica de tareas. El operad Org^#_m tiene como objetos polinomios (interfaces de agentes) y como morfismos:
+Libkind y Spivak extienden esta maquinaria al problema de la delegación
+dinámica de tareas. El operad enriquecido de patrones y su opuesto no deben
+confundirse. La definición 3.7 da:
 
 ```
-Org^#_m(p_1, ..., p_n; q) = c_{[p_1 V ... V p_n, m_q]}
+Org^#_m(p_1, ..., p_k; q) := c_[p_1 V ... V p_k, m(q)]
+(Org^#_m)^op(q_1, ..., q_k; p) := c_[p, m(q_1 V ... V q_k)]
 ```
 
-donde V es el producto monoidal definido como p V q := p + (p tensor q) + q. Un morfismo en este operad es un behavior tree infinito (cofree comonad c) que, dado el internal hom [p_1 V ... V p_n, m_q], produce estrategias dinamicas de delegacion. En cada paso, el manager recibe una tarea q, construye un arbol de decision (free monad m_q) que puede consultar a los subordinados p_1, ..., p_n cero, una o multiples veces, en cualquier orden, dependiendo de los resultados parciales.
+donde `V` es el producto monoidal «or», `m` la mónada libre, `c` la comónada
+cofree y `[-,-]` el hom interno correspondiente. La segunda fórmula expresa
+la lectura agéntica del artículo: `p` es la interfaz del manager y
+`q_1,...,q_k` las de sus subordinados. Una tarea de `p` se convierte en un
+proceso bien fundado de tareas subordinadas; sus resultados retornan hacia un
+resultado de `p`. La estructura cofree permite que la estrategia evolucione
+en el tiempo.
 
-El ejemplo de Alice, Bob y Carmen lo concretiza. Tres subordinados con interfaz y^2 (una tarea binaria, dos outcomes). El manager recibe una tarea y^2 y debe producir un outcome. Su estrategia: pide a Alice y Bob simultaneamente; si coinciden, retorna ese valor; si no, usa a Carmen como desempate. Pero la estrategia es dinamica: si Carmen desempata muchas veces, el manager puede aprender a preferirla como consultora inicial. El estado de la coalgebra evoluciona.
+El ejemplo 3.8 del artículo usa tres subordinados con interfaz `y^2`: consulta
+a los dos primeros y, si discrepan, invoca al tercero como desempate. Eso
+exhibe delegación asíncrona condicionada por resultados. Una regla posterior
+como «aprender a preferir al tercero» requeriría especificar el estado y la
+actualización de la coálgebra; no viene dada por el patrón de desempate.
 
 El funtor [-,t] : Org^{op}_m -> Org^c convierte patrones de delegacion en comportamientos. Para cualquier polynomial monad t, este funtor traduce "como el manager planea delegar" en "como se comportan el manager y sus subordinados." Si t = y (aritmetica simple), los subordinados devuelven numeros y el manager suma. Si t = lott (la monada de loterias), se introduce estocasticidad: las respuestas de los subordinados son distribuciones y la composicion introduce aleatoriedad controlada.
 
@@ -180,13 +193,19 @@ ambos «dicen lo mismo».
 
 Hay una inversión conceptual que complementa la dualidad free/cofree y que cambia cómo modelo los sistemas episódicos -- aquellos donde lo que importa no son los estados sino las transiciones: logs, workflows, event sourcing, trazas de ejecución de agentes.
 
-Fukada formaliza esta inversión: en un sistema episódico, **la acción (el morfismo) es la clave primaria**, no el estado (el objeto). El mundo forma una categoría C donde los objetos son estados o contextos, pero la estructura reside en los morfismos -- las acciones que transforman un contexto en otro. Un episodio no se indexa por "en qué estado estaba" sino por "qué acción ejecutó."
+En Fukada, «acción como clave primaria» es una afirmación sobre el esquema de
+base de datos, no la identificación acción=morfismo. Un e-log contiene un
+objeto/conjunto `Actions`, un objeto/conjunto `Participants` y flechas
+funcionales como `who`, `cause-S` y `cause-N` que salen de `Actions`. Cada
+acción es un **elemento** de `Actions` y la clave primaria de su fila; las
+flechas del esquema relacionan ese registro con participantes y causas.
 
-Formalmente, dada una categoría de episodios E y una categoría de acciones A, el **funtor indexante** Idx : E → A mapea cada episodio a su acción canónica. La composicionalidad episódica dice: si el episodio E₁ termina en un estado que inicia E₂, la composición E₁ ; E₂ existe y se indexa por la composición de acciones Idx(E₁) ; Idx(E₂). Los episodios compuestos -- historias, procesos, trazas completas -- se construyen componiendo episodios atómicos, preservando la estructura categórica.
-
-La jerarquía DIK se reinterpreta. Los **datos** son observaciones crudas -- valores atómicos registrados en cada acción. La **información** es la estructura relacional -- el esquema S más la Grothendieck construction ∫I que "pega" los datos según la estructura del esquema: Info ≅ ∫I →^π S. El **conocimiento** es la lógica interna de la categoría -- las inferencias que surgen de componer morfismos y verificar que los diagramas de constraints conmutan.
-
-Esta perspectiva es dual a la coalgebraica. La coalgebra mira desde el estado hacia afuera: "dado el estado actual, ¿qué observo?" El funtor indexante mira desde la acción hacia afuera: "dada esta acción, ¿qué episodio produjo?" Son dos maneras de organizar relacionalmente la identidad de un sistema. En el mejor de los casos, cada una induce un patrón de observables suficientemente rico para distinguir lo que la categoría decide distinguir. La primera lectura es covariante; la segunda, contravariante.
+El artículo construye e-logs y s-logs categoriales y usa funtores entre ellos
+para comparación, abstracción e inferencia. No define una categoría de
+episodios `E`, una categoría de acciones `A`, un funtor `Idx:E->A`, una
+construcción de Grothendieck para DIK ni una dualidad con coálgebras. Esas
+estructuras serían extensiones posibles, pero atribuirlas a la fuente
+inventaría formalismo.
 
 En event sourcing, un replay suele ser un fold de una secuencia de eventos sobre
 un estado inicial. Puede factorizarse por una construcción libre si se declaran
@@ -198,7 +217,13 @@ y CRUD no es «coalgebraico» por contraste.
 Un profunctor `P : Agent^op x Tool -> Set` es un modelo posible de
 interacciones válidas, no la estructura inevitable de toda invocación.
 
-Cada elemento de P(a, t) es una interaccion valida entre el agente a y la herramienta t. Si el agente es un LLM con function-calling, las posiciones del profunctor son las firmas de las funciones disponibles, y las direcciones son los parametros validos para cada firma. El agente no necesita entender los internos de la herramienta; le basta una interfaz suficientemente expresiva para componer con ella. En ese sentido, la interfaz cumple el papel externo que Yoneda vuelve natural: organizar lo observable sin inspeccionar la implementacion.
+Cada elemento de `P(a,t)` es un testigo de interacción válida entre el agente
+`a` y la herramienta `t`; un profunctor genérico no tiene «posiciones» y
+«direcciones». Si se quiere modelar function-calling mediante un polinomio,
+puede definirse por separado `p = sum_{f in F} y^{Args(f)}`, con firmas como
+posiciones y argumentos/respuestas tipados según la orientación elegida. El
+puente entre ese polinomio y `P` también debe construirse. Encapsulación de API
+y Yoneda no sustituyen ese trabajo.
 
 Si se construyen profuntores componibles, el coend calcula su composición. El
 coproducto y el tensor modelan elección y paralelo solo bajo las estructuras
@@ -261,3 +286,10 @@ los objetos, morfismos y leyes.
 Se restringe pattern-runs-on-matter a `Poly`, se retira «modelo exacto de un
 LLM» y se corrigen las identidades P-D-A=trace, percepción=pullback,
 olvido=funtor olvidadizo y memoria de trabajo=límite.
+
+## Corrección 1.2.0
+
+Se distinguen el operad de delegación dinámica y su opuesto agéntico, se
+separan profuntores de polinomios y se retira una atribución inexistente a
+Fukada: en su e-log las acciones son elementos/keys del objeto `Actions`, no
+morfismos ni imágenes de un funtor `Idx`.

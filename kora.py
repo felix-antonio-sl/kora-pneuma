@@ -1024,24 +1024,34 @@ def chk_sello_fresco(arts, raiz):
     return fallos
 
 
+def _fallos_publicacion_art(art, estado=None):
+    """Exigencias de dignidad para un artefacto en el estado indicado.
+
+    `estado` permite que `ciclo` evalúe el estado destino antes de escribirlo.
+    """
+    fallos = []
+    if art.error_parse or art.tipo is None:
+        return fallos
+    estado = art.campos.get("estado") if estado is None else estado
+    if art.tipo == "conocimiento" and estado == "publicado":
+        tags = art.campos.get("tags")
+        n = len(tags) if isinstance(tags, list) else 0
+        if n < 3:
+            fallos.append((art.rel, f"conocimiento publicado exige >=3 "
+                           f"tags (tiene {n})"))
+    if estado in ("activo", "publicado"):
+        for campo in ("descripcion", "fuente"):
+            v = art.campos.get(campo)
+            if not isinstance(v, str) or not v.strip():
+                fallos.append((art.rel, f"artefacto {estado} exige "
+                               f"'{campo}' no vacío"))
+    return fallos
+
+
 def chk_publicacion_digna(arts, raiz):
     fallos = []
     for art in arts:
-        if art.error_parse or art.tipo is None:
-            continue
-        estado = art.campos.get("estado")
-        if art.tipo == "conocimiento" and estado == "publicado":
-            tags = art.campos.get("tags")
-            n = len(tags) if isinstance(tags, list) else 0
-            if n < 3:
-                fallos.append((art.rel, f"conocimiento publicado exige >=3 "
-                               f"tags (tiene {n})"))
-        if estado in ("activo", "publicado"):
-            for campo in ("descripcion", "fuente"):
-                v = art.campos.get(campo)
-                if not isinstance(v, str) or not v.strip():
-                    fallos.append((art.rel, f"artefacto {estado} exige "
-                                   f"'{campo}' no vacío"))
+        fallos.extend(_fallos_publicacion_art(art))
     return fallos
 
 
@@ -2605,16 +2615,21 @@ def cmd_ciclo(raiz: Path, urn: str, nuevo: str) -> int:
               f"reactiva — se emite artefacto nuevo con 'reemplaza'.",
               file=sys.stderr)
         return 1
-    # Gate de promoción: nadie asciende a publicado/activo sin pasar velar.
+    # Gate de promoción: el corpus actual pasa el registro estricto y el
+    # artefacto satisface `publicacion-digna` EN EL ESTADO DESTINO. Evaluar
+    # solo el borrador de origen dejaría pasar una publicación indigna.
     # Las transiciones hacia deprecado/retirado no exigen gate.
     if nuevo in ("publicado", "activo"):
-        resultados = velar_todo(raiz)
+        resultados = velar_todo(raiz, estricto=True)
+        resultados[CHECK_ESTRICTO].extend(
+            _fallos_publicacion_art(art, nuevo))
         fallos = [(cid, p, m) for cid, fs in resultados.items()
                   for p, m in fs]
         if fallos:
             for cid, p, m in fallos:
                 print("error: promoción rechazada: el corpus completo no "
-                      f"pasa velar: [{cid}] {p} :: {m}.", file=sys.stderr)
+                      f"pasa velar --estricto o el estado destino no es digno: "
+                      f"[{cid}] {p} :: {m}.", file=sys.stderr)
             return 1
     # Reescritura quirúrgica: solo cambia el valor del campo estado; el
     # terminador de línea original (LF/CRLF) y cualquier comentario inline

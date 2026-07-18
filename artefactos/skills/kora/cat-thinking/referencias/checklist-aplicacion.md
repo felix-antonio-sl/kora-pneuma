@@ -59,6 +59,24 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
 - [ ] **CRITICO** toda coalgebra declarada exhibe la funcion `α: A → F(A)` y el funtor `F`.
 - [ ] **MEDIO** las bisimulaciones declaradas exhiben la relacion `R`, el lifting relacional o hipotesis del funtor y la prueba de preservacion bajo `α` y `β`; con efectos, se declara ademas la semantica elegida.
 
+## Bloque 8b — Ingeniería agéntica
+
+- [ ] **CRITICO** se separan artefacto fuente, modelo matematico y conducta
+  runtime; igualdad de archivos no se usa como equivalencia conductual.
+- [ ] **CRITICO** todo agente llamado coalgebra exhibe `I`, `O`, `U`, la
+  monada `M` y `step : U × I -> M(O × U)`.
+- [ ] **CRITICO** toda composicion de agentes exhibe interfaces/puertos
+  tipados, wiring, semantica del wiring y compatibilidad de efectos.
+- [ ] **CRITICO** `componible` se trata como arista candidata, no como prueba
+  de composicion; `estados` no se trata como FSM sin aristas/eventos.
+- [ ] **CRITICO** toda afirmacion de least-privilege compara capacidades
+  efectivas del runtime con la declaracion, incluidos overrides dentro del
+  alcance.
+- [ ] **CRITICO** toda afirmacion de safety exhibe un invariante cerrado bajo
+  la transicion modelada; allowlist y safety no se confunden.
+- [ ] **MEDIO** feedback, recursion o delegacion declaran su semantica de
+  delay/terminacion, protocolo, errores y autoridad.
+
 ## Bloque 9 — Logica interna
 
 - [ ] **CRITICO** todo topos elemental declarado exhibe limites finitos, exponenciales (clausura cartesiana) y clasificador de subobjetos `Ω`.

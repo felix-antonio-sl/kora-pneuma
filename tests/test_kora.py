@@ -355,6 +355,34 @@ class TestCiclo(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("cadena del tipo", err)
 
+    def test_camino_compuesto_y_salto_coinciden_en_dominio_comun(self):
+        path = self.escribir_skill(skill_campos(estado="borrador"))
+        original = path.read_text(encoding="utf-8")
+        for estado in ("activo", "deprecado", "retirado"):
+            codigo, _, _ = self.correr(
+                ["ciclo", "urn:kora:artefacto:util-x", estado])
+            self.assertEqual(codigo, 0, estado)
+        compuesto = path.read_bytes()
+
+        path.write_text(original, encoding="utf-8")
+        codigo, _, _ = self.correr(
+            ["ciclo", "urn:kora:artefacto:util-x", "retirado"])
+        self.assertEqual(codigo, 0)
+        self.assertEqual(
+            path.read_bytes(), compuesto,
+            "en el dominio común, componer avances y saltar debe dejar "
+            "el mismo snapshot")
+
+    def test_promocion_evalua_dignidad_del_estado_destino(self):
+        path = self.escribir_conocimiento(conocimiento_campos(
+            estado="borrador", tags=["insuficiente"]))
+        codigo, _, err = self.correr(
+            ["ciclo", "urn:kora:kb:nota-x", "publicado"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("[publicacion-digna]", err)
+        self.assertIn(">=3 tags", err)
+        self.assertIn("estado: borrador", path.read_text(encoding="utf-8"))
+
 
 # ----------------------------------------------- 9. dignidad del URN muerto
 
@@ -522,6 +550,60 @@ class TestNucleoCategorial(CasoPneuma):
                         self.assertFalse(
                             plam == 3 and min(psigma) < 2,
                             (target, "ley 5", lam, sigma))
+
+    def test_fidelidad_es_antitona_en_la_demanda(self):
+        """Más demanda fuente nunca puede mejorar la fidelidad declarada."""
+        rango = {"none": 0, "partial": 1, "full": 2}
+        for target in kora.TARGETS_REALIZADOS:
+            matriz = kora.MATRICES[target]
+            for eje in kora.EJES:
+                tabla = matriz[eje]
+                for menor in tabla:
+                    for mayor in tabla:
+                        if menor <= mayor:
+                            self.assertGreaterEqual(
+                                rango[tabla[menor][1]],
+                                rango[tabla[mayor][1]],
+                                (target, eje, menor, mayor))
+                for valor, (proyectado, fidelidad, razon) in tabla.items():
+                    if fidelidad == "full":
+                        self.assertEqual(
+                            proyectado, valor,
+                            (target, eje, valor, "full exige no perder ordinal"))
+                    if fidelidad == "none":
+                        self.assertIsNone(
+                            proyectado,
+                            (target, eje, valor, "none exige no proyectable"))
+                    if fidelidad != "full":
+                        self.assertTrue(
+                            razon, (target, eje, valor,
+                                    "toda pérdida exige razón"))
+
+            maximos = matriz["sigma-max"]
+            firmas = list(product(range(4), repeat=5))
+
+            def fidelidad_sigma(firma):
+                return 2 if all(
+                    valor <= maximos[i]
+                    for i, valor in enumerate(firma)) else 1
+
+            for menor in firmas:
+                for mayor in firmas:
+                    if all(x <= y for x, y in zip(menor, mayor)):
+                        self.assertGreaterEqual(
+                            fidelidad_sigma(menor),
+                            fidelidad_sigma(mayor),
+                            (target, "sigma", menor, mayor))
+
+    def test_velar_estricto_extiende_el_mismo_registro_base(self):
+        self.escribir_conocimiento()
+        base = kora.velar_todo(self.raiz)
+        estricto = kora.velar_todo(self.raiz, estricto=True)
+        self.assertEqual(list(base), list(kora.CHECKS))
+        self.assertEqual(
+            list(estricto), list(kora.CHECKS) + [kora.CHECK_ESTRICTO])
+        for check in kora.CHECKS:
+            self.assertEqual(base[check], estricto[check], check)
 
     def test_firmas_iguales_no_colapsan_identidades(self):
         self.escribir_skill(skill_campos())

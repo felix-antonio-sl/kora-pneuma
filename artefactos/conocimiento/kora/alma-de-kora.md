@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:alma-de-kora
 nombre: alma-de-kora
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Destilación del alma de KORA — qué es, qué quiere, cómo se mueve, qué le da forma y qué tensiones la habitan; documento fundacional de la encarnación pneuma."
-fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo original de ALMA.md (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9). Corrección de rigor 1.1.0 (2026-07-18): distingue identidad, clasificación y serialización; restringe Pattern Runs on Matter a Poly; y sustituye las afirmaciones no tipadas de funtor/adjunción/prueba por el núcleo coreflectivo verificado."
+fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo original de ALMA.md (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9). Corrección de rigor 1.1.0 (2026-07-18): distingue identidad, clasificación y serialización; restringe Pattern Runs on Matter a Poly; y sustituye las afirmaciones no tipadas de funtor/adjunción/prueba por el núcleo coreflectivo verificado. v1.2.0 (2026-07-18): alinea la destilacion con la semantica operacional integral; no todo gesto es categorial y las obligaciones historicas sin tipos son deuda, no teoremas pendientes de un check."
 creado: 2026-06-11
 tags: [kora, alma, ontologia, identidad, destilacion, pneuma]
 familia: nota
@@ -91,7 +91,9 @@ ambición no es la potencia; es la *recuperabilidad de sentido*.
 
 ## III. Cómo SE MUEVE — sus operaciones como gestos
 
-KORA tiene pocos gestos esenciales, y cada uno es un verbo categorial.
+KORA tiene pocos gestos esenciales. Todos son actos de gobierno; solo algunos
+admiten una lectura categorial sustantiva. El atlas formal y sus obstrucciones
+viven en `urn:kora:kb:cat-kora-semantica-operacional`.
 
 **Dar nombre verdadero (el URN).** El gesto primero. Antes de existir
 plenamente, un artefacto recibe un nombre que *no lleva versión* —
@@ -195,7 +197,7 @@ expansiones doctrinales, ni nuevos ejes durante el freeze*. Pero las capas que
 lo rodean quedan editables, autorizadas a compactarse. KORA vive la tensión de
 toda entidad madura: **un núcleo que debe permanecer quieto para que la
 periferia pueda moverse sin perder el centro.** El freeze no es parálisis; es
-el punto fijo que permite que lo demás gire.
+el ancla contractual que permite que lo demás gire.
 
 **Lo pre-categorial ⇄ lo canónico.** En sus márgenes hay zonas de gestación
 —el scriptorium, la fragua, el taller— explícitamente declaradas
@@ -208,15 +210,16 @@ de democión son decisiones de gobernanza y preservación de historia; no se
 deducen de functorialidad. Se nace hacia arriba porque así lo dispone el
 contrato de lifecycle.
 
-**El morfismo verificado ⇄ el puente fabricado.** La tensión más exquisita, y
+**La ley verificada ⇄ el puente fabricado.** La tensión más exquisita, y
 la más reveladora de su carácter. La transmutación distingue con dolorosa
 honestidad entre lo *preservado por construcción* (monotonía, descenso e
-idempotencia de la proyección) y lo *meramente declarado* (la naturalidad de Ξ,
-el cierre de safety, la composición Kleisli — obligaciones registradas pero
-**no mecanizadas**). La propia spec lo confiesa en una nota titulada
+idempotencia de la proyección) y tres rótulos históricos de deuda
+(`naturalidad-xi`, `cierre-safety`, `composicion-kleisli`). No son propiedades
+bien tipadas aún: faltan categorías, morfismos, coálgebra/lifting y una mónada
+de efectos concreta. La propia spec lo confiesa en una nota titulada
 *"honestidad spec↔código"*: hoy no existe check que verifique esas tres leyes;
-*lo que se verifica es que la declaración esté presente y bien formada, no que
-la ley se cumpla.* Aquí KORA toca su límite y lo nombra en voz alta: **la
+*lo que se verifica es que el rótulo de deuda esté presente, no una ley aún
+inexpresable.* Aquí KORA toca su límite y lo nombra en voz alta: **la
 diferencia entre el puente que se ha demostrado y el puente que solo se ha
 prometido.** Su virtud no es no tener puentes prometidos; es *no llamarlos
 demostrados.* Incluso su capa formal deja un problema abierto —la relación

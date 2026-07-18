@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-sintesis
 nombre: icas-sintesis
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Síntesis del ADN cognitivo del Arquitecto de Sistemas Categorial: cómo ve (flechas antes que cajas), qué pregunta y cómo decide; pieza 00 y mapa de entrada al corpus ICAS-BoK."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/00-sintesis.md (sha256:136ec83762fb80d19c517256aff351193d0d1f8523b5a849ffdb0d37d0b26786) el 2026-06-12. Revisión de rigor 1.1.0 (2026-07-18): integra la escala epistémica y las correcciones de las piezas 08, 12, 12b, 14, 16, 18, 19 y 20."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/00-sintesis.md (sha256:136ec83762fb80d19c517256aff351193d0d1f8523b5a849ffdb0d37d0b26786) el 2026-06-12. Revisión de rigor 1.1.0 (2026-07-18): integra la escala epistémica y las correcciones de las piezas 08, 12, 12b, 14, 16, 18, 19 y 20. v1.2.0 (2026-07-18): separa Yoneda de encapsulacion API y propaga las correcciones agenticas sobre delegacion, tool use y e-logs."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -92,7 +92,12 @@ en modelos tipados. Una query tiene resultado por la semántica del motor; la
 completitud/cocompletitud de una categoría de instancias debe demostrarse para
 la presentación usada.
 
-**Pienso en Yoneda.** Una cosa puede estudiarse a traves de como todo lo demas se relaciona con ella. En la practica: para entender un servicio no necesito empezar por su codigo fuente -- su API me da la mejor aproximacion externa. Para entender una tabla miro sus queries y restricciones relacionales. Para entender un agente, sus interacciones observables. Dos entidades con patrones de relacion isomorfos son intercambiables para el modo de observacion que esa categoria fija.
+**Pienso en Yoneda.** En una categoría, los hom-funtores representables
+determinan un objeto hasta isomorfismo. Una API o una colección de trazas son
+solo observaciones operacionales hasta construir la categoría y demostrar que
+realizan el patrón representable pertinente. Si se construye, dos objetos con
+representables naturalmente isomorfos son isomorfos en esa categoría; «misma
+firma» o «mismas muestras» no basta.
 
 **Pienso en dualidad.** Una definición categorial admite su dual al invertir
 flechas, pero no todo concepto operacional tiene automáticamente un gemelo:
@@ -231,7 +236,7 @@ Veinticuatro piezas disponibles para consulta profunda, organizadas como un arco
 - **12-topoi** -- Presheaves, sheaves, clasificador de subobjetos, logica intuicionista, geometric morphisms, multi-tenancy.
 - **12b-safety-alignment** -- Alineamiento, seguridad ICAR, verificacion formal vs empirica, Goodhart, coherencia.
 - **13-escala** -- Operads, wiring diagrams, double categories, structured cospans, metodo CMD, verificacion composicional, trazabilidad, simulacion, SoS, megamodelos.
-- **14-agencia** -- Free monad (plan), cofree comonad (sustrato), ley de interaccion, accion como clave primaria, dualidad estado/accion, operads dinamicas, contextads, emergencia, uso de herramientas, P-D-A, memoria.
+- **14-agencia** -- Free monad (plan), cofree comonad (sustrato), ley de interacción en `Poly`, delegación dinámica y su operad opuesto, contextads, e-logs con acciones como keys, modelos condicionales de tools, P-D-A y memoria.
 - **14b-protocolos-coreografia** -- Session types, coreografia, tolerancia a fallas, sagas, protocolos distribuidos.
 - **15-tiempo** -- Behavior types como sheaves, invariancia traslacional, modalidades temporales, hybrid sheaves, delays, contratos composicionales.
 - **16-lifecycle** -- Lifecycle como recursion composicional, V-model, DevOps, drift, categoria de versiones, deuda tecnica categorial.
@@ -247,3 +252,10 @@ faithfulness/fullness no son leyes functoriales; JOIN y merge no son
 pullback/pushout sin propiedad universal; un threshold positivo no produce un
 preorden; tests no son coends; y loop, lifecycle o IaC no adquieren estructura
 categorial solo por su forma.
+
+## Corrección 1.2.0
+
+Yoneda ya no se usa como sinónimo de encapsulación o caja negra. La síntesis
+propaga la separación entre operad de delegación y su opuesto, entre
+profunctores y polinomios de interfaces, y entre acciones-elemento de un e-log
+y morfismos categoriales.

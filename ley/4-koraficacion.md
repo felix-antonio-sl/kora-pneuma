@@ -1,4 +1,4 @@
-# KORA/Koraficación — ley pneuma v1.1.0
+# KORA/Koraficación — ley pneuma v1.2.0
 
 Contrato de **producción** de artefactos de conocimiento: la transformación
 gobernada de fuentes humanas o documentales en KORA/MD con fidelidad medible.
@@ -162,7 +162,7 @@ Antes de dar por cerrada una koraficación, el productor **DEBE** verificar:
 |---|---|---|
 | Forma del artefacto producido | `ley/2` completa (gramática, campos, zona, URN) | mecanizado (`velar`: forma-valida, nombre-verdadero, lugar-coincide…) |
 | Dignidad de publicación | ≥3 tags, descripción y fuente no vacías | mecanizado (`velar --estricto`: publicacion-digna) |
-| Gate de promoción | borrador → publicado solo si `velar` pasa | mecanizado (`ciclo`) |
+| Gate de promoción | borrador → publicado solo si el snapshot pasa `velar --estricto` y el destino satisface `publicacion-digna` | mecanizado (`ciclo`) |
 | `FS = 100%` | prueba ácida §3 contra la fuente | declarado |
 | `CR > 1,5` o justificación §4.3 | medición contra la fuente | declarado |
 | Telegrafización T1-T7 | §5 | declarado |
@@ -194,3 +194,7 @@ de pneuma, no sublimación: la encarnación anterior no lo legislaba así.
 v1.1.0 (2026-07-18): corrección de estatus epistémico. «Funtor K» queda como
 nombre histórico; la koraficación es una transformación editorial con
 fidelidad auditada, no un funtor demostrado.
+
+v1.2.0 (2026-07-18): precisa el gate de promoción sin alterar el shape:
+`ciclo` exige el registro estricto del snapshot actual y evalúa
+`publicacion-digna` sobre el estado destino antes de publicar.

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-protocolos
 nombre: icas-protocolos
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Pieza 14b del ICAS-BoK: protocolos y coreografía — session types, coreografía vs orquestación, sagas y tolerancia a fallas en sistemas distribuidos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14b-protocolos-coreografia.md (sha256:0018ff36d4790f9f2c3220df8498bf46cf0ea3d781620cf75095f6f0bcb8e54a) el 2026-06-12. v1.1.0 (2026-07-18): separa session types, profuntores, sheaves, retries, sagas y redundancia de sus analogias operacionales."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14b-protocolos-coreografia.md (sha256:0018ff36d4790f9f2c3220df8498bf46cf0ea3d781620cf75095f6f0bcb8e54a) el 2026-06-12. v1.1.0 (2026-07-18): separa session types, profuntores, sheaves, retries, sagas y redundancia de sus analogias operacionales. v1.2.0 (2026-07-18): retira las identidades GraphQL=session type y coreografia/profunctor, orquestacion/operad; exige construcciones testigo."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -16,7 +16,12 @@ familia: bok
 
 ## Quien dirige la danza
 
-Cuando compongo microservicios en un sistema distribuido, hay una pregunta que aparece antes de cualquier decision tecnica: quien coordina. Puedo poner un servicio central que llame a los demas en orden -- un orquestador. O puedo hacer que los servicios se comuniquen entre si a traves de eventos compartidos, sin que nadie este al mando. La primera opcion es orquestacion; la segunda, coreografia. Y la diferencia, vista desde la teoria de categorias, es una diferencia de estructura algebraica.
+Cuando compongo microservicios en un sistema distribuido, hay una pregunta que
+aparece antes de cualquier decisión técnica: quién coordina. Puedo poner un
+servicio central que llame a los demás en orden —un orquestador— o hacer que
+los servicios reaccionen a eventos compartidos —una coreografía—. Esta
+diferencia operacional **puede** recibir modelos algebraicos distintos; no los
+determina por sí sola.
 
 La orquestacion puede modelarse mediante un algebra sobre una operad de wiring
 si se especifican operaciones, colores y leyes. Un nodo central no "es la
@@ -29,7 +34,10 @@ estados e interacciones. Su composicion horizontal se calcula por coend:
 (P . Q)(a, c) = ∫^b P(a, b) x Q(b, c)
 ```
 
-El coproducto indexado reemplaza al control central: no hay un nodo que elija b. La existencia de un b compatible es lo que permite la interaccion. Es composicion por rendezvous, no por invocacion.
+En ese modelo, el coend compone testigos a través de objetos intermedios `b` y
+los identifica por la acción de la categoría intermedia. La fórmula no
+implementa un rendezvous, no elimina coordinadores de una arquitectura real y
+no demuestra propiedades de entrega.
 
 Kafka y un API gateway ejemplifican coreografia/orquestacion operacional. Solo
 son composicion profuntorial/operadica si se construyen esos modelos.
@@ -50,7 +58,12 @@ La linealidad controla uso de endpoints/canales en el programa. No garantiza
 entrega exactly-once en una red ni convierte gRPC unary en un objeto lineal sin
 semantica adicional.
 
-Una GraphQL subscription es un session type no-lineal: el servidor envia multiples updates sobre un mismo canal. El tipo del protocolo es un stream -- un session type con un ciclo que permite repetir el paso de send indefinidamente hasta que el cliente cancela. El ciclo es un endomorfismo en la categoria del protocolo.
+Una GraphQL subscription es operacionalmente un stream sobre una conexión
+persistente. **Puede** tiparse mediante un session type recursivo que repita
+`send` hasta la cancelación, pero GraphQL no aporta por sí solo esa derivación
+ni las garantías de linealidad, dualidad o progreso. En la categoría libre del
+autómata subyacente, el ciclo genera endomorfismos; eso no convierte la
+suscripción concreta en un session type por nombre.
 
 ## El algebra de los protocolos
 
@@ -85,7 +98,12 @@ Un handler entre capas solo es transformacion natural si existen dos funtores
 paralelos y todos sus cuadrados conmutan. Normalmente es una funcion/mapping
 cuya cobertura y semantica se prueban directamente.
 
-El retry tiene una lectura coinductiva y comonadica sugerente. Un retry con exponential backoff puede modelarse con un comportamiento tipo cofree donde p codifica "intentar y observar el resultado." La counit epsilon extrae el resultado del intento actual. La comultiplication delta produce un arbol de reintentos futuros: "si fallo ahora, duplico el contexto y lo intento otra vez con backoff incrementado." Cada nivel del arbol de comportamiento infinito es un reintento con un delay mayor.
+El retry tiene una lectura coinductiva sugerente. Un retry con exponential
+backoff **puede** modelarse mediante una comónada cofree después de fijar el
+funtor `p` de observación y continuación. En esa instancia, la counit extrae la
+observación actual y la comultiplicación expone el comportamiento desde cada
+continuación futura. El pseudocódigo siguiente ilustra esa lectura; no
+construye por sí solo la comónada ni demuestra que un retry real la realice.
 
 ```
 retry_with_backoff : c_p
@@ -132,11 +150,21 @@ explorarse un modelo de vistas locales sobre un site, pero hay que demostrar
 que quorums son coberturas y que compatibilidad/pegado representan las reglas
 del protocolo.
 
-Paxos y PBFT implementan una logica cercana: definen quorums y reglas de compatibilidad para que las secciones locales (votos) puedan pegarse en una seccion global (consenso). El lenguaje de sites y sheaves da una buena forma de pensar esa compatibilidad. El teorema de imposibilidad FLP no se reduce literalmente a una frase sobre sheaf property, pero esta perspectiva si ilumina la tension estructural entre asincronia, progreso y acuerdo.
+Un modelo posterior podría representar votos como secciones, quórums como
+coberturas y acuerdo como pegado, siempre que pruebe que las reglas de Paxos o
+PBFT se preservan en esa interpretación. Sin esa construcción, el lenguaje de
+sites/sheaves es una heurística. FLP conserva sus cuantificadores sobre
+asincronía, fallos y terminación; no se deriva de fallar una condición de
+sheaf.
 
 ## La convergencia con la agencia
 
-Los protocolos no son exteriores a los agentes -- son la interfaz donde los arboles de decision (free monads) de multiples agentes se acoplan con los arboles de comportamiento (cofree comonads) de los sistemas sobre los que corren. La coreografia emerge cuando los profunctors de interaccion componen sin coordinador central. La orquestacion emerge cuando una operad controla el cableado.
+Los protocolos no son exteriores a los agentes: fijan parte de sus entradas,
+salidas, temporalidad y errores observables. Un modelo puede acoplar árboles de
+decisión libres con materia cofree, o representar interacciones por
+profunctores y cableados por un álgebra operádica. Sin esos objetos y sus leyes,
+coreografía y orquestación siguen siendo patrones operacionales, no resultados
+de un coend o de una operad.
 
 Estas lecturas pueden orientar modelos separados; no componen entre si hasta
 que se proporcionan funtores/leyes distributivas o una semantica comun.
@@ -149,3 +177,10 @@ que se proporcionan funtores/leyes distributivas o una semantica comun.
   estados, observaciones y leyes.
 - **Heuristica:** Kafka/API gateways, circuit breakers o BFT identificados
   directamente con operads, sheaves o equalizers.
+
+## Corrección 1.2.0
+
+Se retiran las identificaciones GraphQL subscription=session type,
+coreografía=composición profuntorial y orquestación=operad. Las tres quedan
+como modelos posibles solo cuando se exhiben autómata/tipo, categorías de
+interacción o álgebra de wiring, respectivamente.

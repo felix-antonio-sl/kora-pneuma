@@ -30,6 +30,9 @@ subordinado a esas fuentes; `README.md` y `AGENTS.md` solo redirigen aquí.
 
 Atajos consumibles: `urn:kora:kb:guia-rapida-pneuma` y
 `urn:kora:kb:regimen-de-ley` (régimen de estrangulamiento bestia→pneuma).
+Para formalismo propio: `urn:kora:kb:cat-kora-kernel`,
+`urn:kora:kb:cat-kora-semantica-operacional` y
+`urn:kora:kb:cat-contrato-ingenieria-agentica`.
 
 **Los seis gestos** (`kora.py`):
 
@@ -40,7 +43,7 @@ python3 kora.py velar [--estricto]     # ejecutar el registro vigente de checks
 python3 kora.py transmutar --urn U --target T [--aplicar|--stdout]
                                        # proyectar con sello y pérdida declarada
 python3 kora.py transmutar --paridad   # comparar emisión e instalación
-python3 kora.py ciclo <urn> <estado>   # lifecycle solo hacia adelante
+python3 kora.py ciclo <urn> <estado>   # adelante; promoción estricta sobre destino
 python3 kora.py ley                    # alma y ley vigentes a stdout
 ```
 
@@ -105,6 +108,10 @@ python3 -m unittest discover -s tests
 - **`velar` valida forma, no verdad.** La fidelidad semántica (FS=100% de una
   koraficación, `ley/4`) es obligación declarada del productor: el núcleo no la
   mecaniza y la ley lo confiesa. No finjas demostrado el puente prometido.
+- **Declaración agéntica no es conducta.** Firma, `estados`, `componible`,
+  `herramientas`, sello y paridad no prueban coálgebra, FSM, composición,
+  enforcement, safety ni bisimulación. Usa el contrato de ingeniería agéntica
+  y exige sus testigos antes de afirmar cualquiera de esas propiedades.
 
 **Vigencia documental.** Un solo vigente por especie; los docs operativos
 muertos (informes, auditorías ya ejecutadas) se desplazan a `_archivo/`

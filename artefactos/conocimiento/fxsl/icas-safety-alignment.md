@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-safety-alignment
 nombre: icas-safety-alignment
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Pieza 12b del ICAS-BoK: safety y alineamiento categorial — ICAR, ley de Goodhart, coherencia y la distinción verificación/validación para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12. Corrección 1.1.0 contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12. Corrección 1.1.0 contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X. v1.2.0 (2026-07-18): reemplaza el eslogan no-interferencia por la obligacion monoidal concreta y separa declaracion, enforcement y cierre conductual."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,7 +18,11 @@ familia: bok
 
 Hay una asimetria fundamental entre funcionalidad y seguridad. La funcionalidad dice lo que el sistema debe hacer. La seguridad dice lo que el sistema no debe hacer en las trazas dentro de su alcance. Los tests aportan evidencia y pueden agotar modelos finitos; por sí solos no demuestran una propiedad universal sobre un espacio infinito de trazas.
 
-La teoria de categorias me ofrece algo mejor que testing: estructura. Un sistema es seguro cuando su comportamiento preserva ciertos invariantes bajo todas las transiciones. Y esa condicion de preservacion tiene una formulacion precisa que compone -- que se hereda de las partes al todo cuando la composicion tiene la forma correcta.
+La teoría de categorías ofrece una pregunta estructural distinta del testing:
+si un modelo de transiciones preserva un invariante y bajo qué composición
+esa preservación se hereda. Los tests y el argumento estructural tienen
+alcances diferentes; ninguno conecta el modelo con el runtime sin una
+relación de adecuación.
 
 ## Invariantes como sub-coalgebras
 
@@ -86,7 +90,11 @@ adicional sobre transformaciones.
 
 ## Guardrails como sketches
 
-Un guardrail es una restriccion sobre el comportamiento de un agente. "No generes contenido danino." "No ejecutes codigo sin confirmacion del usuario." "No accedas a datos fuera de tu scope." Cada restriccion es un diagrama que debe conmutar en la categoria de comportamientos del agente.
+Un guardrail es una restricción sobre el comportamiento de un agente: no
+generar cierto contenido, no ejecutar código sin confirmación o no acceder
+fuera de alcance. **Puede** codificarse como un diagrama o factorización en
+una categoría de comportamientos; la frase normativa por sí sola no construye
+esa categoría.
 
 Un guardrail **puede especificarse** mediante un sketch si sus conductas se
 presentan como una categoría y la restricción se expresa por los conos,
@@ -119,12 +127,24 @@ Si el sistema A es seguro y el sistema B es seguro, su composicion A tensor B no
 
 La pregunta categorica es: para que productos tensoriales, que subobjetos se preservan? Si la seguridad de A es la propiedad P_A (un subobjeto de los estados de A) y la de B es P_B, la seguridad de A tensor B deberia ser al menos P_A tensor P_B -- los estados donde A es seguro Y B es seguro. Pero la interaccion puede crear estados inseguros que no existen en ninguno de los componentes aislados.
 
-La condicion suficiente para la composicionalidad de safety es que la propiedad de seguridad sea monoidal -- que P_A tensor P_B sea un subobjeto de los estados seguros de A tensor B. Esto ocurre cuando la seguridad de cada componente no depende del estado del otro. Es decir, cuando no hay interferencia.
+La obligación composicional es construir una inclusión
+`P_A tensor P_B -> P_{A tensor B}` compatible con las transiciones y demostrar
+su naturalidad/coherencia en el modelo elegido. Esa inclusión es la propiedad
+monoidal que se necesita; no se sigue del hecho de que `P_A` y `P_B` sean
+subobjetos por separado. Una noción formal de no-interferencia puede ser una
+hipótesis suficiente en una semántica concreta, pero el eslogan «no dependen
+entre sí» no proporciona la flecha ni demuestra su cierre.
 
 Capability-based security puede hacer explícita esta condición si el runtime
 impide autoridad ambiental y la composición no amplifica permisos. Esa
 preservación depende del modelo concreto de delegación y revocación; no se
 sigue solo de usar la palabra capability.
+
+En KORA, `herramientas` declara un conjunto `D_a`; la seguridad operacional
+requiere además que la autoridad efectiva satisfaga
+`Eff_T(a,r) ⊆ m_T[D_a]`, y la seguridad conductual exige cierre de un
+subobjeto bajo la transición. Declaración, enforcement e invariancia son tres
+obligaciones distintas.
 
 Una slice `C/Cap` es un modelo posible cuando existe una categoría `C` y un
 objeto `Cap` adecuados. Preserva los mapas hacia `Cap`; demostrar que eso
@@ -132,9 +152,15 @@ coincide con autoridad efectiva sigue siendo una obligación del runtime.
 
 ## Alignment a lo largo del tiempo
 
-El alignment no es un estado estatico -- puede degradarse. Un agente que empieza alineado puede driftar a medida que su contexto cambia, que los datos de entrenamiento envejecen, o que los objetivos del principal evolucionan. Si modelo el alignment como una seccion de un sheaf sobre ventanas temporales -- un behavior sheaf donde cada ventana tiene un valor de alignment -- la degradacion se formula con precision.
-
-Una seccion de alignment que existe sobre una ventana de 30 dias pero no se extiende a 90 dias exhibe alignment drift. La condicion de sheaf dice: si el alignment es consistente en cada sub-ventana solapada, se extiende a la ventana completa. Si no se extiende, hay una inconsistencia en algun solapamiento -- un periodo donde los objetivos del agente dejaron de corresponder con los del principal.
+El alignment puede degradarse cuando cambian contexto, datos u objetivos. Si
+se construye un sheaf temporal cuyos elementos sean testigos de alignment, una
+sección sobre una ventana representa un testigo en ese intervalo. Que una
+sección de 30 días no admita extensión a 90 puede representar drift **según la
+semántica elegida**. Para una cobertura, la condición de sheaf garantiza
+pegado único de toda familia local compatible. Si no hay extensión, puede
+haber incompatibilidad local o puede haberse elegido un presheaf que no
+satisface sheaf; no se localiza automáticamente un período causal de
+misalignment.
 
 Dentro de un modelo temporal explícito, los evals periódicos son observaciones
 locales. Su consistencia aporta evidencia, pero una muestra finita no verifica
@@ -161,7 +187,15 @@ relación de orden/optimización explícita entre `p` y `g`.
 
 ## Seguridad como analisis categorico de grafos de ataque
 
-Las taxonomias de ciberseguridad -- CVE, CWE, CAPEC, ATT&CK, CPE -- no son silos independientes sino categorias conectadas por funtores. Valence construye ICAR (Integrated CAtegorical Resource) como un knowledge schema categorico donde los diccionarios de seguridad son objetos, las relaciones entre ellos son morfismos, y las path equivalences capturan restricciones semanticas. Los attack paths son composiciones de morfismos; la defensa es la ruptura de conmutatividad en algun punto de la cadena. El documento 18 desarrolla ICAR en profundidad con queries operativas y conteos concretos; el documento 14 lo situa en el contexto de organizaciones multi-agente.
+Valence construye ICAR (Integrated CAtegorical Resource) como un knowledge
+schema categorial que integra diccionarios como CVE, CWE, CAPEC, ATT&CK y CPE
+mediante relaciones tipadas. En ese modelo, rutas compatibles pueden
+representarse por composiciones y solo las path equations declaradas imponen
+conmutatividad. Una defensa puede bloquear o restringir una arista/instancia;
+«romper conmutatividad» violaría una ecuación del schema y no es sinónimo
+general de mitigar un ataque. El documento 18 desarrolla ICAR en profundidad
+con queries operativas y conteos concretos; el documento 14 lo sitúa en el
+contexto de organizaciones multi-agente.
 
 ## Verificacion formal versus validacion empirica
 
@@ -217,3 +251,9 @@ Se corrigen las identificaciones sheafification=defense-in-depth,
 RLHF=transformación natural, proxy fiel=objetivo adecuado y
 verificación/validación=end/coend. Estas construcciones quedan disponibles como
 modelos solo bajo categorías, funtores y propiedades universales explícitas.
+
+## Corrección 1.2.0
+
+Se reemplaza «safety compone cuando no hay interferencia» por la inclusión
+monoidal y el cierre que deben demostrarse. Para agentes KORA se distinguen
+capacidad declarada, enforcement de autoridad y safety conductual.

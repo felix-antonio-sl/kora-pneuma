@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.6.0
+# KORA/Constitución — ley pneuma v1.7.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -19,8 +19,11 @@ formal de lo operacional:
 > KORA = firma clasificatoria PMI × LFS + shape unificado de autoría +
 > proyección reticular y emisión determinista con pérdida declarada.
 
-El núcleo categorial demostrado —subretículo de firmas y coreflexión por
-target— vive en `urn:kora:kb:cat-kora-kernel`. La serialización completa es una
+El núcleo categorial demostrado —subretículo de firmas, coreflexión por
+target y fidelidad contravariante— vive en
+`urn:kora:kb:cat-kora-kernel`. La semántica mínima de todos los gestos, con sus
+pruebas y obstrucciones, vive en
+`urn:kora:kb:cat-kora-semantica-operacional`. La serialización completa es una
 transformación operacional verificada; no se denomina funtor mientras no se
 definan sus categorías, morfismos y leyes.
 
@@ -48,7 +51,7 @@ migración— se declara en `urn:kora:kb:regimen-de-ley`.
   verifica. La ley lo dice en voz alta y NO DEBE fingir lo contrario.
 - **Estatus categorial** — toda afirmación se califica como formal, modelo bajo
   hipótesis, heurística o metáfora, según
-  `urn:kora:kb:cat-kora-kernel` §7. Una URN da trazabilidad, no autoridad
+  `urn:kora:kb:cat-kora-kernel` §8. Una URN da trazabilidad, no autoridad
   matemática.
 
 ## 3. Tres tipos de artefacto, y solo tres
@@ -159,12 +162,25 @@ Reglas:
    reactiva: se emite un artefacto nuevo con `reemplaza` apuntando al muerto.
 3. El gesto `ciclo` es el único camino mecanizado de transición; edita el
    campo `estado` in-place preservando el resto del archivo byte-idéntico.
+4. La promoción a `publicado` o `activo` exige que el snapshot actual pase
+   `velar --estricto` y que `publicacion-digna` se evalúe sobre el **estado
+   destino** antes de escribir. Las transiciones a `deprecado` o `retirado`
+   no exigen ese gate: una fuente incoherente debe poder jubilarse.
 
 Rationale: la encarnación anterior declaraba las cadenas y prohibía las
 inversas, pero callaba sobre los saltos hacia adelante. Esta ley PRECISA esa
 ambigüedad que la bestia dejó abierta: el orden de la cadena es un orden
 estricto, y avanzar es legal desde cualquier estado hacia cualquier estado
 posterior.
+
+Con el orden reflexivo asociado, cada cadena es una categoría delgada. El CLI
+realiza solo sus flechas no identidad. En el dominio común, dos avances
+sucesivos y el salto directo dejan el mismo snapshot; sin embargo, `ciclo` no
+es un funtor total sobre snapshots porque los dominios de los gates difieren.
+Por ejemplo, `borrador → deprecado` puede estar definido cuando
+`borrador → activo → deprecado` no lo está. Esta obstrucción preserva la
+política de retiro y se demuestra en
+`urn:kora:kb:cat-kora-semantica-operacional` §6.
 
 ## 9. Dignidad del URN
 
@@ -180,14 +196,14 @@ de poder ser nombrado.
 
 El núcleo `kora.py` realiza la ley con seis gestos:
 
-| Gesto | Qué hace |
-|---|---|
-| `censo` | cataloga el corpus; vista derivada, jamás autoridad (§6) |
-| `nombre <urn>` | resuelve el nombre verdadero: path, tipo, versión, estado; también muertos, con marca (§9) |
-| `velar [--estricto]` | corre el registro completo de checks (§11) |
-| `transmutar` | proyecta la firma por el coreflector del target y serializa el artefacto (ley/3) |
-| `ciclo <urn> <estado>` | transición de lifecycle, solo hacia adelante (§8) |
-| `ley` | concatena `ALMA.md` + los cuatro estratos: KORA cabe en un contexto |
+| Gesto | Qué hace | Estatuto estructural mínimo |
+|---|---|---|
+| `censo` | cataloga el corpus; vista derivada, jamás autoridad (§6) | función determinista de snapshot; no funtor sustantivo |
+| `nombre <urn>` | resuelve path, tipo, versión y estado; también muertos (§9) | función parcial bajo unicidad de URN |
+| `velar [--estricto]` | corre el registro completo de checks (§11) | intersección finita de subobjetos de snapshots en `Set` |
+| `transmutar` | proyecta la firma y serializa; `--paridad` compara emisión/runtime (ley/3) | coreflector y fidelidad contravariante en firmas; compilador y predicado material fuera de esa prueba |
+| `ciclo <urn> <estado>` | transición de lifecycle, solo hacia adelante (§8) | flecha no identidad de cadena delgada; operación parcial sobre snapshots |
+| `ley` | concatena `ALMA.md` + los cuatro estratos: KORA cabe en un contexto | concatenación textual parcial; no construcción categorial |
 
 Exit codes: `0` ok; `1` fallo de validación u operación; `2` error de uso o
 Python < 3.11.
@@ -239,6 +255,7 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 | URN bien formado y único | regex §7, sin versión embebida | mecanizado (`nombre-verdadero`) |
 | Estado pertenece a la cadena del tipo | §8 | mecanizado (`estado-valido`) |
 | Transición solo hacia adelante | §8 | mecanizado (gesto `ciclo`) |
+| Dignidad de promoción | snapshot actual estricto + estado destino digno | mecanizado (gesto `ciclo`) |
 | Dignidad del URN | muertos resuelven en `censo` y `nombre` | mecanizado (`censo`, `nombre`) |
 | Censo jamás versionado | `censo.json` en `.gitignore` | mecanizado (`.gitignore`) |
 | Derivados sin voz normativa | §5, §6 | declarado |
@@ -266,3 +283,8 @@ no individúa; solo la proyección reticular se declara funtor/coreflector y la
 emisión completa se reconoce como serialización determinista. Se instaura la
 escala epistémica formal/modelo/heurística/metáfora sin cambiar shapes, checks
 ni bytes emitidos.
+
+v1.7.0 (2026-07-18): tipa los seis gestos con la estructura mínima que
+sostienen, formaliza las cadenas de lifecycle sin fingir una acción functorial
+total y fortalece el gate de promoción: registro estricto actual más dignidad
+evaluada en el estado destino.

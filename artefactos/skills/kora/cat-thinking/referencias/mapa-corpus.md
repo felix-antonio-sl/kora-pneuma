@@ -68,7 +68,9 @@ además prueba o fuente primaria.
 
 | URN | Vocablo central | Activar cuando |
 |-----|-----------------|----------------|
-| `urn:kora:kb:cat-kora-kernel` | retículo de firmas, coreflexión por target, grafos generadores, alcance del sello | evaluar afirmaciones categoriales sobre KORA o su transmutación |
+| `urn:kora:kb:cat-kora-kernel` | retículo de firmas, coreflexión por target, fidelidad contravariante, grafos generadores | evaluar la firma, matrices o relaciones de KORA |
+| `urn:kora:kb:cat-kora-semantica-operacional` | subobjetos de validación, lifecycle parcial, censo, emisión, paridad, ley | evaluar categorialmente un gesto concreto de KORA sin forzar functorialidad |
+| `urn:kora:kb:cat-contrato-ingenieria-agentica` | `Spec/Model/Runtime`, coálgebra, efectos, wiring, capabilities, safety | afirmar que un agente compone, preserva conducta, está limitado o es seguro |
 
 ## Como navegar el corpus
 

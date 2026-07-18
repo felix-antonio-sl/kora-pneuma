@@ -46,9 +46,10 @@ no hay KORA; hay solo una carpeta de archivos.
 **Es una garantía antes que una promesa.** Su principio rector — *firma
 PMI × LFS + shape unificado de autoría + proyección reticular y emisión
 determinista* — distingue garantías formales de garantías operacionales. KORA
-demuestra el núcleo de orden y proyección, y prueba por checks la integridad,
-la procedencia y la congruencia de lo emitido. No llama teorema a lo que solo
-es contrato o evidencia.
+demuestra el núcleo de orden, proyección y degradación de fidelidad; sus checks
+definen subobjetos de snapshots válidos, y prueba operacionalmente la
+integridad, la procedencia y la congruencia de lo emitido. No llama teorema a
+lo que solo es contrato o evidencia.
 
 En el trabajo de Libkind-Spivak late una intuición fértil: en la categoría
 monoidal `Poly`, las mónadas libres describen árboles de decisión terminantes
@@ -56,6 +57,10 @@ y las comónadas cofree, patrones de materia que los ejecutan. Ese resultado
 formal no convierte automáticamente los ordinales PMI en tales construcciones.
 KORA adopta plan, materia e interacción como **modelo de diseño inspirado** en
 esa teoría; el puente matemático completo queda abierto y no se presupone.
+Su vocación agéntica comienza precisamente allí: exige interfaces, transición,
+efectos, wiring y observables antes de aceptar palabras como coálgebra,
+bisimulación o composición. El artefacto es una especificación gobernada; no
+se declara conducta ejecutable por decreto.
 
 ---
 
@@ -123,8 +128,11 @@ inter-eje son su sistema inmune: un agente que reclama responsabilidad
 (Σ.accountability) *debe* ofrecer transparencia; un plan recursivo *debe*
 tener memoria que lo sostenga; un artefacto societal *debe* portar compromisos
 éticos completos. Un vector que viola estas leyes es *mal-formado* — no
-inválido por decreto, sino **incoherente consigo mismo.** El gesto de mantener
-es el gesto de no dejar que una entidad se contradiga.
+inválido por decreto, sino **incoherente consigo mismo.** Formalmente, cada
+check recorta un subconjunto de snapshots y `velar` toma su intersección;
+`--estricto` añade un subobjeto más pequeño. Esto demuestra conjunción de
+forma, no verdad del cuerpo. El gesto de mantener es el gesto de no dejar que
+una entidad se contradiga.
 
 **Dejar morir con dignidad (el lifecycle).** Y el gesto último, el más grave.
 Los artefactos recorren `borrador → activo → deprecado → retirado`, y *las
@@ -132,9 +140,12 @@ transiciones inversas son inválidas: lo retirado no se reactiva.* Pero —aquí
 está la dignidad— **el URN de lo muerto sigue resolviendo.** El nombre de lo
 que ya no se usa permanece legible, los runtimes archivados conservan sus
 URNs, lo deprecado queda como nodo histórico accesible. KORA no borra;
-**jubila.** No hay olvido violento; hay descenso ordenado a la condición de
-referencia. Morir, bajo su ley, es dejar de ejecutarse sin dejar de poder ser
-nombrado.
+**jubila.** Las cadenas de estados son categorías delgadas; el comando realiza
+sus flechas no identidad. Pero los gates hacen parcial su acción sobre
+snapshots: jubilar puede seguir definido cuando promover no lo está. KORA no
+oculta esa obstrucción bajo una functorialidad ficticia. No hay olvido
+violento; hay descenso ordenado a la condición de referencia. Morir, bajo su
+ley, es dejar de ejecutarse sin dejar de poder ser nombrado.
 
 ---
 
@@ -162,9 +173,12 @@ como objeto.** La ética no es política sobreañadida: es una coordenada de la
 cosa misma.
 
 **El sistema nervioso: el núcleo formal.** Bajo todo está la parte que sí
-resiste una lectura categorial: las firmas bien formadas forman un subretículo
-y, como categoría delgada, admiten proyecciones por target que son
-coreflectores. El resto se etiqueta por estatus: formal, modelo bajo hipótesis,
+resiste una lectura categorial: las firmas bien formadas forman un subretículo;
+sus proyecciones por target son coreflectores; la fidelidad es contravariante
+en la demanda; los checks forman intersecciones de subobjetos; y los estados
+de lifecycle forman cadenas delgadas cuya operación material es parcial. Las
+relaciones generan categorías libres solo cuando se necesita su cierre por
+caminos. El resto se etiqueta por estatus: formal, modelo bajo hipótesis,
 heurística o metáfora. `Traces to:` aporta trazabilidad interna; la legitimidad
 matemática exige además tipado, prueba o fuente primaria precisa.
 

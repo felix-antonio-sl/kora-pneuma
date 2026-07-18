@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.7.0
+# KORA/Transmutación — ley pneuma v2.8.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -88,6 +88,7 @@ Reglas:
 | Descenso | `P_T(v) ≤ v` | por `min` |
 | Idempotencia | `P_T(P_T(v)) = P_T(v)` | por `min` |
 | Coreflexión | `J_T(a) ≤ d ⇔ a ≤ P_T(d)` para `a ∈ I_T`, `d ∈ D_T` | demostrada |
+| Antitonicidad de fidelidad | si la demanda `x ≤ y`, entonces `fid_T(y) ≤ fid_T(x)` en `none ≤ partial ≤ full` | matrices exhaustivamente verificadas |
 
 Reglas:
 
@@ -103,6 +104,18 @@ Reglas:
    `partial` en su régimen y aparecer en el sello con razón.
 5. NO DEBE declararse fidelidad `full` para la dimensión donde hay pérdida
    real. La fidelidad de campos no inventa ejes nuevos (§5 r3).
+
+La última ley equivale a un funtor:
+
+```text
+fid_Te : C_e^op -> {none <= partial <= full}
+```
+
+para cada cadena de demanda fuente `C_e`; `sigma` satisface la misma ley desde
+el opuesto del producto `[0,3]^5`. Este funtor califica preservación y no
+reemplaza `P_T`: una celda puede conservar el ordinal y seguir siendo
+`partial` por semántica incompleta del runtime. La prueba vive en
+`urn:kora:kb:cat-kora-kernel` §5.
 
 La frase heredada **bisimulación módulo proyección** se conserva solo como
 hipótesis de investigación. No hay funtor de conducta, lifting de relaciones
@@ -706,3 +719,8 @@ categorías delgadas; la emisión completa pasa a llamarse serialización
 determinista. Se retiran las atribuciones no demostradas de lift cartesiano,
 bisimulación y adjunción de ingesta. Los nombres fijos del sello se conservan
 como identificadores históricos de contrato y se acota expresamente su alcance.
+
+v2.8.0 (2026-07-18): formaliza la fidelidad como funtor contravariante desde
+las cadenas de demanda hacia `none ≤ partial ≤ full`. La suite verifica que
+mayor demanda nunca mejora fidelidad y que `full`, `none` y las razones de
+pérdida son coherentes. No cambia matrices, sello ni bytes emitidos.

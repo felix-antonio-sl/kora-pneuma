@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.6.0
+# KORA/Forma — ley pneuma v1.7.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -111,16 +111,43 @@ el sello `(URN,target)` conforme a `ley/3 §7`.
 | `sigma` | sí | lista 5 enteros | `[safety, fairness, transparency, accountability, sustainability]`, cada uno 0..3 |
 | `arnes` | sí | enum | `utilidad\|disciplina\|delegado\|persona\|orquestador\|servicio\|arquetipo` |
 | `forma` | sí | enum | `habilidad\|subagente\|agente\|plataforma` |
-| `herramientas` | sí | lista | herramientas/permisos; PUEDE ser `[]` solo si `forma` = `habilidad` |
+| `herramientas` | sí | lista | capacidades fuente declaradas; su enforcement es específico del target; PUEDE ser `[]` solo si `forma` = `habilidad` |
 | `targets` | sí | lista no vacía | subconjunto de `{claude-code, codex, opencode, openclaw, hermes}` |
 | `conocimiento` | no | lista URNs `kb` | conocimiento permitido |
-| `componible` | no | lista URNs `artefacto` | artefactos componibles |
-| `estados` | no | lista | plan declarativo simple (sin FSM mecanizado) |
+| `componible` | no | lista URNs `artefacto` | candidatos declarados de composición; la arista no prueba interfaces ni composición semántica |
+| `estados` | no | lista | etiquetas ordenadas de workflow; no son FSM ni estado coalgebraico |
 | `alcance` | no | enum | `usuario\|proyecto\|ambos`; ausente = `ambos`. Gobierna qué destino de `--aplicar` admite el artefacto (instalación user-general vs proyecto). Lo respeta y valida el gesto de transmutación (ley/3 §7). Es un atributo del artefacto, no del runtime: ortogonal a `targets` |
 
 Renombres pneuma sobre la bestia: `agente-propiamente-tal` → `agente`,
 `agente-plataforma` → `plataforma`. Estos campos NO DEBEN aparecer en un
 artefacto de conocimiento (serían claves no permitidas para su tipo).
+
+### 3.1 Frontera semántica agéntica
+
+El shape agéntico es una especificación declarativa y fuente de compilación.
+No constituye por sí solo un modelo de conducta.
+
+1. `vector`, `sigma`, `arnes` y `forma` clasifican y gobiernan. No definen
+   conjuntos de entradas, salidas o estados ni una transición.
+2. `estados` no declara eventos, aristas, guards, acciones ni estado inicial;
+   por tanto no es una máquina de estados ni una coálgebra.
+3. `componible` genera un grafo de **candidatos**. Incluso su categoría libre
+   de caminos compone declaraciones, no agentes.
+4. `herramientas` es un subconjunto de capacidades declaradas. Probar
+   least-privilege exige comparar ese conjunto con la autoridad efectiva del
+   runtime bajo todos los overrides incluidos en el alcance.
+5. Un sello fresco o una instalación paritaria prueban procedencia e igualdad
+   material; no bisimulación, safety ni preservación conductual.
+
+Los testigos mínimos para promover cada afirmación —`I`, `O`, `U`, mónada
+`M`, transición, lifting de relaciones, interfaces de wiring, álgebra de
+composición, capacidades efectivas e interpretación runtime— viven en
+`urn:kora:kb:cat-contrato-ingenieria-agentica`.
+
+No se añaden campos conductuales vacíos al frontmatter. Una futura extensión
+deberá nacer de un caso operacional completo y referenciar un testigo
+versionado por URN; el shape plano no debe fingir que serializa una semántica
+que todavía no existe.
 
 ## 4. Campo de conocimiento
 
@@ -358,3 +385,8 @@ declara grafos generadores, no subcategorías ni posets materializados; la
 categoría libre de caminos y el orden por alcanzabilidad se derivan cuando
 corresponde. Se explicita que el cierre transitivo no es obligatorio y que la
 prohibición de democión es política de lifecycle, no teorema.
+
+v1.7.0 (2026-07-18): precisa la frontera semántica agéntica sin expandir el
+shape. `herramientas`, `componible` y `estados` quedan tipados como
+declaraciones; coálgebra, composición, enforcement y preservación runtime
+requieren testigos externos explícitos.

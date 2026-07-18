@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.5.1
+version: 1.6.0
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0). v1.5.0 (2026-07-16): sincroniza ley/3 v2.3.0: fidelidad separada para campos no reticulares, resolución URN por censo, congruencia con el generador incluyendo sidecars/referencias y guard de la colisión personal Codex→managed OpenClaw. v1.5.1 corrige el estatuto categorial del gesto: proyección coreflectiva de firmas seguida por emisión determinista."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0). v1.5.0 (2026-07-16): sincroniza ley/3 v2.3.0: fidelidad separada para campos no reticulares, resolución URN por censo, congruencia con el generador incluyendo sidecars/referencias y guard de la colisión personal Codex→managed OpenClaw. v1.5.1 corrige el estatuto categorial del gesto: proyección coreflectiva de firmas seguida por emisión determinista. v1.6.0 (2026-07-18): incorpora semántica operacional, fidelidad contravariante, gate de promoción sobre el destino y contrato formal de ingeniería agéntica."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -34,8 +34,8 @@ Alberga corpus reales migrados de la bestia, artefacto por artefacto. Familias
 presentes (inventario vivo:
 `python3 kora.py censo`):
 
-- **Categorial** — Formal Layer (`cat-foundations`, `cat-agent-coalgebra`) +
-  el corpus ICAS-BoK; lo consume `cat-thinking`.
+- **Categorial** — Formal Layer, semántica operacional de KORA, contrato de
+  ingeniería agéntica + corpus ICAS-BoK; lo consume `cat-thinking`.
 - **OPM/Forja ES** — SSOT de modelado: núcleo ISO 19450, OPD, OPL, manual
   metodológico, reglas estrictas, specs forja OPD/OPL, puente categorial;
   la consumen la skill `modelamiento-opm` y la persona `dov-dori`.
@@ -58,7 +58,7 @@ URN idénticos a la bestia, que sigue autoritativa para lo no migrado.
 | Nombre verdadero | URN sin versión; resuelve incluso retirado el artefacto |
 | Coherencia | `velar` ejecuta el registro vigente de checks; el censo es derivado, jamás autoridad |
 | Proyección honesta | Sello inline: hash, fidelidad por eje/campo y pérdidas con razón; congruencia byte a byte con el generador |
-| Lifecycle digno | Solo hacia adelante; promoción gateada por `velar`; muertos siguen resolviendo |
+| Lifecycle digno | Solo hacia adelante; promoción gateada por `velar --estricto` y dignidad del estado destino; muertos siguen resolviendo |
 | Producción con verdad | Koraficación: FS=100%, hechos inventados = fallo (`ley/4`) |
 
 ## Los seis gestos
@@ -89,7 +89,9 @@ Campos comunes obligatorios: `urn`, `nombre`, `version` (semver), `estado`,
 `descripcion`, `fuente`. Agénticos agregan: `vector` `[pi,mu,xi,lambda,phi]`,
 `sigma` (5 componentes), `arnes`, `forma`, `herramientas`, `targets`;
 opcionales agénticos: `conocimiento` (URNs `kb`), `componible` (URNs
-`artefacto`) y `estados` (plan declarativo). Conocimiento agrega:
+`artefacto`, candidatos, no composición probada) y `estados` (etiquetas de
+workflow, no FSM). `herramientas` declara capacidades fuente; el enforcement
+depende del target. Conocimiento agrega:
 `familia` ∈ {`nota`, `fuente`, `bok`}. Relaciones opcionales para todo
 tipo: `cita`, `depende`, `reemplaza`, `refina`.
 
@@ -122,9 +124,24 @@ tipo: `cita`, `depende`, `reemplaza`, `refina`.
 | agéntico | `borrador → activo → deprecado → retirado` |
 
 Saltos hacia adelante válidos; inversas inválidas siempre. `ciclo` hacia
-`publicado` o `activo` rechaza si el corpus completo no pasa `velar`.
+`publicado` o `activo` rechaza si el corpus completo no pasa
+`velar --estricto` o si el estado destino no satisface
+`publicacion-digna`.
 `transmutar --aplicar` exige `estado: activo`. Retirado no se reactiva: se
 emite artefacto nuevo con `reemplaza`.
+
+Las cadenas son categorías delgadas, pero el comando es parcial sobre
+snapshots: jubilar no exige el gate de promoción. En el dominio común, un
+camino compuesto y el salto directo dejan los mismos bytes finales.
+
+## Frontera formal agéntica
+
+Un artefacto KORA es `Spec`, no conducta por decreto. Llamarlo coálgebra exige
+`I`, `O`, `U`, mónada `M` y `step`; llamarlo componible exige puertos, wiring,
+semántica y efectos compatibles; llamarlo seguro exige autoridad runtime
+efectiva e invariante cerrado. El sello y la paridad prueban materia, no
+bisimulación. Contrato completo:
+`urn:kora:kb:cat-contrato-ingenieria-agentica`.
 
 ## Transmutación
 
@@ -172,8 +189,9 @@ fidelidad es obligación declarada del productor contra la fuente.
 
 ## Deudas confesadas
 
-Sin ingesta inversa (`Lift`), sin target hermes, sin verificación
-coalgebraica de FSM, sin staging de directorios (el estado `borrador`
+Sin ingesta inversa (`Lift`), sin target hermes, sin interpretación
+source→runtime ni testigos coalgebraicos por artefacto, sin staging de
+directorios (el estado `borrador`
 in-place es la antesala). La migración es **por demanda**, no masiva
 (GENESIS: pneuma se gana el corpus, no lo hereda por decreto): artefacto por
 artefacto, con URN preservado y `sha256` de la fuente en `fuente:`. Ya

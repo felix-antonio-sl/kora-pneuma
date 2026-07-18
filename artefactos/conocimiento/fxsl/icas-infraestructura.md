@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-infraestructura
 nombre: icas-infraestructura
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Pieza 20 del ICAS-BoK: modelos categoriales condicionales para infraestructura autónoma — tool use, self-improvement, IaC, reconciliación, self-healing y sistemas de sistemas."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/20-infraestructura-autonoma.md (sha256:b29c97fc95a73d9c2b11d52f0beedf38963d028dbe19f2d35f8aae7482214743) el 2026-06-12. Corrección 1.1.0 contrastada con Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/20-infraestructura-autonoma.md (sha256:b29c97fc95a73d9c2b11d52f0beedf38963d028dbe19f2d35f8aae7482214743) el 2026-06-12. Corrección 1.1.0 contrastada con Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf. v1.2.0 (2026-07-18): separa encapsulacion API de Yoneda y capacidad declarada de autoridad efectiva; remite al contrato agentico KORA."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -42,7 +42,19 @@ Dentro de ese modelo, profuntores componibles se componen por el coend
 `∫^b P(a,b) × Q(b,c)`. La fórmula identifica interacciones por la acción de
 `B`; no demuestra que una cadena real de autorización o efectos sea transitiva.
 
-El lema de Yoneda inspira directamente esta lectura: la herramienta puede tratarse externamente a traves de su interfaz. El agente no necesita entender los internos de la herramienta -- solo necesita conocer una interfaz suficientemente expresiva para componer con ella. Esta es la formalizacion de la opacidad que observo en la practica: un agente LLM que invoca una tool function no sabe como esta implementada, solo conoce su firma y su descripcion.
+La encapsulación de una herramienta tras su interfaz es primero una propiedad
+operacional de la API. Dentro de una categoría construida, Yoneda permite
+estudiar un objeto mediante sus mapas desde o hacia representables; no afirma
+que una firma de function-calling determine al implementador ni formaliza por
+sí sola su opacidad. Para usar esa lectura hay que declarar la categoría, el
+objeto representado y qué observaciones conserva la interfaz.
+
+La lista de tools visible para un agente es autoridad **declarada**. La
+autoridad efectiva depende del runtime, sus overrides, credenciales y proceso
+padre. En la notación del
+`urn:kora:kb:cat-contrato-ingenieria-agentica`, la obligación mínima es probar
+`Eff_T(a,r) ⊆ m_T[D_a]`; ni un profunctor de interacciones ni la descripción
+textual de una tool demuestra esa inclusión.
 
 Elección, secuencia y paralelismo multi-tool requieren respectivamente
 coproductos, composición y tensor **si** el modelo de interfaces los realiza.
@@ -204,3 +216,9 @@ categorial».
 Se separan punto fijo, coálgebra final y óptimo; se retira la identificación de
 consenso dinámico con sheafification y se condicionan las lecturas
 IaC=funtor, reconciliation=trace y bucle infinito=coinducción.
+
+## Corrección 1.2.0
+
+Se retira la identificación de encapsulación API con el lema de Yoneda y se
+separan capacidad declarada, autoridad efectiva e interacción profuntorial. La
+frontera source/model/runtime queda subordinada al contrato agéntico KORA.

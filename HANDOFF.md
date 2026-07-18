@@ -1,159 +1,200 @@
-# Handoff vigente — 2026-07-18 — auditoría categorial integral de KORA
+# Handoff vigente — 2026-07-18 — semántica operacional y contrato agéntico
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
 
-## Objetivo y alcance
+## Objetivo
 
-Auditar `kora-pneuma` de extremo a extremo —mecánica, modelo de datos, ley,
-transmutación, corpus categorial, consumidores OPM y skills— usando
-`mente-omega` y `cat-thinking`; remediar errores demostrables sin expandir el
-shape ni inventar una formalización mayor que la implementada.
+Continuar la auditoría categorial integral de `kora-pneuma`, con foco en
+ingeniería agéntica, y convertir en formalismo solo aquello que admite objetos,
+morfismos, composición y leyes genuinos. Remediar falsedades y sobreafirmaciones
+sin expandir el shape ni fabricar una semántica runtime inexistente.
 
-Supuestos aplicados:
-
-1. La teoría matemática tiene precedencia sobre metáforas heredadas y URNs.
-2. Se conserva el núcleo formal que puede probarse; el resto se declara
-   modelo, heurística o metáfora según su evidencia.
-3. No se cambia el formato estable del sello ni los bytes del emisor cuando la
-   corrección es doctrinal.
-4. `no-instalada` no autoriza instalar una capacidad nueva por sorpresa.
+El handoff anterior quedó archivado en
+`_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
 ## Veredicto
 
-El repositorio ya tenía una mecánica sólida, pero su discurso categorial
-confundía repetidamente clasificación con identidad y semejanza estructural con
-teorema. El problema principal no era ausencia de teoría de categorías, sino
-**sobreafirmación**: se llamaban funtores, adjunciones, bisimulaciones,
-pushouts, sheaves, topoi u operads a mappings y patrones aún no tipados.
+KORA no necesita que todos sus gestos sean funtores. Su formalización útil se
+divide ahora en tres estratos explícitos:
 
-Tras este incremento:
+1. **fuente declarativa**: firma, shape, lifecycle, relaciones y capacidades;
+2. **modelo matemático**: solo cuando se exhiben tipos, estado, transición,
+   efectos, observaciones y leyes;
+3. **runtime efectivo**: conducta y autoridad que requieren una interpretación
+   específica por target.
 
-- la firma PMI×LFS **clasifica** y no individúa;
-- la proyección numérica por target es el único funtor propio de KORA
-  demostrado en este alcance;
-- esa proyección es un coreflector entre categorías delgadas;
-- la emisión completa es serialización determinista, no funtor demostrado;
-- el sello certifica procedencia, proyección y congruencia, no naturalidad,
-  safety, bisimulación ni composición Kleisli;
-- las relaciones del frontmatter son grafos generadores; la categoría libre de
-  caminos y el orden por alcanzabilidad son construcciones derivadas;
-- el corpus ICAS declara localmente si una aplicación es formal, un modelo bajo
-  hipótesis, una heurística o una metáfora.
+La ganancia de rigor consiste tanto en las pruebas nuevas como en las
+obstrucciones documentadas. Categorías discretas ad hoc, analogías nominales y
+URNs no convierten una función o un patrón en teorema.
 
 ## Núcleo formal añadido
 
-`urn:kora:kb:cat-kora-kernel` prueba:
+### Semántica operacional de KORA
 
-1. las firmas bien formadas constituyen un subretículo acotado `V`;
-2. cada dominio soportado `D_T` y su imagen `I_T` son categorías delgadas;
-3. `P_T(v)=min(v,c_T)` es monótono, descendente e idempotente;
-4. para la inclusión `J_T : I_T -> D_T`, se cumple `J_T ⊣ P_T`;
-5. el coreflector no se extiende automáticamente al transporte de cuerpos,
-   archivos o conducta.
+`urn:kora:kb:cat-kora-semantica-operacional` tipa los seis gestos vigentes:
 
-El contraejemplo vivo `cat-thinking`/`ifml` demuestra que igual arnés, forma,
-vector y sigma no implican mismo artefacto, tipo semántico ni bisimulación.
+- `velar` es una intersección finita de subobjetos de snapshots en `Set`;
+- `censo` es una vista determinista, no un funtor sustantivo;
+- `nombre` es resolución parcial bajo unicidad de URN;
+- cada lifecycle es una categoría delgada de estados;
+- `ciclo` realiza transformaciones parciales de snapshots y compone solo en su
+  dominio común;
+- el retiro sin gate y la promoción con gate impiden legítimamente una acción
+  functorial total del lifecycle;
+- las relaciones generan categorías libres de caminos por campo;
+- la fidelidad por target es un funtor contravariante desde la demanda hacia
+  `none <= partial <= full`;
+- emisión, aplicación, paridad, `ley` y koraficación conservan su estatuto
+  operacional o editorial, sin categorías fabricadas.
 
-## Superficies corregidas
+`urn:kora:kb:cat-kora-kernel` v1.1.0 incorpora la prueba de fidelidad
+contravariante y conserva la coreflexión de la proyección numérica.
 
-- `ALMA.md` y `ley/0..4`: identidad, frontera formal, coreflexión, relaciones,
-  alcance del sello y estatus de koraficación.
-- `kora.py`: terminología y documentación del contrato; el algoritmo y los
-  bytes emitidos no cambiaron.
-- `cat-agent-coalgebra`: tipo reactivo corregido a
-  `H(X)=(M(O×X))^I` y `c:U->H(U)`.
-- `cat-agent-modulo`, `cat-foundations`, `aufbau-persona-agente` y
-  `alma-de-kora`: retirada de isomorfismos y puentes no demostrados.
-- 24 piezas ICAS: correcciones locales de functorialidad, adjunciones,
-  universalidad, (co)álgebras, efectos, enriquecimiento, topoi, temporalidad,
-  infraestructura, calidad y procesos.
-- Puente OPM y cuatro consumidores: una firma de frontera solo expresa
-  equivalencia observacional relativa; merge/pushout y dualidades quedan
-  condicionados a su construcción.
-- `cat-thinking` y referencias: regla adversarial de estatus más débil,
-  fuentes primarias y obligación de tipar categorías, morfismos y leyes.
-- `autoria-de-persona`, `agent-architect`,
-  `auditoria-artefactos-kora`, `modelamiento-opm` y canon de diseño:
-  eliminación de inferencias de identidad o garantía a partir de firma/sello.
+### Contrato categorial de ingeniería agéntica
+
+`urn:kora:kb:cat-contrato-ingenieria-agentica` separa:
+
+```text
+Spec(a)          fuente declarativa KORA
+Model(a)         modelo matemático explícito, si existe
+Runtime_T(a,r)   conducta efectiva bajo contexto runtime r
+```
+
+El modelo reactivo mínimo queda tipado como:
+
+```text
+H(X) = (M(O × X))^I
+c : U -> H(U)
+step : U × I -> M(O × U)
+```
+
+El contrato exige testigos distintos para:
+
+- morfismo coalgebraico y bisimulación;
+- wiring tipado y composición de agentes;
+- compatibilidad de efectos y feedback;
+- realización de *pattern runs on matter* en `Poly`;
+- no amplificación de autoridad
+  `Eff_T(a,r) ⊆ m_T[D_a]`;
+- cierre de safety como subcoálgebra;
+- preservación source→runtime mediante una interpretación por target.
+
+`componible`, `herramientas`, `estados`, el sello y la paridad quedan
+explícitamente limitados a lo que sí declaran o prueban.
+
+## Corrección ejecutable
+
+`ciclo` tenía un falso verde: al promover un conocimiento desde `borrador`,
+`publicacion-digna` evaluaba el estado de origen y podía publicar un destino
+con menos de tres tags.
+
+Ahora una promoción:
+
+1. ejecuta el registro completo de `velar --estricto`;
+2. evalúa dignidad sobre el **estado destino** antes de escribir;
+3. preserva el retiro/deprecación sin gate para no impedir jubilar una fuente
+   incoherente.
+
+La suite cubre el fallo y la coherencia entre camino compuesto y salto directo
+en el dominio común.
+
+## Correcciones adversariales del corpus
+
+Se elevaron a v1.2.0 las piezas ICAS afectadas y su síntesis:
+
+- `icas-agencia`: distingue `Org_m` de su opuesto agéntico; separa
+  profuntores de polinomios; retira la atribución ficticia `Idx:E->A` a
+  Fukada. En el paper, las acciones son elementos/primary keys de `Actions`,
+  no morfismos.
+- `icas-protocolos`: GraphQL no es session type por nombre; un coend no
+  implementa rendezvous; Paxos/PBFT no son sheaves sin interpretación.
+- `icas-infraestructura`: encapsulación API no es el lema de Yoneda; capacidad
+  declarada no es autoridad efectiva.
+- `icas-safety-alignment`: safety monoidal exige una inclusión y cierre
+  demostrados; no-interferencia es una hipótesis por formalizar; sheaf temporal
+  no localiza causalidad por sí solo; mitigar un ataque no significa romper
+  conmutatividad.
+- `icas-sintesis` y `alma-de-kora`: propagan estas fronteras y dejan de llamar
+  categorial a todo gesto.
+
+`cat-thinking` v2.1.0 incorpora la semántica operacional, el contrato agéntico,
+la matriz de testigos y nuevos falsos amigos/disparadores.
 
 ## Evidencia de cierre
 
 - `python3 kora.py velar --estricto`: 13/13 checks.
-- `python3 -m unittest discover -s tests`: 189 pruebas, todas verdes.
-- Se añadieron propiedades exhaustivas de matrices: dominio inicial,
-  monotonía, descenso, idempotencia, adjunción y preservación de las cinco
-  leyes inter-eje.
-- Se añadió prueba de que dos URNs pueden compartir firma sin colapsar
-  identidad y de que `depende` no exige cierre transitivo materializado.
-- `git diff --check` y `python3 -m py_compile kora.py`: verdes.
+- `python3 -m unittest discover -s tests`: 193 pruebas, todas verdes.
+- `git diff --check`: verde.
+- `python3 -m py_compile kora.py`: verde.
+- `cat-thinking`: `3 fiel`, `0 desviadas`, `0 no-instaladas`,
+  `0 sin-emisión`.
 - Paridad global: `116 fiel`, `0 desviadas`, `11 no-instaladas`,
   `0 sin-emisión`.
 
+Las once unidades `no-instaladas` son ausencias previas y no autorizan
+instalación automática.
+
 ## Emisiones e instalaciones
 
-Se regeneraron las 18 superficies derivadas de:
+Se reemitió y aplicó `cat-thinking` en sus tres targets declarados ya
+instalados:
 
-- `auditoria-artefactos-kora`;
-- `autoria-de-persona`;
-- `cat-thinking`;
-- `modelamiento-opm`;
-- `agent-architect`.
+- `/home/felix/.claude/skills/cat-thinking`;
+- `/home/felix/.agents/skills/cat-thinking`;
+- `/home/felix/.config/opencode/skills/cat-thinking`.
 
-Se actualizaron las doce instalaciones que ya existían en Claude Code, Codex y
-OpenCode para las cuatro skills. No se instaló `agent-architect` en targets
-donde ya figuraba ausente ni la variante OpenClaw de `autoria-de-persona`;
-`no-instalada` es informativo y no bloquea.
+Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
 
 ## Fuentes primarias contrastadas
 
-- Libkind y Spivak, *Pattern Runs on Matter*:
-  https://arxiv.org/abs/2404.16321
-- Riehl, *Category Theory in Context*:
+- Emily Riehl, *Category Theory in Context*:
   https://emilyriehl.github.io/files/context.pdf
 - Rutten, *Universal Coalgebra*:
   https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf
-- Stacks Project, *Sheafification*:
-  https://stacks.math.columbia.edu/tag/007X
-- Schultz y Spivak, *Temporal Type Theory*:
-  https://arxiv.org/abs/1710.10258
-- Schultz, Spivak y Vasilakopoulou, *Dynamical Systems and Sheaves*:
-  https://arxiv.org/abs/1609.08086
+- Beohar et al., *Predicate and relation liftings for coalgebras with side
+  effects*: https://arxiv.org/abs/2110.09911
+- Vagner, Spivak y Lerman, *Algebras of Open Dynamical Systems on the Operad
+  of Wiring Diagrams*: https://arxiv.org/abs/1408.1598
+- Libkind y Spivak, *Pattern Runs on Matter*:
+  https://arxiv.org/abs/2404.16321
+- Libkind y Spivak, *Dynamic task delegation for hierarchical agents*:
+  https://arxiv.org/abs/2410.08373
+- Shapiro y Spivak, *Dynamic Operads, Dynamic Categories*:
+  https://arxiv.org/abs/2205.03906
+- Niu y Spivak, *Polynomial Functors*:
+  https://arxiv.org/abs/2312.00990
+- Fukada, *Action is the primary key*:
+  https://arxiv.org/abs/2409.04793
 
-## Deudas explícitas
+## Deudas abiertas y deliberadas
 
-1. No existe todavía una categoría de artefactos y otra de productos runtime
-   con acción del emisor sobre morfismos.
-2. `naturalidad-xi`, `cierre-safety` y `composicion-kleisli` son nombres
-   históricos de deuda, no propiedades verificadas.
-3. No hay puente formal demostrado PMI×LFS -> `Poly` ni desde la firma hacia
-   la coálgebra conductual.
-4. La auditoría corrige afirmaciones categoriales; no valida empíricamente cada
-   paper aplicado ni convierte todo ICAS en un desarrollo formal completo.
-5. La continuidad clínica/OpenClaw anterior permanece en
-   `_archivo/HANDOFF-2026-07-18-agentes-clinicos-openclaw.md` y en el handoff
-   vigente de `openclaw-fleet`; sus pendientes operativos no fueron alterados.
-
-## Siguiente acción recomendada
-
-Si se desea ampliar el núcleo formal, elegir **un solo puente** con valor
-operacional —preferentemente una categoría mínima de artefactos y una semántica
-de observación del emisor—, definir objetos/morfismos y probar leyes antes de
-recuperar términos como naturalidad o bisimulación. No expandir PMI×LFS ni el
-sello mientras esa utilidad no esté demostrada.
+1. No existe una interpretación uniforme `Spec -> RuntimeModel` para los
+   targets; por tanto no hay bisimulación fuente/runtime.
+2. No hay una instancia de wiring con puertos y efectos para agentes KORA;
+   `componible` sigue siendo un grafo de candidatos.
+3. No hay prueba uniforme de autoridad efectiva; debe inspeccionarse por
+   target y contexto.
+4. El puente PMI→`Poly`→coálgebra permanece abierto.
+5. El lifecycle no debe forzarse a funtor mientras promoción y retiro tengan
+   dominios intencionalmente distintos.
+6. No añadir `inputs`, `outputs`, `effects`, `transition` o `wiring` al shape
+   hasta disponer de un caso operacional completo y un testigo versionado.
 
 ## Cómo retomar
 
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Ejecutar `python3 kora.py velar --estricto` y la suite completa.
-3. Leer `urn:kora:kb:cat-kora-kernel` antes de modificar ley o transmutación.
-4. Aplicar la rúbrica de `cat-thinking`: formal > modelo > heurística >
-   metáfora, usando siempre el estatus más débil suficiente.
-5. Ante cambios agénticos, reemitir, pasar gates y verificar paridad por URN;
-   ante cambios de `ley/3` o del emisor, ejecutar paridad global.
+2. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
+3. Para una afirmación agéntica, identificar primero si habla de `Spec`,
+   `Model` o `Runtime`.
+4. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
+   «bisimulación», «compone», «seguro» o «preserva».
+5. El siguiente avance formal debe ser un caso vertical pequeño —un agente,
+   un target, una interfaz y una propiedad observable—, no una expansión
+   taxonómica global.
 
 ## Rollback
 
-Usar `git revert`, nunca `reset --hard`. Tras revertir, regenerar las cinco URNs
-afectadas y repetir `velar`, tests y paridad global. Las instalaciones externas
-deben reconciliarse mediante `transmutar --aplicar`, no editarse a mano.
+Usar `git revert`, nunca `reset --hard`. Tras revertir, reemitir y reconciliar
+`cat-thinking` con `transmutar --aplicar`, luego repetir `velar`, tests y
+paridad global.

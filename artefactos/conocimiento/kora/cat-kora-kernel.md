@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-kora-kernel
 nombre: cat-kora-kernel
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Núcleo categorial mínimo y demostrado de KORA: retículo de firmas, proyección por target como funtor entre categorías delgadas, coreflexión, alcance del sello y semántica de relaciones como grafos generadores."
-fuente: "Doctrina propia pneuma, formalizada el 2026-07-18 a partir de ley/1 y ley/3. Base externa primaria: Riehl, Category Theory in Context (posets como categorías y adjunciones), https://emilyriehl.github.io/files/context.pdf; Lawvere, Metric Spaces, Generalized Logic, and Closed Categories, https://www.math.buffalo.edu/~sww/0papers/lawveres-metric-space-paper.pdf. La prueba específica de KORA se da completa en este cuerpo."
+descripcion: "Núcleo categorial mínimo y demostrado de KORA: retículo de firmas, proyección por target como coreflector, fidelidad contravariante, alcance del sello y relaciones como grafos generadores."
+fuente: "Doctrina propia pneuma, formalizada el 2026-07-18 a partir de ley/1 y ley/3; v1.1.0 añade la prueba de fidelidad contravariante y enlaza la semántica operacional integral. Base externa primaria: Riehl, Category Theory in Context (posets como categorías y adjunciones), https://emilyriehl.github.io/files/context.pdf; Lawvere, Metric Spaces, Generalized Logic, and Closed Categories, https://www.math.buffalo.edu/~sww/0papers/lawveres-metric-space-paper.pdf. Las pruebas específicas de KORA se dan en este cuerpo."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -130,7 +130,45 @@ Así, `I_T` es una subcategoría **coreflexiva** de `D_T` y `P_T` es el
 coreflector. Esta es la formulación categorial precisa de «recortar al máximo
 que el target soporta».
 
-## 5. Lo que la prueba no cubre
+## 5. Fidelidad como funtor contravariante
+
+Sea:
+
+```text
+Q = {none <= partial <= full}
+```
+
+la cadena de fidelidad. Para cada target `T` y eje `e`, la matriz define:
+
+```text
+fid_Te : C_e^op -> Q,
+```
+
+donde `C_e` es la cadena completa de demandas fuente.
+
+**Proposición 4.** `fid_Te` es un funtor entre categorías delgadas.
+
+**Prueba.** Las matrices vigentes satisfacen, para todo `x ≤ y`:
+
+```text
+fid_Te(y) <= fid_Te(x).
+```
+
+Es decir, aumentar la demanda nunca mejora la fidelidad declarada. Esto es
+exactamente monotonía desde `C_e^op` hacia `Q`; como todo mapa monótono entre
+posets, preserva identidades y composición. La propiedad se enumera
+exhaustivamente en la suite para cada target, eje y celda. ∎
+
+La fidelidad agregada de `sigma` es `full` bajo el techo componente a
+componente y `partial` fuera; satisface la misma antitonicidad desde el opuesto
+del producto `[0,3]^5`.
+
+Este funtor no reemplaza `P_T`: expresa cómo cambia la **calificación de
+preservación** al crecer la demanda, mientras `P_T` calcula el ordinal
+proyectado. La fidelidad es dato contrastado con el runtime y no se deduce
+solo de la igualdad numérica.
+
+## 6. Lo que la prueba no cubre
 
 El emisor completo toma un artefacto validado, calcula `P_T`, serializa
 frontmatter/cuerpo/sidecars y produce un conjunto finito de archivos. KORA
@@ -154,7 +192,11 @@ exclusivamente a `P_T` entre categorías delgadas. El sello es un certificado
 de procedencia, proyección y congruencia; no es un objeto de prueba de
 naturalidad, bisimulación, safety ni composición Kleisli.
 
-## 6. Relaciones
+La semántica de los demás gestos —validación, censo, lifecycle, emisión,
+aplicación, paridad, ley y koraficación— se tipa sin sobreafirmación en
+`urn:kora:kb:cat-kora-semantica-operacional`.
+
+## 7. Relaciones
 
 Cada campo relacional del frontmatter almacena **aristas generadoras**
 `A → B`; no almacena identidades, composiciones ni cierre transitivo.
@@ -172,7 +214,7 @@ libre `Path(G_R)`:
 reflexiva induzca un orden parcial. La ausencia de una arista transitiva
 directa no es error: `A → B → C` ya determina un camino `A → C`.
 
-## 7. Regla epistémica
+## 8. Regla epistémica
 
 Toda afirmación categorial del corpus debe llevar uno de estos estatus:
 
