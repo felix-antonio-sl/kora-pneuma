@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-patrones
 nombre: icas-patrones
-version: 1.1.0
+version: 1.1.1
 estado: publicado
 descripcion: "Pieza 19 del ICAS-BoK: patrones — patrones arquitectónicos y agénticos, anti-patrones y wrapper functors; reconocer y nombrar estructura recurrente."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/19-patrones.md (sha256:a117e270a4e4791d7033f361cbb016f62080564ab8763bcd512077a96a582ef5) el 2026-06-12. Corrección epistémica 1.1.0 (2026-07-18): se distinguen instancias formales de modelos y analogías."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/19-patrones.md (sha256:a117e270a4e4791d7033f361cbb016f62080564ab8763bcd512077a96a582ef5) el 2026-06-12. Corrección epistémica 1.1.0 (2026-07-18): se distinguen instancias formales de modelos y analogías. v1.1.1 (2026-07-18): retira la identificación genérica de anti-patrón con violación categorial y tipa el God Object como diagnóstico relativo a un modelo."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -99,11 +99,20 @@ cocono universal que las iguala. El voto, la síntesis o la decisión de un juez
 no satisfacen necesariamente esa propiedad. La inexistencia de un coequalizer
 en una categoría escogida tampoco implica imposibilidad práctica de consenso.
 
-## Anti-patrones como propiedades categoricas rotas
+## Anti-patrones y modelos categoriales posibles
 
-Si los patrones son construcciones universales, los anti-patrones son violaciones de propiedades categoricas.
+Un anti-patrón es un diagnóstico de diseño, no la negación genérica de una
+propiedad universal. Tras elegir un modelo concreto, algunos síntomas pueden
+expresarse como invariantes de grafo, cotas de dependencia o fallas de una
+factorización requerida; no existe una sola «propiedad categorial rota» que
+caracterice todos los anti-patrones.
 
-El God Object es un objeto con demasiados morfismos entrantes y salientes -- un objeto que participa en casi todos los hom-sets de la categoria. Categoricamente, es un objeto cuyo funtor representable Hom(G, -) tiene demasiada estructura, lo que significa que G "sabe demasiado" sobre el resto de la categoria. La solucion es factorizar: descomponer G en un diagrama de objetos mas pequenos cuyo colimite sea G, de modo que cada parte tenga responsabilidad acotada.
+Un God Object puede representarse en un grafo o categoría de dependencias y
+diagnosticarse mediante grado, centralidad o alcance de dependencias previamente
+definidos. «Tener demasiados morfismos» no es una propiedad categorial sin
+observables y umbrales, y exhibir un objeto como colímite tampoco acota por sí
+solo sus responsabilidades. Descomponerlo sigue siendo una decisión
+arquitectónica cuya mejora debe verificarse con las métricas elegidas.
 
 La dependencia circular es un ciclo en un grafo de dependencias. Las
 categorías generales permiten ciclos y endomorfismos no triviales; no son

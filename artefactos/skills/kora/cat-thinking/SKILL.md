@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:cat-thinking
 nombre: cat-thinking
-version: 2.1.0
+version: 2.1.1
 estado: activo
 descripcion: "Skill de pensamiento categorial. Dota al agente de la capacidad de pensar sobre arquitectura, integracion, refactor, modelado de efectos y diseno de sistemas agenticos usando teoria de categorias aplicada, anclada al corpus ICAS-BoK (Arquitecto de Sistemas Categorial)."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la semántica operacional integral y el contrato de testigos para ingeniería agéntica."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la semántica operacional integral y el contrato de testigos para ingeniería agéntica. v2.1.1 (2026-07-18): corrige falsos positivos sobre iteradores, bisimulación y DSLs libres."
 autor: FS
 creado: 2026-04-27
 lang: es

@@ -118,7 +118,7 @@ Se elevaron a v1.2.0 las piezas ICAS afectadas y su síntesis:
 - `icas-sintesis` y `alma-de-kora`: propagan estas fronteras y dejan de llamar
   categorial a todo gesto.
 
-`cat-thinking` v2.1.0 incorpora la semántica operacional, el contrato agéntico,
+`cat-thinking` v2.1.1 incorpora la semántica operacional, el contrato agéntico,
 la matriz de testigos y nuevos falsos amigos/disparadores.
 
 ## Evidencia de cierre
@@ -134,6 +134,29 @@ la matriz de testigos y nuevos falsos amigos/disparadores.
 
 Las once unidades `no-instaladas` son ausencias previas y no autorizan
 instalación automática.
+
+### Auditoría final de cierre
+
+La comprobación final cubrió el rango completo `4e83b97..03dcb05`, no solo el
+último commit. Corrigió tres residuos:
+
+- `cat-agent-coalgebra` v2.1.1 usa el título bibliográfico real de Beohar et al.;
+- `icas-patrones` v1.1.1 deja de identificar todo anti-patrón con una propiedad
+  categorial rota;
+- `cat-thinking` v2.1.1 exige tipos e hipótesis correctos para iteradores,
+  bisimulación y DSLs basados en mónadas libres.
+
+Dos límites deben conservarse al comunicar el resultado:
+
+1. la coreflexión demostrada concierne exclusivamente a la **proyección numérica
+   de firmas** `P_T`; no alcanza al cuerpo, los sidecars ni la emisión completa;
+2. las once unidades `no-instaladas` son ausencias previas. No se ha establecido
+   que esa ausencia sea intencional;
+3. `GENESIS.md` conserva, como acta inmutable, formulaciones históricas hoy
+   superadas —identidad por firma, transmutación funtorial, bisimulación
+   declarada y lifecycle total—. Para el estado vigente prevalecen `ALMA.md`,
+   `ley/` y los tres artefactos formales nuevos; no debe citarse `GENESIS.md`
+   como garantía runtime actual.
 
 ## Emisiones e instalaciones
 

@@ -16,7 +16,7 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | Lo que parece | Lo que es |
 |---------------|-----------|
 | "un map" | una familia de morfismos `α_A: F(A) → G(A)` indexada por objetos, **uniforme** en el sentido de que conmuta con los morfismos del dominio. |
-| "polimorfismo paramétrico" | en `Set`-like, si. Pero la *naturalidad* es la condicion mas fuerte: el cuadrado de naturalidad debe conmutar para todo morfismo. |
+| "polimorfismo paramétrico" | puede inducir naturalidad en un cálculo paramétrico total y una semántica precisa; `bottom`, `seq` y efectos impiden inferirla de una firma de lenguaje por sí sola. |
 
 **Si los componentes no conmutan con los morfismos, no es transformacion natural; es una familia de morfismos sin garantia.**
 
@@ -35,14 +35,14 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | Lo que parece | Lo que es |
 |---------------|-----------|
 | "una clase con metodo `next`" | una funcion `α: A → F(A)` para un endofuntor `F`. La estructura captura **observacion**: estado produce observaciones via interface functor. |
-| "un iterador" | un iterador es un caso particular de coalgebra (sobre `F(A) = 1 + A × A`). No toda clase con `next()` lo es. |
+| "un iterador" | puede modelarse como coálgebra `X → 1 + E × X`, donde `X` es el estado y `E` el elemento producido; una API `next()` no aporta automáticamente ese estado, ese funtor ni sus leyes. |
 
 ## Bisimulacion
 
 | Lo que parece | Lo que es |
 |---------------|-----------|
-| "dos cosas que parecen iguales" | una relacion `R ⊆ A × B` que se preserva bajo observaciones: si `(a, b) ∈ R` y `α(a) = (..., a')`, entonces existe `b'` tal que `β(b) = (..., b')` y `(a', b') ∈ R`. |
-| "los outputs son iguales" | mas fuerte: las **transiciones** producen estados que tambien son bisimilares. |
+| "dos cosas que parecen iguales" | una relación entre coálgebras de un mismo endofuntor, equipada con estructura que hace coalgebraicos sus mapas de proyección; las presentaciones por lifting relacional requieren las hipótesis correspondientes. |
+| "los outputs son iguales" | no basta: la relación debe ser estable bajo la estructura de transición y observación elegida. |
 
 **"Hace lo mismo" no es bisimulacion sin coalgebra de soporte.**
 
@@ -94,7 +94,7 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | Lo que parece | Lo que es |
 |---------------|-----------|
 | "monada cualquiera" | la monada *libre* sobre un funtor `F`: la mas general posible, sin operaciones extra. |
-| "DSL de comandos" | un DSL de comandos **es** un free monad sobre el funtor de comandos, si las leyes se respetan. |
+| "DSL de comandos" | puede implementarse mediante la mónada libre sobre un funtor de comandos cuando se especifican el funtor y la propiedad universal; una sintaxis de comandos cualquiera no basta. |
 
 Un DSL de comandos puede **implementarse** como monada libre cuando se especifican el funtor generador y la propiedad universal; la mera sintaxis de comandos no basta.
 

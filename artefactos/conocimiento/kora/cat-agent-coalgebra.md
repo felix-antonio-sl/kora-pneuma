@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-agent-coalgebra
 nombre: cat-agent-coalgebra
-version: 2.1.0
+version: 2.1.1
 estado: publicado
 descripcion: "Modelo coalgebraico mínimo y bien tipado para agentes con efectos: funtor reactivo en Set, bisimulación y límites de estado, FSM, tools y composición; enlazado al contrato de testigos KORA."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/kora/categorical-foundations/01-agent-coalgebra.md (sha256:138e686d4773e1e0b9f073bfc376bff2a8c14b3d39fedbfb04db83d7f26da242) el 2026-06-12. Reescritura correctiva 2.0.0 (2026-07-18): Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911. v2.1.0 enlaza el contrato operacional de testigos agénticos."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/kora/categorical-foundations/01-agent-coalgebra.md (sha256:138e686d4773e1e0b9f073bfc376bff2a8c14b3d39fedbfb04db83d7f26da242) el 2026-06-12. Reescritura correctiva 2.0.0 (2026-07-18): Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911. v2.1.0 enlaza el contrato operacional de testigos agénticos. v2.1.1 (2026-07-18) corrige el título bibliográfico de Beohar et al.; sin cambio matemático."
 autor: FS
 creado: 2026-02-26
 lang: en
@@ -231,7 +231,8 @@ composition proofs.
 
 - J. J. M. M. Rutten, *Universal Coalgebra: a Theory of Systems*:
   https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf
-- H. Beohar et al., *Categorical Semantics of Generic Side-Effects*:
+- H. Beohar et al., *Predicate and relation liftings for coalgebras with side
+  effects: an application in coalgebraic modal logic*:
   https://arxiv.org/abs/2110.09911
 - Emily Riehl, *Category Theory in Context*:
   https://emilyriehl.github.io/files/context.pdf
