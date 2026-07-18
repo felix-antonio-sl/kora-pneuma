@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opl-es
 nombre: opl-es
-version: 3.0.3
+version: 3.0.4
 estado: publicado
 descripcion: "Gramática canónica del OPL en español: capa textual de la SSOT OPM-ES — léxico, plantillas de oraciones y localización es de la bimodalidad OPD↔OPL."
-fuente: "SSOT OPM v3.0.3. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-opl-es.md (sha256:27b0ee243f1162ee47c245a58d82042da5bc1ac4ac613c7b5705f23ffac4257c) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.1); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
+fuente: "SSOT OPM v3.0.4. La importacion v3.0.3 fue re-sincronizada byte-fiel desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-opl-es.md (sha256:27b0ee243f1162ee47c245a58d82042da5bc1ac4ac613c7b5705f23ffac4257c) el 2026-06-15. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Enmienda pneuma 2026-07-18: corrige el ejemplo SE2 a una firma estructural homogenea objeto-objeto y conserva su equivalencia OPL-ES/OPL-EN."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -658,7 +658,7 @@ Sistema doméstico de preparación de empanadas de pino (tradicionales chilenas)
 | Consumo | **Masa Cruda** | *Preparar Empanadas* | T1 |
 | Consumo | **Relleno de Pino** | *Preparar Empanadas* | T1 |
 | Resultado | *Preparar Empanadas* | **Empanada** | T2 |
-| Etiquetado (nulo) | **Receta** | *Preparar Empanadas* | SE2 |
+| Etiquetado (nulo) | **Receta** | **Sistema de Preparación de Empanadas** | SE2 |
 
 ### OPL-ES del SD
 
@@ -677,7 +677,7 @@ Estado `satisfecho` de **Nivel de Satisfacción** es final.
 *Preparar Empanadas* consume **Relleno de Pino**.
 *Preparar Empanadas* genera **Empanada**.
 **Receta** es ambiental.
-**Receta** se relaciona con *Preparar Empanadas*.
+**Receta** se relaciona con **Sistema de Preparación de Empanadas**.
 ```
 
 ### OPL-EN Equivalente
@@ -697,7 +697,7 @@ Preparing Empanadas consumes Raw Dough.
 Preparing Empanadas consumes Pino Filling.
 Preparing Empanadas yields Empanada.
 Recipe is Environmental.
-Recipe relates to Preparing Empanadas.
+Recipe relates to Empanada Preparation System.
 ```
 
 ### SD1: Descomposición de Preparar Empanadas

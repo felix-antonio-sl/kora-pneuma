@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:manual-metodologico-opm-es
 nombre: manual-metodologico-opm-es
-version: 3.0.1
+version: 3.0.2
 estado: publicado
 descripcion: "Manual metodológico canónico de OPM: capa procedimental de la SSOT OPM-ES — construcción del SD, refinamiento, gestión de complejidad, patrones y anti-patrones de modelado."
-fuente: "SSOT OPM v3.0.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-opm-es.md (sha256:bc793ad4151f525cdab013fd2a52a8a3e0ea54e392e1d3ba49dcfb637e4772ee) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
+fuente: "SSOT OPM v3.0.2. La importacion v3.0.1 fue re-sincronizada byte-fiel desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-opm-es.md (sha256:bc793ad4151f525cdab013fd2a52a8a3e0ea54e392e1d3ba49dcfb637e4772ee) el 2026-06-15. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Enmienda pneuma 2026-07-18: acota la homogeneidad procedimental por subtipo para incluir las firmas proceso-proceso de invocacion y excepcion."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -608,7 +608,7 @@ Atributos blandos son derivables → PUEDEN no requerir seguimiento independient
 
 ### 9.6 Homogeneidad de Enlaces
 
-Enlaces estructurales DEBEN ser homogéneos (objeto↔objeto o proceso↔proceso). Enlaces procedimentales DEBEN ser no homogéneos (objeto↔proceso). Única excepción: exhibición-caracterización permite las 4 combinaciones de perseverancia (objeto exhibe atributo-objeto, objeto exhibe operación-proceso, proceso exhibe atributo-objeto, proceso exhibe operación-proceso).
+Enlaces estructurales DEBEN ser homogéneos (objeto↔objeto o proceso↔proceso). Única excepción estructural: exhibición-caracterización permite las 4 combinaciones de perseverancia (objeto exhibe atributo-objeto, objeto exhibe operación-proceso, proceso exhibe atributo-objeto, proceso exhibe operación-proceso). Entre los enlaces procedimentales, transformadores y habilitadores DEBEN ser no homogéneos (objeto o estado↔proceso); invocación y excepción DEBEN conectar proceso→proceso.
 
 ### 9.7 Enlaces Estructurales Etiquetados con Estado Especificado
 

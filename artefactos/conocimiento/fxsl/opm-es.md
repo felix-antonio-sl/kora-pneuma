@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:opm-es
 nombre: opm-es
-version: 3.0.2
+version: 3.0.3
 estado: publicado
 descripcion: "Núcleo conceptual canónico de OPM (ISO 19450) en español: semántica de objetos, procesos, estados y enlaces — capa semántica de la SSOT OPM-ES de cuatro capas."
-fuente: "SSOT OPM v3.0.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-iso-19450-es.md (sha256:f3cfd2201282bfa5a364536950214bf6115565804c4fd75ce430d5ed5f22d4ab) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v3.0.0); incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases)."
+fuente: "SSOT OPM v3.0.3. La importacion v3.0.2 fue re-sincronizada byte-fiel desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/opm-iso-19450-es.md (sha256:f3cfd2201282bfa5a364536950214bf6115565804c4fd75ce430d5ed5f22d4ab) el 2026-06-15. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Enmienda pneuma 2026-07-18: alinea la coleccion incompleta y el genero del ejemplo Limpieza con OPL-ES, y amplia la definicion 3.57 a las firmas proceso-proceso de invocacion y excepcion."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -128,7 +128,7 @@ La tabla siguiente consolida el glosario operativo de esta capa. Los términos b
 | 3.54 | Conjunto previo al proceso | Objetos evaluados antes de iniciar un proceso |
 | 3.55 | Esencia primaria | Esencia mayoritaria, informacional o física, de las cosas del sistema |
 | 3.56 | Enlace procedimental | Notación gráfica de una relación procedimental |
-| 3.57 | Relación procedimental | Conexión dependiente del tiempo o de condiciones entre objeto o estado y proceso |
+| 3.57 | Relación procedimental | Conexión dependiente del tiempo o de condiciones entre objeto o estado y proceso, o entre procesos mediante invocación o excepción |
 | 3.58 | Proceso | Transformación de uno o más objetos |
 | 3.59 | Clase de proceso | Patrón para procesos con el mismo patrón de transformación |
 | 3.60 | Propiedad | Anotación de modelado que distingue elementos: cardinalidades, etiquetas y etiquetas de ruta |
@@ -760,22 +760,22 @@ Núcleo recuperable del ejemplo clásico de *Sistema de Lavado de Platos*:
 - `*Lavar Platos* consume **Jabón**.`
 - `*Lavar Platos* afecta **Conjunto de Platos**.`
 - `SD se refina por descomposición de *Lavar Platos* en SD1.`
-- `**Lavavajillas** consta de **Compartimento de Jabón** y otras partes.`
+- `**Lavavajillas** consta de **Compartimento de Jabón** y al menos otra parte.`
 - `**Lavavajillas** puede estar \`vacío\` o \`cargado\`.`
 - `Estado \`vacío\` de **Lavavajillas** es inicial y final.`
 - `**Compartimento de Jabón** puede estar \`vacío\` o \`cargado\`.`
 - `Estado \`vacío\` de **Compartimento de Jabón** es inicial.`
 - `**Conjunto de Platos** exhibe **Limpieza**.`
-- `**Limpieza** de **Conjunto de Platos** puede estar \`sucio\` o \`limpio\`.`
-- `Estado \`sucio\` de **Limpieza** de **Conjunto de Platos** es inicial.`
-- `Estado \`limpio\` de **Limpieza** de **Conjunto de Platos** es final.`
+- `**Limpieza** de **Conjunto de Platos** puede estar \`sucia\` o \`limpia\`.`
+- `Estado \`sucia\` de **Limpieza** de **Conjunto de Platos** es inicial.`
+- `Estado \`limpia\` de **Limpieza** de **Conjunto de Platos** es final.`
 - `*Lavar Platos* se descompone en *Cargar Platos*, *Insertar Detergente*, *Lavar y Secar Platos* y *Descargar Platos*, en esa secuencia.`
 - `*Cargar Platos* cambia **Lavavajillas** de \`vacío\` a \`cargado\`.`
 - `*Insertar Detergente* requiere **Jabón**.`
 - `*Insertar Detergente* cambia **Compartimento de Jabón** de \`vacío\` a \`cargado\`.`
 - `*Lavar y Secar Platos* requiere **Lavavajillas**.`
 - `*Lavar y Secar Platos* consume **Jabón**.`
-- `*Lavar y Secar Platos* cambia **Limpieza** de **Conjunto de Platos** de \`sucio\` a \`limpio\`.`
+- `*Lavar y Secar Platos* cambia **Limpieza** de **Conjunto de Platos** de \`sucia\` a \`limpia\`.`
 - `*Descargar Platos* cambia **Lavavajillas** de \`cargado\` a \`vacío\`.`
 
 **Simplificación de OPD:** la recomposición dentro del mismo diagrama y la descomposición en nuevo diagrama pueden simplificar un OPD sobrecargado. Restricción: un objeto no puede incorporarse al conjunto abstraído si eso crearía enlaces procedimentales directos entre procesos pares sin semántica OPM.
