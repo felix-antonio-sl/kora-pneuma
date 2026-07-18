@@ -1,279 +1,173 @@
-# Handoff vigente — 2026-07-18 — cierre Codex y mantenimiento KORA
+# Handoff vigente — 2026-07-18 — agentes clínicos KORA → OpenClaw
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> frontmatters canónicos, Git ni el estado vivo de los runtimes. El informe
-> exhaustivo de la transición quedó archivado en
-> `_archivo/HANDOFF-2026-07-16-transicion-claude-code-a-codex.md`.
+> artefactos canónicos, Git ni el estado vivo de OpenClaw. La continuidad
+> detallada del despliegue está en
+> `/home/felix/openclaw-fleet/docs/handoffs/handoff-2026-07-18.md`; el recibo
+> verificable está en
+> `/home/felix/openclaw-fleet/docs/deploy-receipt-full-profile-urgenciologo-medico-hospitalista-2026-07-18.md`.
 
 ## Objetivo y alcance
 
-El objetivo fue poner el repositorio al día, ejecutar su secuencia de entrada,
-auditar su calidad y alineamiento Pneuma, simplificar sin perder garantías y
-cerrar la continuidad Claude Code → Codex de forma reversible.
+Actualizar canónicamente `urgenciologo` y `medico-hospitalista`, incorporar
+`agent-autonomy-5`, modelar el boarding de hospitalizados en UE sin crear un
+tercer régimen, liberar su superficie técnica completa bajo Guardian y propagar
+la cadena fuente → emisiones → Fleet → runtime de forma verificable y sin PHI.
 
-Incluyó el núcleo de transmutación, su ley y pruebas; la propiedad/paridad de
-superficies gestionadas; la higiene documental; la configuración Codex
-directamente relacionada y la memoria operativa del trabajo. No incluyó
-desplegar en todos los runtimes, demostrar la efectividad completa de OpenClaw
-ni desarrollar Hermes. Trabajo que aterrizó de forma independiente en el mismo
-periodo se verificó por integración, pero no se absorbió artificialmente en
-este alcance.
+El alcance KORA comprendió tres fuentes canónicas, sus cuatro targets y la
+paridad de cinco instalaciones por agente. El alcance OpenClaw comprendió
+blueprints, materialización, configuración efectiva, memoria autorizada,
+canarios sintéticos y documentación de despliegue. No incluyó consultar un
+paciente real, enviar mensajes, ejercitar elevado ni resolver disaster recovery
+off-host.
 
-## Estado al cierre
+## Estado comprobado
 
-El ciclo de revisión y transición **Claude Code → Codex** permanece cerrado en
-`master`. El mantenimiento posterior fortaleció la paridad de las superficies
-gestionadas y separó nombre de propiedad sin reabrir esa migración.
+- `master` contiene y publicó `35f34e5`
+  (`feat(salud): incorporar boarding UE y autonomy 5`).
+- `urn:salud:artefacto:urgenciologo` quedó en v3.12.0.
+- `urn:salud:artefacto:medico-hospitalista` quedó en v1.9.0.
+- `urn:salud:kb:manual-agente-hsc-agent-cli` quedó en v1.0.18.
+- Ambos agentes alcanzaron `5 fiel`, `0 desviadas`, `0 no-instaladas` y
+  `0 sin-emisión`.
+- KORA cerró con `velar --estricto` 13/13 y 185 pruebas.
+- Fleet publicó el contrato clínico en `74080d3`, el espejo documental en
+  `07dd9dd` y el recibo final en `684bcb6`.
+- Al cierre de ese incremento, el gate Fleet vivo pasó 33/33 y los canarios
+  ejecutaron `gpt-5.6-sol` mediante el arnés Codex, sin fallback.
 
-- La paridad exacta vigente se define en `ley/3-transmutacion.md` y `kora.py`;
-  su historia se consulta en Git cuando sea necesaria.
-- Los informes operativos fechados quedaron fuera del corpus vivo y fueron
-  desplazados posteriormente a `_archivo/`, conforme a la política documental.
-- La única reconciliación externa de este mantenimiento reconstruyó la skill
-  Claude Code `cat-thinking` y retiró un duplicado byte-idéntico sin valor único.
-- Hermes queda congelado: no se modificaron su canon, emisiones ni
-  instalaciones.
+Estos resultados son evidencia histórica de los commits indicados. El estado
+actual se vuelve a consultar; no se infiere desde este handoff.
 
-## Valor entregado durante la sesión
+## Decisiones consolidadas
 
-1. **Valor legacy absorbido antes de sobrescribir.** El contenido único de
-   `consenso-deliberativo` pasó a la fuente Pneuma; se corrigieron referencias
-   activas a `kora-agents`, `custodio-kora` y `claude-md-management`.
-2. **Frescura real de la transmutación.** `sello-fresco` pasó de comprobar solo
-   `hash-fuente` a verificar fuente → generador → producto completo, incluidos
-   sidecars y `referencias/`.
-3. **Completitud y tipos honestos.** Se rechazan targets no declarados/no
-   realizados, unidades sin archivo raíz y factores residuales. La pérdida
-   Codex de `herramientas` se declara como fidelidad parcial no reticular.
-4. **Reconciliación y paridad exacta.** Toda ruta gestionada se reconcilia
-   después de demostrar su propiedad por sello: un homónimo ajeno se preserva
-   y bloquea en vez de ser reemplazado. Las skills son directorios cerrados;
-   factores sobrantes, emisiones ambiguas, residuos atribuibles y nodos
-   incompatibles —también en ancestros— son drift. El barrido residual cubre
-   formas históricas del mismo URN sin obligar despliegues ausentes. Los
-   blueprints OpenClaw aplicados permanecen abiertos: un contenedor vacío no
-   cuenta como instalación y KORA solo gobierna los nombres emitidos y sus
-   residuos atribuibles. El workspace runtime privado queda fuera y lo
-   materializa el deploy fleet. El estado vigente se consulta bajo demanda.
-5. **Superficie Codex saneada.** En `/home/felix/.codex/config.toml` quedó
-   `default_permissions = ":workspace"` sin el `sandbox_mode` incompatible;
-   los artefactos legacy/absorbidos identificados quedaron deshabilitados
-   mediante tombstones.
-   `gpt-5.6-sol` y esfuerzo `xhigh` se preservaron como decisión explícita del
-   operador.
-6. **Frontera Codex/OpenClaw visible.** KORA impide instalar una skill managed
-   OpenClaw debajo del homónimo personal directo en `~/.agents/skills`, pero no
-   finge resolver discovery agrupado, workspaces o config efectiva.
+1. **UE boarding es ubicación, no régimen.**
+   `S-HOSPITAL_UE_BOARDING` es subestado micro-asistencial de `S-HOSPITAL`.
+   Sale a `S-HOSPITAL` cuando termina el boarding, a `S-END` al cerrar el pase
+   y deriva a urgencias si el caso no está hospitalizado.
+2. **SGH demuestra hospitalización.** `find --hospitalizados` es fuente
+   primaria; DAU complementa y nunca prueba por sí solo hospitalización.
+3. **El estado vivo resuelve salas.** No se congelan IDs ni nombres observados
+   en pruebas.
+4. **Autonomía factual, juicio clínico humano.** El CLI expone hechos,
+   handles y planes de consulta. Priorización, SOAP, inferencia, propuesta y
+   decisión final permanecen fuera del CLI.
+5. **Contrato masivo explícito.** `batch_plan.requests[].command_args` se sigue
+   en serie. Un singleton puede omitir `batch_plan` y usar `entry.handle` o
+   `best_current_context`. En stream mandan `envelope.state` y
+   `envelope.error_code`; `summary` es opcional.
+6. **Capacidad técnica no es autoridad.** `profile=full` habilita web,
+   escritura, memoria, mensajería, sesiones y subagentes, pero no autoriza
+   acciones clínicas, destructivas o externas.
+7. **Guardian es la postura normal de shell.** `tools.exec.mode=auto` se
+   materializa en Codex como shell nativo `bash` con revisión Guardian. La
+   allowlist durable contiene solo `hsc-agent-cli` y `rg`; los misses pasan por
+   revisión y terminan en deny si no existe aprobación.
+8. **Memoria clínica no se promueve.** La búsqueda usa KORA y memoria curada;
+   `sessionMemory=false`. `/new` separa contexto, pero no borra transcripciones.
+   El delta del pase es efímero y no se convierte en tabla, memoria, log,
+   mensaje, repo o delegación.
+9. **La cadena de autoridad se preserva.** Un archivo sellado se corrige en
+   KORA, se reemite, se lleva al blueprint y recién después se materializa.
+   Runtime y blueprint no son fuentes doctrinales.
 
-## Decisiones vigentes
+## Aprendizajes duraderos
 
-1. **Pneuma es la SSOT.** La bestia `~/kora` solo aporta material a migrar o
-   descartar; no recibe desarrollo nuevo.
-2. **Un producto derivado no se valida contra sí mismo.** Emisión e instalación
-   pueden coincidir y estar ambas obsoletas; el generador vigente forma parte
-   obligatoria de la prueba.
-3. **Fidelidad de ejes y fidelidad de campos son regímenes distintos.** Una
-   limitación de tools no inventa un séptimo eje ni se traduce a un codominio de
-   otro tipo.
-4. **Paridad de bytes no es efectividad runtime.** Discovery, registro de
-   agentes, sender, tool policy, gateway y systemd requieren gates separadas.
-5. **No instalar debajo de una sombra conocida.** Presencia en una ruta managed
-   no equivale a realización si una raíz de mayor precedencia gana.
-6. **Tombstone antes que borrado silencioso.** Deshabilitar conserva
-   reversibilidad y evita reactivaciones por rollback o reinstalación.
-7. **No cambiar modelo por intuición.** La eficiencia de `medium` frente a
-   `max` debe decidirse con evals representativos, no con preferencia general.
-8. **Nombre no equivale a propiedad.** El slug selecciona una ruta candidata;
-   solo el sello `(URN,target)` autoriza reconciliación destructiva. La ausencia
-   en otro runtime sigue siendo informativa: emitir capacidad no obliga a
-   desplegarla en todos los targets.
+### Hechos comprobados
 
-## Aprendizajes destilados
+- La policy efectiva de shell es la intersección entre config y approvals del
+  host. Un warning estático de `security=full` global no reemplaza
+  `openclaw exec-policy show` para conocer la postura del agente.
+- En el arnés Codex, pedir literalmente una herramienta llamada `exec` puede
+  producir un falso negativo; la ejecución nativa se observa como `bash`, aun
+  cuando su gobierno siga siendo `tools.exec.mode`.
+- `sessionMemory=false` evita indexar conversaciones; no garantiza que el
+  runtime no conserve archivos de transcript.
+- El espejo oficial puede avanzar durante un despliegue. La frescura se cierra
+  sincronizando y repitiendo el gate vivo al final, no confiando en el SHA
+  observado al inicio.
+- Un archivo runtime no gestionado con evidencia de prueba no se copia al
+  blueprint ni a Git. Se retira una vez que su valor reusable está canonizado.
+- El estado Git debe revisarse otra vez justo antes de stage y push: un árbol
+  limpio puede recibir trabajo concurrente después de un gate verde.
 
-### 1. La frescura es un diagrama, no un hash
+### Decisiones adoptadas
 
-El hash de la fuente solo prueba identidad de entrada. La garantía útil exige:
+- Mantener el perfil `full` pedido, pero conservar Guardian, owner-only para
+  elevado y prohibición de propagación de PHI.
+- Mantener la skill `asistencial-hospital` única y componible; no duplicarla
+  dentro de hospitalista.
+- Tratar las pruebas sin pacientes reales como una garantía de privacidad, no
+  como una demostración de HCC completo.
 
-`fuente actual → generador vigente → producto completo → instalación`.
+### Hipótesis no promovidas
 
-`velar` gobierna los tres primeros términos; paridad gobierna el último. Una
-gate no sustituye a la otra ni se ejecuta implícitamente dentro de
-`--aplicar`.
-
-### 2. Sidecars y referencias también son producto
-
-Un archivo sin sello puede cambiar conducta. Si el emisor crea
-`agents/openai.yaml` o copia `referencias/`, sus paths y bytes pertenecen al
-contrato verificable aunque no repitan el proof-carrier.
-
-### 3. La migración correcta empieza por el valor, no por los archivos
-
-Antes de reconciliar las instalaciones se auditó si el runtime conservaba
-conocimiento único. `consenso-deliberativo` sí lo contenía; migrarlo primero
-evitó que una sincronización técnicamente correcta destruyera capacidad.
-
-### 4. Los estándares compartidos crean acoplamiento entre runtimes
-
-`~/.agents/skills` es raíz personal tanto para Codex como para OpenClaw. Esa
-interoperabilidad también hace porosa la frontera de targets. La solución no es
-suponer aislamiento, sino gobernar precedencia y visibilidad por runtime.
-
-### 5. “Read-only” debe verificarse contra el comportamiento del CLI
-
-Una consulta OpenClaw con el flag incorrecto activó una auto-migración de
-estado. La sesión registró una restauración byte-idéntica y preservó una copia
-del archivo auto-migrado; esta revisión confirmó la evidencia, pero el estado
-actual no basta para volver a demostrar aquella identidad histórica. Lección
-operativa: para CLIs con migraciones automáticas, inspección estática, dry-run,
-backup y sintaxis exacta preceden incluso a comandos nominalmente de lectura.
-
-### 6. Un gate debe poder materializar su propia recomendación
-
-Detectar `referencias/` obsoletas y recomendar “re-transmutar” era insuficiente
-si el gesto no eliminaba la fibra retirada. Toda recomendación automática debe
-cerrar el loop o declarar la intervención manual necesaria.
-
-### 7. La honestidad del alcance es una propiedad de calidad
-
-Este ciclo cierra Codex y el núcleo Pneuma. No cierra la configuración efectiva
-de OpenClaw. Hermes queda fuera del alcance operativo hasta una decisión
-explícita posterior. Nombrar esas fronteras evita convertir gates verdes en
-afirmaciones falsas.
-
-### 8. Clasificar nodos precede a leer contenido
-
-Un gate que inspecciona emisiones o instalaciones no puede usar
-`is_file()`, `is_dir()` o globbing como frontera de seguridad: esas operaciones
-pueden seguir enlaces. La solución verificada es inventariar primero mediante
-`lstat`/`scandir`, rechazar symlinks y nodos especiales, y solo entonces leer
-bytes. Fuentes: `kora.py`, `ley/3-transmutacion.md §9` y
-`tests/test_kora.py::TestSelloUltimoBloque`.
-
-### 9. El entrypoint de pruebas debe cerrar el módulo
-
-`unittest.main()` situado antes de las últimas clases produjo una ejecución
-directa verde pero incompleta. El guard `if __name__ == "__main__"` debe quedar
-al final del archivo, o usarse discovery como gate canónico. Ambas rutas se
-ejecutaron después de la corrección.
+- No se concluye que HCC esté indisponible: su health es parcial porque una
+  prueba real requiere un caso autorizado.
+- No se concluye que el build post-tag de HSC sea release: `de1e0b7` está limpio
+  y contiene `agent-autonomy-5`, pero sigue siendo posterior a v3.1.1.
 
 ## Alternativas descartadas
 
-- Integrar paridad dentro de `velar`: mezclaría corpus y mundo externo.
-- Persistir recuentos, inventarios o catálogos de commits: envejecen; usar los
-  comandos vivos y Git bajo demanda.
-- Forzar el mismo despliegue en todos los runtimes: una ausencia puede ser una
-  decisión válida y permanece informativa.
-- Reconciliar por nombre: un homónimo no prueba propiedad; solo el sello
-  `(URN,target)` autoriza mutación destructiva.
-- Consultar OpenClaw con comandos de semántica no demostrada como read-only:
-  una consulta ya produjo auto-migración; preferir inspección estática segura.
-- Aprovechar el mantenimiento para ampliar Hermes: frente explícitamente
-  congelado.
+- Crear un tercer modo asistencial para UE: confunde ubicación con régimen.
+- Usar DAU como prueba primaria de hospitalización: degrada la verdad factual.
+- Mover priorización al CLI: mezcla adquisición de hechos con juicio clínico.
+- Ejecutar lotes en paralelo: aumenta tormentas y contradice el contrato.
+- Persistir el tablero delta: crea una segunda fuente con riesgo de PHI.
+- Habilitar shell sin revisión: contradice la preferencia explícita por
+  Guardian.
+- Copiar el informe de prueba a memoria o repositorio: duplica doctrina y puede
+  transportar identificadores.
 
-## Artefactos modificados y propósito
+## Artefactos canónicos afectados
 
-- `CLAUDE.md`: puerta de entrada, gate de mantenimiento, paridad condicional y
-  política contra recuentos persistidos.
-- `README.md`: puntero mínimo a `CLAUDE.md`.
-- `kora.py`: frescura, propiedad, reconciliación y paridad seguras.
-- `ley/0-constitucion.md`, `ley/2-forma.md` y
-  `ley/3-transmutacion.md`: contrato normativo correspondiente.
-- `tests/test_kora.py`: regresiones de producto exacto, propiedad, tipos,
-  symlinks y cobertura de ejecución directa.
-- `artefactos/skills/kora/consenso-deliberativo/{SKILL.md,referencias/}`:
-  absorción del valor único previo a reconciliar instalaciones.
-- `artefactos/conocimiento/kora/guia-rapida-pneuma.md`: guía alineada con el
-  contrato vigente.
-- `HANDOFF.md`: única continuidad y memoria operativa versionada.
-- `.remember/{remember.md,now.md,recent.md}`: punteros locales gitignored hacia
-  la memoria canónica; reemplazan resúmenes activos obsoletos sin duplicarla.
-- `/home/felix/.codex/config.toml`: permisos/tombstones de la superficie Codex;
-  configuración externa al repositorio.
-- `_archivo/informe-desempeno-medico-hospitalista-2026-07-11.md`,
-  `_archivo/informe-retroalimentacion-agentes-salud-openclaw-2026-07-13.md` y
-  `_archivo/informe-turno-urgenciologo-2026-07-10.md`: informes retirados del
-  árbol vivo conforme a la política documental.
-- Evidencia externa preservada en
-  `/home/felix/.codex/backups/kora-pneuma-2026-07-16-openclaw-profile-audit/`.
+- `artefactos/agentes/salud/urgenciologo.md`: v3.12.0 y
+  `agent-autonomy-5`.
+- `artefactos/agentes/salud/medico-hospitalista.md`: v1.9.0,
+  `S-HOSPITAL_UE_BOARDING`, transiciones y fronteras.
+- `artefactos/conocimiento/salud/manual-agente-hsc-agent-cli.md`: v1.0.18,
+  lote/singleton/stream y procedencia del build HSC.
+- `_emision/` e instalaciones de Claude Code, Codex, OpenCode y OpenClaw:
+  derivados regenerables, no fuentes.
+- `HANDOFF.md`: única memoria operativa vigente de KORA.
 
-Usar `git log --oneline -- <ruta>` y `git show <commit> -- <ruta>` para
-reconstruir historia o autoría; no mantener catálogos de commits en esta
-memoria viva.
+Los artefactos Fleet y runtime se enumeran en el handoff Fleet; no se duplican
+aquí.
 
-## Verificación del cierre — 2026-07-18
+## Riesgos y pendientes
 
-Al cerrar se ejecutaron:
+- Publicar un release HSC que incorpore formalmente `agent-autonomy-5`.
+- HCC continúa parcialmente probado hasta que exista un caso legítimo.
+- El perfil `full`, sesiones visibles y escritura fuera del workspace amplían
+  el blast radius; los controles conductuales no son DLP.
+- Falta backup full-state off-host y restore ensayado.
+- Mensajería, elevado y entrega Telegram no se probaron mediante efectos reales.
+- Al cerrar esta memoria, Fleet contiene un patch concurrente no atribuido de
+  hardening de memoria. No pertenece a este incremento y no debe stagearse
+  desde KORA; consultar su handoff antes de intervenir.
 
-- `python3 kora.py velar --estricto`
-- `python3 tests/test_kora.py`
-- `python3 -m unittest discover -s tests`
-- `python3 kora.py transmutar --paridad`
-- `python3 -m py_compile kora.py tests/test_kora.py`
-- `git diff --check`
-- `codex doctor --summary`
+## Siguiente acción recomendada
 
-Los gates del repositorio quedaron verdes, la paridad no presentó bloqueos y
-Codex Doctor no informó fallos; persistió la advertencia ambiental previa
-sobre rollout files. La rama publicada se confirmó contra el remoto. Son
-veredictos históricos: repetir los comandos para conocer el estado vigente.
-
-## Deuda residual y siguiente orden
-
-### P1 — OpenClaw
-
-- La paridad KORA solo prueba emisión↔instalación gestionada; no prueba
-  discovery efectivo, roster, precedencia entre raíces, tool policies ni el
-  workspace runtime privado.
-- Obtener las unidades ausentes o desviadas bajo demanda con
-  `python3 kora.py transmutar --paridad --target openclaw`; no conservar aquí
-  una lista nominal que envejezca.
-- Contrastar después el resultado con la configuración y los workspaces vivos
-  mediante inspección estática segura. No invocar comandos OpenClaw que puedan
-  auto-migrar estado solo para consultar.
-
-Orden recomendado: auditar discovery efectivo por agente → adjudicar la raíz
-personal compartida → registrar solo agentes desplegables → contrastar tools y
-config viva → recién entonces aplicar/canariar.
-
-### Frente congelado — Hermes
-
-Hermes queda fuera del alcance operativo. No modificar su artefacto canónico,
-emisiones ni instalaciones, ni realizar T-Hermes, salvo decisión explícita
-posterior del operador.
-
-### Hipótesis evaluables — eficiencia Codex
-
-Medir en tareas nuevas: costo de descripciones, precisión de discovery,
-`medium` frente a `max`, defaults read-only para agentes sanitarios y la
-duplicación dual-mode de `dov-dori`. Cambios separados, con evals.
-
-### Supuesto de seguridad
-
-El corpus local se trata como fuente confiable y no se promete aislamiento
-frente a una mutación hostil concurrente entre preflight y lectura. Si cambia
-ese threat model, endurecer también la fibra fuente `referencias/` como una
-unidad compuesta exclusivamente por directorios y archivos regulares reales.
+Adjudicar el patch concurrente de memoria en Fleet como una tarea separada:
+identificar owner, esperar un estado estable, revisar el diff completo, reparar
+su gate si corresponde, ejecutar validación estática/viva y publicar solo
+cuando constituya una unidad propia. Después, priorizar backup off-host con
+restore ensayado; HCC se prueba únicamente dentro de atención autorizada.
 
 ## Cómo retomar
 
-1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Abrir una tarea Codex nueva o reiniciar la app para asegurar que el catálogo
-   use los tombstones configurados.
-3. Repetir los gates de mantenimiento y la paridad antes de tocar ley,
-   generador o artefactos agénticos.
-4. Tratar OpenClaw como un frente separado y mantener Hermes congelado; no
-   ampliar el alcance del cierre Codex por conveniencia.
+1. Leer `CLAUDE.md`, este `HANDOFF.md` y el estado Git vivo.
+2. Resolver las tres URN anteriores con `python3 kora.py nombre <URN>`.
+3. Ejecutar `python3 kora.py velar --estricto` y
+   `python3 -m unittest discover -s tests`.
+4. Para cualquier cambio agéntico, repetir paridad por URN antes de tocar Fleet.
+5. Leer el handoff vigente de Fleet y adjudicar sus cambios concurrentes antes
+   de materializar o modificar config.
 
 ## Rollback
 
-- Resolver el commit exacto bajo demanda con
-  `git log --oneline -- <rutas-afectadas>` y revisarlo con
-  `git show <commit> -- <rutas-afectadas>`; revertir en orden cronológico
-  inverso. No usar hashes guardados en este handoff.
-- Tras revertir núcleo o ley, repetir gates y adjudicar cualquier emisión
-  afectada antes de aplicar cambios a un runtime.
-- Antes de revertir artefactos, preservar cualquier valor único absorbido en
-  `consenso-deliberativo`.
-- Config Codex: reactivar una skill exige retirar/cambiar su tombstone y
-  reiniciar. No reintroducir `sandbox_mode="danger-full-access"` como rollback
-  rutinario: volvería a anular el perfil moderno de permisos.
+Usar `git revert`, nunca `reset --hard`. Revertir primero el incremento Fleet y
+después `35f34e5` solo si se decide retirar también la doctrina. Tras cualquier
+reversión, reemitir, comprobar paridad, materializar y ejecutar canarios nuevos.
+No volver a workspaces clínicos históricos ni restaurar memoria episódica como
+atajo.
