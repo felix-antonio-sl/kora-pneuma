@@ -7,7 +7,7 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | Lo que parece | Lo que es |
 |---------------|-----------|
 | "una funcion entre dos cosas" | un mapeo `F: C → D` que preserva **composicion** (`F(g ∘ f) = F(g) ∘ F(f)`) e **identidad** (`F(id_A) = id_F(A)`). Sin esas dos leyes no es funtor. |
-| "como un map de listas" | un `map` cumple las leyes para una categoria especifica (`Set` con funciones); no toda funcion entre estructuras es funtor. |
+| "como un map de listas" | `List` es un endofuntor en `Set` y `map` describe su accion sobre morfismos; no toda funcion entre estructuras define un funtor. |
 
 **Si el "funtor" propuesto no preserva composicion o identidad, no es funtor.** Llamarlo "transformacion" o "mapping" hasta que se demuestre que cumple las leyes.
 
@@ -51,7 +51,7 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | Lo que parece | Lo que es |
 |---------------|-----------|
 | "F y G son inversos" | tener `Hom(F(X), Y) ≅ Hom(X, G(Y))` natural en X y Y. **No** son inversos: F y G casi nunca componen a la identidad. |
-| "F construye, G destruye" | F construye libremente, G olvida. La unidad y counit miden cuanto pierde cada lado. |
+| "F construye, G destruye" | en una adjuncion **libre/olvidadiza**, F construye libremente y G olvida estructura; no toda adjuncion tiene esa lectura ni "mide perdida". |
 
 **No declarar adjuncion sin verificar el iso natural de hom-sets.**
 
@@ -96,6 +96,8 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 | "monada cualquiera" | la monada *libre* sobre un funtor `F`: la mas general posible, sin operaciones extra. |
 | "DSL de comandos" | un DSL de comandos **es** un free monad sobre el funtor de comandos, si las leyes se respetan. |
 
+Un DSL de comandos puede **implementarse** como monada libre cuando se especifican el funtor generador y la propiedad universal; la mera sintaxis de comandos no basta.
+
 ## Cofree comonad
 
 | Lo que parece | Lo que es |
@@ -116,6 +118,17 @@ Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus 
 |---------------|-----------|
 | "una API" | un polinomio `Σ_{i∈I} y^{A_i}` donde `I` son posiciones (lo que la API muestra) y `A_i` son direcciones (lo que la API acepta). |
 | "un product type" | un product type puede ser polynomial; no todo product type lo es ni todo polynomial es product. |
+
+## Otros colapsos frecuentes
+
+| Confusion | Distincion estricta |
+|-----------|---------------------|
+| grafo = categoria | un grafo dirigido solo aporta generadores; la categoria libre añade caminos, identidades y composicion. |
+| *faithful* = "no pierde informacion" | *faithful* significa inyectividad en cada hom-set; no garantiza inyectividad en objetos, calidad de datos ni preservacion de toda semantica. |
+| end/coend = `forall`/`exists` operacional | la notacion sugiere una analogia logica, pero un end/coend requiere un bifuntor tipado y su propiedad universal. |
+| punto fijo = coalgebra final = optimo | son tres nociones distintas; una ecuacion de punto fijo no prueba finality ni optimalidad. |
+| bucle = traza = coinduccion | iterar codigo no proporciona automaticamente una estructura trazada ni una prueba coinductiva. |
+| sheafification = reconciliacion/defensa en profundidad | la sheafification es, bajo hipotesis, un reflector de presheaves a sheaves; no implementa por si sola un protocolo operacional o de seguridad. |
 
 ## Reglas de uso
 

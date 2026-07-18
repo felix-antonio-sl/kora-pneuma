@@ -2,11 +2,17 @@
 
 Usar despues de aplicar un patron del corpus, antes de entregar al agente invocador. Marca con tres niveles: **CRITICO** (debe pasar), **MEDIO** (debe pasar o declararse explicitamente), **BAJO** (recomendable).
 
+## Bloque 0 — Estatuto epistemico
+
+- [ ] **CRITICO** cada afirmacion categorial se etiqueta como **formal**, **modelo**, **heuristica** o **metafora**.
+- [ ] **CRITICO** toda afirmacion formal incluye una demostracion suficiente o una fuente primaria que pruebe exactamente la afirmacion.
+- [ ] **CRITICO** la lectura elegida es la mas debil que resuelve el problema; una heuristica no fabrica categorias ni leyes que no necesita.
+
 ## Bloque 1 — Identificacion
 
-- [ ] **CRITICO** la **categoria base** del problema esta identificada explicitamente (Set, Cat, Vect, Cost, Bool, topos T, etc.).
-- [ ] **CRITICO** los **objetos** del problema estan tipificados (servicios, tablas, tipos, valores efectados, configuraciones, ...).
-- [ ] **CRITICO** los **morfismos** estan tipificados (calls, FKs, funciones, queries, transitions, ...).
+- [ ] **CRITICO** para toda lectura **formal**, la categoria base esta identificada explicitamente (Set, Cat, Vect, Cost, Bool, topos T, etc.).
+- [ ] **CRITICO** sus **objetos** estan tipificados (servicios, tablas, tipos, valores efectados, configuraciones, ...).
+- [ ] **CRITICO** sus **morfismos** estan tipificados (calls, FKs, funciones, queries, transitions, ...).
 - [ ] **MEDIO** se declara si la categoria es enriquecida y sobre que base.
 - [ ] **MEDIO** se declara si la categoria es 1-cat / 2-cat / (∞,1)-cat.
 
@@ -31,15 +37,14 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
 
 ## Bloque 5 — Universalidad
 
-- [ ] **CRITICO** todo limite/colimite declarado se justifica con su **propiedad universal** (existencia + unicidad salvo isomorfismo).
+- [ ] **CRITICO** todo limite/colimite declarado se justifica con su **propiedad universal**: existe un unico morfismo mediador compatible. El objeto universal queda determinado salvo isomorfismo.
 - [ ] **CRITICO** los pullbacks no se confunden con simples intersecciones; los pushouts no se confunden con simples uniones.
 - [ ] **MEDIO** se identifican los morfismos universales que la propiedad induce.
 
 ## Bloque 6 — Adjunciones
 
-- [ ] **CRITICO** toda adjuncion declarada exhibe el **iso natural** `Hom(F(X), Y) ≅ Hom(X, G(Y))`.
-- [ ] **CRITICO** se identifican **unit** `η: Id → G ∘ F` y **counit** `ε: F ∘ G → Id`.
-- [ ] **MEDIO** se verifican las **identidades triangulares**.
+- [ ] **CRITICO** toda adjuncion declarada exhibe el **iso natural** `Hom(F(X), Y) ≅ Hom(X, G(Y))`, o equivalentemente unidad y counit con identidades triangulares.
+- [ ] **CRITICO** si se usa la segunda presentacion, se identifican **unit** `η: Id → G ∘ F`, **counit** `ε: F ∘ G → Id` y sus identidades triangulares.
 - [ ] **BAJO** se declara explicitamente que `F ⊣ G` no implica que `F` y `G` sean inversos.
 
 ## Bloque 7 — Yoneda y representabilidad
@@ -52,25 +57,27 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
 - [ ] **CRITICO** toda monada declarada exhibe `η`, `μ` y satisface las **tres leyes** (unidad izquierda, unidad derecha, asociatividad).
 - [ ] **CRITICO** la composicion Kleisli `>=>` se distingue de la composicion ordinaria.
 - [ ] **CRITICO** toda coalgebra declarada exhibe la funcion `α: A → F(A)` y el funtor `F`.
-- [ ] **MEDIO** las bisimulaciones declaradas se justifican exhibiendo la relacion `R` y mostrando que se preserva bajo `α` y `β`.
+- [ ] **MEDIO** las bisimulaciones declaradas exhiben la relacion `R`, el lifting relacional o hipotesis del funtor y la prueba de preservacion bajo `α` y `β`; con efectos, se declara ademas la semantica elegida.
 
 ## Bloque 9 — Logica interna
 
-- [ ] **CRITICO** todo topos declarado exhibe limites finitos, exponenciales y clasificador de subobjetos `Ω`.
+- [ ] **CRITICO** todo topos elemental declarado exhibe limites finitos, exponenciales (clausura cartesiana) y clasificador de subobjetos `Ω`.
 - [ ] **MEDIO** se distingue logica clasica (boolean) de intuicionista (clasificador no-2).
 - [ ] **BAJO** los sheaves declarados verifican explicitamente la condicion de pegado.
 
 ## Bloque 10 — Trazabilidad y citas
 
-- [ ] **CRITICO** cada conclusion sustantiva cita la **URN especifica** del ICAS-BoK que la apoya.
-- [ ] **CRITICO** se distingue formal (teorema/lema del corpus) de heuristica (analogia util pero no prueba).
-- [ ] **MEDIO** se cita la seccion o pasaje del corpus, no solo la URN, cuando hay precision adicional.
+- [ ] **CRITICO** cada conclusion sustantiva cita la **URN interna** que permite rastrear el artefacto del corpus.
+- [ ] **CRITICO** toda conclusion formal cita ademas una fuente primaria o aporta la prueba; una URN no confiere autoridad matematica.
+- [ ] **CRITICO** se distingue entre formal, modelo, heuristica y metafora.
+- [ ] **MEDIO** se cita la seccion o pasaje preciso. Si el corpus contradice la matematica, se corrige o se declara la discrepancia: la fuente/proof manda.
 
 ## Bloque 11 — Anti-sobreingenieria
 
 - [ ] **CRITICO** se eligio la lectura categorial **mas debil** que cumple el trabajo.
 - [ ] **MEDIO** se justifica por que se necesita ir mas alla de Set / monada simple / categoria 1.
 - [ ] **BAJO** si la lectura es heuristica, se ofrece una alternativa operacional.
+- [ ] **BAJO** una lectura heuristica puede cerrar sin categoria construida, siempre que no use vocabulario formal como si estuviera demostrado.
 
 ## Bloque 12 — Cierre
 

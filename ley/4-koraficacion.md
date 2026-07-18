@@ -1,4 +1,4 @@
-# KORA/Koraficación — ley pneuma v1.0.0
+# KORA/Koraficación — ley pneuma v1.1.0
 
 Contrato de **producción** de artefactos de conocimiento: la transformación
 gobernada de fuentes humanas o documentales en KORA/MD con fidelidad medible.
@@ -11,8 +11,9 @@ el proceso que lo produce. Entre ambas, para el producto de una koraficación,
 prevalece la más específica: esta.
 
 Rationale: en la encarnación anterior este contrato vivía en md-spec como
-régimen de koraficación (el funtor K de la capa formal: la transformación que
-preserva verdad mientras comprime superficie). La maquinaria que lo rodeaba
+régimen de koraficación y se llamaba «funtor K». Aquí se reconoce como
+transformación editorial gobernada: no se han definido categorías, morfismos
+ni leyes functoriales, y la preservación de verdad se audita mediante FS. La maquinaria que lo rodeaba
 (familias retiradas, productor atomize, perfiles por familia) no regresa; el
 contrato sí, porque sin él KORA no produce — solo custodia.
 
@@ -189,3 +190,7 @@ Sublimado de md-spec (régimen de koraficación: prueba ácida, FS/CR y clases
 de hecho, telegrafización, realización superficial) el 2026-06-12; ver
 GENESIS.md. El §8 (procedencia con hash y descarte declarado) es ley nueva
 de pneuma, no sublimación: la encarnación anterior no lo legislaba así.
+
+v1.1.0 (2026-07-18): corrección de estatus epistémico. «Funtor K» queda como
+nombre histórico; la koraficación es una transformación editorial con
+fidelidad auditada, no un funtor demostrado.

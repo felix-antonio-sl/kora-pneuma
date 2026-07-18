@@ -194,8 +194,8 @@ SEIS familias canonicas (§5.1):
 
 ### Equivalencia funcional y composicion (reglas Anexo C)
 
-- [ ] **R-CAT-EQ-2**: realizaciones hermanas comparables comparten firma de frontera para declararse funcionalmente equivalentes.
-- [ ] **R-CAT-EQ-3**: toda descomposicion in-zoom preserva la firma de frontera del proceso abstracto out-zoom.
+- [ ] **R-CAT-EQ-2**: realizaciones hermanas comparables comparten firma de frontera para declararse equivalentes respecto de esos observables; el resultado no afirma identidad, bisimulacion ni sustituibilidad total.
+- [ ] **R-CAT-EQ-3**: toda descomposicion in-zoom preserva la firma de frontera del proceso abstracto out-zoom como condicion necesaria, no suficiente, de equivalencia conductual.
 - [ ] **R-CAT-LIN-2**: objetos lineales no son consumidos por mas de un proceso sin XOR.
 - [ ] **R-CAT-COMP-1**: identificacion de entidades compartidas por interfaz (nombre normalizado + tipo).
 - [ ] **R-CAT-COMP-2**: la composicion satisface las cuatro propiedades: no-duplicacion, sin-colgantes, asociatividad modulo namespacing de ids, y buen-tipado (no introducir avisos de error ausentes en los modelos fuente).

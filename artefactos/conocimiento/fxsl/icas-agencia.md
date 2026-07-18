@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-agencia
 nombre: icas-agencia
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 14 del ICAS-BoK: agencia categorial — free monad como plan, cofree comonad como sustrato, emparejamiento plan-sustrato y el patrón Percepción-Decisión-Acción para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12. Corrección 1.1.0 contrastada con Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -14,11 +14,23 @@ familia: bok
 
 # Agencia
 
+## Frontera formal
+
+La construcción free-monad/cofree-comonad de este documento es formal dentro
+de `Poly` con su producto de sustitución y las hipótesis del trabajo citado.
+Su traducción a LLMs, RL, memoria, tools o al ciclo P-D-A es un modelo o
+heurística hasta construir los polinomios y morfismos concretos.
+
 ## El patron corre sobre la materia
 
-Todo sistema agentico que he construido tiene la misma estructura secreta: hay un plan y hay algo que ejecuta el plan. Un prompt chain que corre sobre un motor de inferencia. Un DAG de tareas que corre sobre un cluster de workers. Un protocolo de votacion que corre sobre electores. Un juego que corre sobre jugadores. En cada caso, el plan tiene forma de arbol de decisiones finito -- ramifica, elige, termina. El ejecutor tiene forma de arbol de comportamiento infinito -- responde, persiste, nunca se destruye.
+Muchos sistemas agénticos admiten una distinción útil entre plan y ejecutor.
+No todo plan termina ni todo ejecutor persiste infinitamente; esas condiciones
+pertenecen a la construcción formal específica.
 
-Libkind y Spivak cristalizan esta intuicion en una frase que se ha vuelto para mi un axioma de diseno: *pattern runs on matter*. Los patrones empiezan y terminan; la materia nunca se destruye. Los programas corren sobre sistemas operativos. Las entrevistas corren sobre personas. Los esquemas de votacion corren sobre votantes. Los juegos corren sobre jugadores. La estructura matematica que captura esta dualidad vive en Poly, la categoria de polynomial functors que ya explore en documentos anteriores. Pero ahora Poly revela su cara mas profunda: la de un universo donde monadas y comonadas interactuan para producir agencia.
+Libkind y Spivak formalizan *pattern runs on matter* en `Poly`: la mónada
+libre representa árboles de decisión terminantes, la comónada cofree representa
+materia y una acción de módulo representa «corre sobre». Esto inspira el
+diseño agéntico, sin caracterizar universalmente toda agencia.
 
 ## Free monad: el arbol de decisiones
 
@@ -38,7 +50,13 @@ m_p ~= y + p triangleleft m_p
 
 Esto dice exactamente lo que espero: un arbol de decision con forma p es, o bien una hoja (resultado inmediato), o bien una decision p seguida de un subarbol para cada posible respuesta. Es la misma estructura recursiva de un arbol de ejecucion de tareas, de una evaluacion lazy, de un pipeline con branching condicional.
 
-Pensar las posiciones de p como preguntas y las direcciones como respuestas posibles ilumina la construccion. El polinomio p_(1) = y + p representa entrevistas de a lo sumo una pregunta. El polinomio p_(2) = y + p triangleleft (y + p) representa entrevistas de a lo sumo dos preguntas. Y m_p es el limite: entrevistas de longitud finita pero no acotada. Cada arbol en m_p termina eventualmente -- es well-founded -- pero no hay cota global sobre cuantas preguntas puede hacer.
+Pensar las posiciones de p como preguntas y las direcciones como respuestas
+posibles ilumina la construcción. `p_(1) = y + p` representa entrevistas de a
+lo sumo una pregunta y `p_(2) = y + p triangleleft (y + p)`, de a lo sumo dos.
+La construcción alcanza una etapa estable —obtenida mediante los colímites de
+la cadena— que contiene entrevistas de longitud finita pero no acotada. No es
+un límite en el sentido categorial. Cada árbol bien fundado termina, aunque no
+haya una cota global uniforme sobre su profundidad.
 
 La estructura de monad sobre m_p viene de dos operaciones. La unit eta : y -> m_p incrusta un resultado como un arbol trivial (una hoja). La multiplication mu : m_p triangleleft m_p -> m_p toma un arbol de arboles y lo aplana en un arbol unico, pegando sustituyendo cada hoja del arbol externo por el arbol que le corresponde. Es el join de Haskell transportado a la tierra de los polinomios.
 
@@ -48,21 +66,31 @@ Dual a la construction inductiva del free monad, el cofree comonad c_p se constr
 
 Si m_p es el plan, c_p es el ejecutor. El plan tiene principio y fin; el ejecutor persiste indefinidamente, siempre listo para responder a la proxima consulta. Un sistema operativo es un elemento de c_p donde p modela los system calls: en cada momento, el OS esta en un estado (muestra su posicion), acepta un call (una direccion), y transiciona a un nuevo estado con un nuevo arbol de comportamiento disponible. La counit epsilon : c_p -> y extrae la observacion inmediata. La comultiplication delta : c_p -> c_p triangleleft c_p desdobla el comportamiento en "lo que hago ahora" y "lo que hare despues."
 
-En reinforcement learning, el agente que aprende tiene exactamente esta estructura comonadica. Su estado es un behavior tree: dado el estado actual, elige una accion (posicion), recibe un reward y una observacion (direccion), y transiciona a un nuevo behavior tree. El aprendizaje es la actualizacion de la coalgebra -- el mismo polinomio p, pero una funcion de transicion distinta que refleja la experiencia acumulada.
+Un proceso de reinforcement learning puede modelarse coalgebraicamente una vez
+fijados estado, observaciones y transición, pero no tiene «exactamente» una
+comónada cofree por definición. El aprendizaje además modifica parámetros o la
+transición y necesita un nivel dinámico separado.
 
 ## La ley de interaccion
 
-El resultado central de Libkind-Spivak es que m_p es un modulo sobre c_p. La ley de interaccion es una transformacion natural:
+El resultado central de Libkind-Spivak es una acción de módulo de la mónada
+libre sobre la comónada cofree en el entorno monoidal preciso del artículo. La
+acción ejecuta un árbol de decisiones contra materia que responde en cada
+juntura. Para evitar mezclar los distintos productos monoidales de `Poly`, su
+tipo debe tomarse del teorema citado y no reconstruirse por analogía.
 
-```
-Xi_{p,q} : m_p tensor c_q -> m_{p tensor q}
-```
+El ejemplo de la entrevista lo hace concreto. Sea `p` el polinomio con dos
+preguntas: «¿quieres té?» (sí/no) y «¿qué tipo?» (verde/negro/herbal). Un
+patrón `y -> m_p` selecciona un árbol: primero pregunta si quiere té; ante «sí»
+pregunta el tipo y ante «no» termina. La materia es una política de respuesta
+modelada en la comónada correspondiente. Alice responde «no» y la ejecución
+tiene una pregunta; Bob responde «sí, verde» y tiene dos. El patrón es el
+mismo, la materia difiere y por ello cambian las trazas.
 
-Dado un patron (un arbol de decision en m_p) y materia (un arbol de comportamiento en c_q), la interaccion produce un arbol de decision en m_{p tensor q}. El patron consume la materia: en cada nodo de decision del patron, el patron consulta a la materia, la materia responde con una direccion, y el patron usa esa respuesta para elegir su siguiente rama. El arbol resultante tiene la forma combinada de patron y materia.
-
-El ejemplo de la entrevista lo hace concreto. Sea p el polinomio con dos preguntas: "quieres te?" (si/no) y "que tipo?" (verde/negro/herbal). Un patron y -> m_p selecciona un arbol de entrevista especifico: primero pregunta "quieres te?", si la respuesta es "si" entonces pregunta "que tipo?", si es "no" termina. La materia es una persona -- un elemento de c_{[p,y]}, un behavior tree que para cada pregunta tiene una respuesta. Alice, que no quiere te, genera una ejecucion de dos preguntas. Bob, que primero dice que no pero luego cambia de opinion, genera una ejecucion de tres preguntas. El patron es el mismo; la materia es diferente; las ejecuciones difieren.
-
-Este es el modelo exacto de un agente LLM: el prompt chain es el patron m_p, el motor de inferencia es la materia c_q, y la interaccion Xi produce la traza de ejecucion. Dos instancias del mismo chain sobre motores diferentes (GPT-4, Claude, Llama) producen trazas diferentes porque la materia es diferente. El patron estructura; la materia responde.
+Para un agente LLM esta es una **heurística estructurada**: prompt chain como
+patrón, motor/contexto como materia y ejecución como interacción. Es exacta
+solo tras derivar polinomios y la acción correspondiente; distintas trazas por
+motor no bastan para demostrar esa instancia.
 
 ## Operads dinamicas: organizaciones que cambian
 
@@ -100,31 +128,53 @@ La construction Ctx toma un contextad (una accion colax de una categoria monoida
 - **co-Kleisli** (contexto): morfismos f : D A -> B donde D es una comonada. Contexto que se duplica y se consume de manera controlada.
 - **Span** (relaciones): morfismos como pares de mapas A <- R -> B. Relaciones no-funcionales entre entidades.
 
-Para un agente, la relevancia es directa. Toda decision agentica depende del contexto: el historial de interacciones, el estado del entorno, los parametros aprendidos. Un contextad captura esta dependencia como estructura de primera clase, no como un hack ad hoc. La composicion de decisiones contextuales es automaticamente contextual -- el wreath product asegura que los contextos se componen coherentemente.
+Para un agente, el contextad ofrece un **modelo candidato** cuando historial,
+entorno y parámetros se tipan como la acción contextual requerida. El wreath
+product da composición coherente dentro de esa construcción; no vuelve
+automáticamente contextuales a decisiones LLM no formalizadas.
 
 ## Organizaciones como categorias
 
 Boudjidj y Souidi modelan sistemas multi-agente organizacionales usando teoria de categorias pura. El modelo AGR (Agent-Group-Role) se traduce directamente: los agentes son objetos de una categoria Agent, los roles son objetos de una categoria Role, las tareas son objetos de una categoria Task, y los funtores entre estas categorias capturan las relaciones "el agente tiene este skill", "este skill habilita esta tarea", "esta tarea requiere este rol." La composicion de organizaciones se realiza via comma categories, que construyen categorias nuevas a partir de dos categorias y un funtor entre ellas.
 
-Lo que este enfoque revela es que la composicion organizacional preserva estructura por construccion. Si dos organizaciones se integran via un funtor comun (un mapeo de roles compartidos, por ejemplo), la comma category resultante hereda las propiedades composicionales de las categorias originales. No necesito verificar post hoc que la integracion es consistente; la construccion categorica lo garantiza.
+Una comma category preserva su propiedad universal relativa a los funtores que
+la definen. Eso garantiza coherencia categorial del objeto construido, no
+consistencia organizacional, compatibilidad de roles ni éxito operativo; esas
+propiedades deben codificarse y verificarse aparte.
 
 ## Enjambres y emergencia
 
 Krol et al. abordan la cuestion mas dificil: la emergencia de comportamiento colectivo. Modelan un enjambre W como una categoria K = Comp(N) de computaciones parciales recursivas. Los miembros del enjambre son objetos; las computaciones que se propagan entre nodos son morfismos. El Yoneda embedding y : K -> SET^{K^op} incrusta el enjambre en la categoria de presheaves, donde cada miembro a define un funtor representable R_a que captura todas las computaciones que terminan en a.
 
-El punto fundamental es que la categoria de presheaves SET^{K^op} es un topos. Y la logica interna de un topos es intuicionistica, no clasica. Esto significa que el comportamiento emergente del enjambre -- las propiedades que existen en el presheaf category pero no en la categoria base -- obedece una logica donde el tercero excluido no vale. Un enjambre puede exhibir un comportamiento que no es ni definitivamente presente ni definitivamente ausente. La emergencia vive en el espacio entre verdadero y falso, en el subobject classifier de Heyting que reemplaza al booleano clasico.
+La categoría de presheaves `Set^{K^op}` es un topos y su lógica interna es, en
+general, intuicionista. Sus valores de verdad clasifican subobjetos de ese
+topos; esto no implica que el comportamiento físico del enjambre sea
+«parcialmente verdadero» ni identifica emergencia con no bivalencia.
 
-Para robot swarms, esta logica no-clasica captura la realidad operativa: el enjambre converge gradualmente, las propiedades emergentes se estabilizan progresivamente, y hay un periodo donde una propiedad esta "parcialmente presente" -- exactamente el valor de verdad de un subpresheaf que no es ni el total ni el vacio.
+Para aplicar esa lógica a robot swarms hay que representar observaciones y
+restricciones como presheaves y formular la propiedad como subobjeto. La
+convergencia gradual, por sí sola, es una dinámica temporal y no un valor de
+verdad interno.
 
 ## Seguridad como categoria: ICAR
 
-Valence muestra que los silos de la ciberseguridad -- vulnerabilidades (CVE), debilidades (CWE), patrones de ataque (CAPEC), tecnicas (ATT&CK), activos (CPE) -- se integran como un knowledge schema categorico. ICAR (Integrated CAtegorical Resource) es una categoria cuyos objetos son los diccionarios de seguridad, cuyos morfismos son las relaciones entre ellos (Has, isChildOf, isParentOf, accomplishesTactic), y cuyos path equivalences capturan las restricciones semanticas (isChildOf.isParentOf = id). Una instancia de ICAR es un funtor F : S -> Set que asigna a cada diccionario su conjunto de entradas y a cada relacion las funciones correspondientes. El documento 18 desarrolla ICAR con queries operativas, conteos concretos y su conexion con el analisis de riesgo.
+Valence presenta ICAR como un knowledge schema categorial que conecta
+diccionarios de seguridad mediante relaciones tipadas. Solo deben imponerse las
+path equations declaradas y válidas; `parent/child` no son inversas en una
+jerarquía ramificada. Una instancia a `Set` exige además que cada generador se
+interprete como función total o que la parcialidad se modele explícitamente.
 
 ## Co-sintesis: codigo y modelo formal como funtores
 
-Jha et al. cierran el circulo con un resultado que me parece profundamente practico: un LLM puede generar simultaneamente codigo ejecutable, un modelo formal verificable, y un funtor entre ambos. El funtor mapea objetos del codigo (threads, mutexes, funciones) a objetos del modelo (procesos, variables booleanas, transiciones), y la propiedad de preservar composicion asegura que la estructura del codigo se refleja fielmente en la estructura del modelo.
+Jha et al. exploran generación conjunta de código, modelo y un mapping
+estructural. Si ese mapping es funtor, preserva identidades y composición del
+modelo elegido; eso no basta para asegurar fidelidad semántica del código ni
+equivalencia conductual.
 
-Los experimentos con el dining philosophers problem son ilustrativos. Los LLMs mas capaces generan en una sola iteracion el codigo C, el modelo SMV, y el funtor asociativo que permite verificar propiedades temporales del codigo a traves del modelo. Modelos menos capaces requieren multiples iteraciones o no convergen sin intervencion humana significativa. El funtor es el puente que falta en la verificacion formal tradicional: no solo genero codigo y especificacion por separado, sino que genero la garantia estructural de que ambos dicen lo mismo.
+Los experimentos con dining philosophers aportan evidencia de caso. Verificar
+SMV demuestra propiedades del modelo; transferirlas al C requiere una relación
+de corrección probada. Un funtor generado no es por sí solo garantía de que
+ambos «dicen lo mismo».
 
 ## Acción como clave primaria
 
@@ -138,40 +188,76 @@ La jerarquía DIK se reinterpreta. Los **datos** son observaciones crudas -- val
 
 Esta perspectiva es dual a la coalgebraica. La coalgebra mira desde el estado hacia afuera: "dado el estado actual, ¿qué observo?" El funtor indexante mira desde la acción hacia afuera: "dada esta acción, ¿qué episodio produjo?" Son dos maneras de organizar relacionalmente la identidad de un sistema. En el mejor de los casos, cada una induce un patrón de observables suficientemente rico para distinguir lo que la categoría decide distinguir. La primera lectura es covariante; la segunda, contravariante.
 
-En la práctica, event sourcing es action-primary-key. Cada evento en el log es un morfismo, no un estado. El estado actual se reconstruye componiendo todos los morfismos desde el estado inicial -- es un fold (catamorfismo) sobre la secuencia de acciones. El append-only log es la categoría libre sobre el grafo de eventos, y la reconstrucción del estado es el único homomorfismo desde esa categoría libre al álgebra de estados. Cuando diseño un sistema con event sourcing, estoy eligiendo la perspectiva action-primary; cuando diseño con CRUD, estoy eligiendo la perspectiva state-primary (coalgebraica). Ambas son válidas; la elección depende de qué dimensión del sistema necesito que sea composicional.
+En event sourcing, un replay suele ser un fold de una secuencia de eventos sobre
+un estado inicial. Puede factorizarse por una construcción libre si se declaran
+generadores, composición y álgebra; un log no es automáticamente una categoría,
+y CRUD no es «coalgebraico» por contraste.
 
 ## Tool use como morfismo externo
 
-Cuando un agente usa una herramienta, compone un morfismo en su propia categoria con un morfismo en la categoria de la herramienta. Pero esta composicion no ocurre dentro de ninguna de las dos categorias -- ocurre en una estructura que las conecta: un profunctor P : Agent^op x Tool -> Set.
+Un profunctor `P : Agent^op x Tool -> Set` es un modelo posible de
+interacciones válidas, no la estructura inevitable de toda invocación.
 
 Cada elemento de P(a, t) es una interaccion valida entre el agente a y la herramienta t. Si el agente es un LLM con function-calling, las posiciones del profunctor son las firmas de las funciones disponibles, y las direcciones son los parametros validos para cada firma. El agente no necesita entender los internos de la herramienta; le basta una interfaz suficientemente expresiva para componer con ella. En ese sentido, la interfaz cumple el papel externo que Yoneda vuelve natural: organizar lo observable sin inspeccionar la implementacion.
 
-La composicion de uso de herramientas es composicion de profunctores. Si P conecta agentes con herramientas de busqueda y Q conecta herramientas de busqueda con bases de datos, la composicion Q . P conecta agentes con bases de datos. La formula es la convolucion coend: (Q . P)(a, d) = integral^t Q(t, d) x P(a, t). Un agente multi-herramienta tiene un profunctor sobre el coproducto de categorias de herramientas: P : Agent^op x (Tool_1 + ... + Tool_n) -> Set. La eleccion de herramienta es la eleccion de componente del coproducto. La composicion de herramientas en secuencia es composicion de profunctores. La invocacion en paralelo es su producto monoidal.
+Si se construyen profuntores componibles, el coend calcula su composición. El
+coproducto y el tensor modelan elección y paralelo solo bajo las estructuras
+de interfaz y equivalencias que se especifiquen.
 
-## Perception-Decision-Action como triple categorico
+## Perception-Decision-Action como hipótesis categorial
 
-El ciclo Perception-Decision-Action que estructura todo agente tiene una formulacion categorica precisa como composicion de tres estructuras distintas.
+El ciclo P-D-A puede recibir varias formalizaciones categoriales; no hay una
+triple canónica para todo agente.
 
-La percepcion se parece mas a una operacion de reindexacion o pullback de observaciones que a un funtor ordinario hacia adelante. Dado el estado del mundo W y la interfaz de observacion del agente, la percepcion "tira hacia atras" los datos relevantes del entorno al espacio interno del agente. En la practica, es el encoder que transforma inputs crudos (pixeles, tokens, sensores) en representaciones internas.
+La percepción puede ser un encoder ordinario o una reindexación. Llamarla
+pullback exige dos flechas hacia un codominio común y la propiedad universal.
 
-La decision es seleccion interna de morfismos. Dentro del free monad del agente, la decision elige una rama del arbol de decisiones. Dado el estado percibido, el agente selecciona un morfismo en su categoria interna -- una accion entre las disponibles. Esta seleccion es un morfismo en la categoria de Kleisli del free monad: toma el estado actual y produce un estado+accion envuelto en la monada.
+La decisión puede modelarse por una flecha de Kleisli si se ha elegido una
+mónada de efectos apropiada. No es una flecha de Kleisli «del free monad» solo
+por seleccionar una acción.
 
-La accion es un funtor -- empuja efectos hacia adelante. El funtor Act : InternalState -> WorldEffect traduce la decision interna del agente en un cambio en el mundo. La functorialidad garantiza que componer dos decisiones internas y luego actuar es lo mismo que actuar sobre cada decision y componer los efectos: Act(d2 . d1) = Act(d2) . Act(d1).
+La acción puede diseñarse como funtor
+`Act : InternalState -> WorldEffect` si ambas categorías y la acción sobre
+morfismos están definidas y sus leyes se verifican.
 
-El ciclo completo P-D-A es un traced morphism. La accion modifica el mundo, la percepcion observa el mundo modificado, la decision elige la siguiente accion -- y el ciclo se repite. El cable de feedback que conecta la salida de Action con la entrada de Perception es la traza en una categoria compact closed. La convergencia del ciclo -- que el agente alcance su objetivo -- es la condicion de que la traza converja a un punto fijo.
+El ciclo completo contiene feedback, pero no es automáticamente un traced
+morphism. Una traza categorial requiere una categoría monoidal trazada y sus
+axiomas. Alcanzar un objetivo tampoco equivale a que «la traza converja a un
+punto fijo»; se necesita una dinámica, un objetivo y una noción de convergencia.
 
 ## Memoria como transformacion de estado
 
-La memoria de un agente es una monada de estado donde el espacio de estados es la base de conocimiento del agente. Formalmente, la monada State K asigna a cada tipo A el tipo K -> (A, K): una computacion que lee la base de conocimiento, produce un resultado, y devuelve una base de conocimiento posiblemente modificada.
+Una memoria mutable puede modelarse con la mónada de estado
+`State K(A) = K -> (A,K)`. Memoria de recuperación, contexto inmutable o una
+base externa pueden necesitar modelos distintos.
 
-El aprendizaje es composicion Kleisli en la monada State K. Cada experiencia nueva es un morfismo Kleisli e : Observation -> State K (Updated_Knowledge). La composicion de experiencias -- aprender de una secuencia de observaciones -- es la composicion Kleisli e_n >=> e_{n-1} >=> ... >=> e_1. La asociatividad de la composicion Kleisli garantiza que el orden de agrupamiento no importa: aprender (a luego b) luego c es lo mismo que aprender a luego (b luego c).
+Una actualización secuencial de memoria mutable puede componerse en Kleisli
+para `State K`. La asociatividad permite reagrupar la misma secuencia, no
+permutar experiencias ni prueba que el proceso constituya aprendizaje.
 
-El olvido es un funtor olvidadizo sobre el espacio de estados. El funtor U : Full_Knowledge -> Working_Knowledge descarta informacion, preservando solo lo relevante para la tarea actual. La composicion de aprendizaje seguida de olvido es una proyeccion: se retiene solo la traza de la experiencia en el espacio de trabajo.
+Una operación de olvido es simplemente un mapa con pérdida hasta que se
+definen categorías y se prueba functorialidad. «Forgetful functor» tiene un
+sentido técnico: olvida estructura de una categoría de objetos estructurados;
+no es sinónimo de descartar información.
 
-La memoria de trabajo es un limite finito del estado completo. Si el estado completo K es un limite de la cadena de experiencias, la memoria de trabajo es una aproximacion finita -- un cono finito que captura las ultimas N experiencias. La atencion es la seleccion del sub-diagrama sobre el que se calcula el limite: elegir a que prestar atencion es elegir que partes de la experiencia contribuyen a la memoria de trabajo actual.
+Una ventana de las últimas `N` experiencias es una truncación. No es un límite
+finito salvo que se especifique un diagrama y se demuestre su propiedad
+universal; atención tampoco es por definición selección de un subdiagrama.
 
 ## La convergencia
 
-Todos estos marcos convergen en una vision unificada de la agencia. El free monad es el plan -- finito, ramificante, terminante. El cofree comonad es el ejecutor -- infinito, persistente, reactivo. La ley de interaccion es la ejecucion -- el patron consume materia. Las operads dinamicas son la organizacion -- jerarquica, adaptiva, con accounting. Los contextads son la dependencia contextual -- parametros, efectos, relaciones, todos unificados por wreath products. El embedding de Yoneda y el paso al topos de presheaves proporcionan un buen marco para estudiar emergencia relacional. Y los funtores de co-sintesis son la verificacion -- el intento de mantener alineados artefacto ejecutable y modelo formal.
+Estos marcos convergen como repertorio de modelos, no como una sola teoría de
+todo agente. En `Poly`, la mónada libre representa patrones terminantes, la
+comónada cofree representa materia reactiva y la acción formaliza «runs on».
+Operads dinámicas, contextads, presheaves y co-síntesis responden a problemas
+distintos y conservan las hipótesis de sus construcciones de origen.
 
-Lo que antes era intuicion artesanal -- "el prompt chain es como un arbol de decisiones," "los agentes necesitan contexto," "la organizacion debe adaptarse" -- ahora tiene una formulacion precisa en la interaccion entre monadas libres y comonadas cofree, modulada por operads dinamicas y contextads. No pierdo la intuicion; la gano en composabilidad.
+La formalización precisa pertenece a las construcciones citadas en sus dominios.
+Su aplicación a un agente concreto conserva estatus de modelo hasta exhibir
+los objetos, morfismos y leyes.
+
+## Corrección 1.1.0
+
+Se restringe pattern-runs-on-matter a `Poly`, se retira «modelo exacto de un
+LLM» y se corrigen las identidades P-D-A=trace, percepción=pullback,
+olvido=funtor olvidadizo y memoria de trabajo=límite.

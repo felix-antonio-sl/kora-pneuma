@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-comparacion
 nombre: icas-comparacion
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 03 del ICAS-BoK: transformaciones naturales, polimorfismo y equivalencia — cómo comparar implementaciones o traducciones que se afirman equivalentes."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/03-comparacion.md (sha256:b5c9912848ca82e8fdef34e2ae0f84402b52cb309e24a8fa7b2960356ed0f29f) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/03-comparacion.md (sha256:b5c9912848ca82e8fdef34e2ae0f84402b52cb309e24a8fa7b2960356ed0f29f) el 2026-06-12. v1.1.0 (2026-07-18): delimita parametricidad, naturalidad, equivalencia y sus analogias con refactor/deploy."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -16,7 +16,11 @@ familia: bok
 
 ## No basta preservar
 
-No basta preservar: necesito comparar dos maneras de preservar. En mi práctica cotidiana esto aparece constantemente. Tengo dos implementaciones de un mismo servicio, dos versiones de un schema, dos maneras de procesar el mismo pipeline. Ambas respetan la estructura -- ambas son funtores legítimos. Pero quiero saber: ¿se comportan igual? ¿Puedo pasar de una a otra sin romper nada? ¿Cuándo dos cosas son "lo mismo" sin ser idénticas?
+No basta preservar: necesito comparar dos maneras de preservar. En mi práctica
+cotidiana esto aparece con dos implementaciones, versiones o pipelines. Si
+ambas se han construido como funtores paralelos, puedo preguntar por una
+transformación natural; si no, primero necesito una equivalencia observacional
+o un mapping operativo bien tipado.
 
 La composición me enseñó que las cosas se conectan. Los funtores me enseñaron que la estructura se preserva al cruzar mundos. Ahora necesito un tercer nivel: morfismos entre los funtores mismos. Necesito comparar las maneras de preservar.
 
@@ -39,7 +43,7 @@ La condición de naturalidad dice exactamente esto: **da igual qué camino tomes
 
 G(f) ∘ α_c = α_c' ∘ F(f)
 
-Cuando vi esto por primera vez, me pareció una restricción técnica. Después entendí que es exactamente lo que necesito para que un refactoring sea seguro: que no importe si primero proceso los datos y después cambio de implementación, o al revés.
+Esta condicion puede especificar un refactor uniforme **si** las implementaciones son funtores con dominio y codominio comunes. No todo refactor tiene esa forma ni la naturalidad basta para cubrir seguridad operacional.
 
 ## El polimorfismo como naturalidad
 
@@ -75,21 +79,21 @@ safeHead (fmap f (x:xs)) = safeHead (f x : fmap f xs) = Just (f x)
 
 Ambos caminos producen el mismo resultado. Esa es la naturalidad hecha código.
 
-Lo profundo aquí es lo que Milewski llama "theorems for free": en Haskell, el polimorfismo paramétrico -- una fórmula uniforme para todos los tipos -- garantiza automáticamente la condición de naturalidad. No necesito verificarla caso por caso; el sistema de tipos la impone. Toda función polimórfica `F a → G a` donde F y G son funtores ES, automáticamente, una transformación natural.
+En un calculo parametrico total adecuado, los teoremas de parametricidad pueden inducir naturalidad para terminos polimorficos de esta forma. Haskell real incluye `bottom`, `seq` y efectos que exigen precisar la categoria/semantica; la firma sola no demuestra automaticamente toda afirmacion de naturalidad.
 
 Otros ejemplos que uso diariamente: `length :: [a] -> Const Int a` es natural (la longitud no depende del tipo de los elementos), `reverse :: [a] -> [a]` es natural (invertir el orden no depende de qué son los elementos). En cada caso, la función trata al contenido como opaco y manipula solo la estructura.
 
 ## Refactoring, deploys y migraciones
 
-Fuera de Haskell, la transformación natural aparece cada vez que tengo dos implementaciones de la misma interfaz y quiero migrar de una a otra.
+Fuera de Haskell, una transformacion natural es un **modelo candidato** solo cuando ya existen dos funtores paralelos.
 
-**Refactoring.** Tengo dos módulos que implementan la misma interfaz. Cada módulo es un funtor: toma los mismos inputs (objetos del dominio) y produce outputs (respuestas del servicio). Un refactoring que transforma la implementación vieja en la nueva, componente a componente, es una transformación natural. La naturalidad dice: no importa si el usuario llama primero y yo refactorizo después, o si refactorizo primero y después el usuario llama -- el resultado debe ser el mismo.
+**Refactoring.** Dos modulos con la misma interfaz no son por ello funtores. Si se construyen funtores semanticos paralelos, un refactor uniforme puede modelarse como transformacion natural; normalmente basta primero una equivalencia observacional bien especificada.
 
-**A/B testing.** Dos versiones de un feature son dos funtores sobre el mismo dominio de usuarios. El test los compara en cada componente (segmento de usuarios). La comparación es significativa precisamente porque ambos funtores operan sobre la misma categoría de inputs -- comparten la estructura que permite contrastar componente a componente.
+**A/B testing.** Dos versiones y segmentos producen evidencia comparativa. Solo forman funtores/componentes de una natural si se definen morfismos entre inputs y se prueba la condicion para todos ellos.
 
-**Canary deploys.** La versión vieja y la nueva de un servicio son dos funtores. El rollout es una transformación natural: en cada nodo del cluster (cada componente), reemplazo F(nodo) por G(nodo). La naturalidad garantiza que el tráfico que fluye entre nodos (los morfismos mapeados por los funtores) se preserva durante la transición.
+**Canary deploys.** Un rollout gradual no es automaticamente una transformacion natural. El modelo requiere categorias, funtores paralelos y cuadrados que conmutan; los checks de trafico aportan evidencia operacional distinta.
 
-**Schema versioning.** Una migración de schema v1 a schema v2, como las que describí cuando hablé de instancias como funtores a Set, es una transformación natural entre los funtores-instancia. Para cada tabla (objeto del schema), la migración transforma los datos de v1 a datos de v2. La naturalidad exige que las foreign keys (los morfismos del schema) sigan siendo respetadas después de la migración.
+**Schema versioning.** Entre dos instancias del **mismo** schema categorial, un homomorfismo es una transformacion natural. Una migracion entre schemas distintos suele requerir primero un funtor de schemas y los funtores de migracion inducidos; no es sin mas una natural entre instancias.
 
 En bases de datos, esto se vuelve aún más preciso. Si mi schema es una categoría C y dos instancias son funtores I, J : C → Set, un homomorfismo de instancias es exactamente una transformación natural α : I ⇒ J. Para cada tabla T, α_T es una función que mapea filas de I(T) a filas de J(T), y la naturalidad dice que las foreign keys se respetan:
 
@@ -140,7 +144,7 @@ La equivalencia de ambos caminos -- la **ley de intercambio** -- es lo que hace 
 
 ## Equivalencia de categorías
 
-Aquí hay una lección que me cambió la forma de pensar. El isomorfismo entre categorías -- un funtor F : C → D con inverso estricto G : D → C tal que GF = Id_C y FG = Id_D -- es casi siempre demasiado estricto. Exigir igualdad on-the-nose entre funtores es como exigir que dos implementaciones de un servicio produzcan exactamente los mismos objetos en memoria. No tiene sentido.
+El isomorfismo estricto de categorias suele ser mas fuerte que la equivalencia, pero el criterio correcto depende de la pregunta: igualdad, isomorfismo, equivalencia categorial y equivalencia observacional no son intercambiables.
 
 Lo correcto es la **equivalencia de categorías**: dos funtores F : C → D y G : D → C con isomorfismos naturales η : Id_C ≅ GF y ε : FG ≅ Id_D. No pido que la ida-y-vuelta sea la identidad; pido que sea naturalmente isomorfa a la identidad. "Lo mismo, salvo isomorfismo consistente."
 
@@ -148,7 +152,7 @@ El teorema que lo caracteriza es elegante: F define una equivalencia si y solo s
 
 El ejemplo que tengo siempre a mano: la categoría **FVect** de espacios vectoriales de dimensión finita es equivalente a la categoría **Mat** de matrices. Los vectores "son" arreglos de números y las transformaciones lineales "son" matrices -- no exactamente lo mismo, pero equivalente en todo sentido operativo. La equivalencia dice: todo lo que puedo hacer con espacios vectoriales abstractos lo puedo hacer igualmente bien con matrices, y viceversa. Perrone lo desarrolla en detalle: el funtor es fiel (matrices distintas dan mapas distintos), pleno (toda transformación lineal se representa con una matriz), y esencialmente sobreyectivo (todo espacio de dimensión finita es isomorfo a algún R^n).
 
-Esta es LA primera gran lección del pensamiento categórico: **la igualdad estricta es demasiado rígida; la equivalencia es la noción correcta de "ser lo mismo."** La llevo a mi práctica diaria: dos servicios con APIs isomorfas son equivalentes aunque su código interno sea completamente diferente. Dos schemas que pueden traducirse mutuamente sin perder información son equivalentes.
+La equivalencia de categorias es el criterio apropiado cuando se comparan categorias como tales. APIs isomorfas no prueban equivalencia conductual de servicios, y traducciones de schemas "sin perdida" deben construirse como funtores plenamente fieles y esencialmente sobreyectivos antes de recibir ese nombre.
 
 ## Sin darme cuenta, ya pienso en dos niveles
 
@@ -166,4 +170,13 @@ No necesité aprender "2-categorías" como tema separado. Ya estaba pensando en 
 
 Perrone lo señala con honestidad: la categoría Cat, tal como se define con funtores como morfismos y conjuntos de funtores como hom-sets, no captura toda la riqueza. Los hom-spaces Hom(C, D) no son solo conjuntos -- son categorías, porque entre funtores hay transformaciones naturales, y entre naturales hay composición. Cuando los hom-spaces son categorías en lugar de conjuntos, estamos en una 2-categoría. Eso es lo que Cat realmente es.
 
-Para mí como arquitecto, esto tiene una consecuencia práctica inmediata: no solo puedo traducir entre mundos (funtores), sino que puedo comparar traducciones (naturales), y esa comparación misma tiene estructura composicional. Un refactoring se puede componer con otro refactoring, una migración se puede componer con otra migración, y las leyes de esa composición son precisas. La ingeniería de sistemas tiene naturalmente esta estructura de dos niveles -- componentes y conectores, implementaciones y migraciones, estados y transiciones -- y la 2-categoría es el lenguaje que la formaliza.
+Para arquitectura, una 2-categoria puede formalizar traducciones y comparaciones cuando se construyen sus 0-, 1- y 2-celdas y se verifican sus leyes. La mera presencia de componentes, migraciones o estados no demuestra esa estructura.
+
+## Estatuto epistemico
+
+- **Formal:** transformaciones naturales, categorias de funtores,
+  equivalencias y la 2-categoria `Cat` bajo las convenciones de tamaño.
+- **Modelo:** refactor, deploy o migracion solo con funtores y componentes
+  tipados.
+- **Heuristica:** tratar dos versiones o dos APIs como funtores equivalentes
+  sin construir la semantica.

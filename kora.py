@@ -1162,7 +1162,7 @@ MATRICES = {
                   3: (3, "full", None)}),  # always-on systemd + Telegram
         "xi": _m({0: (0, "full", None), 1: (1, "full", None),
                   2: (2, "full", None), 3: (3, "full", None),
-                  4: (4, "full", None)}),  # operad dinámica vía ACP dispatch
+                  4: (4, "full", None)}),  # delegación jerárquica vía ACP
         "lambda": _m({0: (0, "full", None), 1: (1, "full", None),
                       2: (2, "full", None),
                       3: (3, "partial", "society-in-the-loop requiere "
@@ -1221,7 +1221,7 @@ QUIEN_SOPORTA = {
 
 # Centinela canónico que delimita el span de U_phen en el cuerpo (ley/2 §10 r6).
 # Predicado literal decidible: el núcleo NO segmenta prosa (forma-no-verdad);
-# el autor marca el span y el funtor lo transporta a SOUL.md (openclaw, ley/3 §7.1).
+# el autor marca el span y el emisor lo transporta a SOUL.md (openclaw, ley/3 §7.1).
 SOUL_ABRE = "<!-- kora:soul -->"
 SOUL_CIERRA = "<!-- kora:soul:fin -->"
 RE_SOUL = re.compile(
@@ -1257,7 +1257,7 @@ class ErrorTransmutacion(Exception):
 def proyectar(vector: list, sigma: list, target: str) -> dict:
     """Proyecta el vector por la matriz del target.
 
-    Monotonía por construcción: cada eje se proyecta a
+    Monotonía por construcción: cada eje y cada componente de sigma se proyecta a
     min(valor, proyección de la matriz); nunca hacia arriba.
     Si un eje cae a None, la transmutación FALLA: jamás degradación silenciosa.
     """
@@ -1320,8 +1320,8 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
     los URN declarados, sin materializar paths (ley/3 §5 r6; cierra GENESIS §4).
 
     Proyecta `conocimiento` (kb a leer como contexto) y `componible` (otros
-    artefactos componibles) — este último refleja en el output la promesa
-    declarada-no-mecanizada `composicion-kleisli`. Devuelve [] si el artefacto
+    artefactos declarados como componibles). Esa relación no prueba una
+    composición de Kleisli. Devuelve [] si el artefacto
     no declara ninguno: un agéntico sin corpus no carga un bloque vacío, y la
     emisión queda byte-idéntica a la previa al contrato.
     """
@@ -1346,7 +1346,7 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
 
 def construir_sello(art: Artefacto, target: str, hash_hex: str,
                     proy: dict, perdidas_extra: list | None = None) -> str:
-    """El sello proof-carrying inline (ley/3 §5). Sin timestamps."""
+    """Certificado inline de procedencia y congruencia (ley/3 §5)."""
     perdidas_extra = list(perdidas_extra or [])
     perdidas = list(proy["perdidas"]) + perdidas_extra
     fid = proy["fidelidad"]
@@ -1371,10 +1371,10 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         for etiqueta, a, b, razon in perdidas:
             lineas.append(f"  {etiqueta}: {a}->{b} :: {razon}")
     # Calificación mu=3 observable (ley/3 §7.1): para un agente con materia
-    # ambiental always-on (mu=3), el funtor REALIZA la emisión del workspace
-    # conforme al techo always-on (mu:3 full, enunciado de TIPO) y DIFIERE la
-    # conducta always-on (daemon/gateway/systemd) al deploy del fleet (TOKEN).
-    # En el proof-carrier, no sólo en la ley: reconcilia el "openclaw no
+    # ambiental always-on (mu=3), el emisor REALIZA el workspace conforme al
+    # techo always-on (mu:3 full) y DIFIERE la conducta always-on
+    # (daemon/gateway/systemd) al deploy del fleet.
+    # En el portador del sello, no sólo en la ley: reconcilia el "openclaw no
     # realizado" inmutable de GENESIS con el realizado registrado en ley/3.
     if target == "openclaw" and art.campos.get("vector", [0, 0])[1] == 3:
         lineas += [
@@ -2791,7 +2791,8 @@ def principal(argv: list[str] | None = None) -> int:
     p.add_argument("--estricto", action="store_true",
                    help="añade publicacion-digna")
 
-    p = sub.add_parser("transmutar", help="proyección funtorial a un runtime")
+    p = sub.add_parser(
+        "transmutar", help="proyección reticular y emisión a un runtime")
     p.add_argument("--urn")
     p.add_argument("--target", choices=list(TARGETS_CONOCIDOS))
     p.add_argument("--aplicar", action="store_true",

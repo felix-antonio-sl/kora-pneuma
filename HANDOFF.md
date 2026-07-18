@@ -1,174 +1,159 @@
-# Handoff vigente — 2026-07-18 — agentes clínicos KORA → OpenClaw
+# Handoff vigente — 2026-07-18 — auditoría categorial integral de KORA
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> artefactos canónicos, Git ni el estado vivo de OpenClaw. La continuidad
-> detallada del despliegue está en
-> `/home/felix/openclaw-fleet/docs/handoffs/handoff-2026-07-18-2.md`; el recibo
-> verificable está en
-> `/home/felix/openclaw-fleet/docs/deploy-receipt-full-profile-urgenciologo-medico-hospitalista-2026-07-18.md`.
+> artefactos canónicos, Git ni el estado vivo de los runtimes.
 
 ## Objetivo y alcance
 
-Actualizar canónicamente `urgenciologo` y `medico-hospitalista`, incorporar
-`agent-autonomy-5`, modelar el boarding de hospitalizados en UE sin crear un
-tercer régimen, liberar su superficie técnica completa bajo Guardian y propagar
-la cadena fuente → emisiones → Fleet → runtime de forma verificable y sin PHI.
+Auditar `kora-pneuma` de extremo a extremo —mecánica, modelo de datos, ley,
+transmutación, corpus categorial, consumidores OPM y skills— usando
+`mente-omega` y `cat-thinking`; remediar errores demostrables sin expandir el
+shape ni inventar una formalización mayor que la implementada.
 
-El alcance KORA comprendió tres fuentes canónicas, sus cuatro targets y la
-paridad de cinco instalaciones por agente. El alcance OpenClaw comprendió
-blueprints, materialización, configuración efectiva, memoria autorizada,
-canarios sintéticos y documentación de despliegue. No incluyó consultar un
-paciente real, enviar mensajes, ejercitar elevado ni resolver disaster recovery
-off-host. Esas deudas operativas se adjudicaron después en Fleet y no cambian
-el alcance doctrinal de este incremento.
+Supuestos aplicados:
 
-## Estado comprobado
+1. La teoría matemática tiene precedencia sobre metáforas heredadas y URNs.
+2. Se conserva el núcleo formal que puede probarse; el resto se declara
+   modelo, heurística o metáfora según su evidencia.
+3. No se cambia el formato estable del sello ni los bytes del emisor cuando la
+   corrección es doctrinal.
+4. `no-instalada` no autoriza instalar una capacidad nueva por sorpresa.
 
-- `master` contiene y publicó `35f34e5`
-  (`feat(salud): incorporar boarding UE y autonomy 5`).
-- `urn:salud:artefacto:urgenciologo` quedó en v3.12.0.
-- `urn:salud:artefacto:medico-hospitalista` quedó en v1.9.0.
-- `urn:salud:kb:manual-agente-hsc-agent-cli` quedó en v1.0.18.
-- Ambos agentes alcanzaron `5 fiel`, `0 desviadas`, `0 no-instaladas` y
+## Veredicto
+
+El repositorio ya tenía una mecánica sólida, pero su discurso categorial
+confundía repetidamente clasificación con identidad y semejanza estructural con
+teorema. El problema principal no era ausencia de teoría de categorías, sino
+**sobreafirmación**: se llamaban funtores, adjunciones, bisimulaciones,
+pushouts, sheaves, topoi u operads a mappings y patrones aún no tipados.
+
+Tras este incremento:
+
+- la firma PMI×LFS **clasifica** y no individúa;
+- la proyección numérica por target es el único funtor propio de KORA
+  demostrado en este alcance;
+- esa proyección es un coreflector entre categorías delgadas;
+- la emisión completa es serialización determinista, no funtor demostrado;
+- el sello certifica procedencia, proyección y congruencia, no naturalidad,
+  safety, bisimulación ni composición Kleisli;
+- las relaciones del frontmatter son grafos generadores; la categoría libre de
+  caminos y el orden por alcanzabilidad son construcciones derivadas;
+- el corpus ICAS declara localmente si una aplicación es formal, un modelo bajo
+  hipótesis, una heurística o una metáfora.
+
+## Núcleo formal añadido
+
+`urn:kora:kb:cat-kora-kernel` prueba:
+
+1. las firmas bien formadas constituyen un subretículo acotado `V`;
+2. cada dominio soportado `D_T` y su imagen `I_T` son categorías delgadas;
+3. `P_T(v)=min(v,c_T)` es monótono, descendente e idempotente;
+4. para la inclusión `J_T : I_T -> D_T`, se cumple `J_T ⊣ P_T`;
+5. el coreflector no se extiende automáticamente al transporte de cuerpos,
+   archivos o conducta.
+
+El contraejemplo vivo `cat-thinking`/`ifml` demuestra que igual arnés, forma,
+vector y sigma no implican mismo artefacto, tipo semántico ni bisimulación.
+
+## Superficies corregidas
+
+- `ALMA.md` y `ley/0..4`: identidad, frontera formal, coreflexión, relaciones,
+  alcance del sello y estatus de koraficación.
+- `kora.py`: terminología y documentación del contrato; el algoritmo y los
+  bytes emitidos no cambiaron.
+- `cat-agent-coalgebra`: tipo reactivo corregido a
+  `H(X)=(M(O×X))^I` y `c:U->H(U)`.
+- `cat-agent-modulo`, `cat-foundations`, `aufbau-persona-agente` y
+  `alma-de-kora`: retirada de isomorfismos y puentes no demostrados.
+- 24 piezas ICAS: correcciones locales de functorialidad, adjunciones,
+  universalidad, (co)álgebras, efectos, enriquecimiento, topoi, temporalidad,
+  infraestructura, calidad y procesos.
+- Puente OPM y cuatro consumidores: una firma de frontera solo expresa
+  equivalencia observacional relativa; merge/pushout y dualidades quedan
+  condicionados a su construcción.
+- `cat-thinking` y referencias: regla adversarial de estatus más débil,
+  fuentes primarias y obligación de tipar categorías, morfismos y leyes.
+- `autoria-de-persona`, `agent-architect`,
+  `auditoria-artefactos-kora`, `modelamiento-opm` y canon de diseño:
+  eliminación de inferencias de identidad o garantía a partir de firma/sello.
+
+## Evidencia de cierre
+
+- `python3 kora.py velar --estricto`: 13/13 checks.
+- `python3 -m unittest discover -s tests`: 189 pruebas, todas verdes.
+- Se añadieron propiedades exhaustivas de matrices: dominio inicial,
+  monotonía, descenso, idempotencia, adjunción y preservación de las cinco
+  leyes inter-eje.
+- Se añadió prueba de que dos URNs pueden compartir firma sin colapsar
+  identidad y de que `depende` no exige cierre transitivo materializado.
+- `git diff --check` y `python3 -m py_compile kora.py`: verdes.
+- Paridad global: `116 fiel`, `0 desviadas`, `11 no-instaladas`,
   `0 sin-emisión`.
-- KORA cerró con `velar --estricto` 13/13 y 185 pruebas.
-- Fleet publicó el contrato clínico en `74080d3`, el espejo documental en
-  `07dd9dd` y el recibo final en `684bcb6`.
-- Al cierre de ese incremento, el gate Fleet vivo pasó 33/33 y los canarios
-  ejecutaron `gpt-5.6-sol` mediante el arnés Codex, sin fallback.
-- La cascada operativa posterior cerró backup off-host con restore ensayado,
-  cola outbound y hardening de memoria en `dee0ed2`; el último gate Fleet vivo
-  pasó 40/40, sin fallos, advertencias ni omisiones.
 
-Estos resultados son evidencia histórica de los commits indicados. El estado
-actual se vuelve a consultar; no se infiere desde este handoff.
+## Emisiones e instalaciones
 
-## Decisiones consolidadas
+Se regeneraron las 18 superficies derivadas de:
 
-1. **UE boarding es ubicación, no régimen.**
-   `S-HOSPITAL_UE_BOARDING` es subestado micro-asistencial de `S-HOSPITAL`.
-   Sale a `S-HOSPITAL` cuando termina el boarding, a `S-END` al cerrar el pase
-   y deriva a urgencias si el caso no está hospitalizado.
-2. **SGH demuestra hospitalización.** `find --hospitalizados` es fuente
-   primaria; DAU complementa y nunca prueba por sí solo hospitalización.
-3. **El estado vivo resuelve salas.** No se congelan IDs ni nombres observados
-   en pruebas.
-4. **Autonomía factual, juicio clínico humano.** El CLI expone hechos,
-   handles y planes de consulta. Priorización, SOAP, inferencia, propuesta y
-   decisión final permanecen fuera del CLI.
-5. **Contrato masivo explícito.** `batch_plan.requests[].command_args` se sigue
-   en serie. Un singleton puede omitir `batch_plan` y usar `entry.handle` o
-   `best_current_context`. En stream mandan `envelope.state` y
-   `envelope.error_code`; `summary` es opcional.
-6. **Capacidad técnica no es autoridad.** `profile=full` habilita web,
-   escritura, memoria, mensajería, sesiones y subagentes, pero no autoriza
-   acciones clínicas, destructivas o externas.
-7. **Guardian es la postura normal de shell.** `tools.exec.mode=auto` se
-   materializa en Codex como shell nativo `bash` con revisión Guardian. La
-   allowlist durable contiene solo `hsc-agent-cli` y `rg`; los misses pasan por
-   revisión y terminan en deny si no existe aprobación.
-8. **Memoria clínica no se promueve.** La búsqueda usa KORA y memoria curada;
-   `sessionMemory=false`. `/new` separa contexto, pero no borra transcripciones.
-   El delta del pase es efímero y no se convierte en tabla, memoria, log,
-   mensaje, repo o delegación.
-9. **La cadena de autoridad se preserva.** Un archivo sellado se corrige en
-   KORA, se reemite, se lleva al blueprint y recién después se materializa.
-   Runtime y blueprint no son fuentes doctrinales.
+- `auditoria-artefactos-kora`;
+- `autoria-de-persona`;
+- `cat-thinking`;
+- `modelamiento-opm`;
+- `agent-architect`.
 
-## Aprendizajes duraderos
+Se actualizaron las doce instalaciones que ya existían en Claude Code, Codex y
+OpenCode para las cuatro skills. No se instaló `agent-architect` en targets
+donde ya figuraba ausente ni la variante OpenClaw de `autoria-de-persona`;
+`no-instalada` es informativo y no bloquea.
 
-### Hechos comprobados
+## Fuentes primarias contrastadas
 
-- La policy efectiva de shell es la intersección entre config y approvals del
-  host. Un warning estático de `security=full` global no reemplaza
-  `openclaw exec-policy show` para conocer la postura del agente.
-- En el arnés Codex, pedir literalmente una herramienta llamada `exec` puede
-  producir un falso negativo; la ejecución nativa se observa como `bash`, aun
-  cuando su gobierno siga siendo `tools.exec.mode`.
-- `sessionMemory=false` evita indexar conversaciones; no garantiza que el
-  runtime no conserve archivos de transcript.
-- El espejo oficial puede avanzar durante un despliegue. La frescura se cierra
-  sincronizando y repitiendo el gate vivo al final, no confiando en el SHA
-  observado al inicio.
-- Un archivo runtime no gestionado con evidencia de prueba no se copia al
-  blueprint ni a Git. Se retira una vez que su valor reusable está canonizado.
-- El estado Git debe revisarse otra vez justo antes de stage y push: un árbol
-  limpio puede recibir trabajo concurrente después de un gate verde.
+- Libkind y Spivak, *Pattern Runs on Matter*:
+  https://arxiv.org/abs/2404.16321
+- Riehl, *Category Theory in Context*:
+  https://emilyriehl.github.io/files/context.pdf
+- Rutten, *Universal Coalgebra*:
+  https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf
+- Stacks Project, *Sheafification*:
+  https://stacks.math.columbia.edu/tag/007X
+- Schultz y Spivak, *Temporal Type Theory*:
+  https://arxiv.org/abs/1710.10258
+- Schultz, Spivak y Vasilakopoulou, *Dynamical Systems and Sheaves*:
+  https://arxiv.org/abs/1609.08086
 
-### Decisiones adoptadas
+## Deudas explícitas
 
-- Mantener el perfil `full` pedido, pero conservar Guardian, owner-only para
-  elevado y prohibición de propagación de PHI.
-- Mantener la skill `asistencial-hospital` única y componible; no duplicarla
-  dentro de hospitalista.
-- Tratar las pruebas sin pacientes reales como una garantía de privacidad, no
-  como una demostración de HCC completo.
-
-### Hipótesis no promovidas
-
-- No se concluye que HCC esté indisponible: su health es parcial porque una
-  prueba real requiere un caso autorizado.
-- No se concluye que el build post-tag de HSC sea release: `de1e0b7` está limpio
-  y contiene `agent-autonomy-5`, pero sigue siendo posterior a v3.1.1.
-
-## Alternativas descartadas
-
-- Crear un tercer modo asistencial para UE: confunde ubicación con régimen.
-- Usar DAU como prueba primaria de hospitalización: degrada la verdad factual.
-- Mover priorización al CLI: mezcla adquisición de hechos con juicio clínico.
-- Ejecutar lotes en paralelo: aumenta tormentas y contradice el contrato.
-- Persistir el tablero delta: crea una segunda fuente con riesgo de PHI.
-- Habilitar shell sin revisión: contradice la preferencia explícita por
-  Guardian.
-- Copiar el informe de prueba a memoria o repositorio: duplica doctrina y puede
-  transportar identificadores.
-
-## Artefactos canónicos afectados
-
-- `artefactos/agentes/salud/urgenciologo.md`: v3.12.0 y
-  `agent-autonomy-5`.
-- `artefactos/agentes/salud/medico-hospitalista.md`: v1.9.0,
-  `S-HOSPITAL_UE_BOARDING`, transiciones y fronteras.
-- `artefactos/conocimiento/salud/manual-agente-hsc-agent-cli.md`: v1.0.18,
-  lote/singleton/stream y procedencia del build HSC.
-- `_emision/` e instalaciones de Claude Code, Codex, OpenCode y OpenClaw:
-  derivados regenerables, no fuentes.
-- `HANDOFF.md`: única memoria operativa vigente de KORA.
-
-Los artefactos Fleet y runtime se enumeran en el handoff Fleet; no se duplican
-aquí.
-
-## Riesgos y pendientes
-
-- Publicar un release HSC que incorpore formalmente `agent-autonomy-5`.
-- HCC continúa parcialmente probado hasta que exista un caso legítimo.
-- El perfil `full`, sesiones visibles y escritura fuera del workspace amplían
-  el blast radius; los controles conductuales no son DLP.
-- Mensajería, elevado y entrega Telegram no se probaron mediante efectos reales.
-- Active Memory queda pendiente de observación no invasiva en un chat directo
-  normal; los comandos headless no ejercitan esa ruta por diseño.
+1. No existe todavía una categoría de artefactos y otra de productos runtime
+   con acción del emisor sobre morfismos.
+2. `naturalidad-xi`, `cierre-safety` y `composicion-kleisli` son nombres
+   históricos de deuda, no propiedades verificadas.
+3. No hay puente formal demostrado PMI×LFS -> `Poly` ni desde la firma hacia
+   la coálgebra conductual.
+4. La auditoría corrige afirmaciones categoriales; no valida empíricamente cada
+   paper aplicado ni convierte todo ICAS en un desarrollo formal completo.
+5. La continuidad clínica/OpenClaw anterior permanece en
+   `_archivo/HANDOFF-2026-07-18-agentes-clinicos-openclaw.md` y en el handoff
+   vigente de `openclaw-fleet`; sus pendientes operativos no fueron alterados.
 
 ## Siguiente acción recomendada
 
-Observar Active Memory durante el próximo chat directo normal de un agente
-optado, sin generar mensajería artificial ni logging persistente. Después,
-publicar un release HSC que contenga `agent-autonomy-5`; HCC se prueba
-únicamente dentro de atención autorizada.
+Si se desea ampliar el núcleo formal, elegir **un solo puente** con valor
+operacional —preferentemente una categoría mínima de artefactos y una semántica
+de observación del emisor—, definir objetos/morfismos y probar leyes antes de
+recuperar términos como naturalidad o bisimulación. No expandir PMI×LFS ni el
+sello mientras esa utilidad no esté demostrada.
 
 ## Cómo retomar
 
-1. Leer `CLAUDE.md`, este `HANDOFF.md` y el estado Git vivo.
-2. Resolver las tres URN anteriores con `python3 kora.py nombre <URN>`.
-3. Ejecutar `python3 kora.py velar --estricto` y
-   `python3 -m unittest discover -s tests`.
-4. Para cualquier cambio agéntico, repetir paridad por URN antes de tocar Fleet.
-5. Leer el handoff vigente de Fleet y comprobar un árbol limpio antes de
-   materializar o modificar config.
+1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
+2. Ejecutar `python3 kora.py velar --estricto` y la suite completa.
+3. Leer `urn:kora:kb:cat-kora-kernel` antes de modificar ley o transmutación.
+4. Aplicar la rúbrica de `cat-thinking`: formal > modelo > heurística >
+   metáfora, usando siempre el estatus más débil suficiente.
+5. Ante cambios agénticos, reemitir, pasar gates y verificar paridad por URN;
+   ante cambios de `ley/3` o del emisor, ejecutar paridad global.
 
 ## Rollback
 
-Usar `git revert`, nunca `reset --hard`. Revertir primero el incremento Fleet y
-después `35f34e5` solo si se decide retirar también la doctrina. Tras cualquier
-reversión, reemitir, comprobar paridad, materializar y ejecutar canarios nuevos.
-No volver a workspaces clínicos históricos ni restaurar memoria episódica como
-atajo.
+Usar `git revert`, nunca `reset --hard`. Tras revertir, regenerar las cinco URNs
+afectadas y repetir `velar`, tests y paridad global. Las instalaciones externas
+deben reconciliarse mediante `transmutar --aplicar`, no editarse a mano.

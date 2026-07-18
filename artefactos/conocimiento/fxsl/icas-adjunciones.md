@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-adjunciones
 nombre: icas-adjunciones
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 06 del ICAS-BoK: adjunciones — unit/counit, free/forgetful, Sigma-Delta-Pi y conexiones de Galois; tradeoffs relajación/formalización y migración con preservación de constraints."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/06-adjunciones.md (sha256:53c5c8fa0c1e3ede1b13e35526862e9b3ee4e5b5f3256f6300f25758207c194c) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/06-adjunciones.md (sha256:53c5c8fa0c1e3ede1b13e35526862e9b3ee4e5b5f3256f6300f25758207c194c) el 2026-06-12. v1.1.0 (2026-07-18): corrige unit/counit, round-trips, preservacion de constraints y retorica de optimalidad."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -14,11 +14,13 @@ familia: bok
 
 # Adjunciones
 
-## El mecanismo óptimo de traducción
+## Una correspondencia universal entre traducciones
 
 Llevo cinco documentos construyendo un vocabulario: composición, preservación, comparación, identidad relacional, y ahora construcciones universales. Y hay un hilo que reaparece en cada una. Cuando traduzco entre mundos con funtores, hay traducciones que están "perfectamente emparejadas" -- una va en un sentido y la otra en el sentido contrario, y juntas forman algo mejor que un simple par de funtores. No son inversas (eso sería una equivalencia), pero están coordinadas de una manera que genera estructura nueva.
 
-Esa coordinación se llama **adjunción**, y es posiblemente el concepto más ubicuo de toda la teoría de categorías. Saunders Mac Lane dijo que los conceptos surgen cuando se encuentran adjunciones. Después de trabajar con ellas, estoy convencido de que tenía razón: cada par de operaciones que "van y vienen" de manera natural resulta ser una adjunción cuando lo miro con cuidado.
+Esa coordinacion se llama **adjuncion**. Muchos pares importantes la realizan,
+pero un viaje de ida y vuelta no basta: se necesita la biyeccion natural de
+hom-sets o, equivalentemente, unidad/counidad con identidades triangulares.
 
 ## La definición: unit y counit
 
@@ -36,11 +38,15 @@ que satisfacen las **identidades triangulares**:
 R(ε_c) ∘ η_{R c} = id_{R c}
 ```
 
-La unit η me permite "introducir" el viaje de ida y vuelta R ∘ L: dado cualquier objeto d en D, obtengo un morfismo η_d : d → R(L(d)) que mete a d en la imagen del viaje redondo. Es como una inyección canónica.
+La unit η aporta un morfismo canonico `η_d : d → R(L(d))`. No tiene por que ser
+inyectivo/monomorfismo.
 
-La counit ε me permite "eliminar" el viaje L ∘ R: dado cualquier c en C, obtengo ε_c : L(R(c)) → c que proyecta desde la imagen del viaje redondo de vuelta al original. Es como una evaluación canónica.
+La counit ε aporta `ε_c : L(R(c)) → c`; tampoco tiene por que ser una
+proyeccion o epimorfismo.
 
-Las identidades triangulares garantizan coherencia: si primero introduzco con η y luego elimino con ε, recupero lo que tenía. Pero nota la asimetría: R ∘ L no es necesariamente la identidad, ni L ∘ R tampoco. La adjunción no es un isomorfismo -- es algo más sutil y más útil.
+Las identidades triangulares dicen que dos compuestos especificos sobre `L` y
+`R` son identidades. No dicen que cualquier objeto sobreviva sin perdida al
+viaje redondo: `R ∘ L` y `L ∘ R` no son necesariamente identidades.
 
 ## La definición equivalente: isomorfismo de hom-sets
 
@@ -74,7 +80,9 @@ Un ejemplo concreto: la función techo ⌈·⌉ : R → Z y la inclusión i : Z 
 
 El left adjoint (techo) es la mejor aproximación entera por arriba compatible con el orden. El right adjoint (inclusión) preserva la estructura exacta. Dualmente, la inclusión es left adjoint de la función piso. Este patrón aparece en cada par de niveles de abstracción que manejo: un lado aproxima, el otro retiene estructura.
 
-El Adjoint Functor Theorem para preórdenes dice algo poderoso: si un poset tiene todos los meets y un mapa monótono los preserva, entonces ese mapa es right adjoint -- el left adjoint existe automáticamente. Esto explica por qué tantas construcciones "obvias" en la práctica resultan ser adjunciones: si preservas suficiente estructura, tu pareja óptima existe gratis.
+Para reticulos completos, un mapa monotono que preserva todos los meets
+(incluido el vacio) es adjunto derecho. Fuera de esas hipotesis no se infiere
+una adjuncion de que una operacion "parezca preservar".
 
 ## Free/forgetful: el arquetipo
 
@@ -141,7 +149,8 @@ donde:
 
 El paper de Spivak lo ilustra con un ejemplo concreto. Si tengo un esquema C con dos tablas T1 (SSN, First, Last) y T2 (First, Last, Salary), y un esquema D con una sola tabla T que unifica ambas, entonces:
 
-- Δ_F(J) divide la tabla unificada en las dos originales (proyección).
+- Δ_F(J) reindexa/proyecta la instancia unificada sobre las entidades y
+  atributos que F asigna a T1 y T2.
 - Σ_F(I) toma la unión de T1 y T2 en una sola tabla, inventando variables Skolem para los campos que faltan (T1 no tiene Salary, T2 no tiene SSN).
 - Π_F(I) hace el join de T1 y T2, quedándose solo con los registros que matchean en First y Last.
 
@@ -167,7 +176,9 @@ mapping F = literal : S -> T { ... }
 -- Π_F produce el join
 ```
 
-Lo que me impresionó del CQL paper es que la garantía de corrección no es ad hoc: viene del hecho de que Σ, Δ y Π son adjuntos. Las "round-trip properties" (Σ_F Δ_F y Δ_F Π_F se comportan bien) son consecuencias directas de las identidades triangulares. La categoría hace el trabajo pesado.
+Las adjunciones proporcionan unidades, counidades e identidades triangulares
+para esos viajes. Son leyes de coherencia, no garantias de round-trip
+lossless: unidad o counidad solo son isomorfismos bajo hipotesis adicionales.
 
 ## Qué preserva cada adjunto
 
@@ -175,16 +186,18 @@ La triple adjunción no solo migra datos -- transporta (o destruye) las constrai
 
 Una constraint en el esquema fuente puede ser una path equation (dos caminos producen el mismo resultado), un monomorfismo (inyectividad, como UNIQUE), una condición de existencia formulada por límites, o una condición más extensional como la sobreyectividad. La pregunta es: si la constraint vale en el esquema fuente, ¿sigue valiendo después de migrar con Δ, Σ o Π? Aquí conviene ser cuidadoso: no todas las constraints se preservan por los mismos argumentos.
 
-| Constraint | Δ_F (pullback) | Σ_F (pushforward izq.) | Π_F (pushforward der.) |
-|---|:---:|:---:|:---:|
-| Path equations | **Sí** | No en general | **Sí** |
-| Monomorfismos / inyectividad | **Sí** por reindexación | No en general | A menudo sí, pero depende del contexto exacto |
-| Constraints expresables por límites finitos | **Sí** | No en general | **Sí** |
-| Epimorfismos / sobreyectividad | No automáticamente | No automáticamente | No automáticamente |
+Lo garantizado al nivel de categorias de instancias es:
 
-Las razones son estructurales. Δ_F es precomposición -- no transforma datos, solo los reindexiza -- así que preserva ecuaciones y constraints locales expresadas en el propio esquema. Π_F usa límites para construir los datos migrados, y por eso es el operador conservador cuando la propiedad está formulada límite a límite. Σ_F usa colímites, y los colímites pueden colapsar distinciones: dos elementos que eran distintos en el esquema fuente pueden identificarse en el target, destruyendo inyectividad; dos paths que eran iguales pueden divergir después del coend que computa la unión. La sobreyectividad y otras propiedades puramente extensionales requieren un análisis aparte: no vienen garantizadas solo por ser right adjoint.
+| Funtor | Garantia estructural |
+|--------|-----------------------|
+| `Δ_F` (precomposicion) | preserva limites y colimites calculados punto a punto |
+| `Σ_F` (adjunto izquierdo) | preserva colimites |
+| `Π_F` (adjunto derecho) | preserva limites |
 
-La regla de decisión que uso: **si necesito garantías fuertes de integridad, Δ o Π. Si acepto pérdida controlada a cambio de generalización, Σ -- pero documento exactamente qué constraints se pierden y por qué.** Cada constraint perdida en una migración Σ es deuda técnica categórica: invisible en el momento, explosiva cuando alguien asume que la constraint sigue vigente.
+Traducir `UNIQUE`, existencia, ecuaciones, nulabilidad o sobreyectividad a esas
+formas requiere especificar la constraint y comprobar que cae bajo la
+garantia. No existe una regla general "Δ/Π = integridad fuerte, Σ = perdida":
+la eleccion depende del tipo de migracion y de la propiedad expresada.
 
 ## La doble categoría de los datos
 
@@ -221,7 +234,10 @@ El marco se llama **proarrow equipment** (o framed bicategory): Data es una dobl
 2. **Queries** (bimodules horizontales) → consultas composicionales.
 3. **Vistas** (2-celdas) → queries parametrizadas por mappings.
 
-En el mundo SQL, las migraciones se escriben en DDL, las queries en DQL, y las vistas como wrappers. Son tres lenguajes con tres semánticas. En Data, las tres son dimensiones de la misma estructura doble-categorial, y la composición es coherente entre dimensiones. Puedo migrar un esquema y automáticamente saber cómo se transforman las queries -- porque la doble categoría garantiza que las dimensiones vertical y horizontal interactúan según leyes precisas.
+En el equipment `Data` citado, mappings, bimodules y 2-celdas interactúan por
+leyes precisas. Traducir DDL/DQL/vistas reales a esa estructura es trabajo
+semántico adicional; solo las queries representadas por el modelo heredan la
+transformación coherente.
 
 ## Adjunciones en la práctica cotidiana
 
@@ -259,10 +275,29 @@ que toma un par (función, argumento) y produce el resultado. Es la eliminación
 
 ## El principio unificador
 
-Las adjunciones son el mecanismo universal de traducción óptima. Cada vez que tengo dos mundos y dos formas de ir y venir entre ellos, con la propiedad de que "preguntar aquí después de traducir" equivale a "preguntar allá antes de traducir," estoy ante una adjunción.
+Una adjuncion caracteriza una correspondencia natural entre hom-sets. Puede
+interpretarse como aproximacion universal en casos concretos, pero "optima" no
+significa mejor rendimiento, fidelidad o menor perdida.
 
-El left adjoint encuentra la mejor aproximación en un sentido: la más libre, la más compacta, la que pierde menos. El right adjoint encuentra la mejor aproximación en el otro sentido: la más fiel, la que preserva más estructura, la que olvida con gracia. Y la isomorfía de hom-sets garantiza que ambas vistas son perfectamente consistentes.
+Algunos adjuntos izquierdos son libres/reflexiones y algunos derechos son
+inclusiones/cofree; no todos admiten las lecturas "compacta", "fiel" o "pierde
+menos". La afirmacion segura es la biyeccion natural y sus consecuencias
+universales.
 
-Esto me ha cambiado la manera de diseñar sistemas. Cuando detecto que un par de operaciones forma una adjunción, sé que: (1) la traducción es óptima en ambas direcciones, (2) los right adjoints preservan límites automáticamente, (3) la composición R ∘ L genera una monad que captura el efecto del viaje redondo, y (4) las propiedades de round-trip son teoremas, no esperanzas.
+Cuando se demuestra una adjuncion, se que: (1) existe la biyeccion natural, (2)
+el adjunto derecho preserva limites existentes, (3) `R ∘ L` induce una monada y
+(4) unidad, counidad e identidades triangulares gobiernan el round-trip. No se
+deduce que este sea invertible ni lossless.
 
-Las construcciones universales del documento anterior me dieron la mejor solución a cada problema estructural. Las adjunciones me dan el mecanismo óptimo para traducir entre las soluciones de distintos mundos. Y juntas, construyen los cimientos para todo lo que viene después.
+Construcciones universales y adjunciones dan garantias precisas dentro de
+categorias tipadas. Su traduccion a una decision de ingenieria conserva siempre
+las hipotesis y metricas del dominio.
+
+## Estatuto epistemico
+
+- **Formal:** equivalencia entre hom-biyeccion y unidad/counidad, preservacion
+  de limites/colimites y `Sigma ⊣ Delta ⊣ Pi` bajo sus hipotesis.
+- **Modelo:** pares cotidianos, constraints de datos y "round-trips" solo tras
+  construir categorias y probar las propiedades adicionales.
+- **Metafora:** llamar adjuncion a cualquier ida/vuelta o atribuirle optimalidad
+  operacional.

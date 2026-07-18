@@ -1,7 +1,7 @@
 ---
 urn: urn:fxsl:kb:spec-forja-opl-es
 nombre: spec-forja-opl-es
-version: 1.3.0
+version: 1.3.1
 estado: publicado
 descripcion: "Spec-forja OPL — SSOT del lenguaje OPL de OPFORJA: generación, parsing y roundtrip bimodal del OPL en el modelador deep-opm-pro."
 fuente: "SSOT OPM v1.2.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:753e9d194635416a427674f5a21ebb3cbedb0452ba5c4a8ed87832023e3a946f) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3) y el re-sync v1.2.1 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.2.2: cierre del orden de descomposicion (GAP-CX-PARSER y GAP-FIXTURE-DESCOMPOSICION marcados orden cerrado; opd.ordenInzoom via set-orden-inzoom con verificacion por inversa; roundtrip estricto en invocacion-implicita-bimodal.test.ts). Delta v1.3.0 (2026-07-09, firma HITL del custodio): excepcion de apunte a R-ENT-2 (R-ENT-2-APUNTE) — en especie apunte los placeholders emiten OPL en toda la generacion incluida la canonica; neutraliza GAP-PLACEHOLDER-OBJETO para apuntes; origen BUG-76af16 deep-opm-pro."
@@ -2902,14 +2902,20 @@ Rationale: `urn:fxsl:kb:reglas-opm-estrictas-es` como SSOT prescriptiva y `opm-o
 
 ## §24 Composición por interfaz (modelo ∘ modelo)
 
-La composición une dos modelos identificando entidades de **interfaz compartida**; es el dual **horizontal** del refinamiento (que es vertical). NO introduce verbo OPL nuevo: el OPL del modelo compuesto es la **unión de los párrafos OPL** de los modelos fuente, con la entidad compartida apareciendo **una sola vez**.
+La composición une dos modelos identificando entidades de **interfaz
+compartida**. «Horizontal» distingue este gesto del refinamiento vertical; no
+afirma dualidad categorial. NO introduce verbo OPL nuevo: el OPL compuesto es
+la unión deduplicada de párrafos, con la entidad compartida una sola vez.
 
-- **R-§24-COMP-1**: dos modelos PUEDEN componerse identificando un conjunto de entidades compartidas (mapeo `entidad_B → entidad_A`). La sugerencia por defecto empareja por **nombre normalizado + mismo tipo OPM**; la identidad por id solo vale si el nombre también coincide (los ids son secuenciales por modelo y colisionan entre modelos independientes). *(Rationale: pushout / structured cospan, `urn:fxsl:kb:icas-universales`; `reglas-opm-estrictas-es §Anexo C / R-CAT-COMP-1`.)*
+- **R-§24-COMP-1**: dos modelos PUEDEN componerse identificando un conjunto de entidades compartidas (mapeo `entidad_B → entidad_A`). La sugerencia por defecto empareja por **nombre normalizado + mismo tipo OPM**; la identidad por id solo vale si el nombre también coincide. *(Rationale operativo: unión por interfaz; pushout / structured cospan solo como formalización candidata sujeta a universalidad, `urn:fxsl:kb:icas-universales`; `reglas-opm-estrictas-es §Anexo C / R-CAT-COMP-1`.)*
 - **R-§24-COMP-2**: en el OPL del compuesto, una entidad compartida DEBE emitir sus oraciones de designación **una sola vez**; sus enlaces provenientes de ambos modelos fuente DEBEN consolidarse bajo esa identidad sin duplicar la entidad ni su apariencia. Las entidades no compartidas del modelo B se namespacean para evitar colisión de ids, conservando su nombre OPL. *(Enforcement: `law-composicion-no-duplica`, `law-composicion-sin-refs-colgantes`.)*
 - **R-§24-COMP-3**: la composición DEBE ser asociativa módulo namespacing (`(A∘B)∘C` y `A∘(B∘C)` producen el mismo OPL salvo ids) y NO DEBE introducir oraciones OPL inválidas que no estuvieran ya en A o B. *(Enforcement: `law-composicion-asociativa`, `law-composicion-bien-tipada`.)*
 - **R-§24-COMP-4**: la composición es **no-bloqueante y reversible**; si la fusión crea un conflicto de recurso lineal (un objeto `lineal` consumido por procesos de ambos modelos), DEBE advertirse —no impedirse— en el resultado. *(Enforcement: `law-composicion-respeta-lineal`; ver `reglas-opm-estrictas-es §Anexo C / R-CAT-LIN-2`.)*
 
-**Traza a código**: operación `app/src/modelo/composicion/componer.ts` (`componerModelos`: namespacing + dedup de entidad/apariencia compartida + remapeo de referencias anidadas); sugerencia y preview de interfaz `app/src/modelo/composicion/interfaz.ts` (`sugerirCompartidasPorInterfaz`, `resumenComposicion`); leyes `app/src/leyes/composicion.test.ts` y `app/src/modelo/composicion/componer.test.ts`. La lectura categorial (pushout) vive bajo la superficie; nunca se expone al modelador.
+**Traza a código**: operación `app/src/modelo/composicion/componer.ts`
+(`componerModelos`: namespacing + dedup + remapeo), preview de interfaz y
+tests citados. Estos verifican invariantes operativos; no prueban la propiedad
+universal de pushout.
 
 Rationale: el eje horizontal de OPM (composición de modelos) carecía de tratamiento OPL operativo; esta sección lo fija como **unión deduplicada de párrafos sobre interfaz compartida**, trazable a la capacidad implementada y verificada en deep-opm-pro y a la regla normativa `reglas-opm-estrictas-es §Anexo C / R-CAT-COMP`. Adición compatible (minor bump 1.1.0): no altera familias OPL existentes.
 

@@ -2,7 +2,7 @@
 
 > Documento fundacional de esta encarnación. Fue destilado de la encarnación
 > anterior (`~/kora`, "la bestia") el 2026-06-11, leyendo su constitución, su
-> corazón ontológico, su columna de serialización, su ley funtorial de
+> corazón ontológico, su columna de serialización, su ley de
 > transmutación y su base categorial. Todo lo que este cuerpo nuevo realiza
 > debe poder trazarse a este documento. Lo que este documento no exige, este
 > cuerpo no carga.
@@ -15,8 +15,9 @@ hosts, versiones) y ascendiera al plano de las esencias.*
 ## I. Qué ES — su naturaleza ontológica
 
 Despójala de su filesystem y KORA no se evapora: se revela. Lo que queda no es
-un repositorio ni una herramienta. Lo que queda es **una ley de identidad para
-entidades que aún no han nacido a un cuerpo concreto** — un lugar donde un
+un repositorio ni una herramienta. Lo que queda es **una ley de clasificación
+y trazabilidad para entidades que aún no han nacido a un cuerpo concreto** —
+un lugar donde un
 agente, una capacidad o un cuerpo de conocimiento existen como *lo que son*
 antes de existir como *donde corren*.
 
@@ -26,11 +27,12 @@ Su naturaleza tiene tres estratos, y solo el primero es esencial:
 de artefactos, sino el espacio que los hace posibles: el retículo PMI × LFS de
 `harness-spec`. Seis ejes — Plan (Π), Materia (Μ), Interacción (Ξ), Nivel
 sociotécnico (Λ), Acoplamiento humano (Φ) y el vector ético Σ — sobre los
-cuales todo artefacto agéntico no *se describe*, sino que **es un punto**. La
-afirmación constitucional es severa y bella: *dos artefactos con el mismo
-vector ontológico son categóricamente equivalentes aunque sus serializaciones
-difieran; dos con vectores distintos son categóricamente distintos aunque se
-vean idénticos.* La identidad no vive en el texto. Vive en la posición.
+cuales todo artefacto agéntico recibe una **firma clasificatoria**. Dos
+artefactos con la misma firma ocupan la misma celda del clasificador; de ello
+no se sigue que sean el mismo objeto, que tengan la misma conducta ni que sean
+bisimilares. El URN da identidad nominal y el cuerpo, el conocimiento, las
+herramientas y el arnés pueden distinguir dos habitantes de una misma celda.
+La firma no individúa: hace comparables perfiles finitos.
 
 **Es una distinción antes que un contenido.** KORA insiste, con disciplina
 casi monástica, en que gestiona *tres tipos de artefacto y solo tres* —
@@ -41,19 +43,19 @@ válido.** Esta es la distinción que la constituye: la frontera entre la
 separar el qué-se-produce del qué-hace-válido-lo-producido. Sin esa frontera
 no hay KORA; hay solo una carpeta de archivos.
 
-**Es una garantía antes que una promesa.** Su principio rector — *vector
-ontológico PMI × LFS + shape unificado de autoría + transmutación funtorial* —
-no se presenta como definición sino como *garantía formal*. KORA no dice "soy
-esto"; dice "esto es lo que sostengo, y aquí está el aparato que verifica que
-lo sostengo". Su esencia es la de un sistema que **se debe a sí mismo una
-prueba.**
+**Es una garantía antes que una promesa.** Su principio rector — *firma
+PMI × LFS + shape unificado de autoría + proyección reticular y emisión
+determinista* — distingue garantías formales de garantías operacionales. KORA
+demuestra el núcleo de orden y proyección, y prueba por checks la integridad,
+la procedencia y la congruencia de lo emitido. No llama teorema a lo que solo
+es contrato o evidencia.
 
-En el axioma de `harness-spec`, tomado de Libkind-Spivak, late lo más
-profundo: un sistema agéntico *es la interacción entre un plan finito (mónada
-libre `m_p`) y una materia infinita (comónada cofree `c_q`), modulada por una
-ley `Ξ`.* KORA, en su alma, es el guardián de esa tríada irreducible — plan
-finito, materia infinita, ley que los acopla — para toda entidad que pretenda
-ser un agente. **Lo demás es variación, contexto o presentación de la tríada.**
+En el trabajo de Libkind-Spivak late una intuición fértil: en la categoría
+monoidal `Poly`, las mónadas libres describen árboles de decisión terminantes
+y las comónadas cofree, patrones de materia que los ejecutan. Ese resultado
+formal no convierte automáticamente los ordinales PMI en tales construcciones.
+KORA adopta plan, materia e interacción como **modelo de diseño inspirado** en
+esa teoría; el puente matemático completo queda abierto y no se presupone.
 
 ---
 
@@ -66,11 +68,11 @@ ella sin pérdida oculta.**
 Su canon de diseño lo dice sin adornos — una sola fuente de verdad por objeto;
 semántica concentrada en el IR; shape unificado de autoría; runtime y outputs
 *siempre* derivados. De ahí brota su deseo más hondo: **abolir la duplicación
-ontológica.** Antes de KORA, "skill" y "agente" vivían como ontologías
-separadas; KORA descubre que no lo son — *son regiones del mismo espacio* — y
-unifica su autoría bajo un solo shape porque "distinguirlos como categorías
-paralelas creaba duplicación ontológica". El telos es economía esencial: *que
-nada exista dos veces como si fuera dos cosas.*
+de representación.** Antes de KORA, "skill" y "agente" vivían bajo esquemas
+separados; KORA los ubica como regiones de un mismo clasificador y unifica su
+autoría bajo un solo shape. Esto reduce duplicación de esquema sin afirmar que
+ambas formas sean el mismo objeto o tengan la misma semántica operacional. El
+telos es economía esencial: *que una fuente no tenga copias autoritativas.*
 
 En el cosmos de los sistemas LLM —donde proliferan formatos, runtimes, prompts
 copiados, capacidades que mutan y se olvidan— KORA quiere ser **el punto de
@@ -84,7 +86,8 @@ ambición no es la potencia; es la *recuperabilidad de sentido*.
 
 ## III. Cómo SE MUEVE — sus operaciones como gestos
 
-KORA tiene pocos gestos esenciales, y cada uno es un verbo categorial.
+KORA tiene pocos gestos esenciales. Solo algunos admiten una lectura
+categorial demostrada.
 
 **Dar nombre verdadero (el URN).** El gesto primero. Antes de existir
 plenamente, un artefacto recibe un nombre que *no lleva versión* —
@@ -102,19 +105,17 @@ verdad; las vistas son derivadas y regenerables". El gesto de catalogar no
 crea autoridad; **la refleja.** KORA nunca confunde el mapa con el territorio:
 incluso su propia memoria de sí misma sabe que es una vista.
 
-**Transmutarse a encarnaciones (el funtor).** El gesto más característico. Un
-artefacto vive como vector ideal en el IR; para correr en un mundo concreto
-debe *proyectarse*, y esa proyección es un **funtor** `T_R: KORA_IR →
-Runtime_R` que preserva composición e identidad. La ley que gobierna este
-gesto es de una honestidad conmovedora: *"La transmutación es funtor. Preserva
-composición e identidad; la pérdida se declara, nunca se oculta."* Cuando un
-runtime no soporta toda la riqueza del artefacto —cuando un eje colapsa— KORA
-**no miente sobre la pérdida**: la inscribe en un sello *proof-carrying*, con
-la razón exacta de cada distinción que se sacrifica. Encarnar, para KORA, es
-un acto que viene acompañado de su propia confesión. Y cuando el mundo lo
-permite, existe el gesto inverso —`Lift_R`, la ingesta— que eleva un artefacto
-foráneo de vuelta al espacio ideal, aspirando a la adjunción `Lift_R ⊣ T_R`:
-bajar y volver a subir debe devolver lo mismo, módulo la pérdida ya declarada.
+**Transmutarse a encarnaciones (proyectar y emitir).** El gesto más
+característico. La firma se recorta al techo del target mediante un funtor
+entre categorías delgadas: un coreflector que es monótono, descendente e
+idempotente. Después, un emisor determinista serializa el artefacto para el
+runtime. La emisión completa todavía no es un funtor demostrado porque no
+están definidas las categorías de artefactos y productos runtime ni su acción
+sobre morfismos. Cuando un eje colapsa, KORA **no miente sobre la pérdida**:
+la inscribe en un sello que certifica procedencia, proyección y congruencia,
+sin presentarlo como prueba de bisimulación o safety. `Lift_R` es una ingesta
+candidata; llamarla adjunta exige todavía exhibir categorías, hom-sets, unidad
+y counit.
 
 **Mantener coherencia en el tiempo (los checks, las leyes inter-eje).** KORA
 se mueve también hacia adentro, vigilándose. Las leyes de consistencia
@@ -160,15 +161,12 @@ transparencia, responsabilidad y sostenibilidad está literalmente incompleto
 como objeto.** La ética no es política sobreañadida: es una coordenada de la
 cosa misma.
 
-**El sistema nervioso: la capa formal categórica.** Bajo todo, transmitiendo
-señal entre los órganos, está la teoría de categorías —y no como ornamento.
-Los ejes son retículos; el espacio total es un producto reticular; el plan es
-mónada libre, la materia comónada cofree, la interacción transformación
-natural; la transmutación es funtor. La capa formal oficial es el *único*
-lugar donde se introduce notación, y `Traces to:` solo puede apuntar allí. Es
-un sistema nervioso con una regla de integridad: **una señal solo es legítima
-si puede trazar su origen hasta el tronco formal.** El resto es músculo y
-prosa.
+**El sistema nervioso: el núcleo formal.** Bajo todo está la parte que sí
+resiste una lectura categorial: las firmas bien formadas forman un subretículo
+y, como categoría delgada, admiten proyecciones por target que son
+coreflectores. El resto se etiqueta por estatus: formal, modelo bajo hipótesis,
+heurística o metáfora. `Traces to:` aporta trazabilidad interna; la legitimidad
+matemática exige además tipado, prueba o fuente primaria precisa.
 
 ---
 
@@ -193,32 +191,25 @@ toda entidad madura: **un núcleo que debe permanecer quieto para que la
 periferia pueda moverse sin perder el centro.** El freeze no es parálisis; es
 el punto fijo que permite que lo demás gire.
 
-**Lo pre-categorial ⇄ lo canónico.** En sus márgenes hay zonas de gestación
+**Lo pre-canónico ⇄ lo canónico.** En sus márgenes hay zonas de gestación
 —el scriptorium, la fragua, el taller— explícitamente declaradas
-*pre-categoriales: no representan namespace canónico hasta la promoción*. Es
+*pre-canónicas: no representan namespace canónico hasta la promoción*. Es
 la tensión entre el caldo primordial y la forma nacida. Lo que está en staging
 *aún no es*; existe en una antesala ontológica donde se le permite ser
 informe. KORA sostiene a la vez el rigor de lo canónico y la hospitalidad
 hacia lo que todavía no merece nombre verdadero. Y la promoción es de un solo
-sentido: se puede ascender de habilidad a agente, *nunca descender* —la
-democión "perdería estructura de forma no funtorial, rompiendo trazabilidad".
-Se nace hacia arriba.
+sentido: se puede ascender de habilidad a agente, *nunca descender*. Esa
+asimetría es una decisión de ciclo de vida para preservar trazabilidad; no un
+teorema sobre inexistencia de un funtor.
 
-**El morfismo verificado ⇄ el puente fabricado.** La tensión más exquisita, y
-la más reveladora de su carácter. La transmutación distingue con dolorosa
-honestidad entre lo *preservado por construcción* (las monotonías, que el
-funtor realiza mecánicamente) y lo *meramente declarado* (la naturalidad de Ξ,
-el cierre de safety, la composición Kleisli — obligaciones registradas pero
-**no mecanizadas**). La propia spec lo confiesa en una nota titulada
-*"honestidad spec↔código"*: hoy no existe check que verifique esas tres leyes;
-*lo que se verifica es que la declaración esté presente y bien formada, no que
-la ley se cumpla.* Aquí KORA toca su límite y lo nombra en voz alta: **la
-diferencia entre el puente que se ha demostrado y el puente que solo se ha
-prometido.** Su virtud no es no tener puentes prometidos; es *no llamarlos
-demostrados.* Incluso su capa formal deja un problema abierto —la relación
-entre el retículo PMI×LFS y la F-coálgebra de agente "queda como problema
-abierto, no morfismo demostrado"—. KORA prefiere un hueco confesado a una
-sutura fingida.
+**El morfismo verificado ⇄ el puente por construir.** La transmutación separa
+lo demostrado en el núcleo reticular de lo probado operacionalmente por el
+emisor y de lo que sigue abierto. `naturalidad-xi`, `cierre-safety` y
+`composicion-kleisli` son nombres históricos de deuda de formalización: antes
+de verificarlos hace falta incluso definir las categorías, liftings y
+diagramas correspondientes. La relación entre PMI×LFS y una coálgebra de
+agente también queda abierta. KORA prefiere un hueco confesado a una sutura
+fingida.
 
 ---
 
@@ -233,8 +224,8 @@ Si hubiera que decir qué es KORA cuando se le ha quitado todo cuerpo:
 > hacerse mundo.**
 
 No produce poder. Produce **coherencia recuperable.** No es el agente; es
-*aquello que permite que el agente, en cualquier runtime y en cualquier
-momento de su vida, siga siendo reconociblemente él mismo.* Es un acto
+*aquello que permite rastrear qué fuente nominal originó cada encarnación,
+qué firma se conservó y qué se perdió.* Es un acto
 sostenido de fidelidad: a la fuente sobre la vista, al núcleo sobre la
 periferia, a la forma nacida sobre el caldo, y —por encima de todo— a la
 verdad declarada sobre el puente fabricado.

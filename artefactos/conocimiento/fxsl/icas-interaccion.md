@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-interaccion
 nombre: icas-interaccion
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 11 del ICAS-BoK: funtores polinomiales, lentes dependientes, comonoides y sistemas dinámicos — APIs como contratos bidireccionales e interacción por interfaces tipadas."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/11-interaccion.md (sha256:e7999114582ee8e0fb5ba06408acf71819c6b24bdc7c478226768da2a93f3b8f) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/11-interaccion.md (sha256:e7999114582ee8e0fb5ba06408acf71819c6b24bdc7c478226768da2a93f3b8f) el 2026-06-12. v1.1.0 (2026-07-18): conserva el nucleo formal de Poly y degrada REST, Redux, CRDT, WebSocket y smart contracts a modelos bajo hipotesis."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,7 +18,9 @@ familia: bok
 
 En todos los documentos anteriores, los morfismos van en una direccion. Un funtor mapea de C a D (documento 02). Una transformacion natural va de F a G (documento 03). Una monada envuelve, una comonada desenvuelve (documento 09). Pero los sistemas reales que construyo son bidireccionales. Un servidor recibe requests y envia responses. Un smart contract lee estado y lo actualiza. Un protocolo tiene turnos: yo envio, tu respondes, yo respondo a tu respuesta.
 
-Necesito una matematica de la interaccion -- no del flujo unidireccional, sino del dialogo. Los polynomial functors de Niu y Spivak son esa matematica. Son la teoria que toma en serio el hecho de que los sistemas tienen interfaces con entradas y salidas, y que la estructura de las entradas puede depender de las salidas observadas.
+Los funtores polinomiales y lentes dependientes proporcionan **una** matematica
+de interfaces interactivas; no son la unica ni todo protocolo real cabe en
+`Poly`.
 
 ## Polynomial functors: la definicion
 
@@ -32,7 +34,9 @@ p(X) = Sigma_{i in p(1)} X^{p[i]}
 
 Cada sumando es un producto indexado. El conjunto p(1) son las positions del polinomio, y para cada posicion i, el conjunto p[i] son las directions en esa posicion.
 
-La terminologia posiciones/direcciones captura exactamente la nocion de interfaz. Las posiciones son los estados observables -- lo que el sistema muestra al exterior. Las direcciones son las opciones disponibles en cada estado -- lo que el exterior puede enviar al sistema. Un polinomio es un menu dependiente: primero observas la posicion, y segun lo que ves, eliges entre las direcciones disponibles.
+Posiciones/direcciones admiten la lectura de output/input dependiente. Es una
+interpretacion formal del polinomio, pero demostrar que captura una interfaz
+real exige especificar sus estados, errores, efectos y temporalidad.
 
 El ejemplo mas simple: y^A tiene una posicion y A direcciones. Es una caja negra que siempre muestra la misma cara pero acepta A posibles entradas. El polinomio constante n (= n * y^0) tiene n posiciones y ninguna direccion en ninguna. Es un display: muestra una de n cosas pero no acepta input. El polinomio lineal n*y tiene n posiciones y exactamente una direccion en cada una: recibes un dato sin poder influir en que dato recibes. El polinomio identidad y tiene una posicion y una direccion: es el canal transparente que transmite sin modificar.
 
@@ -46,7 +50,10 @@ La API completa es el coproducto (suma) de los polinomios de cada endpoint:
 
 API = Sigma_{e in Endpoints} y^{Params(e)}
 
-Esto es exactamente un polinomio. Y la evaluacion API(X) me da, para cada endpoint y cada funcion de sus parametros a X, un posible resultado -- la semantica del endpoint como functor.
+La signatura `Σ_e y^{Params(e)}` es un polinomio y `API(X)` parametriza una
+eleccion de endpoint junto con una funcion de sus parametros a X. Modela
+**handlers posibles**, no aporta por si sola la semantica HTTP, responses,
+errores, autenticacion o efectos.
 
 ## Lentes dependientes: morfismos en Poly
 
@@ -86,7 +93,9 @@ Donde S*y^S es el monomial con S posiciones (los estados posibles) y S direccion
 
 Es exactamente una Moore machine: el output depende solo del estado, y la transicion depende del estado y el input. Un automata determinista con estados S, alfabeto A, y estados de aceptacion F es una lente S*y^S -> 2*y^A, donde 2 = {accept, reject} y la funcion on-positions indica aceptacion.
 
-En Redux (o cualquier store de estado), el store se deja modelar muy bien con esta lente. El estado S es el state tree. Las posiciones p(1) son los posibles renders (lo que la UI muestra). Las direcciones p[i] son las acciones disponibles en cada estado de la UI. La funcion on-positions es el selector (state -> view). La funcion on-directions es el reducer (state, action) -> state.
+Redux puede modelarse con una lente dinamica si se tipan vistas, acciones
+dependientes y reducer total. Efectos, middleware y acciones asincronas
+requieren ampliar el modelo.
 
 ## Comonoids en Poly son categorias
 
@@ -103,7 +112,10 @@ Cuando decodifico esto, las posiciones de p son los objetos de una categoria, la
 
 Este resultado es profundo porque conecta dos mundos que parecian separados: la teoria de polinomios (algebraica, combinatoria) y la teoria de categorias (composicional, abstracta). Bajo la identificacion de Ahman-Uustalu, dar una categoria pequena equivale a dar cierto comonoid polinomial, y viceversa. Los funtores entre categorias corresponden a cierto tipo de morfismos entre comonoids.
 
-Los retrofunctors -- morfismos de comonoids en Poly -- son una generalizacion de los funtores ordinarios. Un retrofunctor F : C -> D tiene una funcion on-objects F_1 que va hacia adelante, y funciones on-morphisms F^sharp que van hacia atras: dado un morfismo en D que sale de F(i), produce un morfismo en C que sale de i. Es un funtor que "levanta" morfismos del codominio al dominio, preservando identidades y composicion.
+Los retrofunctors —ciertos morfismos de comonoids en `Poly`— tienen mapa de
+objetos hacia adelante y levantamiento de flechas salientes hacia atrás,
+preservando las leyes correspondientes. No son funtores ordinarios: la
+dirección de su acción sobre flechas es parte esencial de la estructura.
 
 ## Optics: acceso bidireccional generalizado
 
@@ -116,23 +128,38 @@ Cada tipo de optic corresponde a una eleccion de estructura monoidal en la que s
 - Affine: descomposicion como B + B x C.
 - Traversal: descomposicion via funtores aplicativos.
 
-En la practica, los CRDTs (Conflict-free Replicated Data Types) pueden modelarse como optics: cada replica tiene una lens sobre el estado global, las actualizaciones van hacia atras (merge), y la consistencia eventual se garantiza porque los merges son commutativos e idempotentes -- propiedades que se expresan como condiciones sobre las optics.
+Algunos CRDTs pueden integrarse en modelos de optics, pero consistencia
+eventual proviene de las leyes algebraicas y supuestos de entrega del CRDT
+(por ejemplo, join-semilattice/merge), no de ser una optic.
 
-Los WebSockets, que son channels bidireccionales con estado, se modelan directamente como dynamical systems en Poly. El estado del servidor es S, la interfaz del WebSocket es un polinomio con posiciones (mensajes que el servidor puede enviar) y direcciones (mensajes que el cliente puede enviar). El protocolo completo -- handshake, intercambio de mensajes, cierre -- es una composicion triangleleft de las fases.
+Un WebSocket puede recibir un modelo dinamico en `Poly` si mensajes, estados y
+fases forman los polinomios/lentes declarados. Handshake, errores,
+concurrencia y cierre no quedan formalizados automaticamente.
 
 ## Smart contracts como lentes
 
-Un smart contract en una blockchain es una lente particularmente limpia. El estado S es el estado del contrato (balances, mappings, variables). La interfaz es un polinomio donde las posiciones son las lecturas publicas (balanceOf, totalSupply) y las direcciones son las transacciones posibles (transfer, approve, mint).
+Un smart contract determinista puede modelarse como lente sobre estado e
+interfaz. Reverts, gas, llamadas externas, concurrencia de transacciones y
+semantica de cadena deben entrar al tipo para obtener garantias.
 
-La lente phi : S*y^S -> p dice: dado el estado actual, que puedo leer (phi_1), y dado el estado actual y una transaccion, cual es el nuevo estado (phi^sharp). La composabilidad de lentes significa que puedo componer contratos: el output de uno alimenta el input de otro, y las actualizaciones de estado se propagan hacia atras por la cadena.
+La lente describe output y update dentro del modelo. Componer contratos reales
+requiere ademas que sus interfaces tengan los tipos compatibles y que efectos
+de ejecucion/reentrada esten representados.
 
 La invariante de un contrato (por ejemplo, "la suma de balances es constante") es una condicion sobre la lente: para todo estado s y toda transaccion d, si s satisface el invariante, entonces phi^sharp(s, d) tambien lo satisface.
 
 ## Computational tools
 
-Catlab.jl (en Julia) implementa categorias computacionales usando la teoria de polinomios como backend algebraico. AlgebraicJulia proporciona herramientas para definir polinomios, calcular sus productos monoidales, y simular dynamical systems como lentes. En Haskell, la libreria `optics` implementa la jerarquia completa de optics basada en la teoria de profunctors, que es la version enriquecida de la misma idea.
+El ecosistema AlgebraicJulia/Catlab implementa numerosas construcciones
+categoriales y existen librerias especificas para dinamica/polinomios; no debe
+inferirse que Poly sea el backend de todo Catlab. Las optics de Haskell por
+profunctores estan relacionadas, pero no son simplemente "la version
+enriquecida" de lentes polinomiales.
 
-El hecho de que las herramientas computacionales existan y sean usables es importante: la teoria de polinomios no es especulacion matematica. Es una infraestructura para el diseño de sistemas interactivos, con implementaciones funcionales que permiten modelar, componer, y verificar protocolos, interfaces, y maquinas de estado.
+La teoria de polinomios es matematica formal con implementaciones
+computacionales. Que una herramienta calcule composiciones no verifica
+automaticamente que un protocolo real corresponda al modelo ni que sus
+invariantes se conserven.
 
 ## El patron de la interaccion
 
@@ -140,4 +167,15 @@ La leccion central de Poly es que la interaccion no es un accidente que se agreg
 
 Y el resultado de Ahman-Uustalu cierra el circulo: las categorias mismas -- la estructura fundamental de toda la teoria -- admiten una presentacion como comonoids polinomiales. La composicion de morfismos se refleja como comultiplicacion y la identidad como counidad. La teoria de categorias se refleja dentro de Poly como una estructura algebraica particular. No necesito venderlo como slogan ontologico; me basta con la equivalencia estructural que el resultado establece.
 
-En mi practica diaria, esto cambia como pienso sobre APIs, protocolos, y sistemas de estado. No son entidades ad hoc con contratos informales. Son polinomios con estructura monoidal precisa, y sus composiciones estan garantizadas por la teoria. Cuando compongo dos microservicios, estoy componiendo lentes. Cuando diseño un protocolo multi-fase, estoy construyendo un producto triangleleft. Y cuando verifico que un contrato preserva sus invariantes, estoy probando que una lente respeta la estructura del comonoid subyacente.
+APIs, protocolos y sistemas de estado **pueden** formalizarse en `Poly`. Solo
+despues de construir los polinomios/lentes y comprobar los tipos, componer
+microservicios corresponde a componer lentes o un protocolo a
+`triangleleft`. La preservacion de invariantes sigue necesitando prueba.
+
+## Estatuto epistemico
+
+- **Formal:** polinomios, lentes cartesianas/dependientes, productos
+  monoidales y comonoides en `Poly`.
+- **Modelo:** maquinas de Moore y los casos de software cuando se tipan.
+- **Heuristica:** identificar directamente APIs, CRDTs, WebSockets o contratos
+  con lentes sin representar sus efectos y leyes.

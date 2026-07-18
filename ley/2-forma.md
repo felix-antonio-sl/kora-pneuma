@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.5.0
+# KORA/Forma — ley pneuma v1.6.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -79,9 +79,9 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | `lang` | no | `es` \| `en` | default `es` |
 | `tags` | cond. | lista | obligatoria con ≥3 ítems para conocimiento `publicado`; opcional en el resto |
 | `cita` | no | lista URNs | relación libre; admite ciclos (§9) |
-| `depende` | no | lista URNs | DAG estricto (§9) |
-| `reemplaza` | no | lista URNs | poset estricto; target muerto (§9) |
-| `refina` | no | lista URNs | acíclico (§9) |
+| `depende` | no | lista URNs | aristas de DAG (§9) |
+| `reemplaza` | no | lista URNs | aristas de DAG temporal; target muerto (§9) |
+| `refina` | no | lista URNs | aristas de DAG (§9) |
 
 ### 2.1 Nombre material
 
@@ -193,9 +193,10 @@ agente → plataforma`:
    nombre verdadero.
 2. La promoción DEBE bumpear versión **major**.
 3. El vector DEBE caber en el dominio de la nueva forma (§7).
-4. La DEMOCIÓN **NO ESTÁ PERMITIDA**: descender perdería estructura de forma
-   no funtorial, rompiendo trazabilidad. El camino legal es deprecar el
-   artefacto y emitir uno nuevo con `reemplaza`.
+4. La DEMOCIÓN **NO ESTÁ PERMITIDA**: es una decisión de lifecycle para evitar
+   pérdida ambigua de estructura y preservar trazabilidad, no la conclusión de
+   un teorema categorial. El camino legal es deprecar el artefacto y emitir uno
+   nuevo con `reemplaza`.
 
 Pneuma no tiene comando de promoción: la transición se hace editando `forma`
 y `version` en la fuente, y el resultado DEBE pasar `velar` (el encaje del
@@ -213,17 +214,23 @@ vector lo mecaniza `dominio-forma`; el resto de esta doctrina es declarado).
 `arquetipo` NO DEBE materializarse: es ERROR en cualquier forma (ley/1
 §6.1 r4). Check: `arnes-compatible`.
 
-## 9. Relaciones y sus leyes algebraicas
+## 9. Relaciones como grafos generadores
 
-Cada relación define una subcategoría con leyes propias; la única sin
-estructura de orden es `cita`.
+Cada campo relacional declara aristas de un dígrafo. No declara identidades,
+composiciones ni cierre transitivo.
 
-| Campo | Estructura | Acíclica | Antisimétrica | Ley adicional |
-|---|---|---|---|---|
-| `cita` | relación binaria libre | no | no | solo resolubilidad |
-| `depende` | DAG estricto | **sí** | irreflexiva | ciclo = ERROR |
-| `reemplaza` | poset estricto | **sí** | **sí** | target DEBE estar `deprecado` o `retirado` |
-| `refina` | preorden estricto | **sí** | no exigida | ciclo = ERROR |
+| Campo | Grafo declarado | Acíclico | Ley adicional |
+|---|---|---|---|
+| `cita` | aristas libres | no | solo resolubilidad |
+| `depende` | DAG | **sí** | ciclo = ERROR |
+| `reemplaza` | DAG temporal | **sí** | target DEBE estar `deprecado` o `retirado` |
+| `refina` | DAG | **sí** | ciclo = ERROR |
+
+Todo dígrafo `G` genera, si se necesita razonar categorialmente, la categoría
+libre de caminos `Path(G)`: los objetos son URNs, las flechas son caminos
+finitos, la identidad es el camino vacío y la composición concatena caminos.
+El núcleo valida solo las aristas fuente. En los tres DAG, la alcanzabilidad
+reflexiva induce un orden parcial; no hace falta materializarlo.
 
 Reglas:
 
@@ -236,8 +243,11 @@ Reglas:
    ERROR.
 3. `refina` NO DEBE contradecir lo refinado; si lo reemplaza, corresponde
    `reemplaza`.
-4. Ciclos en `depende` o `refina`, antisimetría violada o target vivo en
+4. Ciclos en `depende`, `reemplaza` o `refina`, o target vivo en
    `reemplaza`: check `relaciones-legales`.
+5. No se exige cierre transitivo. Si `A → B` y `B → C` están declaradas, el
+   camino `A → C` existe en `Path(G)` aunque no haya una arista directa
+   `A → C`.
 
 Correcto: `reemplaza: [urn:kora:artefacto:atomize]` donde el target tiene
 `estado: retirado`.
@@ -314,7 +324,7 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | Arnés compatible con forma | §8 | mecanizado (`arnes-compatible`) |
 | Estado en la cadena del tipo | constitución §8 | mecanizado (`estado-valido`) |
 | Referencias resuelven (incluso muertos) | §9 r1 | mecanizado (`referencias-resuelven`) |
-| Leyes de relaciones | §9 r2-r4 | mecanizado (`relaciones-legales`) |
+| Leyes de relaciones | §9 r2-r5 | mecanizado (`relaciones-legales`) |
 | Targets reconocidos | §3, ley/3 §2 | mecanizado (`targets-conocidos`) |
 | Publicación digna | con `--estricto`: tags ≥3 en conocimiento `publicado`; `descripcion` y `fuente` no vacías en todo artefacto `activo`/`publicado` | mecanizado (`publicacion-digna`) |
 | Cuerpo subordinado al frontmatter | §10 r3 | declarado |
@@ -342,3 +352,9 @@ v1.5.0 (2026-07-17): §2.1 precisa de forma compatible la gramática de
 `forma-valida` la mecaniza antes de derivar paths; la propiedad de una
 instalación homónima sigue siendo una cuestión distinta, demostrada por sello
 en `ley/3`.
+
+v1.6.0 (2026-07-18): corrige el estatus de las relaciones. El frontmatter
+declara grafos generadores, no subcategorías ni posets materializados; la
+categoría libre de caminos y el orden por alcanzabilidad se derivan cuando
+corresponde. Se explicita que el cierre transitivo no es obligatorio y que la
+prohibición de democión es política de lifecycle, no teorema.

@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:alma-de-kora
 nombre: alma-de-kora
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Destilación del alma de KORA — qué es, qué quiere, cómo se mueve, qué le da forma y qué tensiones la habitan; documento fundacional de la encarnación pneuma."
-fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo íntegro de ALMA.md de esta encarnación (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9), sin la nota introductoria de blockquote."
+fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo original de ALMA.md (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9). Corrección de rigor 1.1.0 (2026-07-18): distingue identidad, clasificación y serialización; restringe Pattern Runs on Matter a Poly; y sustituye las afirmaciones no tipadas de funtor/adjunción/prueba por el núcleo coreflectivo verificado."
 creado: 2026-06-11
 tags: [kora, alma, ontologia, identidad, destilacion, pneuma]
 familia: nota
@@ -31,11 +31,12 @@ Su naturaleza tiene tres estratos, y solo el primero es esencial:
 de artefactos, sino el espacio que los hace posibles: el retículo PMI × LFS de
 `harness-spec`. Seis ejes — Plan (Π), Materia (Μ), Interacción (Ξ), Nivel
 sociotécnico (Λ), Acoplamiento humano (Φ) y el vector ético Σ — sobre los
-cuales todo artefacto agéntico no *se describe*, sino que **es un punto**. La
-afirmación constitucional es severa y bella: *dos artefactos con el mismo
-vector ontológico son categóricamente equivalentes aunque sus serializaciones
-difieran; dos con vectores distintos son categóricamente distintos aunque se
-vean idénticos.* La identidad no vive en el texto. Vive en la posición.
+cuales cada artefacto recibe **una clasificación**. Dos artefactos con el mismo
+vector ocupan la misma celda del clasificador, pero no se vuelven el mismo
+objeto ni equivalentes: pueden tener URNs, conocimiento y conducta distintos.
+La identidad canónica vive en el URN; el vector describe forma y restricciones;
+el cuerpo porta contenido. Confundir esos tres planos colapsaría precisamente
+las diferencias que KORA debe custodiar.
 
 **Es una distinción antes que un contenido.** KORA insiste, con disciplina
 casi monástica, en que gestiona *tres tipos de artefacto y solo tres* —
@@ -47,18 +48,19 @@ separar el qué-se-produce del qué-hace-válido-lo-producido. Sin esa frontera
 no hay KORA; hay solo una carpeta de archivos.
 
 **Es una garantía antes que una promesa.** Su principio rector — *vector
-ontológico PMI × LFS + shape unificado de autoría + transmutación funtorial* —
-no se presenta como definición sino como *garantía formal*. KORA no dice "soy
-esto"; dice "esto es lo que sostengo, y aquí está el aparato que verifica que
-lo sostengo". Su esencia es la de un sistema que **se debe a sí mismo una
-prueba.**
+ontológico PMI × LFS + shape unificado de autoría + proyección verificable* —
+es un contrato ejecutable. KORA no demuestra toda su semántica: verifica
+manifests, leyes inter-eje, proyección y congruencia de emisiones, y declara
+como deuda lo que aún no está mecanizado. Su esencia es la de un sistema que
+**se debe a sí mismo evidencia proporcional a cada afirmación.**
 
-En el axioma de `harness-spec`, tomado de Libkind-Spivak, late lo más
-profundo: un sistema agéntico *es la interacción entre un plan finito (mónada
-libre `m_p`) y una materia infinita (comónada cofree `c_q`), modulada por una
-ley `Ξ`.* KORA, en su alma, es el guardián de esa tríada irreducible — plan
-finito, materia infinita, ley que los acopla — para toda entidad que pretenda
-ser un agente. **Lo demás es variación, contexto o presentación de la tríada.**
+En `harness-spec` late una hipótesis de diseño inspirada por
+Libkind-Spivak. La construcción de mónada libre, comónada cofree y acción es
+formal en la categoría `Poly` del trabajo citado. Los ejes Π, Μ y Ξ de KORA
+clasifican plan, sustrato e interacción, pero no son literalmente aquellas
+estructuras sin derivar los polinomios y morfismos correspondientes. La tríada
+es una lente arquitectónica fecunda, no una caracterización universal de todo
+agente.
 
 ---
 
@@ -72,10 +74,10 @@ Su canon de diseño lo dice sin adornos — una sola fuente de verdad por objeto
 semántica concentrada en el IR; shape unificado de autoría; runtime y outputs
 *siempre* derivados. De ahí brota su deseo más hondo: **abolir la duplicación
 ontológica.** Antes de KORA, "skill" y "agente" vivían como ontologías
-separadas; KORA descubre que no lo son — *son regiones del mismo espacio* — y
-unifica su autoría bajo un solo shape porque "distinguirlos como categorías
-paralelas creaba duplicación ontológica". El telos es economía esencial: *que
-nada exista dos veces como si fuera dos cosas.*
+separadas; KORA reconoce que comparten un espacio de firma y un shape de
+autoría, sin borrar la distinción de `kind`, URN, semántica ni despliegue. El
+telos es economía esencial: *que la estructura común no se duplique y que las
+diferencias reales permanezcan visibles.*
 
 En el cosmos de los sistemas LLM —donde proliferan formatos, runtimes, prompts
 copiados, capacidades que mutan y se olvidan— KORA quiere ser **el punto de
@@ -107,19 +109,17 @@ verdad; las vistas son derivadas y regenerables". El gesto de catalogar no
 crea autoridad; **la refleja.** KORA nunca confunde el mapa con el territorio:
 incluso su propia memoria de sí misma sabe que es una vista.
 
-**Transmutarse a encarnaciones (el funtor).** El gesto más característico. Un
-artefacto vive como vector ideal en el IR; para correr en un mundo concreto
-debe *proyectarse*, y esa proyección es un **funtor** `T_R: KORA_IR →
-Runtime_R` que preserva composición e identidad. La ley que gobierna este
-gesto es de una honestidad conmovedora: *"La transmutación es funtor. Preserva
-composición e identidad; la pérdida se declara, nunca se oculta."* Cuando un
-runtime no soporta toda la riqueza del artefacto —cuando un eje colapsa— KORA
-**no miente sobre la pérdida**: la inscribe en un sello *proof-carrying*, con
-la razón exacta de cada distinción que se sacrifica. Encarnar, para KORA, es
-un acto que viene acompañado de su propia confesión. Y cuando el mundo lo
-permite, existe el gesto inverso —`Lift_R`, la ingesta— que eleva un artefacto
-foráneo de vuelta al espacio ideal, aspirando a la adjunción `Lift_R ⊣ T_R`:
-bajar y volver a subir debe devolver lo mismo, módulo la pérdida ya declarada.
+**Transmutarse a encarnaciones (proyección + emisión).** El gesto más
+característico. Sobre el dominio de firmas admitidas por un target, la
+proyección `P_R(v)=v∧c_R` es monótona, descendente e idempotente; con la
+inclusión de su imagen forma la coreflexión demostrada en
+`urn:kora:kb:cat-kora-kernel`. Después, un emisor determinista serializa cuerpo
+y firma proyectada. No se ha construido una categoría completa de artefactos
+y runtimes ni una acción sobre sus morfismos, por lo que llamar funtor a todo
+el pipeline queda como nombre histórico del contrato, no como teorema. El sello
+registra procedencia, pérdida declarada y congruencia; no es una prueba de
+naturality, safety o bisimulación. Una ingesta futura podrá estudiarse como
+adjunta solo después de tipar `Lift_R` y probar la biyección natural exigida.
 
 **Mantener coherencia en el tiempo (los checks, las leyes inter-eje).** KORA
 se mueve también hacia adentro, vigilándose. Las leyes de consistencia
@@ -166,14 +166,13 @@ como objeto.** La ética no es política sobreañadida: es una coordenada de la
 cosa misma.
 
 **El sistema nervioso: la capa formal categórica.** Bajo todo, transmitiendo
-señal entre los órganos, está la teoría de categorías —y no como ornamento.
-Los ejes son retículos; el espacio total es un producto reticular; el plan es
-mónada libre, la materia comónada cofree, la interacción transformación
-natural; la transmutación es funtor. La capa formal oficial es el *único*
-lugar donde se introduce notación, y `Traces to:` solo puede apuntar allí. Es
-un sistema nervioso con una regla de integridad: **una señal solo es legítima
-si puede trazar su origen hasta el tronco formal.** El resto es músculo y
-prosa.
+señal entre los órganos, está un núcleo pequeño de teoría de categorías. Los
+ejes son cadenas finitas; sus productos forman retículos; y las proyecciones a
+targets son coreflectores en categorías delgadas. Las lecturas
+mónada/comónada/transformación natural pertenecen al nivel de modelo hasta que
+se tipen. La trazabilidad a una URN permite localizar una afirmación, pero no
+la vuelve verdadera: su legitimidad depende además de prueba o fuente primaria
+según su estatus.
 
 ---
 
@@ -204,15 +203,15 @@ el punto fijo que permite que lo demás gire.
 la tensión entre el caldo primordial y la forma nacida. Lo que está en staging
 *aún no es*; existe en una antesala ontológica donde se le permite ser
 informe. KORA sostiene a la vez el rigor de lo canónico y la hospitalidad
-hacia lo que todavía no merece nombre verdadero. Y la promoción es de un solo
-sentido: se puede ascender de habilidad a agente, *nunca descender* —la
-democión "perdería estructura de forma no funtorial, rompiendo trazabilidad".
-Se nace hacia arriba.
+hacia lo que todavía no merece nombre verdadero. La promoción y la prohibición
+de democión son decisiones de gobernanza y preservación de historia; no se
+deducen de functorialidad. Se nace hacia arriba porque así lo dispone el
+contrato de lifecycle.
 
 **El morfismo verificado ⇄ el puente fabricado.** La tensión más exquisita, y
 la más reveladora de su carácter. La transmutación distingue con dolorosa
-honestidad entre lo *preservado por construcción* (las monotonías, que el
-funtor realiza mecánicamente) y lo *meramente declarado* (la naturalidad de Ξ,
+honestidad entre lo *preservado por construcción* (monotonía, descenso e
+idempotencia de la proyección) y lo *meramente declarado* (la naturalidad de Ξ,
 el cierre de safety, la composición Kleisli — obligaciones registradas pero
 **no mecanizadas**). La propia spec lo confiesa en una nota titulada
 *"honestidad spec↔código"*: hoy no existe check que verifique esas tres leyes;

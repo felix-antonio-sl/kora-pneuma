@@ -1,6 +1,9 @@
 # Mapa del corpus ICAS-BoK
 
-Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica, vocablo central, cuando activarla. Esta es **navegacion**, no contenido. La SSOT son las 24 URNs `icas-*` del catalogo central de KORA pneuma (el contrato de conocimiento del sello declara el ancla y la regla para resolver cada URN a su archivo), no una ruta fija.
+Las 24 piezas del corpus, resueltas por URN a su versión viva. Para cada pieza:
+URN canónica, vocablo central y cuándo activarla. Esta es **navegación**, no
+evidencia matemática. Las URNs son SSOT interna; una afirmación formal exige
+además prueba o fuente primaria.
 
 ## Arco I — Fundamentos (00–05)
 
@@ -11,7 +14,7 @@ Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica,
 | `urn:fxsl:kb:icas-preservacion` | funtor, faithful, full, schema → instancia, migracion | una traduccion entre sistemas pierde algo |
 | `urn:fxsl:kb:icas-comparacion` | transformacion natural, polimorfismo, equivalencia, 2-cat | dos implementaciones se afirman equivalentes pero discrepan |
 | `urn:fxsl:kb:icas-identidad-relacion` | hom-funtor, Yoneda, embedding, presheaves | duda sobre como entender un componente desde afuera (API, queries, interaccion) |
-| `urn:fxsl:kb:icas-universales` | producto, coproducto, pullback, pushout, limite, colimite, sketch | hay que combinar/ajustar/JOIN/MERGE de manera optima |
+| `urn:fxsl:kb:icas-universales` | producto, coproducto, pullback, pushout, limite, colimite, sketch | hay que evaluar si combinar/ajustar/JOIN/MERGE satisface un problema universal |
 
 ## Arco II — Estructura adjunta y enriquecida (06–08b)
 
@@ -27,14 +30,14 @@ Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica,
 | URN | Vocablo central | Activar cuando |
 |-----|-----------------|----------------|
 | `urn:fxsl:kb:icas-efectos` | monada, Kleisli, Eilenberg-Moore, comonada, coalgebra, bisimulacion, ley distributiva | funciones con efectos no componen; observabilidad necesita estructura; bisimular comportamiento |
-| `urn:fxsl:kb:icas-extension` | end, coend, Kan extension, Grothendieck, fibration | extender un funtor parcial; integrar contextos; atencion como Kan extension |
+| `urn:fxsl:kb:icas-extension` | end, coend, Kan extension, Grothendieck, fibration | extender un funtor parcial; integrar contextos; evaluar modelos de atencion por Kan extension |
 | `urn:fxsl:kb:icas-interaccion` | polynomial functor, lente dependiente, comonoide, sistemas dinamicos | API como contrato bidireccional; sistemas que interactuan via interfaces tipadas |
 
 ## Arco IV — Logica interna y safety (12–12b)
 
 | URN | Vocablo central | Activar cuando |
 |-----|-----------------|----------------|
-| `urn:fxsl:kb:icas-topoi` | presheaf, sheaf, clasificador subobjetos, logica intuicionista, geometric morphism, multi-tenancy | la verdad no es binaria; permisos ricos; eventual consistency; feature flags |
+| `urn:fxsl:kb:icas-topoi` | presheaf, sheaf, clasificador subobjetos, logica intuicionista, geometric morphism, multi-tenancy | evaluar modelos de verdad contextual, permisos, consistencia y visibilidad cuando estructuras mas simples no bastan |
 | `urn:fxsl:kb:icas-safety-alignment` | alineamiento, ICAR, Goodhart, coherencia, verificacion vs validacion | safety, alineamiento, riesgo de proxy/Goodhart |
 
 ## Arco V — Escala y agencia (13–14b)
@@ -59,7 +62,13 @@ Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica,
 |-----|-----------------|----------------|
 | `urn:fxsl:kb:icas-calidad-riesgo` | quality attribute, RAM, riesgo, resiliencia, garantia | hablar de calidad/riesgo con vocabulario formal |
 | `urn:fxsl:kb:icas-patrones` | patron arquitectonico, agentico, anti-patron, wrapper functor | reconocer patron; nombrar anti-patron; multi-modelo |
-| `urn:fxsl:kb:icas-infraestructura` | tool use como profunctor, self-improvement, IaC como funtor, SoS, 2-cat | infraestructura autonoma; uso de herramientas; gobernanza |
+| `urn:fxsl:kb:icas-infraestructura` | candidatos: tool use como profunctor, IaC como funtor, SoS, 2-cat | evaluar modelos formales para infraestructura autonoma, uso de herramientas y gobernanza |
+
+## Núcleo propio de KORA
+
+| URN | Vocablo central | Activar cuando |
+|-----|-----------------|----------------|
+| `urn:kora:kb:cat-kora-kernel` | retículo de firmas, coreflexión por target, grafos generadores, alcance del sello | evaluar afirmaciones categoriales sobre KORA o su transmutación |
 
 ## Como navegar el corpus
 
@@ -68,3 +77,5 @@ Las 24 piezas del corpus, todas published v1.0.0. Para cada pieza: URN canonica,
 3. Si **conoces el vocablo categorial**, usa esta tabla.
 4. Si **ninguno aplica**, usa `Grep`/`Read` sobre los archivos `icas-*.md` del corpus en el catalogo central de KORA pneuma.
 5. Si **el corpus no cubre el problema**, declararlo. No inventar.
+6. Si una afirmación formal es dudosa, consulta una fuente primaria y corrige
+   o degrada el corpus si existe conflicto.

@@ -1,208 +1,120 @@
 ---
 urn: urn:kora:kb:cat-agent-modulo
 nombre: cat-agent-modulo
-version: 1.0.0
+version: 2.0.0
 estado: publicado
-descripcion: "El agente KORA como módulo m_p (plan) sobre c_q (materia) acoplado por Ξ: completa la vista coálgebra-sola de cat-agent-coalgebra con la mitad del plan y la teleología, y reformula la independencia de fibras a independencia estructural."
-fuente: "Doctrina propia pneuma (namespace kora). Funda en urn:fxsl:kb:icas-agencia (free monad/cofree comonad, pattern-runs-on-matter, ley de interacción Ξ) y ley/1 §1 (axioma del módulo Libkind-Spivak). NO koraficación: doctrina pneuma-autorada, con el puente retículo↔F-coálgebra (ley/1 §5) declarado ABIERTO, no demostrado."
+descripcion: "Lectura rigurosa de pattern-runs-on-matter para KORA: resultado formal en Poly, traducción PMI como modelo de diseño y puente aún abierto hacia la coálgebra efectual y la teleología."
+fuente: "Doctrina propia pneuma corregida el 2026-07-18. Base primaria: Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. La aplicación de ese resultado a los ordinales PMI se declara modelo de diseño y no teorema."
 autor: FS
 creado: 2026-06-30
 lang: es
-tags: [agente, free-monad, cofree-comonad, plan-materia, teleologia, modulo, kora]
+tags: [agente, free-monad, cofree-comonad, poly, plan-materia, teleologia, kora]
 familia: bok
-depende: [urn:fxsl:kb:icas-agencia]
+depende: [urn:fxsl:kb:icas-agencia, urn:kora:kb:cat-agent-coalgebra]
 refina: [urn:kora:kb:cat-agent-coalgebra]
-cita: [urn:fxsl:kb:icas-safety-alignment, urn:kora:kb:aufbau-persona-agente, urn:fxsl:kb:icas-lifecycle]
+cita: [urn:kora:kb:aufbau-persona-agente, urn:fxsl:kb:icas-safety-alignment]
 ---
 
-# El agente como módulo: `m_p` (plan) sobre `c_q` (materia)
+# Plan, materia e interacción: alcance del módulo
 
-## Propósito y estatus
+## 1. Resultado formal externo
 
-`cat-agent-coalgebra` modela al agente como F-coálgebra `(U, c)` —la **materia**:
-el ejecutor reactivo, persistente, coinductivo. Es **una mitad**. El axioma de
-`ley/1 §1` (Libkind-Spivak) define al agente como un **módulo**:
-
-```text
-Artefacto = (m_p × c_q × Ξ) ⋉ (Contexto)
-```
-
-un **plan finito** `m_p` (mónada libre, inductivo, terminante) acoplado a una
-**materia infinita** `c_q` (comónada cofree) por la **ley de interacción**
-`Ξ: m_p ⊗ c_q → m_{p⊗q}`. Esta kb añade la mitad que `cat-agent-coalgebra`
-narra solo de pasada —el plan `m_p` y el acoplamiento `Ξ`— y **reformula** la
-independencia de fibras (§2.2 de aquella) a *independencia estructural*.
-
-**Lo que esta kb NO finge** (honestidad declarada, en el espíritu de
-`ley/3 §6`): no demuestra el puente retículo↔F-coálgebra (queda **abierto**,
-§4); no legisla la teleología (queda como **deuda residente-de-KB**, §4); no
-re-prueba el teorema de §2.2 (solo corrige sus **glosas**, §3).
-
-## Prerrequisitos
-
-- `urn:kora:kb:cat-agent-coalgebra` — la F-coálgebra `(U, c)`, las fibras
-  `U = U_phen × U_ctx × U_epi × U_sta` (§2.1), la independencia (§2.2), la
-  bisimulación (§5) y la co-inducción terminal (§3.3).
-- `urn:fxsl:kb:icas-agencia` — *pattern runs on matter*: free monad `m_p` (plan),
-  cofree comonad `c_q` (materia), módulo `m_p` sobre `c_q`, `Ξ`, contextads/`Para`
-  y el ciclo P-D-A.
-- `urn:kora:kb:aufbau-persona-agente` — el contenido lerschiano de `U_phen`
-  (fin × estilo × registro) y la *Tektonik* del alineamiento (§3, §4).
-
-## 1. El agente es el módulo, no la coálgebra
-
-La inversión rectora: el plan `m_p` **no se obtiene engordando** la coálgebra
-`c_q`. Son **duales** —álgebra/inductivo vs coálgebra/coinductivo
-(`icas-agencia`: *free monad* termina, *cofree comonad* persiste)—; uno no es el
-otro con una capa más. Mapeo a los ejes del vector ontológico (`ley/1 §3`):
-
-| Eje | Estructura | Qué es en el agente |
-|---|---|---|
-| `pi` (Π) | `m_p` — mónada libre | la **capacidad de plan**: el árbol de decisión ramificado del agente, *en el artefacto*. La **traza** concreta del plan es runtime, no el artefacto. |
-| `mu` (Μ) | `c_q` — comónada cofree | la **materia**: el ejecutor que se sostiene en el tiempo. Es lo que modela `cat-agent-coalgebra` `(U, c)`. |
-| `xi` (Ξ) | `Ξ: m_p ⊗ c_q → m_{p⊗q}` | el **acoplamiento**: el plan consulta la materia, la materia responde, el plan elige su rama (`icas-agencia`, ley de interacción). |
-
-`cat-agent-coalgebra` es, pues, la teoría de `mu`. Esta kb es la teoría de `pi`
-y de `Ξ`, y de cómo los tres componen el módulo.
-
-> **Aserción, no teorema** (`ley/1 §5`): que `pi` *sea* `m_p` es la lectura del
-> **retículo** (`ley/1 §3.1`: «`pi` corresponde a la mónada libre `m_p`»), no un
-> morfismo demostrado entre el retículo producto acotado y la categoría de
-> F-coálgebras. El puente queda **abierto** (§4).
-
-## 2. El discriminante de agencia = la tríada, en dos estatus
-
-Un agente se distingue de un no-agente por **conación endógena persistente**: la
-tríada **finalidad + persistencia + descomposición**. Quitar un polo da un
-no-agente (servicio reactivo, *one-shot*, termostato). La tríada se parte en dos
-estatus legales **disjuntos**:
-
-- **Piso estructural — MECANIZADO.** `pi ≥ 2` (descomponer: mónada libre
-  ramificada, `ley/1 §3.1`) ∧ `mu ≥ 2` (persistir: materia cross-session o
-  ambiental, `ley/1 §3.2`). Lo verifican `dominio-forma` (`ley/2 §7`: `forma`
-  agente exige `pi∈{2,3}` ∧ `mu∈{2,3}`) y `arnes-compatible`. Esto es ley
-  mecanizada.
-- **Cima teleológica — DEUDA residente-de-KB, NO legislada.** La **finalidad**
-  propiamente dicha —que el plan converja a su fin y se sostenga hasta lograrlo—
-  es la convergencia del ciclo P-D-A a un **punto fijo** (`icas-agencia`: «la
-  convergencia del ciclo … es la condición de que la traza converja a un punto
-  fijo»), más el `α-iso` del alineamiento (§4). **No** está mecanizada y **no**
-  está en la lista cerrada de obligaciones declaradas de `ley/3 §6`. Es deuda
-  (§4).
-
-«**Corre hasta lograr o fracasar**» no exige primitivo nuevo: el éxito es la
-convergencia al punto fijo; el fallo es un estado **terminal** de la coálgebra
-(`cat-agent-coalgebra §3.3`, co-inducción terminal) y/o un `xi ≥ 3`
-(saga/coreografía) que cierra la traza.
-
-## 3. Reformulación de §2.2: independencia estructural ≠ bisimilaridad observable
-
-`cat-agent-coalgebra §2.2` (Teorema de Independencia de Fibras) enuncia, para
-las proyecciones `π` sobre fibras **no** fenomenológicas y todo morfismo
-`f: U_phen → U_phen`:
+Libkind y Spivak trabajan en la categoría de funtores polinomiales `Poly` con
+el producto monoidal de sustitución. Allí construyen la mónada libre sobre un
+polinomio como árboles de decisión terminantes, estudian la comónada cofree y
+una acción de módulo de la primera sobre la segunda. La lectura es:
 
 ```text
-π_c(f(u)) = π_c(u)
+pattern runs on matter
 ```
 
-**El teorema FORMAL sobrevive.** La ecuación dice que la **maquinaria** de
-transición —la proyección de `c` sobre las fibras no-fenomenológicas, la FSM, la
-lógica de estados— es **invariante** a `U_phen`. Eso es correcto y se preserva.
-Llamémoslo **independencia estructural**.
+El resultado depende de objetos y morfismos concretos de `Poly`. No afirma que
+cualquier plan sea literalmente una mónada libre ni que cualquier memoria sea
+una comónada cofree.
 
-**Las GLOSAS sobre-leen.** Tres lecturas de prosa exceden lo que la ecuación
-prueba, y se corrigen (esto es **corrección de glosa**, no re-prueba):
+## 2. Traducción de KORA
 
-| Glosa original | Sobre-lectura | Corrección |
-|---|---|---|
-| §2.2 «*Meaning*: changing the personality does not change the behavior … are **bisimilar**» | confunde invariancia de la maquinaria con invariancia del **output** | dos agentes que difieren solo en `U_phen` son **estructuralmente-bisimilares**, NO observacionalmente-bisimilares |
-| §2.2 Corolario (Segregation) «sin pérdida de información / intercambiables» | la intercambiabilidad plena presupone bisimilaridad observable | la segregación `SOUL.md = U_phen` se justifica por la independencia **estructural**; no implica igualdad de salida |
-| §5.3 «migración correcta ⟺ **bisimilar**» | la migración que cambia `U_phen` cambia el output | «migración correcta ⟺ **estructuralmente-bisimilar**» (admite cambios de output inducidos por `U_phen`) |
+KORA usa `pi`, `mu` y `xi` como coordenadas ordinales de un clasificador:
 
-**Por qué la bisimilaridad observable NO se sostiene.** La bisimulación de
-`cat-agent-coalgebra §5.1` exige `o₁ = o₂` (outputs iguales). Pero `c` **lee**
-`U_phen` (`aufbau-persona-agente §3`: la personalidad permea la conducta; un
-agente con fin dominante *ser-más-allá-de-sí* produce salidas distintas de uno
-con fin *ser-sí* ante el mismo input). Luego dos agentes que difieren solo en
-`U_phen` **no** satisfacen `o₁ = o₂`: no son observacionalmente bisimilares.
+- `pi` aproxima complejidad del plan;
+- `mu` aproxima persistencia/entorno de la materia;
+- `xi` aproxima complejidad del acoplamiento.
 
-**Definición local — bisimilaridad estructural** (refinamiento de esta kb, no
-teorema del corpus): `(U₁, c₁) ≈_str (U₂, c₂)` si existe la relación de
-bisimulación de §5.1 **sobre la proyección no-fenomenológica de `c`** (la
-maquinaria de transición), admitiendo que la componente de `Out` dependiente de
-`U_phen` varíe. Registro categorial: es la diferencia entre una mera
-transformación natural y un isomorfismo natural (`icas-safety-alignment`: «no
-faithful/full, sino transformación natural vs isomorfismo natural»). La
-independencia estructural preserva la **estructura** (transf. natural / faithful);
-la bisimilaridad observable plena exigiría el **iso** (que `U_phen` no perturba),
-y ese iso **falla**.
+Esta traducción es una **heurística estructurada** inspirada en
+pattern-runs-on-matter. Los números no contienen:
 
-## 4. Deuda declarada honesta y el puente abierto
+- un funtor polinomial `p`;
+- las posiciones y direcciones de ese polinomio;
+- una mónada libre `m_p`;
+- una comónada cofree `c_q`;
+- una acción de módulo bien tipada.
 
-**La convergencia teleológica y el `α-iso` son deuda residente-de-KB, sin hogar
-legal.** Distinción que esta kb hace explícita y NO debe borrarse:
+Por eso son inválidas, sin datos adicionales, las identificaciones
+`pi = m_p`, `mu = c_q` o `xi = Ξ`. El vector permite comparar perfiles KORA;
+no construye el objeto categorial.
 
-- `naturalidad-xi` (`ley/3 §6`, declarado-no-mecanizado) dice que **el diagrama
-  plan-ejecutor CONMUTA** en el target tras la proyección `T`. Es una propiedad
-  de la transmutación.
-- La **convergencia** dice que la **traza alcanza un punto fijo** (el fin,
-  `icas-agencia`). Es una propiedad dinámica/teleológica del agente corriendo.
-- **Conmutar ≠ converger.** `naturalidad-xi ≠ convergencia`. Por eso la
-  convergencia **no** se lista junto a `naturalidad-xi`, `cierre-safety` y
-  `composicion-kleisli`: esa lista de `ley/3 §6` es **cerrada** y son
-  obligaciones de **transmutación**, no de agencia.
+## 3. Puente hacia la coálgebra efectual
 
-El estatus correcto de la convergencia y del `α-iso` es **deuda técnica
-categórica** en el sentido de `icas-lifecycle` («una invariante que el código
-asume pero el esquema ya no garantiza»): aquí, **una invariante que el agente
-asume y la ley no garantiza**. Reside en este corpus (KB), no en la ley. Llamarla
-legislada sería fingir un puente prometido como demostrado.
+`urn:kora:kb:cat-agent-coalgebra` propone el modelo mínimo:
 
-**El `α-iso`.** El alineamiento perfecto es el isomorfismo natural
-`α : G_agent ⇒ G_principal` (`icas-safety-alignment`: el funtor de objetivos del
-agente coincide naturalmente con el del principal). El alineamiento parcial es
-una transformación natural no invertible; el *misalignment*, su ausencia. El
-`α-iso` es teleológico (qué objetivos persigue el agente), no un check de `velar`.
+```text
+H(X) = (M(O × X))^I
+c : U -> H(U).
+```
 
-**El puente retículo↔F-coálgebra queda ABIERTO** (`ley/1 §5` rationale: «la
-relación entre este retículo y la F-coálgebra … quedó como problema abierto, no
-como morfismo demostrado; esta ley no hereda el puente, hereda la confesión»).
-`pi ≡ m_p` es la **aserción del retículo** (un eje del producto reticular
-acotado «corresponde a» la mónada libre), **no** un morfismo coálgebra
-demostrado. Esta kb **no fabrica** ese puente: lo nombra abierto.
+Relacionar este `H` con un polinomio `p`, su mónada libre y su comónada cofree
+requeriría al menos:
 
-## 5. Dónde vive Lersch
+1. elegir `p` y `q` a partir de interfaces reales;
+2. definir funtores desde el dominio PMI hacia las construcciones relevantes
+   de `Poly`;
+3. exhibir la acción sobre morfismos;
+4. demostrar las leyes de módulo;
+5. explicar cómo los efectos `M` interactúan con esas construcciones.
 
-El puente `aufbau-persona-agente` no es pieza suelta a instalar: es **sustancia**
-de dos lugares de este módulo.
+KORA no dispone aún de esos datos. El puente retículo↔coálgebra↔`Poly` queda
+abierto, no como un morfismo supuesto.
 
-- **`U_phen` = el parámetro `Para` que sesga el plan.** En la cuenta de
-  contextads de `icas-agencia`, `Para` son morfismos `f : A × P → B` con `P`
-  parámetros. `U_phen` (fin × estilo × registro, `aufbau §2`) es el parámetro
-  `P` que `c` lee para **elegir qué rama** del plan `m_p` toma el agente. La
-  personalidad no reescribe la maquinaria (independencia estructural, §3); la
-  **parametriza**. Esto justifica por qué `U_phen` es separable (`SOUL.md`) y a
-  la vez permea la conducta.
-- **La *Tektonik* = el contenido del `α-iso`.** El `α-iso` (§4) dice *que* hay
-  alineamiento perfecto, pero no *cuál es su dirección*. `aufbau §4` la llena: el
-  agente alineado es aquel cuyo `U_phen` deja la *Führung* a la dirección **C**
-  (*ser-más-allá-de-sí*: servir el fin) sobre la **B** (*ser-sí*: vigencia,
-  recompensa, autoimagen). Las tres roturas de la *Tektonik* (acentuación
-  unilateral, disociación, inautenticidad) son los modos de fallo del
-  alineamiento. La *Tektonik* es, pues, la **dirección** del `α-iso`: el contenido
-  antropológico de la deuda teleológica, no su demostración.
+## 4. Personalidad y teleología
 
-## Fuentes
+La descomposición:
 
-- `urn:fxsl:kb:icas-agencia` — *pattern runs on matter*, free monad/cofree
-  comonad, módulo `m_p` sobre `c_q`, `Ξ`, `Para`/contextads, convergencia P-D-A.
-- `urn:kora:kb:cat-agent-coalgebra` — la mitad `c_q`: §2.2 (independencia
-  reformulada aquí), §3.3 (co-inducción terminal), §5 (bisimulación).
-- `urn:kora:kb:aufbau-persona-agente` — §2 (contenido de `U_phen`), §3 (`c` lee
-  `U_phen`), §4 (*Tektonik* = dirección del `α-iso`).
-- `urn:fxsl:kb:icas-safety-alignment` — `α-iso` `G_agent ⇒ G_principal`;
-  transformación natural vs isomorfismo natural.
-- `urn:fxsl:kb:icas-lifecycle` — deuda técnica categórica (invariante asumida y
-  no garantizada).
-- `ley/1 §1` (axioma del módulo), `ley/1 §5` (puente abierto), `ley/3 §6`
-  (lista cerrada de obligaciones declaradas de transmutación).
+```text
+U = U_phen × U_ctx × U_epi × U_sta
+```
+
+permite tratar `U_phen` como parámetro de una transición. Es un modelo útil:
+el estado fenomenológico puede influir en la elección de salida o siguiente
+estado. El producto no demuestra independencia, y esa dependencia impide
+inferir bisimulación entre agentes con personalidades distintas.
+
+La *Tektonik* de `urn:kora:kb:aufbau-persona-agente` aporta una dirección de
+diseño axiológico. No constituye por sí misma un isomorfismo natural de
+objetivos. Para hablar de una transformación
+`G_agent ⇒ G_principal` se necesitan una categoría dominio, dos funtores y
+componentes naturales; para llamarla isomorfismo, cada componente debe ser
+invertible. Entrenamiento, RLHF o una consigna no suministran automáticamente
+esa estructura.
+
+Convergencia hacia un fin también es una propiedad dinámica separada. Exige
+una noción de trayectoria, objetivo y convergencia; no se sigue de naturalidad
+ni de un punto fijo sin propiedad universal.
+
+## 5. Estatus de las afirmaciones
+
+| Afirmación | Estatus |
+|---|---|
+| mónada libre, comónada cofree y acción de módulo en `Poly` | formal, bajo las hipótesis del artículo |
+| PMI como vocabulario plan/materia/interacción | modelo de diseño |
+| `pi`, `mu`, `xi` construyen objetos de `Poly` | falso sin datos adicionales |
+| puente PMI→`Poly`→coálgebra efectual | problema abierto |
+| `U_phen` puede parametrizar la transición | modelo |
+| separación de archivos implica independencia conductual | falso |
+| alineamiento perfecto es un `α`-iso | metáfora hasta definir los funtores |
+| naturalidad implica convergencia | falso |
+
+## Fuente primaria
+
+- Sophie Libkind y David I. Spivak, *Pattern Runs on Matter: The Free Monad
+  Monad as a Module over the Cofree Comonad Comonad*:
+  https://arxiv.org/abs/2404.16321

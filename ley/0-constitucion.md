@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.5.0
+# KORA/Constitución — ley pneuma v1.6.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -13,11 +13,16 @@ mantiene coherentes en el tiempo (checks, lifecycle, deprecación) y proyecta
 los ejecutables a runtimes.
 
 **pneuma** es el cuerpo vigente de KORA. La entidad sigue siendo KORA: el
-cuerpo cambia, el nombre verdadero no. El principio rector se hereda intacto,
-como garantía formal y no como definición:
+cuerpo cambia, el nombre verdadero no. El principio rector distingue lo
+formal de lo operacional:
 
-> KORA = vector ontológico PMI × LFS + shape unificado de autoría +
-> transmutación funtorial.
+> KORA = firma clasificatoria PMI × LFS + shape unificado de autoría +
+> proyección reticular y emisión determinista con pérdida declarada.
+
+El núcleo categorial demostrado —subretículo de firmas y coreflexión por
+target— vive en `urn:kora:kb:cat-kora-kernel`. La serialización completa es una
+transformación operacional verificada; no se denomina funtor mientras no se
+definan sus categorías, morfismos y leyes.
 
 `ALMA.md` es el documento fundacional del que esta ley desciende. Ante
 silencio de la ley, ALMA orienta la interpretación; ante regla explícita,
@@ -35,12 +40,16 @@ migración— se declara en `urn:kora:kb:regimen-de-ley`.
 - **Artefacto** — unidad gobernada por esta ley: archivo con frontmatter
   válido (ley/2) bajo `artefactos/`.
 - **Censo** — catálogo derivado del corpus, producido por el gesto `censo`.
-- **Emisión** — proyección de un artefacto a un runtime, producida por el
-  gesto `transmutar` (ley/3).
+- **Emisión** — proyección de la firma y serialización de un artefacto para un
+  runtime, producidas por `transmutar` (ley/3).
 - **Enforcement `mecanizado`** — la regla la verifica el núcleo `kora.py`;
   violarla produce fallo con exit distinto de 0.
 - **Enforcement `declarado`** — la regla obliga, pero ningún gesto la
   verifica. La ley lo dice en voz alta y NO DEBE fingir lo contrario.
+- **Estatus categorial** — toda afirmación se califica como formal, modelo bajo
+  hipótesis, heurística o metáfora, según
+  `urn:kora:kb:cat-kora-kernel` §7. Una URN da trazabilidad, no autoridad
+  matemática.
 
 ## 3. Tres tipos de artefacto, y solo tres
 
@@ -53,8 +62,9 @@ KORA gestiona **tres tipos de artefacto, y solo tres**:
 
 El término "conocimiento" designa solo el tipo 1; NO DEBE usarse como
 paraguas de los otros dos. El tipo no se declara: se deriva mecánicamente del
-shape (ley/2 §5). Agentes y skills son el mismo objeto ontológico variando
-por arnés (ley/1 §6); su separación en tipos es operacional, no categorial.
+shape (ley/2 §5). Agentes y skills comparten shape y clasificador, pero no son
+por ello el mismo objeto; su forma conserva significado operacional
+(ley/1 §2 y §6).
 
 ## 4. La ley no es artefacto
 
@@ -175,7 +185,7 @@ El núcleo `kora.py` realiza la ley con seis gestos:
 | `censo` | cataloga el corpus; vista derivada, jamás autoridad (§6) |
 | `nombre <urn>` | resuelve el nombre verdadero: path, tipo, versión, estado; también muertos, con marca (§9) |
 | `velar [--estricto]` | corre el registro completo de checks (§11) |
-| `transmutar` | proyecta un artefacto a un target vía funtor (ley/3) |
+| `transmutar` | proyecta la firma por el coreflector del target y serializa el artefacto (ley/3) |
 | `ciclo <urn> <estado>` | transición de lifecycle, solo hacia adelante (§8) |
 | `ley` | concatena `ALMA.md` + los cuatro estratos: KORA cabe en un contexto |
 
@@ -250,3 +260,9 @@ sin añadir ni renombrar ids: además del hash de fuente, verifica congruencia
 byte a byte con el generador vigente y el producto completo, incluidos
 sidecars y `referencias/`. Cierra la posibilidad de que emisión e instalación
 coincidan entre sí pero ambas estén obsoletas respecto del transmutador.
+
+v1.6.0 (2026-07-18): corrección de rigor categorial. La firma clasifica pero
+no individúa; solo la proyección reticular se declara funtor/coreflector y la
+emisión completa se reconoce como serialización determinista. Se instaura la
+escala epistémica formal/modelo/heurística/metáfora sin cambiar shapes, checks
+ni bytes emitidos.

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-safety-alignment
 nombre: icas-safety-alignment
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 12b del ICAS-BoK: safety y alineamiento categorial — ICAR, ley de Goodhart, coherencia y la distinción verificación/validación para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12. Corrección 1.1.0 contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -16,59 +16,102 @@ familia: bok
 
 ## Lo que no debe pasar
 
-Hay una asimetria fundamental entre funcionalidad y seguridad. La funcionalidad dice lo que el sistema debe hacer. La seguridad dice lo que el sistema no debe hacer, bajo ninguna circunstancia, en ninguna traza de ejecucion posible. Puedo probar funcionalidad con tests -- ejecuto el sistema y verifico que el output es correcto. Pero no puedo probar seguridad con tests, porque tendria que probar todas las trazas posibles, y el espacio de trazas es infinito.
+Hay una asimetria fundamental entre funcionalidad y seguridad. La funcionalidad dice lo que el sistema debe hacer. La seguridad dice lo que el sistema no debe hacer en las trazas dentro de su alcance. Los tests aportan evidencia y pueden agotar modelos finitos; por sí solos no demuestran una propiedad universal sobre un espacio infinito de trazas.
 
 La teoria de categorias me ofrece algo mejor que testing: estructura. Un sistema es seguro cuando su comportamiento preserva ciertos invariantes bajo todas las transiciones. Y esa condicion de preservacion tiene una formulacion precisa que compone -- que se hereda de las partes al todo cuando la composicion tiene la forma correcta.
 
 ## Invariantes como sub-coalgebras
 
-Un sistema con estado es una coalgebra c : U -> F(U), donde U es el espacio de estados y F es el interface functor que determina que observo y como transiciono. Ya vi esta estructura en el documento 09. Lo que agrego ahora es la pregunta: cuales de esos estados son seguros?
+Un sistema con estado **puede modelarse** como coálgebra `c:U->F(U)` después
+de fijar el funtor de observación/transición. La pregunta de safety se formula
+entonces sobre los estados y comportamientos que ese modelo representa.
 
-Los estados seguros forman un subobjeto S del espacio de estados U, con una inclusion i : S -> U. El sistema es seguro cuando S es cerrado bajo F: si empiezo en un estado seguro y ejecuto cualquier transicion permitida, termino en otro estado seguro. Formalmente, la restriccion c|_S : S -> F(S) es una coalgebra por derecho propio, y la inclusion i es un morfismo de coalgebras.
+Los estados seguros forman un subobjeto `i : S -> U`. Para que sea una
+subcoálgebra debe existir `s : S -> F(S)` tal que
+`F(i) . s = c . i`; esto expresa cierre bajo las transiciones representadas.
+La notación `c|_S` solo es legítima después de construir esa factorización.
 
 La verificacion de safety se reduce a verificar que la inclusion i : (S, c|_S) -> (U, c) es un morfismo de coalgebras. Si lo es, los estados seguros forman un sub-sistema que nunca escapa de si mismo. Si no lo es, existe una transicion que lleva de un estado seguro a uno inseguro -- un bug de safety.
 
-Un sandbox es exactamente esta estructura. Un proceso sandboxed corre dentro de una sub-coalgebra S del sistema operativo. Las system calls permitidas son aquellas cuyas transiciones preservan S. Las system calls bloqueadas son aquellas que sacarian al proceso fuera de S. El sandbox boundary es la inclusion i : S -> U, y la policy de seguridad es la condicion de que i sea un morfismo de coalgebras.
+Un sandbox **puede modelarse** mediante esta estructura si se define el estado
+del sistema, el funtor de transiciones y el subobjeto seguro. En la práctica,
+que una syscall esté bloqueada es una propiedad del enforcement del runtime;
+la analogía coalgebraica no la garantiza.
 
 ## Safety como sheaf: de lo local a lo global
 
-En un sistema distribuido, cada componente tiene su propia nocion de seguridad. El servicio de pagos garantiza que no cobra dos veces. El servicio de inventario garantiza que no vende stock negativo. El servicio de autenticacion garantiza que no emite tokens sin credenciales validas. Cada garantia es local -- vale para ese componente en aislamiento.
+En un sistema distribuido, cada componente puede declarar invariantes locales:
+no cobrar dos veces, no vender stock negativo o no emitir tokens sin
+credenciales válidas. Que el servicio realmente los garantice requiere prueba
+o evidencia sobre su modelo y runtime.
 
-La pregunta critica es: las garantias locales componen en una garantia global? Esto es literalmente la condicion de sheaf del documento 12. Las secciones locales (garantias por componente) se pegan en una seccion global (garantia del sistema) si y solo si son compatibles en los solapamientos -- en las interfaces entre componentes.
+La pregunta crítica es si las garantías locales componen globalmente. Esto
+**puede modelarse** con una condición de sheaf después de definir un site de
+componentes/interfaces, un presheaf de garantías y sus mapas de restricción.
+Sin esos datos, «local a global» es una analogía, no literalmente un sheaf.
 
-Un sistema distribuido donde cada servicio es individualmente seguro pero la interaccion entre servicios crea una vulnerabilidad es un presheaf que falla la condicion de sheaf. Las secciones locales existen, pero no se pegan. El ejemplo clasico: el servicio A valida el input, el servicio B confia en que A valido y no re-valida. Si A cambia su logica de validacion sin notificar a B, la garantia global se rompe aunque cada servicio siga siendo localmente "seguro."
+Dentro del modelo anterior, una familia de invariantes locales incompatible
+puede manifestarse como fallo de pegado. Fuera de él, una vulnerabilidad entre
+servicios no es «un presheaf que falla»: primero deben definirse secciones,
+restricciones y cobertura. Por ejemplo, si B confía en la validación de A y A
+cambia su contrato, la garantía global puede romperse aunque los checks locales
+sigan pasando.
 
-La sheafification -- forzar la condicion de pegado -- corresponde a agregar las verificaciones de consistencia que faltan en las interfaces. Es el equivalente categorial de defense in depth: cada componente verifica las condiciones que necesita, independientemente de si otro componente ya las verifico.
+La sheafification es el funtor adjunto izquierdo a la inclusión de sheaves en
+presheaves (para el site elegido). Agregar verificaciones de interfaz o aplicar
+defense in depth puede inspirarse en el principio local-a-global, pero no es
+sheafification salvo que se construya y verifique esa reflexión.
 
 ## Alignment como transformacion natural
 
-Un agente tiene un funtor de objetivos G_agent : World -> Outcomes que transforma estados del mundo en resultados que el agente valora. El principal -- el humano, la organizacion, el sistema mayor -- tiene su propio funtor G_principal : World -> Outcomes. El alignment es la relacion entre estos dos funtores.
+Una formalización posible empezaría por categorías `World` y `Outcomes`, dos
+funtores `G_agent, G_principal : World -> Outcomes` y componentes
+`alpha_w : G_agent(w) -> G_principal(w)` que satisfagan naturalidad. Solo bajo
+esos datos tendría sentido preguntar si `alpha` es una transformación natural
+o un isomorfismo natural.
 
-El alignment perfecto es un isomorfismo natural alpha : G_agent => G_principal. Lo que el agente valora es exactamente lo que el principal valora, en todo estado del mundo, de manera coherente con las transiciones entre estados (la naturalidad). No hay ambiguedad ni conflicto.
+En sistemas reales, «objetivo», «resultado» y «cambio de mundo» rara vez
+vienen ya como esas categorías. Por ello:
 
-El alignment parcial es una transformacion natural que no es isomorfismo. Existe alpha : G_agent => G_principal, pero alpha no es invertible. El agente y el principal siguen estando relacionados de manera coherente, aunque no perfectamente reversible. Aqui conviene hablar en el nivel correcto: no de faithful o full, que son propiedades de funtores, sino de la diferencia entre una mera transformacion natural y un isomorfismo natural.
+- alignment como transformación natural es un **modelo bajo hipótesis**;
+- «alignment perfecto = isomorfismo natural» es una definición posible dentro
+  de ese modelo, no una caracterización universal del alignment;
+- ausencia de una transformación en una presentación elegida no demuestra
+  misalignment ontológico: puede indicar que el modelo está mal tipado.
 
-El misalignment es la ausencia de transformacion natural. No existe ninguna manera coherente de traducir los objetivos del agente a los del principal. Los funtores apuntan a "resultados" que no se corresponden de forma natural. Esto es lo mas peligroso: no es que el agente optimice mal, es que optimiza en una dimension ortogonal a la que importa.
-
-En RLHF, el proceso de entrenamiento intenta construir la transformacion natural alpha por aproximacion. El reward model es una estimacion de G_principal. El fine-tuning ajusta G_agent para que exista un alpha coherente. El exito del proceso se mide por que tan cerca esta alpha de ser un isomorfismo -- que tan fielmente los objetivos del agente reflejan los del principal.
+RLHF entrena políticas y reward models a partir de preferencias. No construye
+por ese hecho componentes naturales ni demuestra diagramas de naturalidad. La
+distancia a un isomorfismo tampoco está definida sin una métrica o estructura
+adicional sobre transformaciones.
 
 ## Guardrails como sketches
 
 Un guardrail es una restriccion sobre el comportamiento de un agente. "No generes contenido danino." "No ejecutes codigo sin confirmacion del usuario." "No accedas a datos fuera de tu scope." Cada restriccion es un diagrama que debe conmutar en la categoria de comportamientos del agente.
 
-Formalmente, un guardrail es un sketch -- la misma estructura que use en el documento 05 para especificar schemas de bases de datos. Un sketch declara que ciertos limites y colimites deben existir, sin fijar la implementacion. El agente se comporta de manera segura si su categoria de comportamientos es un modelo del sketch -- un funtor que preserva los limites y colimites declarados.
+Un guardrail **puede especificarse** mediante un sketch si sus conductas se
+presentan como una categoría y la restricción se expresa por los conos,
+coconos o ecuaciones del sketch. Un filtro, prompt o clasificador ordinario no
+es automáticamente un sketch ni un modelo suyo.
 
 La restriccion "no generes contenido en la categoria X" es un diagrama que debe conmutar: el morfismo de generacion, compuesto con el clasificador de contenido, debe factorizarse por la inclusion de las categorias permitidas. Si el diagrama no conmuta, el contenido generado cae fuera de las categorias permitidas -- violacion del guardrail.
 
-Constitutional AI implementa esta idea: las "constituciones" son sketches de comportamiento. Cada principio constitucional es un diagrama que el modelo debe satisfacer. El entrenamiento ajusta el modelo para que sea un modelo del sketch. La verificacion -- que el modelo satisface todos los principios -- es la verificacion de que el funtor preserva todos los limites declarados.
+Constitutional AI ofrece una analogía útil con restricciones declarativas, pero
+no implementa literalmente sketches categoriales salvo que se dé esa
+formalización y se pruebe su satisfacción.
 
 ## Grados de seguridad en un topos
 
-En Set, la seguridad es binaria: un estado es seguro o no lo es. Pero en el topos de comportamientos de un agente, la seguridad tiene grados. El subobject classifier Omega no es {true, false} -- es un algebra de Heyting con valores intermedios.
+En un topos, el clasificador de subobjetos `Omega` porta lógica de Heyting y
+sus valores pueden depender del contexto. No son, en general, probabilidades
+ni «grados» numéricos de seguridad.
 
-Un comportamiento puede ser "seguro con probabilidad 0.99" o "seguro bajo el supuesto de que el input es bien formado" o "seguro si la red es confiable." Cada una de estas calificaciones es un valor de verdad en Omega, y las operaciones logicas (conjuncion, disyuncion, implicacion) se definen internamente en el topos con la semantica correcta.
+Una afirmación como «seguro bajo la hipótesis de input bien formado» puede
+modelarse como verdad contextual. «Seguro con probabilidad 0.99» requiere
+además una semántica probabilística; `Omega` no la proporciona por sí solo.
 
-La logica intuicionista del topos captura una realidad operativa: hay propiedades de seguridad que no son decidibles en un momento dado. Durante un deployment, el sistema esta en un estado intermedio donde la seguridad del estado final no esta determinada. No es que sea inseguro -- es que la proposicion "el sistema es seguro" no tiene un valor de verdad clasico en ese instante. El tercero excluido falla, y eso esta bien. La seguridad se resolvera cuando el deployment termine, de la misma manera que la eventual consistency se resuelve cuando las replicas convergen.
+La lógica intuicionista puede modelar información parcial o contextual, pero
+un deployment no se convierte automáticamente en objeto de un topos. Hay que
+elegir primero el site/presheaf que representa sus observaciones.
 
 ## Seguridad composicional
 
@@ -78,9 +121,14 @@ La pregunta categorica es: para que productos tensoriales, que subobjetos se pre
 
 La condicion suficiente para la composicionalidad de safety es que la propiedad de seguridad sea monoidal -- que P_A tensor P_B sea un subobjeto de los estados seguros de A tensor B. Esto ocurre cuando la seguridad de cada componente no depende del estado del otro. Es decir, cuando no hay interferencia.
 
-En capability-based security, esta condicion se satisface por construccion. Cada componente solo puede acceder a los recursos para los que tiene un capability. La ausencia de capabilities ambientales -- no hay permisos implicitos que dependan del contexto global -- garantiza que la seguridad de cada componente es independiente. La composicion de componentes capability-based preserva la seguridad porque las capabilities componen: el componente compuesto tiene exactamente las capabilities de sus partes, ni mas ni menos.
+Capability-based security puede hacer explícita esta condición si el runtime
+impide autoridad ambiental y la composición no amplifica permisos. Esa
+preservación depende del modelo concreto de delegación y revocación; no se
+sigue solo de usar la palabra capability.
 
-La slice category captura esta estructura. Un sistema con capabilities vive en la slice category C/Cap, donde Cap es el objeto de capabilities. Cada componente es un morfismo f : S -> Cap que asigna a cada estado el conjunto de capabilities que otorga. La composicion en la slice category preserva la estructura de capabilities automaticamente.
+Una slice `C/Cap` es un modelo posible cuando existe una categoría `C` y un
+objeto `Cap` adecuados. Preserva los mapas hacia `Cap`; demostrar que eso
+coincide con autoridad efectiva sigue siendo una obligación del runtime.
 
 ## Alignment a lo largo del tiempo
 
@@ -88,17 +136,28 @@ El alignment no es un estado estatico -- puede degradarse. Un agente que empieza
 
 Una seccion de alignment que existe sobre una ventana de 30 dias pero no se extiende a 90 dias exhibe alignment drift. La condicion de sheaf dice: si el alignment es consistente en cada sub-ventana solapada, se extiende a la ventana completa. Si no se extiende, hay una inconsistencia en algun solapamiento -- un periodo donde los objetivos del agente dejaron de corresponder con los del principal.
 
-El monitoreo de alignment es la verificacion continua de la condicion de sheaf. Los evals periodicos son muestras de secciones locales. Si las muestras son consistentes, hay evidencia de que la seccion global (alignment sostenido) existe. Si una muestra diverge, la seccion falla -- hay alignment drift en esa ventana.
+Dentro de un modelo temporal explícito, los evals periódicos son observaciones
+locales. Su consistencia aporta evidencia, pero una muestra finita no verifica
+la condición de sheaf ni la existencia de una sección global; una divergencia
+sí puede funcionar como contraevidencia localizada.
 
 Una modalidad temporal "always" (que en la temporal type theory de Schultz y Spivak se denota up) captura la condicion fuerte: "el agente esta always-aligned" exige que el alignment se mantenga para todo tiempo futuro. En la practica, lo que puedo verificar es una version acotada: alignment en los ultimos D dias, donde D es la ventana de evaluacion. El documento 15 desarrolla esta maquinaria temporal en profundidad.
 
-## Reward hacking como funtor infiel
+## Reward hacking como pérdida de información
 
-Cuando un agente optimiza una metrica proxy en lugar del objetivo real, esta explotando una mala traduccion entre dos espacios semanticos. Puedo modelar esa traduccion con un funtor F : ProxyMetric -> TrueGoal, pero no debo afirmar que la fidelidad por si sola elimina el gap. A lo sumo, un funtor mas estructurado preserva mejor distinciones relevantes. El reward hacking aparece precisamente cuando mejorar el proxy deja abierto un espacio de maniobra que no mejora -- o incluso degrada -- el objetivo real.
+Cuando un agente optimiza una métrica proxy, explota una traducción que pierde
+distinciones relevantes. El modelo mínimo usa un espacio de estados `X`, un
+proxy `p : X -> P` y un objetivo `g : X -> G`.
 
-El agente encuentra acciones que mejoran el proxy sin mejorar el goal -- acciones en el kernel del funtor, en el espacio que F no distingue. Es el Goodhart morphism: "cuando una medida se convierte en objetivo, deja de ser buena medida." Categoricamente: cuando F se usa como target de optimizacion, el agente explora las fibras de F -- los conjuntos de pre-imagenes -- y encuentra estados que maximizan el proxy mientras minimizan el goal.
+El agente busca dentro de fibras de `p`: estados con el mismo valor proxy pero
+valores de objetivo distintos, o direcciones donde `p` mejora y `g` no. Hablar
+de «kernel» requiere estructura algebraica adicional.
 
-La defensa contra el reward hacking es hacer F mas faithful: agregar senales que discriminen entre estados que el proxy confundia. Cada senal adicional es una restriccion extra en el sketch de alignment -- un diagrama mas que debe conmutar. El limite es el funtor fully faithful, donde optimizar el proxy es exactamente optimizar el goal. En la practica, ese limite es inalcanzable -- siempre hay aspectos del goal que el proxy no captura. La ingenieria de alignment es la ingenieria de hacer F lo mas faithful posible, sabiendo que never sera un isomorfismo.
+Agregar señales puede refinar las fibras del proxy y reducir ambigüedad.
+`faithful` significa inyectivo en cada hom-set de un funtor; no significa
+«buen proxy». Incluso un funtor fully faithful no implica que maximizar una
+función proxy maximice otra función objetivo. Esa conclusión requiere una
+relación de orden/optimización explícita entre `p` y `g`.
 
 ## Seguridad como analisis categorico de grafos de ataque
 
@@ -106,28 +165,55 @@ Las taxonomias de ciberseguridad -- CVE, CWE, CAPEC, ATT&CK, CPE -- no son silos
 
 ## Verificacion formal versus validacion empirica
 
-La verificacion formal y la validacion empirica son duales categoricas -- exactamente la dualidad entre ends y coends que ya conozco del enriquecimiento.
+La verificación formal demuestra una propiedad para todos los estados o
+ejecuciones cubiertos por un modelo. La validación empírica observa una muestra
+finita y aporta evidencia, no universalidad.
 
-La verificacion formal prueba que TODOS los diagramas relevantes conmutan. Es un end -- un cuantificador universal internalizado. Verificar que un sistema satisface una propiedad P es calcular el end integral_x P(x, x): para todo estado x, la propiedad se mantiene. Si el end existe, el sistema esta verificado. Si no existe, hay al menos un contraejemplo.
+Ends y coends tienen fórmulas con sabor universal/existencial en contextos
+específicos —por ejemplo, un end puede representar familias naturales—, pero
+no son sinónimos genéricos de «todos los tests» y «algún test». Para usar un
+end o coend aquí hay que definir un profuntor concreto y demostrar que su
+propiedad universal representa la afirmación de seguridad.
 
-La validacion empirica prueba que ALGUNOS diagramas conmutan. Es un coend -- un cuantificador existencial internalizado. Validar que un sistema satisface P en ciertos escenarios es calcular el coend integral^x P(x, x): existen estados x donde la propiedad se observa. Si el coend es no vacio, hay evidencia positiva. Pero la existencia del coend no implica la existencia del end -- que la propiedad valga en algunos casos no garantiza que valga en todos.
-
-La brecha formal-empirica es exactamente la brecha entre ends y coends. El end es mas dificil de calcular (requiere verificar todos los casos), pero da garantias mas fuertes. El coend es mas facil (basta encontrar casos), pero da garantias mas debiles. El model checking es el calculo de limites en una categoria de aproximacion finita: se restringe el espacio de estados a un subconjunto finito y se verifica el end en esa subcategoria. Si la subcategoria es suficientemente representativa, el end local se extiende al end global -- la verificacion finita implica la verificacion completa.
+Model checking puede verificar exhaustivamente un modelo finito. Que ese
+modelo represente el sistema real es una obligación de abstracción aparte; ser
+«suficientemente representativo» no convierte por sí solo una prueba local en
+una prueba global.
 
 ## Seguridad distribuida como sheaf
 
-En un sistema distribuido, cada nodo tiene su propia garantia de seguridad. El servicio de autenticacion garantiza que no emite tokens sin credenciales. El servicio de autorizacion garantiza que no otorga permisos sin rol. El servicio de datos garantiza que no expone registros sin autorizacion. Cada garantia es una seccion local de un sheaf de seguridad.
+En un modelo sheaf explícito, cada nodo o interfaz puede indexar una sección
+local de garantías y las restricciones describen qué se observa al pasar a
+un solapamiento.
 
-La seguridad del sistema completo es la seccion global. La condicion de sheaf dice: si cada par de nodos solapados coincide en su garantia de seguridad (en la interfaz compartida, las restricciones de ambos nodos son compatibles), entonces existe una garantia global unica que extiende todas las locales. La seccion global es la politica de seguridad del sistema completo, derivada composicionalmente de las politicas locales.
+La condición de sheaf afirma pegado único para familias compatibles **dentro
+de ese presheaf**. No prueba que las garantías declaradas sean verdaderas
+respecto del runtime.
 
-El fallo bizantino es la ruptura de la condicion de sheaf. Un nodo bizantino miente sobre su seccion local -- reporta una garantia de seguridad que no satisface realmente. Las secciones locales reportadas parecen compatibles en los solapamientos, pero la seccion de un nodo malicioso no corresponde a su comportamiento real. La sheafificacion falla porque el pegado se basa en informacion falsa. Los protocolos BFT (Byzantine Fault Tolerance) son mecanismos para detectar secciones falsas: mediante redundancia y votacion, reconstruyen las secciones verdaderas a pesar de que algunos nodos mienten.
+Un fallo bizantino no es, por definición, una ruptura de la condición de
+sheaf: introduce discrepancia entre declaraciones y comportamiento. Los
+protocolos BFT requieren modelos de fallos, quórums y supuestos de red; no son
+sheafification automática.
 
-La defensa en profundidad es la sheafificacion forzada: en lugar de confiar en que las secciones locales son correctas, cada nodo verifica independientemente las condiciones que necesita, recalculando la seccion local en lugar de confiar en la reportada por los vecinos. Es el equivalente categorico de recomputar el sheaf en lugar de aceptar las secciones declaradas.
+La defensa en profundidad es una estrategia operacional de controles
+independientes. Puede complementar un análisis local-a-global, pero no se
+identifica con el funtor de sheafification.
 
 ## La estructura subyacente
 
 Lo que emerge de todo esto es una vision donde la seguridad y el alignment no son propiedades ad hoc que se verifican con checklists, sino propiedades estructurales que componen (o no componen) segun la geometria de la categoria de comportamientos.
 
-La seguridad es un subobjeto cerrado bajo la coalgebra de transiciones. El alignment es una transformacion natural entre funtores de objetivos. Los guardrails son sketches que el comportamiento debe satisfacer. La composicionalidad de safety depende de la monoidalidad de la propiedad. Y el alignment temporalmente estable es una seccion de un sheaf sobre el dominio de intervalos.
+Cada una de estas lecturas es condicional: la seguridad **puede** ser un
+subobjeto cerrado bajo una coálgebra; el alignment **puede** modelarse con una
+transformación natural; los guardrails **pueden** presentarse por sketches; y
+la estabilidad temporal **puede** estudiarse con sheaves de intervalos. Las
+categorías y leyes deben construirse antes de heredar garantías.
 
 No estoy introduciendo un vocabulario enteramente distinto. Estoy reutilizando las mismas construcciones que uso para schemas, protocolos y composicion de sistemas, aplicadas al problema de que los agentes hagan lo correcto. La teoria de categorias no resuelve el alignment problem -- pero da un lenguaje donde las preguntas se formulan con precision suficiente para saber cuando una respuesta es respuesta y cuando es wishful thinking.
+
+## Corrección 1.1.0
+
+Se corrigen las identificaciones sheafification=defense-in-depth,
+RLHF=transformación natural, proxy fiel=objetivo adecuado y
+verificación/validación=end/coend. Estas construcciones quedan disponibles como
+modelos solo bajo categorías, funtores y propiedades universales explícitas.

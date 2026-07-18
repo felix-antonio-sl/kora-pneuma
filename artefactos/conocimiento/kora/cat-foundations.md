@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-foundations
 nombre: cat-foundations
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Fundamentos matemáticos de la Formal Layer de KORA: notación, categorías, funtores, transformaciones naturales, adjunciones y (co)álgebras — único documento de la serie que introduce notación; los demás lo referencian."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/kora/categorical-foundations/00-foundations.md (sha256:d5999f525ff2298043cb59d459429a8fe4ac173951ea9d944f24fc41c8b3ba71) el 2026-06-12; cuerpo byte-fiel. Fuente original: Fong & Spivak (Seven Sketches), Spivak (Categorical Systems Theory), Barbosa (Coalgebra for Working SE), Mac Lane (CWM)."
+descripcion: "Fundamentos matemáticos de la capa formal de KORA: categorías, funtores, transformaciones naturales, adjunciones, mónadas, coálgebras y construcciones universales."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/kora/categorical-foundations/00-foundations.md (sha256:d5999f525ff2298043cb59d459429a8fe4ac173951ea9d944f24fc41c8b3ba71) el 2026-06-12. Corrección 1.1.0 (2026-07-18) contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf."
 autor: FS
 creado: 2026-02-26
 lang: en
@@ -16,7 +16,9 @@ familia: bok
 
 ## Purpose
 
-This document establishes the mathematical prerequisites for the KORA formal layer. Every construct used in documents 01-05 of this series is defined here. This is the **only** document in the formal layer that introduces notation — all other documents reference this one.
+This document establishes reference prerequisites for the KORA formal layer.
+It does not make downstream analogies formal merely by supplying vocabulary.
+Each application must still define its categories, morphisms and laws.
 
 ## Notation Convention
 
@@ -44,7 +46,9 @@ satisfying:
 **Key instances in KORA:**
 - Set: objects = sets, morphisms = functions
 - Cat: objects = small categories, morphisms = functors
-- Pos: objects = elements of a poset, morphisms = order relations
+- Any poset `P` induces a thin category whose objects are elements of `P` and
+  with one morphism `x -> y` exactly when `x <= y`
+- **Pos**: objects = posets, morphisms = monotone maps
 
 ## 2. Functor
 
@@ -93,8 +97,8 @@ satisfying the triangle identities:
 Hom_**D**(L(A), B) ≅ Hom_**C**(A, R(B))
 
 **Properties of interest:**
-- η iso ⟹ L is full and faithful (R reflects **C** inside **D**)
-- ε iso ⟹ R is full and faithful (L reflects **D** inside **C**)
+- η iso ⟹ L is full and faithful
+- ε iso ⟹ R is full and faithful
 - η iso and ε iso ⟹ equivalence of categories
 
 ## 5. Monad
@@ -117,7 +121,7 @@ satisfying:
 
 | Monad | M(A) | Effect | Agent meaning |
 |-------|------|--------|---------------|
-| Identity | A | None | Pure transitions, no sandbox |
+| Identity | A | None | Pure transitions; sandboxing is orthogonal |
 | Writer W | A × W | Logging | Audit trail on every transition |
 | Powerset P | P(A) | Nondeterminism | Multiple valid next states |
 | Distribution D | Dist(A) | Probability | Stochastic sampling |
@@ -140,11 +144,18 @@ satisfying:
  d
 ```
 
-**Bisimulation.** A relation R ⊆ U × V such that related states produce related outputs. Formally: there exists a coalgebra structure on R making both projections coalgebra morphisms.
+**Bisimulation.** A relation R ⊆ U × V for which there exists a coalgebra
+structure on R making both projections coalgebra morphisms. Equivalent
+relation-lifting characterizations require suitable hypotheses on F.
 
-**Final coalgebra.** Terminal object in the category of F-coalgebras. Unique morphism from any coalgebra (the unfold/anamorphism). Two states are bisimilar iff they map to the same element of the final coalgebra.
+**Final coalgebra.** A terminal object in the category of F-coalgebras, when
+one exists. It receives a unique morphism from any coalgebra. Under the usual
+conditions on F, bisimilar states have equal final semantics; the converse
+also needs the relevant behavioral-equivalence hypotheses.
 
-**Coinduction principle.** To prove a property P holds for all behaviors of a coalgebra, show that P is a bisimulation.
+**Coinduction principle.** To prove two states behaviorally equivalent, it is
+often enough to exhibit a bisimulation containing them. A validation retry
+loop is not by itself coinduction.
 
 ## 7. Lens
 
@@ -157,7 +168,10 @@ satisfying:
 - PutGet: get(put(s, t)) = t
 - PutPut: put(put(s, t₁), t₂) = put(s, t₂)
 
-**In Kl(M).** A monadic lens replaces put with put: S × T → M(S), where updates produce effectful states.
+**Effectful variants.** Replacing `put` by `S × T -> M(S)` gives a candidate
+effectful update type. The appropriate lens laws and composition depend on the
+chosen effectful-lens framework and compatibility with `M`; the pure laws do
+not transfer merely by changing the codomain.
 
 **Composition.** Lenses compose:
 - get_{l₂ ∘ l₁} = get_{l₂} ∘ get_{l₁}
@@ -169,7 +183,11 @@ satisfying:
 
 **Coproduct.** A + B with injections ι₁: A → A+B, ι₂: B → A+B satisfying the dual universal property.
 
-**Fibered coproduct (pushout).** Given f: C → A and g: C → B, the pushout A +_C B identifies elements with common preimage in C. Universal property: for any D with compatible morphisms from A and B, exists unique morphism from A +_C B to D.
+**Pushout.** Given `f: C -> A` and `g: C -> B`, a pushout is a cocone
+`A -> P <- B` universal among cocones satisfying compatibility over `C`.
+In `Set`, it can be constructed from the disjoint union `A+B` by the
+equivalence relation generated by `f(c) ~ g(c)`. The elementwise quotient is
+not the definition in an arbitrary category.
 
 ## 9. Presheaf
 
@@ -204,10 +222,13 @@ satisfying the **interchange law**: (β' • α') ∗ (β • α) = (β' ∗ β)
 The free construction F(A) is the "simplest" object in **D** generated by A ∈ **C** — it has exactly the structure needed to be an object of **D** and nothing more.
 
 **Properties:**
-- Unit η: A → U(F(A)) embeds generators into the free object (always injective for algebraic theories)
-- Counit ε: F(U(D)) → D maps the free object generated by the underlying set of D back to D (surjective — forgets the extra "free" structure)
-- η iso means the embedding is lossless (U reflects **C** faithfully into **D**)
-- ε surjective means the free construction is a quotient of D (some structure in D is not "free")
+- Unit η: A → U(F(A)) maps generators into the free object. Injectivity is an
+  additional property, not a consequence of an arbitrary adjunction.
+- Counit ε: F(U(D)) → D evaluates the free object on the underlying object of
+  D. Surjectivity likewise needs additional algebraic hypotheses.
+- η iso means the left adjoint F is full and faithful.
+- When ε is a quotient map in a concrete algebraic setting, **D is a quotient
+  of F(U(D))**, not the other way around.
 
 ## 12. Wiring Diagram
 
@@ -224,3 +245,14 @@ The free construction F(A) is the "simplest" object in **D** generated by A ∈ 
 - Spivak, D. "Categorical Systems Theory" — §7 (lenses), §12 (wiring diagrams)
 - Fong & Spivak. "Seven Sketches in Compositionality" — §8 (limits, colimits, presheaves, Yoneda)
 - Awodey, S. "Category Theory" — §10 (monads, Kleisli categories)
+- Riehl, E. *Category Theory in Context*:
+  https://emilyriehl.github.io/files/context.pdf
+- Rutten, J. *Universal Coalgebra*:
+  https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf
+
+## Correction note
+
+Version 1.1.0 corrects the definition of `Pos`, removes unsupported
+injectivity/surjectivity claims for arbitrary adjunctions, reverses the
+misstated quotient direction, and qualifies final-coalgebra/bisimulation
+claims by their existence and preservation hypotheses.

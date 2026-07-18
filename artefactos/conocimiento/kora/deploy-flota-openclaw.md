@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:deploy-flota-openclaw
 nombre: deploy-flota-openclaw
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Runbook del deploy pneuma→flota OpenClaw viva: documentación oficial como canon del runtime, diff anti-despotenciación, cambios por superficies soportadas, HITL clínico, canarios frescos, rollback trazable y paridad de cierre."
-fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4); corregido el 2026-07-16 contra OpenClaw 2026.7.1 y el retiro de las skills legacy; v1.2.0 separa capacidad global, membresía fleet, blueprint declarativo y workspace runtime privado."
+fuente: "Destilado el 2026-07-06 de la ejecución real de la Fase A del plan tres-frentes (kora-pneuma commits 0d1e76b..e8745ff; openclaw-fleet ec12ac6..3ed79f4); corregido el 2026-07-16 contra OpenClaw 2026.7.1 y el retiro de las skills legacy; v1.2.0 separa capacidad global, membresía fleet, blueprint declarativo y workspace runtime privado; v1.2.1 corrige el estatuto de la transmutación: proyección coreflectiva y emisión determinista, no funtor de artefactos demostrado."
 autor: FS
 creado: 2026-07-06
 lang: es
@@ -17,7 +17,7 @@ familia: nota
 
 Runbook del despliegue de agentes pneuma a la flota OpenClaw viva
 (`~/openclaw-fleet/blueprints/` → `~/.openclaw/workspaces/`, gateway systemd
-`:18790`). El funtor emite
+`:18790`). El emisor serializa una proyección coreflectiva de la firma
 (`ley/3 §7.1`); **desplegar es otra cosa**: instala un derivado sobre un
 runtime con estado, memoria y gobernanza propios. Sobrescribir un bot vivo es
 producción.

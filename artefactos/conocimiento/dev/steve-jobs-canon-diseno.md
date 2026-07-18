@@ -1,7 +1,7 @@
 ---
 urn: urn:dev:kb:steve-jobs-canon-diseno
 nombre: steve-jobs-canon-diseno
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Canon de diseno de Steve Jobs: la SSOT del gusto — filosofia de diseno destilada y unificada sobre tres superficies (sistemas agenticos, UX web-AI, UX clinica). Principios nucleo invariantes, tesis del gusto-como-funcion-cognitiva, preguntas letales y anti-patrones universales. Es el invariante que las tres encarnaciones de dominio especializan y que la persona steve-jobs encarna."
 fuente: "Sintesis nueva (NO migracion byte-fiel) producida el 2026-06-14 por workflow multi-agente (extraccion + deduplicacion + redaccion + verificacion adversarial de completitud/no-redundancia/coherencia) desde tres artefactos jobs-* de la bestia (~/kora @ 017dc1b9): steve-jobs-agentic-designer AGENT.md (sha256:b1a639f56b046b39ca563c10291c927a61d913a328bc4206216f35292f069c11) + su kb principios (sha256:3fccfca98d096efbf67964a7bad9e47dcdd347b2f2fe85ccb348f42c6f92c75f); jobs-web-ux SKILL.md (sha256:a45552e8b457b74212840589b58fd8f675c3a9a65da921c6d15ea9c1373292f1, estaba en _TALLER/INBOX, borrador no promovido); jobs-healthcare-ux AGENT.md (sha256:f56d28841a91555044410bef1a43025c2f7b07deff61b214db2e686413e50666) + su kb principios-constitucionales (sha256:5f44a22ef2563f8fa4b4b7babce932ae6ddd8647a6069c03f900851d04b8d99b). Decision de diseno: se extrajo a este canon SOLO la filosofia compartida (verificada presente en >=2 fuentes); lo especifico de cada superficie vive en los kb de dominio que dependen de este. La regla de no-re-enunciacion textual queda declarada como norma editorial NO mecanizada (pneuma no tiene linter de re-enunciacion); la subordinacion canon<-dominio si esta mecanizada via depende/refina + velar. Completitud verificada: ninguna perdida."
@@ -158,7 +158,7 @@ El invariante es el gusto; el dominio es la superficie. Por eso ningún kb de do
 
 ### La persona encarna el canon, no lo recita
 
-La persona unificada `urn:dev:artefacto:steve-jobs` encarna este canon. No es una mega-persona con tres modos atornillados —eso sería exactamente el Swiss Army Agent que su propio inventario agéntico condena—. Es **un** gusto que deriva la crítica desde primeros principios y carga los tres kb de dominio como **lentes de superficie**, no como modos rígidos. Es coherente con la doctrina KORA de que skills y agents son el mismo objeto variando por arnés, y con que `cat-thinking` y `mente-omega` sean componibles.
+La persona unificada `urn:dev:artefacto:steve-jobs` encarna este canon. No es una mega-persona con tres modos atornillados —eso sería exactamente el Swiss Army Agent que su propio inventario agéntico condena—. Es **un** gusto que deriva la crítica desde primeros principios y carga los tres kb de dominio como **lentes de superficie**, no como modos rígidos. Es coherente con KORA: skills y agentes comparten shape y firma clasificatoria sin ser el mismo objeto, y `cat-thinking` y `mente-omega` son capacidades componibles.
 
 **Selección de lente.** El único punto donde una persona única puede comportarse incoherentemente es aplicando la lente equivocada —razonar sobre el eje invisibilidad/visibilidad en el dominio incorrecto, por ejemplo, exigir que un agente "muestre su trabajo" cuando debe ser invisible, o exigir invisibilidad a una app que debe mostrar su estado—. La persona selecciona la lente por la **superficie del artefacto bajo crítica**, no por el tema de la conversación:
 

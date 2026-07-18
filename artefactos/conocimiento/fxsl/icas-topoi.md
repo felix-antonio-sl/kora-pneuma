@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-topoi
 nombre: icas-topoi
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Pieza 12 del ICAS-BoK: topoi — presheaves, sheaves, clasificador de subobjetos, lógica intuicionista y morfismos geométricos; verdad no binaria, permisos ricos, eventual consistency y multi-tenancy."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12-topoi.md (sha256:6702052c2755d880d46a4af66bf9b434cd391191da7c3c8108c405ce4aafd46d) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+descripcion: "Pieza 12 del ICAS-BoK: topoi — presheaves, sheaves, clasificador de subobjetos, lógica intuicionista y morfismos geométricos; modelos condicionales para permisos, consistencia y multi-tenancy."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12-topoi.md (sha256:6702052c2755d880d46a4af66bf9b434cd391191da7c3c8108c405ce4aafd46d) el 2026-06-12. Corrección 1.1.0 contrastada con Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,7 +18,9 @@ familia: bok
 
 Hay una pregunta que me persigue cada vez que modelo un sistema distribuido: ¿este feature flag esta habilitado? La respuesta deberia ser simple -- si o no. Pero en la practica la respuesta es: "si para el 20% de los usuarios en la region EU, no para el resto salvo el grupo canary que tiene su propia logica, y ademas hay un override por tenant que todavia no se propago a todos los nodos." Verdadero o falso no alcanza. Necesito un espacio de valores de verdad mas rico.
 
-Durante anos trate esto como un problema de ingenieria -- mas flags, mas condiciones, mas tablas de decisiones. Pero resulta que hay una estructura matematica que captura exactamente esta situacion: el topos. Y lo que descubri al estudiarlo es que los topoi no son una generalizacion exotica de la teoria de conjuntos. Son la herramienta correcta para razonar sobre sistemas donde la verdad depende del contexto.
+Un topos ofrece una semántica precisa para verdad interna dependiente del
+contexto **cuando el dominio se representa en él**. Un feature-flag gradual o
+distribuido no determina por sí solo ese topos.
 
 ## Presheaves: conjuntos que varian
 
@@ -28,7 +30,12 @@ Lo que no aprecié plenamente en ese momento es que la categoria de presheaves [
 
 En Set, el clasificador de subobjetos es el conjunto {true, false} con la inclusion true : 1 -> {true, false}. Cada subconjunto S de X corresponde a una unica funcion caracteristica chi_S : X -> {true, false}. Esto es lo que hace funcionar la logica clasica: cada proposicion es verdadera o falsa, punto.
 
-Pero en [C^op, Set], el clasificador de subobjetos Omega ya no es un conjunto de dos elementos. Para un presheaf sobre un espacio topologico, Omega(U) es el conjunto de abiertos contenidos en U. Los valores de verdad son abiertos -- regiones donde una proposicion vale. Una proposicion puede ser verdadera en una region y falsa en otra, y eso no es ambigüedad: es la estructura correcta.
+Pero en `[C^op, Set]`, el clasificador de subobjetos `Omega` ya no es en
+general un conjunto de dos elementos: `Omega(c)` es el conjunto de cribas
+(*sieves*) sobre `c`. En el topos de sheaves sobre un espacio topológico,
+`Omega(U)` se identifica con los abiertos contenidos en `U`. Los valores de
+verdad son entonces contextuales: expresan dónde vale una proposición, no
+grados probabilísticos de verdad.
 
 ## Sheaves: pegado local-a-global
 
@@ -36,7 +43,10 @@ No todo presheaf es igualmente bien comportado. Un presheaf es un sheaf cuando s
 
 La definicion precisa, siguiendo a Schultz y Spivak, requiere la nocion de site -- una categoria C equipada con una coverage que dice que familias de morfismos "cubren" un objeto. Un sheaf sobre un site (C, chi) es un funtor B : C^op -> Set tal que para cada familia cubriente (f_i : U_i -> U), y cada familia compatible de secciones (b_i en B(U_i) que coinciden en las restricciones), existe un unico b en B(U) cuyas restricciones dan los b_i.
 
-Esto es exactamente el patron de configuracion distribuida. En Kubernetes, cada namespace tiene su ConfigMap local. Cuando dos namespaces comparten un servicio, sus configuraciones deben ser compatibles en la interfaz. La condicion de sheaf dice: si todas las configuraciones locales son mutuamente compatibles, se pueden pegar en una configuracion global consistente. Si no se pueden pegar, es porque hay un conflicto genuino en los solapamientos -- y el formalismo te obliga a enfrentarlo.
+Esto puede modelar configuración distribuida después de definir un site de
+contextos, restricciones y cobertura. Namespaces y ConfigMaps de Kubernetes no
+aportan automáticamente esos datos, y un fallo de gluing matemático no
+identifica por sí solo la causa operacional del conflicto.
 
 La categoria de sheaves sobre un site se denota Shv(C, chi). El teorema clave: Shv(C, chi) es un topos.
 
@@ -54,23 +64,36 @@ La potencia de esta definicion es que un topos es simultaneamente:
 
 - Un universo de "conjuntos generalizados" donde hacer matematica
 - Una logica interna de orden superior con sus propias reglas de inferencia
-- Un espacio donde las proposiciones tienen grados de verdad contextuales
+- Un espacio donde las proposiciones tienen valores de verdad contextuales
 
 ## El clasificador de subobjetos como logica de permisos
 
-Volvamos a los feature flags. En Set, Omega = {true, false}. Cada predicado sobre un conjunto X es una funcion X -> {true, false}. En mi topos de configuracion, puedo definir un Omega mas rico (en rigor, Omega necesita estructura de algebra de Heyting para que la logica interna funcione -- lo que sigue es una ilustracion del principio, donde los valores de verdad capturan estados mas finos que true/false):
+Volvamos a los feature flags. En `Set`, `Omega = {true, false}`. Cada predicado
+sobre un conjunto `X` es una función `X -> Omega`. Para proponer un topos de
+configuración no basta inventar un conjunto de estados; habría que construir
+la categoría/topología y calcular su clasificador. La siguiente lista es solo
+un dominio operacional candidato, que además necesitaría un orden de Heyting
+si se quisiera usar como álgebra de políticas:
 
 ```
 Omega = {enabled, disabled, canary, percentage_10, percentage_50, rollback_pending}
 ```
 
-Un subobjeto de "usuarios con acceso al feature F" ya no es un subconjunto binario. Es un morfismo que asigna a cada usuario un valor de verdad matizado. Y las operaciones logicas se adaptan:
+Una política puede asignar esos estados a usuarios, pero eso no la convierte
+todavía en mapa característico de un subobjeto. Si el dominio se realiza como
+álgebra de Heyting o como valores de `Omega` en un topos concreto, las
+operaciones lógicas quedan determinadas por esa estructura:
 
 - La conjuncion (AND) de "canary" y "percentage_50" produce un valor que captura ambas restricciones
 - La negacion de "enabled" no es simplemente "disabled" -- puede ser "rollback_pending"
 - La implicacion "si canary entonces enabled" tiene semantica precisa
 
-El patron de access control encaja naturalmente. Un sistema de permisos es un clasificador de subobjetos sobre la categoria de recursos. Para cada recurso, Omega clasifica el nivel de acceso: read, write, admin, owner, denied, conditional. La composicion de permisos (el AND y el OR logico) se calcula internamente en Omega. Y lo crucial: esta logica es intuicionista.
+Un sistema de permisos **puede modelarse** mediante subobjetos de sujetos con
+acceso. Su mapa característico toma valores en el `Omega` del topos elegido.
+Los niveles `read/write/admin` no son automáticamente valores de ese
+clasificador; pueden requerir un retículo de políticas adicional. Cuando el
+modelo es un topos, conjunción, disyunción e implicación se interpretan en su
+álgebra de Heyting interna.
 
 ## Logica intuicionista: lo que no se puede decidir
 
@@ -78,15 +101,24 @@ En la logica de un topos, el principio del tercero excluido (P ∨ ¬P = true) n
 
 Fong y Spivak lo explican con el topos de sheaves sobre un espacio topologico. Ahi, la negacion de un abierto U es el interior del complemento: ¬U = int(X \ U). El doble negativo ¬¬U = int(X \ int(X \ U)) no es necesariamente igual a U -- puede ser mas grande. Por eso P ∨ ¬P no necesariamente cubre todo el espacio.
 
-Para la practica de sistemas: la eventual consistency es exactamente una condicion de sheaf sobre el tiempo. Los datos locales son consistentes en cada nodo. La condicion de pegado dice: eventualmente, las vistas locales se reconcilian en una vista global. Pero "eventualmente" es un operador modal, no una garantia instantanea. La logica intuicionista captura esto: "sera verdadero" no es lo mismo que "es verdadero ahora."
+Para sistemas, la consistencia eventual **puede modelarse** con datos locales
+sobre un site temporal, pero no es exactamente la condición de sheaf. El
+«eventualmente» requiere dinámica/modalidad adicional; el pegado de un sheaf
+es una propiedad estática del presheaf elegido.
 
 ## Morfismos geometricos: mapas entre universos
 
 Si tengo dos topoi E y E', el mapa correcto entre ellos no es un simple funtor. Es un morfismo geometrico: un par de funtores adjuntos f* ⊣ f_* donde f* (la "imagen inversa") preserva limites finitos. Esta condicion extra -- preservar limites finitos, no solo ser adjunto izquierdo -- es lo que garantiza que el mapa respeta la estructura logica interna.
 
-En la practica, un morfismo geometrico entre topoi de configuracion es una migracion de esquema que preserva las relaciones logicas entre las configuraciones. No basta con mapear datos de un formato a otro; hay que garantizar que las restricciones de consistencia se preservan.
+Una migración de configuración **puede** representarse por un morfismo
+geométrico si se construyen los topoi y el par adjunto con imagen inversa
+left-exact. Una migración de schema ordinaria no lo es por definición.
 
-La relacion con lo que vi en el documento 10 es directa: la sheafification -- el proceso de convertir un presheaf en el sheaf mas cercano -- es el adjunto izquierdo de la inclusion Shv(C) ↪ [C^op, Set]. Es una Kan extension izquierda a lo largo de la inclusion del site. Cada vez que tengo un presheaf (datos locales sin garantia de pegado) y quiero forzar consistencia global, sheafifico: proyecto al universo donde la condicion de sheaf se cumple automaticamente.
+La sheafification es el adjunto izquierdo de la inclusión
+`Sh(C,J) ↪ PSh(C)` para el site elegido. No se identifica en general con «la
+Kan extension izquierda a lo largo de la inclusión del site». Tampoco repara
+automáticamente un sistema distribuido: construye el sheaf asociado al
+presheaf matemático, no la ejecución que hace verdaderos sus datos.
 
 ## El dominio de intervalos y el topos de comportamientos
 
@@ -100,14 +132,34 @@ El clasificador de subobjetos de B no es binario. Como observan, codifica propie
 
 ## Multi-tenancy como fibration de topoi
 
-Quiero conectar esto con una estructura que ya conozco del documento 10. En un sistema multi-tenant, cada tenant tiene su propio "universo" de datos, esquemas y reglas de negocio. Puedo modelar esto como una fibration de topoi: un funtor p : E -> B donde B es la categoria de tenants y cada fibra p^{-1}(t) es el topos del tenant t.
+Un sistema multi-tenant **puede modelarse** mediante una fibración cuyas fibras
+sean topoi, pero eso exige reindexación coherente y lifts cartesianos; agrupar
+datos por tenant no basta.
 
-Los morfismos en B (migraciones de tenant, merges de cuentas) inducen morfismos geometricos entre las fibras. El reindexing a lo largo de un morfismo f : t1 -> t2 tira de la configuracion de t2 hacia t1, preservando las relaciones logicas. Y el pushforward (la Kan extension izquierda) empuja datos en la otra direccion.
+En una fibración sobre una categoría `Tenant`, un morfismo
+`f : t1 -> t2` induce reindexación entre fibras según la varianza elegida.
+Que esa reindexación forme la imagen inversa de un morfismo geométrico exige
+un adjunto derecho y preservación de límites finitos. Un pushforward o
+extensión de Kan existe solo bajo hipótesis adicionales.
 
-Los namespaces de Kubernetes son un caso concreto: cada namespace es un "slice" del cluster. La categoria de todos los recursos del cluster, indexada por namespace, forma un topos slice E/N para cada namespace N. Los network policies entre namespaces son los morfismos entre estos slices.
+Los namespaces de Kubernetes motivan esa analogía, pero no son literalmente
+topoi slice sin una categoría de recursos con límites, exponenciales y
+clasificador de subobjetos adecuados.
+
+## Corrección 1.1.0
+
+Se separan sheafification, Kan extension y reconciliación dinámica, y se
+condiciona la lectura fibrada/topos de multi-tenancy a las estructuras que
+realmente exige.
 
 ## La leccion del topos
 
-Lo que me llevo de todo esto para mi practica como arquitecto es una inversion de perspectiva. No es que los sistemas distribuidos tengan una logica defectuosa que deberiamos reparar para que sea clasica. Es que los sistemas distribuidos habitan naturalmente en topoi donde la logica correcta es intuicionista, donde la verdad tiene grados y contextos, y donde la consistencia es una condicion de sheaf -- local por defecto, global solo cuando el pegado lo permite.
+La lección rigurosa es condicional: cuando un dominio distribuido se presenta
+como un site y sus datos satisfacen restricción y pegado, los sheaves separan
+consistencia local de existencia/unicidad global. Si además se trabaja en su
+topos, la lógica interna es intuicionista en general.
 
-Los feature flags no son un hack. Son un clasificador de subobjetos. Los permisos no son una lista plana. Son la logica interna de un topos de acceso. La configuracion distribuida no es un problema de sincronizacion. Es una condicion de sheaf. Y la eventual consistency no es una limitacion. Es la logica intuicionista haciendo su trabajo: lo que todavia no se decidio, simplemente todavia no se decidio.
+Feature flags, permisos, sincronización y consistencia eventual son problemas
+operacionales que **pueden** beneficiarse de ese modelo. No son por definición
+clasificadores, sheaves ni lógica intuicionista; el site, los subobjetos, la
+dinámica y la correspondencia semántica deben construirse.

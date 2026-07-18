@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-tiempo
 nombre: icas-tiempo
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 15 del ICAS-BoK: tiempo — behavior types, sheaves temporales, sheaves híbridos, contratos composicionales y delay aditivo; invariantes temporales, SLA, circuit breakers y event sourcing."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/15-tiempo.md (sha256:94f380b1bcfd1c227ac37c65907605a8d2a3c7f2ac480368eeff7324492ed30b) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/15-tiempo.md (sha256:94f380b1bcfd1c227ac37c65907605a8d2a3c7f2ac480368eeff7324492ed30b) el 2026-06-12. Revisado contra Schultz-Spivak, Temporal Type Theory, arXiv:1710.10258. v1.1.0 (2026-07-18): delimita el framework y corrige SLA, circuit breaker, delays, event sourcing, deploys y cron."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -55,7 +55,10 @@ Sobre el topos B actuan cuatro modalidades -- endofuntores que transforman propo
 
 Estas modalidades forman una red de adjunciones. Las adjunciones pi -| @ y down -| up capturan la tension entre lo puntual y lo global, entre el pasado y el futuro. Y lo crucial: estas no son operadores bolteados sobre una logica existente. Son endofuntores del topos B con semantica precisa dada por la estructura de sheaves.
 
-Cuando escribo un SLA que dice "99.9% uptime medido en ventanas de 30 dias", estoy combinando modalidades. La ventana de 30 dias es una restriccion del sheaf. El porcentaje es una medida sobre las secciones. Y la obligacion contractual es una proposicion up aplicada a la ventana.
+Un SLA de uptime puede modelarse con ventanas, una medida sobre secciones y
+operadores temporales. Identificar la obligacion con una modalidad concreta
+requiere formalizar porcentaje, ventana movil y horizonte; `up` por si sola no
+expresa 99.9%.
 
 ## Hybrid sheaves: cuando lo continuo se mezcla con lo discreto
 
@@ -65,25 +68,34 @@ Schultz y Spivak formalizan esto con los hybrid sheaves. Un hybrid datum es una 
 
 La definicion es un pushout seguido de sheafificacion -- una construccion que usa los colimites y la topologia del topos B. Y la propiedad clave: una seccion de Hyb(C, D) esta "almost always" en la parte continua C. Las transiciones discretas son instantaneas -- duran exactamente cero tiempo.
 
-Un circuit breaker es un hybrid sheaf. El comportamiento continuo C tiene dos modos: cerrado (el servicio responde normalmente) y abierto (el fallback esta activo). La transicion D ocurre cuando la tasa de errores cruza un umbral -- un evento instantaneo que cambia el modo. El tau marca el instante exacto de la apertura. Y la restriccion de sheaf garantiza que si miro una ventana de tiempo suficientemente pequena alrededor de tau, veo el comportamiento continuo de un lado y del otro con la transicion en el medio.
+Un circuit breaker puede **modelarse** como tipo hibrido tras especificar sus
+conductas continuas/discretas y el dato hibrido. Tener estados open/closed y un
+timeout no demuestra por si solo la construccion de pushout/sheafification.
 
 ## Delays: el morfismo que desplaza
 
 Un delay de duracion D es un morfismo en B que desplaza el comportamiento por D unidades de tiempo. Formalmente, un par (a, a') : A x A es D-delayed si, para cada predicado phi sobre A y cada constante c de tipo C, la seccion a satisface phi en el intervalo [d,u] si y solo si a' satisface phi en el intervalo [d+D, u+D].
 
-Esto captura exactamente la latencia de red, el buffering en pipelines, el retraso de propagacion en sistemas distribuidos. Un mensaje publicado en un topic Kafka a tiempo t llega al consumidor a tiempo t+D. El delay D es un morfismo del tipo de comportamiento del productor al tipo de comportamiento del consumidor.
+La definicion captura un delay constante idealizado. Latencia de red/Kafka es
+variable, puede reordenar o perder mensajes y requiere un tipo probabilistico o
+acotado mas rico.
 
-Y dentro de la logica del topos, puedo razonar sobre estos delays composicionalmente. Si el servicio A tiene delay D1 hacia B y B tiene delay D2 hacia C, el delay total de A a C es D1+D2. La composicion de delays es aditiva -- exactamente lo que esperaria, pero ahora con una demostracion formal.
+Para delays puros constantes compuestos secuencialmente, el desplazamiento es
+`D1+D2`. Esta ley no cubre concurrencia, colas o distribuciones de latencia.
 
 ## Systems, components y behavior contracts
 
-Una machine en este framework es un objeto con una interfaz (una coleccion de puertos, cada uno con un tipo de comportamiento) y un tipo total de comportamiento X que mapea a cada puerto via port maps p_i : X -> S_i. Reconozco aqui la estructura de los polynomial functors del documento 11: la interfaz es un polinomio, la machine es un lens del espacio de estados al polinomio.
+En el framework, una machine relaciona un comportamiento total con puertos
+tipados. Vincular esta definicion con polinomios/lentes exige un funtor o
+equivalencia adicional; no se sigue solo de tener interfaz.
 
 Pero ahora hay tiempo. El tipo total de comportamiento X no es un conjunto estatico de estados -- es un sheaf temporal. La machine no solo responde a inputs: se comporta a lo largo de duraciones. Y las propiedades que me importan son propiedades temporales: "la temperatura se mantiene entre 18 y 22 grados durante toda la operacion", no "la temperatura es 20 grados ahora."
 
 Un contrato de comportamiento es un predicado temporal sobre los tipos de comportamiento de una interfaz. Es una proposicion en el lenguaje interno del topos B que dice que ciertas relaciones entre las variables del sistema se mantienen a lo largo del tiempo. El contrato se formula en contexto -- un juicio de tipo Gamma, donde Gamma nombra las variables de la interfaz.
 
-Un sistema se compone de componentes, cada uno con su interfaz, su behavior contract, y su cableado (wiring diagram, como en el documento 13). La composicion de componentes produce un sistema cuyo contrato exterior se puede derivar de los contratos individuales y la topologia de conexion. Esto es el teorema de composicionalidad de contratos: si cada componente satisface su contrato, y el cableado es correcto, el sistema compuesto satisface el contrato derivado.
+Los resultados de composicionalidad del framework permiten derivar contratos
+exteriores bajo hipotesis de tipado, totality/determinism y wiring. No basta que
+cada componente satisfaga aisladamente un contrato informal.
 
 ## El National Airspace System
 
@@ -93,18 +105,42 @@ Un avion tiene un tipo de comportamiento que incluye altitud, velocidad, rumbo, 
 
 La propiedad de safe separation -- que ningun par de aviones viola la distancia minima -- se formula como una proposicion up sobre el tipo de comportamiento del sector completo. Y se puede probar combinando los contratos individuales de aviones y controladores con los delays del sistema de comunicacion y las dinamicas continuas de movimiento.
 
-Este ejemplo muestra algo profundo: el mismo framework que uso para circuit breakers y SLAs se aplica al espacio aereo. La estructura categorica -- sheaves, modalidades, hybrid types, delays -- es suficientemente general para capturar sistemas tan distintos como un cluster de Kubernetes y un sistema de control de trafico aereo.
+El caso NAS demuestra expresividad dentro del modelo de Temporal Type Theory.
+Circuit breakers, SLAs o Kubernetes son aplicaciones candidatas que deben
+formalizarse por separado.
 
 ## Todo converge aqui
 
 Este es el ultimo documento conceptual del corpus, y no es accidental que sea el del tiempo. El tiempo es donde todo converge.
 
-Los sheaves del documento 12 se concretan: en este framework, un tipo de comportamiento se define como un sheaf sobre un site temporal especifico. Los polynomial functors del documento 11 reaparecen: las interfaces de los sistemas son polinomios, las machines son lenses. Las coalgebras del documento 09 adquieren temporalidad: una machine es una coalgebra de un polinomio, pero ahora con un espacio de estados que es un sheaf temporal. La composicion operadica del documento 13 se enriquece: los wiring diagrams componen systems con contratos que se propagan composicionalmente. Y la dualidad pattern/matter del documento 14 se despliega EN el tiempo: el pattern (el arbol finito de decisiones de un agente) corre sobre matter (el stream infinito de comportamiento) a lo largo de duraciones reales.
+En Temporal Type Theory, un tipo de comportamiento es un sheaf sobre el site
+temporal especificado por esa teoría. Polinomios, lenses, coálgebras, wiring
+diagrams y pattern/matter pertenecen a otros formalismos citados: pueden
+conectarse mediante construcciones explícitas, pero no convergen
+automáticamente por compartir vocabulario de interfaces o tiempo.
 
-El event log de un sistema event-sourced se deja modelar de forma natural como un tipo de comportamiento. Para cada ventana temporal, provee los eventos que ocurrieron. El replay es el restriction map: tomar el log de una ventana mas larga y restringirlo a una subventana. La condicion de sheaf dice: si tengo logs parciales de ventanas solapadas que coinciden en el solapamiento, existe un unico log global consistente. Decir "event sourcing es un sheaf" es una buena abreviatura para esa modelizacion, no una identidad sin resto.
+Un event log puede modelarse como sheaf/presheaf de eventos por ventana si
+restricciones y pegado se verifican. Restringir una ventana es el restriction
+map; **replay** es un fold que reconstruye estado y no debe confundirse con
+restriccion.
 
-Una migracion de base de datos de schema S1 a schema S2 es un morfismo en una categoria temporal de schemas. El schema S1 existe "antes" y S2 existe "despues". La migracion respeta el orden temporal. Y la composicionalidad de migraciones -- que puedo componer M1 : S1 -> S2 y M2 : S2 -> S3 para obtener M2 . M1 : S1 -> S3 -- es composicion de morfismos en esta categoria temporal.
+Migraciones secuenciales generan una categoria de caminos si se declaran
+identidades/equivalencias. El hecho de que ocurran antes/despues no construye
+un sheaf o categoria temporal mas rica.
 
-Un blue/green deploy puede modelarse como un morfismo entre tipos de comportamiento: el tipo viejo y el tipo nuevo, conectados por una transicion que es un hybrid sheaf con un solo evento discreto -- el switch. El rate limiting es una restriccion temporal sobre la frecuencia de interacciones: "a lo sumo N requests en cualquier ventana de duracion delta" es un predicado sobre secciones del tipo de comportamiento de requests. Un cron job es la modalidad up aplicada a una accion periodica.
+Un blue/green deploy puede recibir un modelo hibrido si el switch y ambos
+regimenes forman el dato requerido. Rate limiting si admite naturalmente un
+predicado por ventanas. Periodicidad de cron requiere una condicion de
+recurrencia/fase; no es solo aplicar `up`.
 
-Cuando miro atras al corpus completo, lo que veo es una unica estructura que se repite en dimensiones crecientes: composicion, preservacion, universalidad, interaccion, y ahora temporalidad. Cada nueva dimension no reemplaza las anteriores sino que las enriquece. El tiempo no anula la composicion -- la hace temporal. No destruye los funtores -- les da dinamica. No elimina los contratos -- los hace verificables a lo largo de duraciones. Esta es la promesa de la teoria de categorias para sistemas: no una herramienta puntual para un problema puntual, sino un lenguaje que crece con la complejidad de lo que trato de capturar.
+Temporal Type Theory aporta un modelo formal de comportamientos durativos. Su
+uso fuera de los casos construidos conserva el estatuto de modelo hasta que se
+definan site, sheaves, morphisms y contratos.
+
+## Estatuto epistemico
+
+- **Formal:** el framework de Schultz-Spivak dentro de su topos y axiomas.
+- **Modelo:** NAS y cualquier sistema cuya traduccion al framework se
+  construya.
+- **Heuristica:** SLA, circuit breaker, Kafka, deploy o cron identificados con
+  modalidades/sheaves sin esa traduccion.

@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:auditoria-artefactos-kora
 nombre: auditoria-artefactos-kora
-version: 1.1.0
+version: 1.2.0
 estado: activo
 descripcion: "Evalua, decide y actua sobre el DESTINO de agentes y skills frente a kora-pneuma: tres pilares (formalidad kora, calidad funcional, valor en uso real), cuatro veredictos (migrar/descartar/reubicar/conservar-externo), verificacion adversarial y ejecucion con gate. Usar al auditar el ecosistema agentico, decidir que conservar/descartar, o reconciliar artefactos no-controlados con el corpus."
-fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude (workflow de 54 agentes + fases de migracion): 3 pilares + 4 veredictos + verificacion adversarial de contexto limpio + convergencia con velar como red. No es migracion de la bestia: codifica la experiencia operativa de la sesion, alineada a ley/0..4. Cubre el nicho que kora-agentic-lifecycle (descartada por doctrina bestia) dejo abierto: el JUICIO de evaluacion-decision-accion que velar (forma) y kora.py no mecanizan. v1.1.0 (2026-07-12): generaliza el censo y REUBICAR a Codex/OpenCode y a sus rutas oficiales de proyecto."
+fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude: 3 pilares + 4 veredictos + verificacion adversarial + convergencia con velar. v1.1.0 (2026-07-12): generaliza el censo y REUBICAR a Codex/OpenCode. v1.2.0 (2026-07-18): corrige el alcance del sello; certifica procedencia, integridad y congruencia, no teoremas semanticos."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -71,8 +71,9 @@ la fuente; si no la hay en pneuma, ese hecho ES el hallazgo de formalidad.
    plano cerrado; vector dentro del dominio de su forma §7; arnés×forma §8; cinco
    leyes inter-eje §4; URN/zona §6)? ¿Su doctrina/Knowledge Contract está vigente
    (`ley/0..4`) o **desalineada** (cita specs bestia —md-spec, autoria-spec,
-   knowledge-spec, harness-spec, gobernanza— ya sublimadas)? ¿El sello
-   proof-carrying está presente y fresco?
+   knowledge-spec, harness-spec, gobernanza— ya sublimadas)? ¿El sello de
+   procedencia, integridad y congruencia está presente y fresco? El sello no
+   prueba naturalidad, safety ni equivalencia semántica.
 2. **Calidad funcional** — ¿el cuerpo es sólido, operable, sin errores? ¿La
    descripción dispara bien? ¿Herramientas mínimas y justificadas? ¿Estructura
    recuperable (headings/tablas), sin grasa? ¿Scripts/referencias funcionan?

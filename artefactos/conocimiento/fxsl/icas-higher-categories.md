@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-higher-categories
 nombre: icas-higher-categories
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 08b del ICAS-BoK: categorías superiores — 2-categorías, (∞,1)-categorías, conjuntos simpliciales y HoTT; relaciones entre relaciones e igualdad debilitada a homotopía."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/08b-higher-categories.md (sha256:6b52df236256def342de50765c37677f761334464df026ca02a6ddcd6cade911) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/08b-higher-categories.md (sha256:6b52df236256def342de50765c37677f761334464df026ca02a6ddcd6cade911) el 2026-06-12. v1.1.0 (2026-07-18): corrige debilidad n-categorial, horn filling, univalencia, factorizacion de Quillen y separa aplicaciones de ingenieria como modelos."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,7 +18,9 @@ familia: bok
 
 En el documento 03 descubri que comparar funtores requiere un nivel extra de estructura: las transformaciones naturales. En el documento 08, al enriquecer sobre Cat, obtuve 2-categorias -- categorias donde los hom-spaces son categorias en si mismos, con 1-morfismos (funtores) y 2-morfismos (transformaciones naturales) compuestos horizontal y verticalmente. Pero la pregunta que esa construccion deja abierta es: por que parar en dos niveles?
 
-En mi practica, necesito transformaciones de transformaciones con frecuencia. Tengo una migracion de schema v1 a v2, y otra de v1 a v2 que toma un camino distinto. Las dos migraciones son 1-celdas. La equivalencia entre ellas -- la garantia de que producen el mismo resultado -- es una 2-celda. Pero ahora quiero comparar dos maneras de demostrar esa equivalencia. O tengo dos estrategias de refactoring que ambas transforman la implementacion vieja en la nueva, y quiero comparar las estrategias de refactoring entre si. Necesito 3-celdas. Y en principio, el patron se repite indefinidamente.
+Migraciones, refactors y pruebas pueden motivar una jerarquia de comparaciones.
+Solo son 1-, 2- o 3-celdas despues de construir la categoria superior y tipar
+sus fuentes, destinos y composiciones.
 
 ## La escalera de celdas
 
@@ -26,8 +28,10 @@ La intuicion para una n-categoria tiene la forma de una escalera:
 
 - 0-celdas: los objetos. Sistemas, servicios, espacios de configuracion.
 - 1-celdas: los morfismos entre objetos. Mapas, funciones, migraciones, deployments.
-- 2-celdas: los morfismos entre morfismos. Refactorings, equivalencias de migraciones, adapters entre APIs.
-- 3-celdas: los morfismos entre 2-celdas. Meta-refactorings, compatibilidades entre estrategias de adaptacion.
+- 2-celdas: morfismos entre 1-celdas; refactorings o adapters son ejemplos
+  candidatos, no automaticos.
+- 3-celdas: morfismos entre 2-celdas; las "meta-comparaciones" requieren una
+  estructura concreta.
 - n-celdas: datos de coherencia que aseguran que todo el edificio es consistente.
 
 En una 2-categoria, las 2-celdas tienen composicion vertical (apilar transformaciones naturales) y composicion horizontal (concatenar a lo largo de funtores), con la interchange law garantizando la compatibilidad. En una 3-categoria, hay tres modos de composicion, con leyes de intercambio entre cada par. Y asi sucesivamente.
@@ -38,9 +42,15 @@ El problema no es conceptual -- la escalera es clara. El problema es que las ley
 
 En el documento 03 aprendi que la igualdad estricta entre categorias es demasiado rigida -- la nocion correcta es la equivalencia. Esta leccion se repite en cada nivel.
 
-Una n-categoria estricta exige que la asociatividad y la unidad de la composicion valgan on-the-nose en cada nivel: (f . g) . h = f . (g . h) como igualdad de n-celdas. Pero la experiencia matematica y practica dice que esto es demasiado restrictivo. Lo correcto es una n-categoria debil, donde la asociatividad y la unidad valen up to coherent isomorphism: existe un (n+1)-celda invertible entre (f . g) . h y f . (g . h), y estos isomorfismos satisfacen condiciones de coherencia con los de nivel superior.
+Una n-categoria estricta exige asociatividad/unidad on-the-nose. En una version
+debil, composiciones de k-celdas pueden ser asociativas/unitales solo mediante
+(k+1)-celdas coherentes cuando `k < n`; no existe en general una
+`(n+1)`-celda dentro de una n-categoria.
 
-Para n = 1, la diferencia es invisible -- una categoria ordinaria es automaticamente estricta. Para n = 2, la diferencia entre una 2-categoria estricta y una bicategoria (2-categoria debil) ya importa: los asociadores y unitores son 2-isomorfismos, no igualdades. El Mac Lane coherence theorem dice que toda bicategoria es equivalente a una 2-categoria estricta, asi que para n = 2 la distincion es tecnica pero no fundamental.
+Para n = 1, la diferencia es invisible -- una categoria ordinaria es estricta.
+Para n = 2, los asociadores y unitores de una bicategoria son 2-isomorfismos,
+no igualdades. El teorema de strictificacion de bicategorias dice que toda
+bicategoria es biequivalente a una 2-categoria estricta.
 
 Para n = 3, la distincion se vuelve sustancial. No toda tricategoria (3-categoria debil) es equivalente a una estricta. El resultado de Gordon-Power-Street muestra que hay estructura genuinamente debil que no se puede rigidificar. Y para n arbitrario, la definicion explicita de n-categoria debil -- con todos sus asociadores, unitores, y coherencias de coherencias -- se vuelve impracticable.
 
@@ -60,44 +70,84 @@ Para cada n >= 0, X_n es el conjunto de n-simplices -- los datos de dimension n.
 
 El nerve de una categoria C es el simplicial set N(C) donde los 0-simplices son los objetos, los 1-simplices son los morfismos, los 2-simplices son los pares composables (f, g, g.f), y los n-simplices son las cadenas composables de n morfismos con toda su informacion de composicion. El nerve es un funtor fully faithful N : Cat -> sSet, lo que dice que las categorias se incrustan fielmente en el mundo de los conjuntos simpliciales. No toda (infinity,1)-categoria viene de una 1-categoria, pero toda 1-categoria define una (infinity,1)-categoria via su nerve.
 
-Un Kan complex es un simplicial set donde todo horn (un simplice con una cara removida) puede rellenarse. Si puedo rellenar todos los horns, el simplicial set modela un infinity-groupoid -- un espacio donde todos los morfismos son invertibles. Un quasi-category (o inner Kan complex) relaja esta condicion: solo los inner horns (los que omiten la primera o la ultima cara no cuentan) se pueden rellenar. Un quasi-category es el modelo concreto de una (infinity,1)-categoria a la Joyal y Lurie.
+Un Kan complex rellena todos los horns y modela un infinity-groupoid. Una
+quasi-category exige relleno para los horns interiores `Λ^n_k` con
+`0 < k < n`; no exige en general los dos horns exteriores. Es uno de los
+modelos equivalentes de `(infinity,1)`-categorias.
 
-Mahadevan, en su framework GAIA, usa exactamente esta maquinaria. Los modelos generativos de AI se organizan como un simplicial complex jerarquico. Cada n-simplex actua como una unidad organizacional que recibe informacion de sus superiores y transmite actualizaciones a sus n+1 sub-complejos. El aprendizaje jerarquico -- backpropagation a traves de capas -- se formaliza como horn filling: completar la informacion faltante en un simplex parcial. Los inner horns corresponden a backpropagation estandar (composicion secuencial); los outer horns corresponden a problemas de generalizacion mas dificiles (encontrar inversos, extrapolar).
+GAIA propone una lectura simplicial de modelos generativos. La correspondencia
+entre backpropagation, generalizacion y horn filling pertenece a ese modelo; no
+es un teorema general de aprendizaje automatico ni identifica por si sola una
+quasi-category.
 
 ## Homotopy type theory: la conexion
 
 Hay un puente profundo entre las categorias superiores y la teoria de tipos. En homotopy type theory (HoTT), los tipos son espacios, los terminos son puntos, las pruebas de igualdad entre terminos son caminos, y las pruebas de igualdad entre pruebas son homotopias. La torre completa de igualdades superiores corresponde exactamente a la torre de n-celdas de una (infinity,1)-categoria.
 
-El axioma de univalencia de Voevodsky lleva la leccion del documento 03 a su conclusion logica: los tipos equivalentes son iguales. No solo "equivalentes para propositos practicos" -- iguales en el sentido fuerte de la teoria de tipos. Esto elimina la necesidad de distinguir entre un tipo y otro que es "lo mismo up to isomorphism." La equivalencia ES la igualdad. Es el principio "equality is too strict, equivalence is the right notion" internalizado en los fundamentos.
+El axioma de univalencia identifica, mediante una equivalencia, el tipo de
+igualdades entre tipos de un universo con el tipo de equivalencias entre ellos.
+No convierte equivalencia en igualdad definicional ni elimina todas las
+distinciones de representacion/transport.
 
-Para un arquitecto de sistemas, HoTT sugiere algo provocativo: dos schemas que son equivalentes (hay una migracion invertible entre ellos) deberian ser tratados como el mismo schema. No como "dos schemas con un adaptador" -- como el mismo objeto, con la equivalencia como prueba. Esto elimina una categoria entera de errores: los que surgen de tratar como distintos a objetos que son equivalentes.
+HoTT puede inspirar transporte de propiedades a lo largo de equivalencias de
+schemas formalizadas. Una migracion invertible operacional no basta para
+univalencia, y conservar representaciones distintas puede seguir siendo
+necesario.
 
 ## Model categories: homotopia abstracta
 
 Antes de Joyal y Lurie, la herramienta para hacer homotopy theory en contextos abstractos era la model category de Quillen. Una model category es una categoria con tres clases distinguidas de morfismos -- weak equivalences, fibrations, cofibrations -- sujetas a axiomas que permiten hacer homotopy theory sin mencionar espacios topologicos.
 
-Las weak equivalences son los morfismos que "deberian ser isomorfismos" -- los que preservan toda la informacion homotopica relevante. Las fibrations y cofibrations son los morfismos "bien comportados" que permiten construir y descomponer objetos. Los axiomas aseguran que se puede factorizar cualquier morfismo en una cofibration seguida de una fibration, que las weak equivalences satisfacen el axioma de dos-de-tres, y que existen suficientes lifting properties.
+Las weak equivalences satisfacen dos-de-tres. Todo morfismo admite dos
+factorizaciones: cofibracion seguida de fibracion trivial, y cofibracion
+trivial seguida de fibracion, junto con las propiedades de lifting
+correspondientes.
 
 Toda model category presenta una (infinity,1)-categoria: su localizacion infinita (la construccion de Dwyer-Kan), obtenida al invertir formalmente las weak equivalences. La homotopy category ordinaria es su sombra 1-categorica. Una Quillen adjunction entre model categories induce una adjunction entre las (infinity,1)-categorias presentadas.
 
-Para mi practica, la model category es una abstraccion de la nocion de "refactoring seguro." Los weak equivalences son los refactorings que no cambian el comportamiento observable. Los cofibrations son las extensiones -- agregar funcionalidad nueva sin modificar la existente (el open/closed principle formalizado). Las fibrations son las restricciones -- tomar un sistema y proyectarlo a un subsistema. La factorizacion dice que todo cambio se descompone en una extension seguida de una restriccion, y viceversa.
+Usar weak equivalences para refactors y (co)fibraciones para
+extensiones/restricciones es una analogia que solo se vuelve formal tras
+construir una categoria modelo. Los axiomas de Quillen no formalizan por si
+solos el principio open/closed ni descomponen cambios arbitrarios de software.
 
 ## Por que importa para sistemas
 
 La relevancia practica de las categorias superiores no es que vaya a implementar un Kan complex en produccion. Es que la perspectiva homotopica cambia como pienso sobre cuatro problemas concretos.
 
-Primero, la evolucion de schemas. El espacio de todos los schemas de una base de datos no es un conjunto -- es un espacio con topologia. Dos schemas conectados por una migracion son "cercanos." Una secuencia de migraciones es un camino en ese espacio. Dos secuencias de migraciones que producen el mismo resultado son homotopicas -- deformables una en la otra. Los componentes conexos del espacio son las clases de equivalencia de schemas. La pregunta "puedo migrar de S1 a S2?" es una pregunta sobre conectividad en este espacio.
+**Modelo candidato — schemas.** Se puede construir un espacio/categoria de
+schemas, migraciones y equivalencias superiores. Sin esa construccion, dos
+secuencias con igual resultado no son automaticamente homotopicas ni existe una
+topologia canonica de schemas.
 
-Segundo, el versionado de APIs. La version 1 y la version 2 de una API estan conectadas por un 1-morfismo (el adapter). Pero puede haber multiples adapters. La equivalencia entre dos adapters es un 2-morfismo. La compatibilidad entre estrategias de adaptacion es un 3-morfismo. El espacio completo de versiones, adapters, y compatibilidades forma una (infinity,1)-categoria donde la infraestructura de versioning vive naturalmente.
+**Modelo candidato — APIs.** Versiones, adapters y comparaciones pueden poblar
+una categoria superior si se especifican composicion y coherencias; no forman
+automaticamente una `(infinity,1)`-categoria.
 
-Tercero, los espacios de configuracion. El espacio de configuraciones validas de un sistema distribuido tiene estructura topologica no-trivial. Los componentes conexos son clusters de configuraciones que se pueden transformar unas en otras sin romper el sistema. Los loops (caminos que empiezan y terminan en la misma configuracion) son simetrias -- transformaciones que no cambian nada. Los loops no-contractibles revelan obstaculos topologicos: configuraciones que "parecen iguales" localmente pero son globalmente distintas.
+**Modelo candidato — configuraciones.** Una topologia o complejo de
+configuraciones puede revelar conectividad y obstaculos, pero debe definirse;
+un loop operacional no es automaticamente una simetria u homotopia.
 
-Cuarto, el deployment continuo. Un pipeline de deployment es un camino a traves de la (infinity,1)-categoria de estados del sistema. El estado inicial (version vieja) y el estado final (version nueva) son los endpoints. Un blue/green deploy y un canary deploy son dos caminos con los mismos endpoints -- dos estrategias para llegar al mismo resultado. La pregunta "son equivalentes?" es una pregunta sobre la existencia de una 2-celda (una homotopia) entre los dos caminos. Y la respuesta depende de la topologia del espacio de estados: si hay un obstaculo topologico (un estado inseguro que uno de los caminos debe cruzar), los caminos no son homotopicos -- las estrategias no son equivalentes.
+**Modelo candidato — deployments.** Blue/green y canary pueden representarse
+como caminos en un espacio de estados construido. La seguridad y equivalencia
+requieren observables/riesgos del dominio; no se deducen de compartir
+endpoints.
 
 ## Honestidad sobre la frontera
 
-Debo ser honesto sobre donde estamos. Las categorias superiores son la frontera activa de la matematica -- no son herramientas estabilizadas como los funtores o las adjunciones. No hay un "CQL para (infinity,1)-categorias" ni un "Catlab para quasi-categories." La libreria Agda implementa HoTT, y hay esfuerzos en Lean y Coq, pero no son herramientas de ingenieria de produccion.
+Las categorias superiores son matematica madura en varias areas, pero su uso
+general como herramienta de arquitectura de software sigue siendo una
+frontera. La disponibilidad de asistentes y librerias no convierte las
+analogias anteriores en modelos validados.
 
 Lo que si es operativo hoy es la perspectiva. Pensar en los espacios de schemas como espacios homotopicos cambia las decisiones de diseno de las migraciones. Pensar en los adapters como 1-morfismos en una (infinity,1)-categoria cambia como diseno la compatibilidad entre versiones. Pensar en el deployment como un camino en un espacio con topologia cambia como evaluo la seguridad de una estrategia de rollout.
 
-Las herramientas llegaran -- ya estan llegando, en GAIA, en AlgebraicJulia, en los type checkers homotopicos. Pero la perspectiva no necesita herramientas para ser util. Es la misma situacion que con la teoria de categorias basica hace diez anos: primero cambia como piensas, despues cambia como construyes. Y el pensamiento homotopico -- que los sistemas, sus transformaciones, y las transformaciones de las transformaciones forman una estructura con coherencias en todos los niveles -- ya esta cambiando como pienso sobre infraestructura, AI, y evolucion de sistemas.
+La perspectiva puede generar preguntas utiles, pero debe entregarse como
+heuristica mientras no haya tipos, coherencias y validacion del modelo.
+
+## Estatuto epistemico
+
+- **Formal:** definiciones y resultados sobre bicategorias,
+  quasi-categorias, HoTT y categorias modelo.
+- **Modelo:** GAIA y cualquier categoria superior concreta de schemas/APIs.
+- **Heuristica:** llamar camino, homotopia o celda a una operacion de software
+  sin construir el espacio correspondiente.

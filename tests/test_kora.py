@@ -10,6 +10,7 @@ import sys
 import tempfile
 import tomllib
 import unittest
+from itertools import product
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -411,6 +412,122 @@ class TestRelaciones(CasoPneuma):
         self.escribir_conocimiento(conocimiento_campos(
             cita=["urn:kora:kb:fantasma"]))
         self.assert_fallo("referencias-resuelven", "no resuelve")
+
+    def test_depende_no_exige_cierre_transitivo_materializado(self):
+        self.escribir_conocimiento(conocimiento_campos(
+            urn="urn:kora:kb:a", nombre="a", depende=["urn:kora:kb:b"]))
+        self.escribir_conocimiento(conocimiento_campos(
+            urn="urn:kora:kb:b", nombre="b", depende=["urn:kora:kb:c"]))
+        self.escribir_conocimiento(conocimiento_campos(
+            urn="urn:kora:kb:c", nombre="c"))
+        self.assert_todo_coherente()
+
+
+# ------------------------------------------ 10b. núcleo categorial demostrable
+
+class TestNucleoCategorial(CasoPneuma):
+
+    def test_cada_matriz_realiza_una_coreflexion_escalar(self):
+        """La proyección por coordenada es monótona, descendente e idempotente.
+
+        Para a en la imagen y d en el dominio soportado verifica además:
+        a <= d  sii  a <= P(d), la adjunción inclusión ⊣ proyección.
+        """
+        for target in kora.TARGETS_REALIZADOS:
+            matriz = kora.MATRICES[target]
+            for eje in kora.EJES:
+                with self.subTest(target=target, eje=eje):
+                    tabla = matriz[eje]
+                    dominio_total = list(range(kora.RANGO_EJE[eje] + 1))
+                    self.assertEqual(sorted(tabla), dominio_total)
+                    dominio = [d for d in dominio_total
+                               if tabla[d][0] is not None]
+                    self.assertEqual(
+                        dominio, list(range(max(dominio) + 1)),
+                        "el dominio soportado debe ser un segmento inicial")
+                    imagen = sorted({tabla[d][0] for d in dominio})
+                    for d in dominio:
+                        pd = tabla[d][0]
+                        self.assertLessEqual(pd, d)
+                        self.assertEqual(tabla[pd][0], pd)
+                    for d1 in dominio:
+                        for d2 in dominio:
+                            if d1 <= d2:
+                                self.assertLessEqual(
+                                    tabla[d1][0], tabla[d2][0])
+                    for a in imagen:
+                        for d in dominio:
+                            self.assertEqual(a <= d, a <= tabla[d][0])
+
+            for i, nombre in enumerate(kora.SIGMA_NOMBRES):
+                with self.subTest(target=target, sigma=nombre):
+                    tope = matriz["sigma-max"][i]
+                    p = lambda valor: min(valor, tope)
+                    imagen = range(tope + 1)
+                    for d in range(4):
+                        self.assertLessEqual(p(d), d)
+                        self.assertEqual(p(p(d)), p(d))
+                    for d1 in range(4):
+                        for d2 in range(d1, 4):
+                            self.assertLessEqual(p(d1), p(d2))
+                    for a in imagen:
+                        for d in range(4):
+                            self.assertEqual(a <= d, a <= p(d))
+
+    def test_proyeccion_preserva_las_cinco_leyes_inter_eje(self):
+        for target in kora.TARGETS_REALIZADOS:
+            matriz = kora.MATRICES[target]
+
+            def soportados(eje):
+                return [x for x, (px, _, _) in matriz[eje].items()
+                        if px is not None]
+
+            def p(eje, valor):
+                return matriz[eje][valor][0]
+
+            for pi, mu in product(soportados("pi"), soportados("mu")):
+                if not (pi >= 3 and mu < 1):
+                    self.assertFalse(
+                        p("pi", pi) >= 3 and p("mu", mu) < 1,
+                        (target, "ley 1", pi, mu))
+
+            for xi, lam in product(soportados("xi"),
+                                   soportados("lambda")):
+                if not (xi == 4 and lam < 1):
+                    self.assertFalse(
+                        p("xi", xi) == 4 and p("lambda", lam) < 1,
+                        (target, "ley 2", xi, lam))
+
+            for phi, mu in product(soportados("phi"), soportados("mu")):
+                if not (phi >= 2 and mu < 1):
+                    self.assertFalse(
+                        p("phi", phi) >= 2 and p("mu", mu) < 1,
+                        (target, "ley 3", phi, mu))
+
+            maximos = matriz["sigma-max"]
+            for transparency, accountability in product(range(4), repeat=2):
+                if not (accountability >= 2 and transparency < 2):
+                    pt = min(transparency, maximos[2])
+                    pa = min(accountability, maximos[3])
+                    self.assertFalse(
+                        pa >= 2 and pt < 2,
+                        (target, "ley 4", transparency, accountability))
+
+            for lam in soportados("lambda"):
+                for sigma in product(range(4), repeat=5):
+                    if not (lam == 3 and min(sigma) < 2):
+                        plam = p("lambda", lam)
+                        psigma = [min(x, maximos[i])
+                                  for i, x in enumerate(sigma)]
+                        self.assertFalse(
+                            plam == 3 and min(psigma) < 2,
+                            (target, "ley 5", lam, sigma))
+
+    def test_firmas_iguales_no_colapsan_identidades(self):
+        self.escribir_skill(skill_campos())
+        self.escribir_skill(skill_campos(
+            urn="urn:kora:artefacto:util-y", nombre="util-y"))
+        self.assert_todo_coherente()
 
 
 # ---------------------------------------------------------- 11. transmutación

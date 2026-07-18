@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-enriquecimiento
 nombre: icas-enriquecimiento
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 08 del ICAS-BoK: categorías enriquecidas — Bool/Cost-categories, espacios métricos de Lawvere, profunctors y cambio de base; relaciones cuantitativas (latencia, fiabilidad, costo, QoS)."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/08-enriquecimiento.md (sha256:3c514ef1407c0112d3bb0a1bdf29e578391b86b61e591e994e6f191ad5b8bd00) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/08-enriquecimiento.md (sha256:3c514ef1407c0112d3bb0a1bdf29e578391b86b61e591e994e6f191ad5b8bd00) el 2026-06-12. Corrección 1.1.0 contrastada con Lawvere, Metric Spaces, Generalized Logic, and Closed Categories, https://www.math.buffalo.edu/~sww/0papers/lawveres-metric-space-paper.pdf."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -48,7 +48,10 @@ Una Bool-category X asigna a cada par (x, y) un valor booleano X(x, y) in {true,
 
 El resultado es un preorden. Los preordenes son exactamente las Bool-categories. Fong y Spivak demuestran este isomorfismo con una construccion explicita en ambas direcciones.
 
-Esto no es trivialidad. Es la primera muestra de que el enriquecimiento recupera estructuras familiares como casos particulares de una construccion general. Y tiene aplicacion directa: los permisos de acceso en un sistema son exactamente un preorden. "¿Puede el usuario U acceder al recurso R?" es un Bool-category donde los objetos son (usuarios, recursos) y el hom-object es true o false. La composicion -- la transitividad -- captura la herencia de permisos: si el rol A hereda del rol B, y B tiene acceso a R, entonces A tiene acceso a R.
+Esto permite modelar como preorden la **herencia monotónica** de permisos: si
+un rol hereda de otro y este accede a un recurso, el acceso se propaga. Un
+sistema real con denegaciones explícitas, contexto, separación de funciones o
+prioridades puede no ser preorden y necesita otra base.
 
 ## Cost-enrichment: espacios metricos de Lawvere
 
@@ -61,9 +64,15 @@ Una Cost-category X es un conjunto de objetos donde X(x, y) in [0, infinito] asi
 
 Lawvere observo que esto es exactamente un espacio metrico generalizado -- sin exigir simetria ni separacion. Un espacio metrico de Lawvere permite distancias asimetricas (cuesta mas subir que bajar) y distancias infinitas (no hay camino).
 
-Esto me da la formalizacion exacta de la topologia de red. Los nodos de mi cluster son objetos. La latencia entre nodos es el hom-object. La composicion (suma de latencias) satisface la desigualdad triangular automaticamente: la latencia del camino directo nunca es mayor que la del camino con escala. Y la asimetria captura la realidad de que la latencia de ida puede diferir de la de vuelta.
+Una red pesada genera una métrica de Lawvere al tomar el costo mínimo de
+caminos. Las mediciones crudas de latencia, variables en el tiempo y afectadas
+por congestión, no satisfacen automáticamente la desigualdad triangular. La
+asimetría sí puede representarse.
 
-Un grafo pesado dirigido es exactamente una Cost-category presentada por generadores. Si tengo nodos {A, B, C} con aristas pesadas A->B:3, B->C:2, A->C:10, el Cost-category resultante tiene X(A, C) = min(10, 3+2) = 5 -- el shortest path. La multiplicacion de matrices en el semianillo (min, +) computa exactamente los hom-objects de la Cost-category. Es el algoritmo de Floyd-Warshall reinterpretado como calculo de enriquecimiento.
+La `Cost`-categoría libre generada por un grafo pesado dirigido toma shortest
+paths. Para aristas `A->B:3`, `B->C:2`, `A->C:10`, resulta
+`X(A,C)=min(10,3+2)=5`; el cierre matricial en `(min,+)` computa esos
+hom-values. El grafo inicial y su cierre enriquecido no son el mismo objeto.
 
 ## [0,1]-enrichment: calidad de servicio
 
@@ -71,7 +80,10 @@ Un caso que uso frecuentemente es V = ([0,1], <=, 1, *), donde el tensor es la m
 
 La composicion dice que la fiabilidad del camino compuesto es al menos el producto de las fiabilidades individuales: X(x, y) * X(y, z) <= X(x, z). La identidad dice que la fiabilidad del canal de un nodo a si mismo es 1.
 
-Esto captura exactamente el modelo de QoS que uso en arquitecturas de microservicios. Si el servicio A llama a B con fiabilidad 0.99 y B llama a C con fiabilidad 0.95, la fiabilidad del camino A->B->C es al menos 0.99 * 0.95 = 0.9405. Y si hay un camino directo A->C con fiabilidad 0.98, el sistema elige el camino mas fiable.
+Este enriquecimiento modela una cota multiplicativa bajo hipótesis como
+independencia y probabilidades estables. Sin ellas, multiplicar `0.99` y
+`0.95` no determina la fiabilidad compuesta; tampoco el sistema «elige» el
+camino más fiable salvo que exista una política de routing que lo haga.
 
 ## Cambio de base de enriquecimiento
 
@@ -79,7 +91,20 @@ Hay una operacion que conecta todos estos mundos: el cambio de base. Si tengo un
 
 Fong y Spivak lo definen formalmente: dada una V-category C, la W-category C_f tiene los mismos objetos y hom-objects C_f(c, d) = f(C(c, d)). Las condiciones de V-category se transfieren automaticamente gracias a las propiedades del monoidal monotone.
 
-El ejemplo mas iluminador: la funcion "threshold" t_epsilon : Cost -> Bool definida por t_epsilon(x) = true si x <= epsilon, false si no, es un monoidal monotone. Aplicarla a una Cost-category (un espacio metrico) produce una Bool-category (un preorden): "x esta a distancia <= epsilon de y." Es exactamente la construccion de grafos de proximidad que uso en clustering: dado un espacio metrico, elijo un umbral y obtengo una relacion de vecindad.
+Un contraejemplo importante: para `epsilon > 0`, la función
+`t_epsilon(x) = true` si `x <= epsilon` **no** es en general monoidal lax de
+`Cost` a `Bool`. La condición exigiría que de `x <= epsilon` e
+`y <= epsilon` se siguiera `x+y <= epsilon`, lo que falla. En un espacio
+métrico, tres puntos con distancias `0.75 epsilon`, `0.75 epsilon` y
+`1.5 epsilon` muestran que «estar a distancia <= epsilon» no es transitivo.
+Por tanto el umbral produce un **grafo de proximidad**, no automáticamente una
+Bool-category/preorden.
+
+Hay dos reparaciones distintas: `epsilon = 0` sí respeta la composición, o se
+toma el cierre reflexivo-transitivo del grafo de proximidad. Este último
+produce un preorden de alcanzabilidad, pero cambia la semántica: relaciona
+puntos conectados por una cadena de saltos cortos aunque su distancia directa
+supere el umbral.
 
 En la otra direccion, la inclusion Bool -> Cost que envía true a 0 y false a infinito convierte preordenes en espacios metricos discretos: o estas a distancia 0 o estas a distancia infinita.
 
@@ -127,6 +152,18 @@ Los profunctors son la herramienta para co-design: descomponer un problema de in
 
 ## El patron recurrente
 
-El enriquecimiento es un meta-patron. No agrega nueva matematica al nucleo de la teoria de categorias -- preserva los mismos diagramas, las mismas propiedades universales, la misma composicionalidad. Lo que hace es parametrizar la teoria sobre la "moneda" con la que se miden las relaciones. Cambiar la moneda de Set a Bool da preordenes. Cambiar a Cost da espacios metricos. Cambiar a Cat da 2-categorias. Cambiar a [0,1] da redes de fiabilidad.
+El enriquecimiento parametriza los hom-objects y su composición por una base
+monoidal. `Bool` da preórdenes, `Cost` métricas de Lawvere y `Cat`
+2-categorías. `[0,1]` da una estructura de cotas multiplicativas; llamarla red
+de fiabilidad requiere justificar la semántica probabilística.
 
-En mi practica diaria, la leccion es que cuando un sistema tiene relaciones cuantitativas -- latencias, costos, fiabilidades, probabilidades, niveles de acceso -- no necesito inventar un framework ad hoc. Necesito identificar el monoidal preorder correcto y enriquecer sobre el. La teoria me da composicion, identidad, y cambio de base gratis. Y lo mas importante: me da una nocion de funtor enriquecido que preserva esa estructura cuantitativa, garantizando que mis transformaciones entre sistemas respetan las cotas que importan.
+En la práctica, primero identifico una base monoidal y compruebo sus leyes
+contra el dominio. Entonces una categoría y un funtor enriquecidos proporcionan
+composición y preservación de las cotas **codificadas**; no garantizan que la
+métrica elegida sea una medición correcta del sistema real.
+
+## Corrección 1.1.0
+
+Se retira el falso cambio de base por umbral positivo. El threshold ordinario
+da un grafo de proximidad; solo una construcción compatible con el tensor o un
+cierre explícito produce el preorden.

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-composicion
 nombre: icas-composicion
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 01 del ICAS-BoK: categorías, morfismos, leyes de asociatividad e identidad, y dualidad — el vocabulario base para diagnosticar fallas de encadenamiento y composición."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/01-composicion.md (sha256:f34c1b125ac6495b6934b3c1149f2a9b3bc795f37e4013e3d29f586abb08bfdc) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/01-composicion.md (sha256:f34c1b125ac6495b6934b3c1149f2a9b3bc795f37e4013e3d29f586abb08bfdc) el 2026-06-12. v1.1.0 (2026-07-18): separa grafos de categorias y corrige analogias operacionales sobre JOIN, side effects, pipelines y dependencias."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -14,24 +14,24 @@ familia: bok
 
 # Composicion
 
-Composicion es lo primero que veo. Antes de entender que son las cosas, entiendo que las cosas se componen. Un pipeline de datos se compone. Un deploy se compone. Un join se compone. Cuando miro un sistema distribuido que funciona, lo que estoy viendo --- aunque no siempre lo nombre asi --- es composicion. Y cuando algo falla, cuando un microservicio no integra, cuando una migracion rompe datos, cuando un merge de git produce conflictos irresolubles, lo que se violo fue una ley de composicion.
+Composicion es lo primero que veo. Antes de entender que son las cosas, entiendo que las cosas se componen. Un pipeline de datos se compone. Un deploy se compone. Un join se compone. Cuando algo falla, una lectura composicional puede localizar incompatibilidades, pero no toda falla operacional viola asociatividad o identidad categorial.
 
 No llegue a esta idea por la matematica. Llegue por el dolor de las cosas que no componen bien.
 
 ## Lo que veo cuando miro flechas
 
-Antes de hablar de categorias necesito hablar de flechas. Todo empieza con flechas. Un schema de base de datos relacional tiene tablas y foreign keys --- las foreign keys son flechas. Un diagrama de arquitectura tiene servicios y dependencias --- las dependencias son flechas. Un pipeline de CI/CD tiene stages y transiciones --- las transiciones son flechas. Un Dockerfile tiene instrucciones que se encadenan --- cada instruccion es una flecha de un estado de imagen al siguiente.
+Antes de hablar de categorias necesito hablar de flechas. Un schema, un diagrama de arquitectura o un pipeline aporta **aristas candidatas**. Solo son morfismos despues de declarar identidades, composicion, tipos y ecuaciones. Si se parte de un grafo, la categoria libre de caminos es una construccion posible, no una propiedad inherente del dibujo.
 
-Los autores de *Relational Thinking* lo dicen mejor que yo: el pensamiento relacional busca entender un objeto mirando hacia afuera --- como interactua --- en lugar de hacia adentro --- de que esta hecho. Un vertice en un grafo dirigido no importa por lo que "es", sino por las flechas que salen y llegan a el. Cuando modelo un sistema, las flechas que dibujo en la pizarra SON el modelo. Los nodos son solo los puntos de anclaje.
+Los autores de *Relational Thinking* lo dicen mejor que yo: el pensamiento relacional busca entender un objeto mirando hacia afuera --- como interactua --- en lugar de hacia adentro --- de que esta hecho. Un vertice en un grafo dirigido se caracteriza, dentro de ese grafo, por las flechas que salen y llegan a el. Cuando dibujo un sistema, esas flechas forman el grafo generador del modelo; aún debo decidir cuáles se componen y qué ecuaciones satisfacen.
 
 Hay una escalera que subi sin darme cuenta, y que el libro de Fong, Myers y Spivak formaliza con claridad:
 
 1. **Dibujar flechas.** Puntos y flechas entre ellos --- grafos dirigidos. Sencillo, visual, inmediato. Asi empieza todo diseno de sistema.
-2. **Codificar como datos.** Las flechas se convierten en funciones `src` y `tgt` que asignan a cada flecha su origen y su destino. Un grafo dirigido se convierte en dos mapas. Esta representacion es la que un computador puede entender --- no la imagen bonita, sino las listas. Y aca ya hay una decision de diseno: las flechas apuntan "de flecha a vertice" (arrows-first), no al reves. La representacion arrows-first es la unica que no produce dangling edges --- bordes colgantes, sin significado. La representacion vertices-first genera mutantes.
+2. **Codificar como datos.** Las flechas se convierten en funciones `src` y `tgt` que asignan a cada flecha su origen y destino. Es una representacion total y util; otras codificaciones tambien pueden impedir aristas colgantes mediante tipos o constraints.
 3. **Reconocer el schema.** Esos dos mapas paralelos `src, tgt: E -> V` constituyen un blueprint --- un molde que, llenado de distintas formas, genera distintos grafos. El schema ES un grafo dirigido el mismo.
-4. **Llegar a la categoria.** Cuando agrego ecuaciones de conmutatividad al schema --- cuando digo que ciertos caminos producen el mismo resultado --- ya no tengo un grafo libre sino una categoria finitamente presentada.
+4. **Llegar a la categoria.** Primero genero la categoria libre (caminos, identidades y concatenacion) y luego, si corresponde, cociento por las ecuaciones de caminos. El resultado es una categoria presentada por generadores y relaciones.
 
-Este ascenso es el que hago cada vez que miro un DDL de PostgreSQL. Lo que veo no son tablas y columnas. Lo que veo es una categoria finitamente presentada donde las tablas son objetos, las foreign keys son morfismos generadores, y los path equivalences son las ecuaciones de integridad. Y los datos concretos -- las filas -- son un mapeo que traduce el schema a conjuntos y funciones, respetando las ecuaciones. Ese mapeo tiene un nombre preciso que aparecera en el proximo documento.
+Este ascenso puede aplicarse a un fragmento de DDL bajo el modelo categorial de bases de datos: tablas como objetos, claves foraneas totales como generadores y ciertas constraints como ecuaciones de caminos. `NULL`, multiplicidades, constraints no ecuacionales y semantica SQL completa requieren tratamiento adicional.
 
 ## Objetos, morfismos, y las dos leyes
 
@@ -69,7 +69,7 @@ id . f == f -- identidad izquierda
 h . (g . f) == (h . g) . f -- asociatividad
 ```
 
-En SQL, la composicion aparece en el JOIN. Si tengo una foreign key `employee.department_id -> department.id` y otra `department.company_id -> company.id`, su composicion es el camino `employee -> department -> company`. El JOIN de tres tablas puede leerse como composicion de morfismos. Y la identidad? No es la primary key, sino el morfismo identidad sobre la tabla misma: el camino vacio que deja intacta la fila de partida.
+En el modelo de instancias como funtores, dos foreign keys totales se componen como funciones. Un JOIN puede **realizar o consultar** ese camino, pero el operador SQL no es por ello la composicion categorial; `NULL`, bags y variantes de JOIN importan. La identidad es el camino vacio sobre la tabla.
 
 ```sql
 -- morfismo: employee -> department
@@ -84,7 +84,7 @@ JOIN department d ON e.department_id = d.id
 JOIN company c ON d.company_id = c.id;
 ```
 
-La composicion del primer JOIN con el segundo produce el tercero. Asociatividad garantiza que no importa si hago primero employee-department y luego le agrego company, o si hago primero department-company y luego le antepongo employee. El resultado es el mismo.
+La composicion de las funciones de claves es asociativa. La equivalencia de planes JOIN concretos exige ademas las hipotesis de la semantica relacional elegida; no se deduce solo de la ley categorial.
 
 ## Diagramas conmutativos: el lenguaje del razonamiento
 
@@ -107,15 +107,15 @@ Spivak formaliza esta idea para bases de datos: una database schema en forma nor
 
 ## Donde veo composicion en la practica
 
-**Docker Compose.** Cada servicio es un objeto. Las dependencias (`depends_on`) son morfismos. La composicion de dependencias es transitiva: si web depende de api y api depende de db, entonces web depende transitivamente de db. Cuando el orden de startup falla, una ley de composicion fue violada.
+**Docker Compose.** `depends_on` genera un digrafo de dependencias. Su categoria libre contiene caminos y su relacion de alcanzabilidad es transitiva. Un fallo de startup puede deberse a readiness, timing o configuracion; no demuestra que haya fallado una ley categorial.
 
 **git merge.** Un merge sugiere una intuicion composicional: combina dos historias de desarrollo en una historia nueva. Pero no conviene presentarlo como una operacion asociativa en sentido categorial estricto; depende del estado del repositorio, de la base comun y de la estrategia de merge. Lo util de la analogia es otra cosa: cuando aparece un conflicto severo, suele haber dos cambios que dejaron de encajar composicionalmente.
 
-**Pipelines de CI/CD.** build -> test -> deploy. Cada stage toma un artefacto y produce otro. La composicion build;test;deploy es el pipeline completo. La identidad es el stage que pasa el artefacto sin modificarlo (un passthrough stage). La asociatividad garantiza que puedo agrupar stages en sub-pipelines sin alterar el resultado.
+**Pipelines de CI/CD.** Si cada stage se modela como funcion total entre estados de artefacto, la composicion es asociativa y el passthrough es identidad. Efectos, fallos, caches y entorno deben entrar al tipo o modelarse, por ejemplo, en una categoria de Kleisli; de otro modo reagrupar puede cambiar el comportamiento.
 
-**Composicion de funciones en APIs.** Un middleware chain en Express o Koa es composicion pura: `authenticate . validate . parseBody`. Cada middleware toma un request y produce un request transformado (o un response). La composicion es asociativa. La identidad es el middleware que no hace nada: `(req, res, next) => next`.
+**Composicion de funciones en APIs.** Un middleware chain puede modelarse composicionalmente, pero callbacks, respuestas tempranas y efectos impiden llamarlo composicion pura sin una semantica explicita.
 
-**Dependencias de componentes de software.** Jiang Guo modela las dependencias de componentes como una categoria: componentes son objetos, dependencias son morfismos. La composicion de dependencias produce dependencias transitivas. Los conflictos de version son violaciones de la conmutatividad del diagrama de dependencias.
+**Dependencias de componentes de software.** Un grafo de dependencias puede generar una categoria de caminos o un orden de alcanzabilidad si es aciclico. Los conflictos de version son incompatibilidades de constraints; solo son fallas de conmutatividad si se ha construido un diagrama semantico que deba conmutar.
 
 ## Dualidad: cada concepto tiene un gemelo
 
@@ -123,7 +123,7 @@ Hay un principio generativo que descubri tarde pero que ahora uso todo el tiempo
 
 Esto no es un truco formal. Es un principio de generacion de conceptos. Cada estructura en una categoria tiene un **dual** en la categoria opuesta, y ese dual es automaticamente coherente. Si tengo un concepto (por ejemplo, un "producto" que combina dos objetos), al invertir todas las flechas obtengo el concepto dual (un "coproducto" que elige entre dos objetos). Gratis.
 
-En la practica cotidiana: si foreign keys van de la tabla hijo al padre (`order.customer_id -> customer.id`), en la categoria opuesta las flechas van del padre al hijo. Una consulta que sigue foreign keys "hacia arriba" se convierte en su dual que sigue relaciones "hacia abajo". SELECT y INSERT viven en categorias duales. Cada vez que defino una interfaz de lectura, su dual me da la interfaz de escritura.
+En la categoria opuesta se invierte formalmente la direccion de las claves. Esto puede sugerir lecturas descendentes, pero `SELECT` e `INSERT` no forman automaticamente un par dual: hay que definir las categorias y demostrar la correspondencia.
 
 En preorders, el dual invierte el orden: si en P tenemos a <= b, en P^op tenemos b <= a. Joins se convierten en meets. El supremo se convierte en infimo. Fong y Spivak en *Seven Sketches* construyen todo el Capitulo 1 sobre esta dualidad: las conexiones de Galois son pares de mapas monotonos entre un preorder y su dual.
 
@@ -133,8 +133,17 @@ Vuelvo al principio. Lo que me trajo aca no fue la elegancia de la matematica si
 
 La superficie de un componente debe crecer mas lento que su volumen. La superficie es la informacion que necesito para componer; el volumen es la informacion que necesito para implementar. Cuando la superficie crece tan rapido como el volumen, la composicion se vuelve imposible --- necesito conocer la implementacion para componer, y eso destruye la abstraccion.
 
-Los side effects son el ejemplo canonico de no-composicion. Una funcion que modifica estado global puede funcionar aislada, pero no compone: la composicion de dos funciones con side effects no es predecible a partir de las funciones individuales. La categoria Hask (tipos de Haskell y funciones puras) compone; el pseudocodigo imperativo con estado mutable no forma una categoria honesta.
+Los efectos no destruyen necesariamente la composicion: pueden hacerse explicitos como transformaciones de estado, flechas de Kleisli u otra semantica. El problema aparece cuando el modelo omite el estado/efecto relevante y pretende razonar como si las funciones fueran puras.
 
 *Relational Thinking* marca una transicion fundamental: del pensamiento de causa-y-efecto al pensamiento de equilibrio-y-constraint. Los sistemas dinamicos del Capitulo 2 --- Kiki y Bouba, los semaforos, las luces intermitentes --- se modelan como grafos dirigidos con estados y reglas de actualizacion, un mundo causal donde las flechas transmiten estado de un vertice a otro en cada paso temporal. Pero a partir del Capitulo 3, el libro gira hacia una vision relacional donde las flechas codifican constraints simultaneas, no secuencias temporales. Esa transicion --- de imperativo a relacional, de procedimental a declarativo --- es la misma que yo hago cada vez que paso de pensar en "que hace este microservicio" a pensar en "que invariantes mantiene este schema."
 
 La composicion es el primer peldano. Todo lo demas --- la preservacion de estructura cuando paso entre mundos, la construccion de cosas nuevas a partir de piezas universales, la equivalencia entre perspectivas distintas --- se apoya en este fundamento. Si la composicion falla, nada de lo que viene despues tiene sentido.
+
+## Estatuto epistemico
+
+- **Formal:** definicion de categoria, categoria opuesta, categoria libre y
+  cociente por ecuaciones.
+- **Modelo:** schemas, pipelines y dependencias solo despues de tipar sus
+  objetos, flechas y leyes.
+- **Heuristica:** llamar "falla de composicion" a un sintoma operacional antes
+  de construir ese modelo.

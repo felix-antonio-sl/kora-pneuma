@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-calidad-riesgo
 nombre: icas-calidad-riesgo
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 18 del ICAS-BoK: calidad y riesgo — quality attributes, RAM, resiliencia y garantías formuladas con métricas enriquecidas y vocabulario formal."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/18-calidad-riesgo.md (sha256:033be897e2b071186bee582adff6df17f8068398ab38af49192aea17b57690b9) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/18-calidad-riesgo.md (sha256:033be897e2b071186bee582adff6df17f8068398ab38af49192aea17b57690b9) el 2026-06-12. Corrección de rigor 1.1.0 (2026-07-18): se retira la identificación genérica verificación=end y test=coend."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,11 +18,17 @@ familia: bok
 
 Cuando dibujo un sistema --- cajas, flechas, puertos --- lo que dibujo es la estructura funcional. Que componentes existen, como se conectan, que datos fluyen. Pero las propiedades que hacen que un sistema sea confiable, seguro, rapido y mantenible no viven en las cajas ni en las flechas. Viven en otra dimension. La latencia no es un componente; es una medida sobre los morfismos. La confiabilidad no es una conexion; es una probabilidad sobre las trayectorias. La seguridad no es un dato; es la imposibilidad de ciertos caminos.
 
-Estas propiedades --- los quality attributes, los atributos no-funcionales, lo que los systems engineers llaman "-ilities" --- requieren una formalizacion distinta a la de la estructura. No son objetos en la categoria del sistema. Son funtores DESDE la categoria del sistema HACIA categorias de medicion. Y la riqueza de esas categorias de medicion --- probabilidades, intervalos temporales, lattices de prioridades, costos monetarios --- es lo que determina cuan finamente puedo razonar sobre la calidad de lo que construyo.
+Estas propiedades requieren una formalización distinta a la estructura
+funcional. **Pueden modelarse** mediante funtores desde una categoría del
+sistema hacia categorías de medición si se definen los objetos, morfismos y la
+acción sobre ambos. No todo atributo o dashboard es ya uno de esos funtores.
 
 ## Quality attributes como funtores de medicion
 
-Un quality attribute Q es un funtor Q : SystemCat -> MeasurementCat que toma cada componente del sistema y lo mapea a un valor medible, y cada morfismo del sistema lo mapea a una relacion entre medidas. La categoria de medicion no es unica: depende del atributo. Para performance esta enriched en el monoide aditivo de tiempos ([0, infinity), +, 0). Para reliability esta enriched en el intervalo de probabilidades ([0,1], *, 1). Para cost esta enriched en el semianillo de valores monetarios. Para availability, la observacion instantanea puede ser booleana --- up or down en cada instante --- pero la medida operativa relevante sobre ventanas temporales vive en [0,1]. Para security, un predicado booleano puede ser un primer modelo util, aunque en la practica suelo necesitar escalas mas ricas.
+En ese modelo, un quality attribute `Q : SystemCat -> MeasurementCat` toma
+componentes y transformaciones a mediciones compatibles. La categoría de
+medición depende del atributo; las leyes de composición deben verificarse y no
+se obtienen por escoger una escala numérica.
 
 Munoz et al. formalizan exactamente esta idea para Software Product Lines. En su framework, las variability models (VMs) forman una categoria NVM cuyos objetos son arboles de features con nodos numericos y booleanos, y cuyos morfismos son las relaciones jerarquicas (Parent/Child, cardinality) y cross-tree constraints entre features. Los quality attributes forman una segunda categoria QAM cuyos objetos son Measured metrics sets M_S --- conjuntos de metricas con formato name-domain-metric como "Performance < 10 Seconds" o "EnergyConsumption in Joules" --- y cuyos morfismos son los non-functional requirements (NFRs) que restringen las metricas. El puente entre ambas categorias es un isomorphic functor F : M_NVM -> QAM que establece una correspondencia bijective entre los Complete Solution objects CS de NVM (los productos satisfactorios de la variability model) y los Measurement Sets objects MS de QAM (sus mediciones de calidad).
 
@@ -32,74 +38,162 @@ Engel lo ilustra con los Key Performance Attributes del Battery Electric Vehicle
 
 ## La categoria de quality attributes
 
-Los quality attributes no son independientes. Mejorar la performance puede degradar el consumo energetico. Aumentar la seguridad puede reducir la usabilidad. Agregar redundancia mejora la reliability pero aumenta el costo y la complejidad. Estas tensiones forman una categoria propia.
+Los quality attributes no son independientes. Mejorar performance puede
+degradar consumo energético; redundancia puede mejorar reliability y aumentar
+costo. Estas tensiones aportan datos para un modelo ordenado o enriquecido,
+pero no forman una categoría por sí mismas.
 
-En la categoria QA de quality attributes, los objetos son los atributos individuales (Performance, Reliability, Security, Maintainability, Cost, ...) y los morfismos son los trade-offs entre ellos. Un trade-off t : Performance -> Cost dice: mejorar la performance en delta requiere incrementar el costo en f(delta). Un trade-off inverso t' : Cost -> Performance dice: reducir el costo en delta degrada la performance en g(delta). Si f y g son inversas, el trade-off es simetrico --- gano exactamente lo que pierdo. En la practica nunca son inversas: las degradaciones son superlineales y las mejoras son sublineales.
+Puede construirse una categoría `QA` si los objetos son perfiles de atributos
+y los morfismos son transformaciones de diseño componibles. Tratar los
+atributos aislados como objetos y los trade-offs como flechas exige tipar la
+composición: una curva empírica `performance -> cost` no tiene necesariamente
+inversa ni compone con cualquier otra curva.
 
-Esta categoria esta enriched en un lattice de prioridades. Cada organizacion asigna una prioridad parcial a los quality attributes: "la seguridad domina sobre la performance, la performance domina sobre el costo, la seguridad y la maintainability son incomparables." Este orden parcial es exactamente un preorder, y la categoria QA enriquecida en ese preorder captura tanto los trade-offs como sus prioridades. Los trade-offs entre QAs forman adjunciones locales: mejorar security tiene un right adjoint que mide cuanto usability se pierde, y esa adjuncion no es simetrica --- ganar security es mas caro en usability que ganar usability es caro en security.
+Un orden de prioridades puede formar un preorder y servir como base de
+enriquecimiento. Los trade-offs empíricos entre seguridad y usabilidad no
+forman por ello adjunciones locales: harían falta mapas monótonos y la
+equivalencia de orden que define la adjunción.
 
-Un SLA es un quality attribute functor con cotas. "99.9% uptime medido en ventanas de 30 dias" es una seccion del funtor de availability restringida a un intervalo temporal, con un threshold sobre el valor. El SLA dice: Q_availability(System, [t, t+30d]) >= 0.999. Un SLA violation es un punto donde el funtor cruza el threshold --- donde la medida real cae por debajo de la garantia contractual.
+Un SLA es primero un contrato con una función de medición, una ventana y una
+cota. Puede incorporarse a un funtor de calidad si se construyen las categorías
+y la acción sobre morfismos. «99.9% uptime en 30 días» se evalúa directamente
+como `availability(System,[t,t+30d]) >= 0.999`; el cruce del umbral es una
+violación contractual, haya o no formalización funtorial.
 
-Un performance budget es una cota de enrichment. Si la latencia total del sistema no debe exceder 200ms, y el sistema tiene tres componentes en serie, el budget asigna 80ms al frontend, 100ms al backend y 20ms a la base de datos. Categoricamente, el enriquecimiento en [0, 200ms] de los morfismos del sistema debe respetar la cota composicional: la composicion de latencias (su suma) no debe exceder el budget total. Esto es exactamente una condicion sobre la enriched category: los hom-values deben componer dentro del bound.
+Un performance budget puede modelarse en una categoría enriquecida en costes
+si la composición de latencias usa la operación monoidal elegida. Para tres
+componentes estrictamente seriales, `80+100+20 <= 200 ms` es una cota aditiva.
+Paralelismo, colas y distribuciones de cola requieren otra operación o un
+enriquecimiento más rico; el presupuesto por sí solo no construye la
+categoría.
 
 ## RAM categoricamente
 
 Reliability, Availability y Maintainability --- la triada RAM --- tienen formalizaciones categoricas precisas que conectan con la nocion de comportamiento temporal y con la nocion coalgebraica de estado.
 
-**Reliability** es la probabilidad de que la coalgebra del sistema permanezca en la sub-coalgebra "operacional" durante un intervalo de tiempo [0, t]. Un sistema tiene una coalgebra alpha : State -> F(State) que describe sus transiciones, como formaliza Barbosa. Los estados se particionan en operacionales y fallidos. La reliability R(t) es la probabilidad de que la trayectoria del sistema, empezando en un estado operacional, permanezca en estados operacionales durante todo el intervalo [0, t]. En la terminologia del temporal type theory, es una proposicion "up" (siempre en el futuro) sobre el tipo de comportamiento del sistema: la afirmacion de que la propiedad "operacional" se mantiene para todo tiempo futuro hasta t.
+**Reliability** puede modelarse como probabilidad de permanecer en un
+subconjunto operacional durante `[0,t]`. Ese subconjunto es una
+subcoálgebra solo si está cerrado bajo la transición y existe la estructura
+coalgebraica restringida; una partición de estados no basta.
 
-Vidalie documenta la infraestructura formal: los Safety Integrity Levels (SIL) de IEC 61508 asignan cuatro niveles desde SIL 1 (probabilidad de falla peligrosa entre 10^{-5} y 10^{-6} por hora) hasta SIL 4 (entre 10^{-8} y 10^{-9}). Los Design Assurance Levels (DAL) de DO-178B para aviatica asignan cinco niveles de A (catastrofico) a E (sin efecto). Los DAL y SIL son objetos en una categoria de niveles de criticidad, ordenados por la severidad de las consecuencias de falla. Las metodologias de safety assessment --- Functional Hazard Assessment (FHA), Preliminary System Safety Assessment (PSSA), System Safety Assessment (SSA), Common Cause Analysis (CCA) --- forman una cadena functorial a lo largo del lifecycle de seguridad de IEC 61508 que va desde Concept hasta Decommissioning. Los fault trees, los event trees, y las Markov chains que Vidalie detalla son todos modelos de la sub-coalgebra de falla: representaciones concretas de como el sistema puede salir del dominio operacional.
+SIL y DAL pueden organizarse en órdenes de criticidad con cuidado de no mezclar
+estándares ni métricas. Las metodologías de safety forman un proceso, no una
+cadena functorial hasta definir categorías y preservación. Fault trees, event
+trees y Markov chains son formalismos distintos; solo son modelos de una misma
+subcoálgebra si se construyen traducciones semánticas entre ellos.
 
-**Availability** es la fraccion de tiempo que el sistema pasa en estados operacionales versus estados fallidos. Es un temporal measurement functor: A : System x TimeInterval -> [0,1] que para cada sistema y cada ventana temporal produce un numero entre 0 y 1. La availability compone: si dos componentes en serie tienen availability A_1 y A_2, la availability del sistema compuesto es A_1 * A_2 (en el caso independiente). Si estan en paralelo con redundancia, es 1 - (1-A_1)(1-A_2). Estas formulas de composicion son exactamente las leyes de un lax monoidal functor de la categoria de topologias de sistema a la categoria de probabilidades.
+**Availability** es una medición temporal. Bajo independencia y topologías
+serie/paralelo ideales aparecen las fórmulas `A1*A2` y
+`1-(1-A1)(1-A2)`. Puede buscarse un funtor monoidal/lax que las organice, pero
+las fórmulas por sí solas no construyen su categoría ni cubren common-cause
+failures.
 
-**Maintainability** es la complejidad del morfismo de restauracion --- el costo medido en tiempo, pasos o recursos de llevar al sistema de un estado fallido a un estado operacional. Es un funtor M : FailedStates -> N que cuenta cuantas transiciones (morfismos) se necesitan para llegar desde un estado fallido a un estado operacional. El Mean Time To Repair (MTTR) es el valor esperado de este funtor sobre la distribucion de estados fallidos. Un sistema es mas mantenible si M produce valores pequenos --- si hay caminos cortos desde cualquier falla hasta la restauracion. Las Petri Nets que Vidalie presenta como herramienta para modelar sistemas redundantes (Working/Failed con transiciones de falla y reparacion) son representaciones diagramaticas de este funtor de maintainability.
+**Maintainability** puede medirse por el costo mínimo o esperado de caminos de
+restauración en una categoría enriquecida o un sistema estocástico. Una función
+`FailedStates -> N` no es automáticamente funtor y un estado puede tener varios
+caminos o ninguno. MTTR exige además una distribución y un proceso temporal.
 
-La conexion entre MTBF (Mean Time Between Failures) y MTTR es una relacion en la categoria temporal enriched: la availability A se aproxima como MTBF / (MTBF + MTTR). Esta formula es una composicion en la categoria enriched en [0, infinity]: el ratio de tiempo operacional sobre tiempo total.
+En un proceso reparable estacionario bajo hipótesis usuales,
+`A ≈ MTBF/(MTBF+MTTR)`. Es una fórmula probabilística/temporal; no se vuelve
+composición enriquecida solo porque sus magnitudes estén en `[0,∞]`.
 
 ## Riesgo como morfismo en la categoria de Kleisli
 
-Un riesgo es un morfismo que puede fallar. En la categoria determinista, un morfismo f : A -> B siempre produce un resultado. En la practica, muchos morfismos son inciertos: la llamada HTTP puede devolver timeout, la transaccion puede fallar, el sensor puede dar una lectura erronea. Un riesgo es un morfismo en la categoria de Kleisli para una monada de probabilidad.
+Un comportamiento incierto puede modelarse como flecha de Kleisli para una
+mónada de distribuciones. «Riesgo» incluye además impacto, exposición y
+criterios de decisión, y no se identifica con esa flecha sin codificarlos.
 
 Formalmente, un morfismo con riesgo es una flecha de Kleisli k : A -> P(B + Error) donde P es la monada de probabilidad y B + Error es el coproducto de resultados exitosos y fallidos. Con probabilidad p, el morfismo produce un error; con probabilidad 1-p, produce el resultado correcto. La composicion de riesgos en la categoria de Kleisli propaga las probabilidades: si k_1 falla con probabilidad p_1 y k_2 falla con probabilidad p_2, la composicion k_2 .kl k_1 falla con probabilidad 1 - (1-p_1)(1-p_2) (asumiendo independencia). Myers formaliza los stochastic systems como morfismos en la categoria de Kleisli de la monada de distribuciones de probabilidad, y demuestra que esta construccion es functorial y composicional: el comportamiento del sistema compuesto se puede calcular a partir de los comportamientos de las partes.
 
-La gestion de riesgos es el proceso de reemplazar morfismos inciertos por morfismos con cotas de probabilidad mas estrechas. Agregar un retry reduce la probabilidad de error a p^n (n reintentos). Agregar un fallback usa un camino alternativo cuando el primero falla. Cada mitigacion transforma el morfismo en la categoria de Kleisli para reducir la componente Error --- para tightening the probability bounds. Un risk register es la lista de los Kleisli arrows mas peligrosos, ordenados por la combinacion de probabilidad de falla e impacto. El threat modeling es el analisis sistematico para identificar cuales Kleisli arrows tienen cotas de probabilidad inaceptables y proponer mitigaciones que las reduzcan.
+La gestión de riesgos puede transformar kernels estocásticos y sus cotas. Con
+intentos independientes y probabilidad de falla constante `p`, `n` intentos
+fallan con `p^n`; correlación, backoff y fallas permanentes invalidan esa
+fórmula. Fallback, risk register y threat modeling solo son flechas/órdenes de
+Kleisli después de codificar resultados, impacto y composición.
 
 ## Resiliencia como recovery functor
 
-Un sistema es resiliente si, despues de salir de la sub-coalgebra operacional, puede volver a ella. Formalmente, para cada estado fallido s_f existe un morfismo de recuperacion r : s_f -> s_o que lleva al sistema de vuelta a un estado operacional s_o, y ese morfismo esta acotado en la metrica temporal --- la recuperacion ocurre en menos de delta unidades de tiempo.
+En un modelo de transición enriquecido, la resiliencia puede exigir que cada
+estado fallido considerado tenga un camino de recuperación hacia el dominio
+operacional con costo temporal acotado. Esto no es un «recovery functor» hasta
+definir una selección coherente de caminos y su acción.
 
-La resiliencia no es solo la existencia del morfismo de recuperacion. Es que ese morfismo sea rapido y automatico. Un sistema que requiere intervencion humana para recuperarse tiene un morfismo de recuperacion con cota temporal alta (horas, dias). Un sistema con auto-healing tiene un morfismo de recuperacion con cota temporal baja (segundos, minutos). El circuit breaker es la formalizacion canonica: el sistema tiene dos modos continuos --- cerrado (operacion normal) y abierto (fallback activo). La transicion trip es un morfismo de la sub-coalgebra operacional a la sub-coalgebra de fallback. La transicion reset es el morfismo de recuperacion que restaura la operacion normal. La resiliencia del circuit breaker es la garantia de que reset existe y se activa automaticamente despues de un timeout acotado.
+Un circuit breaker tiene estados y transiciones operacionales que pueden
+incluir `trip`, `half-open` y `reset`. Puede integrarse en un modelo híbrido o
+coalgebraico, pero su implementación no garantiza recuperación: `reset` puede
+fallar o reabrir, y el timeout solo habilita un intento.
 
-Bakirtzis formaliza la resiliencia desde los contracts: un sistema resiliente es aquel cuyos safety contracts se satisfacen composicionalmente incluso despues de una falla parcial. Un assume-guarantee contract (A, G) es resiliente si la garantia G se mantiene incluso cuando la assumption A se viola temporalmente, siempre que la violacion sea acotada en duracion e intensidad. La composicion de contracts resilientes produce un contrato resiliente para el sistema compuesto --- la resiliencia es una propiedad composicional. La verificacion de resiliencia se reduce a verificar que el morfismo de recuperacion existe para cada componente y que la composicion de morfismos de recuperacion produce un morfismo de recuperacion para el sistema compuesto.
+En un álgebra específica de contracts, reglas de composición pueden transferir
+garantías bajo assumptions compatibles. La resiliencia global no se reduce en
+general a que cada componente tenga recuperación: dependencias, fallas comunes
+y composición de tiempos deben formar parte del teorema.
 
-Resilience testing es la verificacion del morfismo de recuperacion. Chaos engineering --- inyectar fallas deliberadamente para verificar que el sistema se recupera --- es la verificacion empirica de que el morfismo de recuperacion existe y esta acotado. Cada experimento de chaos testing es un coend: una cuantificacion existencial sobre el espacio de fallas posibles. La verificacion formal de resiliencia seria el end correspondiente: demostrar que para TODA falla posible, el morfismo de recuperacion existe y esta acotado.
+Resilience testing y chaos engineering observan recuperación bajo fallas
+inyectadas. Cada experimento aporta un caso y una cota medida; no es por ello
+un coend. La verificación formal requeriría demostrar la propiedad para el
+modelo completo de fallas considerado. Un end podría representar familias
+naturales concretas, pero solo después de definir el profuntor correspondiente.
 
 ## Seguridad como ICAR
 
 Valence construye ICAR --- Integrated CAtegorical Resource --- como una categoria de seguridad informatica cuyos objetos son los diccionarios de conocimiento: CPE (activos, con mas de 20,000 entradas), CVE (vulnerabilidades, 176,000 entradas), CWE (debilidades, 668 entradas), CAPEC (patrones de ataque, 559 entradas), ATT&CK Techniques (193 entradas) y Tactics (14 entradas). Los morfismos son las relaciones entre diccionarios: Has (un CVE tiene un CWE, un CWE tiene CAPECs), isChildOf/isParentOf (jerarquia dentro de CWE y CAPEC), isSubTechniqueOf (jerarquia de techniques), y accomplishesTactic (una Technique implementa una Tactic).
 
-Lo que hace categorica a esta construccion --- y no un mero grafo --- es la adicion de path equivalences que capturan semantic facts. Si un patron de ataque CAPEC-X explota una debilidad CWE-Y, es natural que CAPEC-X este entre los patrones asociados a CWE-Y. Formalmente: la composicion (CAPEC-X -> CWE-Y -> CAPEC) es path-equivalent a CAPEC-X. Las relaciones parent/child satisfacen la identidad i.isChildOf.isParentOf = i y i.isParentOf.isChildOf = i. Estas no son convenciones arbitrarias: son ecuaciones en la categoria finitamente presentada que Valence llama knowledge schema. Una instancia de ICAR es un funtor F : Schema -> Set que asigna a cada diccionario su conjunto de entradas y respeta las path equivalences --- es un set-valued functor que preserva la estructura algebraica del schema.
+Lo que hace categorial a un knowledge schema es declarar objetos, morfismos,
+identidades, composición y, cuando proceda, ecuaciones tipadas entre caminos.
+Las relaciones parent/child de una jerarquía con ramificación no son inversas:
+`child ; parent = id` y `parent ; child = id` solo valdrían en una
+correspondencia biyectiva. Una instancia a `Set` respeta únicamente las
+ecuaciones que el schema realmente presenta.
 
-Las tres categorias de seguridad --- Vulnerabilities, Threats, Assets --- se conectan a traves de los morfismos del schema. Los attack paths son morfismos composicionales: el atacante explota una vulnerabilidad (CVE), que se debe a una debilidad (CWE), que habilita un patron de ataque (CAPEC), que implementa una tecnica (Technique), que cumple una tactica (Tactic). Un attack path completo es una composicion de morfismos desde un asset (via CPE) hasta una tactica. Una defensa efectiva es un morfismo que hace no-conmutativo alguno de los diagramas del attack path --- que rompe la composicion en algun punto. Parchar una vulnerabilidad elimina el morfismo CVE -> CWE para esa instancia especifica. Implementar un control de acceso bloquea el morfismo Technique -> Tactic para ciertas tecnicas.
+Los attack paths pueden ser composiciones en el schema. Una defensa cambia la
+instancia o la semántica de alcanzabilidad —elimina, restringe o invalida una
+ruta efectiva—; «hacer no conmutativo» un diagrama no es en general la
+condición correcta de seguridad.
 
-Valence demuestra el poder de esta formalizacion con queries concretas. Q2: listar todos los assets vulnerables es un pullback de DB_X (inventario) y CVE sobre CPE. Q7: medir la attack surface es la suma de CVSS scores sobre el pullback DB_X x_{CPE} CVSS. Q8: listar vulnerabilidades explotables por una tactica es la composicion de morfismos Tactic -> Technique -> CAPEC -> CWE -> CVE. Cada query es una operacion categorica --- pullback, composicion de funtores, proyeccion --- y la formalizacion garantiza que los resultados son consistentes con la estructura del schema.
+En el schema de Valence, algunas queries se expresan por pullbacks,
+composición y proyección. Esa consistencia es relativa a la instancia, mappings
+y equations del modelo; no garantiza actualidad ni corrección de los
+diccionarios de seguridad.
 
 Bakirtzis complementa esta perspectiva con su algebra de security tests. Un test de seguridad verifica que un ataque no logra componer morfismos para producir un comportamiento peligroso. El razonamiento en clave Yoneda da una forma util de modelar el aprendizaje del atacante: la exploracion se parece a la construccion progresiva del representable functor Hom(-, System), y la explotacion a la composicion exitosa de un attack path. La security posture del sistema es inversamente proporcional a la cantidad de informacion que el atacante puede extraer observando respuestas.
 
 ## Verificacion formal vs validacion empirica
 
-Hay una distincion fundamental entre verificar que TODOS los morfismos de un diagrama conmutan y validar que ALGUNOS morfismos conmutan para inputs especificos. La verificacion formal es un end --- una cuantificacion universal --- y la validacion empirica es un coend --- una cuantificacion existencial.
+Hay una distinción fundamental: la verificación formal demuestra una
+propiedad sobre todos los casos cubiertos por un modelo; la validación
+empírica observa casos elegidos. Property-based testing amplía la muestra y
+model checking puede agotar un modelo finito, pero ninguno se identifica
+genéricamente con un end o un coend.
 
-La verificacion formal demuestra que para TODO input x y TODO camino en el diagrama, los resultados coinciden. Es un end: int_{x in X} Hom(f(x), g(x)). Si el end existe, la propiedad vale universalmente. La verificacion es completa pero costosa --- en general, indecidible para sistemas suficientemente expresivos. Barbosa muestra que Coalgebra proporciona herramientas para esta verificacion: la finality del coalgebra final permite verificar propiedades universales via el unique morphism al coalgebra final, y el bisimulation proof method permite verificar equivalencias composicionalmente.
+Un end de `Hom(F-,G-)` representa transformaciones naturales porque incorpora
+una condición de compatibilidad específica. Un coend es un cociente de un
+coproducto por relaciones de dinaturalidad; no «existe trivialmente porque
+puedo probar un input». Usar estas construcciones para V&V exige definir el
+profuntor y demostrar que su propiedad universal coincide con la afirmación
+verificada.
 
-La validacion empirica muestra que para ALGUNOS inputs elegidos, los resultados coinciden. Es un coend: coend^{x in X} f(x) x g(x). El coend existe trivialmente (siempre hay al menos un input que puedo probar), pero no garantiza universalidad. La validacion es barata pero incompleta.
-
-La brecha entre verificacion y validacion --- el end-coend gap --- es el espacio donde vive la ingenieria real. Los tests empiricos son coends: muestrean el espacio de inputs. La verificacion formal es el end: cubre todo el espacio. Property-based testing esta a medio camino: genera inputs aleatorios para aproximar el end con un muestreo denso. Model checking enumera estados para construir el end sobre un espacio finito. Bisimulation checking, como propone Barbosa, construye la relacion de equivalencia de forma iterativa, verificando cerradura bajo la dinamica de la coalgebra. Cada tecnica elige un punto distinto en el espectro entre el coend (un solo ejemplo) y el end (todos los ejemplos).
-
-Vidalie opera en este espectro con su framework S2ML+Cat. La consistencia entre el modelo MBSE y el modelo MBSA no se verifica probando un caso --- se verifica construyendo la binary consistency relation completa: los submodelos A' y B' con inyecciones reciprocas que forman un common skeleton. Si la relacion existe, la consistencia es un end --- vale para todos los elementos de los modelos. Si se construye solo para los elementos de un diccionario parcial, es un coend --- vale para los elementos verificados. La diferencia determina el nivel de confianza que tengo en la consistencia del sistema. Y la propiedad de Cantor-Bernstein que Vidalie demuestra para S2ML+Cat garantiza que si existe una inyeccion de A en B y una de B en A, entonces A y B son equivalentes --- un resultado poderoso que permite verificar la consistencia en una sola direccion cuando la estructura es suficientemente rica.
+Las coálgebras aportan técnicas de bisimulación y semántica final cuando el
+funtor y la coálgebra final existen y satisfacen las hipótesis pertinentes.
+Esas técnicas no convierten toda verificación universal en un end ni toda
+consistencia parcial en un coend.
 
 ## La convergencia
 
-Los quality attributes, los riesgos, la resiliencia y la seguridad no son propiedades separadas que se miden con herramientas distintas y se reportan en documentos distintos. Son funtores, flechas de Kleisli, morfismos de recuperacion y path equivalences en la misma estructura categorica que modela el sistema.
+Los quality attributes, riesgos, resiliencia y seguridad pueden integrarse en
+una misma estructura categorial cuando sus representaciones se tipan y sus
+leyes se demuestran; fuera de ese caso son modelos parciales complementarios,
+no automáticamente funtores o flechas de Kleisli.
 
-La reliability es un funtor temporal que mide la probabilidad de permanecer en la sub-coalgebra operacional. La availability puede entenderse como una medida temporal agregada que depende tanto de reliability como de maintainability. El riesgo es un morfismo en la categoria de Kleisli de la monada de probabilidad, y la gestion de riesgos es el tightening de las probability bounds de esos morfismos. La resiliencia es la existencia de morfismos de recuperacion acotados temporalmente. La seguridad es la no-composabilidad de attack paths --- la imposibilidad de que los morfismos del atacante produzcan caminos validos en el schema categorico del sistema. Y la calidad --- esa propiedad sintetica que distingue un sistema bien construido de uno fragil --- puede leerse como la cercania estructural entre especificacion y realidad. Si quiero expresarla categorialmente, la naturalidad de una transformacion eta : Spec -> Reality es una formulacion fuerte y util, pero no la unica posible.
+En modelos concretos, reliability puede representarse con medidas temporales
+sobre trayectorias, el riesgo mediante flechas de Kleisli probabilísticas y la
+resiliencia mediante caminos de recuperación acotados. Cada elección exige sus
+propias hipótesis. La naturalidad de una transformación
+`eta : Spec => Reality` sería una formulación fuerte de coherencia solo si
+`Spec` y `Reality` son funtores con componentes bien definidos.
+
+## Corrección 1.1.0
+
+Se elimina el falso «end-coend gap»: tests, chaos experiments y diccionarios
+parciales no son coends por ser existenciales, ni la verificación es un end por
+cuantificar universalmente. La notación queda reservada a profuntores y
+propiedades universales explícitas.

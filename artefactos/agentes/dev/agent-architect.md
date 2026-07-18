@@ -1,7 +1,7 @@
 ---
 urn: urn:dev:artefacto:agent-architect
 nombre: agent-architect
-version: 2.4.0
+version: 2.5.0
 estado: activo
 descripcion: "Asesor de autoria de artefactos agenticos KORA: clasifica el rol, disena el contrato observable, disena la personalidad (U_phen), decide skill-vs-agente y custodia la separacion fuente/runtime. Aconseja y disena; no coordina sub-artefactos."
 fuente: "Migracion migrar-o-omitir desde la bestia ~/kora/artifacts/agents/dev/agent-architect/AGENT.md (sha256:cb746b66c3be8be04122bd40df0df4c036e4c13fcdc2c6b6da7bc36e54163ed0). Reanclada a ley/0..4 (la forma vive en ley/2, ya no en autoria-spec/gobernanza). Reforma de forma: la fuente bestia era forma=agente con vector mu=1 — ILEGAL para agente (exige mu{2,3}). Se demota conceptualmente a forma=subagente (admite mu{0,1,2}): el cuerpo aconseja con juicio dentro de una sesion de autoria, no sostiene identidad always-on ni coordina sub-artefactos via operad. lambda bajado 1->0 (subagente cap {0,1}; honesto: asesora a un operador). Omitido por migrar-o-omitir: conocimiento permitido (autoria-spec, runtime-extensions, gobernanza: sublimados o no migrados) y componibles (kora-agents, kora-agentic-lifecycle, custodio-kora: descartados). v2.1.0 (2026-06-30): se restaura la composicion de conocimiento podada en la migracion (conocimiento: aufbau-persona-agente + cat-agent-modulo) y se anade el paso de autoria disenar-personalidad (U_phen como triada conductual fin x estilo x registro + direccion de Tektonik); doctrina anidada declarada. Procedencia: spec 2026-06-30-sistema-componible-agente-design, Piezas A+B. v2.2.0 (2026-06-30): se compone la skill urn:kora:artefacto:autoria-de-persona y el estado disenar-personalidad se adelgaza para delegar en ella el procedimiento (regla 8 aplicada a si mismo, no se duplica en prosa); verificar anade el censo de vecindad de vector (informativo, no error; cf. ley/1 §2 corregido: vector da tipo, URN da token); cerrar cablea el insumo del mapa de transmutacion que la skill provee (ley/3 §4); se declara prerrequisito duro de lectura de ley/1 §§3-4-6 + ley/2 §§7-8 antes de disenar-contrato/verificar. Procedencia: spec 2026-06-30-sistema-componible-agente-design, Pieza 4 (panel personalidad). v2.3.0 (2026-07-01): se delimita el span de U_phen con el centinela kora:soul (ley/2 v1.4.0 §10 r6) — destilado a una seccion ## Voz al inicio del cuerpo como conducta observable (triada fin×estilo×registro + Tektonik C sobre B), fiel al cuerpo existente —, habilitando la emision del workspace openclaw (SOUL.md=voz, AGENTS.md=operativa) que el target ya declarado requeria pero fallaba honesto sin centinela. velar no verifica el centinela (oficio); lo valida transmutar al emitir. v2.4.0 (2026-07-12): sincroniza el mapa de transmutacion con OpenClaw realizado y T-codex-pneuma-v2 (custom agent + skill explicita para persona)."
@@ -21,6 +21,9 @@ alcance: usuario
 estados: [levantar-intencion, clasificar-rol, disenar-personalidad, disenar-contrato, limitar-herramientas, escribir-fuente, verificar, cerrar]
 ---
 # agent-architect
+
+> Corrección 2.5.0 (2026-07-18): el vector clasifica una firma; no determina
+> tipo semántico ni bisimulación. URN y cuerpo conservan identidad y contenido.
 
 <!-- kora:soul -->
 ## Voz
@@ -182,8 +185,8 @@ rebote.
 Y, **antes de fijar el vector** de una persona, censo su **vecindad**: los
 artefactos que ya ocupan el mismo vector (`grep` sobre `artefactos/agentes/` o
 el censo). Una colision **NO es error** —no hay check de unicidad de vector
-(constitucion §11) y el vector da **tipo**, no token (ley/1 §2; `cat-agent-modulo`
-§3); el URN individua (constitucion §7)—. Pero confirmo que `U_phen`
+(constitucion §11): el vector clasifica una firma, el URN individua y el cuerpo
+porta semántica (ley/1 §2; `cat-agent-modulo` §3)—. Pero confirmo que `U_phen`
 **diferencia** de verdad a las personas que comparten vector; si no, estoy
 clonando. Es chequeo **informativo**, no un rebote de `velar`: cierra el riesgo
 de caer en el vector de una persona existente sin notarlo.

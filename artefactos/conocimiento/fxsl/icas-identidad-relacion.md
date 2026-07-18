@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-identidad-relacion
 nombre: icas-identidad-relacion
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 04 del ICAS-BoK: hom-funtores, lema de Yoneda, embedding y presheaves — entender un componente desde afuera por su patrón de relaciones (API, queries, interacción)."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/04-identidad-es-relacion.md (sha256:ae994f1606b5bc1bc3e0e403f1c767bd2706d5e4163ef22c24c9099778d8a66a) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/04-identidad-es-relacion.md (sha256:ae994f1606b5bc1bc3e0e403f1c767bd2706d5e4163ef22c24c9099778d8a66a) el 2026-06-12. v1.1.0 (2026-07-18): restringe Yoneda a la estructura visible en la categoria y corrige sus extrapolaciones a APIs, usuarios, containers y presheaves de datos."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -18,7 +18,10 @@ familia: bok
 
 Hay un momento en el que todo cambia. Dejo de preguntar "¿qué es esto por dentro?" y empiezo a ver que, para fines de observación y composición, una cosa queda determinada por un patrón suficientemente rico de relaciones con todo lo demás. Un servicio se deja estudiar por su API. Una tabla, por las operaciones que admite. Un agente, por sus interacciones. Un container, por sus puertos y volúmenes expuestos.
 
-Este giro -- de mirar adentro a mirar afuera -- es el paso más profundo que he dado en mi formación como arquitecto. Antes de este punto, entendía las cosas descomponiéndolas: abría la caja, estudiaba los mecanismos internos, clasificaba las partes. Después de este punto, entiendo las cosas situándolas: observo cómo se relacionan con todo lo demás, y esa red de relaciones me dice todo lo que necesito saber.
+Este giro -- de mirar adentro a mirar afuera -- es central para mi formación
+como arquitecto. La red de relaciones dice todo lo que la categoría elegida
+puede observar; no necesariamente agota la implementación, el contexto físico
+ni la identidad humana de aquello que modela.
 
 En el libro sobre pensamiento relacional lo dicen con una frase que se me quedó grabada: *relational thinking seeks to understand an object by taking it as a point from which to look outwards, asking how the object interacts, rather than inwards, asking what the object is made of.* Eso es exactamente lo que voy a formalizar aquí.
 
@@ -54,13 +57,13 @@ class Representable f where
  index :: f x -> Rep f -> x
 ```
 
-Un Stream infinito, por ejemplo, es representable por Integer: es exactamente una función de Integer a valores, empaquetada como estructura de datos.
+Un `Stream` unilateral infinito es representable por los numeros naturales: equivale a una funcion `Natural -> x`.
 
 ```haskell
 data Stream x = Cons x (Stream x)
 
 instance Representable Stream where
- type Rep Stream = Integer
+ type Rep Stream = Natural
  tabulate f = Cons (f 0) (tabulate (f . (+1)))
  index (Cons b bs) n = if n == 0 then b else index bs (n - 1)
 ```
@@ -110,7 +113,7 @@ fromData :: Functor f => f a -> (forall x. (a -> x) -> f x)
 fromData fa h = fmap h fa
 ```
 
-La aplicación más simple es cuando F es la identidad: `forall r. (a -> r) -> r ≅ a`. Esto es la **transformación de paso de continuaciones** (CPS). Cualquier valor de tipo `a` puede reemplazarse por una función que toma un "handler" y le pasa el valor. Es la base de los callbacks, la programación asíncrona, las promesas. Y es un caso particular del lema de Yoneda.
+En una semantica parametrica total, el caso identidad da `forall r. (a -> r) -> r ≅ a`. Es la codificacion por continuaciones de un valor; relacionarla con callbacks, asincronia o promesas exige modelar ademas sus efectos.
 
 ## El embedding de Yoneda: ninguna información se pierde
 
@@ -127,7 +130,7 @@ Hom_C(A, B) → Nat(Hom(−, A), Hom(−, B))
 
 es una biyección. Cada transformación natural entre los hom-funtores contravariantes corresponde exactamente a un morfismo en la categoría original. No se pierde nada y no se inventa nada.
 
-Esto es extraordinario. Dice que la categoría C vive fielmente dentro de su categoría de presheaves [C^op, Set], sin perder ningún detalle de su estructura interna. Cada objeto queda completamente determinado por su patrón de relaciones con todos los demás.
+Esto dice que la categoria C se embebe plenamente fiel en su categoria de presheaves: se preservan exactamente sus hom-sets. No afirma que el modelo categorico capture toda propiedad extramatematica del sistema representado.
 
 La versión covariante usa Hom(A, −) y embebe C^op en [C, Set], llegando a la misma conclusión por dualidad.
 
@@ -137,7 +140,7 @@ La categoría [C^op, Set] se llama la **categoría de presheaves** sobre C. Sus 
 
 No todos los presheaves vienen de objetos de C vía el embedding de Yoneda. Los que sí vienen -- los de la forma Hom(−, A) -- se llaman **presheaves representables**. Son los puntos de vista de los "ciudadanos nativos" de C. Pero la categoría de presheaves contiene mucho más: contiene "vistas generalizadas" que no corresponden a ningún objeto concreto.
 
-Un ejemplo que me acompaña siempre: si C es el schema de una base de datos (objetos = tablas, morfismos = foreign keys), un presheaf es una asignación de datos a cada tabla que respeta las FKs en dirección opuesta. Pero además de las instancias "normales" (que corresponden a presheaves representables en cierto sentido), existen presheaves que representan "consultas parciales" o "vistas materializadas" que no son instancias completas de ningún objeto del schema.
+Con la convencion usual del corpus, una instancia de un schema C es un funtor covariante `C -> Set`. Un presheaf `C^op -> Set` es una construccion distinta (o una instancia del schema opuesto); las instancias ordinarias no son, en general, presheaves representables.
 
 Perrone muestra un ejemplo limpio: si C = Par (la categoría con dos objetos V, E y dos flechas paralelas s, t : V → E), un presheaf sobre Par^op consiste en dos conjuntos FV y FE con dos funciones Fs, Ft : FE → FV. Esto es exactamente un multigrafo dirigido. Los grafos emergen como presheaves sobre un schema simple.
 
@@ -145,7 +148,7 @@ Perrone muestra un ejemplo limpio: si C = Par (la categoría con dos objetos V, 
 
 ### Un servicio se deja estudiar por su API
 
-Cuando diseño microservicios, el lema de Yoneda formaliza algo más preciso y más modesto que el eslogan "un servicio es su API": si fijo una categoría de observables adecuada, el patrón de morfismos hacia y desde el servicio captura exactamente la información relevante para ese modo de observación. En práctica, la API suele ser la mejor aproximación externa a ese patrón. Dos servicios con APIs isomorfas son indistinguibles para cualquier cliente que solo observe a través de esa interfaz, aunque todavía pueden diferir internamente en dimensiones que la API no expone.
+Si un servicio es realmente un objeto de una categoria de observables, su presheaf representable captura los morfismos que esa categoria distingue. Una signatura de API usual es solo una aproximacion parcial: APIs isomorfas no garantizan igual conducta, latencia, efectos ni protocolo.
 
 ### Una tabla se deja estudiar por sus queries
 
@@ -153,11 +156,11 @@ En bases de datos, una tabla queda muy bien caracterizada por el repertorio de c
 
 ### Un container se deja estudiar por sus puertos
 
-Un container Docker está fuertemente determinado, para el orquestador, por su interfaz expuesta: puertos publicados, volúmenes montados, variables de entorno que acepta. Dos containers con la misma signatura de puertos y volúmenes son intercambiables desde ese punto de vista operativo. La implementación interna -- el sistema operativo base, el lenguaje de la aplicación, la estructura de archivos -- puede seguir importando para otros fines, pero no para la observación que hace el orquestador.
+Puertos, volumenes y variables describen parte de la interfaz observable de un container. Igual signatura no demuestra intercambiabilidad: protocolos, semantica, salud, recursos y efectos tambien pueden ser observables.
 
 ### Un usuario se deja estudiar por su comportamiento
 
-Los motores de recomendación funcionan porque Yoneda es verdadero. No necesitan saber quién "es" un usuario por dentro -- su edad, sus pensamientos, su identidad. Lo que necesitan es el patrón de interacciones: qué compró, qué vio, qué calificó, con qué frecuencia. La identidad del usuario, para el sistema, ES la totalidad de sus interacciones. Dos usuarios con comportamiento isomorfo recibirán las mismas recomendaciones.
+Los motores de recomendacion pueden modelar usuarios por trazas observadas. Eso es una eleccion estadistica y etica, no una consecuencia de Yoneda; las interacciones no agotan la identidad de una persona ni garantizan recomendaciones iguales.
 
 ### Un agente se deja estudiar por sus interacciones
 
@@ -167,7 +170,7 @@ En sistemas multi-agente, un agente puede modelarse externamente por lo que hace
 
 El proyecto Sys-Self de Aguado, Rossi y Sanz en la Universidad Politécnica de Madrid lleva esta idea a un territorio fascinante: robots autónomos que se entienden a sí mismos no abriendo su propia carcasa, sino modelando sus interacciones. La premisa es que un robot puede mejorar su dependabilidad si tiene un modelo formal de sí mismo -- de sus capacidades, su misión, su entorno.
 
-La teoría de categorías les proporciona el marco: el robot se modela como un objeto en una categoría de sistemas. Su auto-conocimiento no viene de introspección de su código, sino de su hom-funtor -- la totalidad de cómo puede interactuar con su entorno, con sus componentes, con otros robots. Cuando algo cambia (un sensor falla, el entorno se modifica), el robot actualiza su modelo relacional y re-planifica. Es Yoneda operativo: el sistema SE CONOCE a través de sus relaciones, no de su estructura interna.
+Una categoria de sistemas y sus observaciones puede servir como modelo formal de auto-representacion. Llamarlo "Yoneda operativo" es una lectura de diseño: el teorema no implementa introspeccion, deteccion de fallas ni re-planificacion.
 
 ## Enjambres en la categoría de presheaves
 
@@ -177,7 +180,7 @@ y : K → SET^{K^op}
 
 embebe el enjambre en su categoría de presheaves. Los presheaves representables R_a = Hom(−, a) capturan todas las computaciones que pueden llegar a un nodo a. Las regiones excitadas del enjambre -- las zonas donde la computación se activa en respuesta a estímulos externos -- se modelan como sub-presheaves.
 
-Lo notable es que la categoría de presheaves SET^{K^op} tiene propiedades extraordinariamente ricas -- limites, colimites, exponenciales, un clasificador de subobjetos -- que le dan una logica interna intuicionista (el documento 12 desarrolla esta estructura bajo el nombre de topos). Krol y colegas encuentran que el comportamiento colectivo emergente del enjambre vive naturalmente en esa lógica: no es necesariamente clásico (tercero excluido), sino intuicionista. La emergencia no es mística; es la lógica interna del topos de presheaves.
+Para K pequena, la categoria de presheaves `Set^{K^op}` es un topos y posee logica interna intuicionista. Que un comportamiento de enjambre quede adecuadamente representado en ella depende del modelo del estudio; la existencia del topos no explica por si sola la emergencia.
 
 El lema de Yoneda, en este contexto, establece la biyección entre las transformaciones naturales de un presheaf representable R_a a cualquier presheaf F, y el conjunto F(a):
 
@@ -191,12 +194,21 @@ Antes de Yoneda, miro los objetos por dentro para entenderlos. Abro la caja, sac
 
 Después de Yoneda, entiendo que descomponer no es necesario -- y a veces no es posible. Lo que determina completamente un objeto, en el sentido del embedding de Yoneda, es la totalidad de sus relaciones categóricas. Ninguna información se pierde cuando paso de un objeto a su presheaf representable. La red de relaciones no reemplaza mágicamente toda descripción concreta del objeto, pero sí captura de manera plena y fiel la estructura que la categoría sabe distinguir.
 
-Este es el paso del reduccionismo al pensamiento relacional. No abandono la capacidad de mirar adentro cuando es útil, pero ya no la necesito como fundamento epistémico. Lo primero que miro ahora es la interfaz, el API, el contrato, el patrón de interacciones. Y sé, con la garantía del lema, que eso es suficiente.
+Yoneda garantiza suficiencia respecto de **todos los morfismos de la categoria elegida**. Una API o conjunto finito de observaciones solo hereda esa garantia si se demuestra que realiza ese patron completo.
 
 El co-Yoneda -- la versión contravariante -- me da lo mismo por el otro lado. Si fijo el target en lugar del source, obtengo:
 
 Nat(Hom(−, A), F) ≅ F(A)
 
-para funtores contravariantes F : C^op → Set. Los morfismos que llegan a A son tan informativos como los que salen. En la práctica, esto es la dualidad entre "lo que un servicio ofrece" (endpoints que expone) y "lo que un servicio requiere" (dependencias que consume). Ambas perspectivas determinan al servicio completamente.
+para funtores contravariantes F : C^op → Set. La analogia entre endpoints ofrecidos y dependencias requeridas puede orientar un modelo, pero cada perspectiva parcial no determina por si sola al servicio.
 
 Cuando este entendimiento se asienta, la forma de diseñar sistemas cambia. Ya no parto de "qué es este componente por dentro" sino de "cómo se relaciona este componente con todo lo demás." La parte teoremática es Yoneda: el embedding pleno y fiel en la categoría de presheaves. Las lecturas sobre APIs, queries e interfaces son aplicaciones de modelado de ese resultado, no sustitutos literales de su formulación.
+
+## Estatuto epistemico
+
+- **Formal:** lema y embedding de Yoneda, representabilidad y topos de
+  presheaves para una categoria pequena.
+- **Modelo:** servicios, schemas, agentes o enjambres solo dentro de una
+  categoria de observacion construida.
+- **Metafora:** reducir identidad humana, conducta operacional o
+  auto-conocimiento al eslogan "un objeto es sus relaciones".

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-preservacion
 nombre: icas-preservacion
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 02 del ICAS-BoK: funtores y preservación de estructura — faithful/full, schema→instancia y migraciones; qué se preserva o se pierde al traducir entre sistemas."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/02-preservacion.md (sha256:9b4d56be662f49eaef894708d4673b50277b76e11f78088a5b2b0902940ee5dd) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/02-preservacion.md (sha256:9b4d56be662f49eaef894708d4673b50277b76e11f78088a5b2b0902940ee5dd) el 2026-06-12. v1.1.0 (2026-07-18): corrige la promocion automatica de ORM, compilador, serializador, SQL y Docker a funtores y delimita faithful/full."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -16,7 +16,8 @@ familia: bok
 
 Si la composicion es lo que veo primero, la preservacion es lo segundo: que se mantiene cuando paso de un mundo a otro. Cuando migro un schema de base de datos, cuando compilo codigo a bytecode, cuando serializo un objeto a JSON, cuando construyo una vista SQL sobre tablas base --- en cada caso estoy mapeando de un mundo a otro. La pregunta que me obsesiona es: que se preservo en la traduccion? Que se perdio? Y lo que se perdio, se perdio intencionalmente o por accidente?
 
-Esa pregunta tiene una respuesta precisa. Se llama functor.
+Una respuesta estructural posible es construir un funtor y preguntar que
+propiedades adicionales preserva. No toda traduccion cotidiana induce uno.
 
 ## El patron que aparece en todas partes
 
@@ -31,7 +32,9 @@ Pero no cualquier mapeo sirve. El functor debe satisfacer dos leyes --- las mism
 
 **Preservacion de identidad:** F(id_A) = id_{F(A)}. La identidad en el mundo de origen se mapea a la identidad en el mundo de destino.
 
-Estas dos leyes son un TEST. Cuando construyo un mapeo entre dos sistemas y quiero saber si "se porta bien", le aplico estas leyes. Si las satisface, es un functor. Si no, es un mapeo ad hoc que puede romper invariantes sin que me de cuenta.
+Estas dos leyes son el test de **functorialidad**, no de correccion general. Si
+se satisfacen, hay un funtor; si no, debe usarse un tipo de transformacion mas
+debil y verificar sus invariantes por otros medios.
 
 En Haskell, esta idea se materializa en la typeclass `Functor`:
 
@@ -86,7 +89,7 @@ newtype Consumer a = Consumer (a -> IO )
 
 Un `Consumer` de `String` se convierte en un `Consumer` de `Int` si tengo una funcion `show :: Int -> String`. La flecha se invierte: la funcion va de `Int` a `String`, pero el consumer va de `Consumer String` a `Consumer Int`. Esto es contravarianza pura.
 
-En bases de datos: una consulta SELECT es un functor covariante (produce filas), pero un predicado WHERE es contravariante (consume filas para producir un booleano). Si cambio el schema agregando una columna, las queries que producen datos se adaptan covariantemente, pero los filtros que consumen datos se adaptan contravariantemente.
+En bases de datos, covarianza o contravarianza solo se afirma despues de definir una categoria de schemas/consultas y la accion sobre morfismos. `SELECT` y `WHERE` por si solos no son funtores ni determinan su varianza.
 
 ## Cuanta estructura preserva un functor
 
@@ -100,13 +103,13 @@ No todos los functores preservan la misma cantidad de informacion. Hay un espect
 
 Un functor que es faithful, full, y essentially surjective es una equivalencia de categorias --- la nocion de "son la misma cosa, salvo detalles inesenciales" en matematica categorica.
 
-En la practica, la mayoria de los functores que encuentro son fieles pero no plenos. Un ORM que mapea un schema relacional a clases de objetos es tipicamente faithful (relaciones distintas se mapean a metodos distintos) pero no full (hay operaciones sobre objetos que no corresponden a ninguna relacion en el schema). Y eso esta bien: el punto no es preservar todo, sino saber exactamente que se preserva y que no.
+No debe inferirse fidelidad o plenitud de una intuicion de "perdida". Ambas propiedades se calculan por hom-set para un funtor ya construido. Un ORM concreto puede no inducir siquiera las categorias o la accion funtorial supuestas.
 
 ## Functores que olvidan y functores que crean
 
 Dos patrones aparecen una y otra vez en mi practica:
 
-**Forgetful functors** (functores de olvido). Toman una estructura rica y olvidan parte de ella. El ejemplo clasico: tomo un grupo (conjunto con operacion, inversos, identidad) y olvido la operacion, quedandome solo con el conjunto subyacente. En bases de datos, una vista que selecciona solo algunas columnas es un functor de olvido: preserva las filas y sus relaciones, pero olvida columnas.
+**Forgetful functors** (functores de olvido). Toman una estructura rica y olvidan parte de ella. El ejemplo clasico: tomo un grupo y olvido su operacion, quedandome con el conjunto subyacente. Una proyeccion de schema/instancias puede modelarse de este modo si se especifican sus categorias y accion; una vista SQL aislada no basta.
 
 ```sql
 -- Functor de olvido: Employee tiene (id, name, email, dept_id, salary)
@@ -115,13 +118,13 @@ CREATE VIEW employee_directory AS
  SELECT id, name, dept_id FROM employee;
 ```
 
-La vista preserva la composicion de foreign keys (puedo seguir haciendo JOINs a traves de dept_id) pero olvido informacion. Es un functor honesto: cumple las leyes.
+En un modelo concreto debe comprobarse si la vista preserva las claves y composiciones relevantes. El ejemplo no demuestra por si solo las leyes.
 
 **Free functors** (functores libres). Van en la direccion opuesta: toman una estructura simple y la completan libremente con la minima cantidad de estructura necesaria para satisfacer las leyes. Un grafo dirigido genera una categoria libre: los objetos son los vertices, los morfismos son los caminos (secuencias de flechas), y la composicion es la concatenacion de caminos. No se impone ninguna ecuacion --- es la categoria mas libre posible compatible con el grafo.
 
 Milewski describe esto con claridad: dado cualquier grafo dirigido, agrego una identidad en cada nodo y luego, para cada par de flechas componibles, agrego la flecha de composicion. "You usually end up with infinitely many arrows, but that's okay." La categoria libre generada por un grafo captura toda la informacion composicional del grafo sin imponer restricciones adicionales.
 
-Los functores de olvido y los functores libres viven en tension creativa. El functor libre construye; el functor de olvido deconstruye. Esa tension es uno de los motores mas profundos de la teoria --- las adjunciones entre functores libres y de olvido --- pero ese tema viene despues. Por ahora basta con reconocer el patron: cada vez que "genero algo libremente" o "olvido estructura," estoy trabajando con un functor.
+Muchas construcciones libres son adjuntas izquierdas a funtores de olvido, pero no todo acto informal de "generar" u "olvidar" define esa adjuncion.
 
 ## El patron schema/instancia
 
@@ -141,7 +144,7 @@ Un **database schema** en forma normal categorica es una categoria finitamente p
 
 La linea clave: una **database instance** es un functor I: C -> Set. A cada tabla T le asigna un conjunto I(T) --- el conjunto de filas. A cada foreign key f: T -> U le asigna una funcion I(f): I(T) -> I(U) --- la funcion que, dada una fila de T, devuelve la fila referenciada en U.
 
-Las leyes del functor garantizan automaticamente la integridad referencial. Si tengo dos caminos en el schema que son declarados equivalentes (path equivalence), el functor asegura que las funciones correspondientes tambien son iguales. Esta es la idea central de Spivak: la integridad referencial no es un conjunto de checks ad hoc, sino una consecuencia automatica de la functorialidad.
+Las leyes del funtor garantizan que las ecuaciones de caminos declaradas se respeten en la instancia y que cada flecha se interprete como funcion total. Esto cubre una nocion precisa de integridad en el modelo categorial; no engloba automaticamente toda constraint o semantica SQL.
 
 Consideremos un schema concreto:
 
@@ -160,7 +163,13 @@ CREATE TABLE employee (
 );
 ```
 
-Este DDL define una categoria con objetos {Employee, Department, String, Integer} y morfismos {first_name, last_name, dept_id, manager_id, name}. Una instancia --- los datos concretos --- es un functor a Set. Si agrego la path equivalence `manager.dept = dept` (el manager de un empleado esta en el mismo departamento), toda instancia valida debe satisfacer esa ecuacion functorialmente: la funcion compuesta I(manager) seguida de I(dept) debe ser igual a I(dept).
+Este DDL no define directamente esa categoría a `Set`: `dept_id`,
+`manager_id`, `first_name` y `last_name` admiten `NULL`, luego se interpretan
+como relaciones parciales u opciones, no como funciones totales. Tras declarar
+columnas `NOT NULL` o modelar explícitamente la parcialidad, puede presentarse
+un schema con esos generadores. Si además se agrega
+`manager ; dept = dept`, las instancias categoriales deben satisfacer esa
+ecuación; SQL solo la hará cumplir si se materializa el constraint adecuado.
 
 En Julia/Catlab, el schema se declara como una categoria presentada:
 
@@ -181,23 +190,35 @@ Y una instancia es un functor de esta categoria a FinSet. Los datos SE CONVIERTE
 
 ## Migracion de datos como composicion de functores
 
-Cuando tengo un mapeo entre dos schemas --- una traduccion F: C -> D que envia tablas a tablas y columnas a columnas, preservando las ecuaciones --- Spivak demuestra que se inducen automaticamente tres functores de migracion de datos:
+En las categorías de instancias usadas por el modelo, un funtor de schemas
+`F:C->D` induce `Delta_F` por precomposición y, cuando existen las extensiones
+de Kan relevantes, sus adjuntos `Sigma_F` y `Pi_F`:
 
-- **Delta_F (pullback):** tira instancias de D hacia C. Automaticamente produce proyecciones. Si F fusiona dos tablas T1 y T2 en una sola tabla T, Delta_F separa los datos de T de vuelta en T1 y T2.
-- **Sigma_F (left pushforward):** empuja instancias de C hacia D. Automaticamente produce uniones, y Skolemiza valores desconocidos.
-- **Pi_F (right pushforward):** empuja instancias de C hacia D. Automaticamente produce joins.
+- **Delta_F (precomposicion):** tira instancias de D hacia C mediante `I ↦ I ∘ F`. Si F envia dos objetos a uno, ambos reciben el mismo conjunto subyacente bajo la precomposicion; eso no "separa" datos por si solo.
+- **Sigma_F (left pushforward):** extensión de Kan izquierda; en la
+  presentación CQL del ejemplo produce uniones y labelled nulls.
+- **Pi_F (right pushforward):** extensión de Kan derecha; en ese ejemplo
+  produce el join indicado.
 
-La belleza de esto es que los tres functores de migracion son *determinados* por la traduccion de schemas F. No necesito escribir queries de migracion ad hoc. La migracion emerge del mapeo entre categorias. Y las propiedades de "round-trip" (composiciones Delta-Pi y Delta-Sigma) se demuestran como consecuencias de adjunciones entre los functores.
+Cuando existen, estas construcciones quedan determinadas hasta isomorfismo por
+su universalidad. Unit y counit dan leyes de round-trip, pero no son
+isomorfismos ni garantizan migración lossless sin hipótesis adicionales.
 
-## Functores en la ingenieria cotidiana
+## Candidatos en la ingenieria cotidiana
 
-**ORMs como functores.** Un ORM mapea el schema relacional (una categoria) a clases y metodos en un lenguaje orientado a objetos (otra categoria). Las tablas se mapean a clases. Las foreign keys se mapean a propiedades de navegacion. La composicion se preserva: si `employee.department.company` es un camino en el schema, el ORM produce `employee.getDepartment.getCompany` en el mundo de objetos. Cuando un ORM "pierde" informacion (no expone ciertas relaciones, o introduce N+1 queries), es porque el functor no es faithful o porque la implementacion viola las leyes.
+ORMs, compiladores, serializadores y builders de imagen pueden admitir modelos
+funtoriales, pero el sustantivo no aporta la prueba. Para cada caso hay que
+declarar:
 
-**Compiladores como functores.** Un compilador mapea la categoria de tipos y funciones del lenguaje fuente a la categoria de tipos y operaciones del bytecode. La composicion debe preservarse: compilar `g . f` debe producir lo mismo que compilar `f`, compilar `g`, y componer los resultados. La preservacion de identidad asegura que las funciones identidad se compilan a no-ops. Un compilador que viola estas leyes genera codigo incorrecto.
+1. categorias origen y destino;
+2. accion sobre objetos y morfismos;
+3. preservacion de identidad y composicion;
+4. propiedad semantica adicional requerida.
 
-**Serializacion como functor.** `JSON.stringify` en JavaScript es (idealmente) un functor de la categoria de valores JS a la categoria de strings JSON. Si serializo un objeto compuesto, el resultado debe ser compatible con serializar las partes y componer. Cuando la serializacion falla en tipos ciclicos o pierde informacion de tipo, el functor deja de cumplir las leyes.
-
-**Docker image layers.** Cada instruccion en un Dockerfile transforma un filesystem en otro. El mapeo de un Dockerfile multi-stage a su imagen final es un functor: preserva la composicion de layers (la composicion de transformaciones de filesystem es la transformacion total) y preserva las identidades (una instruccion que no modifica nada produce un layer vacio).
+Las dos leyes funtoriales no garantizan por si solas que un compilador preserve
+la semantica, que una serializacion sea reversible o que un ORM evite N+1.
+Esas son propiedades adicionales (correccion semantica, inversa/embedding,
+coste operacional, etc.).
 
 **`fmap` en la practica.** Cuando escribo `map` sobre una lista en cualquier lenguaje, estoy aplicando un functor. Cuando uso `Promise.then` o `async/await`, estoy dentro de un functor (de hecho, dentro de algo mas fuerte --- pero la parte functorial es lo que preserva la composicion de transformaciones asincronas). Cada vez que "levanto" una funcion ordinaria para que opere sobre valores envueltos en un contexto (Maybe, List, Promise, Result, Stream), estoy usando `fmap`.
 
@@ -219,6 +240,14 @@ Cada una de estas lineas es la misma idea: un functor que preserva composicion e
 
 El functor es mi herramienta de diagnostico. Cuando construyo un mapeo entre dos sistemas --- entre un schema y su ORM, entre un DSL y su compilacion, entre un modelo de dominio y su serializacion --- me pregunto: es esto un functor? Si lo es, tengo garantias de coherencia automatica. Si no lo es, necesito entender que ley se violo y por que.
 
-Las leyes del functor dicen exactamente lo que vi en la composicion: preserva identidades y preserva la composicion asociativa. Eso es todo. Y ese "todo" es extraordinariamente poderoso, porque me permite razonar sobre el mapeo sin inspeccionar cada caso particular. Si se que mi ORM es un functor faithful, se que puedo reconstruir el schema a partir de las clases. Si se que mi compilador es un functor que preserva composicion, se que puedo razonar sobre el programa fuente y confiar en que el ejecutable se comporta igual.
+Las leyes del funtor preservan identidades y composicion. Ser fiel solo impide colapsar morfismos dentro de cada hom-set; no permite reconstruir objetos ni un schema completo. De igual modo, la functorialidad de un compilador no basta para concluir equivalencia semantica entre fuente y ejecutable.
 
-La preservacion no es un lujo teorico. Es la condicion minima para que una traduccion entre mundos sea confiable. Y cuando la traduccion no es un functor --- cuando el ORM pierde joins, cuando el serializador descarta campos, cuando la migracion de datos introduce inconsistencias --- ahora tengo el vocabulario para diagnosticar exactamente que fallo: la ley de composicion, la ley de identidad, la faithfulness, la fullness. Cada falla tiene un nombre y un remedio.
+La functorialidad es una garantia estructural precisa, no una certificacion general de confiabilidad. Una traduccion puede perder informacion siendo un funtor perfectamente legal, y *faithful/full* solo se preguntan despues de construirlo. El diagnostico responsable identifica primero la propiedad concreta que se perdio y luego comprueba si el vocabulario categorial aplica.
+
+## Estatuto epistemico
+
+- **Formal:** definicion de funtor, fidelidad/plenitud, instancias `C -> Set`
+  y la triple de migracion bajo sus hipotesis.
+- **Modelo:** ORM, compilador, serializador, vista o layer solo tras construir
+  categorias y acciones.
+- **Heuristica:** atribuir cualquier perdida a una "ley de funtor rota".

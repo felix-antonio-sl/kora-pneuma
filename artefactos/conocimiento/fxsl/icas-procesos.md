@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-procesos
 nombre: icas-procesos
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Pieza 17 del ICAS-BoK: procesos de ingeniería — requirements, design, testing y maintenance leídos como procesos categóricos, con factorización de la actividad misma."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/17-procesos.md (sha256:c950fa627bf98e9f2134a095c156549ef210369aa0431d47e382e1c9f7b291a4) el 2026-06-12; cuerpo byte-fiel. Fuente original: ICAS-BoK corpus — Fong/Spivak, Mac Lane, Barbosa, Awodey, Riehl"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/17-procesos.md (sha256:c950fa627bf98e9f2134a095c156549ef210369aa0431d47e382e1c9f7b291a4) el 2026-06-12. v1.1.0 (2026-07-18): corrige viewpoints, requirements/pullback, testing/end/bisimulacion, realizacion, mantenimiento y deuda."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -24,21 +24,36 @@ Su respuesta es que los modelos de requirements, los modelos de comportamiento y
 
 Todo sistema comienza con personas que necesitan cosas. Cada stakeholder --- el usuario final, el regulador, el equipo de operaciones, el equipo de seguridad --- tiene una perspectiva distinta sobre el mismo sistema. Vidalie lo documenta en detalle para la aeronautica: el equipo MBSE ve bloques, puertos y conexiones en SysML; el equipo MBSA ve componentes, modos de falla y arboles de falla en AltaRica 3.0. Ambos describen el mismo tren de aterrizaje, pero desde categorias distintas. El problema real que motiva su tesis es que estos modelos evolucionan independientemente --- los analistas de seguridad modifican su modelo para ajustarlo a los resultados del analisis, y esas modificaciones introducen inconsistencias con el modelo de arquitectura que nadie detecta hasta que es demasiado tarde.
 
-Cada perspectiva de stakeholder es un viewpoint functor V_s : System -> Concern_s que proyecta el sistema completo sobre lo que ese stakeholder necesita ver. El equipo de seguridad tiene V_safety que extrae los modos de falla y sus probabilidades. El equipo de operaciones tiene V_ops que extrae metricas de disponibilidad y procedimientos de mantenimiento. El equipo de desarrollo tiene V_dev que extrae interfaces, dependencias y tests. Los viewpoints de DoDAF que Vidalie enumera --- Operational, Systems, Technical, Standards --- son exactamente estos funtores de proyeccion aplicados al dominio de defensa.
+Una perspectiva puede modelarse como viewpoint functor **si** existen
+categorias `System`, `Concern_s`, accion sobre morfismos y leyes. Los viewpoints
+DoDAF no son funtores por el solo hecho de proyectar informacion.
 
-Los requirements emergen como el pullback de todos los viewpoint functors. Dado un diagrama de stakeholders con sus respectivos funtores V_1, V_2, ..., V_n que convergen sobre el sistema, el pullback es el subobjeto maximal que satisface simultaneamente todas las perspectivas. Es la interseccion no trivial de todas las preocupaciones: lo que TODO stakeholder necesita que sea verdadero. Si el pullback es vacio, los stakeholders tienen demandas incompatibles. Si el pullback existe pero es pequeno, hay poca interseccion y mucha negociacion pendiente.
+La compatibilidad de viewpoints puede formularse mediante limites tras definir
+un diagrama comun. Requirements no "emergen" automaticamente como pullback:
+necesidades conflictivas, prioridades y negociacion requieren semantica de
+dominio y un objeto de comparacion tipado.
 
 Subrahmanian y Keraron llevan esta idea al nivel de la practica industrial. Las tres estructuras fundamentales de un sistema --- funcional (que hace), fisica (de que esta hecho) y de ubicacion (donde esta) --- son tres categorias conectadas por funtores de asignacion. ISO/IEC 81346-1 formaliza estas tres estructuras como arboles de referencia con designaciones multi-nivel, y el zigzagging entre la estructura funcional y la de producto es un par de funtores que Suh teorizo como Axiomatic Design. Un requirement "la bomba debe entregar 50 m3/h en condiciones normales" se formaliza como un predicado sobre las propiedades de un objeto en la categoria funcional: [When C] -> val(O.P) in D subset Im(P). La relacion entre las categorias funcional, fisica y de ubicacion es un sistema de funtores que constituye el skeleton del information system de la ingenieria.
 
 ## Requirements como constraints formales
 
-Un requirement no es una oracion en lenguaje natural. Es un predicado sobre el espacio de comportamientos del sistema. Categoricamente, un requirement es un subobject en el topos de comportamientos: dado el objeto de todos los comportamientos posibles B, un requirement R es un monomorfismo R >-> B que selecciona los comportamientos aceptables. Los comportamientos que satisfacen R son las secciones globales de R; los que no lo satisfacen quedan fuera del subobjeto.
+Un requirement suele nacer en lenguaje natural y **puede formalizarse** como
+predicado/subobjeto de comportamientos si se construye el topos y su semantica.
+No todo requirement (coste, proceso, obligacion social) cabe en ese objeto sin
+trabajo adicional.
 
-Una specification es un sketch que el sistema debe modelar. Un sketch consiste en un grafo con declaraciones de limites y colimites --- diagramas que deben conmutar, conos que deben ser limites, coconos que deben ser colimites. Un modelo del sketch es un funtor que satisface todas estas declaraciones. Un sistema "cumple la spec" si es un modelo del sketch. Un sistema que no cumple la spec falla en alguno de los diagramas: algun cono no es un limite, alguna ecuacion no conmuta.
+Una specification **puede codificarse** como sketch cuando sus constraints se
+expresan mediante diagramas y límites/colímites distinguidos. Un modelo del
+sketch es un funtor que satisface esas declaraciones. Esto demuestra
+conformidad con la parte formalizada, no con requisitos textuales u operativos
+que quedaron fuera.
 
 Engel y Mordecai construyen un ejemplo concreto con el vehiculo electrico. La categoria del BEV tiene tipos --- Vehicle, PowerSystem, Energy --- y morfismos --- `has : Vehicle -> PowerSystem`, `uses : PowerSystem -> Energy`. La composicion `has ; uses` produce el morfismo derivado "Vehicle usa Energy." Cada requirement del BEV --- autonomia de 380 km, potencia de 239 kW, vida util de 15 anos, 12000 horas de operacion --- es un predicado sobre los atributos de los objetos de esta categoria. La Expert Knowledge Base (EKB) codifica estos predicados como design rules: un power system exhibits OpHrs, OpHrs es un Attribute con cota gteq 12000hr; un power system exhibits Lifespan, Lifespan gteq 15yr. Estas reglas forman subsets of relationship patterns que representan perspectivas integradas sobre el diseno. El conjunto de requirements forma un sub-sketch: un subgrafo del sketch completo con sus propios predicados.
 
-Lo que llamo "acceptance criteria" en una user story es exactamente un predicado de sketch. "Given a logged-in user, when they submit an order, then the order appears in the database" declara que un diagrama especifico conmuta: el camino User -> SubmitOrder -> Database produce el mismo resultado que el camino User -> SubmitOrder -> Response -> ConfirmedOrder -> Database. Si el diagrama no conmuta, el acceptance criterion falla. Los acceptance criteria son sketch predicates --- declaraciones de conmutatividad sobre diagramas especificos en la categoria del sistema.
+Un acceptance criterion puede traducirse a una ecuacion de caminos o predicado
+de sketch cuando los eventos/estados estan formalizados. Un escenario
+Given-When-Then ordinario no construye por si solo el diagrama ni exige que
+todos sus caminos sean iguales.
 
 Bakirtzis formaliza los requirements como contracts. Un static contract es un predicado sobre los estados del sistema que restringe cuales son aceptables. Un assume-guarantee contract es un par (A, G) donde A son las assumptions sobre el entorno y G son las garantias del componente: si el entorno satisface A, el componente garantiza G. La composicion de contracts sigue las leyes de la categoria de wiring diagrams W: si conecto dos componentes con contracts (A_1, G_1) y (A_2, G_2) a traves de un wiring diagram, el contract del compuesto se deriva composicionalmente. Esta es la composicion horizontal --- la capacidad de componer contracts dentro de una misma algebra.
 
@@ -46,19 +61,35 @@ Bakirtzis formaliza los requirements como contracts. Un static contract es un pr
 
 Hay una idea en la tesis de Bakirtzis que cambio como pienso sobre el diseno. El dice que los requirements son una flecha R : Needs -> Capabilities. El diseno consiste en factorizar esa flecha a traves de una arquitectura intermedia: Needs -> Architecture -> Capabilities. La arquitectura es el "objeto intermedio" en la factorizacion.
 
-Esto es profundo. Distintos disenos son distintas factorizaciones del mismo morfismo R. Un diseno monolitico factoriza R a traves de un unico objeto: Needs -> Monolith -> Capabilities. Un diseno de microservicios factoriza R a traves de un producto de servicios: Needs -> Service_1 x Service_2 x ... x Service_n -> Capabilities. Un diseno event-driven factoriza R a traves de un bus de eventos: Needs -> EventBus -> Processors -> Capabilities. La decomposicion jerarquica que Bakirtzis formaliza como "system architecture via hierarchical decomposition" --- el capitulo 3.3 de su disertacion --- es exactamente esta factorizacion en capas sucesivas, donde cada nivel del wiring diagram refina la factorizacion del nivel superior.
+Dentro del modelo de wiring de Bakirtzis, diseños pueden compararse como
+factorizaciones. Monolito, microservicios o event-driven no son literalmente
+esas flechas/productos hasta definir la categoria y demostrar que la
+factorizacion realiza el mismo morfismo de requerimiento.
 
 La calidad del diseno se mide por las propiedades de la factorizacion. Si el paso Needs -> Architecture retiene las distinciones relevantes entre requirements, la arquitectura captura lo que importa del problema. Si el paso Architecture -> Capabilities no sobrepromete y realiza solo capacidades que la arquitectura justifica, la factorizacion es sana. En el extremo ideal, esta ida y vuelta se acerca a una equivalencia de representaciones: misma estructura esencial, distinto nivel de abstraccion.
 
-Un Architecture Decision Record (ADR) es la documentacion de una eleccion de factorizacion. "Decidimos usar event sourcing para el modulo de ordenes" dice: factorizamos el morfismo de requirements de ordenes a traves de un event store. La justificacion del ADR explica por que esta factorizacion es preferible a otras --- por que las propiedades del funtor a traves del event store son mejores que las del funtor a traves de CRUD directo.
+Un ADR documenta una decision y puede registrar una factorizacion categorial si
+el diseño usa ese modelo. Normalmente compara tradeoffs operacionales, no
+propiedades de funtores ya demostrados.
 
-Engel formaliza esto con la Categorical Multidisciplinary Collaborative Design (C-MCD). Las categorias de diseno de cada disciplina --- electrica, mecanica, termica, software --- se integran mediante boundary objects (objetos compartidos entre categorias) y funtores de integracion. El funtor F1 : SRCat -> BOM mapea la categoria de sistemas y recursos a la Bill of Materials. El funtor F2 : SRCat -> ICD mapea la misma categoria al Interface Control Document. Ambos funtores factorizan la misma informacion a traves de representaciones distintas. La Central Knowledge Base (CKB) alimenta cada Expert Model (EM) via un funtor F_1_3, y los EMs se integran en un Integrated Design Graph (IDG) via funtores F_3x4_5 que combinan cada EM con el Semantic Integration Model (SIM). La consistencia entre BOM e ICD se verifica comprobando que ambos funtores son compatibles con los boundary objects compartidos --- un code review categorico es exactamente esta verificacion.
+Engel formaliza esto con la Categorical Multidisciplinary Collaborative Design
+(C-MCD). Las categorías de cada disciplina se integran mediante boundary
+objects y funtores en el modelo citado. Los funtores `F1 : SRCat -> BOM` y
+`F2 : SRCat -> ICD` llevan información común a dos representaciones, mientras
+otros mappings conectan CKB, Expert Models, SIM e IDG. Comprobar compatibilidad
+sobre los boundary objects es una verificación categorial del modelo; un code
+review ordinario puede revisar esa obligación, pero no es idéntico a ella.
 
 ## Construccion como funtor de realizacion
 
-La implementacion --- escribir el codigo, fabricar el hardware, configurar la infraestructura --- es un funtor de realizacion R : Design -> Code. El funtor toma cada objeto del diseno (un modulo, un componente, una interfaz) y lo mapea a un artefacto concreto (una clase, un servicio, un archivo de configuracion). Toma cada morfismo del diseno (una dependencia, un flujo de datos, una llamada) y lo mapea a una conexion concreta (un import, una API call, un wire).
+La realizacion puede modelarse como funtor `R : Design -> Code` solo tras
+construir categorias y una accion que preserve identidades/composicion. Es una
+obligacion del modelo, no una propiedad de toda implementacion.
 
-Las propiedades del funtor de realizacion importan enormemente. Si R es faithful, las distinciones de diseno sobreviven en la implementacion. Si R es full sobre la imagen que efectivamente pretende realizar, las interacciones entre artefactos implementados siguen estando justificadas por el diseno. Si R fuera una equivalencia, la implementacion seria una representacion perfecta del diseno: misma estructura esencial, distinto nivel de abstraccion. La situacion ideal, como diria Barbosa, es que el funtor de realizacion preserve las bisimulaciones: que dos componentes observacionalmente equivalentes en el diseno produzcan implementaciones observacionalmente equivalentes.
+Si R existe, *faithful/full* describen sus mapas de hom-sets; no garantizan que
+objetos, requisitos o toda semantica sobrevivan. Preservar equivalencia
+observacional requiere coalgebras/observables y un teorema adicional, no solo
+functorialidad.
 
 En la practica, el funtor de realizacion rara vez es una equivalencia. Los frameworks imponen dependencias no previstas en el diseno, lo que introduce morfismos entre artefactos implementados que el diseno nunca nombro. Las limitaciones de tiempo dejan funcionalidades sin implementar o solo parcialmente realizadas. Las decisiones de implementacion agregan componentes auxiliares --- caches, loggers, circuit breakers --- que no aparecian en el diseno original. Cada desviacion entre Design y R(Design) es un punto donde la trazabilidad se pierde.
 
@@ -66,30 +97,66 @@ Lo que Bakirtzis llama "composicion horizontal" es la capacidad de componer mode
 
 ## Testing como verificacion de conmutatividad
 
-Un test es un morfismo en la categoria de comportamientos que verifica si un diagrama especifico conmuta. Un unit test verifica un morfismo individual: dado el input x, la funcion f produce el output y. Un integration test verifica que la composicion de morfismos produce el resultado esperado: dado el input x, la cadena f ; g ; h produce el output w. Un end-to-end test verifica que un diagrama completo conmuta: todos los caminos del input al output producen el mismo resultado.
+Un test ejecuta casos y aporta evidencia sobre una ecuacion/comportamiento. Se
+puede organizar como comprobacion de diagramas, pero un test finito no prueba
+que un diagrama conmute para todos los objetos/morfismos.
 
-Barbosa, en su trabajo sobre coalgebras para ingenieros de software, formaliza esta intuicion con precision matematica. Un sistema es una coalgebra alpha : U -> F(U) donde U es el espacio de estados y F es el funtor que determina la "forma" de las transiciones. El funtor F parametriza todo: si F(X) = X^A x B, tenemos una Moore machine que, dado un estado, produce un output en B y una funcion de transicion que para cada input en A da un nuevo estado. Dos estados u y v son observacionalmente equivalentes --- producen el mismo comportamiento --- si y solo si son bisimilares. Un test de comportamiento verifica bisimulacion: el sistema bajo test y el sistema especificado deben ser bisimilares. La bisimulacion de Barbosa no es una relacion ad hoc: es una relacion R tal que si (u,v) in R entonces (pu, qv) in F_bar(R), donde F_bar es el relation lifting del funtor F. Esta definicion es generica y parametrica en el funtor: cambiando F, obtengo nociones de bisimulacion para Moore machines, Mealy machines, probabilistic automata, hybrid automata.
+Para una coalgebra explicita y un lifting adecuado, una bisimulacion puede
+probar equivalencia conductual (bajo las hipotesis del funtor). Un test de
+comportamiento normal comprueba trazas finitas; no verifica una bisimulacion
+completa salvo que construya y cierre la relacion.
 
-Property-based testing es un end --- una cuantificacion universal sobre el espacio de inputs. Un test QuickCheck que dice "para todo par de listas xs ys, reverse (xs ++ ys) == reverse ys ++ reverse xs" verifica que un diagrama conmuta para TODOS los valores posibles, no solo para los ejemplos elegidos a mano. Esto es exactamente un end: la integral sobre todos los objetos de la categoria de inputs de un funtor que mide si la propiedad se satisface.
+Property-based testing **muestrea/genera** muchos valores; QuickCheck no
+cuantifica exhaustivamente todos los inputs. Un end requiere un bifuntor y
+dinaturalidad, no solo la palabra "`forall`".
 
-Regression testing es verificacion de bisimulacion bajo evolucion. Cuando cambio el sistema de la version v_n a la version v_{n+1}, un regression test verifica que los comportamientos observables no cambiaron: que v_n y v_{n+1} son bisimilares en los escenarios cubiertos por los tests. Barbosa demuestra que la bisimulacion proporciona una tecnica composicional de verificacion: para establecer la equivalencia de comportamiento generado por dos estados, basta construir una bisimulacion que los contenga y verificar que es cerrada bajo la dinamica de la coalgebra. La suite de regression tests es un aproximante finito de la bisimulacion completa.
+Regression testing compara observaciones en escenarios seleccionados. Puede
+refutar una equivalencia conductual, pero pasar la suite no construye una
+bisimulación. En una coálgebra explícita, sí puede probarse bisimilaridad
+exhibiendo una relación cerrada que contenga ambos estados; los tests aportan
+solo evidencia finita salvo exhaustividad demostrada.
 
 Bakirtzis lleva esta idea al dominio de la seguridad con lo que el llama "the algebra of security tests." Un test de seguridad verifica que un ataque --- una secuencia de morfismos en la categoria del atacante --- no logra componer con los morfismos del sistema para producir un comportamiento peligroso. El razonamiento en clave Yoneda ofrece una buena forma de modelar el aprendizaje del atacante: la exploracion (attacker learning) se parece a la construccion progresiva del representable Hom(-, S) observando respuestas, y la explotacion (attacker hijacking) a la composicion exitosa de un attack path con el comportamiento del sistema.
 
 ## Mantenimiento como endofuntor evolutivo
 
-Un sistema en produccion vive bajo un endofuntor de mantenimiento M : System -> System. Cada aplicacion de M transforma el sistema: corrige un bug, agrega un feature, actualiza una dependencia, refactoriza un modulo. La naturaleza de M determina el tipo de mantenimiento.
+Una secuencia de versiones y cambios puede modelarse en una categoria. Un unico
+endofuntor M requiere una regla uniforme sobre todos los objetos/morfismos; el
+hecho de mantener software no lo proporciona.
 
-Un bug fix es un M que corrige un diagrama que no conmutaba. Antes del fix, existia un camino A -> B -> C que producia un resultado distinto al camino A -> D -> C. Despues del fix, ambos caminos producen el mismo resultado. El bug fix restaura la conmutatividad de un diagrama --- es la reparacion de una ecuacion rota en el sketch del sistema.
+Algunos bugs pueden especificarse como ecuaciones de caminos rotas; otros son
+rendimiento, seguridad, usabilidad o ausencia de comportamiento y no tienen esa
+forma.
 
-Un feature addition es un M que agrega nuevos objetos y morfismos a la categoria del sistema. El sistema pasa de tener n componentes a tener n+1. Los morfismos nuevos conectan el componente nuevo con los existentes. La condicion critica es que los morfismos nuevos no rompan la conmutatividad de los diagramas existentes --- que el feature nuevo no introduzca side effects inesperados en los features existentes. En la terminologia de Barbosa, agregar un feature es ampliar la coalgebra: cambiar el funtor shape F para que admita nuevas observaciones o transiciones.
+Agregar un feature puede extender una presentacion/cambiar una coalgebra si el
+sistema fue modelado asi. Preservar diagramas existentes es una obligacion
+posible, no una caracterizacion completa de compatibilidad.
 
-Un refactoring es un M que es un isomorfismo natural. La estructura del sistema cambia --- los objetos se reorganizan, los morfismos se renombran, las composiciones se factorizan de otra manera --- pero el comportamiento observable permanece identico. Formalmente, existe una transformacion natural alpha : Id => M tal que alpha es un isomorfismo en cada componente. El refactoring perfecto es invisible desde afuera: el sistema compuesto con el entorno produce exactamente las mismas observaciones antes y despues. En terminos coalgebraicos, el sistema antes y despues del refactoring son bisimilares --- un coalgebra morphism h : p -> p' que preserva la dinamica.
+Un refactor busca preservar una equivalencia observable elegida. Puede
+formalizarse por isomorfismo natural o bisimulacion solo cuando existen los
+funtores/coalgebras y la prueba; un morfismo de coalgebras no es
+automaticamente una bisimulacion invertible.
 
-La deuda tecnica es la non-naturality acumulada -- el mismo fenomeno de drift que el documento 16 describe como perdida de naturalidad del endofuntor evolutivo E, ahora visto desde el proceso de mantenimiento. Cada decision suboptima --- un hack rapido, una dependencia circular, un shortcut que viola la abstraccion --- introduce una pequena falla en la naturalidad del endofuntor de mantenimiento. Una falla aislada es manejable. Pero las fallas se acumulan composicionalmente: la composicion M_n . M_{n-1} . ... . M_1 puede producir un sistema donde la naturalidad esta tan degradada que cualquier cambio nuevo tiene efectos impredecibles. Pagar la deuda tecnica es aplicar refactorings --- isomorfismos naturales --- que restauran la naturalidad perdida.
+Deuda tecnica es un concepto socio-tecnico medible por coste/riesgo de cambio.
+"Non-naturality acumulada" es como maximo una metafora hasta definir dos
+funtores paralelos, componentes y cuadrados concretos.
 
 ## La convergencia de los procesos
 
-Todos estos procesos --- requirements, diseno, construccion, testing, mantenimiento --- no son etapas secuenciales que se ejecutan una vez y se olvidan. Son funtores que se aplican iterativamente, se componen verticalmente (requirements con diseno, diseno con construccion, construccion con testing), y se retroalimentan horizontalmente (los resultados de testing informan nuevos requirements, el mantenimiento genera nuevos features que requieren nuevo diseno).
+Estos procesos se retroalimentan. Pueden recibir modelos funtoriales o
+algebras sobre wiring diagrams, pero no son funtores por definicion.
 
-Lo que la teoria de categorias aporta no es una nueva metodologia de ingenieria. Es un lenguaje que hace explicitas las relaciones entre los procesos existentes. Los requirements son subobjetos en un topos de comportamientos, o contracts en la algebra de Bakirtzis. El diseno es factorizacion de morfismos a traves de arquitecturas intermedias. La construccion es un funtor de realizacion cuya fidelidad determina la calidad de la traza. El testing es verificacion de conmutatividad via bisimulacion. El mantenimiento es un endofuntor cuya naturalidad mide la salud del sistema. Y la consistencia entre todos ellos --- la propiedad que hace que un sistema funcione --- es la naturalidad de las transformaciones que los conectan: la composicion vertical de Bakirtzis, la binary consistency relation de Vidalie, los boundary objects de Engel. El esqueleto composicional que une los procesos es el verdadero artefacto de la ingenieria, mas fundamental que cualquier documento individual.
+La teoria de categorias aporta lenguajes formales **cuando se construyen**:
+subobjetos/contracts para requirements, factorizaciones para diseño, funtores
+de realizacion y coalgebras de comportamiento. Testing y mantenimiento siguen
+aportando evidencia/operacion; no quedan convertidos automaticamente en
+ends, bisimulaciones o naturales.
+
+## Estatuto epistemico
+
+- **Formal:** los modelos particulares citados dentro de sus categorias y
+  algebras declaradas.
+- **Modelo:** traducciones de requirements, diseño, realizacion y conducta
+  cuando se prueban tipos/leyes.
+- **Heuristica:** acceptance criteria, tests, refactors o deuda nombrados como
+  sketch/end/bisimulacion/naturalidad sin construccion.

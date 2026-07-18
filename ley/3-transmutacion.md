@@ -1,32 +1,46 @@
-# KORA/Transmutación — ley pneuma v2.6.1
+# KORA/Transmutación — ley pneuma v2.7.0
 
-Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección de un
-artefacto agéntico desde el espacio ideal hacia un runtime concreto.
+Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
+de una firma y la serialización del artefacto para un runtime concreto.
 
 ## 1. Principio
 
-> **La transmutación es funtor. Preserva composición e identidad; la pérdida
-> se declara, nunca se oculta.**
+> **La proyección de firmas es un coreflector; la emisión es determinista y
+> toda pérdida se declara, nunca se oculta.**
 
-Un artefacto vive como vector en el IR; para correr en un mundo concreto se
-proyecta vía el funtor `T_target: IR → Runtime_target`. Encarnar, bajo esta
-ley, es un acto que viene acompañado de su propia confesión: el sello (§5).
+Para cada target realizado `T`, las firmas proyectables forman una categoría
+delgada `D_T`; la imagen soportada forma `I_T`. La operación componente a
+componente
 
-### 1.1 Transporte de fibra (doctrina universal, todos los targets)
+```text
+P_T(v) = min(v, techo_T)
+```
 
-> El funtor `T_target` actúa sobre la **base** —el retículo de vectores PMI×LFS—
-> proyectando cada eje por `min` (§3). El **cuerpo** del artefacto es la
-> **fibra** sobre el punto-base; viaja **verbatim** al archivo de operativa del
-> runtime, sin reescribirse. Ese transporte de fibra es **NO-funtorial** (el
-> cuerpo no es una flecha que se componga): es el lift cartesiano `T̃` sobre `T`.
+es un funtor `P_T: D_T → I_T`, derecho adjunto a la inclusión
+`J_T: I_T ↪ D_T`. La prueba completa vive en
+`urn:kora:kb:cat-kora-kernel`.
+
+El emisor toma después el artefacto validado y produce archivos de runtime. Es
+una compilación/serialización determinista, no un funtor demostrado: KORA no
+ha definido categorías de artefactos y productos runtime ni la acción del
+emisor sobre morfismos. Encarnar viene acompañado de evidencia verificable en
+el sello (§5).
+
+### 1.1 Transporte de contenido (todos los targets)
+
+La implementación trata la firma como datos proyectables y el cuerpo como
+contenido. En targets monolíticos el cuerpo viaja **verbatim** al archivo de
+operativa. «Base» y «fibra» pueden servir como intuición de diseño, pero no se
+declara una fibración ni un lift cartesiano: faltan la categoría total, la
+proyección y la propiedad universal correspondiente.
 
 Reglas:
 
-1. La proyección del vector la hace `T` sobre la base (matrices §4). En targets
+1. La proyección de la firma la hace `P_T` (matrices §4). En targets
    monolíticos el cuerpo NO se proyecta: se transporta entero al archivo que el
    target reserva para la operativa (`SKILL.md` o `{nombre}.md`).
 2. Este transporte vale para **todos** los targets, sin campo por-emisión que lo
-   declare: es la forma del funtor, no un atributo del artefacto.
+   declare: es una regla del emisor, no un atributo del artefacto.
 3. Un target cuyo objeto-runtime es un **producto de archivos** PUEDE distribuir
    un componente marcado del cuerpo al archivo nativo que le corresponde. En
    `openclaw`, `AGENTS.md` recibe la operativa sin el span `U_phen` y `SOUL.md`
@@ -52,8 +66,9 @@ Reglas:
    no nombra capacidades inexistentes como si existieran. `openclaw` está
    **realizado** desde v1.3.0 (cierra la deuda de `GENESIS §4`, registrada aquí
    sin editar GENESIS).
-3. El identificador del funtor DEBE corresponder a la versión de su contrato.
-   Funtores vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
+3. El campo histórico `funtor` del sello identifica la versión del contrato de
+   emisión; el nombre se conserva para no invalidar productos. Identificadores
+   vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
    `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`. La v2 de Codex reemplaza
    el antiguo colapso agente→skill por custom agents nativos (§7).
 4. `transmutar --target T` exige que la fuente declare `T` en `targets`:
@@ -63,21 +78,25 @@ Reglas:
    `--aplicar` exige `estado: activo`. Un artefacto deprecado o retirado se
    conserva y resuelve; no se reinstala como si siguiera vigente.
 
-## 3. Leyes del funtor
+## 3. Leyes de la proyección reticular
 
 | Ley | Enunciado | Garantía |
 |---|---|---|
-| Composición | `T(f ∘ g) = T(f) ∘ T(g)` | por construcción |
-| Identidad | `T(id) = id` | por construcción |
-| Monotonía Π, Μ, Ξ | proyección por eje = `min(valor, máximo soportado)`; si `v1 ≤ v2` entonces `T(v1) ≤ T(v2)` | por construcción |
+| Composición | `P_T(f ∘ g) = P_T(f) ∘ P_T(g)` en las categorías delgadas | por monotonía |
+| Identidad | `P_T(id_v) = id_{P_T(v)}` | por monotonía |
+| Monotonía | si `v1 ≤ v2`, entonces `P_T(v1) ≤ P_T(v2)` en los cinco ejes y cinco componentes de `sigma` | por `min` |
+| Descenso | `P_T(v) ≤ v` | por `min` |
+| Idempotencia | `P_T(P_T(v)) = P_T(v)` | por `min` |
+| Coreflexión | `J_T(a) ≤ d ⇔ a ≤ P_T(d)` para `a ∈ I_T`, `d ∈ D_T` | demostrada |
 
 Reglas:
 
 1. NUNCA se proyecta hacia arriba: ningún eje emite un valor mayor que el
    declarado en la fuente.
-2. Violar composición o identidad rompe la transmutación: es error
-   categorial, no "pérdida declarada".
-3. Si algún eje proyecta a ∅ (sin valor target), la transmutación DEBE fallar
+2. Composición e identidad se refieren solo a `P_T` entre categorías delgadas,
+   no a la emisión de archivos.
+3. Si algún eje proyecta a ∅ (sin valor target), la firma está fuera de `D_T`
+   y la transmutación DEBE fallar
    (exit 1) con mensaje que nombre el eje, el valor fuente y el runtime que
    sí lo soporta. NUNCA degradación silenciosa.
 4. Toda pérdida —reticular o de campo no reticular— DEBE declarar fidelidad
@@ -85,11 +104,10 @@ Reglas:
 5. NO DEBE declararse fidelidad `full` para la dimensión donde hay pérdida
    real. La fidelidad de campos no inventa ejes nuevos (§5 r3).
 
-Garantía declarada adicional, heredada de la bestia — **bisimulación módulo
-proyección**: si `A₁ ∼ A₂` en el IR (equivalencia observacional), entonces
-`T(A₁) ∼ T(A₂)` módulo pérdida declarada. Ningún check la verifica; esta ley
-la confiesa en el mismo régimen que las tres leyes declaradas de §6, y NO se
-añade al sello, cuyas líneas finales son fijas (§5 r4).
+La frase heredada **bisimulación módulo proyección** se conserva solo como
+hipótesis de investigación. No hay funtor de conducta, lifting de relaciones
+ni equivalencia observacional definidos que permitan formularla como
+proposición; el sello no la afirma ni la prueba.
 
 ## 4. Matrices de preservación
 
@@ -104,6 +122,10 @@ legislado: la ley fija máximos, proyecciones y fidelidades; las razones DEBEN
 ser veraces respecto de la runtime-extension de origen, pero su literal vive
 en `kora.py`. (Esto evita el drift de duplicar quince strings entre ley y
 núcleo.)
+
+La frase histórica `operad dinámica` que persiste en algunas razones de
+pérdida es una etiqueta estable para el nivel ordinal `xi=4`; no afirma que el
+runtime ni KORA construyan una operad matemática.
 
 ### 4.1 `claude-code`
 
@@ -149,7 +171,7 @@ confirmada contra el openclaw real (`~/openclaw-fleet/`, `docs.openclaw.ai`).
 |---|---|
 | `pi` | 0→0, 1→1, 2→2, 3→3 full — delegación jerárquica recursiva vía ACP dispatch |
 | `mu` | 0→0, 1→1, 2→2, 3→3 full — always-on vía systemd + Telegram; único runtime con μ=3 full |
-| `xi` | 0→0, 1→1, 2→2, 3→3, 4→4 full — operad dinámica `Org^#_m` vía ACP + agentToAgent |
+| `xi` | 0→0, 1→1, 2→2, 3→3, 4→4 full — delegación jerárquica dinámica vía ACP + agentToAgent; preservar el ordinal no realiza una operad matemática |
 | `lambda` | 0→0, 1→1, 2→2 full · 3→3 partial — society-in-the-loop requiere gobernanza externa no modelada en runtime |
 | `phi` | 0→0, 1→1, 2→2 full · 3→3 partial — cognición híbrida parcial (no HAJCS completo) · 4→∅ none — co-evolutivo no modelado |
 | `sigma` | máx soportado `[3,3,3,3,2]` — sustainability ambiental no medida directamente |
@@ -161,9 +183,10 @@ aborta (none, igual que el resto).
 ## 5. El sello
 
 Todo factor doctrinal emitido (`SKILL.md`, agente, `AGENTS.md`, `SOUL.md`) DEBE
-terminar con un sello proof-carrying: comentario HTML, formato EXACTO, **sin
-timestamp** — el hash ancla la identidad, el tiempo es mundano. Los sidecars
-de runtime y la fibra `referencias/` no duplican el sello; pertenecen al mismo
+terminar con un sello de procedencia y congruencia: comentario HTML, formato
+EXACTO, **sin timestamp** — el hash identifica los bytes de la fuente, no una
+identidad semántica. Los sidecars
+de runtime y el contenido auxiliar `referencias/` no duplican el sello; pertenecen al mismo
 producto y `sello-fresco` prueba sus bytes contra el generador (§9).
 
 ```text
@@ -212,7 +235,9 @@ Reglas:
    aborta (§3 r3) y `none` jamás llega al archivo.
 4. Las líneas `preservado-por-construccion` y `declarado-no-mecanizado` son
    **FIJAS**, carácter por carácter. NO DEBE moverse jamás una ley declarada
-   a la lista de preservadas (§6).
+   a la lista de preservadas (§6). El campo histórico `funtor` y estas líneas
+   son identificadores estables del contrato; su literal no amplía el alcance
+   matemático definido en §1 y §3.
 5. Determinismo: misma fuente → emisión byte-idéntica. Ninguna emisión lleva
    timestamp ni estado de máquina.
 6. `contrato-conocimiento:` aparece **solo si** el artefacto declara
@@ -232,35 +257,35 @@ Reglas:
    `herramientas: allowlist[<tools KORA>]->sin-allowlist-builtins-local`.
    Un custom agent puede estrechar sandbox, MCP y skills, pero no expresa una
    allowlist exacta de herramientas built-in por artefacto; además, las
-   overrides vivas del turno padre prevalecen al delegar. El funtor preserva la
+   overrides vivas del turno padre prevalecen al delegar. El emisor conserva la
    lista fuente sin presentar una restricción instruccional como enforcement.
 
 ## 6. La nota de honestidad (heredada)
 
-Dos regímenes de garantía, y la ley los distingue en voz alta:
+El sello conserva dos listas históricas; esta ley precisa su alcance:
 
 - **preservado-por-construccion**: `composicion`, `identidad`,
   `monotonia-pi`, `monotonia-mu`, `monotonia-xi`. El núcleo las realiza
-  mecánicamente al proyectar con `min` sobre la matriz; no pueden violarse
-  sin que `transmutar` falle.
-- **declarado-no-mecanizado**: `naturalidad-xi` (el diagrama plan-ejecutor
-  conmuta en el target), `cierre-safety` (la sub-coálgebra segura sigue
-  cerrada tras la proyección), `composicion-kleisli` (la composición de
-  efectos declarada en `componible` se refleja en el target).
+  al proyectar con `min`. Composición e identidad se refieren exclusivamente a
+  `P_T`; la suite verifica además monotonía en `lambda`, `phi` y `sigma`, aunque
+  esos nombres no estén en la línea fija.
+- **declarado-no-mecanizado**: `naturalidad-xi`, `cierre-safety` y
+  `composicion-kleisli` son nombres históricos de deuda. Hoy no constituyen
+  proposiciones bien tipadas: faltan categorías, morfismos, un modelo
+  coalgebraico/lifting y una categoría de Kleisli concreta.
 
 Reglas:
 
-1. Hoy **NO existe check** que verifique las tres leyes declaradas. Lo que se
-   verifica es que la declaración esté presente y bien formada en el sello,
-   no que la ley se cumpla en el runtime destino. Son obligación declarada,
-   no garantía verificada, y esta ley lo dice sin eufemismo.
-2. Mecanizar una de las tres exige: escribir el check, registrarlo en el
+1. Hoy **NO existe check** que verifique esas tres deudas. Se verifica solo que
+   la línea fija esté presente y bien formada, no que exista o conmute un
+   diagrama en el runtime.
+2. Formalizar una de las tres exige primero tiparla y declarar sus hipótesis;
+   mecanizarla exige después escribir el check, registrarlo en el
    registro cerrado (constitución §11, cambio de ley) y solo entonces moverla
    de lista.
 
-Rationale: esta es la diferencia entre el puente demostrado y el puente
-prometido. La virtud de KORA no es carecer de puentes prometidos; es no
-llamarlos demostrados.
+Rationale: un nombre de ley no es una ley. La frontera queda explícita entre
+el núcleo demostrado, la evidencia operacional y los puentes por formalizar.
 
 ## 7. Emisión por target
 
@@ -305,8 +330,8 @@ voice»). La emisión:
      marker).
 3. **Partición por rol nativo**: el centinela y su span se retiran de
    `AGENTS.md`; el contenido del span viaja una sola vez, en `SOUL.md`. El
-   producto `AGENTS.md × SOUL.md` conserva la materia semántica completa y la
-   **bisimulación módulo proyección** (§3), mientras los targets monolíticos
+   pareja `AGENTS.md`/`SOUL.md` conserva todos los bytes marcados del cuerpo
+   fuente, sin que esa conservación sintáctica implique bisimulación, mientras los targets monolíticos
    conservan el cuerpo fuente verbatim. La voz no se inyecta dos veces ni se
    hereda como regla operativa por consumidores que sólo cargan `AGENTS.md`.
 4. Ambos archivos portan el **mismo sello** (misma fuente, misma proyección):
@@ -320,16 +345,16 @@ voice»). La emisión:
    difiere: conducta-always-on (gateway/systemd/openclaw.json) -> deploy del fleet
    ```
 
-   El funtor **realiza** la emisión del workspace conforme al techo always-on
+   El emisor **realiza** el workspace conforme al techo always-on
    (`mu:3→3 full` es enunciado de **TIPO**: el techo lo admite sin recorte); la
    **conducta** always-on —el daemon vivo recordando entre sesiones (**TOKEN**)—
-   es deploy del fleet, no función del funtor. La calificación vive en el
-   **proof-carrier** (no sólo en esta ley): reconcilia el «openclaw no realizado»
+   es deploy del fleet, no función del emisor. La calificación vive en el
+   **portador del sello** (no sólo en esta ley): reconcilia el «openclaw no realizado»
    inmutable de `GENESIS §4` con el realizado registrado aquí, sin tercerizar la
    honestidad a una ley que no viaja con el artefacto. `mu<3` no porta la
    calificación (no hay always-on que diferir).
 
-**Frontera declarada — lo que el funtor NO emite.** `IDENTITY.md`, `USER.md`,
+**Frontera declarada — lo que el emisor NO produce.** `IDENTITY.md`, `USER.md`,
 `TOOLS.md`, `HEARTBEAT.md`, `BOOT.md`, `MEMORY.md`, `memory/`, y la config de
 deploy (`openclaw.json`: model, tools, auth, telegram, systemd). No son doctrina
 KORA: son scaffolding de workspace (bootstrap ritual / `openclaw setup`, que
@@ -340,7 +365,7 @@ El sello la declara en cada archivo OpenClaw con:
 
 ```text
 frontera-herramientas-declarada: [<allowlist KORA>]
-frontera-herramientas-realizacion: openclaw.json/deploy (fuera del funtor; no verificada por este sello)
+frontera-herramientas-realizacion: openclaw.json/deploy (fuera del emisor; no verificada por este sello)
 ```
 
 El runtime la realiza por config. Ni el sello ni la paridad de archivos prueban
@@ -356,7 +381,7 @@ opencode → `~/.config/opencode/skills/{nombre}/` y
 `~/openclaw-fleet/blueprints/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`])
 para el agente, y
 `~/.openclaw/skills/{nombre}/` (managed skills) para la skill. En toda emisión y
-aplicación la fibra `referencias/` conserva su nombre: el cuerpo emitido cita
+aplicación el contenido auxiliar `referencias/` conserva su nombre: el cuerpo emitido cita
 paths `referencias/...` y ningún target exige otro nombre.
 
 La aplicación de un agente OpenClaw es **fail-closed**: el nombre debe figurar
@@ -375,7 +400,7 @@ sobrevive.
 
 La exactitud comienza **después de adquirir la propiedad**, no antes. `nombre`
 selecciona una ruta candidata; el último bloque `kora:sello` legible del
-proof-carrier raíz debe atribuir la instalación al mismo `(URN,target)`.
+factor raíz portador del sello debe atribuir la instalación al mismo `(URN,target)`.
 `--aplicar` PUEDE crear una ruta ausente y PUEDE reemplazar o retirar una ruta
 ya atribuida a ese par. Si el destino existe pero carece de ese sello —o porta
 otro par— es un homónimo no atribuible: conflicto bloqueante, preservado sin
@@ -436,18 +461,15 @@ definido en `ley/2 §2.1`; cualquier otro `nombre` aborta sin mutar el producto.
 
 ## 8. El gesto inverso (Lift)
 
-La ley reconoce el gesto inverso — `Lift_target: Runtime ⇢ IR`, la ingesta
-que eleva un artefacto foráneo al espacio ideal — y su aspiración de
-adjunción `Lift ⊣ T`:
+La inclusión reticular `J_T: I_T ↪ D_T` ya es adjunta izquierda de `P_T`
+(§1); no debe confundirse con ingerir archivos de runtime.
 
-```text
-T ∘ Lift = id   (módulo pérdida declarada)
-Lift ∘ T ≤ id   (módulo encaje)
-```
-
-Esta encarnación NO lo realiza: ningún gesto del núcleo lo implementa (ver
-`GENESIS.md`). Reconocerlo sin realizarlo es deliberado: es ley pendiente de
-cuerpo, no capacidad fingida.
+`Lift_target` nombra una **candidata** de ingesta que reconstruiría una fuente
+desde un artefacto foráneo. Esta encarnación no la implementa y no afirma una
+adjunción para ella. Demostrar `Lift_target ⊣ E_target` exigiría definir las
+categorías de runtime e IR, ambos funtores, una biyección natural de hom-sets
+o unidad/counit y sus identidades triangulares. Las ecuaciones históricas
+«módulo pérdida» no satisfacían por sí solas esa obligación.
 
 ## 9. Frescura
 
@@ -467,7 +489,7 @@ cuerpo puede citar sellos de ejemplo— y verifica:
    sha256 actual del archivo fuente principal;
 2. al regenerar en memoria el par `(URN,target)`, el conjunto y los bytes de
    todos los factores coinciden, incluidos sidecars sin sello;
-3. para skills, los paths y bytes de `referencias/` coinciden con la fibra
+3. para skills, los paths y bytes de `referencias/` coinciden con el contenido
    fuente, aunque esos archivos no participen en `hash-fuente`.
 
 Una diferencia implica re-transmutar. Alcance honesto: si una unidad completa
@@ -551,8 +573,10 @@ clase de fallos sin fingir que la instalación es corpus.
 |---|---|---|
 | Eje a ∅ aborta | §3 r3: exit 1 nombrando eje, valor y runtime alternativo | mecanizado (`transmutar`) |
 | Target no realizado falla honesto | §2 r2 | mecanizado (`transmutar`) |
-| Monotonía Π, Μ, Ξ | proyección `min` sobre matriz | mecanizado (por construcción) |
-| Composición e identidad | §3 | mecanizado (por construcción) |
+| Monotonía de los cinco ejes y cinco componentes de Σ | proyección `min` sobre matriz | mecanizado (por construcción y tests exhaustivos por ley) |
+| Descenso e idempotencia | §3 | mecanizado (por construcción y tests) |
+| Composición e identidad de `P_T` | §3, categorías delgadas | mecanizado (por monotonía y tests) |
+| Coreflexión `J_T ⊣ P_T` | §1 y núcleo categorial | demostrada; igualdad de orden cubierta por tests |
 | Pérdidas declaradas si `partial` | §5 r2 | mecanizado (`transmutar`) |
 | Fuente coherente antes de proyectar | checks ontológicos de `velar` sobre la fuente | mecanizado (`transmutar`) |
 | Colisión de `nombre` en el espacio plano de emisión | §7 | mecanizado (`transmutar`) |
@@ -570,10 +594,10 @@ clase de fallos sin fingir que la instalación es corpus.
 | Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
 | Paridad de instalaciones `--proyecto` | §9.1 r4 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
-| `naturalidad-xi` | §6 | declarado |
-| `cierre-safety` | §6 | declarado |
-| `composicion-kleisli` | §6 | declarado |
-| Bisimulación módulo proyección | §3 | declarado |
+| `naturalidad-xi` | §6 | deuda por tipar |
+| `cierre-safety` | §6 | deuda por tipar |
+| `composicion-kleisli` | §6 | deuda por tipar |
+| Bisimulación módulo proyección | §3 | hipótesis de investigación, no garantía |
 
 Sublimado de transmutation-spec v1.2.1 y las runtime-extensions claude-code,
 codex y opencode de la bestia el 2026-06-11; ver GENESIS.md.
@@ -675,3 +699,10 @@ históricos sin normalizar la democión prohibida por `ley/2`.
 v2.6.1 (2026-07-18): corrige `sello-fresco` para preflightar `_emision/` con
 `lstat` antes de leerla. Enlaces simbólicos, nodos especiales o ilegibles ya no
 pueden producir frescura aparente ni provocar lectura fuera de la emisión.
+
+v2.7.0 (2026-07-18): corrección de rigor categorial sin cambiar el formato ni
+los bytes del sello. Se demuestra y delimita `P_T` como coreflector entre
+categorías delgadas; la emisión completa pasa a llamarse serialización
+determinista. Se retiran las atribuciones no demostradas de lift cartesiano,
+bisimulación y adjunción de ingesta. Los nombres fijos del sello se conservan
+como identificadores históricos de contrato y se acota expresamente su alcance.

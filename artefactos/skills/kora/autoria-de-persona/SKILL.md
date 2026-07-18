@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:autoria-de-persona
 nombre: autoria-de-persona
-version: 1.1.0
+version: 1.2.0
 estado: activo
 descripcion: "Skill de autoria de la personalidad de un agente: deriva U_phen como triada conductual fin x estilo x registro + direccion de Tektonik, la pasa por el test anti-adjetivo y el filtro N2-N3, corta cosmovision/operativo, censa la vecindad de vector y provee el insumo del mapa de transmutacion. Porta los procedimientos; no decide el contrato del agente (eso es agent-architect)."
-fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos que el audit de agent-architect 2.1.0 mostro NOMBRADOS-NO-PORTADOS: la autoria de U_phen baja de prosa a metodo operable. Funda en urn:kora:kb:aufbau-persona-agente (contenido de U_phen, filtro N2-N3, Tektonik) y urn:kora:kb:cat-agent-modulo (eje de encapsulacion cosmovision/operativo, vector da tipo, U_phen como parametro Para). Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3 (panel personalidad). v1.1.0 (2026-07-12): sincroniza el insumo de transmutacion con OpenClaw realizado y Codex v2 nativo."
+fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos de autoria de U_phen fundados en urn:kora:kb:aufbau-persona-agente y urn:kora:kb:cat-agent-modulo. Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3. v1.1.0 (2026-07-12): sincroniza OpenClaw y Codex v2. v1.2.0 (2026-07-18): corrige identidad y estatus categorial; el vector clasifica firma, no tipo ni bisimulacion, y Para/naturalidad/slice quedan como modelos candidatos."
 autor: FS
 creado: 2026-06-30
 lang: es
@@ -69,13 +69,13 @@ Dos KB fundan cada paso; se leen en tiempo de skill, no de memoria:
 | URN | Que aporta |
 |---|---|
 | `urn:kora:kb:aufbau-persona-agente` | el contenido de `U_phen` (§2: fin × estilo × registro), el filtro de admision N2-N3 (§1), la *Tektonik* del alineamiento (§4), los limites de lo no transferible (§5), la perdida declarada (§6) |
-| `urn:kora:kb:cat-agent-modulo` | el eje de encapsulacion cosmovision/operativo (§5), `U_phen` como parametro `Para` que sesga el plan (§5), la *Tektonik* como direccion del `α-iso` (§5), vector da **tipo** no token (§3; ley/1 §2) |
+| `urn:kora:kb:cat-agent-modulo` | el eje de encapsulacion cosmovision/operativo (§5), la lectura candidata de `U_phen` como parametro y la separación entre firma clasificatoria, URN y cuerpo (§3; ley/1 §2) |
 
-Lectura categorial de fondo (cuando aporta rigor): `U_phen` es el `Para` de
-`urn:fxsl:kb:icas-agencia` (parametro que `c` lee para elegir rama del plan);
-la *Tektonik* es la direccion del isomorfismo natural `α: G_agent ⇒ G_principal`
-de `urn:fxsl:kb:icas-safety-alignment`; el corte cosmovision/operativo es el
-slice `C/Cap` (encapsulacion) del mismo corpus.
+Lectura categorial de fondo, con estatus **modelo candidato**: `U_phen` puede
+tratarse como parámetro de una familia de conductas; la *Tektonik* como
+restricción de alineamiento; y el corte cosmovisión/operativo como una frontera
+de encapsulación. No son automáticamente `Para`, isomorfismo natural ni slice:
+esas palabras exigen categorías, funtores y leyes que esta skill no construye.
 
 ## Workflow — los cinco procedimientos
 
@@ -172,12 +172,12 @@ python3 kora.py censo
 Veredicto:
 
 - **colision ⇏ error.** No existe check de unicidad de vector (constitucion
-  §11); el vector da **TIPO**, no token (ley/1 §2 corregido; `cat-agent-modulo`
-  §3). Dos personas con el mismo vector son **estructuralmente bisimilares**;
-  el **URN** las individua (constitucion §7).
+  §11). El vector clasifica una **firma**; no determina tipo semántico,
+  conducta ni bisimulación. El **URN** individua y el cuerpo aporta contenido
+  (ley/1 §2; `cat-agent-modulo` §3).
 - **pero confirmar que `U_phen` diferencia.** Para arneses con `U_phen`
-  (`persona`), mismo vector ⟹ mismo **tipo**, token distinto: la individuacion
-  cualitativa vive en `U_phen` (no-coordenada del vector). Si dos personas
+  (`persona`), el mismo vector solo implica la misma celda clasificatoria; la
+  individuacion cualitativa vive en `U_phen` y el resto del cuerpo. Si dos personas
   comparten vector **y** `U_phen` no las distingue de verdad, **estas clonando**
   —reconsiderar, no firmar.
 
@@ -242,7 +242,7 @@ Esta skill no compone otros artefactos: es **ejercida por** su consumidor.
 |---|---|---|
 | ejercida por | `urn:dev:artefacto:agent-architect` | en su estado `disenar-personalidad`: el agente compone esta skill y delega en ella el procedimiento, sin duplicarlo en prosa |
 | funda en | `urn:kora:kb:aufbau-persona-agente` | contenido antropologico de `U_phen`, N2-N3, *Tektonik* |
-| funda en | `urn:kora:kb:cat-agent-modulo` | eje de encapsulacion, `U_phen` como `Para`, vector da tipo |
+| funda en | `urn:kora:kb:cat-agent-modulo` | eje de encapsulacion, `U_phen` como parámetro candidato, vector como clasificador |
 
 ## Modo de invocacion
 
