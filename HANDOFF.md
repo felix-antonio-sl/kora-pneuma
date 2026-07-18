@@ -3,7 +3,7 @@
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de OpenClaw. La continuidad
 > detallada del despliegue está en
-> `/home/felix/openclaw-fleet/docs/handoffs/handoff-2026-07-18.md`; el recibo
+> `/home/felix/openclaw-fleet/docs/handoffs/handoff-2026-07-18-2.md`; el recibo
 > verificable está en
 > `/home/felix/openclaw-fleet/docs/deploy-receipt-full-profile-urgenciologo-medico-hospitalista-2026-07-18.md`.
 
@@ -19,7 +19,8 @@ paridad de cinco instalaciones por agente. El alcance OpenClaw comprendió
 blueprints, materialización, configuración efectiva, memoria autorizada,
 canarios sintéticos y documentación de despliegue. No incluyó consultar un
 paciente real, enviar mensajes, ejercitar elevado ni resolver disaster recovery
-off-host.
+off-host. Esas deudas operativas se adjudicaron después en Fleet y no cambian
+el alcance doctrinal de este incremento.
 
 ## Estado comprobado
 
@@ -35,6 +36,9 @@ off-host.
   `07dd9dd` y el recibo final en `684bcb6`.
 - Al cierre de ese incremento, el gate Fleet vivo pasó 33/33 y los canarios
   ejecutaron `gpt-5.6-sol` mediante el arnés Codex, sin fallback.
+- La cascada operativa posterior cerró backup off-host con restore ensayado,
+  cola outbound y hardening de memoria en `dee0ed2`; el último gate Fleet vivo
+  pasó 40/40, sin fallos, advertencias ni omisiones.
 
 Estos resultados son evidencia histórica de los commits indicados. El estado
 actual se vuelve a consultar; no se infiere desde este handoff.
@@ -140,19 +144,16 @@ aquí.
 - HCC continúa parcialmente probado hasta que exista un caso legítimo.
 - El perfil `full`, sesiones visibles y escritura fuera del workspace amplían
   el blast radius; los controles conductuales no son DLP.
-- Falta backup full-state off-host y restore ensayado.
 - Mensajería, elevado y entrega Telegram no se probaron mediante efectos reales.
-- Al cerrar esta memoria, Fleet contiene un patch concurrente no atribuido de
-  hardening de memoria. No pertenece a este incremento y no debe stagearse
-  desde KORA; consultar su handoff antes de intervenir.
+- Active Memory queda pendiente de observación no invasiva en un chat directo
+  normal; los comandos headless no ejercitan esa ruta por diseño.
 
 ## Siguiente acción recomendada
 
-Adjudicar el patch concurrente de memoria en Fleet como una tarea separada:
-identificar owner, esperar un estado estable, revisar el diff completo, reparar
-su gate si corresponde, ejecutar validación estática/viva y publicar solo
-cuando constituya una unidad propia. Después, priorizar backup off-host con
-restore ensayado; HCC se prueba únicamente dentro de atención autorizada.
+Observar Active Memory durante el próximo chat directo normal de un agente
+optado, sin generar mensajería artificial ni logging persistente. Después,
+publicar un release HSC que contenga `agent-autonomy-5`; HCC se prueba
+únicamente dentro de atención autorizada.
 
 ## Cómo retomar
 
@@ -161,8 +162,8 @@ restore ensayado; HCC se prueba únicamente dentro de atención autorizada.
 3. Ejecutar `python3 kora.py velar --estricto` y
    `python3 -m unittest discover -s tests`.
 4. Para cualquier cambio agéntico, repetir paridad por URN antes de tocar Fleet.
-5. Leer el handoff vigente de Fleet y adjudicar sus cambios concurrentes antes
-   de materializar o modificar config.
+5. Leer el handoff vigente de Fleet y comprobar un árbol limpio antes de
+   materializar o modificar config.
 
 ## Rollback
 
