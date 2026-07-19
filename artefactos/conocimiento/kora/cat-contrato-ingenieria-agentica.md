@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -305,9 +305,10 @@ Este contrato **no** añade `inputs`, `outputs`, `effects`, `transition` ni
 
 El primer caso ya existe y confirma la forma documental mínima: referenciar
 por URN un testigo versionado, no duplicar una teoría completa dentro del
-frontmatter. Todavía no justifica ampliar el shape porque su observación
-runtime es manual y cubre una sola propiedad. La honestidad formal vale más
-que la cobertura nominal.
+frontmatter. Su observación ya está mecanizada para una superficie estrecha,
+`codex exec --json`, pero depende de markers locales y cubre una sola
+propiedad. Todavía no justifica ampliar el shape. La honestidad formal vale
+más que la cobertura nominal.
 
 ## 13. Primer caso vertical
 
@@ -321,15 +322,25 @@ propiedad   no cerrar sin evidencia verde vigente
 ```
 
 El objeto coalgebraico demostrado es un **monitor de trazas** con mónada de
-excepciones, no el estado cognitivo completo de `steipete`. La tarea Codex del
-2026-07-19 aporta una traza observada; ello es evidencia de un caso, no una
-cuantificación sobre ejecuciones futuras.
+excepciones, no el estado cognitivo completo de `steipete`. Para Codex CLI,
+la proyección se mecaniza como una extensión por concatenación:
 
-Este primer testigo no justifica todavía ampliar el shape: la proyección desde
-eventos Codex a la interfaz del monitor es manual y la propiedad solo cubre
-loop closure. Sí demuestra el patrón mínimo que debe seguir todo caso futuro:
-tipos completos, transición total con efecto explícito, invariante, prueba,
-test ejecutable y frontera runtime declarada.
+```text
+o     : R_ok -> I*
+obs_r : R_ok* -> I*
+obs_r(r1 ... rn) = o(r1) ... o(rn).
+```
+
+Aquí `R_ok` contiene los registros JSONL bien formados que satisfacen el
+protocolo local. La tarea del 2026-07-19 aporta una traza aceptada; ello es
+evidencia de un caso, no una cuantificación sobre ejecuciones futuras.
+
+Este primer testigo no justifica todavía ampliar el shape: la proyección solo
+cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y
+`change` también puede serlo como fallback de escrituras shell. La propiedad
+se limita a loop closure. Sí demuestra el patrón mínimo que debe seguir todo
+caso futuro: tipos completos, transición total con efecto explícito,
+invariante, prueba, test ejecutable y frontera runtime declarada.
 
 ## Fuentes primarias
 

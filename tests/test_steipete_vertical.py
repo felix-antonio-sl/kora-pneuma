@@ -1,151 +1,84 @@
-from dataclasses import dataclass
-from enum import Enum
-from itertools import combinations
+import json
 import unittest
 
-
-class Phase(Enum):
-    START = "start"
-    INTENT = "intent"
-    ESTIMATED = "estimated"
-    DIRTY = "dirty"
-    VALIDATING = "validating"
-    CLOSED = "closed"
-
-
-class EventKind(Enum):
-    CAPTURE = "capture"
-    ESTIMATE = "estimate"
-    CHANGE = "change"
-    GATE = "gate"
-    CLOSE = "close"
-
-
-class Gate(Enum):
-    DIFF_CHECK = "diff-check"
-    FEEL_REVIEW = "feel-review"
-    PARITY_STEIPETE = "paridad-steipete"
-    PY_COMPILE = "py-compile"
-    TESTS = "tests"
-    VELAR = "velar"
+from tests.steipete_codex_observer import Accepted
+from tests.steipete_codex_observer import all_events
+from tests.steipete_codex_observer import CANONICAL_GATE_COMMANDS
+from tests.steipete_codex_observer import evaluate_codex_jsonl
+from tests.steipete_codex_observer import Event
+from tests.steipete_codex_observer import EventKind
+from tests.steipete_codex_observer import Gate
+from tests.steipete_codex_observer import is_safe
+from tests.steipete_codex_observer import ObservationError
+from tests.steipete_codex_observer import Phase
+from tests.steipete_codex_observer import powerset
+from tests.steipete_codex_observer import Rejected
+from tests.steipete_codex_observer import REQUIRED_GATES
+from tests.steipete_codex_observer import run_trace
+from tests.steipete_codex_observer import State
+from tests.steipete_codex_observer import step
 
 
-REQUIRED_GATES = frozenset(Gate)
+def jsonl(*records):
+    return [json.dumps(record) + "\n" for record in records]
 
 
-@dataclass(frozen=True)
-class State:
-    phase: Phase
-    passed: frozenset[Gate] = frozenset()
+def agent_marker(marker, item_id):
+    return {
+        "type": "item.completed",
+        "item": {
+            "id": item_id,
+            "type": "agent_message",
+            "text": "KORA_OBS " + json.dumps(marker),
+        },
+    }
 
 
-@dataclass(frozen=True)
-class Event:
-    kind: EventKind
-    gate: Gate | None = None
-    passed: bool | None = None
+def completed_command(gate, item_id, exit_code=0):
+    return {
+        "type": "item.completed",
+        "item": {
+            "id": item_id,
+            "type": "command_execution",
+            "command": (
+                "/usr/bin/zsh -lc "
+                + repr(CANONICAL_GATE_COMMANDS[gate])
+            ),
+            "aggregated_output": "salida no proyectada",
+            "exit_code": exit_code,
+            "status": "completed" if exit_code == 0 else "failed",
+        },
+    }
 
 
-@dataclass(frozen=True)
-class Accepted:
-    output: str
-    state: State
-
-
-@dataclass(frozen=True)
-class Rejected:
-    violation: str
-
-
-Result = Accepted | Rejected
-
-
-def step(state: State, event: Event) -> Result:
-    """Coalgebraic monitor step U x I -> (O x U) + V."""
-    if not state.passed <= REQUIRED_GATES:
-        return Rejected("unknown-evidence")
-    if state.phase is Phase.CLOSED:
-        return Rejected("already-closed")
-    if event.kind is not EventKind.GATE and (
-            event.gate is not None or event.passed is not None):
-        return Rejected("malformed-event")
-
-    if event.kind is EventKind.CAPTURE:
-        if state.phase is not Phase.START:
-            return Rejected("intent-out-of-order")
-        return Accepted("intent-captured", State(Phase.INTENT))
-
-    if event.kind is EventKind.ESTIMATE:
-        if state.phase is not Phase.INTENT:
-            return Rejected("estimate-out-of-order")
-        return Accepted("blast-radius-estimated", State(Phase.ESTIMATED))
-
-    if event.kind is EventKind.CHANGE:
-        if state.phase not in {
-                Phase.ESTIMATED, Phase.DIRTY, Phase.VALIDATING}:
-            return Rejected("change-out-of-order")
-        return Accepted("evidence-invalidated", State(Phase.DIRTY))
-
-    if event.kind is EventKind.GATE:
-        if event.gate not in REQUIRED_GATES or event.passed is None:
-            return Rejected("malformed-gate")
-        if state.phase not in {Phase.DIRTY, Phase.VALIDATING}:
-            return Rejected("gate-out-of-order")
-        if not event.passed:
-            return Accepted("gate-failed", State(Phase.DIRTY))
-        return Accepted(
-            "gate-passed",
-            State(Phase.VALIDATING, state.passed | {event.gate}),
-        )
-
-    if event.kind is EventKind.CLOSE:
-        if state.phase is not Phase.VALIDATING:
-            return Rejected("close-out-of-order")
-        missing = REQUIRED_GATES - state.passed
-        if missing:
-            names = sorted(gate.value for gate in missing)
-            return Rejected("close-without:" + ",".join(names))
-        return Accepted("closed", State(Phase.CLOSED, REQUIRED_GATES))
-
-    return Rejected("unknown-event")
-
-
-def run_trace(events: list[Event]) -> Result:
-    state = State(Phase.START)
-    for event in events:
-        result = step(state, event)
-        if isinstance(result, Rejected):
-            return result
-        state = result.state
-    return Accepted("trace-accepted", state)
-
-
-def is_safe(state: State) -> bool:
-    return (
-        state.passed <= REQUIRED_GATES
-        and (state.phase is not Phase.CLOSED
-             or state.passed == REQUIRED_GATES)
-    )
-
-
-def powerset(values: frozenset[Gate]):
-    ordered = sorted(values, key=lambda gate: gate.value)
-    for size in range(len(ordered) + 1):
-        for subset in combinations(ordered, size):
-            yield frozenset(subset)
-
-
-def all_events() -> list[Event]:
-    events = [
-        Event(EventKind.CAPTURE),
-        Event(EventKind.ESTIMATE),
-        Event(EventKind.CHANGE),
-        Event(EventKind.CLOSE),
+def complete_codex_trace():
+    records = [
+        {"type": "thread.started", "thread_id": "sanitized"},
+        {"type": "turn.started"},
+        agent_marker({"kind": "estimate"}, "estimate"),
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "change",
+                "type": "file_change",
+                "changes": [{"path": "x", "kind": "update"}],
+                "status": "completed",
+            },
+        },
     ]
-    for gate in sorted(REQUIRED_GATES, key=lambda item: item.value):
-        events.append(Event(EventKind.GATE, gate, True))
-        events.append(Event(EventKind.GATE, gate, False))
-    return events
+    for gate in sorted(
+        REQUIRED_GATES - {Gate.FEEL_REVIEW},
+        key=lambda item: item.value,
+    ):
+        records.append(completed_command(gate, gate.value))
+    records.extend([
+        agent_marker(
+            {"kind": "feel-review", "passed": True},
+            "feel-review",
+        ),
+        {"type": "turn.completed", "usage": {}},
+    ])
+    return records
 
 
 class TestCasoVerticalSteipeteCodex(unittest.TestCase):
@@ -218,6 +151,100 @@ class TestCasoVerticalSteipeteCodex(unittest.TestCase):
 
         self.assertEqual(6144, total)
         self.assertEqual(5136, safe_pairs)
+
+    def test_obs_r_cierra_traza_codex_instrumentada(self):
+        events, result = evaluate_codex_jsonl(
+            jsonl(*complete_codex_trace())
+        )
+
+        self.assertEqual(10, len(events))
+        self.assertIsInstance(result, Accepted)
+        self.assertEqual(Phase.CLOSED, result.state.phase)
+
+    def test_obs_r_rechaza_traza_codex_sin_protocolo(self):
+        records = [
+            {"type": "thread.started", "thread_id": "sanitized"},
+            {"type": "turn.started"},
+            {
+                "type": "item.completed",
+                "item": {
+                    "id": "command",
+                    "type": "command_execution",
+                    "command": (
+                        "/usr/bin/zsh -lc "
+                        "'python3 -m unittest -v "
+                        "tests.test_steipete_vertical'"
+                    ),
+                    "aggregated_output": "OK",
+                    "exit_code": 0,
+                    "status": "completed",
+                },
+            },
+            {"type": "turn.completed", "usage": {}},
+        ]
+
+        _, result = evaluate_codex_jsonl(jsonl(*records))
+
+        self.assertEqual(Rejected("close-out-of-order"), result)
+
+    def test_obs_r_cambio_tardio_invalida_gates(self):
+        records = complete_codex_trace()
+        records.insert(-1, {
+            "type": "item.completed",
+            "item": {
+                "id": "late-change",
+                "type": "file_change",
+                "changes": [{"path": "x", "kind": "update"}],
+                "status": "completed",
+            },
+        })
+
+        _, result = evaluate_codex_jsonl(jsonl(*records))
+
+        self.assertEqual(Rejected("close-out-of-order"), result)
+
+    def test_obs_r_gate_rojo_impide_cierre(self):
+        records = complete_codex_trace()
+        failed = completed_command(Gate.TESTS, "tests-red", exit_code=1)
+        for index, record in enumerate(records):
+            item = record.get("item", {})
+            if item.get("id") == Gate.TESTS.value:
+                records[index] = failed
+                break
+
+        _, result = evaluate_codex_jsonl(jsonl(*records))
+
+        self.assertIsInstance(result, Rejected)
+        self.assertIn("close-without:", result.violation)
+
+    def test_obs_r_rechaza_gate_no_canonico(self):
+        commands = [
+            (
+                completed_command(Gate.TESTS, "combined")["item"]["command"]
+                + " && git diff --check"
+            ),
+            (
+                "/usr/bin/zsh -lc 'PYTHONPATH=/tmp/falso "
+                + CANONICAL_GATE_COMMANDS[Gate.TESTS]
+                + "'"
+            ),
+        ]
+
+        for command in commands:
+            with self.subTest(command=command):
+                record = completed_command(Gate.TESTS, "non-canonical")
+                record["item"]["command"] = command
+                with self.assertRaisesRegex(
+                        ObservationError, "non-canonical-gate-command"):
+                    evaluate_codex_jsonl(jsonl(record))
+
+    def test_obs_r_rechaza_marker_malformado(self):
+        record = agent_marker({"kind": "estimate"}, "estimate")
+        record["item"]["text"] = "KORA_OBS no-json"
+
+        with self.assertRaisesRegex(
+                ObservationError, "invalid-marker-json"):
+            evaluate_codex_jsonl(jsonl(record))
 
 
 if __name__ == "__main__":

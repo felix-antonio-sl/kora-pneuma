@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-19 — primer caso vertical agéntico
+# Handoff vigente — 2026-07-19 — `obs_r` mecanizado en Codex CLI
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -146,17 +146,27 @@ vacía la evidencia ante cualquier cambio posterior o gate rojo. El test
 exhaustivo recorre 6.144 pares estado/evento y verifica cierre de la
 subcoálgebra segura en 5.136 pares cuyo estado inicial satisface el invariante.
 
-La tarea Codex del 2026-07-19 aporta una traza aceptada. El mapping desde la
-traza runtime al alfabeto del monitor sigue siendo manual: esto prueba el
-monitor y evidencia un run, no la conducta universal del LLM.
+`tests/steipete_codex_observer.py` mecaniza la observación para la superficie
+pública `codex exec --json`:
+
+```text
+o     : R_ok -> I*
+obs_r : R_ok* -> I*
+```
+
+Proyecta eventos nativos de turno, cambio y comandos, más markers explícitos
+para `estimate`, `feel-review` y el fallback de cambios hechos por shell. Una
+traza real instrumentada produjo los diez eventos de referencia y alcanzó
+`closed`; una traza real sin protocolo fue rechazada. Esto no extiende la
+prueba a Codex app, IDE, cloud ni a la conducta universal del LLM.
 
 ## Evidencia de cierre
 
 - `python3 kora.py velar --estricto`: 13/13 checks.
-- `python3 -m unittest discover -s tests`: 198 pruebas, todas verdes.
+- `python3 -m unittest discover -s tests`: 204 pruebas, todas verdes.
 - `git diff --check`: verde.
-- `python3 -m py_compile kora.py`: verde.
-- `python3 -m py_compile tests/test_steipete_vertical.py`: verde.
+- `py_compile` sobre `kora.py`, el observador y su test, con bytecode bajo
+  `/tmp`: verde.
 - `steipete`: `5 fiel`, `0 desviadas`, `0 no-instaladas`,
   `0 sin-emisión`.
 - `cat-thinking`: `3 fiel`, `0 desviadas`, `0 no-instaladas`,
@@ -178,7 +188,7 @@ La comprobación final cubrió el rango completo `4e83b97..03dcb05`, no solo el
 - `cat-thinking` v2.1.1 exige tipos e hipótesis correctos para iteradores,
   bisimulación y DSLs basados en mónadas libres.
 
-Dos límites deben conservarse al comunicar el resultado:
+Tres límites deben conservarse al comunicar el resultado:
 
 1. la coreflexión demostrada concierne exclusivamente a la **proyección numérica
    de firmas** `P_T`; no alcanza al cuerpo, los sidecars ni la emisión completa;
@@ -234,8 +244,8 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
 5. El lifecycle no debe forzarse a funtor mientras promoción y retiro tengan
    dominios intencionalmente distintos.
 6. El primer caso versionado no basta para añadir `inputs`, `outputs`,
-   `effects`, `transition` o `wiring` al shape: todavía falta una observación
-   runtime mecanizada y evidencia de semántica común entre más casos.
+   `effects`, `transition` o `wiring` al shape: `obs_r` solo cubre Codex CLI
+   instrumentado y todavía falta evidencia de semántica común entre más casos.
 
 ## Cómo retomar
 
@@ -245,12 +255,12 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
    `Model` o `Runtime`.
 4. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
    «bisimulación», «compone», «seguro» o «preserva».
-5. El primer caso vertical ya existe. El siguiente avance solo se justifica si
-   mecaniza `obs_r` desde trazas Codex o contrasta autoridad efectiva; no crear
-   una expansión taxonómica global.
+5. El primer caso vertical y su `obs_r` para Codex CLI ya existen. El siguiente
+   avance solo se justifica si contrasta autoridad efectiva en un contexto
+   acotado; no crear una expansión taxonómica global.
 
 ## Rollback
 
-Usar `git revert`, nunca `reset --hard`. Tras revertir, reemitir y reconciliar
-`cat-thinking` con `transmutar --aplicar`, luego repetir `velar`, tests y
-paridad global.
+Usar `git revert`, nunca `reset --hard`. Este incremento no modifica fuentes
+de agentes/skills ni instalaciones, por lo que revertirlo no exige reemisión.
+Después del revert, repetir `velar`, tests y paridad global.
