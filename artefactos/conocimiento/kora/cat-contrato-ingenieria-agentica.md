@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -303,12 +303,38 @@ Este contrato **no** añade `inputs`, `outputs`, `effects`, `transition` ni
 4. un contrato de evidencia debe nacer de al menos un caso operacional
    completo, no de una taxonomía anticipada.
 
-Cuando exista ese caso, la extensión mínima deberá referenciar por URN un
-testigo versionado, no duplicar una teoría completa dentro del frontmatter.
-Hasta entonces, la honestidad formal vale más que la cobertura nominal.
+El primer caso ya existe y confirma la forma documental mínima: referenciar
+por URN un testigo versionado, no duplicar una teoría completa dentro del
+frontmatter. Todavía no justifica ampliar el shape porque su observación
+runtime es manual y cubre una sola propiedad. La honestidad formal vale más
+que la cobertura nominal.
+
+## 13. Primer caso vertical
+
+`urn:kora:kb:cat-caso-vertical-steipete-codex` instancia un caso estrecho:
+
+```text
+agente      steipete
+target      Codex, modo persona
+interfaz    eventos observables de trabajo
+propiedad   no cerrar sin evidencia verde vigente
+```
+
+El objeto coalgebraico demostrado es un **monitor de trazas** con mónada de
+excepciones, no el estado cognitivo completo de `steipete`. La tarea Codex del
+2026-07-19 aporta una traza observada; ello es evidencia de un caso, no una
+cuantificación sobre ejecuciones futuras.
+
+Este primer testigo no justifica todavía ampliar el shape: la proyección desde
+eventos Codex a la interfaz del monitor es manual y la propiedad solo cubre
+loop closure. Sí demuestra el patrón mínimo que debe seguir todo caso futuro:
+tipos completos, transición total con efecto explícito, invariante, prueba,
+test ejecutable y frontera runtime declarada.
 
 ## Fuentes primarias
 
+- Eugenio Moggi, *Notions of computation and monads*:
+  https://person.dibris.unige.it/moggi-eugenio/ftp/ic91.pdf
 - J. J. M. M. Rutten, *Universal Coalgebra: a Theory of Systems*:
   https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf
 - H. Beohar et al., *Predicate and relation liftings for coalgebras with side

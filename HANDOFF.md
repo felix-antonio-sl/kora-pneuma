@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-18 — semántica operacional y contrato agéntico
+# Handoff vigente — 2026-07-19 — primer caso vertical agéntico
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -121,12 +121,44 @@ Se elevaron a v1.2.0 las piezas ICAS afectadas y su síntesis:
 `cat-thinking` v2.1.1 incorpora la semántica operacional, el contrato agéntico,
 la matriz de testigos y nuevos falsos amigos/disparadores.
 
+## Primer caso vertical
+
+`urn:kora:kb:cat-caso-vertical-steipete-codex` instancia la recomendación
+pendiente con un corte deliberadamente pequeño:
+
+```text
+agente      steipete
+target      Codex, modo persona
+interfaz    eventos observables de trabajo
+propiedad   no cerrar sin evidencia verde vigente
+```
+
+El objeto formal es un monitor finito en `Set`:
+
+```text
+M(X) = X + V
+H(X) = (M(O × X))^I
+step : U × I -> M(O × U)
+```
+
+Su invariante impide alcanzar `closed` sin todos los gates del contexto y
+vacía la evidencia ante cualquier cambio posterior o gate rojo. El test
+exhaustivo recorre 6.144 pares estado/evento y verifica cierre de la
+subcoálgebra segura en 5.136 pares cuyo estado inicial satisface el invariante.
+
+La tarea Codex del 2026-07-19 aporta una traza aceptada. El mapping desde la
+traza runtime al alfabeto del monitor sigue siendo manual: esto prueba el
+monitor y evidencia un run, no la conducta universal del LLM.
+
 ## Evidencia de cierre
 
 - `python3 kora.py velar --estricto`: 13/13 checks.
-- `python3 -m unittest discover -s tests`: 193 pruebas, todas verdes.
+- `python3 -m unittest discover -s tests`: 198 pruebas, todas verdes.
 - `git diff --check`: verde.
 - `python3 -m py_compile kora.py`: verde.
+- `python3 -m py_compile tests/test_steipete_vertical.py`: verde.
+- `steipete`: `5 fiel`, `0 desviadas`, `0 no-instaladas`,
+  `0 sin-emisión`.
 - `cat-thinking`: `3 fiel`, `0 desviadas`, `0 no-instaladas`,
   `0 sin-emisión`.
 - Paridad global: `116 fiel`, `0 desviadas`, `11 no-instaladas`,
@@ -201,8 +233,9 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
 4. El puente PMI→`Poly`→coálgebra permanece abierto.
 5. El lifecycle no debe forzarse a funtor mientras promoción y retiro tengan
    dominios intencionalmente distintos.
-6. No añadir `inputs`, `outputs`, `effects`, `transition` o `wiring` al shape
-   hasta disponer de un caso operacional completo y un testigo versionado.
+6. El primer caso versionado no basta para añadir `inputs`, `outputs`,
+   `effects`, `transition` o `wiring` al shape: todavía falta una observación
+   runtime mecanizada y evidencia de semántica común entre más casos.
 
 ## Cómo retomar
 
@@ -212,9 +245,9 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
    `Model` o `Runtime`.
 4. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
    «bisimulación», «compone», «seguro» o «preserva».
-5. El siguiente avance formal debe ser un caso vertical pequeño —un agente,
-   un target, una interfaz y una propiedad observable—, no una expansión
-   taxonómica global.
+5. El primer caso vertical ya existe. El siguiente avance solo se justifica si
+   mecaniza `obs_r` desde trazas Codex o contrasta autoridad efectiva; no crear
+   una expansión taxonómica global.
 
 ## Rollback
 
