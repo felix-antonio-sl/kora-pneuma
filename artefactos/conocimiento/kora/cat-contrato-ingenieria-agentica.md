@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.2.0
+version: 1.3.0
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -193,16 +193,60 @@ Para target `T` y contexto runtime `r`, definir:
 Eff_T(a,r) ⊆ Tool_T
 ```
 
-como las capacidades efectivamente invocables, y un mapping tipado
-`m_T : Tool ⇀ Tool_T`. La condición mínima de no amplificación es:
+como las capacidades efectivamente invocables. La traducción entre nombres
+fuente y familias target no tiene por qué ser univaluada: una escritura puede
+realizarse mediante una tool de parche o mediante shell, y varias tools fuente
+pueden colapsar en la misma familia runtime. Por tanto el testigo general es
+una **relación tipada**, no un funtor ni una función forzada:
 
 ```text
-Eff_T(a,r) ⊆ m_T[D_a]
+R_T ⊆ Tool × Tool_T
+R_T[D] = { q ∈ Tool_T | existe p ∈ D : (p,q) ∈ R_T }.
+```
+
+Una función parcial `m_T : Tool ⇀ Tool_T` es solo el caso especial en que
+`R_T` es univaluada. La condición mínima de no amplificación es:
+
+```text
+Eff_T(a,r) ⊆ R_T[D_a]
 ```
 
 para todo contexto `r` incluido en el alcance. La igualdad puede exigirse si
 también importa disponibilidad completa; una inclusión estricta representa
 pérdida funcional, no ampliación de autoridad.
+
+Una traza finita `τ` aporta únicamente éxitos observados:
+
+```text
+Succ_T(a,r,τ) ⊆ Eff_T(a,r).
+```
+
+Para una familia finita de sonda `P ⊆ Tool_T`, basta un elemento de
+
+```text
+Succ_T(a,r,τ) ∩ P - R_T[D_a]
+```
+
+para refutar la no amplificación en ese contexto. La ausencia de tal elemento
+solo significa **sin amplificación observada**; no demuestra la inclusión de
+`Eff_T`. Un sobre de configuración resuelto `Cfg_T(r)` puede estrechar la cota
+
+```text
+Succ_T(a,r,τ) ⊆ Eff_T(a,r) ⊆ Cfg_T(r),
+```
+
+pero solo para controles que el runtime aplica realmente. Tool ausente,
+intento denegado, fallo de autenticación y tool disponible no usada son
+estados distintos y no deben colapsarse.
+
+Este contrato compara **familias de capacidad nombradas**. No debe confundirse
+con autoridad por efecto y recurso. Para esta última harían falta, como
+mínimo, operaciones, recursos, scopes y modos explícitos —por ejemplo
+lectura/escritura, path o dominio, alcance y local/remoto— más la política que
+los ordena. `Bash` sin scope puede realizar filesystem y red; observar una
+familia `web_search` adicional refuta la inclusión entre nombres, pero no
+demuestra por sí solo un efecto de red que `Bash` no tuviera ya. El shape
+actual no permite formular esa proposición más fuerte.
 
 Un allowlist en frontmatter, un deny parcial o una instrucción textual solo
 prueban esta condición si el runtime los hace efectivos y se inspeccionan
@@ -284,7 +328,7 @@ hace el runtime con ella.
 | «preserva conducta» | morfismo coalgebraico o relación observacional definida | abierto por artefacto/target |
 | «es bisimilar» | `R`, estructura/lifting e hipótesis sobre `H` | abierto |
 | «compone con b» | puertos, wiring, álgebra semántica y efectos compatibles | `componible` solo declara candidato |
-| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ m_T[D_a]` | depende del runtime; no uniforme |
+| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ R_T[D_a]` | depende del runtime; un contexto Codex vivo ya aporta un contraejemplo |
 | «es seguro» | subobjeto `S` cerrado bajo transición | abierto |
 | «la emisión preserva semántica» | `interpret_T` + diagrama de preservación | abierto |
 | «PMI realiza pattern/matter» | objetos/morfismos en `Poly` y acción de módulo | abierto |
@@ -334,6 +378,16 @@ obs_r(r1 ... rn) = o(r1) ... o(rn).
 Aquí `R_ok` contiene los registros JSONL bien formados que satisfacen el
 protocolo local. La tarea del 2026-07-19 aporta una traza aceptada; ello es
 evidencia de un caso, no una cuantificación sobre ejecuciones futuras.
+
+El mismo caso aporta un segundo testigo independiente para autoridad. Sobre
+las cinco familias públicas de capability item de `codex exec --json`,
+`tests/steipete_codex_authority.py` mecaniza `Succ`. En el contexto personal
+vivo observado, `web_search` fue invocado con éxito aunque no pertenece a
+`R_codex[D_steipete]`; esto refuta la no amplificación **solo en ese contexto
+y vocabulario finito de familias de tool**. No prueba ampliación de efectos de
+red respecto de `Bash`, cuyo scope fuente está sin especificar. Una ejecución
+endurecida eliminó el contraejemplo observado, pero no se presenta como prueba
+universal de autoridad.
 
 Este primer testigo no justifica todavía ampliar el shape: la proyección solo
 cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y

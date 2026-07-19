@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-safety-alignment
 nombre: icas-safety-alignment
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Pieza 12b del ICAS-BoK: safety y alineamiento categorial — ICAR, ley de Goodhart, coherencia y la distinción verificación/validación para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12. Corrección 1.1.0 contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X. v1.2.0 (2026-07-18): reemplaza el eslogan no-interferencia por la obligacion monoidal concreta y separa declaracion, enforcement y cierre conductual."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/12b-safety-alignment.md (sha256:610d51c3c8b5e96d93a5de922db8023813cff74a09276942ede3c2dbfe5988a0) el 2026-06-12. Corrección 1.1.0 contrastada con Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf, y Stacks Project, Sheafification, https://stacks.math.columbia.edu/tag/007X. v1.2.0 (2026-07-18): reemplaza el eslogan no-interferencia por la obligacion monoidal concreta y separa declaracion, enforcement y cierre conductual. v1.2.1 (2026-07-19): alinea la cota de autoridad con la relación tipada R_T y limita el contraste a familias de tool, no a efectos sobre recursos."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -142,9 +142,11 @@ sigue solo de usar la palabra capability.
 
 En KORA, `herramientas` declara un conjunto `D_a`; la seguridad operacional
 requiere además que la autoridad efectiva satisfaga
-`Eff_T(a,r) ⊆ m_T[D_a]`, y la seguridad conductual exige cierre de un
-subobjeto bajo la transición. Declaración, enforcement e invariancia son tres
-obligaciones distintas.
+`Eff_T(a,r) ⊆ R_T[D_a]`, donde `R_T` relaciona nombres fuente con familias
+target, y la seguridad conductual exige cierre de un subobjeto bajo la
+transición. Declaración, enforcement e invariancia son tres obligaciones
+distintas. Esta cota entre familias no expresa por sí sola restricciones sobre
+paths, dominios, operaciones o modos.
 
 Una slice `C/Cap` es un modelo posible cuando existe una categoría `C` y un
 objeto `Cap` adecuados. Preserva los mapas hacia `Cap`; demostrar que eso
@@ -257,3 +259,10 @@ modelos solo bajo categorías, funtores y propiedades universales explícitas.
 Se reemplaza «safety compone cuando no hay interferencia» por la inclusión
 monoidal y el cierre que deben demostrarse. Para agentes KORA se distinguen
 capacidad declarada, enforcement de autoridad y safety conductual.
+
+## Corrección 1.2.1
+
+La obligación de no amplificación adopta la relación tipada `R_T` del contrato
+vigente. Se explicita que comparar familias de tool no demuestra least
+privilege sobre recursos o efectos cuando la declaración fuente carece de
+scope.

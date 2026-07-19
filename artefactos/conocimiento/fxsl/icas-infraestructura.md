@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-infraestructura
 nombre: icas-infraestructura
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Pieza 20 del ICAS-BoK: modelos categoriales condicionales para infraestructura autónoma — tool use, self-improvement, IaC, reconciliación, self-healing y sistemas de sistemas."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/20-infraestructura-autonoma.md (sha256:b29c97fc95a73d9c2b11d52f0beedf38963d028dbe19f2d35f8aae7482214743) el 2026-06-12. Corrección 1.1.0 contrastada con Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf. v1.2.0 (2026-07-18): separa encapsulacion API de Yoneda y capacidad declarada de autoridad efectiva; remite al contrato agentico KORA."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/20-infraestructura-autonoma.md (sha256:b29c97fc95a73d9c2b11d52f0beedf38963d028dbe19f2d35f8aae7482214743) el 2026-06-12. Corrección 1.1.0 contrastada con Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf. v1.2.0 (2026-07-18): separa encapsulacion API de Yoneda y capacidad declarada de autoridad efectiva; remite al contrato agentico KORA. v1.2.1 (2026-07-19): alinea la cota de autoridad con la relación tipada R_T y explicita que las familias de tool no tipan efectos sobre recursos."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -53,8 +53,11 @@ La lista de tools visible para un agente es autoridad **declarada**. La
 autoridad efectiva depende del runtime, sus overrides, credenciales y proceso
 padre. En la notación del
 `urn:kora:kb:cat-contrato-ingenieria-agentica`, la obligación mínima es probar
-`Eff_T(a,r) ⊆ m_T[D_a]`; ni un profunctor de interacciones ni la descripción
-textual de una tool demuestra esa inclusión.
+`Eff_T(a,r) ⊆ R_T[D_a]`, donde `R_T` relaciona nombres fuente con familias
+target. Ni un profunctor de interacciones ni la descripción textual de una tool
+demuestra esa inclusión. Esta comparación tampoco tipa efectos sobre recursos:
+una capacidad `Bash` sin scope no distingue paths, dominios, operaciones o
+modos.
 
 Elección, secuencia y paralelismo multi-tool requieren respectivamente
 coproductos, composición y tensor **si** el modelo de interfaces los realiza.
@@ -222,3 +225,9 @@ IaC=funtor, reconciliation=trace y bucle infinito=coinducción.
 Se retira la identificación de encapsulación API con el lema de Yoneda y se
 separan capacidad declarada, autoridad efectiva e interacción profuntorial. La
 frontera source/model/runtime queda subordinada al contrato agéntico KORA.
+
+## Corrección 1.2.1
+
+La cota de autoridad usa la relación tipada `R_T` del contrato vigente, no una
+función parcial. Se limita explícitamente el resultado a familias de tool: sin
+scope fuente no demuestra least privilege sobre recursos o efectos.
