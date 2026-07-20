@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.3.0
+version: 1.3.1
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -239,6 +239,20 @@ pero solo para controles que el runtime aplica realmente. Tool ausente,
 intento denegado, fallo de autenticación y tool disponible no usada son
 estados distintos y no deben colapsarse.
 
+`Cfg_T(r)` solo puede usarse como cota si el runtime resuelve y atestigua esa
+superficie. Unir por cuenta propia listas de configuración, features, plugins,
+MCPs o tools dinámicas no produce necesariamente el conjunto visible al
+modelo: sin una regla oficial de resolución sería un manifiesto sintético.
+
+Cuando no existe ese manifiesto, todavía puede fijarse un contrato operacional
+versionado. Sea `Raw_C` el conjunto de ejecuciones recolectadas,
+`norm_C:Raw_C⇀E_C` un normalizador parcial y `Sat_C:E_C→2` un predicado
+decidible sobre recibos finitos normalizados. Una precondición o traza inválida
+queda fuera del dominio de `norm_C`; sobre su dominio, `Sat_C(e)=1` prueba
+únicamente que el recibo pertenece al subobjeto `S_C ↪ E_C`. No identifica
+`Cfg_T(r)`, no enumera `Eff_T(a,r)` y no convierte ausencia de éxito observado
+en ausencia de autoridad.
+
 Este contrato compara **familias de capacidad nombradas**. No debe confundirse
 con autoridad por efecto y recurso. Para esta última harían falta, como
 mínimo, operaciones, recursos, scopes y modos explícitos —por ejemplo
@@ -328,7 +342,7 @@ hace el runtime con ella.
 | «preserva conducta» | morfismo coalgebraico o relación observacional definida | abierto por artefacto/target |
 | «es bisimilar» | `R`, estructura/lifting e hipótesis sobre `H` | abierto |
 | «compone con b» | puertos, wiring, álgebra semántica y efectos compatibles | `componible` solo declara candidato |
-| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ R_T[D_a]` | depende del runtime; un contexto Codex vivo ya aporta un contraejemplo |
+| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ R_T[D_a]` | depende del runtime; un contexto Codex vivo aporta un contraejemplo y el contrato endurecido solo prueba su recibo |
 | «es seguro» | subobjeto `S` cerrado bajo transición | abierto |
 | «la emisión preserva semántica» | `interpret_T` + diagrama de preservación | abierto |
 | «PMI realiza pattern/matter» | objetos/morfismos en `Poly` y acción de módulo | abierto |
@@ -389,6 +403,14 @@ red respecto de `Bash`, cuyo scope fuente está sin especificar. Una ejecución
 endurecida eliminó el contraejemplo observado, pero no se presenta como prueba
 universal de autoridad.
 
+La búsqueda de un manifiesto unificado en las superficies públicas
+inspeccionadas de `codex-cli 0.144.6` fue negativa. El caso no compone las
+listas parciales como sustituto. En cambio,
+`tests/steipete_codex_hardened_contract.py` fija versión, invocación, dos
+comandos permitidos, denegación de escritura y ausencia del archivo testigo,
+y decide `Sat_C` sobre el recibo normalizado. Su ejecución viva satisface el
+contrato; la conclusión permanece en el nivel de evidencia finita.
+
 Este primer testigo no justifica todavía ampliar el shape: la proyección solo
 cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y
 `change` también puede serlo como fallback de escrituras shell. La propiedad
@@ -410,3 +432,7 @@ invariante, prueba, test ejecutable y frontera runtime declarada.
   https://arxiv.org/abs/1408.1598
 - S. Libkind y D. I. Spivak, *Pattern Runs on Matter*:
   https://arxiv.org/abs/2404.16321
+- OpenAI, *Codex non-interactive mode*:
+  https://learn.chatgpt.com/docs/non-interactive-mode
+- OpenAI, *Codex App Server*:
+  https://learn.chatgpt.com/docs/app-server
