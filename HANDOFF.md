@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-20 — contrato `steipete` y contraste App Server
+# Handoff vigente — 2026-07-20 — entrega guiada y contrato agéntico Codex
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -9,6 +9,11 @@ Continuar la auditoría categorial integral de `kora-pneuma`, con foco en
 ingeniería agéntica, y convertir en formalismo solo aquello que admite objetos,
 morfismos, composición y leyes genuinos. Remediar falsedades y sobreafirmaciones
 sin expandir el shape ni fabricar una semántica runtime inexistente.
+
+El corte más reciente convierte los gates KORA ya existentes en una entrega
+guiada hacia Codex: resuelve un artefacto, valida su fuente, regenera su emisión
+derivada, contrasta instalación y devuelve un recibo tipado. No aplica cambios
+al runtime, no cambia lifecycle y no amplía el shape.
 
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
@@ -290,10 +295,12 @@ runtime.
 ## Evidencia de cierre
 
 - `python3 kora.py velar --estricto`: 13/13 checks.
-- `python3 -m unittest discover -s tests`: 228 pruebas, todas verdes.
+- `python3 -m unittest discover -s tests`: 237 pruebas, todas verdes.
 - `git diff --check`: verde.
-- `py_compile` sobre `kora.py`, los tres testigos y sus tests, con bytecode
-  bajo `/tmp`: verde.
+- `py_compile` sobre `kora.py`, los testigos, el helper de entrega y sus tests,
+  con bytecode bajo `/tmp`: verde.
+- Validador genérico de skills sobre la emisión Codex de `entrega-kora`:
+  `Skill is valid!`.
 - `python3 -m tests.steipete_codex_hardened_contract`:
   `contract-satisfied`, sin archivo testigo residual.
 - App Server: dos handshakes y dos consultas contra el daemon `0.144.3`,
@@ -303,7 +310,9 @@ runtime.
   `0 sin-emisión`.
 - `cat-thinking`: `3 fiel`, `0 desviadas`, `0 no-instaladas`,
   `0 sin-emisión`.
-- Paridad global: `116 fiel`, `0 desviadas`, `11 no-instaladas`,
+- `entrega-kora`: `1 fiel`, `0 desviadas`, `0 no-instaladas`,
+  `0 sin-emisión`.
+- Paridad global: `117 fiel`, `0 desviadas`, `11 no-instaladas`,
   `0 sin-emisión`.
 
 Las once unidades `no-instaladas` son ausencias previas y no autorizan
@@ -344,7 +353,53 @@ instalados:
 - `/home/felix/.agents/skills/cat-thinking`;
 - `/home/felix/.config/opencode/skills/cat-thinking`.
 
+Se emitió y aplicó `entrega-kora` únicamente a su target v1:
+
+- `/home/felix/.agents/skills/entrega-kora`.
+
 Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
+
+## Corte productivo: `entrega-kora` v1
+
+`urn:kora:artefacto:entrega-kora` es una skill activa, acotada a Codex, que
+compone gates canónicos sin introducir un séptimo gesto:
+
+```text
+consulta exacta
+  -> resolución por censo/nombre
+  -> gate de lifecycle
+  -> suite completa
+  -> emisión derivada
+  -> velar --estricto
+  -> paridad del artefacto
+  -> recibo JSON + resumen humano
+```
+
+Para conocimiento publicado no hay emisión ni paridad: el recorrido termina
+después de la suite y `velar`. La skill nunca ejecuta `--aplicar`, `ciclo`,
+edición de fuente, commit ni push. Las sugerencias por coincidencia parcial no
+se seleccionan automáticamente y una identidad ambigua falla cerrada.
+
+El recibo distingue `knowledge-validated`, `parity-faithful`,
+`not-installed`, `partially-installed`, `ambiguous`, `not-found`, `blocked`,
+`observation-error` y `unsupported-target`. Formalmente, estas variantes forman
+una unión etiquetada de registros en `Set`; esto tipa los resultados del
+adaptador, pero no demuestra un funtor, una coálgebra ni una semántica de
+ejecución del artefacto entregado.
+
+La prueba viva desde la instalación Codex cubrió:
+
+- `cat-thinking` y su variante de mayúsculas: `parity-faithful`;
+- `cat-kora-semantica-operacional`: `knowledge-validated`;
+- `steve-jobs`: `partially-installed`, sin instalación automática;
+- `entrega-kora`: detectó primero una instalación desviada, bloqueó sin
+  aplicar y, tras una aplicación explícita externa al comportamiento de la
+  skill, devolvió `parity-faithful`.
+
+El corte reúne en una invocación controles que antes se coordinaban por
+separado, pero todavía no hay medición de tiempo, errores de operador o
+usabilidad. La mejora UX es una hipótesis instrumentable, no un resultado
+probado.
 
 ## Fuentes primarias contrastadas
 
@@ -396,6 +451,12 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
 6. El primer caso versionado no basta para añadir `inputs`, `outputs`,
    `effects`, `transition` o `wiring` al shape: `obs_r` solo cubre Codex CLI
    instrumentado y todavía falta evidencia de semántica común entre más casos.
+7. `entrega-kora` v1 solo cubre Codex y no mide todavía tiempo de entrega,
+   errores de operador ni satisfacción. No se debe ampliar a otros targets ni
+   automatizar `--aplicar` antes de observar uso real.
+8. El helper interpreta el resumen textual actual de
+   `transmutar --paridad`; falla cerrado si no lo reconoce, pero una salida
+   JSON canónica reduciría este acoplamiento.
 
 ## Cómo retomar
 
@@ -411,9 +472,15 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
    clientes y repetir la sonda; en una actualización de Codex, reauditar
    primero la disponibilidad de un manifiesto oficial y actualizar
    deliberadamente el pin y las sondas. No ampliar todavía el shape.
+6. Usar `entrega-kora` en tareas reales y registrar duración, estado del recibo
+   y correcciones manuales. El siguiente corte debe decidir con esa evidencia
+   si conviene mejorar el contrato JSON de paridad; no añadir targets ni
+   aplicación automática por anticipado.
 
 ## Rollback
 
-Usar `git revert`, nunca `reset --hard`. Este incremento no modifica fuentes
-de agentes/skills ni instalaciones, por lo que revertirlo no exige reemisión.
-Después del revert, repetir `velar`, tests y paridad global.
+Usar `git revert`, nunca `reset --hard`. Para retirar este corte, revertir el
+commit de producto `d03d876`, eliminar solo la instalación derivada
+`/home/felix/.agents/skills/entrega-kora` y regenerar `_emision/` desde las
+fuentes restantes. Después, repetir `velar`, tests y paridad global. Eliminar
+la fuente no retira por sí solo una instalación ya materializada.
