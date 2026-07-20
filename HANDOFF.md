@@ -468,7 +468,7 @@ sin modificar `10-modelamiento-opm/`.
 
 | Resultado | Cantidad |
 |---|---:|
-| Artefactos nuevos publicados | 26 |
+| Artefactos nuevos publicados | 28 |
 | Artefactos HODOM canónicos reutilizados | 5 |
 | Copias Drive descargadas, identificadas y hasheadas | 79 |
 | PDF Drive con texto recuperable | 45 |
@@ -491,21 +491,20 @@ demuestra por sí sola adopción efectiva ni aplicabilidad específica a HODOM.
 
 De 20 unidades H0:
 
-- **16 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
+- **18 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
   PRO-134 recorte HODOM; AOC 2.1; APT 1.2 histórico; núcleo de
   contactabilidad; HSC 14.2; HSC 14.3; AOC 1.1; REG 1.1; GCL 1.12; NT 245;
-  GCL 2.3; REG 1.2.
+  GCL 2.3; REG 1.2; DP 2.1; copia observada de MO U.G.D.P. y Mov. 002.
 - **2 excluidas por contenido:** la cartera 2024 no identifica una cartera
   HODOM —solo cinco prestaciones genéricas de visita—; Decreto Exento 74/2024
   regula Modalidad de Cobertura Complementaria y no modifica HODOM.
-- **2 pendientes tras resolver el soporte:** Modelo UGCC y DP 2.1 ya cuentan
-  con OCR verificable, al igual que GCL 2.3 y REG 1.2. Los dos últimos fueron
-  cotejados visualmente y publicados; los dos primeros requieren cerrar sus
-  particularidades documentales antes de publicación. El cuerpo de DP 2.1
-  declara vigencia hasta mayo de 2025, pero la Resolución Exenta 87 la extiende
-  hasta mayo de 2027. El PDF rotulado Modelo UGCC contiene un manual UGDP y
-  Movilización con vigencia declarada hasta septiembre de 2025 y paginación
-  interna potencialmente incompleta.
+- **0 bloqueadas:** los cuatro PDF inicialmente escaneados recibieron OCR,
+  cotejo visual y koraficación. DP 2.1 conserva por separado la vigencia
+  impresa hasta mayo de 2025 y la extensión de la Resolución Exenta 87 hasta
+  mayo de 2027. El PDF rotulado Modelo UGCC se publicó deliberadamente como
+  **copia observada** de MO U.G.D.P. y Mov. 002: mantiene aplicación operativa
+  provisional, pero no oculta la discordancia de título ni reconstruye las
+  páginas internas 25 a 31 ausentes.
 
 AOC 1.1 aporta una frontera negativa importante: Código Azul solo cubre
 emergencias **dentro del recinto** y no constituye rescate domiciliario.
@@ -553,6 +552,8 @@ urn:salud:kb:hsc-pro-089-resultados-vih-historico
 urn:salud:kb:hsc-pro-090-almacenamiento-muestras-historico
 urn:salud:kb:hsc-gcl-2-3-vigilancia-eventos-adversos
 urn:salud:kb:hsc-reg-1-2-estandarizacion-registros-clinicos
+urn:salud:kb:hsc-dp-2-1-consentimiento-informado
+urn:salud:kb:hsc-mo-ugdp-mov-002-organizacion-copia-observada
 ```
 
 Se reutilizan sin duplicación:
