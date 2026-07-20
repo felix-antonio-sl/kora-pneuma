@@ -458,6 +458,110 @@ probado.
    `transmutar --paridad`; falla cerrado si no lo reconoce, pero una salida
    JSON canónica reduciría este acoplamiento.
 
+## Campaña HODOM–HSC: koraficación del subárbol 2026-07-20
+
+### Resultado
+
+Se ejecutó el corte curatorial de
+`/home/felix/projects/hd-dt/01-normativo/hsc/subarbol-candidatos-koraficacion-hodom-2026-07-20.md`
+sin modificar `10-modelamiento-opm/`.
+
+| Resultado | Cantidad |
+|---|---:|
+| Artefactos nuevos publicados | 24 |
+| Artefactos HODOM canónicos reutilizados | 5 |
+| Copias Drive descargadas, identificadas y hasheadas | 79 |
+| PDF Drive con texto recuperable | 45 |
+| PDF Drive escaneados sin capa textual | 34 |
+| Páginas Drive censadas | 2.096 |
+
+No se confundió publicación del artefacto con vigencia clínica de su fuente:
+PRO-110, PRO-134, APT 1.2, PRO 89 y PRO 90 quedaron expresamente históricos.
+Los recortes declaran páginas o secciones excluidas. El Arsenal conserva el PDF
+como autoridad primaria y no afirma un subarsenal HODOM.
+
+### H0 resuelto
+
+De 20 unidades H0:
+
+- **14 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
+  PRO-134 recorte HODOM; AOC 2.1; APT 1.2 histórico; núcleo de
+  contactabilidad; HSC 14.2; HSC 14.3; AOC 1.1; REG 1.1; GCL 1.12; NT 245.
+- **2 excluidas por contenido:** la cartera 2024 no identifica una cartera
+  HODOM —solo cinco prestaciones genéricas de visita—; Decreto Exento 74/2024
+  regula Modalidad de Cobertura Complementaria y no modifica HODOM.
+- **4 bloqueadas por soporte:** Modelo UGCC, DP 2.1, GCL 2.3 y REG 1.2 son
+  PDF escaneados sin texto. LiteParse no produjo OCR y el host no dispone de
+  `tesseract` ni `ocrmypdf`; publicarlos habría fingido FS=100%.
+
+AOC 1.1 aporta una frontera negativa importante: Código Azul solo cubre
+emergencias **dentro del recinto** y no constituye rescate domiciliario.
+
+### H1 y fuentes nacionales admitidas
+
+- Entrega de turno: Medicina, Enfermería/Matronería y Enfermería de Urgencia
+  publicadas por separado. La entrega médica de Urgencia permanece bloqueada
+  por escaneo.
+- Laboratorio: RPE-33 y los históricos PRO 89/90 publicados. APL 1.2 no se
+  recortó: sus 184 páginas requieren una pregunta de interfaz y validación
+  propietaria.
+- RPE nacionales publicados: 9 Telemedicina, 14 Rehabilitación, 25 Cuidados
+  Paliativos, 27 Imagenología, 33 Laboratorio y 34 HODOM.
+- Farmacia e IAAS permanecen por fuente: el Arsenal no demuestra subarsenal,
+  transporte ni cobertura HODOM; los protocolos intrahospitalarios no se
+  trasladan al domicilio sin recorte validado por Farmacia o IAAS.
+
+### URN nuevas
+
+```text
+urn:salud:kb:hodom-rpe-34-criterios-tecnicos
+urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026
+urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria
+urn:salud:kb:hsc-pro-110-hodom-historico-2019
+urn:salud:kb:hsc-pro-134-gestion-pacientes-recorte-hodom
+urn:salud:kb:hsc-aoc-2-1-derivacion-pacientes
+urn:salud:kb:hsc-aoc-1-1-emergencia-riesgo-vital
+urn:salud:kb:hsc-apt-1-2-transporte-pacientes-historico
+urn:salud:kb:hsc-14-2-prestamo-catres-clinicos
+urn:salud:kb:hsc-14-3-riesgo-biopsicosocial
+urn:salud:kb:hsc-reg-1-1-ficha-clinica-unica
+urn:salud:kb:hsc-gcl-1-12-identificacion-pacientes
+urn:salud:kb:minsal-nt-245-identificacion-pacientes
+urn:salud:kb:minsal-contactabilidad-nucleo-operativo
+urn:salud:kb:hsc-aoc-2-2-entrega-turno-medico-medicina
+urn:salud:kb:hsc-aoc-2-2-entrega-turno-enfermeria-matroneria
+urn:salud:kb:hsc-aoc-2-2-entrega-turno-enfermeria-urgencia
+urn:salud:kb:minsal-rpe-9-telemedicina
+urn:salud:kb:minsal-rpe-14-rehabilitacion
+urn:salud:kb:minsal-rpe-25-cuidados-paliativos-universales
+urn:salud:kb:minsal-rpe-27-imagenologia
+urn:salud:kb:minsal-rpe-33-unidades-laboratorio
+urn:salud:kb:hsc-pro-089-resultados-vih-historico
+urn:salud:kb:hsc-pro-090-almacenamiento-muestras-historico
+```
+
+Se reutilizan sin duplicación:
+
+```text
+urn:salud:kb:hodom-reglamento-ds1-2022
+urn:salud:kb:hodom-decreto-exento-31-2024
+urn:salud:kb:hodom-norma-tecnica-2024
+urn:salud:kb:hodom-direccion-tecnica
+urn:salud:kb:hodom-glosario-ontologia
+```
+
+### Cierre y próxima admisión
+
+Cada lote pasó `velar --estricto` y los 237 tests. Los artefactos de
+conocimiento no tienen emisión derivada, por lo que no requieren
+`transmutar --paridad`.
+
+PF-01 a PF-06 y los protocolos H1/H2 no publicados continúan como candidatos,
+no como deuda de escritura automática. Solo se abren cuando concurren los
+cuatro gates del corte: pregunta OPM concreta, propietario de interfaz,
+autoridad/vigencia y recorte que no exceda la fuente. Para los 34 escaneos se
+requiere primero OCR verificable o lectura visual completa.
+
 ## Cómo retomar
 
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
