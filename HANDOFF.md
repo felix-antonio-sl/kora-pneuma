@@ -468,7 +468,7 @@ sin modificar `10-modelamiento-opm/`.
 
 | Resultado | Cantidad |
 |---|---:|
-| Artefactos nuevos publicados | 24 |
+| Artefactos nuevos publicados | 26 |
 | Artefactos HODOM canónicos reutilizados | 5 |
 | Copias Drive descargadas, identificadas y hasheadas | 79 |
 | PDF Drive con texto recuperable | 45 |
@@ -480,19 +480,32 @@ PRO-110, PRO-134, APT 1.2, PRO 89 y PRO 90 quedaron expresamente históricos.
 Los recortes declaran páginas o secciones excluidas. El Arsenal conserva el PDF
 como autoridad primaria y no afirma un subarsenal HODOM.
 
+Por decisión del DT de 2026-07-20, una fecha de término declarada no produce
+baja automática si no se identifica reemplazo, instrucción contraria o
+incompatibilidad superior. En ese caso se conserva aplicación operativa
+provisional hasta la actualización, manteniendo visibles la fecha impresa, el
+estado de búsqueda y el carácter local de la decisión. Esta continuidad no
+demuestra por sí sola adopción efectiva ni aplicabilidad específica a HODOM.
+
 ### H0 resuelto
 
 De 20 unidades H0:
 
-- **14 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
+- **16 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
   PRO-134 recorte HODOM; AOC 2.1; APT 1.2 histórico; núcleo de
-  contactabilidad; HSC 14.2; HSC 14.3; AOC 1.1; REG 1.1; GCL 1.12; NT 245.
+  contactabilidad; HSC 14.2; HSC 14.3; AOC 1.1; REG 1.1; GCL 1.12; NT 245;
+  GCL 2.3; REG 1.2.
 - **2 excluidas por contenido:** la cartera 2024 no identifica una cartera
   HODOM —solo cinco prestaciones genéricas de visita—; Decreto Exento 74/2024
   regula Modalidad de Cobertura Complementaria y no modifica HODOM.
-- **4 bloqueadas por soporte:** Modelo UGCC, DP 2.1, GCL 2.3 y REG 1.2 son
-  PDF escaneados sin texto. LiteParse no produjo OCR y el host no dispone de
-  `tesseract` ni `ocrmypdf`; publicarlos habría fingido FS=100%.
+- **2 pendientes tras resolver el soporte:** Modelo UGCC y DP 2.1 ya cuentan
+  con OCR verificable, al igual que GCL 2.3 y REG 1.2. Los dos últimos fueron
+  cotejados visualmente y publicados; los dos primeros requieren cerrar sus
+  particularidades documentales antes de publicación. El cuerpo de DP 2.1
+  declara vigencia hasta mayo de 2025, pero la Resolución Exenta 87 la extiende
+  hasta mayo de 2027. El PDF rotulado Modelo UGCC contiene un manual UGDP y
+  Movilización con vigencia declarada hasta septiembre de 2025 y paginación
+  interna potencialmente incompleta.
 
 AOC 1.1 aporta una frontera negativa importante: Código Azul solo cubre
 emergencias **dentro del recinto** y no constituye rescate domiciliario.
@@ -538,6 +551,8 @@ urn:salud:kb:minsal-rpe-27-imagenologia
 urn:salud:kb:minsal-rpe-33-unidades-laboratorio
 urn:salud:kb:hsc-pro-089-resultados-vih-historico
 urn:salud:kb:hsc-pro-090-almacenamiento-muestras-historico
+urn:salud:kb:hsc-gcl-2-3-vigilancia-eventos-adversos
+urn:salud:kb:hsc-reg-1-2-estandarizacion-registros-clinicos
 ```
 
 Se reutilizan sin duplicación:
@@ -559,8 +574,8 @@ conocimiento no tienen emisión derivada, por lo que no requieren
 PF-01 a PF-06 y los protocolos H1/H2 no publicados continúan como candidatos,
 no como deuda de escritura automática. Solo se abren cuando concurren los
 cuatro gates del corte: pregunta OPM concreta, propietario de interfaz,
-autoridad/vigencia y recorte que no exceda la fuente. Para los 34 escaneos se
-requiere primero OCR verificable o lectura visual completa.
+autoridad/vigencia y recorte que no exceda la fuente. Para los escaneos
+restantes se requiere primero OCR verificable o lectura visual completa.
 
 ## Cómo retomar
 
