@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-20 — contrato endurecido `steipete` en Codex CLI
+# Handoff vigente — 2026-07-20 — contrato `steipete` y contraste App Server
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -248,6 +248,45 @@ Esto prueba pertenencia del recibo a `S_C` y
 `Eff_P ⊆ R_codex[D_steipete]`, no enumera tools ausentes y no amplía el shape,
 el emisor, la configuración ni las instalaciones.
 
+## Contraste vivo de App Server
+
+Se distinguieron dos contextos que no deben combinarse:
+
+```text
+r_cli = (codex exec, 0.144.6, configuración de la sonda)
+r_app = (app-server daemon, 0.144.3, socket y clientes vivos)
+```
+
+El gestor ya apuntaba a `0.144.6`, pero el proceso dueño del socket seguía en
+`0.144.3`. La sonda abrió dos conexiones efímeras e invocó solo métodos de
+consulta: cada una hizo el handshake e inicializó el protocolo; en total se
+consultaron capacidades de proveedor y estado MCP sin crear hilo ni turno. La
+salida se normalizó en memoria; la sonda no guardó ni versionó nombres,
+descripciones, schemas de tools o payloads crudos.
+
+El resultado tipado fue:
+
+```text
+CapProv(r_app) ∈ 2^{ {namespaceTools,imageGeneration,webSearch} }
+McpInv(r_app)  = Σ (s : Server_r). Tool_s
+```
+
+Los booleanos de proveedor, el inventario MCP por servidor y las listas
+separadas de skills, hooks, plugins, apps, features y permisos no constituyen
+el conjunto desconocido `A(r_app)` de tools visibles al modelo. Falta una regla
+oficial de resolución y mapas de comparación; no se fabricó una unión.
+
+Los schemas exactos de `0.144.3` y `0.144.6` tenían el mismo conjunto de 122
+métodos y eran idénticos en las respuestas relevantes de `thread/start`,
+capacidades de proveedor y estado MCP. En el momento de decidir había siete
+conexiones establecidas al daemon. Reiniciarlo habría interrumpido clientes sin
+añadir la interfaz buscada, por lo que se conservó `0.144.3`.
+
+La alineación a `0.144.6` queda como higiene operacional para una ventana sin
+clientes, no como paso categorial ni como medio para obtener un manifiesto. Al
+hacerla se debe repetir la sonda porque el nuevo proceso será otro contexto
+runtime.
+
 ## Evidencia de cierre
 
 - `python3 kora.py velar --estricto`: 13/13 checks.
@@ -257,6 +296,9 @@ el emisor, la configuración ni las instalaciones.
   bajo `/tmp`: verde.
 - `python3 -m tests.steipete_codex_hardened_contract`:
   `contract-satisfied`, sin archivo testigo residual.
+- App Server: dos handshakes y dos consultas contra el daemon `0.144.3`,
+  schemas relevantes `0.144.3`/`0.144.6` idénticos y siete conexiones activas
+  al decidir; no se creó hilo, turno ni reinicio.
 - `steipete`: `5 fiel`, `0 desviadas`, `0 no-instaladas`,
   `0 sin-emisión`.
 - `cat-thinking`: `3 fiel`, `0 desviadas`, `0 no-instaladas`,
@@ -345,8 +387,9 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
    `componible` sigue siendo un grafo de candidatos.
 3. No hay manifiesto unificado ni prueba uniforme de autoridad efectiva. El
    contexto personal vivo de `steipete` en Codex tiene un contraejemplo
-   `web_search`; el contrato endurecido decide su recibo, pero no prueba
-   exhaustivamente `Eff`.
+   `web_search`; el contrato endurecido decide su recibo, y el App Server vivo
+   solo expone inventarios parciales, pero ninguno prueba exhaustivamente
+   `Eff`.
 4. El puente PMI→`Poly`→coálgebra permanece abierto.
 5. El lifecycle no debe forzarse a funtor mientras promoción y retiro tengan
    dominios intencionalmente distintos.
@@ -362,11 +405,12 @@ Las pérdidas declaradas de Codex/OpenCode permanecen explícitas en sus sellos.
    `Model` o `Runtime`.
 4. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
    «bisimulación», «compone», «seguro» o «preserva».
-5. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad
-   y el contrato operacional endurecido para Codex CLI. En una actualización
-   de Codex, reauditar primero la disponibilidad de un manifiesto oficial y
-   actualizar deliberadamente el pin y las sondas; no ampliar todavía el
-   shape.
+5. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad,
+   el contrato operacional endurecido para Codex CLI y el contraste de
+   inventarios del App Server vivo. Alinear el daemon solo en una ventana sin
+   clientes y repetir la sonda; en una actualización de Codex, reauditar
+   primero la disponibilidad de un manifiesto oficial y actualizar
+   deliberadamente el pin y las sondas. No ampliar todavía el shape.
 
 ## Rollback
 

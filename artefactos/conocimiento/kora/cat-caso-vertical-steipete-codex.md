@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-caso-vertical-steipete-codex
 nombre: cat-caso-vertical-steipete-codex
-version: 1.3.0
+version: 1.4.0
 estado: publicado
-descripcion: "Caso vertical de ingeniería agéntica en KORA: steipete sobre Codex CLI con monitor de loop closure, contraste finito de autoridad y contrato operacional endurecido."
-fuente: "Doctrina propia pneuma instanciada el 2026-07-19 desde urn:dev:artefacto:steipete y urn:kora:kb:cat-contrato-ingenieria-agentica. Base primaria: Moggi, Notions of computation and monads, https://person.dibris.unige.it/moggi-eugenio/ftp/ic91.pdf; Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf. Superficie runtime: OpenAI, Codex non-interactive mode, https://learn.chatgpt.com/docs/non-interactive-mode; App Server, https://learn.chatgpt.com/docs/app-server; subagentes y herencia, https://learn.chatgpt.com/docs/agent-configuration/subagents; seguridad, https://learn.chatgpt.com/docs/agent-approvals-security; configuración, https://learn.chatgpt.com/docs/config-file/config-reference; esquema primario, https://github.com/openai/codex/blob/main/codex-rs/exec/src/exec_events.rs. Testigos ejecutables: tests/steipete_codex_observer.py, tests/steipete_codex_authority.py, tests/steipete_codex_hardened_contract.py, tests/test_steipete_vertical.py, tests/test_steipete_authority.py y tests/test_steipete_hardened_contract.py. v1.1.0 mecaniza obs_r para codex exec --json sin extender la afirmación a otras superficies Codex. v1.2.0 contrasta autoridad en dos contextos finitos y registra un contraejemplo de no amplificación en la configuración personal viva, sin ampliar el shape. v1.3.0 convierte la invocación endurecida en un contrato operacional ejecutable y versionado después de no hallar un manifiesto unificado en las superficies públicas inspeccionadas de Codex CLI 0.144.6; no amplía el shape."
+descripcion: "Caso vertical de ingeniería agéntica en KORA: steipete sobre Codex CLI con monitor de loop closure, contraste finito de autoridad, contrato operacional endurecido y contraste de inventarios parciales del App Server vivo."
+fuente: "Doctrina propia pneuma instanciada el 2026-07-19 desde urn:dev:artefacto:steipete y urn:kora:kb:cat-contrato-ingenieria-agentica. Base primaria: Moggi, Notions of computation and monads, https://person.dibris.unige.it/moggi-eugenio/ftp/ic91.pdf; Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf. Superficie runtime: OpenAI, Codex non-interactive mode, https://learn.chatgpt.com/docs/non-interactive-mode; App Server, https://learn.chatgpt.com/docs/app-server; subagentes y herencia, https://learn.chatgpt.com/docs/agent-configuration/subagents; seguridad, https://learn.chatgpt.com/docs/agent-approvals-security; configuración, https://learn.chatgpt.com/docs/config-file/config-reference; esquema primario, https://github.com/openai/codex/blob/main/codex-rs/exec/src/exec_events.rs. Testigos ejecutables: tests/steipete_codex_observer.py, tests/steipete_codex_authority.py, tests/steipete_codex_hardened_contract.py, tests/test_steipete_vertical.py, tests/test_steipete_authority.py y tests/test_steipete_hardened_contract.py. v1.1.0 mecaniza obs_r para codex exec --json sin extender la afirmación a otras superficies Codex. v1.2.0 contrasta autoridad en dos contextos finitos y registra un contraejemplo de no amplificación en la configuración personal viva, sin ampliar el shape. v1.3.0 convierte la invocación endurecida en un contrato operacional ejecutable y versionado después de no hallar un manifiesto unificado en las superficies públicas inspeccionadas de Codex CLI 0.144.6; no amplía el shape. v1.4.0 separa el CLI 0.144.6 del daemon App Server 0.144.3, contrasta el schema exacto y dos respuestas vivas de consulta, y rechaza tanto fabricar un manifiesto como reiniciar un runtime con clientes activos."
 autor: FS
 creado: 2026-07-19
 lang: es
@@ -37,6 +37,7 @@ Estatus:
 | `Runtime_codex-cli-exec(r)` | `tests/steipete_codex_observer.py` sobre `codex exec --json` | mecanizado bajo el protocolo local |
 | `Autoridad_codex-cli-exec(r)` | `tests/steipete_codex_authority.py` sobre cinco familias JSONL | contraejemplo observado; no enumeración completa |
 | `Contrato_codex-cli-exec(r_hardened)` | `tests/steipete_codex_hardened_contract.py` | predicado ejecutable satisfecho; no manifiesto ni prueba total de `Eff` |
+| `Inventarios_codex-app-server(r_app)` | schema 0.144.3 y requests vivos de inicialización, capacidades de proveedor y MCP | superficies parciales tipadas; no manifiesto resuelto |
 | `Runtime_codex-app(r)` | conversación y tool outputs de esta tarea | observación manual; fuera del adaptador |
 
 ## 2. Interfaz observable
@@ -551,6 +552,72 @@ La consecuencia legítima es solo `recibo ∈ S_C` y
 `Eff_P(steipete,r_hardened) ⊆ R_codex[D_steipete]`, no se enumeran tools
 ausentes y no se prueba safety conductual. El corte añade un gate operacional,
 no un objeto nuevo al shape KORA.
+
+### 8.6 Contraste vivo del App Server y decisión de versión
+
+El proceso App Server y el CLI no se colapsaron en un mismo contexto:
+
+```text
+r_cli = (codex exec, 0.144.6, configuración de cada sonda)
+r_app = (app-server daemon, 0.144.3, socket y clientes vivos)
+```
+
+`codex app-server daemon version` confirmó que el gestor y el CLI instalado
+apuntaban a `0.144.6`, mientras el proceso que poseía el socket seguía
+ejecutando `0.144.3`. El schema experimental se generó con el binario instalado
+de esa versión exacta. La documentación oficial garantiza que cada bundle
+generado corresponde a la versión que lo produjo.
+
+El schema de `0.144.3` contiene 122 métodos de request. Para la pregunta de
+autoridad ofrece superficies separadas como
+`modelProvider/capabilities/read`, `mcpServerStatus/list`, `skills/list`,
+`hooks/list`, `plugin/list`, `app/list`, `permissionProfile/list` y
+`experimentalFeature/list`. Sus tipos relevantes son distintos:
+
+```text
+CapProv(r_app) ∈ 2^{ {namespaceTools,imageGeneration,webSearch} }
+McpInv(r_app)  = Σ (s : Server_r). Tool_s
+```
+
+La primera respuesta son tres booleanos de capacidad del proveedor. La segunda
+es un inventario etiquetado por servidor, con tools anidadas y cursor. El
+schema de `thread/start` retorna hilo, modelo, permisos, sandbox, directorio e
+instrucciones, pero no una lista de tools resueltas.
+
+Dos conexiones efímeras hicieron cada una el handshake obligatorio y, en
+total, dos requests de consulta, sin invocar métodos de escritura:
+
+- `initialize` atestiguó `Codex Desktop/0.144.3`;
+- `modelProvider/capabilities/read` devolvió exactamente los tres booleanos
+  anteriores;
+- `mcpServerStatus/list` devolvió inventario no vacío por servidor;
+- no se llamó `thread/start` ni se creó turno;
+- la sonda no guardó ni versionó nombres, descripciones, schemas de tools o
+  respuestas crudas.
+
+Sea `A(r_app)` el conjunto desconocido de tools finalmente visibles al modelo.
+No se documenta un mapa de comparación desde `CapProv(r_app)` o
+`McpInv(r_app)` hacia `A(r_app)`, ni un operador de resolución que combine
+skills, hooks, plugins, apps, MCPs, features, perfiles y tools dinámicas. Por
+tanto ni la unión de nombres ni un coproducto de inventarios construye
+`A(r_app)`. `McpInv` es un inventario MCP; no es autoridad efectiva total.
+
+El mismo contraste sobre el schema de destino `0.144.6` produjo el mismo
+conjunto de 122 métodos y schemas idénticos para `thread/start`, capacidades
+de proveedor y estado MCP. Reiniciar habría cambiado el contexto a un
+`r_app'` distinto, pero no habría añadido una interfaz documentada para el
+manifiesto buscado. Además, en el momento de decidir había siete conexiones
+establecidas al daemon. Se preservó el runtime y no se interrumpieron clientes.
+
+**Veredicto:** no alinear el daemon dentro de esta tarea. Una alineación futura
+puede hacerse en una ventana sin clientes por higiene de versión, seguida de
+la misma sonda; no debe justificarse como obtención de un manifiesto que el
+schema de destino tampoco ofrece.
+
+Este corte no demuestra que una API privada o futura carezca de manifiesto, ni
+que las tools MCP listadas sean visibles en todo hilo. Tampoco amplía el shape:
+solo añade una frontera empírica entre dos runtimes y evita una reconstrucción
+semántica forzada.
 
 ## Fuentes primarias
 

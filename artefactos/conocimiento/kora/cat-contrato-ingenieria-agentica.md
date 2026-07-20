@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.3.1
+version: 1.3.2
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad. v1.3.2 (2026-07-20): tipa por separado capacidades de proveedor, inventario MCP y autoridad visible al modelo; un contraste vivo del App Server confirma que no deben reunirse sin una resolución oficial."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -244,6 +244,22 @@ superficie. Unir por cuenta propia listas de configuración, features, plugins,
 MCPs o tools dinámicas no produce necesariamente el conjunto visible al
 modelo: sin una regla oficial de resolución sería un manifiesto sintético.
 
+La separación sigue siendo necesaria aunque todas las respuestas provengan
+del mismo proceso. Por ejemplo, para un App Server puede haber:
+
+```text
+CapProv(r) ∈ 2^K
+McpInv(r)  = Σ (s : Server_r). Tool_s
+A(r)       = tools finalmente visibles al modelo, si el runtime las atestigua
+```
+
+`CapProv(r)` clasifica capacidades del proveedor y `McpInv(r)` es un inventario
+MCP etiquetado por servidor. Son objetos de tipos distintos. Sin mapas de
+comparación ni un operador de resolución documentado hacia `A(r)`, no existe
+base para identificar una unión, producto, coproducto o colímite de
+inventarios con la autoridad visible al modelo. La mera coexistencia de
+endpoints no aporta esa estructura.
+
 Cuando no existe ese manifiesto, todavía puede fijarse un contrato operacional
 versionado. Sea `Raw_C` el conjunto de ejecuciones recolectadas,
 `norm_C:Raw_C⇀E_C` un normalizador parcial y `Sat_C:E_C→2` un predicado
@@ -410,6 +426,14 @@ listas parciales como sustituto. En cambio,
 comandos permitidos, denegación de escritura y ausencia del archivo testigo,
 y decide `Sat_C` sobre el recibo normalizado. Su ejecución viva satisface el
 contrato; la conclusión permanece en el nivel de evidencia finita.
+
+El corte posterior del App Server mantuvo separados `r_cli` y el daemon vivo
+`r_app`: este último ejecutaba `0.144.3`, aunque el CLI y el binario gestionado
+eran `0.144.6`. El schema exacto y dos respuestas vivas confirmaron la
+distinción tipada entre booleanos de proveedor e inventario MCP por servidor.
+El schema de destino conservaba las mismas superficies relevantes. No se
+reinició el daemon con clientes activos ni se elevó ese inventario parcial a
+`A(r_app)`.
 
 Este primer testigo no justifica todavía ampliar el shape: la proyección solo
 cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y
