@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-21 — entrega guiada, contrato agéntico y campaña HODOM-HSC
+# Handoff vigente — 2026-07-22 — entrega guiada, contrato agéntico y campaña HODOM-HSC
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -294,6 +294,11 @@ runtime.
 
 ## Evidencia de cierre
 
+La revalidación de continuidad del 2026-07-22 repitió `velar --estricto`, la
+suite completa y la paridad focalizada de `entrega-kora`; los tres gates
+quedaron verdes. No repitió las sondas vivas de autoridad ni App Server: su
+evidencia fechada permanece como antecedente, no como observación actual.
+
 - `python3 kora.py velar --estricto`: 13/13 checks.
 - `python3 -m unittest discover -s tests`: 237 pruebas, todas verdes.
 - `git diff --check`: verde.
@@ -400,6 +405,43 @@ El corte reúne en una invocación controles que antes se coordinaban por
 separado, pero todavía no hay medición de tiempo, errores de operador o
 usabilidad. La mejora UX es una hipótesis instrumentable, no un resultado
 probado.
+
+### Artefactos y decisiones persistentes
+
+- Fuente canónica: `artefactos/skills/kora/entrega-kora/SKILL.md`.
+- Helper ejecutable:
+  `artefactos/skills/kora/entrega-kora/referencias/entrega.py`.
+- Contrato verificable: `tests/test_entrega_kora.py`.
+- Instalación derivada observada: `/home/felix/.agents/skills/entrega-kora`;
+  no es fuente de verdad.
+- Producto y primer cierre documental: commits `d03d876` y `291c223`.
+
+Se conservan cuatro decisiones: Codex es el único target v1; la emisión
+derivada sí pertenece al flujo; `--aplicar` exige una acción externa y
+explícita; ni el recibo ni la paridad autorizan ampliar el shape o afirmar
+conducta runtime.
+
+### Aprendizajes destilados
+
+1. La vía productiva más pequeña fue componer los gestos existentes, no crear
+   otro gesto constitucional ni una abstracción categorial nueva.
+2. El orden es parte del contrato: suite, emisión derivada, `velar` y paridad.
+   Validar frescura antes de emitir bloquea precisamente el caso que la entrega
+   debe reparar. El conocimiento, que no se emite, termina en suite y `velar`.
+3. Resolución exacta, ambigüedad explícita y fallo cerrado son semántica de
+   producto: evitan entregar el artefacto equivocado aunque exista una
+   sugerencia plausible.
+4. Una fibra cerrada no debe incorporar residuos del intérprete. Un
+   `__pycache__` accidental altera materialmente emisión e instalación; la
+   suite impide que vuelva a introducirse bytecode en esa fibra.
+5. `not-installed` y `partially-installed` son diagnósticos completos, no
+   permisos de despliegue. Separar observación de mutación mantiene la acción
+   reversible y la autoridad visible.
+6. La unión etiquetada del recibo tipa alternativas en `Set`; no prueba por sí
+   sola functorialidad, coálgebra, equivalencia, safety ni autoridad efectiva.
+7. El siguiente dato valioso no es otro campo del shape: es evidencia de uso
+   real —duración, estado obtenido y corrección manual necesaria—. Los conteos
+   globales de paridad no se memorizan; se consultan en vivo.
 
 ## Fuentes primarias contrastadas
 
