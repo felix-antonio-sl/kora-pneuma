@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:spec-forja-opl-es
 nombre: spec-forja-opl-es
-version: 1.3.1
+version: 1.4.0
 estado: publicado
 descripcion: "Spec-forja OPL — SSOT del lenguaje OPL de OPFORJA: generación, parsing y roundtrip bimodal del OPL en el modelador deep-opm-pro."
-fuente: "SSOT OPM v1.2.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:753e9d194635416a427674f5a21ebb3cbedb0452ba5c4a8ed87832023e3a946f) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3) y el re-sync v1.2.1 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.2.2: cierre del orden de descomposicion (GAP-CX-PARSER y GAP-FIXTURE-DESCOMPOSICION marcados orden cerrado; opd.ordenInzoom via set-orden-inzoom con verificacion por inversa; roundtrip estricto en invocacion-implicita-bimodal.test.ts). Delta v1.3.0 (2026-07-09, firma HITL del custodio): excepcion de apunte a R-ENT-2 (R-ENT-2-APUNTE) — en especie apunte los placeholders emiten OPL en toda la generacion incluida la canonica; neutraliza GAP-PLACEHOLDER-OBJETO para apuntes; origen BUG-76af16 deep-opm-pro."
+fuente: "SSOT OPM v1.2.2. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/spec-forja-opl-es.md (sha256:753e9d194635416a427674f5a21ebb3cbedb0452ba5c4a8ed87832023e3a946f) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.1.3) y el re-sync v1.2.1 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.2.2: cierre del orden de descomposicion (GAP-CX-PARSER y GAP-FIXTURE-DESCOMPOSICION marcados orden cerrado; opd.ordenInzoom via set-orden-inzoom con verificacion por inversa; roundtrip estricto en invocacion-implicita-bimodal.test.ts). Delta v1.3.0 (2026-07-09, firma HITL del custodio): excepcion de apunte a R-ENT-2 (R-ENT-2-APUNTE) — en especie apunte los placeholders emiten OPL en toda la generacion incluida la canonica; neutraliza GAP-PLACEHOLDER-OBJETO para apuntes; origen BUG-76af16 deep-opm-pro. Delta v1.4.0 (2026-07-21): R-FAN-5A/5B canoniza la superficie OPL y el roundtrip por fact-set del abanico TS3 con estado de entrada comun y salidas alternativas; origen solicitud deep-opm-pro 2026-07-21-abanico-ts3-entrada-comun."
 autor: FS
 creado: 2026-05-26
 lang: es
@@ -538,7 +538,7 @@ Rationale: `reglas §4.5` (T3), `§5.2` (R-EFE-1, R-EFE-2, R-EFE-2A, R-EFE-2B) y
 
 **Emisión**: un efecto con estado especificado tanto en entrada como en salida emite el verbo compuesto `cambia … de … a`. El modificador `e`/`c` reescribe la superficie según las variantes (admisible por R-TR-ASIM-3: el afectado está en Pre(P)).
 
-**Supresión**: placeholder NO emite. Bajo abanico XOR/OR de estados de destino se emite la oración de abanico (`cambia … a exactamente uno de …`), no TS3 individual.
+**Supresión**: placeholder NO emite. Bajo abanico XOR/OR de estados de destino sin entrada común se emite la oración de abanico unilateral (`cambia … a exactamente uno de …`), no TS3 individual. Cuando todas las ramas TS3 comparten entrada y difieren por la salida se emite la forma de entrada común de R-FAN-5A (`cambia … de … a exactamente uno de …`).
 
 **Tokenización**: span de *proceso* con `ref`; `cambia` + `de` + `a` tokens fijos; span de **objeto** con `ref`; `estado-entrada` y `estado-salida` entre backticks, cada uno con `ref` a su estado.
 
@@ -1506,6 +1506,18 @@ Rationale: `reglas §6.4`–`§6.8`, `§7`, `§11.2` y `opm-opl-es §11`–`§13
 
   Rationale: `reglas §7.4` (R-FAN-EST-1) y `abanico.ts·oracionAbanicoEstados` (líneas 192–229).
 
+- **R-FAN-5A** (TS3 con entrada común y salidas alternativas): un fan XOR/OR de `n ≥ 2` enlaces TS3 compactos DEBE realizarse como `*P* cambia **Obj** de \`entrada\` a exactamente uno de \`s1\`, \`s2\` o \`s3\`.` para XOR, o con `a al menos uno de` para OR, cuando todas las ramas comparten *proceso*, **objeto**, estado de entrada, operador y ausencia de modificador/ruta/probabilidad diferenciadora, y difieren por estados de salida distintos. La entrada común NO DEBE suprimirse. Si las ramas varían simultáneamente en entrada y salida, esta forma NO aplica y la generación DEBE fallar cerrado antes de declarar equivalencia de fact-set.
+
+  Correcto: `*Corregir Desajuste* cambia **Grado de Cobertura Asistencial Efectiva** de \`insuficiente\` a exactamente uno de \`suficiente\` o \`insuficiente\`.`
+
+  Incorrecto: `*Corregir Desajuste* cambia **Grado de Cobertura Asistencial Efectiva** a exactamente uno de \`suficiente\` o \`insuficiente\`.` — pierde la entrada común.
+
+  Rationale: R-FAN-EST-1 ya admite estado independiente por rama; esta regla cierra únicamente su realización textual cuando los TS3 comparten entrada, sin cambiar la validez nuclear. Solicitud upstream `deep-opm-pro/docs/solicitudes-upstream/2026-07-21-abanico-ts3-entrada-comun.md`.
+
+- **R-FAN-5B** (inversa y fact-set): el parser de R-FAN-5A DEBE reconstruir un enlace TS3 por estado de salida, repetir el estado de entrada común en cada enlace y crear un único abanico con las `n` ramas y el operador original. El roundtrip se decide por igualdad del fact-set `{proceso, objeto, entrada, salidas, enlaces TS3, operador, membresía del fan}`, no por igualdad superficial de texto ni por deduplicación de entidad.
+
+  Rationale: §9 R-COMP-REV-2 y el contrato de bimodalidad exigen recuperar cada hecho coordinado; deduplicar por **objeto** antes de leer los estados colapsa ramas distintas.
+
 - **R-FAN-6** (probabilidad solo dentro de fan XOR): la anotación de probabilidad `Pr=p` SOLO es canónica **dentro de un abanico probabilístico**, que DEBE ser siempre XOR, con exactamente una rama activa por ejecución y suma de probabilidades `1.0`. Un `Pr=p` sobre un enlace **sin** abanico es **no-canonizado** (§8.4).
 
   Rationale: `reglas §6.8` (R-PROB-1, R-PROB-1A), `§7.4` (R-FAN-PROB-1), `§11.2` (zona: «enlace probabilístico sin fan no tiene canonicidad»). GAP-PROB-SUPERFICIE: cerrado; `procedural.ts·sufijoProbabilidad` y `abanico.ts` emiten `Pr=p`, y el parser lo descarta como anotación de superficie al reconstruir el hecho base.
@@ -1564,6 +1576,7 @@ Para cada combinación con relevancia semántica/lógica, su **estatus**, la pla
 | C-19b | otros transformadores/habilitadores × evento × XOR/OR (INPUT-only) | válida (canon) / GAP código | plantilla específica por rol | R-FAN-4; GAP-FAN-EVENTO |
 | C-20 | resultado × condición × XOR/OR | **inválida** | — | R-COMB-2; GAP-FAN-RESULTADO-COND cerrado: `abanico.ts` degrada a fan base sin `puede generarse` |
 | C-21 | consumo/resultado/efecto × — × XOR (ramas = estados de un objeto) | válida | `*P* cambia **Obj** a exactamente uno de \`s1\`, \`s2\` o \`s3\`.` | R-FAN-5; R-FAN-7 |
+| C-21b | efecto TS3 × — × XOR/OR (entrada común; ramas = salidas distintas del mismo objeto) | válida | `*P* cambia **Obj** de \`s0\` a exactamente uno de \`s1\`, \`s2\` o \`s3\`.` | R-FAN-5A; R-FAN-5B |
 | C-22 | resultado × — × XOR × probabilidad (fan probabilístico) | válida | `*P* genera exactamente uno de **A** \`Pr=0.6\`, **B** \`Pr=0.4\`.` | R-FAN-6; suma=1; GAP-PROB-SUPERFICIE cerrado |
 | C-23 | cualquier rol × — × — × probabilidad (sin fan) | **no-canonizada** | — | R-FAN-6; `reglas §11.2` (probabilístico fuera de fan sin canonicidad) |
 | C-24 | consumo/resultado × modificador/abanico/multiplicidad × **ruta** | válida | `Por ruta L1, *P* consume **A**.` | R-COMB-5; una oración por enlace, ruta degrada el fan |
@@ -2314,13 +2327,16 @@ oracion_transformadora = oracion_de_consumo | oracion_de_resultado | oracion_de_
 oracion_de_consumo = identificador_de_proceso, " consume ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
 oracion_de_resultado = identificador_de_proceso, " genera ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
 oracion_de_efecto = identificador_de_proceso, " afecta ", lista_de_objetos_procedimentales ;
-oracion_de_cambio = oracion_de_cambio_entrada_salida | oracion_de_cambio_solo_entrada | oracion_de_cambio_solo_salida ;
+oracion_de_cambio = oracion_de_cambio_entrada_salida | oracion_de_cambio_solo_entrada | oracion_de_cambio_solo_salida
+ | oracion_de_cambio_entrada_comun_salida_fan ;
 frase_de_cambio_entrada_salida = identificador_de_objeto, " de ", estado_de_entrada, " a ", estado_de_salida ;
 frase_de_cambio_solo_entrada = identificador_de_objeto, " de ", estado_de_entrada ;
 frase_de_cambio_solo_salida = identificador_de_objeto, " a ", estado_de_salida ;
 oracion_de_cambio_entrada_salida = identificador_de_proceso, " cambia ", frase_de_cambio_entrada_salida ;
 oracion_de_cambio_solo_entrada = identificador_de_proceso, " cambia ", frase_de_cambio_solo_entrada ;
 oracion_de_cambio_solo_salida = identificador_de_proceso, " cambia ", frase_de_cambio_solo_salida ;
+oracion_de_cambio_entrada_comun_salida_fan = identificador_de_proceso, " cambia ", identificador_de_objeto,
+ " de ", estado_de_entrada, " a ", operador_de_fan, " ", lista_de_estados ;
 oracion_habilitadora = oracion_de_agente | oracion_de_instrumento ;
 oracion_de_agente = [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado, " maneja ", identificador_de_proceso ;
 oracion_de_instrumento = identificador_de_proceso, " requiere ", [ restriccion_de_participacion, " " ], objeto_con_opcion_de_estado ;
