@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-20 — entrega guiada y contrato agéntico Codex
+# Handoff vigente — 2026-07-21 — entrega guiada, contrato agéntico y campaña HODOM-HSC
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -466,14 +466,9 @@ Se ejecutó el corte curatorial de
 `/home/felix/projects/hd-dt/01-normativo/hsc/subarbol-candidatos-koraficacion-hodom-2026-07-20.md`
 sin modificar `10-modelamiento-opm/`.
 
-| Resultado | Cantidad |
-|---|---:|
-| Artefactos nuevos publicados | 28 |
-| Artefactos HODOM canónicos reutilizados | 5 |
-| Copias Drive descargadas, identificadas y hasheadas | 79 |
-| PDF Drive con texto recuperable | 45 |
-| PDF Drive escaneados sin capa textual | 34 |
-| Páginas Drive censadas | 2.096 |
+El inventario vivo no se fija en este handoff: se obtiene bajo demanda con
+`python3 kora.py censo`. Este corte registra decisiones, límites y rutas de
+retoma, no un conteo paralelo al filesystem canónico.
 
 No se confundió publicación del artefacto con vigencia clínica de su fuente:
 PRO-110, PRO-134, APT 1.2, PRO 89 y PRO 90 quedaron expresamente históricos.
@@ -489,16 +484,16 @@ demuestra por sí sola adopción efectiva ni aplicabilidad específica a HODOM.
 
 ### H0 resuelto
 
-De 20 unidades H0:
+El corte H0 quedó resuelto:
 
-- **18 publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
+- **Publicadas:** PRO 002; PRO-110 histórico; RPE-34; Arsenal 2026;
   PRO-134 recorte HODOM; AOC 2.1; APT 1.2 histórico; núcleo de
   contactabilidad; HSC 14.2; HSC 14.3; AOC 1.1; REG 1.1; GCL 1.12; NT 245;
   GCL 2.3; REG 1.2; DP 2.1; copia observada de MO U.G.D.P. y Mov. 002.
-- **2 excluidas por contenido:** la cartera 2024 no identifica una cartera
+- **Excluidas por contenido:** la cartera 2024 no identifica una cartera
   HODOM —solo cinco prestaciones genéricas de visita—; Decreto Exento 74/2024
   regula Modalidad de Cobertura Complementaria y no modifica HODOM.
-- **0 bloqueadas:** los cuatro PDF inicialmente escaneados recibieron OCR,
+- **Sin bloqueos remanentes:** los PDF inicialmente escaneados recibieron OCR,
   cotejo visual y koraficación. DP 2.1 conserva por separado la vigencia
   impresa hasta mayo de 2025 y la extensión de la Resolución Exenta 87 hasta
   mayo de 2027. El PDF rotulado Modelo UGCC se publicó deliberadamente como
@@ -519,11 +514,41 @@ emergencias **dentro del recinto** y no constituye rescate domiciliario.
   propietaria.
 - RPE nacionales publicados: 9 Telemedicina, 14 Rehabilitación, 25 Cuidados
   Paliativos, 27 Imagenología, 33 Laboratorio y 34 HODOM.
-- Farmacia e IAAS permanecen por fuente: el Arsenal no demuestra subarsenal,
-  transporte ni cobertura HODOM; los protocolos intrahospitalarios no se
-  trasladan al domicilio sin recorte validado por Farmacia o IAAS.
+- Farmacia se abrió por fuente para continuidad farmacológica; IAAS permanece
+  por fuente. El Arsenal no demuestra subarsenal, transporte ni cobertura
+  HODOM, y los protocolos intrahospitalarios no se trasladan al domicilio sin
+  validación propietaria de aplicabilidad.
 
-### URN nuevas
+### Continuidad farmacéutica H1 publicada el 2026-07-21
+
+Se publicaron como fuentes separadas, sin fusionar códigos ni convertirlas en
+práctica HODOM:
+
+```text
+urn:salud:kb:hsc-apf-1-4-rotulacion-envasado-despacho
+urn:salud:kb:hsc-apf-1-5-almacenamiento-conservacion-2023
+urn:salud:kb:hsc-apf-1-5-formato-recetas-prescripcion
+urn:salud:kb:hsc-apf-1-5-solicitud-devolucion-medicamentos
+urn:salud:kb:hsc-apf-1-5-almacenamiento-conservacion-insumos
+urn:salud:kb:hsc-apf-1-5-notificacion-reacciones-adversas-medicamentos
+urn:salud:kb:hsc-17-2-estupefacientes-psicotropicos
+urn:salud:kb:hsc-17-4-solicitud-medicamentos-uso-restringido
+```
+
+Los anexos gráficos se recuperaron como campos, relaciones y listas; no se
+trasladaron valores poblados ni identificadores clínicos. Se preservaron la
+colisión real de varias fuentes distintas bajo `APF 1.5`, las discordancias
+internas y la diferencia de dos frente a tres días para recetas DAU. La fuente
+de solicitud/devolución de medicamentos conserva su vigencia impresa vencida
+y la aplicación operativa provisional decidida por el DT mientras no aparezca
+sucesora, instrucción contraria o incompatibilidad superior.
+
+Ninguna de estas fuentes demuestra subarsenal, stock, transporte o entrega al
+domicilio, custodia domiciliaria, cobertura horaria efectiva, receta HODOM ni
+adopción real. Esas interfaces siguen requiriendo validación de Farmacia,
+Abastecimiento, Calidad y Dirección Técnica HODOM según corresponda.
+
+### URN publicadas antes del lote farmacéutico
 
 ```text
 urn:salud:kb:hodom-rpe-34-criterios-tecnicos
@@ -568,15 +593,16 @@ urn:salud:kb:hodom-glosario-ontologia
 
 ### Cierre y próxima admisión
 
-Cada lote pasó `velar --estricto` y los 237 tests. Los artefactos de
+Cada lote pasó `velar --estricto` y la suite completa. Los artefactos de
 conocimiento no tienen emisión derivada, por lo que no requieren
 `transmutar --paridad`.
 
-PF-01 a PF-06 y los protocolos H1/H2 no publicados continúan como candidatos,
-no como deuda de escritura automática. Solo se abren cuando concurren los
-cuatro gates del corte: pregunta OPM concreta, propietario de interfaz,
-autoridad/vigencia y recorte que no exceda la fuente. Para los escaneos
-restantes se requiere primero OCR verificable o lectura visual completa.
+Los demás PF-01 a PF-06 y protocolos H1/H2 no publicados continúan como
+candidatos, no como deuda de escritura automática. Solo se abren cuando
+concurren los cuatro gates del corte: pregunta concreta, propietario de
+interfaz, autoridad/vigencia y recorte que no exceda la fuente. Para los
+escaneos restantes se requiere primero OCR verificable o lectura visual
+completa.
 
 ## Cómo retomar
 
