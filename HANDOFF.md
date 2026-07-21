@@ -506,16 +506,18 @@ emergencias **dentro del recinto** y no constituye rescate domiciliario.
 
 ### H1 y fuentes nacionales admitidas
 
-- Entrega de turno: Medicina, Enfermería/Matronería y Enfermería de Urgencia
-  publicadas por separado. La entrega médica de Urgencia permanece bloqueada
-  por escaneo.
+- Entrega de turno: Medicina, Enfermería/Matronería, Enfermería de Urgencia y
+  Medicina de Urgencia publicadas por separado. El último PDF, completamente
+  escaneado y con siete páginas rotadas, se recuperó mediante OCR y cotejo
+  visual de sus 14 páginas y cinco formularios.
 - Laboratorio: RPE-33 y los históricos PRO 89/90 publicados. APL 1.2 no se
   recortó: sus 184 páginas requieren una pregunta de interfaz y validación
   propietaria.
 - RPE nacionales publicados: 9 Telemedicina, 14 Rehabilitación, 25 Cuidados
   Paliativos, 27 Imagenología, 33 Laboratorio y 34 HODOM.
-- Farmacia se abrió por fuente para continuidad farmacológica; IAAS permanece
-  por fuente. El Arsenal no demuestra subarsenal, transporte ni cobertura
+- Farmacia se abrió por fuente para continuidad farmacológica. IAAS, aseo y
+  residuos también se publicaron por fuente, sin construir una norma HODOM
+  sintética. El Arsenal no demuestra subarsenal, transporte ni cobertura
   HODOM, y los protocolos intrahospitalarios no se trasladan al domicilio sin
   validación propietaria de aplicabilidad.
 
@@ -547,6 +549,39 @@ Ninguna de estas fuentes demuestra subarsenal, stock, transporte o entrega al
 domicilio, custodia domiciliaria, cobertura horaria efectiva, receta HODOM ni
 adopción real. Esas interfaces siguen requiriendo validación de Farmacia,
 Abastecimiento, Calidad y Dirección Técnica HODOM según corresponda.
+
+### IAAS, residuos y entrega médica de Urgencia publicados el 2026-07-22
+
+Se publicaron como fuentes institucionales separadas:
+
+```text
+urn:salud:kb:hsc-gcl-3-3-precauciones-estandar
+urn:salud:kb:hsc-gcl-3-3-prevencion-infecciones-torrente-sanguineo-2025
+urn:salud:kb:hsc-gcl-3-3-prevencion-itu-cup-2024
+urn:salud:kb:hsc-24-8-aseo-desinfeccion
+urn:salud:kb:hsc-pro-031-manejo-residuos-hospitalarios
+urn:salud:kb:hsc-aoc-2-2-entrega-turno-medico-urgencia
+```
+
+Se preservaron tres documentos diferentes que imprimen `GCL 3.3`, sin
+fusionarlos. El plan de residuos conserva `Pro-031` como identidad interna y
+`HSC 27.A.1` como rótulo externo discordante. Su OCR y cotejo cubrieron las
+69 páginas, incluidas tablas, flujos, planos, formularios y anexos. La entrega
+médica de Urgencia completa el corpus AOC 2.2 de contraste, pero sus libros y
+firmas no demuestran por sí solos transferencia efectiva de responsabilidad.
+
+Las cinco fuentes IAAS/aseo/REAS regulan ámbitos institucionales impresos. No
+prueban que HODOM use los dispositivos descritos, ni definen limpieza,
+vigilancia, insumos, segregación, retiro o logística inversa en el domicilio.
+Requieren un recorte validado por los propietarios IAAS, REAS, clínicos y la
+Dirección Técnica HODOM antes de convertirse en práctica domiciliaria.
+
+Este lote tampoco valida ni reemplaza
+`urn:salud:kb:hodom-operacional-iaas`: ese BOK legado atribuye su contenido a
+un manual HODOM que no fue localizado en la biblioteca auditada. Sus reglas
+operativas y sus consumidores requieren una auditoría propietaria separada
+antes de uso asistencial; las nuevas fuentes no deben citarse como
+corroboración indirecta.
 
 ### URN publicadas antes del lote farmacéutico
 
