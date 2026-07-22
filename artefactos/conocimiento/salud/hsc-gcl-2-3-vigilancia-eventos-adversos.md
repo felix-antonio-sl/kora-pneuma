@@ -4,7 +4,7 @@ nombre: hsc-gcl-2-3-vigilancia-eventos-adversos
 version: 1.0.0
 estado: publicado
 descripcion: "Norma HSC GCL 2.3 para detectar, notificar, analizar y prevenir incidentes, eventos adversos y eventos centinela."
-fuente: "Hospital San Carlos Dr. Benicio Arzola Medina, GCL 2.3 Sistema de vigilancia de eventos adversos asociados a la atención, quinta edición, septiembre de 2023, vigencia declarada hasta septiembre de 2028, 19 páginas, Drive ID 1bMFKuRBlcg-iYH7Hig9-Ipu1kcVewi_Z, sha256 91e8555218da804544943861a6ec274298f4a8d12f5e523a9d367414cdb2799c; koraficación integral sin recorte temático."
+fuente: "Hospital San Carlos Dr. Benicio Arzola Medina, GCL 2.3 Sistema de vigilancia de eventos adversos asociados a la atención, quinta edición, septiembre de 2023, vigencia declarada hasta septiembre de 2028, 19 páginas; Drive ID de la copia de origen 1bMFKuRBlcg-iYH7Hig9-Ipu1kcVewi_Z y Drive ID seleccionado por el subárbol HODOM 10YUIMzMU2SqKVhrlhtq5zZeIn8aCxj95, copias byte-idénticas con sha256 91e8555218da804544943861a6ec274298f4a8d12f5e523a9d367414cdb2799c; koraficación integral sin recorte temático."
 autor: Codex
 creado: 2026-07-20
 lang: es

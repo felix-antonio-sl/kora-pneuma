@@ -4,7 +4,7 @@ nombre: hsc-reg-1-2-estandarizacion-registros-clinicos
 version: 1.0.0
 estado: publicado
 descripcion: "Norma HSC REG 1.2 sobre contenidos mínimos, forma, responsabilidades y evaluación de registros clínicos."
-fuente: "Hospital San Carlos Dr. Benicio Arzola Medina, REG 1.2 Estandarización de los registros clínicos, quinta edición, noviembre de 2023, vigencia declarada hasta noviembre de 2028, 13 páginas, Drive ID 1XdNNuCgiAuWd_2i4H5iXmeLYH0KbU7jC, sha256 051492314d2113c28884ba6699056f0cb26226e6c12e01a0ec36fc82ffbacbcd; koraficación integral sin recorte temático."
+fuente: "Hospital San Carlos Dr. Benicio Arzola Medina, REG 1.2 Estandarización de los registros clínicos, quinta edición, noviembre de 2023, vigencia declarada hasta noviembre de 2028, 13 páginas; Drive ID de la copia de origen 1XdNNuCgiAuWd_2i4H5iXmeLYH0KbU7jC y Drive ID seleccionado por el subárbol HODOM 1n0UF4IrZ3-WaYP1btAI2Xh5mVjtReEJt, copias byte-idénticas con sha256 051492314d2113c28884ba6699056f0cb26226e6c12e01a0ec36fc82ffbacbcd; koraficación integral sin recorte temático."
 autor: Codex
 creado: 2026-07-20
 lang: es
