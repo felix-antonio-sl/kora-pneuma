@@ -10,13 +10,62 @@ ingeniería agéntica, y convertir en formalismo solo aquello que admite objetos
 morfismos, composición y leyes genuinos. Remediar falsedades y sobreafirmaciones
 sin expandir el shape ni fabricar una semántica runtime inexistente.
 
-El corte más reciente convierte los gates KORA ya existentes en una entrega
-guiada hacia Codex: resuelve un artefacto, valida su fuente, regenera su emisión
-derivada, contrasta instalación y devuelve un recibo tipado. No aplica cambios
-al runtime, no cambia lifecycle y no amplía el shape.
+El corte de entrega guiada convirtió los gates KORA ya existentes en una
+preparación segura hacia Codex: resuelve un artefacto, valida su fuente,
+regenera su emisión derivada, contrasta instalación y devuelve un recibo
+tipado. `entrega-kora` conserva su frontera: no aplica cambios al runtime, no
+cambia lifecycle y no amplía el shape.
 
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
+
+## Corte más reciente: `agent-architect` v2.6.0 en Codex
+
+`urn:dev:artefacto:agent-architect` se conserva como un KORA agente válido en
+su forma exacta de **subagente persona** (`forma=subagente`, `arnes=persona`,
+vector `[2, 1, 2, 0, 2]`). La puesta a punto no lo ascendió artificialmente a
+agente persistente ni lo degradó a skill.
+
+El contrato canónico quedó restringido a `targets: [codex]` y ahora:
+
+- clasifica explícitamente las cuatro formas vigentes: habilidad, subagente,
+  agente y plataforma;
+- integra `urn:kora:kb:cat-contrato-ingenieria-agentica` y separa `Spec(a)`,
+  `Model(a)` y `Runtime_T(a,r)`;
+- exige interfaz e invariantes observables sin fabricar FSM, coálgebra,
+  composición, safety o preservación sin testigos;
+- distingue herramientas declaradas, alcance normativo y autoridad efectiva
+  del runtime;
+- emite solo el custom agent TOML que corresponde a un subagente Codex, sin
+  skill compañera ni proyecciones a otros targets.
+
+La corrección se condujo en rojo-verde con cuatro pruebas contractuales nuevas.
+El cierre completo quedó en 241 pruebas verdes, 13/13 checks de
+`velar --estricto` y paridad focal `1 fiel · 0 desviadas · 0 no-instaladas · 0
+sin-emision`.
+
+`entrega-kora` preparó y verificó el artefacto hasta su recibo
+`not-installed`. La aplicación posterior se ejecutó fuera de esa skill, bajo la
+orden explícita del operador, mediante `transmutar --aplicar`. Estado material:
+
+```text
+fuente       artefactos/agentes/dev/agent-architect.md v2.6.0
+emisión      _emision/codex/agents/agent-architect.toml
+instalación  /home/felix/.codex/agents/agent-architect.toml
+sha256       c740cf03ea02eb2dc5bc1456f864a5d48aca8c3e497d9e9a21e320d9ac4b630b
+producto     c395257930909df47898a887abb17bfa925626d6
+```
+
+Emisión e instalación son byte-idénticas. Codex CLI 0.145.0 cargó su
+configuración y reportó `multi_agent` estable y activo. Esta evidencia prueba
+fuente, emisión, instalación y paridad material; **no prueba todavía la conducta
+del agente ni su autoridad efectiva dentro de una invocación real**. Ese cierre
+requiere una sesión Codex nueva y una tarea acotada observada de extremo a
+extremo.
+
+Las emisiones derivadas obsoletas de Claude Code, OpenCode y OpenClaw se
+retiraron después de reducir el target. No había instalaciones de
+`agent-architect` en esos runtimes; ningún otro artefacto instalado fue tocado.
 
 ## Veredicto
 
@@ -807,6 +856,10 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
    y correcciones manuales. El siguiente corte debe decidir con esa evidencia
    si conviene mejorar el contrato JSON de paridad; no añadir targets ni
    aplicación automática por anticipado.
+7. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
+   sesión Codex nueva, invocarlo sobre un caso de autoría acotado y observar
+   entradas, salidas, límites de herramientas y no-coordinación. No convertir
+   la paridad material ya verde en evidencia conductual.
 
 ## Rollback
 
@@ -815,3 +868,10 @@ commit de producto `d03d876`, eliminar solo la instalación derivada
 `/home/felix/.agents/skills/entrega-kora` y regenerar `_emision/` desde las
 fuentes restantes. Después, repetir `velar`, tests y paridad global. Eliminar
 la fuente no retira por sí solo una instalación ya materializada.
+
+Para retirar únicamente `agent-architect` de Codex, eliminar solo
+`/home/felix/.codex/agents/agent-architect.toml`; es una proyección derivada y
+se recupera con `transmutar --urn urn:dev:artefacto:agent-architect --target
+codex --aplicar`. Para revertir también su puesta a punto canónica, usar
+`git revert c395257` y repetir tests, `velar` y paridad focal antes de volver a
+aplicar. No retirar ni reescribir otros custom agents.
