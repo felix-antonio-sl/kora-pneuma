@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-22 — entrega guiada, contrato agéntico y campaña HODOM-HSC
+# Handoff vigente — 2026-07-22 — panel agéntico de roles HODOM-HSC
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -16,10 +16,87 @@ regenera su emisión derivada, contrasta instalación y devuelve un recibo
 tipado. `entrega-kora` conserva su frontera: no aplica cambios al runtime, no
 cambia lifecycle y no amplía el shape.
 
+El corte más reciente materializa en Codex, con alcance de proyecto, las 14
+perspectivas institucionales provisionables de HODOM-HSC. Son interlocutores de
+diseño y validación; no sustituyen titulares humanos, autoridad clínica o
+fiscalizadora, políticas RBAC ni evidencia de práctica.
+
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: `agent-architect` v2.7.0 en Codex
+## Corte más reciente: panel R01–R14 para `hd-hsc-os`
+
+Se publicaron 14 fuentes `urn:salud:artefacto:hodom-hsc-*`, una por cada
+`roleType` provisionable del catálogo DT: Dirección Técnica, Enfermería
+Coordinadora, Médico de Atención Directa, Médico Regulador, Enfermería Clínica,
+Kinesiología, TENS, Trabajo Social, Fonoaudiología, Otro Profesional, Conductor,
+Administrativo, Administrador de Seguridad y SEREMI. `superusuario-dev`,
+paciente/cuidador y los actores de interfaz externos quedan fuera porque no son
+roles provisionables de esta configuración.
+
+La decisión arquitectónica, revisada adversarialmente por `agent-architect`
+v2.7.0, es homogénea:
+
+```text
+forma       subagente
+arnes       persona
+vector      [2,1,2,1,2]
+sigma       [3,3,3,3,2]
+herramientas [Read,Grep,Glob]
+target      codex
+alcance     proyecto
+```
+
+El vector clasifica cómo opera el artefacto y no la jerarquía del oficio. Cada
+persona se diferencia mediante un `U_phen` conductual y el conflicto propio de
+su rol. Todas reciben fase, artefacto/diff, journey, evidencia N/L/O/D/V y
+pregunta; emiten `ROLE_REVIEW` con postura, evidencia, hallazgos, costuras,
+riesgos, criterios, pruebas, disenso y `human_decision_required`. Los errores
+comunes son `missing-context`, `outside-role`, `authority-gap`,
+`non-demonstrated-practice` y `phi-detected`.
+
+Los cuerpos incorporan una guardia temporal: dotación, funciones absorbidas,
+horarios y estado de V01–V13 pertenecen al corte fuente 2026-07-22 y solo se
+tratan como vigentes con evidencia viva competente en la entrada. Trabajo
+Social conserva su condición de rol objetivo sin fingir dotación; Otro
+Profesional rehúsa inventar una disciplina; SEREMI declara que es una
+perspectiva regulatoria simulada y externa.
+
+Estado material:
+
+```text
+fuentes       artefactos/agentes/salud/hodom-hsc-*.md
+test          tests/test_hodom_hsc_role_agents.py
+commit KORA   5d7ce0e88c8de80d6a01842911aa475133e9f8ce
+emisión       _emision/codex/agents/hodom-hsc-*.toml
+instalación   hd-hsc-os/.codex/agents/hodom-hsc-*.toml
+commit app    5a0c5fee9514c3704b0df1c29bded819bc29ba63
+manifest      sha256:b31621159ffb28cf26d54c2db8c13b3e7eee2d1afa714238451a993cca8a1207
+```
+
+Las 14 instalaciones son byte-idénticas a sus emisiones y sus TOML parsean con
+los campos Codex obligatorios. Los gates cerraron `velar --estricto` 13/13,
+suite KORA 253/253 y pre-push de cumplimiento de `hd-hsc-os` 113/113. Codex CLI
+0.145.0 cargó el proyecto con `--strict-config`.
+
+Dos canarios efímeros bajo sandbox `read-only` devolvieron la postura esperada
+ante un falso cierre de E2E-01: `brecha`, práctica no demostrada o brecha de
+autoridad, decisión humana requerida y cero intento de mutación. La traza JSON
+no expuso inequívocamente el hilo hijo —el primer intento además fue rechazado
+por combinar `agent_type` con fork de historial completo—, por lo que esta
+salida es **compatible con la persona pero no demuestra todavía identidad de
+invocación ni fidelidad conductual**. El próximo smoke debe crear el subagente
+sin fork de historial desde un turno padre `read-only` y conservar una traza con
+identidad del receptor.
+
+`herramientas: [Read,Grep,Glob]` es una frontera fuente, no enforcement. Codex
+no materializa una allowlist exacta de built-ins y el subagente hereda los
+overrides vivos del padre. Hasta que exista enforcement propio por agente, el
+panel se invoca únicamente desde turnos `read-only`. Sello y bytes iguales
+prueban procedencia y paridad material; no prueban autoridad, safety ni práctica
+HSC.
+
+## Corte previo relevante: `agent-architect` v2.7.0 en Codex
 
 `urn:dev:artefacto:agent-architect` se conserva como un KORA agente válido en
 su forma exacta de **subagente persona** (`forma=subagente`, `arnes=persona`,
