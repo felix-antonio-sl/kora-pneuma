@@ -79,6 +79,61 @@ Las emisiones derivadas obsoletas de Claude Code, OpenCode y OpenClaw se
 retiraron después de reducir el target. No había instalaciones de
 `agent-architect` en esos runtimes; ningún otro artefacto instalado fue tocado.
 
+### Cierre seguro, decisiones y relevo
+
+El alcance final de esta sesión fue únicamente la puesta a punto del agente,
+su regresión ejecutable, la continuidad viva y su proyección derivada a Codex.
+No se modificaron la ley, el transmutador, otros artefactos,
+`/home/felix/.codex/config.toml` ni runtimes distintos de Codex.
+
+Decisiones consolidadas y alternativas descartadas:
+
+- se conserva `forma=subagente` y `arnes=persona` porque su hogar operacional
+  es la delegación; llamarlo agente persistente o reducirlo a habilidad habría
+  contradicho cuerpo, invocación y firma;
+- `targets: [codex]` limita dónde vive `agent-architect`, no los targets para
+  los que puede diseñar; equiparar despliegue con dominio de autoría habría
+  introducido una restricción funcional no solicitada;
+- `autoria-de-persona` se usa mediante un adaptador procedural explícito;
+  declarar composición semántica sin wiring, leyes ni testigos fue rechazado;
+- no se añadió skill compañera ni configuración propia de modelo, sandbox o
+  MCP: el custom agent hereda esas capacidades de la sesión Codex y no debe
+  prometer una autoridad que la fuente no controla;
+- no se corrigió parcialmente `autoria-de-persona`: su fuente se proyecta a
+  Claude Code, Codex y OpenCode, y un parche solo en Codex dejaría instalaciones
+  divergentes y excedería este corte.
+
+Artefactos del corte:
+
+- `artefactos/agentes/dev/agent-architect.md`: fuente KORA v2.7.0;
+- `tests/test_agent_architect.py`: regresiones de forma, contrato, anclas,
+  alcance de autoría, herramientas y uso procedural de personalidad;
+- `HANDOFF.md`: única continuidad operativa vigente;
+- `_emision/codex/agents/agent-architect.toml` y
+  `/home/felix/.codex/agents/agent-architect.toml`: producto derivado e
+  instalación Codex, no fuentes de autoridad;
+- `/home/felix/.codex/memories/extensions/ad_hoc/notes/20260722T111628Z-kora-agent-architect-cierre.md`:
+  destilación durable para incorporar al índice de memoria, subordinada al
+  canon y al estado vivo.
+
+El cierre repitió suite completa, `velar --estricto`, paridad focal, parseo TOML
+y carga estricta de Codex; todos los gates del artefacto quedaron verdes. El
+único aviso de `codex doctor` fue una diferencia entre inventarios de rollouts
+y base de estado, sin evidencia de causalidad con este agente. Git quedó limpio
+y sin divergencia antes de esta actualización; los commits de producto y
+auditoría ya estaban confirmados en `origin/master`. Este cierre documental se
+publica como unidad separada y debe comprobarse siempre contra el remoto vivo.
+
+Riesgo conocido: `artefactos/skills/kora/autoria-de-persona/SKILL.md` conserva
+anclas y glosas incompatibles con la doctrina vigente —entre ellas
+`vector = tipo`, una sección inexistente de `cat-agent-coalgebra`, una lectura
+no sustentada de `cat-agent-modulo` y el tratamiento de `componible` como
+composición—. `agent-architect` v2.7.0 amortigua esas afirmaciones, pero no sana
+la dependencia. La siguiente acción recomendada es reparar esa skill como una
+unidad multiruntime coordinada, reemitir sus targets instalados y verificar
+paridad global. Después, una sesión Codex nueva debe invocar `agent-architect`
+en un caso acotado para cerrar la evidencia conductual aún desconocida.
+
 ## Veredicto
 
 KORA no necesita que todos sus gestos sean funtores. Su formalización útil se
