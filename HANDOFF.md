@@ -19,49 +19,61 @@ cambia lifecycle y no amplía el shape.
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: `agent-architect` v2.6.0 en Codex
+## Corte más reciente: `agent-architect` v2.7.0 en Codex
 
 `urn:dev:artefacto:agent-architect` se conserva como un KORA agente válido en
 su forma exacta de **subagente persona** (`forma=subagente`, `arnes=persona`,
 vector `[2, 1, 2, 0, 2]`). La puesta a punto no lo ascendió artificialmente a
 agente persistente ni lo degradó a skill.
 
-El contrato canónico quedó restringido a `targets: [codex]` y ahora:
+Su despliegue canónico quedó restringido a `targets: [codex]` sin recortar el
+dominio de autoría: desde Codex puede diseñar artefactos KORA para cualquier
+target declarado por el artefacto en trabajo. El contrato ahora:
 
-- clasifica explícitamente las cuatro formas vigentes: habilidad, subagente,
-  agente y plataforma;
+- clasifica habilidad, subagente, agente y plataforma primero por modo de
+  invocación y luego valida la firma completa; no usa materia como discriminante
+  único porque los dominios de `mu` se solapan;
 - integra `urn:kora:kb:cat-contrato-ingenieria-agentica` y separa `Spec(a)`,
   `Model(a)` y `Runtime_T(a,r)`;
-- exige interfaz e invariantes observables sin fabricar FSM, coálgebra,
-  composición, safety o preservación sin testigos;
+- declara su propio `I_self`, `O_self`, protocolo, adaptador, errores e
+  invariantes observables;
+- usa `autoria-de-persona` como candidato procedural con `I_persona` y
+  `O_persona`, sin presentar la arista `componible` como composición semántica;
+- reancla identidad, personalidad y firma a las secciones vigentes de ley y
+  rebaja el corte cosmovisión/operativo a política editorial explícita;
 - distingue herramientas declaradas, alcance normativo y autoridad efectiva
   del runtime;
 - emite solo el custom agent TOML que corresponde a un subagente Codex, sin
   skill compañera ni proyecciones a otros targets.
 
-La corrección se condujo en rojo-verde con cuatro pruebas contractuales nuevas.
-El cierre completo quedó en 241 pruebas verdes, 13/13 checks de
-`velar --estricto` y paridad focal `1 fiel · 0 desviadas · 0 no-instaladas · 0
-sin-emision`.
+La corrección se condujo en rojo-verde y pasó una refutación adversarial de
+contexto limpio. La suite completa está verde, `velar --estricto` informa todo
+coherente y el recibo final `entrega-kora-v1` es `parity-faithful`. Los conteos
+vivos se consultan con los gestos; no se fijan en este handoff.
 
-`entrega-kora` preparó y verificó el artefacto hasta su recibo
-`not-installed`. La aplicación posterior se ejecutó fuera de esa skill, bajo la
-orden explícita del operador, mediante `transmutar --aplicar`. Estado material:
+`entrega-kora` preparó y verificó cada emisión y se detuvo ante la deriva
+esperada antes de aplicar. La instalación se ejecutó fuera de esa skill, bajo la
+orden explícita del operador, mediante `transmutar --aplicar`; el recibo se
+repitió después de la aplicación. Estado material final:
 
 ```text
-fuente       artefactos/agentes/dev/agent-architect.md v2.6.0
-emisión      _emision/codex/agents/agent-architect.toml
-instalación  /home/felix/.codex/agents/agent-architect.toml
-sha256       c740cf03ea02eb2dc5bc1456f864a5d48aca8c3e497d9e9a21e320d9ac4b630b
-producto     c395257930909df47898a887abb17bfa925626d6
+fuente          artefactos/agentes/dev/agent-architect.md v2.7.0
+hash-fuente     db27a0f4dac42b5e206e6d71b61a750174aca6e87987e0019adc9696d96a69ca
+emisión         _emision/codex/agents/agent-architect.toml
+instalación     /home/felix/.codex/agents/agent-architect.toml
+sha256-producto 59b677cb80902971ca56b01d3647fc9864ad7355b9c4441ce499401df88420b6
+commit-producto 360efbadc6518c5dd27626c709a95a75c0393674
 ```
 
-Emisión e instalación son byte-idénticas. Codex CLI 0.145.0 cargó su
-configuración y reportó `multi_agent` estable y activo. Esta evidencia prueba
-fuente, emisión, instalación y paridad material; **no prueba todavía la conducta
-del agente ni su autoridad efectiva dentro de una invocación real**. Ese cierre
-requiere una sesión Codex nueva y una tarea acotada observada de extremo a
-extremo.
+Emisión e instalación son byte-idénticas y el TOML contiene exactamente los
+campos obligatorios documentados por Codex (`name`, `description` y
+`developer_instructions`). Codex CLI 0.145.0 cargó su configuración en modo
+estricto, reportó instalación consistente y `multi_agent` estable y activo.
+Esta evidencia prueba fuente, emisión, instalación y paridad material; **no
+prueba todavía la conducta del agente ni su autoridad efectiva dentro de una
+invocación real**. La comprobación conductual debe hacerse en una sesión nueva
+para no asumir un hot reload no documentado, no porque se haya demostrado que
+Codex exija reinicio.
 
 Las emisiones derivadas obsoletas de Claude Code, OpenCode y OpenClaw se
 retiraron después de reducir el target. No había instalaciones de
@@ -548,6 +560,13 @@ conducta runtime.
 8. El helper interpreta el resumen textual actual de
    `transmutar --paridad`; falla cerrado si no lo reconoce, pero una salida
    JSON canónica reduciría este acoplamiento.
+9. `urn:kora:artefacto:autoria-de-persona` v1.2.0 conserva deuda doctrinal
+   preexistente: equipara vector con tipo en una regla, cita secciones que ya no
+   sostienen `U_phen` o el supuesto eje de encapsulación, describe mal la
+   partición OpenClaw y habla de composición sin interfaz. Su fuente y sus
+   instalaciones actuales son materialmente fieles, por lo que la corrección
+   debe ser una unidad multiruntime separada: reparar fuente, reemitir, aplicar
+   solo a destinos previamente instalados y cerrar con paridad global.
 
 ## Campaña HODOM–HSC: koraficación del subárbol 2026-07-20
 
@@ -857,9 +876,13 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
    si conviene mejorar el contrato JSON de paridad; no añadir targets ni
    aplicación automática por anticipado.
 7. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
-   sesión Codex nueva, invocarlo sobre un caso de autoría acotado y observar
-   entradas, salidas, límites de herramientas y no-coordinación. No convertir
-   la paridad material ya verde en evidencia conductual.
+   sesión Codex nueva —evitando asumir hot reload—, invocarlo sobre un caso de
+   autoría acotado y observar entradas, salidas, límites de herramientas y
+   no-coordinación. No convertir la paridad material ya verde en evidencia
+   conductual.
+8. Reparar `autoria-de-persona` en una unidad separada y coordinada con sus
+   instalaciones Claude Code, Codex y OpenCode; no parchear solo la copia
+   runtime ni dejar targets instalados en deriva.
 
 ## Rollback
 
@@ -872,6 +895,8 @@ la fuente no retira por sí solo una instalación ya materializada.
 Para retirar únicamente `agent-architect` de Codex, eliminar solo
 `/home/felix/.codex/agents/agent-architect.toml`; es una proyección derivada y
 se recupera con `transmutar --urn urn:dev:artefacto:agent-architect --target
-codex --aplicar`. Para revertir también su puesta a punto canónica, usar
-`git revert c395257` y repetir tests, `velar` y paridad focal antes de volver a
-aplicar. No retirar ni reescribir otros custom agents.
+codex --aplicar`. Para volver al corte defectuoso v2.6.0, revertir `360efba`;
+para retirar toda esta puesta a punto y volver al estado anterior a la sesión,
+revertir primero `360efba` y después `c395257`, junto con la continuidad
+documental correspondiente. En ambos casos repetir suite, `velar`, emisión,
+aplicación y paridad focal. No retirar ni reescribir otros custom agents.
