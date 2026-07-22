@@ -552,9 +552,10 @@ emergencias **dentro del recinto** y no constituye rescate domiciliario.
   Medicina de Urgencia publicadas por separado. El último PDF, completamente
   escaneado y con siete páginas rotadas, se recuperó mediante OCR y cotejo
   visual de sus 14 páginas y cinco formularios.
-- Laboratorio: RPE-33 y los históricos PRO 89/90 publicados. APL 1.2 no se
-  recortó: sus 184 páginas requieren una pregunta de interfaz y validación
-  propietaria.
+- Laboratorio: RPE-33, los históricos PRO 89/90 y APL 1.2 publicados. APL 1.2
+  se recuperó completo sobre 184/184 páginas y 169/169 prestaciones del
+  catálogo, manteniendo separados auto-toma domiciliaria, contacto confidencial
+  en domicilio y una cadena profesional HODOM que la fuente no define.
 - RPE nacionales publicados: 9 Telemedicina, 14 Rehabilitación, 25 Cuidados
   Paliativos, 27 Imagenología, 33 Laboratorio y 34 HODOM.
 - Farmacia se abrió por fuente para continuidad farmacológica. IAAS, aseo y
@@ -625,6 +626,53 @@ operativas y sus consumidores requieren una auditoría propietaria separada
 antes de uso asistencial; las nuevas fuentes no deben citarse como
 corroboración indirecta.
 
+### H2 nacional, seguridad clínica y resiliencia publicados el 2026-07-22
+
+Se publicaron fuentes separadas para planificación, desempeño, beneficios,
+autorización, clasificación, trazabilidad, terapia endovenosa y continuidad
+hospitalaria:
+
+```text
+urn:salud:kb:minsal-nt-243-clasificacion-establecimientos-hospitalarios-2025
+urn:salud:kb:minsal-pauta-chequeo-nt-247-trazabilidad-dispositivos-medicos
+urn:salud:kb:minsal-instructivo-pauta-autorizacion-sanitaria-hodom-2024
+urn:salud:kb:minsal-orientaciones-planificacion-programacion-red-2025
+urn:salud:kb:minsal-orientaciones-tecnicas-comges-2026
+urn:salud:kb:superintendencia-salud-compendio-beneficios-2026
+urn:salud:kb:hsc-apl-1-2-toma-traslado-muestras-2025
+urn:salud:kb:hsc-gcl-1-2-vias-venosas-centrales-2025
+urn:salud:kb:hsc-gcl-1-2-administracion-medicamentos-endovenosos-2024
+urn:salud:kb:hsc-gcl-2-2-prevencion-caidas-2023
+```
+
+También se publicaron cinco fuentes institucionales de seguridad ocupacional y
+resiliencia:
+
+```text
+urn:salud:kb:hsc-rh-4-2-accidentes-sangre-fluidos-riesgo-2023
+urn:salud:kb:hsc-ins-1-1-plan-prevencion-incendios-2023
+urn:salud:kb:hsc-ins-2-1-plan-evacuacion-2023
+urn:salud:kb:hsc-ins-3-2-contingencia-agua-potable-estanques-2026
+urn:salud:kb:hsc-ins-3-2-contingencia-energia-electrica-2022
+```
+
+Las orientaciones 2025 no equiparan APS domiciliaria, PADDS, telemedicina o
+seguimiento remoto con HODOM. COMGES 1.13 preserva por separado la razón de
+cumplimiento del Servicio y el promedio de estada por establecimiento; `8,5`
+no es criterio clínico individual de alta. El compendio mantiene separados plan
+complementario, CAEC, GES, Fonasa y Ley Ricarte Soto.
+
+NT 243 es clasificación hospitalaria, no una norma de seguridad del paciente.
+La pauta HODOM está rotulada `Borrador revisión final` y no demuestra
+autorización de HODOM-HSC. La pauta NT 247 no es la norma completa y su
+`director técnico de la institución` no se reasigna al DT HODOM por inferencia.
+
+Las dos fuentes de contingencia que imprimen `INS 3.2` —agua y energía— se
+conservan separadas por título, fecha, acto y hash. Incendio, evacuación, agua,
+energía y accidente ocupacional regulan ámbitos hospitalarios impresos; no
+definen respuesta ante incendio residencial, respaldo de dispositivos en casa
+ni aplicación domiciliaria del circuito ocupacional.
+
 ### URN publicadas antes del lote farmacéutico
 
 ```text
@@ -674,12 +722,11 @@ Cada lote pasó `velar --estricto` y la suite completa. Los artefactos de
 conocimiento no tienen emisión derivada, por lo que no requieren
 `transmutar --paridad`.
 
-Los demás PF-01 a PF-06 y protocolos H1/H2 no publicados continúan como
-candidatos, no como deuda de escritura automática. Solo se abren cuando
-concurren los cuatro gates del corte: pregunta concreta, propietario de
-interfaz, autoridad/vigencia y recorte que no exceda la fuente. Para los
-escaneos restantes se requiere primero OCR verificable o lectura visual
-completa.
+Por instrucción del operador del 2026-07-22, el resto del subconjunto PF-01 a
+PF-06 y H1/H2 seleccionado pasó a una campaña activa de koraficación. La
+apertura global no rebaja los gates por fuente: identidad y vigencia visibles,
+recorte que no exceda el original, separación entre fuente y adopción HODOM,
+privacidad y OCR o lectura visual completa para los escaneos.
 
 ## Cómo retomar
 
