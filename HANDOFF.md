@@ -673,6 +673,60 @@ energía y accidente ocupacional regulan ámbitos hospitalarios impresos; no
 definen respuesta ante incendio residencial, respaldo de dispositivos en casa
 ni aplicación domiciliaria del circuito ocupacional.
 
+### H2 institucional y cierre del subárbol publicados el 2026-07-22
+
+El último lote material publicó gobierno, personas, soporte y recursos clínicos
+como fuentes separadas:
+
+```text
+urn:salud:kb:hsc-1e-mg-cal-modelo-gestion-dcsp-2024
+urn:salud:kb:hsc-mo-daiu-003-organizacion-atencion-integral-usuario-2022
+urn:salud:kb:hsc-cdg-02-organizacion-unidad-control-gestion-2022
+urn:salud:kb:hsc-mo-rrhh-01-organizacion-gestion-personas-2022
+urn:salud:kb:hsc-mo-cap-02-organizacion-capacitacion-desarrollo-2022
+urn:salud:kb:hsc-rh-2-1-programa-induccion-2024
+urn:salud:kb:hsc-rh-3-1-programa-capacitacion-iaas-rcp-2023
+urn:salud:kb:hsc-mo-fin-044-organizacion-finanzas-2022
+urn:salud:kb:hsc-mo-abast-01-organizacion-abastecimiento-2022
+urn:salud:kb:hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024
+urn:salud:kb:hsc-mo-farm-001-modelo-organizacion-farmacia-2023
+urn:salud:kb:hsc-mo-lab-03-modelo-organizacion-laboratorio-2022
+urn:salud:kb:hsc-mo-imag-014-modelo-organizacion-imagenologia-2023
+urn:salud:kb:hsc-mo-sa-est-002-modelo-organizacion-esterilizacion-2022
+urn:salud:kb:minsal-plan-campana-invierno-2025
+```
+
+La cobertura fue 404/404 páginas o diapositivas. Gestión de Personas conserva
+la ausencia material de las páginas internas 22–23; Finanzas, la página 8; y
+Capacitación, sus tres hojas físicas en blanco. Los quince artefactos declaran
+FS 100 % dentro de sus recortes, CR reproducible superior a 1,5 y exclusión de
+personas, firmas, contactos y valores poblados.
+
+Calidad, Atención Integral, Control de Gestión, Personas, Capacitación,
+Finanzas, Abastecimiento y DCIYE aportan capacidades institucionales e
+interfaces. No acreditan adopción HODOM, presupuesto, stock, competencia
+disponible, SLA o práctica actual. Farmacia, Laboratorio, Imagenología y
+Esterilización tampoco crean subarsenal, toma de muestras, adquisición de
+imágenes ni circuito limpio–sucio domiciliario. La visita domiciliaria de
+investigación epidemiológica no es atención clínica HODOM.
+
+El Plan de Invierno es una presentación macro, nacional y estacional de 2025;
+no es regla permanente ni prueba de capacidad HSC/HODOM en 2026. Conserva
+lineamientos, cifras y defectos documentales sin transformar metas en resultados.
+
+La reconciliación final del corte arrojó 96 unidades seleccionadas para
+koraficación: 79/79 fuentes Drive y 15/15 locales admitidas produjeron **94
+artefactos fuente publicados**. Cartera HSC 2024 y Decreto Exento 74/2024 son
+las dos exclusiones por contenido ya justificadas. Los cinco artefactos `R`
+resuelven publicados sin duplicación; REG 1.2 y GCL 2.3 conservan sus copias
+byte-idénticas como procedencia de un solo artefacto por fuente. No quedan IDs
+Drive ausentes o ambiguos ni hashes de fuente huérfanos.
+
+El PDF primario del Arsenal 2026 permanece intacto y controlador. Su
+transcripción de trabajo se conserva; una edición de formato cambió su hash
+respecto del corte fechado, sin pérdida de la fuente primaria ni creación de un
+segundo artefacto.
+
 ### URN publicadas antes del lote farmacéutico
 
 ```text
@@ -722,11 +776,18 @@ Cada lote pasó `velar --estricto` y la suite completa. Los artefactos de
 conocimiento no tienen emisión derivada, por lo que no requieren
 `transmutar --paridad`.
 
-Por instrucción del operador del 2026-07-22, el resto del subconjunto PF-01 a
-PF-06 y H1/H2 seleccionado pasó a una campaña activa de koraficación. La
-apertura global no rebaja los gates por fuente: identidad y vigencia visibles,
-recorte que no exceda el original, separación entre fuente y adopción HODOM,
-privacidad y OCR o lectura visual completa para los escaneos.
+La campaña del subárbol 2026-07-20 quedó **cerrada**: 94/94 artefactos fuente
+seleccionados publicados, dos exclusiones por contenido y cinco canónicos
+reutilizados. No queda candidato material pendiente dentro de ese corte. Una
+nueva admisión debe responder a una brecha o decisión HODOM concreta, aplicar
+los mismos gates por fuente y no convertir esta biblioteca en koraficación por
+catálogo.
+
+Siguen fuera de este cierre la validación propietaria de práctica/adopción y las
+fuentes aún no adquiridas que el corte identifica para Cuidador, territorio,
+capacidad real, operación, datos, desempeño y software. También permanece
+abierta la auditoría de `urn:salud:kb:hodom-operacional-iaas`; las nuevas fuentes
+institucionales no validan el manual HODOM no localizado que ese BOK declara.
 
 ## Cómo retomar
 
