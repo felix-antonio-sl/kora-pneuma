@@ -589,7 +589,9 @@ La prueba viva desde la instalación Codex cubrió:
 
 - `cat-thinking` y su variante de mayúsculas: `parity-faithful`;
 - `cat-kora-semantica-operacional`: `knowledge-validated`;
-- `steve-jobs`: `partially-installed`, sin instalación automática;
+- `steve-jobs`: inicialmente `partially-installed`; el 2026-07-23, tras
+  aplicación explícita externa a la skill, `parity-faithful` (custom agent y
+  skill Codex, 2 fieles). Esto prueba paridad material, no conducta runtime;
 - `entrega-kora`: detectó primero una instalación desviada, bloqueó sin
   aplicar y, tras una aplicación explícita externa al comportamiento de la
   skill, devolvió `parity-faithful`.
