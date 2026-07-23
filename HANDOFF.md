@@ -589,16 +589,48 @@ La prueba viva desde la instalación Codex cubrió:
 
 - `cat-thinking` y su variante de mayúsculas: `parity-faithful`;
 - `cat-kora-semantica-operacional`: `knowledge-validated`;
-- `steve-jobs`: inicialmente `partially-installed`; el 2026-07-23, tras
-  aplicación explícita externa a la skill, `parity-faithful` (custom agent y
-  skill Codex, 2 fieles). Esto prueba paridad material, no conducta runtime;
-  un smoke efímero `read-only` en sesión nueva aceptó el rol `steve-jobs` tras
-  rechazar correctamente un primer fork con historial completo. La respuesta fue
-  compatible con su lente, pero la traza no expuso identidad del hijo ni sus
-  instrucciones efectivas: evidencia de selección, no fidelidad conductual;
+- `steve-jobs`: véase el cierre puntual siguiente;
 - `entrega-kora`: detectó primero una instalación desviada, bloqueó sin
   aplicar y, tras una aplicación explícita externa al comportamiento de la
   skill, devolvió `parity-faithful`.
+
+### Cierre puntual: `steve-jobs` como custom agent Codex — 2026-07-23
+
+**Objetivo y alcance.** Completar la superficie nativa Codex que faltaba para
+`urn:dev:artefacto:steve-jobs`, sin alterar su fuente canónica, lifecycle ni
+los runtimes Claude Code, OpenClaw u OpenCode. El alcance es de usuario: la
+fuente declara `forma: agente`, `arnes: persona`, `alcance: usuario` y target
+`codex` entre sus destinos.
+
+**Estado material.** La fuente sigue en
+`artefactos/agentes/dev/steve-jobs.md` (v1.1.1, activa). La aplicación canónica
+creó o reconcilió el custom agent
+`/home/felix/.codex/agents/steve-jobs.toml` y su skill compañera
+`/home/felix/.agents/skills/steve-jobs/`; ambas son byte-idénticas a sus
+emisiones bajo `_emision/codex/`. El sidecar
+`agents/openai.yaml` preserva invocación implícita desactivada para la skill.
+
+**Decisiones.** Se conservó el dual-mode existente: TOML para delegación
+nativa y skill para encarnación explícita, en vez de degradarlo a skill o copiar
+el TOML a mano. La aplicación fue una acción externa explícitamente autorizada
+mediante `python3 kora.py transmutar --urn urn:dev:artefacto:steve-jobs --target
+codex --aplicar`; `entrega-kora` se limitó a preparar y verificar. No se fijó
+modelo, sandbox, MCP ni allowlist adicional: Codex hereda esas capacidades de
+la sesión padre y la fuente no debe prometer enforcement que no controla.
+
+**Comprobaciones.** El recibo `entrega-kora-v1` final fue
+`parity-faithful`; `velar --estricto` pasó 13/13 y la suite 253/253. La paridad
+focal Codex informa dos factores fieles, cero desviados y cero ausentes. Un
+smoke efímero `read-only` de sesión nueva aceptó el rol `steve-jobs` después de
+que Codex rechazara correctamente un primer fork con historial completo.
+
+**Límite y siguiente acción.** La paridad prueba procedencia y materialidad; el
+smoke acredita selección compatible, pero su traza no expuso identidad del hijo
+ni instrucciones efectivas. No se afirma fidelidad conductual, autoridad ni
+enforcement de herramientas. No hay acción obligatoria pendiente; si se requiere
+esa evidencia, ejecutar una delegación `read-only` desde una superficie que
+conserve la identidad del subagente. Los otros tres targets continúan
+`no-instalada` de forma informativa y fuera de este alcance.
 
 El corte reúne en una invocación controles que antes se coordinaban por
 separado, pero todavía no hay medición de tiempo, errores de operador o
