@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:autoria-de-persona
 nombre: autoria-de-persona
-version: 1.2.0
+version: 1.2.1
 estado: activo
 descripcion: "Skill de autoria de la personalidad de un agente: deriva U_phen como triada conductual fin x estilo x registro + direccion de Tektonik, la pasa por el test anti-adjetivo y el filtro N2-N3, corta cosmovision/operativo, censa la vecindad de vector y provee el insumo del mapa de transmutacion. Porta los procedimientos; no decide el contrato del agente (eso es agent-architect)."
-fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos de autoria de U_phen fundados en urn:kora:kb:aufbau-persona-agente y urn:kora:kb:cat-agent-modulo. Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3. v1.1.0 (2026-07-12): sincroniza OpenClaw y Codex v2. v1.2.0 (2026-07-18): corrige identidad y estatus categorial; el vector clasifica firma, no tipo ni bisimulacion, y Para/naturalidad/slice quedan como modelos candidatos."
+fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos de autoria de U_phen fundados en urn:kora:kb:aufbau-persona-agente y urn:kora:kb:cat-agent-modulo. Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design, Pieza 3. v1.1.0 (2026-07-12): sincroniza OpenClaw y Codex v2. v1.2.0 (2026-07-18): corrige identidad y estatus categorial; el vector clasifica firma, no tipo ni bisimulacion, y Para/naturalidad/slice quedan como modelos candidatos. v1.2.1 (2026-07-23): elimina el vestigio contradictorio vector=tipo de la regla 6 y lo reancla a ley/1 §2: firma clasificatoria e identidad nominal por URN."
 autor: FS
 creado: 2026-06-30
 lang: es
@@ -226,8 +226,9 @@ silencio (`ley/3 §3 r3`).
    operativo → skill componible. Nada de conocimiento desnudo en el agente
    (`cat-agent-modulo` §5, eje de encapsulacion).
 6. **Censar la vecindad de vector antes de fijarlo.** Colision no es error
-   (vector = tipo, ley/1 §2; URN = token, constitucion §7), pero **confirmar
-   que `U_phen` diferencia**: no clonar.
+   (vector = firma clasificatoria, ley/1 §2; URN = identidad nominal,
+   constitucion §§7 y 9), pero **confirmar que `U_phen` diferencia**: no
+   clonar.
 7. **Citar el ancla** (`aufbau` §, `cat-agent-modulo` §, `ley` §) de cada
    derivacion. Leer el corpus en tiempo de skill; no responder de memoria.
 8. **No fundar nada en lo vivido no transferible.** La honestidad sobre la
