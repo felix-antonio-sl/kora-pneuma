@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-22 — panel agéntico de roles HODOM-HSC
+# Handoff vigente — 2026-07-23 — usuarios sintéticos HODOM-HSC
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -16,85 +16,122 @@ regenera su emisión derivada, contrasta instalación y devuelve un recibo
 tipado. `entrega-kora` conserva su frontera: no aplica cambios al runtime, no
 cambia lifecycle y no amplía el shape.
 
-El corte más reciente materializa en Codex, con alcance de proyecto, las 14
-perspectivas institucionales provisionables de HODOM-HSC. Son interlocutores de
-diseño y validación; no sustituyen titulares humanos, autoridad clínica o
-fiscalizadora, políticas RBAC ni evidencia de práctica.
+El corte más reciente reautoriza las 14 perspectivas institucionales
+provisionables de HODOM-HSC como usuarios sintéticos ideales, proactivos y
+persistentes por paquetes. Descubren necesidades sin artefacto previo,
+sintetizan requisitos y costuras conservando disenso, revisan candidatos y
+emiten aceptación interna final dentro de su oficio.
 
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: panel R01–R14 para `hd-hsc-os`
+## Corte más reciente: contrato v2 R01–R14
 
-Se publicaron 14 fuentes `urn:salud:artefacto:hodom-hsc-*`, una por cada
-`roleType` provisionable del catálogo DT: Dirección Técnica, Enfermería
-Coordinadora, Médico de Atención Directa, Médico Regulador, Enfermería Clínica,
-Kinesiología, TENS, Trabajo Social, Fonoaudiología, Otro Profesional, Conductor,
-Administrativo, Administrador de Seguridad y SEREMI. `superusuario-dev`,
-paciente/cuidador y los actores de interfaz externos quedan fuera porque no son
-roles provisionables de esta configuración.
-
-La decisión arquitectónica, revisada adversarialmente por `agent-architect`
-v2.7.0, es homogénea:
+La fuente metodológica compartida es
+`urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc` v1.0.0:
+`forma=habilidad`, `arnes=disciplina`, vector `[2,0,2,0,1]`, sigma
+`[3,3,3,3,2]`, sin herramientas, target Codex y alcance de proyecto. Los 14
+`urn:salud:artefacto:hodom-hsc-*` pasan a v2.0.0 y conservan URN, `U_phen`,
+competencias, antiroles y la firma persona:
 
 ```text
-forma       subagente
-arnes       persona
-vector      [2,1,2,1,2]
-sigma       [3,3,3,3,2]
+forma        subagente
+arnes        persona
+vector       [2,1,2,1,2]
+sigma        [3,3,3,3,2]
 herramientas [Read,Grep,Glob]
-target      codex
-alcance     proyecto
+target       codex
+alcance      proyecto
 ```
 
-El vector clasifica cómo opera el artefacto y no la jerarquía del oficio. Cada
-persona se diferencia mediante un `U_phen` conductual y el conflicto propio de
-su rol. Todas reciben fase, artefacto/diff, journey, evidencia N/L/O/D/V y
-pregunta; emiten `ROLE_REVIEW` con postura, evidencia, hallazgos, costuras,
-riesgos, criterios, pruebas, disenso y `human_decision_required`. Los errores
-comunes son `missing-context`, `outside-role`, `authority-gap`,
-`non-demonstrated-practice` y `phi-detected`.
+Cada persona declara `componible` hacia la skill y porta un adaptador inline
+que ordena resolver su URN, leer `SKILL.md` completa y aplicar el método. La
+relación no se presenta como wiring demostrado.
 
-Los cuerpos incorporan una guardia temporal: dotación, funciones absorbidas,
-horarios y estado de V01–V13 pertenecen al corte fuente 2026-07-22 y solo se
-tratan como vigentes con evidencia viva competente en la entrada. Trabajo
-Social conserva su condición de rol objetivo sin fingir dotación; Otro
-Profesional rehúsa inventar una disciplina; SEREMI declara que es una
-perspectiva regulatoria simulada y externa.
+El contrato ejecuta exactamente un modo por invocación:
+`DISCOVER|SYNTHESIZE|REVIEW|ACCEPT`. `I_ROLE` aporta `run_id`, modo, alcance,
+pregunta, `authority_packet`, candidato opcional y paquetes de contexto
+opcionales. Devuelve un único `ROLE_PACKET` o `ROLE_ERROR`; los payloads
+discriminados son:
 
-Estado material:
+- DISCOVER: `needs`, `journey_deltas`, `user_stories`;
+- SYNTHESIZE: `requirements`, `seams`, `conflicts`, `decision_owners`;
+- REVIEW: `findings`, `acceptance_criteria`, `verdict`;
+- ACCEPT: `verdict`, `conditions`, `blocking_items`,
+  `scope_of_acceptance`.
+
+REVIEW y ACCEPT incluyen obligatoriamente
+`candidate_binding{id,revision}`, copia exacta del candidato. ACCEPT requiere
+exactamente un REVIEW del mismo rol, `run_id` y binding, y aplica una ley total:
+
+| REVIEW | ACCEPT | `conditions` | `blocking_items` |
+|---|---|---|---|
+| PASS | ACCEPTED | vacía | vacía |
+| PASS_WITH_CHANGES | ACCEPTED_WITH_CONDITIONS | no vacía | vacía |
+| FAIL | REJECTED | vacía | no vacía |
+
+Cada modo lo solicita un orquestador externo y aplica guards explícitos; no hay
+FSM interna ni autoinvocación. Una nueva revisión del candidato invalida REVIEW
+y ACCEPT anteriores. La repetición de la misma entrada normalizada conserva
+`packet_id`, binding, veredicto y listas decisionales.
+
+Los paquetes conservan procedencia N/L/O/D/V, supuestos, disenso y handoffs.
+La ausencia de evidencia local se etiqueta como supuesto y no bloquea el
+diseño. Las excepciones quedan explícitas: R08 acepta diseño social aunque no
+haya dotación local; R10 exige disciplina para todo modo salvo DISCOVER; R11
+acepta solo alcance logístico no clínico; R14 acepta preparación regulatoria,
+nunca emite un acto administrativo real.
+
+La skill define N como norma o doctrina sanitaria del corpus KORA; L como
+documento oficial/local HSC que no prueba ejecución; O como práctica
+operacional observada y desidentificada; D como diseño objetivo o necesidad
+derivada; y V como validación propietaria pendiente que todavía no puede
+presentarse como contrato local.
+
+La procedencia viva queda anclada al mapa hd-dt
+`sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd`
+y al catálogo ejecutable
+`sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6`.
+
+Evidencia local del corte:
 
 ```text
-fuentes       artefactos/agentes/salud/hodom-hsc-*.md
-test          tests/test_hodom_hsc_role_agents.py
-commit KORA   5d7ce0e88c8de80d6a01842911aa475133e9f8ce
-emisión       _emision/codex/agents/hodom-hsc-*.toml
-instalación   hd-hsc-os/.codex/agents/hodom-hsc-*.toml
-commit app    5a0c5fee9514c3704b0df1c29bded819bc29ba63
-manifest      sha256:b31621159ffb28cf26d54c2db8c13b3e7eee2d1afa714238451a993cca8a1207
+rojo inicial          8 tests; 34 fallos y 1 error esperados
+rojo cierres          13 tests; 5 fallos y 4 errores esperados
+verde focal           15/15
+suite KORA             263/263
+velar --estricto      13/13
+emisión Codex         1 skill + 14 agentes
+TOML emitidos         14/14 parseables
+snapshot fuentes      sha256:a67d9a88931e4891fea0b7192f2f720920da261d4557f30b677afc39dfc98270
+manifest emisión      sha256:41646aa6a4afb39b279a4b8d2113c43195753d9f2d02208e54b25b16edff6373
+recibo entrega-kora   validación/tests passed; status not-installed
 ```
 
-Las 14 instalaciones son byte-idénticas a sus emisiones y sus TOML parsean con
-los campos Codex obligatorios. Los gates cerraron `velar --estricto` 13/13,
-suite KORA 253/253 y pre-push de cumplimiento de `hd-hsc-os` 113/113. Codex CLI
-0.145.0 cargó el proyecto con `--strict-config`.
+La aplicación a `/home/felix/projects/hd-hsc-os` se detuvo en la primera pieza
+sin relajar el gate:
 
-Dos canarios efímeros bajo sandbox `read-only` devolvieron la postura esperada
-ante un falso cierre de E2E-01: `brecha`, práctica no demostrada o brecha de
-autoridad, decisión humana requerida y cero intento de mutación. La traza JSON
-no expuso inequívocamente el hilo hijo —el primer intento además fue rechazado
-por combinar `agent_type` con fork de historial completo—, por lo que esta
-salida es **compatible con la persona pero no demuestra todavía identidad de
-invocación ni fidelidad conductual**. El próximo smoke debe crear el subagente
-sin fork de historial desde un turno padre `read-only` y conservar una traza con
-identidad del receptor.
+```text
+OSError: [Errno 30] Read-only file system: '/home/felix/projects/hd-hsc-os/.agents/skills'
+```
 
-`herramientas: [Read,Grep,Glob]` es una frontera fuente, no enforcement. Codex
-no materializa una allowlist exacta de built-ins y el subagente hereda los
-overrides vivos del padre. Hasta que exista enforcement propio por agente, el
-panel se invoca únicamente desde turnos `read-only`. Sello y bytes iguales
-prueban procedencia y paridad material; no prueban autoridad, safety ni práctica
-HSC.
+No se intentó el lote de agentes después de ese rechazo. La comparación exacta
+emisión/proyecto confirma el estado esperado: 0/15 byte-idénticos, 14 agentes
+desviados respecto de las emisiones v2 y 1 skill ausente; tanto los 14 TOML
+emitidos como los 14 TOML preexistentes del proyecto parsean correctamente.
+
+La publicación Git tampoco pudo cerrarse en este runtime. El índice rechazó el
+primer `git add` antes de alterar staging:
+
+```text
+fatal: Unable to create '/home/felix/kora-pneuma/.git/index.lock': Read-only file system
+```
+
+Por tanto, las fuentes, pruebas, emisiones y este handoff están modificados en
+el worktree sobre `2cdcf60`, pero no existe todavía commit ni push de este
+corte. El siguiente ejecutor debe conservar el diff, repetir los gates, aplicar
+las 15 emisiones con permiso de escritura explícito, verificar 15/15 bytes y
+recién entonces producir commits semánticos y push controlado.
 
 ## Corte previo relevante: `agent-architect` v2.7.0 en Codex
 
