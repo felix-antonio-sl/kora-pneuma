@@ -1,31 +1,114 @@
-# Handoff vigente — 2026-07-23 — usuarios sintéticos HODOM-HSC
+# Handoff vigente — 2026-07-26 — dirección integrada de producto UI/UX
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
 
 ## Objetivo
 
-Continuar la auditoría categorial integral de `kora-pneuma`, con foco en
-ingeniería agéntica, y convertir en formalismo solo aquello que admite objetos,
-morfismos, composición y leyes genuinos. Remediar falsedades y sobreafirmaciones
-sin expandir el shape ni fabricar una semántica runtime inexistente.
+Disponer de una combinación KORA mínima de conocimiento, skill y agente para
+elevar el diseño UI/UX de los proyectos: comprender contexto antes de generar,
+conservar tensiones entre escuelas, elegir una dirección con criterio,
+materializar el menor bucle completo y probarlo contra accesibilidad, fallos y
+uso real.
 
-El corte de entrega guiada convirtió los gates KORA ya existentes en una
-preparación segura hacia Codex: resuelve un artefacto, valida su fuente,
-regenera su emisión derivada, contrasta instalación y devuelve un recibo
-tipado. `entrega-kora` conserva su frontera: no aplica cambios al runtime, no
-cambia lifecycle y no amplía el shape.
+La continuidad transversal sigue exigiendo separar fuente KORA, emisión
+derivada, instalación y conducta runtime. Este corte demuestra fuente, gates,
+emisión, instalación y paridad material en Codex; no declara todavía una prueba
+conductual en una sesión nueva.
 
-El corte más reciente reautoriza las 14 perspectivas institucionales
-provisionables de HODOM-HSC como usuarios sintéticos ideales, proactivos y
-persistentes por paquetes. Descubren necesidades sin artefacto previo,
-sintetizan requisitos y costuras conservando disenso, revisan candidatos y
-emiten aceptación interna final dentro de su oficio.
+El corte previo de usuarios sintéticos HODOM-HSC y la auditoría categorial
+permanecen documentados más abajo; no fueron modificados por esta intervención.
 
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: contrato v2 R01–R14
+## Corte más reciente: tríada KORA de diseño de producto
+
+La arquitectura elegida evita una mega-persona que imite a cuatro diseñadores.
+Separa responsabilidades en tres fuentes canónicas:
+
+```text
+urn:dev:kb:canon-diseno-producto-integrado
+  -> evidencia, inferencias, límites, contrapruebas y propiedades emergentes
+
+urn:dev:artefacto:diseno-producto-integrado
+  -> método encuadrar→tensar→divergir→decidir→prototipar→probar→integrar→entregar
+
+urn:dev:artefacto:director-diseno-producto
+  -> identidad invocable que arbitra, firma una dirección y exige prueba
+```
+
+El canon destila trabajo público de Alan Dye, Tobias van Schneider, Imran
+Chaudhri y Karri Saarinen. Distingue explícitamente evidencia pública,
+inferencia operativa y límite/contraprueba. Corrige además un dato temporal del
+brief: al corte 2026-07-26 Alan Dye ya no es VP de Human Interface Design en
+Apple; salió a Meta Reality Labs a fines de 2025. Los cargos son contexto
+mutable y no se usan como doctrina.
+
+La síntesis conserva cuatro tensiones que un promedio borraría:
+
+- coherencia sistémica y material vs. legibilidad y propósito;
+- punto de vista y fricción útil vs. tarea, familiaridad y acceso;
+- paradigma de interacción vs. latencia, fiabilidad, privacidad y continuidad;
+- velocidad/craft integrado vs. output sin comprensión.
+
+De su cruce emergen ocho principios operativos: fit antes que forma; coherencia
+con punto de vista; ambición bajo prueba; fricción discriminada; calidad sin
+handoff; agencia y reversibilidad; alcance pequeño con bucle completo; y gusto
+acotado por evidencia. El Humane Ai Pin se conserva como contraprueba material:
+visión y demo no prueban un producto durable.
+
+La skill no duplica `design` ni `ux-design`. Las declara como candidatos
+`componible` y porta adaptadores explícitos:
+
+```text
+I_design -> O_design  # materialización, sistema, tokens y continuidad
+I_ux     -> O_ux      # tarea, heurísticas, WCAG y correcciones trazables
+```
+
+La arista `componible` no se presenta como wiring ni preservación semántica
+demostrada. El agente usa proceduralmente la nueva skill y mantiene la
+dirección; no reclama identidad, recuerdos, autoridad ni aprobación de las
+personas estudiadas. Su salida total es `DESIGN_PACKET | DESIGN_ERROR`.
+
+El despliegue se limitó deliberadamente a Codex. La skill quedó instalada en:
+
+```text
+/home/felix/.agents/skills/diseno-producto-integrado
+```
+
+La persona dual quedó instalada en:
+
+```text
+/home/felix/.codex/agents/director-diseno-producto.toml
+/home/felix/.agents/skills/director-diseno-producto
+```
+
+Evidencia del corte:
+
+```text
+rojo focal inicial       FileNotFoundError esperado
+verde focal              7/7
+suite KORA               270/270
+velar --estricto         13/13
+paridad skill            1 fiel · 0 desviadas · 0 no-instaladas
+paridad persona          2 fiel · 0 desviadas · 0 no-instaladas
+git diff --check         pass
+```
+
+Las pérdidas de proyección quedan declaradas en los sellos: Codex no prueba una
+allowlist exacta de herramientas; la persona no obtiene memoria transparente
+cross-session ni identidad persistente. Paridad demuestra igualdad material
+fuente→emisión→instalación, no calidad conductual. La siguiente prueba legítima
+es abrir una sesión Codex nueva —sin asumir hot reload—, invocar
+`director-diseno-producto` sobre una tarea UI/UX acotada y observar si entrega
+un `DESIGN_PACKET` que separa verificado, inferido y pendiente.
+
+Rollback de este corte: revertir su commit Git, eliminar solamente las tres
+instalaciones listadas arriba y regenerar `_emision/` desde las fuentes
+restantes. No editar `_emision/` ni el censo a mano.
+
+## Corte previo: contrato v2 R01–R14
 
 La fuente metodológica compartida es
 `urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc` v1.0.0:
