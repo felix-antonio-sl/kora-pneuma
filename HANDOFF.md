@@ -12,9 +12,11 @@ materializar el menor bucle completo y probarlo contra accesibilidad, fallos y
 uso real.
 
 La continuidad transversal sigue exigiendo separar fuente KORA, emisión
-derivada, instalación y conducta runtime. Este corte demuestra fuente, gates,
-emisión, instalación y paridad material en Claude Code, Codex y OpenCode; no
-declara todavía una prueba conductual en sesiones nuevas.
+derivada, instalación y conducta runtime. El alcance operativo final de este
+corte es **solo Codex**. Demuestra fuente, gates, emisión, instalación y paridad
+material, además de dos canarios conductuales Codex. No generaliza esos canarios
+a toda tarea futura ni confunde la autoridad declarada con la autoridad efectiva
+heredada de cada sesión.
 
 El corte previo de usuarios sintéticos HODOM-HSC y la auditoría categorial
 permanecen documentados más abajo; no fueron modificados por esta intervención.
@@ -71,91 +73,107 @@ demostrada. El agente usa proceduralmente la nueva skill y mantiene la
 dirección; no reclama identidad, recuerdos, autoridad ni aprobación de las
 personas estudiadas. Su salida total es `DESIGN_PACKET | DESIGN_ERROR`.
 
-La v1.1.0 amplió el despliegue a Claude Code, Codex y OpenCode después de
-verificar que `design` y `ux-design` ya declaran esos tres targets y mantienen
-paridad fiel en todos ellos. La skill quedó instalada en:
+La v1.2.0 sustituye el despliegue multiruntime de v1.1.0. Añade un
+`EVIDENCE_LEDGER`, prohíbe que una salida se verifique a sí misma y activa
+`SPEC_ONLY` cuando no existen insumos observables. En ese modo el paquete
+separa `verificado`, `propuesto`, `inferido` y `pendiente`; canon y guías son
+normativos, no evidencia del producto.
+
+La decisión de concentrar el target en Codex se tomó por evidencia conductual y
+por instrucción final del operador:
+
+- OpenCode resolvía los artefactos pero su modelo por defecto fabricó métricas,
+  tests, versiones, capacidades y owners en canarios repetidos. Un perfil
+  alternativo no produjo resultado observable dentro de la ventana acotada.
+- Claude Code falló antes de usar modelo o herramientas con
+  `Failed to authenticate: OAuth session expired and could not be refreshed`.
+  No se infiere de ello un defecto del artefacto, pero tampoco existe canario
+  conductual válido.
+- Codex produjo dos canarios verdes: la invocación de persona
+  `$director-diseno-producto` y un custom agent aislado sin contexto heredado.
+  Ambos resolvieron canon y skill, entregaron `DESIGN_PACKET`, mantuvieron
+  `SPEC_ONLY`, no inventaron evidencia y no escribieron archivos.
+
+El fork nativo con historial completo no es una ruta válida para seleccionar un
+custom agent: Codex devolvió `Full-history forked agents inherit the parent
+agent type; omit agent_type, or spawn without a full-history fork.` Para
+delegación se usa un subagente aislado (`fork_context:false`); para uso directo,
+la persona invocable es la ruta más simple.
+
+### Artefactos y runtime final
+
+Fuentes canónicas versionadas:
 
 ```text
-/home/felix/.claude/skills/diseno-producto-integrado
-/home/felix/.agents/skills/diseno-producto-integrado
-/home/felix/.config/opencode/skills/diseno-producto-integrado
+artefactos/conocimiento/dev/canon-diseno-producto-integrado.md       v1.0.0
+artefactos/skills/dev/diseno-producto-integrado/SKILL.md             v1.2.0
+artefactos/agentes/dev/director-diseno-producto.md                   v1.2.0
+tests/test_diseno_producto_integrado.py                              contrato
 ```
 
-La persona dual quedó instalada en:
+Instalación gestionada Codex:
 
 ```text
-/home/felix/.claude/agents/director-diseno-producto.md
+/home/felix/.agents/skills/diseno-producto-integrado
 /home/felix/.codex/agents/director-diseno-producto.toml
 /home/felix/.agents/skills/director-diseno-producto
-/home/felix/.config/opencode/agents/director-diseno-producto.md
 ```
 
-OpenClaw permanece fuera porque las skills dependientes no declaran ese target
-y la copia personal Codex bajo `~/.agents/skills` tendría precedencia sobre la
-managed de OpenClaw. Hermes está reconocido por la ley, pero su transmutación
-no está realizada.
+Las emisiones equivalentes viven bajo `_emision/codex/` y siguen siendo
+derivadas; no deben editarse a mano. Se retiraron solo las unidades gestionadas
+de `diseno-producto-integrado` y `director-diseno-producto` en Claude Code y
+OpenCode, después de confirmar en cada runtime su correspondencia con la
+emisión. `design`, `ux-design` y los demás artefactos instalados no fueron
+tocados. OpenClaw y Hermes siguen fuera del alcance.
 
-Evidencia del corte:
+### Evidencia y comprobaciones finales
 
 ```text
-rojo focal inicial       FileNotFoundError esperado
-verde focal              8/8
-suite KORA               271/271
+focal diseño             10/10
+suite KORA               273/273
 velar --estricto         13/13
-dependencias             design + ux-design: 6/6 unidades fieles
-paridad skill            3 runtimes · 3/3 unidades fieles
-paridad persona          3 runtimes · 4/4 unidades fieles
-discovery OpenCode       director-diseno-producto (all)
-CLI observados           Claude 2.1.207 · Codex 0.145.0 · OpenCode 1.18.5
 git diff --check         pass
+paridad skill Codex      1/1 fiel
+paridad persona Codex    2/2 fiel
+dependencias Codex       design + ux-design: 2/2 fieles
+recibo canon             knowledge-validated
+recibo skill/persona     parity-faithful
+permisos instalados      0600
+TOML custom agent        parseable
+canarios Codex           persona verde · aislado verde
+Claude/OpenCode          unidades integradas ausentes
+commit funcional         eaab0e0 · publicado en origin/master
 ```
 
-Las pérdidas de proyección quedan declaradas por runtime en sus sellos. Paridad
-demuestra igualdad material fuente→emisión→instalación, no calidad conductual.
-La siguiente prueba legítima es abrir sesiones nuevas —sin asumir hot reload—,
-invocar `director-diseno-producto` sobre la misma tarea UI/UX acotada y observar
-si cada runtime entrega un `DESIGN_PACKET` que separa verificado, inferido y
-pendiente.
+La revisión integral no encontró secretos, cambios ajenos ni residuos
+temporales. Se eliminaron cinco directorios `mktemp` creados por los canarios.
+Las retiradas runtime son recuperables mediante transmutación desde una revisión
+Git que vuelva a declarar el target; no se debe reintroducir ningún runtime por
+paridad material solamente.
 
-Rollback solo de la ampliación v1.1.0: crear un commit que restaure agente,
-skill y pruebas al estado de `ae3aab9`, retirar las dos unidades de Claude Code
-y las dos de OpenCode, y reemitir/reaplicar Codex desde la fuente v1.0.0. Esto
-conserva el despliegue Codex inicial y evita revertir a ciegas commits
-documentales posteriores.
+### Decisiones, límites y continuidad
 
-Rollback de toda la tríada: revertir semánticamente todos los commits del corte
-desde `ae3aab9`, retirar entonces las siete unidades instaladas y regenerar
-`_emision/` desde las fuentes restantes. No editar `_emision/` ni el censo a
-mano.
+Se conserva la tríada pequeña —canon, skill y agente— y se reutilizan `design`
+y `ux-design`; se descartó duplicar sus métodos o construir una mega-persona.
+También se descarta declarar soporte multiruntime sin canario conductual verde.
+La paridad prueba material gestionado, no calidad, autoridad efectiva ni
+comportamiento universal.
 
-### Auditoría final del corte
+No queda elemento pendiente dentro del alcance Codex acordado. Persisten estos
+límites conocidos:
 
-La revisión integral del 2026-07-26 confirmó que el reset inicial no perdió
-contenido: `e3f024c` y `284a30c` tienen el mismo árbol
-`838a4c0e22ba38fca73e3b173599bca47c2191fd` y el mismo padre; solo difieren en
-metadatos de commit. El diff de la sesión contra `284a30c` queda limitado a
-este handoff y las cuatro fuentes/pruebas de la tríada.
+- dos canarios acotados no garantizan toda tarea futura;
+- las herramientas efectivas y el sandbox dependen de la sesión padre;
+- el canario `SPEC_ONLY` valida disciplina epistémica, no la UX de un producto
+  real ni WCAG sobre una interfaz observable;
+- Claude Code y OpenCode solo pueden reincorporarse con alcance explícito,
+  autenticación/modelo operables y canario conductual verde.
 
-Se corrigieron en esta auditoría la frontera multiruntime del objetivo, el
-rollback de v1.1.0 frente al rollback total y la ausencia de una regresión
-específica de emisión para los tres targets. No se hallaron secretos, archivos
-temporales ni cambios ajenos en el alcance. Las fuentes web principales
-respondieron; el hostname de soporte de Humane no resolvió por `curl` local,
-pero la fuente fue accesible por el navegador de investigación. Esto se trata
-como una limitación de red local, no como prueba de disponibilidad universal.
-
-`director-diseno-producto` comparte la firma `[2,2,3,1,2]` con otros agentes,
-entre ellos `steve-jobs`; esto no viola unicidad porque el vector clasifica y
-el URN individua. La diferencia observable quedó revisada: `steve-jobs`
-critica desde sustracción e inevitabilidad, mientras el nuevo director conduce
-el ciclo completo desde contexto, alternativas y evidencia.
-
-Sigue sin demostrarse la conducta efectiva del agente en una sesión nueva de
-cada runtime, la resolución cross-project del conocimiento ni la autoridad
-efectiva de sus herramientas. Son pruebas runtime pendientes, no fallos de
-paridad. OpenCode sí enumeró `director-diseno-producto (all)`; en Claude Code
-y Codex se verificaron ruta canónica, bytes y formato —incluido TOML parseable
-en Codex—, pero no una selección/invocación viva.
+La siguiente acción recomendada es abrir una tarea Codex nueva en un proyecto
+real, invocar `$director-diseno-producto` con artefactos observables y cerrar un
+bucle de diseño completo. Si se delega, crear el custom agent aislado, sin fork
+de historial completo, y conservar la separación entre especificación,
+evidencia runtime y aprobación humana.
 
 ## Corte previo: contrato v2 R01–R14
 
@@ -1199,34 +1217,51 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
 ## Cómo retomar
 
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
-3. Para una afirmación agéntica, identificar primero si habla de `Spec`,
+2. Para trabajo UI/UX, invocar `$director-diseno-producto` con insumos
+   observables. Si se necesita delegación, usar el custom agent Codex aislado
+   (`fork_context:false`), nunca un fork con historial completo.
+3. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
+4. Para una afirmación agéntica, identificar primero si habla de `Spec`,
    `Model` o `Runtime`.
-4. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
+5. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
    «bisimulación», «compone», «seguro» o «preserva».
-5. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad,
+6. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad,
    el contrato operacional endurecido para Codex CLI y el contraste de
    inventarios del App Server vivo. Alinear el daemon solo en una ventana sin
    clientes y repetir la sonda; en una actualización de Codex, reauditar
    primero la disponibilidad de un manifiesto oficial y actualizar
    deliberadamente el pin y las sondas. No ampliar todavía el shape.
-6. Usar `entrega-kora` en tareas reales y registrar duración, estado del recibo
+7. Usar `entrega-kora` en tareas reales y registrar duración, estado del recibo
    y correcciones manuales. El siguiente corte debe decidir con esa evidencia
    si conviene mejorar el contrato JSON de paridad; no añadir targets ni
    aplicación automática por anticipado.
-7. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
+8. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
    sesión Codex nueva —evitando asumir hot reload—, invocarlo sobre un caso de
    autoría acotado y observar entradas, salidas, límites de herramientas y
    no-coordinación. No convertir la paridad material ya verde en evidencia
    conductual.
-8. Reparar `autoria-de-persona` en una unidad separada y coordinada con sus
+9. Reparar `autoria-de-persona` en una unidad separada y coordinada con sus
    instalaciones Claude Code, Codex y OpenCode; no parchear solo la copia
    runtime ni dejar targets instalados en deriva.
 
 ## Rollback
 
-Usar `git revert`, nunca `reset --hard`. Para retirar este corte, revertir el
-commit de producto `d03d876`, eliminar solo la instalación derivada
+Para revertir solo el endurecimiento v1.2 y la concentración en Codex, ejecutar
+`git revert eaab0e0` y repetir suite, `velar`, emisión y paridad. Ese revert
+restaura las declaraciones multiruntime históricas, pero no reinstala las cuatro
+unidades retiradas: cualquier reaplicación en Claude Code u OpenCode exige una
+decisión explícita y un canario conductual verde. No restaurarlas por paridad
+solamente.
+
+Para retirar toda la tríada de diseño, revertir semánticamente en orden
+cronológico inverso los commits del corte desde `eaab0e0` hasta `ae3aab9`,
+retirar solo las tres unidades Codex enumeradas en este handoff y regenerar
+`_emision/` desde las fuentes restantes. No editar `_emision/` ni el censo a
+mano.
+
+Usar `git revert`, nunca `reset --hard`. Para retirar el corte de
+`entrega-kora`, revertir el commit de producto `d03d876`, eliminar solo la
+instalación derivada
 `/home/felix/.agents/skills/entrega-kora` y regenerar `_emision/` desde las
 fuentes restantes. Después, repetir `velar`, tests y paridad global. Eliminar
 la fuente no retira por sí solo una instalación ya materializada.
