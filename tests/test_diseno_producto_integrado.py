@@ -44,24 +44,24 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertEqual(
             self.skill_campos["urn"],
             "urn:dev:artefacto:diseno-producto-integrado")
-        self.assertEqual(self.skill_campos["version"], "1.1.0")
+        self.assertEqual(self.skill_campos["version"], "1.2.0")
         self.assertEqual(self.skill_campos["forma"], "habilidad")
         self.assertEqual(self.skill_campos["arnes"], "disciplina")
         self.assertEqual(self.skill_campos["estado"], "activo")
         self.assertEqual(
             self.skill_campos["targets"],
-            ["claude-code", "codex", "opencode"])
+            ["codex"])
 
         self.assertEqual(
             self.agente_campos["urn"],
             "urn:dev:artefacto:director-diseno-producto")
-        self.assertEqual(self.agente_campos["version"], "1.1.0")
+        self.assertEqual(self.agente_campos["version"], "1.2.0")
         self.assertEqual(self.agente_campos["forma"], "agente")
         self.assertEqual(self.agente_campos["arnes"], "persona")
         self.assertEqual(self.agente_campos["estado"], "activo")
         self.assertEqual(
             self.agente_campos["targets"],
-            ["claude-code", "codex", "opencode"])
+            ["codex"])
 
     def test_canon_separa_evidencia_inferencia_y_contraprueba(self):
         cuerpo = " ".join(self.canon_cuerpo.split())
@@ -123,18 +123,46 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertIn("spec", cuerpo)
         self.assertIn("runtime", cuerpo)
 
+    def test_agente_y_skill_prohiben_evidencia_fabricada(self):
+        for cuerpo in (self.agente_cuerpo, self.skill_cuerpo):
+            normalizado = " ".join(cuerpo.split()).lower()
+            self.assertIn("fuente observable de esta ejecución", normalizado)
+            self.assertIn("no invent", normalizado)
+            self.assertIn("métricas", normalizado)
+            self.assertIn("tests", normalizado)
+            self.assertIn("owners", normalizado)
+            self.assertIn("sin artefacto ejecutable", normalizado)
+            self.assertIn("`inferido` o `pendiente`", normalizado)
+            self.assertIn("`evidence_ledger`", normalizado)
+            self.assertIn("[e#]", normalizado)
+            self.assertIn("no puede verificarse a sí mism", normalizado)
+            self.assertIn("independiente de", normalizado)
+            self.assertIn("`spec_only`", normalizado)
+            self.assertIn("`propuesto`", normalizado)
+            self.assertIn("normativo", normalizado)
+            self.assertIn("ausentes de la entrada", normalizado)
+
     def test_no_reintroduce_ancla_obsoleta_de_encapsulacion(self):
         fuentes = "\n".join((
             self.canon_cuerpo, self.skill_cuerpo, self.agente_cuerpo))
         self.assertNotIn("cat-agent-modulo §5", fuentes)
         self.assertNotIn("vector = tipo", fuentes)
 
-    def test_las_emisiones_multiruntime_son_materializables(self):
+    def test_target_operativo_queda_concentrado_en_codex(self):
+        for campos in (self.skill_campos, self.agente_campos):
+            self.assertEqual(campos["targets"], ["codex"])
+            fuente = campos["fuente"].lower()
+            self.assertIn("retira opencode", fuente)
+            self.assertIn("retira claude code", fuente)
+            self.assertIn("alcance explicito", fuente)
+            self.assertIn("canario conductual verde", fuente)
+
+    def test_las_emisiones_codex_son_materializables(self):
         urns = (
             "urn:dev:artefacto:diseno-producto-integrado",
             "urn:dev:artefacto:director-diseno-producto",
         )
-        targets = ("claude-code", "codex", "opencode")
+        targets = ("codex",)
         emisiones = {}
 
         for urn in urns:
@@ -166,8 +194,6 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertIn(
             "codex/skills/director-diseno-producto/SKILL.md",
             agente_codex)
-        self.assertIn(
-            "mode: all", emisiones[(urns[1], "opencode")])
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:diseno-producto-integrado
 nombre: diseno-producto-integrado
-version: 1.1.0
+version: 1.2.0
 estado: activo
 descripcion: "Disciplina de direccion UI/UX que transforma contexto y tensiones en un bucle de producto completo: diverge con criterio, selecciona por fit, materializa mediante design, valida mediante ux-design y entrega una decision trazable con prueba de realidad."
-fuente: "Sintesis nueva creada el 2026-07-26 para operacionalizar urn:dev:kb:canon-diseno-producto-integrado. Reutiliza proceduralmente design y ux-design mediante adaptadores explicitos; componible solo declara candidatos y no prueba composicion semantica ni ejecucion runtime. v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y OpenCode despues de verificar que design y ux-design ya declaran y mantienen paridad fiel en los tres runtimes; OpenClaw queda fuera por dependencia no realizada y colision de precedencia con la skill personal Codex, y Hermes por target reconocido no realizado."
+fuente: "Sintesis nueva creada el 2026-07-26 para operacionalizar urn:dev:kb:canon-diseno-producto-integrado. Reutiliza proceduralmente design y ux-design mediante adaptadores explicitos; componible solo declara candidatos y no prueba composicion semantica ni ejecucion runtime. v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y OpenCode despues de verificar que design y ux-design ya declaran y mantienen paridad fiel en los tres runtimes; OpenClaw queda fuera por dependencia no realizada y colision de precedencia con la skill personal Codex, y Hermes por target reconocido no realizado. v1.2.0 (2026-07-26): endurece la disciplina epistemica y concentra el target en Codex por instruccion final del operador; retira OpenCode despues de canarios que fabricaron evidencia y retira Claude Code porque su autenticacion no permitio ejecutar el canario. Cualquier reincorporacion requiere alcance explicito y un canario conductual verde."
 autor: FS
 creado: 2026-07-26
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 2, 3, 2, 2]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Write, Edit, Glob, Grep, Bash]
-targets: [claude-code, codex, opencode]
+targets: [codex]
 conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
 componible: [urn:dev:artefacto:design, urn:kora:artefacto:ux-design]
 alcance: usuario
@@ -230,9 +230,43 @@ Ejecutar una prueba de realidad proporcional al riesgo:
 
 Separar siempre:
 
-- **verificado:** observado en artefacto o ejecución;
+- **verificado:** declarado literalmente en los insumos o observado en una
+  fuente leída o ejecución de esta invocación, citando insumo, ruta o comando;
 - **inferido:** conclusión razonada desde evidencia;
 - **pendiente:** requiere humano, dispositivo, usuario o runtime no disponible.
+
+Aplicar un gate de **evidencia cerrada** antes de entregar:
+
+1. Construir primero un `EVIDENCE_LEDGER` numerado `[E1]`, `[E2]`, etc. Solo
+   admite entradas literales, artefactos preexistentes leídos y resultados de
+   pruebas realmente ejecutadas sobre esos artefactos.
+2. Cada afirmación `verificado` debe citar un `[E#]` y su insumo, ruta o comando
+   con resultado; ese registro es su fuente observable de esta ejecución.
+3. Una especificación, código, token o componente generado en la propia
+   respuesta no puede verificarse a sí mismo.
+4. No inventar métricas, tests, versiones, participantes, investigación,
+   telemetría, capacidades del producto, tokens, decisiones legales, owners ni
+   fechas.
+5. Patrones conocidos, documentación de librerías no observadas en el producto
+   o productos de referencia son `inferido` o `referencia`,
+   no pruebas del producto actual.
+6. Sin artefacto ejecutable, tratar el resultado como especificación: WCAG,
+   teclado, lector de pantalla, contraste, latencia y recuperación permanecen
+   `pendiente`.
+7. Si la entrada no aporta stack, design system, endpoint o política de datos,
+   usar nombres genéricos o placeholders; no completarlos por plausibilidad.
+8. Si una afirmación no puede citar una fuente válida independiente de la
+   propia salida, degradarla a `inferido` o `pendiente`.
+
+Si no hay `insumos`, artefacto, prototipo o ejecución observable, activar
+`SPEC_ONLY`:
+
+- `verificado` se limita a la entrada literal y a referencias resueltas;
+- canon y guías se rotulan `normativo`, no cumplimiento del producto;
+- la solución diseñada se rotula `propuesto` y sus pruebas `pendiente`;
+- no se añaden números, duraciones, conteos, stack, componentes, tokens,
+  endpoints, políticas, capacidades, owners ni fechas ausentes de la entrada;
+- no se afirma que la propia especificación cumple, funciona o está probada.
 
 Si un fallo crítico persiste tras tres ciclos
 `prototipar -> probar -> integrar`, devolver `reality-check-failed`.
@@ -284,3 +318,9 @@ qué fue verificado, qué queda pendiente, deuda, riesgos y siguiente decisión.
 11. Las herramientas del frontmatter son capacidades declaradas. Su autoridad
     efectiva depende del target y del runtime.
 12. Esta skill dirige el proceso; no suplanta la identidad de ningún diseñador.
+13. No fabricar evidencia para completar el paquete; lo no observado se declara
+    como inferencia, hipótesis o trabajo pendiente.
+14. Ninguna salida autogenerada puede servir como evidencia de su propia
+    corrección o de capacidades existentes en el producto.
+15. En `SPEC_ONLY`, separar siempre `propuesto` de `verificado`; una norma no
+    prueba cumplimiento y una especificación no prueba conducta.
