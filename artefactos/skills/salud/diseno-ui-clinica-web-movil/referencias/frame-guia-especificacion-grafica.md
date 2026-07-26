@@ -20,9 +20,10 @@
 
 ## Uso
 
-Completar este frame al ejecutar `FRAME` o `DESIGN`. En `IMPLEMENT`, usarlo
-como contrato de trazabilidad. En `EVALUATE`, usarlo como índice de cobertura,
-no como prueba de cumplimiento.
+Completar este frame al ejecutar `FRAME` o `DESIGN`. En `MODEL`, usar sus
+bindings; en `BUILD`, como contrato de trazabilidad; en `EVALUATE`, como índice
+de cobertura; y en `FULL`, durante cada gate. Modos canónicos:
+`FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL`.
 
 No rellenar campos con contenido plausible. Usar:
 
@@ -40,6 +41,7 @@ o dependencia.
 ```text
 GRAPHIC_SPEC_FRAME = {
   binding,
+  data_classification,
   status,
   frame,
   graphic_thesis,
@@ -70,13 +72,18 @@ La salida completa es una especificación visual. No es evidencia runtime.
 |---|---|
 | Producto/feature | `<nombre>` |
 | Revisión | `<id o hash>` |
-| Modo | `FRAME | DESIGN | IMPLEMENT | EVALUATE` |
+| Modo | `FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL` |
 | Soportes | `web | smartphone | ambos` |
-| Plataforma | `<responsive-web / nativa / híbrida / otra>` |
+| Plataforma | `responsive-web | mobile-web` |
 | Artefactos de entrada | `<paths, URLs, hashes>` |
 | Sistema visual de origen | `<path/versión o ausente>` |
-| Autoridad de dominio | `<persona/rol o pendiente>` |
-| Estado epistémico | `SPEC_ONLY | STATIC | RUNTIME | HUMAN_VALIDATED` |
+| Clasificación de datos | `synthetic | deidentified | phi | unknown` |
+| Recibo de autoridad de dominio | `<E#, autoridad, rol competente, fuente, alcance, versión/fecha, vigencia, decisiones>` |
+| Recibo de mutación | `<E#, repo, paths, operaciones, comandos, acciones externas o no aplica>` |
+| Estado epistémico | `SPEC_ONLY | MODEL_STRUCTURAL | STATIC | RUNTIME_AUTOMATED | RUNTIME_MANUAL | HUMAN_VALIDATED | DOMAIN_VALIDATED` |
+
+Esta versión no cubre apps nativas o híbridas. No abrir ni capturar recursos con
+clasificación `phi` o `unknown`; devolver `phi-boundary`.
 
 ### Evidencia
 
@@ -169,7 +176,7 @@ nombrar paneles.
 | Componentes/estados Vercel | `<contrato>` | `<estado que lo rompe>` |
 | Responsive Vercel | `<transformación>` | `<pérdida semántica>` |
 
-### Direcciones
+### Direcciones candidatas TLHD/paciente-episodio
 
 | Dirección | Tesis | Gana | Pierde | Evidencia que la mata |
 |---|---|---|---|---|
@@ -177,7 +184,8 @@ nombrar paneles.
 | Hilo de evidencia |  |  |  |  |
 | Escena de decisión |  |  |  |  |
 
-**Gate:** las tres usan fixture, estados y soportes idénticos.
+**Gate:** cuando el binding corresponde, las tres usan fixture, estados y
+soportes idénticos. No son una taxonomía universal para toda UI clínica.
 
 ---
 
@@ -501,7 +509,7 @@ Para cada transición:
 | Zoom/reflow |  | viewport ejecutable |  |
 | Lector |  | prueba manual |  |
 | Movimiento |  | modo reducido |  |
-| Semántica |  | DOM/accessibility tree |  |
+| Semántica |  | DOM/accessibility tree web |  |
 
 ### Rendimiento
 
@@ -514,6 +522,17 @@ Para cada transición:
 | Recursos visuales |  |  |  |  |
 
 No inventar presupuestos sin hardware, red, tarea y baseline.
+
+```text
+ACCESSIBILITY_RECEIPT = {
+  platform, criterion_or_sc, route, state, device_and_at,
+  evidence, result, limits
+}
+PERFORMANCE_RECEIPT = {
+  device, network, command, baseline, budget, repetitions,
+  measurement, result, limits
+}
+```
 
 ---
 
@@ -620,18 +639,18 @@ Marcar uno por hallazgo:
 
 ### Gates
 
-| Gate | Estado | Evidencia | Bloqueo |
+| Gate canónico | Estado | Evidencia | Bloqueo |
 |---|---|---|---|
-| Problema |  |  |  |
-| Objeto |  |  |  |
-| Conceptos |  |  |  |
-| Sistema |  |  |  |
-| Estados |  |  |  |
-| Responsive |  |  |  |
-| Implementación |  |  |  |
-| Acceso/rendimiento |  |  |  |
-| Dominio |  |  |  |
-| Evidencia |  |  |  |
+| `G1-problem` |  |  |  |
+| `G2-data-privacy` |  |  |  |
+| `G3-object` |  |  |  |
+| `G4-concepts` |  |  |  |
+| `G5-visual-system` |  |  |  |
+| `G6-states` |  |  |  |
+| `G7-responsive` |  |  |  |
+| `G8-domain-authority` |  |  |  |
+| `G9-implementation-access-performance` |  |  |  |
+| `G10-evidence` |  |  |  |
 
 ### Cierre
 

@@ -1,4 +1,4 @@
-# Handoff vigente — 2026-07-26 — diseño UI clínica web y móvil
+# Handoff vigente — 2026-07-26 — diseño UI clínica web y mobile web
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
@@ -6,9 +6,10 @@
 ## Objetivo
 
 Disponer de una puerta KORA única para encuadrar, modelar, diseñar, implementar
-y evaluar la gráfica de interfaces clínicas densas en web y smartphone. La
-skill traduce criterios públicos de Karri/Linear y Vercel Design a contratos,
-gates y evidencia; no imita su estética ni atribuye participación o aprobación.
+y evaluar la gráfica de TLHD-HEALTH y UI clínica comparable centrada en
+persona/episodio, en web responsive y mobile web. La skill traduce criterios
+públicos de Karri/Linear y Vercel Design a contratos, gates y evidencia; no
+imita su estética ni atribuye participación o aprobación.
 
 La continuidad transversal sigue exigiendo separar fuente KORA, emisión
 derivada, instalación y conducta runtime. El alcance operativo final de este
@@ -23,7 +24,7 @@ permanecen documentados más abajo; no fueron modificados por esta intervención
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: skill de diseño UI clínica web y móvil
+## Corte más reciente: skill de diseño UI clínica web y mobile web
 
 La fuente canónica nueva es:
 
@@ -71,7 +72,7 @@ FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL
 ```
 
 `FULL` es el fallback ante una petición ambigua y se detiene en el primer gate
-rojo. Las salidas son:
+rojo. La versión contractual vigente es `1.1.0`. Las salidas son:
 
 ```text
 UI_FRAME_PACKET
@@ -83,11 +84,13 @@ UI_FULL_PACKET
 UI_DESIGN_ERROR
 ```
 
-El `domain_authority_packet` separa hechos autorizados, decisiones pendientes,
-políticas aplicables y frontera de aprobación. Sin él se permiten framing y
+`domain_authority_receipt` liga autoridad, competencia, fuente, alcance,
+vigencia y decisiones aprobadas a evidencia. Sin él se permiten framing y
 prototipo sintético; no se promueven decisiones sobre identidad, alertas,
-órdenes, override, privacidad o corrección. Web responsive, mobile web y stacks
-nativos se distinguen; “smartphone” no autoriza una sustitución silenciosa.
+órdenes, override, privacidad o corrección. La v1 sólo admite web responsive y
+mobile web: apps nativas/híbridas devuelven `unsupported-platform`. Antes de
+abrir fuentes, `G2-data-privacy` exige clasificación sintética o
+desidentificada; PHI o clasificación incierta devuelven `phi-boundary`.
 
 ### Marco y frame guía
 
@@ -119,19 +122,32 @@ continuidad. En BUILD funciona como contrato de trazabilidad; en EVALUATE como
 
 ### Evidencia del corte
 
-Fuentes de proyecto preservadas:
+Fuentes de procedencia observadas:
 
 ```text
-especificación original   sha256:7b745468294a3a55bc5a20b8af7951cac67c481dd05f0e2c7ea842396bdd0b61
-DESIGN PACKET v2          sha256:34a6f80ab006342532e59b391fd51b0a5405ab3e8284f219523baedff43a1103
-auditoría Linear-Vercel   sha256:ee991086faa8655c9a6fda1587fd1fd0fcb136f759b1cdcc93d16e249ad50a5f
+especificación original
+  /home/felix/.codex/attachments/eae343e3-d330-448d-ac7d-2e5aca73ef3d/pasted-text.txt
+  sha256:7b745468294a3a55bc5a20b8af7951cac67c481dd05f0e2c7ea842396bdd0b61
+DESIGN PACKET v2
+  /home/felix/projects/hd-hsc-os-descomp/SYSTEM-TLHD-HEALTH-DESIGN-PACKET-v2.md
+  sha256:34a6f80ab006342532e59b391fd51b0a5405ab3e8284f219523baedff43a1103
+auditoría Linear-Vercel
+  /home/felix/projects/hd-hsc-os-descomp/AUDITORIA-LINEAR-VERCEL-SYSTEM-TLHD-HEALTH.md
+  sha256:ee991086faa8655c9a6fda1587fd1fd0fcb136f759b1cdcc93d16e249ad50a5f
 ```
+
+Los dos Markdown son artefactos locales no versionados: su directorio no es un
+repositorio Git. El original vive en un attachment de Codex y contiene ejemplos
+con apariencia identificable no rotulados como sintéticos. Estos locators y
+hashes prueban presencia en este corte, no preservación durable. No son
+dependencias runtime de KORA y no deben versionarse sin clasificar y
+desidentificar primero.
 
 Comprobaciones:
 
 ```text
-pruebas focales           8/8
-suite KORA                281/281
+pruebas focales           11/11
+suite KORA                284/284
 velar --estricto          13/13
 git diff --check          pass
 quick_validate emitida    valid
@@ -142,7 +158,7 @@ instalación               /home/felix/.agents/skills/diseno-ui-clinica-web-movi
 permisos instalados       0600
 ```
 
-Canarios aislados y read-only:
+Observaciones históricas de sesión, aisladas y read-only:
 
 - `FULL` con los dos insumos TLHD se detuvo en `insufficient-context`: urgencias
   y UCI, rol, tarea y objeto no podían fijarse sin inventar;
@@ -155,8 +171,26 @@ Canarios aislados y read-only:
   fuente entre web y mobile web, mantuvo tres direcciones abiertas y dejó rojos
   los gates sin objeto confirmado, artefacto o runtime.
 
-Estos cuatro canarios prueban conducta acotada de la fuente leída, no toda
-invocación futura ni hot reload de la instalación.
+No se conservaron runner, prompt completo ni recibo versionado; por ello estas
+observaciones orientan, pero no son canarios reproducibles desde el repositorio.
+En particular, el caso de alerta terminó en `insufficient-context` y no prueba
+el error específico `domain-authority-required`. Ninguna prueba conducta futura
+ni hot reload de la instalación.
+
+### Corrección crítica v1.1.0
+
+La comprobación final encontró que la forma KORA verde ocultaba divergencias
+semánticas. La v1.1.0 corrigió, sin ampliar funcionalidades:
+
+- `IMPLEMENT` y contratos legacy fueron retirados; existen seis modos y un
+  sobre `UI_PACKET`;
+- skill, marco y frame comparten `G1..G10`; privacidad y autoridad preceden a
+  implementación;
+- `BUILD` exige dirección, spec, target y recibo explícito de mutación;
+- el alcance dejó de sobreprometer apps nativas y doctrina clínica universal;
+- recibos de autoridad, accesibilidad y rendimiento quedaron estructurados;
+- las pruebas rechazan modos/gates divergentes, contratos legacy y una skill de
+  500 líneas o más.
 
 ### Decisiones y límites
 
@@ -1365,9 +1399,11 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
 ## Cómo retomar
 
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Para trabajo UI/UX, invocar `$director-diseno-producto` con insumos
-   observables. Si se necesita delegación, usar el custom agent Codex aislado
-   (`fork_context:false`), nunca un fork con historial completo.
+2. Para TLHD o UI clínica paciente/episodio en web/mobile web, invocar
+   `$diseno-ui-clinica-web-movil` con datos sintéticos o desidentificados. Para
+   dirección UI/UX general, invocar `$director-diseno-producto`. Si se necesita
+   delegación, usar el custom agent Codex aislado (`fork_context:false`), nunca
+   un fork con historial completo.
 3. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
 4. Para una afirmación agéntica, identificar primero si habla de `Spec`,
    `Model` o `Runtime`.
@@ -1393,6 +1429,15 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
    runtime ni dejar targets instalados en deriva.
 
 ## Rollback
+
+Para deshacer sólo el endurecimiento v1.1.0, identificar y revertir el commit
+de asunto `fix(ui): endurece contrato de diseño clínico`, luego regenerar la
+emisión y reaplicar la versión resultante. Para retirar toda la skill, revertir
+además `a78414c`, verificar que el sello instalado pertenece a esta URN,
+eliminar únicamente
+`/home/felix/.agents/skills/diseno-ui-clinica-web-movil`, regenerar `_emision/`
+y repetir suite, `velar --estricto` y paridad. Un revert Git no retira por sí
+solo la instalación derivada.
 
 Para revertir solo el endurecimiento v1.2 y la concentración en Codex, ejecutar
 `git revert eaab0e0` y repetir suite, `velar`, emisión y paridad. Ese revert

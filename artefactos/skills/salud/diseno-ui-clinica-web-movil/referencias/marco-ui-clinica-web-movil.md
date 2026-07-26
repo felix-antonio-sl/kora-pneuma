@@ -1,8 +1,11 @@
-# SYSTEM TLHD-HEALTH — marco de diseño gráfico UI
+# SYSTEM TLHD-HEALTH — marco de diseño gráfico UI web/mobile web
 
 **Lentes:** Karri Saarinen / Linear × Vercel Design Team
 
-**Soportes:** aplicación web de escritorio y aplicación web/móvil en smartphone
+**Soportes:** aplicación web responsive en escritorio y mobile web en smartphone
+
+**Alcance:** TLHD-HEALTH y casos clínicos comparables centrados en
+persona/episodio; no es doctrina universal ni cubre apps nativas o híbridas
 
 **Estado:** `SPEC_ONLY · marco normativo propuesto · no validado en producto`
 
@@ -17,8 +20,8 @@
 > Este marco no fue escrito ni aprobado por Karri Saarinen, Linear ni Vercel.
 > No reconstruye su voz ni les atribuye decisiones sobre TLHD-HEALTH. Traduce
 > criterios publicados por esas personas y equipos a una disciplina de diseño
-> para este producto. Toda regla clínica, regulatoria o institucional permanece
-> pendiente de validación competente.
+> para este producto y bindings equivalentes. Toda regla clínica, regulatoria o
+> institucional permanece pendiente de validación competente.
 
 ## Índice
 
@@ -91,12 +94,14 @@ sin una relación gráfica propia entre:
 
 El replanteamiento no comienza por una paleta. Comienza por esa relación.
 
-### 1.2 Función visual esencial
+### 1.2 Hipótesis de función visual
 
 > **Mantener visibles persona, tiempo, procedencia y consecuencia mientras una
 > tarea clínica pasa de observación a acción.**
 
-La UI debe ayudar a reconocer qué se está mirando, de cuándo es, de dónde
+Esta función gobierna la exploración de esta familia hasta ser refutada por
+evidencia o por un binding distinto; no es la tesis final de todo producto
+clínico. La UI debe ayudar a reconocer qué se está mirando, de cuándo es, de dónde
 proviene, qué cambió, qué exige atención y qué ocurrirá al actuar. No debe
 presuponer que el sistema conoce relevancia clínica si esa capacidad no está
 demostrada.
@@ -678,8 +683,9 @@ teclado, tacto y tecnología asistiva; tooltip por hover no basta.
 
 ## 7. Direcciones gráficas a comparar
 
-Las direcciones son experimentos, no skins. Usan el mismo paciente ficticio,
-los mismos datos sintéticos, el mismo momento y los mismos estados.
+Estas direcciones son experimentos candidatos para TLHD/paciente-episodio, no
+una taxonomía universal. Usan el mismo paciente ficticio, los mismos datos
+sintéticos, el mismo momento y los mismos estados.
 
 ### 7.1 Dirección A — Ledger clínico
 
@@ -1339,48 +1345,24 @@ Cada concepto se captura y opera con:
 
 ### 14.3 Gates de promoción
 
-#### Gate 1 — Problema
+Los IDs, orden y significado son canónicos; el frame y la skill no los
+renombran:
 
-Existe contexto, tarea, responsabilidad, alternativa actual y fallos
-observables o explícitamente autorizados.
+1. `G1-problem` — contexto, rol, tarea, responsabilidad y fallo observable.
+2. `G2-data-privacy` — datos clasificados y autorizados antes de abrir fuentes.
+3. `G3-object` — objeto, ciclo, tiempo, procedencia y relaciones.
+4. `G4-concepts` — candidatos comparables bajo el mismo fixture.
+5. `G5-visual-system` — tokens, primitives y componentes trazables.
+6. `G6-states` — crash matrix, asincronía, error e incertidumbre.
+7. `G7-responsive` — invariantes y composición web/mobile web.
+8. `G8-domain-authority` — recibo competente para identidad, alertas, órdenes,
+   corrección, procedencia, privacidad y riesgos.
+9. `G9-implementation-access-performance` — slice ejecutable y recibos de
+   build, foco, teclado, tacto, scroll, accesibilidad y rendimiento.
+10. `G10-evidence` — cada claim tiene evidencia, alcance y límite explícitos.
 
-#### Gate 2 — Objeto
-
-El objeto primario y su ciclo pueden explicarse sin nombrar paneles.
-
-#### Gate 3 — Concepto
-
-Tres direcciones materializadas usan el mismo contenido; una gana o las tres se
-rechazan con razones observables.
-
-#### Gate 4 — Sistema
-
-Tokens, primitives y componentes resuelven la escena sin valores mágicos ni
-duplicación.
-
-#### Gate 5 — Estados
-
-El concepto sobrevive al crash matrix sin ocultar contexto, error o
-incertidumbre.
-
-#### Gate 6 — Responsive
-
-Web y smartphone conservan invariantes y transforman composición de forma
-comprensible.
-
-#### Gate 7 — Implementación
-
-El slice es ejecutable; foco, teclado, tacto, scroll, async y rendimiento
-pueden observarse.
-
-#### Gate 8 — Accesibilidad
-
-Pruebas automáticas de apoyo y recorridos manuales sobre el slice.
-
-#### Gate 9 — Dominio
-
-Autoridad competente valida identidad, alertas, órdenes, corrección,
-procedencia, privacidad y riesgos. Este gate no se delega a la UI.
+G8 no se delega a la UI. Un prototipo sintético puede conservarlo pendiente;
+una integración sensible se detiene antes de `BUILD`.
 
 ---
 
@@ -1510,52 +1492,14 @@ La IA NO puede declarar por sí sola:
 - accesibilidad no probada;
 - funcionamiento no ejecutado.
 
-### 16.1 Contrato de entrada
+### 16.1 Contrato canónico
 
-```text
-UI_FRAME_INPUT = {
-  contexto,
-  rol_primario,
-  tarea,
-  responsabilidad,
-  objeto_primario_candidato,
-  soportes: web | smartphone | ambos,
-  contenido_sintetico_o_desidentificado,
-  estados_requeridos,
-  restricciones,
-  sistema_existente?,
-  artefacto_ejecutable?,
-  evidencia,
-  supuestos,
-  fuera_de_alcance
-}
-```
-
-### 16.2 Contrato de salida
-
-```text
-UI_GRAPHIC_PACKET = {
-  frame,
-  tension_map,
-  directions[3],
-  decision,
-  visual_thesis,
-  tokens,
-  primitives,
-  components,
-  web_composition,
-  smartphone_composition,
-  state_matrix,
-  prototype_or_spec,
-  evidence_ledger,
-  evaluation,
-  debt,
-  handoff
-}
-```
-
-Sin artefacto ejecutable, `prototype_or_spec` es `spec` y todo cumplimiento
-permanece pendiente.
+La única definición de entrada, salida, errores y gates es `UI_INPUT`,
+`UI_PACKET` y `UI_DESIGN_ERROR` en `../SKILL.md`. El
+`GRAPHIC_SPEC_FRAME` de `frame-guia-especificacion-grafica.md` completa el
+payload visual; no crea un segundo contrato público. Sin artefacto ejecutable,
+el alcance permanece `SPEC_ONLY` y funcionamiento, accesibilidad y rendimiento
+siguen pendientes.
 
 ---
 

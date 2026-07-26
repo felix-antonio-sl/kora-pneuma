@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:artefacto:diseno-ui-clinica-web-movil
 nombre: diseno-ui-clinica-web-movil
-version: 1.0.0
+version: 1.1.0
 estado: activo
-descripcion: "Diseña, implementa y evalúa la gráfica y estética funcional de interfaces clínicas densas para web y smartphones mediante una lente sintética Karri/Linear y Vercel: fit antes que output, calma, jerarquía, detalle invisible, sistema visual trazable, diseño en código, responsive semántico, estados completos y evidencia runtime. Usar al encuadrar, rediseñar, materializar o auditar UI clínica; no atribuye participación ni aprobación a esas personas o equipos."
+descripcion: "Diseña, implementa y evalúa la gráfica y estética funcional de TLHD-HEALTH y de interfaces clínicas comparables centradas en persona o episodio, exclusivamente para web responsive y mobile web, mediante una lente sintética Karri/Linear y Vercel. Usar al encuadrar, materializar o auditar esa UI; enrutar otros dominios o apps nativas a una capacidad general o específica. No atribuye participación ni aprobación a esas personas o equipos."
 fuente: "Síntesis nueva creada el 2026-07-26 desde la especificación SYSTEM TLHD-HEALTH sha256:7b745468294a3a55bc5a20b8af7951cac67c481dd05f0e2c7ea842396bdd0b61, DESIGN PACKET v2 sha256:34a6f80ab006342532e59b391fd51b0a5405ab3e8284f219523baedff43a1103 y auditoría Linear-Vercel sha256:ee991086faa8655c9a6fda1587fd1fd0fcb136f759b1cdcc93d16e249ad50a5f; destila fuentes públicas citadas en referencias/marco-ui-clinica-web-movil.md. La síntesis es inferencia operativa, no opinión, participación ni aprobación de Karri Saarinen, Linear o Vercel. Reutiliza capacidades KORA mediante adaptadores explícitos; componible declara candidatos y no prueba wiring ni conducta."
 autor: FS
 creado: 2026-07-26
@@ -20,14 +20,17 @@ componible: [urn:dev:artefacto:diseno-producto-integrado, urn:dev:artefacto:desi
 alcance: usuario
 estados: [enrutar, reunir-evidencia, encuadrar, modelar, divergir, decidir, sistematizar, materializar, implementar, evaluar, integrar, entregar]
 ---
-# Diseño UI clínica web y móvil
+# Diseño UI clínica web y mobile web
 
 ## Propósito
 
-Convertir una necesidad de interfaz clínica en una forma visual calmada, densa,
-propia y operable para web y smartphone; llevarla a componentes y código cuando
-el repositorio está en alcance; y evaluarla con evidencia proporcional al
-artefacto disponible.
+Convertir una necesidad de TLHD-HEALTH —o de una interfaz clínica comparable
+centrada en persona o episodio— en una forma visual calmada, densa y operable
+para web responsive y mobile web; llevarla a código sólo con autorización; y
+evaluarla con evidencia proporcional al artefacto disponible. Para UI no
+clínica usar `diseno-producto-integrado` o `design`. Para apps nativas usar una
+capacidad con canon y runners específicos: este contrato devuelve
+`unsupported-platform`.
 
 Aplicar una síntesis explícita de criterios públicos:
 
@@ -39,7 +42,7 @@ Aplicar una síntesis explícita de criterios públicos:
 No imitar su estética ni reclamar su autoridad. La skill no fue creada,
 revisada ni aprobada por Karri Saarinen, Linear o Vercel.
 
-## Resultado que gobierna
+## Alcance y resultado que gobierna
 
 > Mantener visibles persona, tiempo, procedencia y consecuencia mientras una
 > tarea clínica pasa de observación a acción.
@@ -47,6 +50,9 @@ revisada ni aprobada por Karri Saarinen, Linear o Vercel.
 La gráfica debe comprimir complejidad sin ocultar conflicto, obsolescencia,
 incertidumbre, identidad ni consecuencias. Minimalismo significa menos
 competencia visual y más relación visible; no menos información necesaria.
+Los objetos, componentes y tres direcciones TLHD de las referencias son
+candidatos condicionados a este binding paciente/episodio, no universales para
+cualquier UI clínica.
 
 ## Modo
 
@@ -69,23 +75,30 @@ no completa vacíos con output.
 
 ```text
 UI_INPUT = {
-  modo: FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL,
+  modo?: FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL,
   necesidad,
   contexto_clinico,
   rol_y_tarea,
   responsabilidad,
   objeto_primario_candidato?,
-  plataforma: responsive-web | mobile-web | native-ios | native-android |
-              react-native | flutter | otra,
+  plataforma: responsive-web | mobile-web,
   soportes: web | smartphone | ambos,
-  domain_authority_packet?: {
-    hechos_autorizados,
-    decisiones_pendientes,
-    politicas_aplicables,
-    frontera_de_aprobacion
+  data_classification: synthetic | deidentified | phi | unknown,
+  domain_authority_receipt?: {
+    evidence_id, authority, competent_role, source, scope,
+    version_or_date, validity, approved_decisions
+  },
+  mutation_authorized?: false | true,
+  mutation_authority_receipt?: {
+    evidence_id, authority, source, repository, paths,
+    operations, commands, external_actions
+  },
+  selected_direction?,
+  graphic_spec_binding?,
+  implementation_target?: {
+    repository, stack, entrypoint, build_command, test_command?, runtime_runner?
   },
   alternativa_actual?,
-  contenido_sintetico_o_desidentificado?,
   estados_requeridos?,
   restricciones?,
   sistema_visual?,
@@ -98,20 +111,34 @@ UI_INPUT = {
 }
 ```
 
-No leer ni retener PHI como insumo de diseño. Usar datos sintéticos o
-desidentificados. Si el trabajo depende de contenido clínico identificable,
-detenerse y pedir una vía autorizada.
+Antes de abrir rutas, URLs, código, logs o runtimes, resolver
+`data_classification`. Si falta, tratarla como `unknown`. Con `phi` o `unknown`
+no dereferenciar, capturar, registrar ni repetir el contenido: devolver
+`phi-boundary` y pedir un fixture sintético o desidentificado autorizado.
+
+Requisitos por modo:
+
+- `BUILD`: `selected_direction`, `graphic_spec_binding`,
+  `implementation_target`, `mutation_authorized=true` y
+  `mutation_authority_receipt`;
+- `EVALUATE`: `artefactos`, `repo_o_url` o evidencia observable;
+- `FULL`: satisfacer cada requisito al llegar a su gate; no inferir autoridad
+  de mutación desde el cwd, una ruta o el acceso técnico;
+- `FRAME`, `MODEL` y `DESIGN`: pueden usar contenido sintético sin autoridad de
+  dominio, pero no promover semántica clínica sensible ni integración.
 
 ## Errores observables
 
-Devolver `UI_DESIGN_ERROR` con `codigo`, `evidencia`, `bloqueo` y
-`accion_minima`:
+Devolver `UI_DESIGN_ERROR` con el sobre común, más `code`, `blocking` y
+`minimum_action`:
 
 - `insufficient-context` — no se distinguen contexto, rol o tarea;
+- `phi-boundary` — el insumo contiene PHI o no está clasificado;
 - `domain-authority-required` — una decisión visual depende de política o
   significado clínico no autorizado;
 - `unresolved-reference` — marco, canon o skill requerida no resuelve;
-- `unsupported-platform` — “móvil” no distingue web responsive de stack nativo;
+- `unsupported-platform` — se pide app nativa, híbrida u otra plataforma no
+  cubierta por esta versión;
 - `no-comparable-directions` — no existen tres formas materialmente comparables;
 - `no-selected-direction` — se pide implementar sin decisión;
 - `no-authorized-repository` — se pide mutar código sin repo en alcance;
@@ -124,7 +151,8 @@ Devolver `UI_DESIGN_ERROR` con `codigo`, `evidencia`, `bloqueo` y
 
 ## Carga progresiva del marco
 
-Leer `referencias/marco-ui-clinica-web-movil.md` antes de producir una decisión
+Tras pasar la frontera de datos, leer
+`referencias/marco-ui-clinica-web-movil.md` antes de producir una decisión
 visual. Completar
 `referencias/frame-guia-especificacion-grafica.md` en `FRAME` o `DESIGN` y
 usarlo como índice de trazabilidad en los otros modos. No copiar las referencias
@@ -153,7 +181,10 @@ Crear primero un `EVIDENCE_LEDGER`:
      alcance=<qué demuestra y qué no>
 ```
 
-Clasificar toda conclusión:
+Clasificar toda conclusión y declarar uno o más alcances epistémicos:
+
+`SPEC_ONLY | MODEL_STRUCTURAL | STATIC | RUNTIME_AUTOMATED |
+RUNTIME_MANUAL | HUMAN_VALIDATED | DOMAIN_VALIDATED`
 
 - `verificado` — traza a `[E#]` independiente de la propia salida;
 - `propuesto` — decisión producida en esta invocación;
@@ -171,8 +202,9 @@ Reglas:
 7. Validación clínica sólo proviene de autoridad competente identificada.
 8. No inventar métricas, tests, usuarios, políticas, stack, owners ni plazos.
 
-Sin artefacto ejecutable, activar `SPEC_ONLY`: no declarar cumplimiento,
-funcionamiento, accesibilidad ni rendimiento.
+Los alcances no forman una escalera automática: una observación runtime no
+implica validación humana o de dominio. Sin artefacto ejecutable, activar
+`SPEC_ONLY`: no declarar funcionamiento, accesibilidad ni rendimiento.
 
 ## Composición
 
@@ -186,9 +218,7 @@ Usar `urn:dev:artefacto:diseno-producto-integrado` en `FRAME`, `DESIGN` y
 `FULL` cuando exista una tensión de producto o varias direcciones plausibles.
 
 ```text
-I_product = {
-  necesidad, usuario_y_tarea, contexto, restricciones, insumos
-}
+I_product = {necesidad, usuario_y_tarea, contexto, restricciones, insumos}
 O_product = DESIGN_PACKET | DESIGN_ERROR
 ```
 
@@ -220,12 +250,8 @@ modelar navegación multivista, eventos, bindings o adaptación multiscreen. No
 cargar IFML para ajustes puramente visuales.
 
 ```text
-I_ifml = {
-  plataforma, roles, modelo_dominio_autorizado, vistas, eventos, acciones
-}
-O_ifml = {
-  modelo_tipado, patrones, validacion, supuestos, preguntas_abiertas
-}
+I_ifml = {plataforma, roles, modelo_dominio_autorizado, vistas, eventos, acciones}
+O_ifml = {modelo_tipado, patrones, validacion, supuestos, preguntas_abiertas}
 ```
 
 Si falta semántica de negocio, conservar el gate de elicitación de IFML; no
@@ -237,12 +263,9 @@ Usar `urn:dev:artefacto:ship-discipline` sólo en `BUILD` o en la fase de
 implementación de `FULL`.
 
 ```text
-I_ship = {
-  repo, direccion, build_contract, alcance, restricciones
-}
-O_ship = {
-  patch, build, tests, lint, integracion, deuda, cierre
-}
+I_ship = {repo, direccion, graphic_spec_binding, build_contract, alcance,
+          mutation_authority_receipt, restricciones}
+O_ship = {patch, build, tests, lint, integracion, deuda, cierre}
 ```
 
 La implementación realiza la dirección ya elegida. No reabre gusto o modelo de
@@ -266,21 +289,34 @@ O_ux = {
 Rotular el nivel de evidencia: `documental`, `estático`, `automatizado`,
 `runtime-manual`, `humano` o `dominio`.
 
+Cuando corresponda, exigir recibos estructurados:
+
+```text
+ACCESSIBILITY_RECEIPT = {
+  platform, criterion_or_sc, route, state, device_and_at,
+  evidence, result, limits
+}
+PERFORMANCE_RECEIPT = {
+  device, network, command, baseline, budget, repetitions,
+  measurement, result, limits
+}
+```
+
 ## Workflow común
 
 ### `enrutar`
 
 1. Fijar un modo.
-2. Identificar soporte y tipo de implementación.
-3. Distinguir web responsive de app nativa; “móvil” no las vuelve equivalentes.
-4. Resolver referencias requeridas.
+2. Clasificar datos antes de abrir cualquier recurso; detener `phi|unknown`.
+3. Admitir sólo `responsive-web|mobile-web`; rechazar stacks nativos.
+4. Resolver referencias requeridas tras pasar la frontera de datos.
 5. Estimar qué acciones son read-only y cuáles mutan código.
 6. Registrar los adaptadores activados; el operador invoca sólo esta skill.
 
 ### `reunir-evidencia`
 
 1. Construir `EVIDENCE_LEDGER`.
-2. Leer brief, spec, sistema visual, código y artefactos autorizados.
+2. Leer sólo brief, spec, código y artefactos clasificados y autorizados.
 3. Separar decisiones existentes, hipótesis y gaps.
 4. Identificar política clínica o institucional faltante.
 5. Activar `SPEC_ONLY` si no hay runtime.
@@ -306,19 +342,21 @@ permanece hipótesis.
 
 Comparar objetos candidatos y describir identidad, ciclo, tiempo, procedencia,
 evidencia, acción y relaciones. Si navegación, eventos o multiscreen son
-materiales, usar el adaptador IFML. Sin `domain_authority_packet`, dejar como
+materiales, usar el adaptador IFML. Sin `domain_authority_receipt`, dejar como
 preguntas las acciones, guards y políticas clínicas; no fabricarlas.
 
 ### `divergir`
 
-Materializar exactamente tres direcciones con el mismo contenido y estados:
+Para TLHD o un binding paciente/episodio equivalente, materializar tres
+direcciones candidatas con el mismo contenido y estados:
 
 1. `Ledger clínico`;
 2. `Hilo de evidencia`;
 3. `Escena de decisión`.
 
 Cada una incluye web y smartphone, normal, crítico, vacío, error y recepción
-incierta. No producir tres skins de la misma estructura.
+incierta. No tratarlas como respuesta universal ni producir tres skins de la
+misma estructura; si el binding no corresponde, enrutar al método general.
 
 ### `decidir`
 
@@ -353,7 +391,8 @@ Según modo:
 - `FRAME`: marco y gates, sin fingir UI;
 - `MODEL`: modelo de objetos e interacción, sin decidir estética;
 - `DESIGN`: especificación o prototipo con sistema trazable;
-- `BUILD`: patch sobre repo autorizado y loop técnico cerrado;
+- `BUILD`: sólo tras G8 verde cuando la semántica sea sensible; exige dirección,
+  spec, target y recibo de mutación, luego cierra el loop técnico;
 - `EVALUATE`: no mutar salvo que el operador pida también corregir;
 - `FULL`: recorrer en orden y detenerse en el primer gate rojo.
 
@@ -373,118 +412,64 @@ Aplicar:
 8. estabilidad y rendimiento;
 9. validación de dominio cuando corresponda.
 
-Si existe runtime, ejecutar comandos autorizados y conservar capturas/logs. Si
-no existe, degradar hallazgos a documental o estático.
+Si existe runtime clasificado y autorizado, ejecutar comandos autorizados y
+conservar sólo evidencia sin PHI. Si aparece PHI, detener captura/log, no
+repetir el contenido y devolver `phi-boundary`. Si no existe runtime, degradar
+hallazgos a documental o estático.
 
 ### `entregar`
 
-Emitir un único paquete del modo con:
-
-- binding del artefacto evaluado o modificado;
-- decisión;
-- evidencia;
-- resultado;
-- deuda;
-- gates verdes/rojos;
-- siguiente acción mínima.
+Emitir un único `UI_PACKET` del modo; no omitir bindings, evidencia, deuda,
+gates, riesgos ni siguiente acción.
 
 ## Salidas
 
-### `UI_FRAME_PACKET`
+Toda salida exitosa usa un único sobre:
 
 ```text
-FRAME
-FORCE_MAP
-PRIMARY_OBJECT_HYPOTHESES
-GRAPHIC_PRINCIPLES
-PLATFORM_INVARIANTS
-GATES
-EVIDENCE_LEDGER
-RISKS_AND_NEXT_GATE
+UI_PACKET = {
+  mode, input_binding, graphic_spec_binding?, epistemic_status,
+  evidence_ledger, gates: {G1..G10}, decision, result,
+  debt, risks, next_action
+}
 ```
 
-### `UI_DESIGN_PACKET`
+`UI_DESIGN_ERROR` conserva `mode`, bindings disponibles, `epistemic_status`,
+`evidence_ledger` y `gates`, y añade `code`, `blocking` y `minimum_action`.
 
-```text
-FRAME
-VISUAL_DIRECTIONS[3]
-DECISION_RECORD
-VISUAL_SYSTEM
-COMPONENT_CONTRACTS
-WEB_COMPOSITION
-SMARTPHONE_COMPOSITION
-STATE_MATRIX
-PROTOTYPE_OR_SPEC
-EVALUATION_CONTRACT
-EVIDENCE_LEDGER
-HANDOFF
-```
+El `result` tipado por modo es:
 
-### `UI_MODEL_PACKET`
-
-```text
-INPUT_BINDING
-OBJECT_MODEL_CANDIDATES
-SELECTED_OBJECT_OR_OPEN_DECISION
-INTERACTION_CONTRACT
-IFML_MODEL?
-DOMAIN_QUESTIONS
-EVIDENCE_LEDGER
-NEXT_GATE
-```
-
-### `UI_IMPLEMENTATION_PACKET`
-
-```text
-ARTIFACT_BINDING
-PATCH
-DESIGN_SYSTEM_TRACE
-BUILD_RECEIPT
-TEST_RECEIPT
-LINT_RECEIPT
-RUNTIME_EVIDENCE
-DEBT
-HANDOFF
-```
-
-### `UI_EVALUATION_PACKET`
-
-```text
-ARTIFACT_BINDING
-EVIDENCE_LEVEL
-FINDINGS
-VISUAL_MATRIX
-CRASH_MATRIX
-WCAG_EVIDENCE
-PERFORMANCE_EVIDENCE
-DOMAIN_PENDING
-VERDICT
-CORRECTIONS
-```
-
-### `UI_FULL_PACKET`
-
-Contiene los paquetes anteriores realmente producidos, los adaptadores
-activados, el primer gate rojo si existe y `RISKS_AND_NEXT_GATE`. No crea
-secciones vacías para aparentar completitud.
+- `UI_FRAME_PACKET`: `frame`, `force_map`, hipótesis de objeto, principios,
+  invariantes y `GRAPHIC_SPEC_FRAME`;
+- `UI_MODEL_PACKET`: candidatos, decisión abierta/elegida, interacción,
+  `IFML_MODEL?` y preguntas de dominio;
+- `UI_DESIGN_PACKET`: tres direcciones comparables, decisión, sistema,
+  composiciones web/mobile web, estados, spec/prototipo y handoff;
+- `UI_IMPLEMENTATION_PACKET`: binding de spec y autorización, patch, traza del
+  sistema, recibos de build/test/lint y evidencia runtime disponible;
+- `UI_EVALUATION_PACKET`: hallazgos, matrices visual/crash,
+  `ACCESSIBILITY_RECEIPT[]`, `PERFORMANCE_RECEIPT[]`, dominio y veredicto;
+- `UI_FULL_PACKET`: resultados realmente producidos, adaptadores activados y
+  primer gate rojo; no agrega secciones vacías para aparentar completitud.
 
 ## Gates
 
-Orden obligatorio:
+IDs y orden canónicos:
 
-1. problema;
-2. objeto;
-3. conceptos comparables;
-4. sistema visual;
-5. estados;
-6. responsive;
-7. implementación;
-8. accesibilidad y rendimiento;
-9. dominio;
-10. evidencia.
+1. `G1-problem` — contexto, rol, tarea, responsabilidad y fallo observable;
+2. `G2-data-privacy` — clasificación y autorización antes de leer evidencia;
+3. `G3-object` — identidad, ciclo, tiempo, procedencia y relaciones;
+4. `G4-concepts` — direcciones comparables bajo el mismo fixture;
+5. `G5-visual-system` — tokens, primitives y componentes trazables;
+6. `G6-states` — crash matrix, asincronía, error e incertidumbre;
+7. `G7-responsive` — invariantes y composición web/mobile web;
+8. `G8-domain-authority` — recibo competente para promoción sensible;
+9. `G9-implementation-access-performance` — target ejecutable y recibos;
+10. `G10-evidence` — claims ligados a evidencia y límites explícitos.
 
 No promover por promedio. Un gate rojo mantiene la salida como propuesta o
-prototipo.
+prototipo. `FRAME` y `DESIGN` sintéticos pueden registrar G8 pendiente; `BUILD`
+productivo y `FULL` se detienen antes de implementar semántica sensible sin G8.
 
 ## Reglas duras
 
@@ -506,6 +491,9 @@ prototipo.
 16. No implementar sin dirección, repo y alcance autorizados.
 17. No declarar experiencia verde por build o tests automáticos.
 18. No cerrar sin deuda, evidencia y siguiente gate.
-19. Sin `domain_authority_packet`, permitir framing y prototipo sintético, pero
+19. Sin `domain_authority_receipt`, permitir framing y prototipo sintético, pero
     no promover identidad, alertas, órdenes, override, privacidad o corrección.
 20. No importar `steve-jobs-principios-salud` por defecto.
+21. No abrir recursos con datos `phi` o `unknown`.
+22. No inferir autorización de mutación desde acceso técnico, cwd o rutas.
+23. No declarar soporte de app nativa desde evidencia web.

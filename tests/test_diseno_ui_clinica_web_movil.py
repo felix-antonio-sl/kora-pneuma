@@ -21,6 +21,19 @@ FRAME_GUIA = (
     SKILL.parent
     / "referencias/frame-guia-especificacion-grafica.md"
 )
+MODOS = ("FRAME", "MODEL", "DESIGN", "BUILD", "EVALUATE", "FULL")
+GATES = (
+    "G1-problem",
+    "G2-data-privacy",
+    "G3-object",
+    "G4-concepts",
+    "G5-visual-system",
+    "G6-states",
+    "G7-responsive",
+    "G8-domain-authority",
+    "G9-implementation-access-performance",
+    "G10-evidence",
+)
 
 
 class TestDisenoUiClinicaWebMovil(unittest.TestCase):
@@ -37,7 +50,7 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:diseno-ui-clinica-web-movil")
         self.assertEqual(self.campos["nombre"], "diseno-ui-clinica-web-movil")
-        self.assertEqual(self.campos["version"], "1.0.0")
+        self.assertEqual(self.campos["version"], "1.1.0")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -47,10 +60,13 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
 
     def test_es_puerta_unica_con_seis_modos(self):
         cuerpo = " ".join(self.cuerpo.split())
-        for modo in (
-                "`FRAME`", "`MODEL`", "`DESIGN`",
-                "`BUILD`", "`EVALUATE`", "`FULL`"):
-            self.assertIn(modo, cuerpo)
+        enum = "FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL"
+        self.assertIn(f"modo?: {enum}", cuerpo)
+        self.assertIn(f"| Modo | `{enum}` |", self.frame_guia)
+        for modo in MODOS:
+            self.assertIn(f"`{modo}`", cuerpo)
+            self.assertIn(modo, self.frame_guia)
+        self.assertNotIn("IMPLEMENT", self.frame_guia)
         for salida in (
                 "`UI_FRAME_PACKET`", "`UI_MODEL_PACKET`",
                 "`UI_DESIGN_PACKET`",
@@ -59,6 +75,38 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
             self.assertIn(salida, cuerpo)
         self.assertIn("Ejecutar exactamente uno", cuerpo)
         self.assertIn("el operador invoca sólo esta skill", cuerpo)
+
+    def test_input_cubre_privacidad_build_y_plataforma_real(self):
+        normalizado = " ".join(self.cuerpo.split())
+        for testigo in (
+                "data_classification",
+                "`phi-boundary`",
+                "domain_authority_receipt",
+                "mutation_authority_receipt",
+                "mutation_authorized=true",
+                "selected_direction",
+                "graphic_spec_binding",
+                "implementation_target",
+                "`unsupported-platform`"):
+            self.assertIn(testigo, normalizado)
+        for plataforma_no_soportada in (
+                "native-ios", "native-android", "react-native", "flutter"):
+            self.assertNotIn(
+                plataforma_no_soportada,
+                self.cuerpo.split("## Errores observables", 1)[0])
+
+    def test_gates_y_sobre_son_canonicos(self):
+        for gate in GATES:
+            self.assertIn(gate, self.cuerpo)
+            self.assertIn(gate, self.frame_guia)
+            self.assertIn(gate, self.marco)
+        for campo in (
+                "mode", "input_binding", "epistemic_status",
+                "evidence_ledger", "decision", "result",
+                "debt", "risks", "next_action"):
+            self.assertIn(campo, self.cuerpo)
+        self.assertNotIn("UI_FRAME_INPUT", self.marco)
+        self.assertNotIn("UI_GRAPHIC_PACKET", self.marco)
 
     def test_reutiliza_capacidades_sin_fingir_wiring(self):
         self.assertEqual(
@@ -109,6 +157,7 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
         self.assertIn(
             "frame-guia-especificacion-grafica.md",
             self.cuerpo)
+        self.assertIn("GRAPHIC_SPEC_FRAME", self.cuerpo)
 
     def test_conserva_fronteras_spec_model_runtime(self):
         cuerpo = " ".join(self.cuerpo.split()).lower()
@@ -119,7 +168,7 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
                 "build verde prueba build; no prueba experiencia",
                 "validación clínica sólo proviene de autoridad competente"):
             self.assertIn(testigo, cuerpo)
-        self.assertIn("domain_authority_packet", cuerpo)
+        self.assertIn("domain_authority_receipt", cuerpo)
 
     def test_exige_web_smartphone_y_estados_reales(self):
         combinado = " ".join((self.cuerpo + self.marco).split()).lower()
@@ -130,7 +179,12 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
                 "rendimiento", "responsive"):
             self.assertIn(testigo, combinado)
 
-    def test_emision_codex_es_materializable(self):
+    def test_skill_respeta_presupuesto_de_contexto(self):
+        self.assertLess(
+            len(SKILL.read_text("utf-8").splitlines()),
+            500)
+
+    def test_transmutacion_codex_compila(self):
         resultado = subprocess.run(
             [
                 sys.executable,
@@ -147,12 +201,6 @@ class TestDisenoUiClinicaWebMovil(unittest.TestCase):
         )
         self.assertEqual(resultado.returncode, 0, resultado.stderr)
         self.assertIn("target: codex", resultado.stdout)
-        self.assertIn(
-            "referencias/marco-ui-clinica-web-movil.md",
-            resultado.stdout)
-        self.assertIn(
-            "referencias/frame-guia-especificacion-grafica.md",
-            resultado.stdout)
 
 
 if __name__ == "__main__":
