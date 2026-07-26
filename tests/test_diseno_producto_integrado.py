@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Contrato de la triada KORA para direccion integrada de producto UI/UX."""
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -42,6 +44,7 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertEqual(
             self.skill_campos["urn"],
             "urn:dev:artefacto:diseno-producto-integrado")
+        self.assertEqual(self.skill_campos["version"], "1.1.0")
         self.assertEqual(self.skill_campos["forma"], "habilidad")
         self.assertEqual(self.skill_campos["arnes"], "disciplina")
         self.assertEqual(self.skill_campos["estado"], "activo")
@@ -52,6 +55,7 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertEqual(
             self.agente_campos["urn"],
             "urn:dev:artefacto:director-diseno-producto")
+        self.assertEqual(self.agente_campos["version"], "1.1.0")
         self.assertEqual(self.agente_campos["forma"], "agente")
         self.assertEqual(self.agente_campos["arnes"], "persona")
         self.assertEqual(self.agente_campos["estado"], "activo")
@@ -124,6 +128,46 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
             self.canon_cuerpo, self.skill_cuerpo, self.agente_cuerpo))
         self.assertNotIn("cat-agent-modulo §5", fuentes)
         self.assertNotIn("vector = tipo", fuentes)
+
+    def test_las_emisiones_multiruntime_son_materializables(self):
+        urns = (
+            "urn:dev:artefacto:diseno-producto-integrado",
+            "urn:dev:artefacto:director-diseno-producto",
+        )
+        targets = ("claude-code", "codex", "opencode")
+        emisiones = {}
+
+        for urn in urns:
+            for target in targets:
+                with self.subTest(urn=urn, target=target):
+                    resultado = subprocess.run(
+                        [
+                            sys.executable,
+                            str(RAIZ / "kora.py"),
+                            "transmutar",
+                            "--urn", urn,
+                            "--target", target,
+                            "--stdout",
+                        ],
+                        cwd=RAIZ,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(
+                        resultado.returncode, 0, resultado.stderr)
+                    self.assertIn(f"target: {target}", resultado.stdout)
+                    emisiones[(urn, target)] = resultado.stdout
+
+        agente_codex = emisiones[(urns[1], "codex")]
+        self.assertIn(
+            "codex/agents/director-diseno-producto.toml",
+            agente_codex)
+        self.assertIn(
+            "codex/skills/director-diseno-producto/SKILL.md",
+            agente_codex)
+        self.assertIn(
+            "mode: all", emisiones[(urns[1], "opencode")])
 
 
 if __name__ == "__main__":

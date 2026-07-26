@@ -13,8 +13,8 @@ uso real.
 
 La continuidad transversal sigue exigiendo separar fuente KORA, emisión
 derivada, instalación y conducta runtime. Este corte demuestra fuente, gates,
-emisión, instalación y paridad material en Codex; no declara todavía una prueba
-conductual en una sesión nueva.
+emisión, instalación y paridad material en Claude Code, Codex y OpenCode; no
+declara todavía una prueba conductual en sesiones nuevas.
 
 El corte previo de usuarios sintéticos HODOM-HSC y la auditoría categorial
 permanecen documentados más abajo; no fueron modificados por esta intervención.
@@ -99,8 +99,8 @@ Evidencia del corte:
 
 ```text
 rojo focal inicial       FileNotFoundError esperado
-verde focal              7/7
-suite KORA               270/270
+verde focal              8/8
+suite KORA               271/271
 velar --estricto         13/13
 dependencias             design + ux-design: 6/6 unidades fieles
 paridad skill            3 runtimes · 3/3 unidades fieles
@@ -117,9 +117,45 @@ invocar `director-diseno-producto` sobre la misma tarea UI/UX acotada y observar
 si cada runtime entrega un `DESIGN_PACKET` que separa verificado, inferido y
 pendiente.
 
-Rollback de este corte: revertir su commit Git, retirar solamente las siete
-unidades instaladas listadas arriba y regenerar `_emision/` desde las fuentes
-restantes. No editar `_emision/` ni el censo a mano.
+Rollback solo de la ampliación v1.1.0: crear un commit que restaure agente,
+skill y pruebas al estado de `ae3aab9`, retirar las dos unidades de Claude Code
+y las dos de OpenCode, y reemitir/reaplicar Codex desde la fuente v1.0.0. Esto
+conserva el despliegue Codex inicial y evita revertir a ciegas commits
+documentales posteriores.
+
+Rollback de toda la tríada: revertir semánticamente todos los commits del corte
+desde `ae3aab9`, retirar entonces las siete unidades instaladas y regenerar
+`_emision/` desde las fuentes restantes. No editar `_emision/` ni el censo a
+mano.
+
+### Auditoría final del corte
+
+La revisión integral del 2026-07-26 confirmó que el reset inicial no perdió
+contenido: `e3f024c` y `284a30c` tienen el mismo árbol
+`838a4c0e22ba38fca73e3b173599bca47c2191fd` y el mismo padre; solo difieren en
+metadatos de commit. El diff de la sesión contra `284a30c` queda limitado a
+este handoff y las cuatro fuentes/pruebas de la tríada.
+
+Se corrigieron en esta auditoría la frontera multiruntime del objetivo, el
+rollback de v1.1.0 frente al rollback total y la ausencia de una regresión
+específica de emisión para los tres targets. No se hallaron secretos, archivos
+temporales ni cambios ajenos en el alcance. Las fuentes web principales
+respondieron; el hostname de soporte de Humane no resolvió por `curl` local,
+pero la fuente fue accesible por el navegador de investigación. Esto se trata
+como una limitación de red local, no como prueba de disponibilidad universal.
+
+`director-diseno-producto` comparte la firma `[2,2,3,1,2]` con otros agentes,
+entre ellos `steve-jobs`; esto no viola unicidad porque el vector clasifica y
+el URN individua. La diferencia observable quedó revisada: `steve-jobs`
+critica desde sustracción e inevitabilidad, mientras el nuevo director conduce
+el ciclo completo desde contexto, alternativas y evidencia.
+
+Sigue sin demostrarse la conducta efectiva del agente en una sesión nueva de
+cada runtime, la resolución cross-project del conocimiento ni la autoridad
+efectiva de sus herramientas. Son pruebas runtime pendientes, no fallos de
+paridad. OpenCode sí enumeró `director-diseno-producto (all)`; en Claude Code
+y Codex se verificaron ruta canónica, bytes y formato —incluido TOML parseable
+en Codex—, pero no una selección/invocación viva.
 
 ## Corte previo: contrato v2 R01–R14
 
