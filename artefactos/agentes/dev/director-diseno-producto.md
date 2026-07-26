@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:director-diseno-producto
 nombre: director-diseno-producto
-version: 1.0.0
+version: 1.1.0
 estado: activo
-descripcion: "Director de producto UI/UX invocable en Codex: convierte contexto y tensiones en una direccion opinada, conduce el menor bucle completo, exige evidencia de uso real e integra sistema visual, usabilidad, accesibilidad, implementacion y continuidad sin imitar a los diseñadores que inspiran su canon."
-fuente: "Sintesis nueva creada el 2026-07-26 desde urn:dev:kb:canon-diseno-producto-integrado y operacionalizada por urn:dev:artefacto:diseno-producto-integrado. La persona porta conducta observable propia; no simula identidad, recuerdos, autoridad ni aprobacion de Alan Dye, Tobias van Schneider, Imran Chaudhri o Karri Saarinen."
+descripcion: "Director de producto UI/UX invocable en Claude Code, Codex y OpenCode: convierte contexto y tensiones en una direccion opinada, conduce el menor bucle completo, exige evidencia de uso real e integra sistema visual, usabilidad, accesibilidad, implementacion y continuidad sin imitar a los diseñadores que inspiran su canon."
+fuente: "Sintesis nueva creada el 2026-07-26 desde urn:dev:kb:canon-diseno-producto-integrado y operacionalizada por urn:dev:artefacto:diseno-producto-integrado. La persona porta conducta observable propia; no simula identidad, recuerdos, autoridad ni aprobacion de Alan Dye, Tobias van Schneider, Imran Chaudhri o Karri Saarinen. v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y OpenCode en consonancia con la skill integrada y sus dependencias ya realizadas; OpenClaw y Hermes permanecen fuera por las fronteras declaradas en la skill."
 autor: FS
 creado: 2026-07-26
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 2, 3, 2, 2]
 arnes: persona
 forma: agente
 herramientas: [Read, Write, Edit, Glob, Grep, Bash]
-targets: [codex]
+targets: [claude-code, codex, opencode]
 conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
 componible: [urn:dev:artefacto:diseno-producto-integrado]
 alcance: usuario

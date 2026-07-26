@@ -71,18 +71,29 @@ demostrada. El agente usa proceduralmente la nueva skill y mantiene la
 dirección; no reclama identidad, recuerdos, autoridad ni aprobación de las
 personas estudiadas. Su salida total es `DESIGN_PACKET | DESIGN_ERROR`.
 
-El despliegue se limitó deliberadamente a Codex. La skill quedó instalada en:
+La v1.1.0 amplió el despliegue a Claude Code, Codex y OpenCode después de
+verificar que `design` y `ux-design` ya declaran esos tres targets y mantienen
+paridad fiel en todos ellos. La skill quedó instalada en:
 
 ```text
+/home/felix/.claude/skills/diseno-producto-integrado
 /home/felix/.agents/skills/diseno-producto-integrado
+/home/felix/.config/opencode/skills/diseno-producto-integrado
 ```
 
 La persona dual quedó instalada en:
 
 ```text
+/home/felix/.claude/agents/director-diseno-producto.md
 /home/felix/.codex/agents/director-diseno-producto.toml
 /home/felix/.agents/skills/director-diseno-producto
+/home/felix/.config/opencode/agents/director-diseno-producto.md
 ```
+
+OpenClaw permanece fuera porque las skills dependientes no declaran ese target
+y la copia personal Codex bajo `~/.agents/skills` tendría precedencia sobre la
+managed de OpenClaw. Hermes está reconocido por la ley, pero su transmutación
+no está realizada.
 
 Evidencia del corte:
 
@@ -91,21 +102,23 @@ rojo focal inicial       FileNotFoundError esperado
 verde focal              7/7
 suite KORA               270/270
 velar --estricto         13/13
-paridad skill            1 fiel · 0 desviadas · 0 no-instaladas
-paridad persona          2 fiel · 0 desviadas · 0 no-instaladas
+dependencias             design + ux-design: 6/6 unidades fieles
+paridad skill            3 runtimes · 3/3 unidades fieles
+paridad persona          3 runtimes · 4/4 unidades fieles
+discovery OpenCode       director-diseno-producto (all)
+CLI observados           Claude 2.1.207 · Codex 0.145.0 · OpenCode 1.18.5
 git diff --check         pass
 ```
 
-Las pérdidas de proyección quedan declaradas en los sellos: Codex no prueba una
-allowlist exacta de herramientas; la persona no obtiene memoria transparente
-cross-session ni identidad persistente. Paridad demuestra igualdad material
-fuente→emisión→instalación, no calidad conductual. La siguiente prueba legítima
-es abrir una sesión Codex nueva —sin asumir hot reload—, invocar
-`director-diseno-producto` sobre una tarea UI/UX acotada y observar si entrega
-un `DESIGN_PACKET` que separa verificado, inferido y pendiente.
+Las pérdidas de proyección quedan declaradas por runtime en sus sellos. Paridad
+demuestra igualdad material fuente→emisión→instalación, no calidad conductual.
+La siguiente prueba legítima es abrir sesiones nuevas —sin asumir hot reload—,
+invocar `director-diseno-producto` sobre la misma tarea UI/UX acotada y observar
+si cada runtime entrega un `DESIGN_PACKET` que separa verificado, inferido y
+pendiente.
 
-Rollback de este corte: revertir su commit Git, eliminar solamente las tres
-instalaciones listadas arriba y regenerar `_emision/` desde las fuentes
+Rollback de este corte: revertir su commit Git, retirar solamente las siete
+unidades instaladas listadas arriba y regenerar `_emision/` desde las fuentes
 restantes. No editar `_emision/` ni el censo a mano.
 
 ## Corte previo: contrato v2 R01–R14

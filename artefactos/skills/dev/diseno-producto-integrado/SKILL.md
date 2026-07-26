@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:diseno-producto-integrado
 nombre: diseno-producto-integrado
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Disciplina de direccion UI/UX que transforma contexto y tensiones en un bucle de producto completo: diverge con criterio, selecciona por fit, materializa mediante design, valida mediante ux-design y entrega una decision trazable con prueba de realidad."
-fuente: "Sintesis nueva creada el 2026-07-26 para operacionalizar urn:dev:kb:canon-diseno-producto-integrado. Reutiliza proceduralmente design y ux-design mediante adaptadores explicitos; componible solo declara candidatos y no prueba composicion semantica ni ejecucion runtime."
+fuente: "Sintesis nueva creada el 2026-07-26 para operacionalizar urn:dev:kb:canon-diseno-producto-integrado. Reutiliza proceduralmente design y ux-design mediante adaptadores explicitos; componible solo declara candidatos y no prueba composicion semantica ni ejecucion runtime. v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y OpenCode despues de verificar que design y ux-design ya declaran y mantienen paridad fiel en los tres runtimes; OpenClaw queda fuera por dependencia no realizada y colision de precedencia con la skill personal Codex, y Hermes por target reconocido no realizado."
 autor: FS
 creado: 2026-07-26
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 2, 3, 2, 2]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Write, Edit, Glob, Grep, Bash]
-targets: [codex]
+targets: [claude-code, codex, opencode]
 conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
 componible: [urn:dev:artefacto:design, urn:kora:artefacto:ux-design]
 alcance: usuario

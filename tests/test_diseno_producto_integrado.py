@@ -45,6 +45,9 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertEqual(self.skill_campos["forma"], "habilidad")
         self.assertEqual(self.skill_campos["arnes"], "disciplina")
         self.assertEqual(self.skill_campos["estado"], "activo")
+        self.assertEqual(
+            self.skill_campos["targets"],
+            ["claude-code", "codex", "opencode"])
 
         self.assertEqual(
             self.agente_campos["urn"],
@@ -52,6 +55,9 @@ class TestDisenoProductoIntegrado(unittest.TestCase):
         self.assertEqual(self.agente_campos["forma"], "agente")
         self.assertEqual(self.agente_campos["arnes"], "persona")
         self.assertEqual(self.agente_campos["estado"], "activo")
+        self.assertEqual(
+            self.agente_campos["targets"],
+            ["claude-code", "codex", "opencode"])
 
     def test_canon_separa_evidencia_inferencia_y_contraprueba(self):
         cuerpo = " ".join(self.canon_cuerpo.split())
