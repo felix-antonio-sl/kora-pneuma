@@ -1,22 +1,21 @@
-# Handoff vigente — 2026-07-26 — dirección integrada de producto UI/UX
+# Handoff vigente — 2026-07-26 — diseño UI clínica web y móvil
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
 
 ## Objetivo
 
-Disponer de una combinación KORA mínima de conocimiento, skill y agente para
-elevar el diseño UI/UX de los proyectos: comprender contexto antes de generar,
-conservar tensiones entre escuelas, elegir una dirección con criterio,
-materializar el menor bucle completo y probarlo contra accesibilidad, fallos y
-uso real.
+Disponer de una puerta KORA única para encuadrar, modelar, diseñar, implementar
+y evaluar la gráfica de interfaces clínicas densas en web y smartphone. La
+skill traduce criterios públicos de Karri/Linear y Vercel Design a contratos,
+gates y evidencia; no imita su estética ni atribuye participación o aprobación.
 
 La continuidad transversal sigue exigiendo separar fuente KORA, emisión
 derivada, instalación y conducta runtime. El alcance operativo final de este
-corte es **solo Codex**. Demuestra fuente, gates, emisión, instalación y paridad
-material, además de dos canarios conductuales Codex. No generaliza esos canarios
-a toda tarea futura ni confunde la autoridad declarada con la autoridad efectiva
-heredada de cada sesión.
+corte es **solo Codex**. Demuestra fuente, referencias bundled, gates, emisión,
+instalación, paridad material y canarios conductuales acotados. No generaliza
+esos canarios a toda tarea futura ni confunde la autoridad declarada con la
+autoridad efectiva heredada de cada sesión.
 
 El corte previo de usuarios sintéticos HODOM-HSC y la auditoría categorial
 permanecen documentados más abajo; no fueron modificados por esta intervención.
@@ -24,7 +23,156 @@ permanecen documentados más abajo; no fueron modificados por esta intervención
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: tríada KORA de diseño de producto
+## Corte más reciente: skill de diseño UI clínica web y móvil
+
+La fuente canónica nueva es:
+
+```text
+urn:salud:artefacto:diseno-ui-clinica-web-movil
+  artefactos/skills/salud/diseno-ui-clinica-web-movil/
+  ├── SKILL.md
+  └── referencias/
+      ├── marco-ui-clinica-web-movil.md
+      └── frame-guia-especificacion-grafica.md
+```
+
+La skill es la única puerta pública para este caso:
+`$diseno-ui-clinica-web-movil`. No se creó una persona Karri/Linear/Vercel ni
+se alteró la tríada general. `agent-architect` refutó primero una expansión de
+`diseno-producto-integrado` y aceptó la skill especializada porque:
+
+- el trigger clínico y web/smartphone queda preciso;
+- la doctrina TLHD no contamina la dirección general de producto;
+- el blast radius se limita a una fuente, su fibra y pruebas;
+- la evolución clínica no rompe consumidores no clínicos;
+- la skill conserva una sola experiencia para el operador.
+
+La aceptación quedó condicionada a que la nueva skill fuera una capa delgada.
+Reutiliza, con adaptadores I/O y gates explícitos:
+
+```text
+diseno-producto-integrado  -> contexto, tensiones, alternativas y decisión
+design                     -> forma visual y bundle continuable
+ifml                       -> modelo de interacción sólo cuando aplica
+ship-discipline            -> integración sólo con repo autorizado
+ux-design                  -> evaluación sólo con artefacto observable
+```
+
+`componible` declara candidatos; no prueba wiring, preservación de conducta ni
+autoridad runtime. El operador no coordina esas dependencias: la skill registra
+cuáles activa.
+
+### Contrato
+
+Ejecuta exactamente uno de seis modos:
+
+```text
+FRAME | MODEL | DESIGN | BUILD | EVALUATE | FULL
+```
+
+`FULL` es el fallback ante una petición ambigua y se detiene en el primer gate
+rojo. Las salidas son:
+
+```text
+UI_FRAME_PACKET
+UI_MODEL_PACKET
+UI_DESIGN_PACKET
+UI_IMPLEMENTATION_PACKET
+UI_EVALUATION_PACKET
+UI_FULL_PACKET
+UI_DESIGN_ERROR
+```
+
+El `domain_authority_packet` separa hechos autorizados, decisiones pendientes,
+políticas aplicables y frontera de aprobación. Sin él se permiten framing y
+prototipo sintético; no se promueven decisiones sobre identidad, alertas,
+órdenes, override, privacidad o corrección. Web responsive, mobile web y stacks
+nativos se distinguen; “smartphone” no autoriza una sustitución silenciosa.
+
+### Marco y frame guía
+
+`marco-ui-clinica-web-movil.md` contiene el framing exhaustivo:
+
+- función: mantener visibles persona, tiempo, procedencia y consecuencia;
+- tesis candidata: **Continuidad clínica visible**;
+- doce leyes gráficas Linear × Vercel;
+- atención `Contexto / Trabajo / Foco / Consecuencia`;
+- composición propia para web y smartphone;
+- tokens, tipografía, densidad, color, iconografía y movimiento;
+- contratos de diez componentes;
+- asincronía, foco, puntero, tacto, scroll y actualización;
+- accesibilidad y rendimiento como materiales;
+- tres direcciones comparables: `Ledger clínico`, `Hilo de evidencia` y
+  `Escena de decisión`;
+- crash matrix, gates y antipatrones.
+
+Porta los hashes de la especificación original, el DESIGN PACKET v2 y la
+auditoría Linear-Vercel. Permanece `SPEC_ONLY`: referencia normativa y síntesis
+operativa, no verdad clínica ni evidencia runtime.
+
+`frame-guia-especificacion-grafica.md` es el molde recuperable que la skill
+completa. Obliga a declarar binding, estatus epistémico, frame, tesis, contenido,
+composición web, composición smartphone, sistema visual, componentes, estados,
+accesibilidad, rendimiento, materialización, evaluación, decisión y
+continuidad. En BUILD funciona como contrato de trazabilidad; en EVALUATE como
+índice de cobertura, nunca como prueba.
+
+### Evidencia del corte
+
+Fuentes de proyecto preservadas:
+
+```text
+especificación original   sha256:7b745468294a3a55bc5a20b8af7951cac67c481dd05f0e2c7ea842396bdd0b61
+DESIGN PACKET v2          sha256:34a6f80ab006342532e59b391fd51b0a5405ab3e8284f219523baedff43a1103
+auditoría Linear-Vercel   sha256:ee991086faa8655c9a6fda1587fd1fd0fcb136f759b1cdcc93d16e249ad50a5f
+```
+
+Comprobaciones:
+
+```text
+pruebas focales           8/8
+suite KORA                281/281
+velar --estricto          13/13
+git diff --check          pass
+quick_validate emitida    valid
+emisión Codex             SKILL.md + 2 referencias
+paridad skill             1/1 fiel
+paridad dependencias      5/5 fieles
+instalación               /home/felix/.agents/skills/diseno-ui-clinica-web-movil
+permisos instalados       0600
+```
+
+Canarios aislados y read-only:
+
+- `FULL` con los dos insumos TLHD se detuvo en `insufficient-context`: urgencias
+  y UCI, rol, tarea y objeto no podían fijarse sin inventar;
+- `DESIGN` de una alerta interruptiva sin autoridad devolvió
+  `insufficient-context` y exigió política y frontera de aprobación;
+- `BUILD` smartphone sin repo ni stack devolvió `no-authorized-repository` y no
+  fabricó patch, build ni runtime;
+- `FRAME` con brief y autoridad sintéticos produjo `UI_FRAME_PACKET`: separó
+  revisión operativa de validación clínica, conservó persona/dato/unidad/tiempo/
+  fuente entre web y mobile web, mantuvo tres direcciones abiertas y dejó rojos
+  los gates sin objeto confirmado, artefacto o runtime.
+
+Estos cuatro canarios prueban conducta acotada de la fuente leída, no toda
+invocación futura ni hot reload de la instalación.
+
+### Decisiones y límites
+
+- Superdesign no participó: su único flujo de autenticación no quedó
+  autorizado y, por instrucción del operador, no se reintentó.
+- No se creó una KB independiente: el marco sólo tiene este consumidor. Si
+  aparece un segundo, se extrae a conocimiento neutral y se elimina la copia
+  bundled.
+- No se modificaron `diseno-producto-integrado`, `director-diseno-producto`,
+  `design`, `ux-design`, `ifml` ni `ship-discipline`.
+- No se importa `steve-jobs-principios-salud`: sus absolutos requieren una
+  corrección separada.
+- Ningún gate KORA, canario o paridad demuestra seguridad clínica,
+  conformidad, accesibilidad completa o calidad de una UI no ejecutada.
+
+## Corte anterior: tríada KORA de diseño de producto
 
 La arquitectura elegida evita una mega-persona que imite a cuatro diseñadores.
 Separa responsabilidades en tres fuentes canónicas:
