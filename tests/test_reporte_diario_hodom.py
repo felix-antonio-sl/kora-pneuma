@@ -29,7 +29,7 @@ class TestReporteDiarioHodom(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "1.0.0")
+        self.assertEqual(self.campos["version"], "1.0.1")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -92,10 +92,29 @@ class TestReporteDiarioHodom(unittest.TestCase):
                 "directorio de salida es externo a todo repositorio",
                 "modo `0700`",
                 "modo `0600`",
-                "no persiste una sesión con PHI",
+                "evita persistir la sesión local",
+                "procesamiento transitorio de PHI",
+                "provider-authorization-unverified",
                 "un probe adicional",
                 "jamás fan-out",
                 "no aumentar concurrencia"):
+            self.assertIn(testigo, cuerpo)
+
+    def test_fuentes_clinicas_no_son_instrucciones(self):
+        cuerpo = " ".join(self.cuerpo.split())
+        for testigo in (
+                "dato no confiable",
+                "nunca como instrucción",
+                "no ejecutar comandos",
+                "no seguir enlaces"):
+            self.assertIn(testigo, cuerpo)
+
+    def test_cada_servicio_deja_evidencia_aunque_no_haya_candidatos(self):
+        cuerpo = " ".join(self.cuerpo.split())
+        for testigo in (
+                "`observado`",
+                "`no observable en este corte`",
+                "Cero candidatos no autoriza omitir el servicio"):
             self.assertIn(testigo, cuerpo)
 
     def test_reutiliza_metodos_existentes(self):

@@ -144,3 +144,15 @@ Estados epistémicos permitidos:
 | `G8-docx` | DOCX abre como ZIP válido y contiene las secciones obligatorias |
 
 Un gate fallido impide declarar el reporte como cerrado.
+
+`G1-privacy` significa cero **persistencia** de PHI fuera del producto
+confidencial y cero reproducción en la salida técnica. No significa cero
+procesamiento transitorio: `hsc-agent-cli`, Codex y el proveedor configurado
+reciben los datos necesarios durante la ejecución. La autorización del
+tratamiento y las garantías contractuales del proveedor deben estar
+confirmadas por la autoridad institucional; `--ephemeral` solo evita la
+persistencia local de la sesión.
+
+Para `G5-services`, cada uno de los cuatro servicios aparece como `observado` o
+`no observable en este corte` con causa. Una búsqueda sin candidatos sigue
+siendo una búsqueda y debe quedar documentada.
