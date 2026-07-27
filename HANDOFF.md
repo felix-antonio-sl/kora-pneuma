@@ -1,30 +1,99 @@
-# Handoff vigente — 2026-07-26 — diseño UI clínica web y mobile web
+# Handoff vigente — 2026-07-27 — ciclo reversible de modelamiento en OpForja
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git ni el estado vivo de los runtimes.
 
 ## Objetivo
 
-Disponer de una puerta KORA única para encuadrar, modelar, diseñar, implementar
-y evaluar la gráfica de TLHD-HEALTH y UI clínica comparable centrada en
-persona/episodio, en web responsive y mobile web. La skill traduce criterios
-públicos de Karri/Linear y Vercel Design a contratos, gates y evidencia; no
-imita su estética ni atribuye participación o aprobación.
+Propagar al ecosistema el contrato ya implementado de Taller/Modelos sin crear
+una segunda semántica: elevarlo a la SSOT OPM/Forja, actualizar
+`modelamiento-opm`, emitir sus proyecciones y dejar recibos coherentes en
+`deep-opm-pro`.
 
-La continuidad transversal sigue exigiendo separar fuente KORA, emisión
-derivada, instalación y conducta runtime. El alcance operativo final de este
-corte es **solo Codex**. Demuestra fuente, referencias bundled, gates, emisión,
-instalación, paridad material y canarios conductuales acotados. No generaliza
-esos canarios a toda tarea futura ni confunde la autoridad declarada con la
-autoridad efectiva heredada de cada sesión.
-
-El corte previo de usuarios sintéticos HODOM-HSC y la auditoría categorial
-permanecen documentados más abajo; no fueron modificados por esta intervención.
+La continuidad transversal separa cuatro hechos: fuente KORA publicada, emisión
+derivada, instalación material y runtime de OpForja. Este corte cierra los tres
+primeros y deja el cuarto como **GO con límite** hasta un despliegue explícitamente
+autorizado. Los cortes previos de diseño UI clínica, usuarios sintéticos
+HODOM-HSC y auditoría categorial permanecen documentados más abajo y no fueron
+modificados semánticamente.
 
 El handoff anterior quedó archivado en
 `_archivo/HANDOFF-2026-07-18-auditoria-categorial-integral.md`.
 
-## Corte más reciente: skill de diseño UI clínica web y mobile web
+## Corte más reciente: Taller, Modelos y ciclos reversibles
+
+### Decisión consolidada
+
+- Taller y Modelos son espacios de navegación; no son dos entidades
+  persistentes distintas.
+- El documento conserva identidad en Apunte⇄Modelo mediante Graduar/Reabrir.
+- Cada componente conserva identidad en Boceto⇄OPD integrado mediante
+  Integrar/Devolver.
+- `padreId:null` puede representar la raíz del documento o un Boceto; se
+  distingue por `opdRaizId`, no por el campo aislado.
+- Graduar exige integridad, pero puede asumir deuda formal y Bocetos pendientes.
+  Integrar/Devolver y Graduar/Reabrir son operaciones independientes; ninguna
+  acredita validación humana.
+- `adoptarOpd` y `origen:"adopcion"` permanecen como identificadores internos
+  compatibles. La interfaz y el método dicen Integrar; renombrar almacenamiento
+  o contratos internos habría introducido migración sin valor semántico.
+- La canonicidad pertenece a `reglas-opm-estrictas-es`; OPD legisla la
+  realización visual y la skill consume ambas sin inventar otro gate.
+
+### Fuentes y artefactos
+
+| Artefacto | Versión | Propósito |
+|---|---:|---|
+| `artefactos/conocimiento/fxsl/reglas-opm-estrictas-es.md` | 1.5.0 | `R-CAN-BOCETO-1..4`, exportación y separación de ciclos |
+| `artefactos/conocimiento/fxsl/spec-forja-opd-es.md` | 1.4.0 | Bocetos, Integrar/Devolver, compatibilidad interna y UX visual |
+| `artefactos/conocimiento/fxsl/metodologia-forja-opm-es.md` | 1.7.0 | método Apunte⇄Modelo y Boceto⇄integrado |
+| `artefactos/skills/kora/modelamiento-opm/SKILL.md` | 2.1.0 | operación agéntica coherente con los dos ciclos |
+| `artefactos/skills/kora/modelamiento-opm/referencias/bundle-deep-opm-pro.md` | — | contrato de la mesa y distinción raíz/Boceto |
+| `tests/test_modelamiento_opm_ciclo_reversible.py` | — | seis regresiones focales |
+
+Los commits KORA son:
+
+```text
+2413e3caa328318807ab9a2798a79036e499057d feat(opm): canonizar ciclos reversibles de taller
+e43ebf791d31325efa410dd31c7aad38c2dd04f5 fix(modelamiento-opm): alinear ciclo reversible
+```
+
+El receptor `deep-opm-pro` publicó:
+
+```text
+977a13c640ed7326ea10ed66f0e8f3f777f4eaba fix(opm): alinear propagación del ciclo reversible
+2761196a6494ec9d2a59648c403c058f8b43ce98 docs(handoff): registrar propagación KORA
+```
+
+### Verificación
+
+- Suite KORA: 290/290.
+- `velar --estricto`: 13/13 gates.
+- Emisiones Claude Code, Codex y OpenCode: 3 fieles, 0 desviadas, 0 ausentes.
+- Sello fuente de `modelamiento-opm`:
+  `sha256:8cf8dd16dd843c967d585edfd3508425d835686508d89836978e31ad03639483`.
+- Canario de contexto fresco: recomendó Graduar con pendientes sin integrar,
+  Reabrir preservando identidad/hechos/carpeta/Boceto y mantuvo
+  Devolver separado de Eliminar.
+- Recibo final `entrega-kora-v1` para Codex: `parity-faithful`; resolución,
+  validación y pruebas pasaron. Ese recibo prueba paridad material gestionada,
+  no conducta ni autoridad runtime.
+- En `deep-opm-pro`: 39/39 pruebas focales, 3408/3408 en `bun run check`, lint,
+  build de 793 módulos, corpus reproducible y cordón 2.1.0 verdes.
+
+### Estado y siguiente acción
+
+KORA `master` y `deep-opm-pro/main` están publicados. Las instalaciones de la
+skill están vigentes. No se modificaron modelos, datos, schema, credenciales ni
+infraestructura y no se desplegó la app.
+
+Producción permanece sana en `c692e0a4` y conserva 24/28 digests Tutor en
+paridad. Los cuatro pendientes son reglas, método, OPD y manual OPM puro. Para
+cerrar runtime se requiere otra autorización: preflight y backup, despliegue
+solo con `./deploy/deploy.sh`, verificación de SHA/salud y comparación 28/28 del
+manifiesto Tutor.
+
+## Corte anterior: skill de diseño UI clínica web y mobile web
 
 La fuente canónica nueva es:
 
@@ -1399,32 +1468,41 @@ institucionales no validan el manual HODOM no localizado que ese BOK declara.
 ## Cómo retomar
 
 1. Leer `CLAUDE.md`, este handoff y el estado Git vivo.
-2. Para TLHD o UI clínica paciente/episodio en web/mobile web, invocar
+2. Para el ciclo reversible, comprobar `master` en
+   `e43ebf791d31325efa410dd31c7aad38c2dd04f5` o posterior y leer el receptor
+   `/home/felix/projects/deep-opm-pro/docs/handoff-2026-07-21.md`.
+3. No confundir paridad de la skill con paridad productiva. Mientras OpForja
+   siga en `c692e0a4`, el resultado es GO con límite y cuatro digests Tutor
+   pendientes.
+4. Para cerrar runtime, obtener autorización explícita y ejecutar en
+   `deep-opm-pro` backup/preflight, `./deploy/deploy.sh`, cordón postdeploy y
+   comparación 28/28. No usar Compose directo ni promover modelos.
+5. Para TLHD o UI clínica paciente/episodio en web/mobile web, invocar
    `$diseno-ui-clinica-web-movil` con datos sintéticos o desidentificados. Para
    dirección UI/UX general, invocar `$director-diseno-producto`. Si se necesita
    delegación, usar el custom agent Codex aislado (`fork_context:false`), nunca
    un fork con historial completo.
-3. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
-4. Para una afirmación agéntica, identificar primero si habla de `Spec`,
+6. Ejecutar `velar --estricto`, suite completa y paridad del artefacto tocado.
+7. Para una afirmación agéntica, identificar primero si habla de `Spec`,
    `Model` o `Runtime`.
-5. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
+8. Exigir el testigo de la matriz del contrato antes de usar «coálgebra»,
    «bisimulación», «compone», «seguro» o «preserva».
-6. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad,
+9. El primer caso vertical ya cubre `obs_r`, un contraste finito de autoridad,
    el contrato operacional endurecido para Codex CLI y el contraste de
    inventarios del App Server vivo. Alinear el daemon solo en una ventana sin
    clientes y repetir la sonda; en una actualización de Codex, reauditar
    primero la disponibilidad de un manifiesto oficial y actualizar
    deliberadamente el pin y las sondas. No ampliar todavía el shape.
-7. Usar `entrega-kora` en tareas reales y registrar duración, estado del recibo
+10. Usar `entrega-kora` en tareas reales y registrar duración, estado del recibo
    y correcciones manuales. El siguiente corte debe decidir con esa evidencia
    si conviene mejorar el contrato JSON de paridad; no añadir targets ni
    aplicación automática por anticipado.
-8. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
+11. Para cerrar la dimensión `Runtime_T(a,r)` de `agent-architect`, abrir una
    sesión Codex nueva —evitando asumir hot reload—, invocarlo sobre un caso de
    autoría acotado y observar entradas, salidas, límites de herramientas y
    no-coordinación. No convertir la paridad material ya verde en evidencia
    conductual.
-9. Reparar `autoria-de-persona` en una unidad separada y coordinada con sus
+12. Reparar `autoria-de-persona` en una unidad separada y coordinada con sus
    instalaciones Claude Code, Codex y OpenCode; no parchear solo la copia
    runtime ni dejar targets instalados en deriva.
 
