@@ -32,10 +32,11 @@ Documento JSON canonico que la skill `modelamiento-opm` emite cuando el destino 
    certeza, **omitir**, no inventar.
 4. Nombres de cosas son humanos y deben coincidir con los emitidos en OPL-ES y en el OPD.
 5. `opdRaizId` DEBE resolver a un OPD con `padreId: null`. Un segundo OPD con
-   `padreId: null` y `id != opdRaizId` es un **OPD suelto** legítimo del Taller
-   bottom-up (R-OPD-REF-20), no una referencia rota. Puede editarse y emitir OPL;
-   en un modelo bloquea el export canónico hasta adoptarse y en un apunte degrada
-   a observación.
+   `padreId: null` y `id != opdRaizId` es un **Boceto** legítimo, no una
+   referencia rota. Puede editarse y emitir OPL; en un Modelo bloquea el export
+   canónico hasta Integrar y en un Apunte se informa con marca de bosquejo
+   (R-CAN-BOCETO-1..4 / R-OPD-REF-20). La UI usa **Integrar**; el kernel conserva
+   `adoptarOpd` como identificador interno de compatibilidad.
 6. Lo inválido es una referencia colgante: `padreId` que no resuelve,
    refinamiento hacia un OPD inexistente, enlace sin apariencia o extremo
    ausente. `validarReferenciasOpd` se aplica al hidratar y falla con error
@@ -258,7 +259,10 @@ interface Modelo {
 
 ### 5.4 OPD
 
-- `padreId: Id | null` — `null` solo para el OPD raiz.
+- `padreId: Id | null` — `null` para el OPD raiz y para cada Boceto; se
+  distinguen comparando `id` con `modelo.opdRaizId`. Un OPD integrado porta el
+  padre correspondiente y debe resolver desde exactamente un slot de
+  refinamiento.
 - `vista?: { kind: "generic-view"; readOnly?: boolean }` (E-1) — marca el OPD
   como **vista ad-hoc sin semantica de refinamiento**: reune apariciones
   existentes para navegar/explicar, no emite OPL (delta-cero) y queda exenta de
@@ -320,8 +324,8 @@ campo `bundle.json` del `ResultadoBundle` ES el documento importable
 2. Aplicar `validar-modelo` antes de serializar; corregir bloqueos estructurales.
 3. Serializar con `JSON.stringify(doc, null, 2)` (la app espera 2-space indentation por convencion, pero acepta cualquier whitespace valido).
 4. Adjuntar el bundle al entregable y dar al usuario el camino de import:
-   `cd ~/projects/deep-opm-pro/app && bun run dev` → gestor **«Modelos»** →
-   acción **«Importar JSON»** → pegar.
+   `cd ~/projects/deep-opm-pro/app && bun run dev` → **Abrir / importar
+   modelo** → gestor **Trabajo de modelado** → **Importar JSON** → pegar.
 5. Si la sesion ya tiene la app abierta y el bundle es chico, basta con copiar al portapapeles.
 6. Si la mesa entrega `LogDecisiones v0`, ejecutar `re-elicitar` antes de emitir
    un nuevo bundle. Un log sin consumidor operativo queda prohibido por la regla
