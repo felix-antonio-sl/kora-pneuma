@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:reglas-opm-estrictas-es
 nombre: reglas-opm-estrictas-es
-version: 1.4.2
+version: 1.5.0
 estado: publicado
 descripcion: "Reglas OPM estrictas — SSOT prescriptiva OPD/OPL de OPFORJA: canon de reglas duras para tooling, validación mecánica y modelado estricto."
-fuente: "SSOT OPM v1.4.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:976ad532b019d6815a7996b13b8122c25a9c52261cea782542206c0b0b60aa09) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.3.1) y el re-sync v1.4.0 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.4.1: frontera implicito/explicito de la invocacion entre subprocesos (R-INV-2D, 8 casos ratificados 2026-06-14) y aclaracion R-IDP-0A (el orden es declarado; la coordenada lo realiza)."
+fuente: "SSOT OPM v1.4.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/reglas-opm-estrictas-es.md (sha256:976ad532b019d6815a7996b13b8122c25a9c52261cea782542206c0b0b60aa09) el 2026-06-16 (commit bestia fccd1f51); cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Reemplaza la migracion snapshot del 2026-06-12 (v1.3.1) y el re-sync v1.4.0 del 2026-06-15; incorpora los deltas v1.4.0 del corpus consolidado (6.a familia de enlace Excepcion, abanicos convergentes de habilitadores, ruta sobre habilitadores, R-FAN-PROB-1 A/B/C, R-NOM-PROC-1 deverbal, co-enmiendas de bases) y el delta v1.4.1: frontera implicito/explicito de la invocacion entre subprocesos (R-INV-2D, 8 casos ratificados 2026-06-14) y aclaracion R-IDP-0A (el orden es declarado; la coordenada lo realiza). Enmienda v1.5.0 del 2026-07-27: eleva a este canon propietario el gate de Bocetos por regimen documental y separa integracion, graduacion, export y validacion humana."
 autor: FS
 creado: 2026-05-31
 lang: es
@@ -1173,6 +1173,26 @@ Es decir: `*P* genera **Obj**` (con n estados) ≡ `*P* genera exactamente uno d
 - **R-ARB-2**: el árbol de objetos OPD DEBE tener raíz en un objeto y mostrar su elaboración por refinamiento.
 - **R-ARB-3**: las etiquetas `SD`, `SD1`, `SD1.1` y análogas son navegación visible; la política de identidad persistente es R-IDP-2.
 - **R-ARB-4**: cada arista del árbol OPD DEBE tener semántica de refinamiento equivalente a `se refina por descomposición de NombreProceso en` o `se refina por despliegue de NombreCosa en`.
+- **R-CAN-BOCETO-1** (extensión local de herramienta): un **Boceto** es un
+  OPD no raíz con `padreId = null`, todavía sin un slot de refinamiento que lo
+  sitúe en el árbol. Es estado de organización del componente, no primitiva OPM,
+  especie documental ni error de integridad. Sus hechos locales DEBEN conservar
+  bimodalidad OPD↔OPL.
+- **R-CAN-BOCETO-2**: en **régimen Modelo**, la presencia de uno o más Bocetos
+  DEBE bloquear el export canónico `canon-diagrama` y `canon-documento` con
+  causa y nombres recuperables. Graduar con pendientes PUEDE dejar Bocetos en
+  un Modelo, pero NO satisface este gate ni los integra implícitamente.
+- **R-CAN-BOCETO-3**: en **régimen Apunte**, el perfil de export PUEDE incluir
+  Bocetos si lleva una **marca explícita** de bosquejo y no afirma cierre de
+  Modelo. La condición DEBE aparecer como observación y NO DEBE bloquear la
+  edición; la integridad estructural y la emisión OPL de los hechos siguen
+  siendo obligatorias.
+- **R-CAN-BOCETO-4**: Integrar como descomposición o despliegue y Devolver a
+  Bocetos DEBEN cambiar solo la pertenencia del OPD al árbol, preservando
+  identidad y hechos. Graduar a Modelo y Reabrir en Taller DEBEN cambiar solo
+  el régimen documental. Integrar NO gradúa; Graduar NO integra; ninguna de
+  estas operaciones, ni exportar o marcar Biblioteca, certifica validación
+  humana.
 - **R-OPL-TOTAL-1** (`SSOT-iso §OPL del sistema completo`): el OPL completo del sistema DEBE obtenerse concatenando los párrafos OPL locales en orden de navegación del árbol OPD.
 - **R-OPL-TOTAL-2**: el OPL completo NO DEBE describir solo el contexto actual; DEBE cubrir la totalidad del sistema individual cargado.
 - **R-OPL-TOTAL-3**: en modelos compuestos, cada modelo individual conserva OPL local autocontenido y la composición entre modelos exige referencias explícitas.

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:metodologia-forja-opm-es
 nombre: metodologia-forja-opm-es
-version: 1.6.1
+version: 1.7.0
 estado: publicado
 descripcion: "Metodología Forja — método de modelamiento OPM en opforja: destilación korificada del manual metodológico para la mesa de trabajo deep-opm-pro."
-fuente: "SSOT OPM v1.5.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-forja-es.md (sha256:7a30c72d1ad2c674fb3b29d4f0e01e5350ae66b652fdf932237073e42b8838b4) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Enmienda v1.6.0 del 2026-07-07: arranque bottom-up de primera clase. Correccion v1.6.1 del 2026-07-18: la firma de frontera se acota a equivalencia observacional relativa; se retira su identificacion automatica con equivalencia categorial, sustituibilidad total y fibracion."
+fuente: "SSOT OPM v1.5.1. Re-sincronizado desde la bestia (~/kora) artifacts/knowledge/fxsl/opm/opm-ssot-es/metodologia-forja-es.md (sha256:7a30c72d1ad2c674fb3b29d4f0e01e5350ae66b652fdf932237073e42b8838b4) el 2026-06-15; cuerpo byte-fiel. DECISION HITL 2026-06-15: pneuma toma la posta como SSOT viva de OPM (urn:kora:kb:regimen-de-ley); la bestia queda como ultimo origen historico, ya no SSOT viva. Enmienda v1.6.0 del 2026-07-07: arranque bottom-up de primera clase. Correccion v1.6.1 del 2026-07-18: la firma de frontera se acota a equivalencia observacional relativa; se retira su identificacion automatica con equivalencia categorial, sustituibilidad total y fibracion. Enmienda v1.7.0 del 2026-07-27: separa el ciclo documental Apunte-Modelo del ciclo de componente Boceto-OPD integrado, incorpora sus inversas y preservaciones, y distingue graduacion, integracion, export canonico y validacion humana."
 autor: FS
 creado: 2026-05-31
 lang: es
@@ -14,7 +14,7 @@ depende: [urn:fxsl:kb:opm-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:opd-es]
 cita: [urn:fxsl:kb:opm-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:manual-metodologico-opm-es, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-escala]
 ---
 
-# Metodología Forja — método de modelamiento OPM en opforja (v1.6.1)
+# Metodología Forja — método de modelamiento OPM en opforja (v1.7.0)
 
 SSOT **primaria y autónoma** del *método* de modelar OPM con la herramienta
 opforja (deep-opm-pro). Contiene todo el procedimiento (no requiere abrir otra
@@ -56,7 +56,7 @@ fuente para modelar) + el catálogo de lecciones forja + la realización del bun
 
 ## A1. Principio rector y clasificación
 
-**A1.1 Regla rectora.** El modelado **DEBE** empezar por la **función**, seguir con valor/agentes/entorno/transformados, y solo después profundizar en estructura, control, simulación y gobernanza. La función es la semilla; el SD precede a todo refinamiento; la claridad local nunca viola la completitud global; toda heurística está subordinada a la equivalencia OPD↔OPL y a la unicidad del hecho. **Práctica real = middle-out**: se empieza por el nivel mejor entendido y se refina/abstrae en ambas direcciones; "empezar por la función" fija la *semilla conceptual*, no obliga a construir top-down estricto.
+**A1.1 Regla rectora.** El modelado **DEBE** empezar por la **función**, seguir con valor/agentes/entorno/transformados, y solo después profundizar en estructura, control, simulación y gobernanza. La función es la semilla; el SD precede a todo refinamiento **integrado en el árbol**, aunque un Boceto bottom-up pueda existir antes de decidir ese SD; la claridad local nunca viola la completitud global; toda heurística está subordinada a la equivalencia OPD↔OPL y a la unicidad del hecho. **Práctica real = middle-out**: se empieza por el nivel mejor entendido y se refina/abstrae en ambas direcciones; "empezar por la función" fija la *semilla conceptual*, no obliga a construir top-down estricto.
 
 **A1.2 Clasificación del sistema (pre-etapa obligatoria).** Determina qué componentes del SD aplican:
 
@@ -92,22 +92,69 @@ Preguntas guía para observar antes de plasmar:
 
 **A1.4 Modos de aplicación real.** Además del diseño forward, Forja reconoce tres modos frecuentes: (a) **task analysis humano-máquina**, donde el OPD debe modelar personas, tecnología, decisiones, feedback y contingencias como un solo sistema procedimental; (b) **modelo prospectivo/To-Be**, donde el OPD describe una arquitectura futura o prototipo digital y debe marcar la fuerza epistémica de sus objetos/procesos; (c) **digital twin / CPS**, donde el OPD combina proceso físico, datos, simulación y predicción sin convertir cada variable en transformee. El modo elegido no cambia las primitivas OPM; cambia la disciplina de evidencia, validación y altitud.
 
-**A1.5 Arranque bottom-up de primera clase (bosquejo → reconciliación → SD0).** Forja reconoce dos arranques **hermanos**, ambos de primera clase y subordinados a la misma ley de equivalencia OPD↔OPL y a la función-semilla (A1.1):
+**A1.5 Taller y arranque bottom-up de primera clase.** Forja reconoce dos
+arranques hermanos, subordinados a la misma equivalencia OPD↔OPL y a la
+función-semilla (A1.1):
 
-- **SD-primero** (default del asistente guiado, A2): fija la función en el SD y refina hacia abajo (A3). Es el camino disciplinado del diseño forward.
-- **Bottom-up (bosquejo)**: el modelador **PUEDE** trazar **fragmentos sueltos** —OPDs sin padre, hechos OPM locales— sin comprometer aún un SD, y reconciliarlos después hacia el SD0. Hace explícito lo que A1.1 (middle-out) y A1.3 (MBRSE) ya admiten: el arranque **no obliga** a decidir el SD antes del primer hecho.
+- **SD-primero** (default del asistente guiado, A2): fija la función en el SD y
+  refina hacia abajo (A3).
+- **Bottom-up**: permite trazar Bocetos —OPDs no raíz todavía fuera del árbol de
+  refinamiento— antes de comprometer un SD, y situarlos después donde agregan
+  detalle motivado.
+
+La mesa mantiene dos ciclos reversibles **independientes**:
+
+```text
+Documento: Apunte ⇄ Modelo       (Graduar a Modelo / Reabrir en Taller)
+Componente: Boceto ⇄ OPD integrado (Integrar como… / Devolver a Bocetos)
+```
+
+El **Taller** es el espacio global de documentos Apunte; **Bocetos** es la banda
+local de componentes todavía no integrados. Un Apunte puede contener OPDs
+integrados y un Modelo puede conservar Bocetos como pendientes: ninguna de esas
+combinaciones crea una tercera especie ni una etapa persistida.
 
 Reglas de uso:
-- El bosquejo es **OPM legítimo con rigor de cierre relajado**: los juicios de **validez de método** (SD sin proceso principal, densidad, nombres, refinamiento no trivial, preservación de frontera) se **observan**, no bloquean, mientras el material esté en régimen de bosquejo. La **integridad estructural NUNCA se relaja** (referencias colgantes, formato, geometría rechazan igual).
-- La **reconciliación hacia el SD0** es el acto que **cobra el rigor**: al **graduar** el bosquejo a modelo, los juicios de validez vuelven **exigibles** y el reporte los muestra.
-- El bottom-up **NO crea un mecanismo de refinamiento nuevo**: un fragmento suelto se incorpora al árbol por **adopción** (spec-forja-opd-es §10.4 R-OPD-REF-20) — fijar padre + declarar refinamiento en un gesto, **convergente por construcción** con el refinamiento top-down (mismo constructor de vínculo; el contenido del OPD hijo difiere legítimamente: el top-down auto-andamia, adoptar toma el suelto tal cual).
-*(anclaje: A1.1 middle-out; A1.3 MBRSE; realización spec-forja-opd-es §10.4 R-OPD-REF-20; doctrina resuelta HITL custodio 2026-07-06.)*
+
+- **Integridad constante.** Apunte y Boceto relajan cierre u orden, nunca
+  referencias, formato ni geometría. Un documento roto bloquea en cualquier
+  régimen.
+- **Ciclo documental.** Graduar a Modelo cambia el régimen de cierre del mismo
+  documento: conserva identidad y hechos, vuelve exigibles sus pendientes y
+  crea una versión. Si la integridad está sana, el operador PUEDE **Graduar con
+  pendientes**; el gesto no corrige, integra ni certifica. **Graduar no
+  integra** Bocetos. Reabrir en Taller es la inversa de régimen y conserva
+  identidad, hechos y carpeta; tampoco invalida por sí sola una validación
+  humana registrada sobre una versión.
+- **Ciclo del componente.** Integrar como descomposición o despliegue fija padre
+  y slot de refinamiento en un solo gesto, usando el mismo constructor de
+  vínculo que el refinamiento top-down. La convergencia es del vínculo, no del
+  contenido: el Boceto conserva su autoría. Devolver a Bocetos libera ese
+  vínculo y preserva ID, hechos y subárbol. **Eliminar refinamiento** es una
+  operación destructiva distinta, nunca la inversa de Integrar.
+- **Cierre y export.** La preparación formal es derivada, no persistida. En
+  régimen Modelo, un Boceto pendiente bloquea el export canónico según
+  `reglas-opm-estrictas-es` R-CAN-BOCETO-1..4; en régimen Apunte se informa y
+  marca el bosquejo sin bloquear la edición. Graduar y exportar son decisiones
+  separadas.
+- **Validación humana separada.** Integrar, Graduar a Modelo, exportar o marcar
+  Biblioteca no aprueba el contenido ni sustituye a una persona o autoridad de
+  dominio.
+
+*(anclaje: A1.1 middle-out; A1.3 MBRSE; validez
+`reglas-opm-estrictas-es` R-CAN-BOCETO-1..4; realización
+`spec-forja-opd-es` §10.4 R-OPD-REF-20; contrato de producto
+deep-opm-pro `2026-07-27-taller-modelos-ciclo-reversible-design.md`.)*
 
 ## A2. Construcción del SD (asistente agnóstico, 11 etapas)
 
 Cada etapa **DEBE** cerrar con un hecho explícito listo para OPD/OPL. El asistente no termina cuando el usuario "entiende"; termina cuando los hechos mínimos quedaron decididos. Si una etapa no cierra, retroceder a la que bloquea.
 
-> El asistente de las 11 etapas realiza el arranque **SD-primero**. El arranque **bottom-up** (A1.5) es su hermano legítimo para elicitación exploratoria: no pasa por este asistente hasta la **reconciliación** (graduación del bosquejo a modelo), momento en que estas 11 etapas se exigen sobre el SD resultante.
+> El asistente de las 11 etapas realiza el arranque **SD-primero**. El arranque
+> **bottom-up** (A1.5) es su hermano legítimo para elicitación exploratoria:
+> puede aplicar estas etapas cuando emerge un candidato a SD. Graduar no ejecuta
+> ni completa el asistente de manera implícita; en régimen Modelo, lo pendiente
+> reaparece como cierre exigible.
 
 | # | Objetivo | Salida mínima |
 |---|---|---|
@@ -647,3 +694,4 @@ Realización canónica implementada en `deep-opm-pro` sin copiar gestos OPCloud 
 | 2026-06-12 | v1.5.1 — auditoría de coherencia del corpus 2026-06-12: A2.1 lifteado a `reglas-opm-estrictas-es` R-AG-3/R-AG-4 (la vía «instrumento + atributo medido» queda condicionada a ratificación previa en reglas como extensión declarada, p.ej. R-AG-3A; condición de mantenimiento alineada a alcance declarado/exclusión declarada); A8 «métrica antes que conclusión» comprimida a referencia a LF-19.3 (se retira la narrativa del incidente 99-vs-8); LF-19.4 abstraído a declaración explícita y auditable de caracterización (el literal `Coproducto XOR-n` y su parseo por barrido bajan al nuevo campo 9 «Realización opforja» de LF-19, conforme al molde B; la acusación por defecto permanece en el método); anclas SSOT corregidas por misatribución de capa: LF-05.9 (`opd-es` §10.12 semi-plegado V-116..V-120; se añade `manual` §7.2) y LF-06.9 (`opd-es` §9.3, no `manual`). |
 | 2026-07-07 | v1.6.0 — arranque bottom-up de primera clase (HITL custodio): **A1.5 nueva** (bosquejo → reconciliación → SD0 como hermano legítimo del SD-primero, bajo la misma ley de equivalencia OPD↔OPL y la función-semilla A1.1; el bosquejo es OPM legítimo con rigor de cierre relajado — los juicios de validez de método se observan, no bloquean; la integridad estructural NUNCA se relaja; la reconciliación cobra el rigor al graduar; sin mecanismo de refinamiento nuevo — se incorpora por **adopción**, spec-opd §10.4 R-OPD-REF-20, convergente por construcción con el top-down) + nota de preámbulo en A2 (el asistente de 11 etapas realiza el arranque SD-primero; el bottom-up no pasa por el asistente hasta la reconciliación, donde las 11 etapas se exigen sobre el SD resultante). Realiza la doctrina bottom-up resuelta 2026-07-06 y el working-artifact deep-opm-pro `2026-07-06-apuntes-taller-design.md`. *(Fila de bitácora repuesta 2026-07-09: la enmienda ya constaba en frontmatter/título; se completa el registro.)* |
 | 2026-07-18 | v1.6.1 — corrección epistémica: igualdad de firma de frontera pasa a equivalencia observacional relativa y condición necesaria de sustitución; no implica identidad, bisimulación ni equivalencia categorial. La lectura de fibración queda como hipótesis hasta construir lifts cartesianos. |
+| 2026-07-27 | v1.7.0 — separa los ciclos reversibles de documento (Apunte ⇄ Modelo) y componente (Boceto ⇄ OPD integrado); reserva Taller para el espacio global, incorpora Reabrir y Devolver como inversas preservantes, permite graduación explícita con pendientes cuando la integridad está sana y separa integración, cierre, export canónico y validación humana. |
