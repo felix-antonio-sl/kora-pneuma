@@ -111,14 +111,13 @@ instalada con alcance de usuario en:
 /home/felix/.agents/skills/reporte-diario-hodom/
 ```
 
-La emisión Codex de la versión `2.1.0` fue regenerada y pasó `sello-fresco`.
-La instalación de usuario conserva `2.0.0`: `entrega-kora-v1` informó
-`blocked` en paridad, con `1` unidad desviada porque difieren `SKILL.md` y
-`contrato-reporte-diario.md`, y falta `playbook-hsc-agent-cli.md`.
+La emisión y la instalación Codex corresponden a la versión `2.1.0`. El
+operador autorizó explícitamente la instalación el 2026-07-28; tras aplicar la
+emisión, `entrega-kora-v1` informó `parity-faithful`: `1` unidad fiel, `0`
+desviadas, `0` no instaladas y `0` sin emisión. La instalación contiene
+`SKILL.md`, `contrato-reporte-diario.md` y `playbook-hsc-agent-cli.md`.
 
-No se ejecutó `--aplicar`: `entrega-kora-v1` se detiene antes de instalar y la
-instalación requiere autorización humana explícita. Claude Code, OpenCode,
-OpenClaw y Hermes no son targets de este artefacto.
+Claude Code, OpenCode, OpenClaw y Hermes no son targets de este artefacto.
 
 La paridad prueba igualdad material en la frontera gestionada. No prueba
 conducta runtime, autoridad efectiva, ejecución clínica completa ni aprobación
@@ -147,9 +146,9 @@ velar --estricto               13/13
 git diff --check               pass
 quick_validate genérica        no aplicable al frontmatter KORA
 emisión Codex                  SKILL.md + 2 referencias
-paridad skill                  0/1 fiel; 1 desviada
-recibo entrega-kora-v1         blocked en parity
-instalación Codex              conserva 2.0.0
+paridad skill                  1/1 fiel; 0 desviadas
+recibo entrega-kora-v1         parity-faithful
+instalación Codex              versión 2.1.0
 bash -n del runner             pass
 canario JSON Schema             pass
 timers y servicios HODOM       retirados
@@ -178,10 +177,9 @@ clínico completo ni que el corte de las 08:00 termine antes de las 11:00.
 
 ## Próxima acción
 
-Si el operador autoriza instalar la versión `2.1.0`, ejecutar las gates desde
-un árbol limpio, aplicar la emisión Codex, repetir paridad focal y registrar el
-recibo. Paridad material no sustituye un canario vivo ni revisión humana de
-utilidad.
+La entrega material está cerrada. Ante la próxima solicitud explícita de un
+corte, ejecutar el canario vivo y someter una muestra a revisión humana de
+utilidad; no inferir esos resultados desde la paridad.
 
 ## Siguiente ejecución manual
 
