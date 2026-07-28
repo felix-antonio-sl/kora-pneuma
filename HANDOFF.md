@@ -22,10 +22,12 @@ urn:salud:artefacto:reporte-diario-hodom
   artefactos/skills/salud/reporte-diario-hodom/
   ├── SKILL.md
   └── referencias/
-      └── contrato-reporte-diario.md
+      ├── contrato-reporte-diario.md
+      └── playbook-hsc-agent-cli.md
 ```
 
-Versión `2.0.0`, estado `activo`, target exclusivo `codex`, alcance `usuario`.
+Versión fuente `2.1.0`, estado `activo`, target exclusivo `codex`, alcance
+`usuario`.
 Commits fuente:
 
 ```text
@@ -43,6 +45,18 @@ La skill es una orquestación delgada. No duplica juicio clínico ni gestión:
 - `auditor-calidad-hospitalizacion`: gates de completitud;
 - `manual-agente-hsc-agent-cli`: contrato vivo de adquisición.
 
+La versión `2.1.0` responde el memo DT del 2026-07-28 sin cambiar el binario:
+
+- separa el recorrido exhaustivo HODOM del embudo selectivo de candidatos;
+- ejecuta todo `batch_plan` solo para HODOM y prohíbe por defecto ejecutar el
+  plan masivo de los servicios candidatos;
+- fija argv, stream, `--fresh`, presupuesto de bytes y cierre por igualdad de
+  conjuntos;
+- prueba la composición `hodom:libro-mayor`/`hodom:programacion` por
+  `items[]` y registra ledger paciente × fuente × tiempo × estado;
+- agrega gates `G9-provenance`, `G10-utility` y `G11-funnel`;
+- incorpora fixture sintético y canario vivo no identificable como referencia.
+
 ## Contrato operativo
 
 Cada brief incluye identificadores clínicos, situación actual, tendencia,
@@ -58,7 +72,7 @@ La actualización de las 11:00 consulta de nuevo las fuentes y compara un
 manifiesto mínimo. Si falta la base de las 08:00, genera el reporte vigente y
 declara `baseline-unavailable`; no fabrica el delta.
 
-La versión `2.0.0` conserva de `1.0.2`:
+La versión `2.1.0` conserva de `2.0.0`:
 
 - cada servicio consta como observado o no observable, aun con cero candidatos;
 - el contenido clínico se trata como dato no confiable, nunca como instrucción;
@@ -97,10 +111,14 @@ instalada con alcance de usuario en:
 /home/felix/.agents/skills/reporte-diario-hodom/
 ```
 
-La verificación viva mediante `entrega-kora-v1` resolvió la versión `2.0.0`
-activa como `parity-faithful`: `1` unidad fiel, `0` desviadas, `0` no emitidas
-y `0` no instaladas. Claude Code, OpenCode, OpenClaw y Hermes no son targets de
-este artefacto y no recibieron esta versión.
+La emisión Codex de la versión `2.1.0` fue regenerada y pasó `sello-fresco`.
+La instalación de usuario conserva `2.0.0`: `entrega-kora-v1` informó
+`blocked` en paridad, con `1` unidad desviada porque difieren `SKILL.md` y
+`contrato-reporte-diario.md`, y falta `playbook-hsc-agent-cli.md`.
+
+No se ejecutó `--aplicar`: `entrega-kora-v1` se detiene antes de instalar y la
+instalación requiere autorización humana explícita. Claude Code, OpenCode,
+OpenClaw y Hermes no son targets de este artefacto.
 
 La paridad prueba igualdad material en la frontera gestionada. No prueba
 conducta runtime, autoridad efectiva, ejecución clínica completa ni aprobación
@@ -123,15 +141,15 @@ solicitada por el operador.
 ## Evidencia
 
 ```text
-pruebas focales                 13/13
-suite KORA                      303/303
+pruebas focales                 16/16
+suite KORA                      306/306
 velar --estricto               13/13
 git diff --check               pass
-quick_validate emitida         valid
-emisión Codex                  SKILL.md + 1 referencia
-paridad skill                  1/1 fiel
-recibo entrega-kora-v1         parity-faithful
-permisos instalados            0600
+quick_validate genérica        no aplicable al frontmatter KORA
+emisión Codex                  SKILL.md + 2 referencias
+paridad skill                  0/1 fiel; 1 desviada
+recibo entrega-kora-v1         blocked en parity
+instalación Codex              conserva 2.0.0
 bash -n del runner             pass
 canario JSON Schema             pass
 timers y servicios HODOM       retirados
@@ -157,6 +175,13 @@ constan como no observables; DOCX/manifest/schema/permisos verdes. El log
 diagnóstico potencialmente sensible y todos los temporales fueron eliminados.
 Esta evidencia prueba el fail-closed y la salida degradada; no prueba un reporte
 clínico completo ni que el corte de las 08:00 termine antes de las 11:00.
+
+## Próxima acción
+
+Si el operador autoriza instalar la versión `2.1.0`, ejecutar las gates desde
+un árbol limpio, aplicar la emisión Codex, repetir paridad focal y registrar el
+recibo. Paridad material no sustituye un canario vivo ni revisión humana de
+utilidad.
 
 ## Siguiente ejecución manual
 

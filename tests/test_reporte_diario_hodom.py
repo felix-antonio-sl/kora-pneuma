@@ -14,6 +14,7 @@ SKILL = (
     / "artefactos/skills/salud/reporte-diario-hodom/SKILL.md"
 )
 CONTRATO = SKILL.parent / "referencias/contrato-reporte-diario.md"
+PLAYBOOK = SKILL.parent / "referencias/playbook-hsc-agent-cli.md"
 
 
 class TestReporteDiarioHodom(unittest.TestCase):
@@ -23,13 +24,14 @@ class TestReporteDiarioHodom(unittest.TestCase):
         cls.campos, cls.cuerpo = kora.parsear_archivo(
             SKILL.read_text("utf-8"))
         cls.contrato = CONTRATO.read_text("utf-8")
+        cls.playbook = PLAYBOOK.read_text("utf-8")
 
     def test_identidad_forma_y_target(self):
         self.assertEqual(
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "2.0.0")
+        self.assertEqual(self.campos["version"], "2.1.0")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -155,11 +157,48 @@ class TestReporteDiarioHodom(unittest.TestCase):
                 "G5-services",
                 "G6-candidates",
                 "G7-delta",
-                "G8-docx"):
+                "G8-docx",
+                "G9-provenance",
+                "G10-utility",
+                "G11-funnel"):
             self.assertIn(gate, self.contrato)
 
+    def test_playbook_separa_hodom_de_embudo_selectivo(self):
+        combinado = " ".join((self.cuerpo + self.playbook).split())
+        for testigo in (
+                "ejecutar todo el `batch_plan`",
+                "no ejecutar el `batch_plan` masivo",
+                "--fresh --stream --budget-bytes 16384",
+                "handles_materializados = handles_seleccionados",
+                "No usar `--with-rut` sobre el board completo"):
+            self.assertIn(testigo, combinado)
+
+    def test_playbook_prueba_fuentes_drive_y_cierre_del_censo(self):
+        for testigo in (
+                "hodom:libro-mayor/<rut>",
+                "hodom:programacion/<rut>",
+                "summary.hodom_identity_resolution",
+                "summary.source_issues[]",
+                "summary.bundle_integrity",
+                "summary.discrepancies[]",
+                "covered_handle_count == ready_count"):
+            self.assertIn(testigo, self.playbook)
+
+    def test_playbook_define_ledger_presupuesto_y_eval(self):
+        for testigo in (
+                "requested_handle",
+                "evidence_path",
+                "Sintetizar un paciente por vez",
+                "hasta 350 palabras",
+                "Fixture sintético versionable",
+                "Canario vivo sin PHI versionada",
+                "revisión humana"):
+            self.assertIn(testigo, self.playbook)
+
     def test_fuente_y_pruebas_no_contienen_identificadores_clinicos(self):
-        combinado = SKILL.read_text("utf-8") + self.contrato
+        combinado = (
+            SKILL.read_text("utf-8") + self.contrato + self.playbook
+        )
         self.assertNotRegex(combinado, r"\b\d{7,8}-[\dkK]\b")
         self.assertNotRegex(
             combinado,

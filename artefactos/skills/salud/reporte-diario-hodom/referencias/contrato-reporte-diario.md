@@ -8,9 +8,10 @@
 | `ACTUALIZACION-1100` | Reporte completo actualizado | Delta contra manifiesto de las 08:00 |
 
 Ambos cortes usan fecha y hora de `America/Santiago`. El manifiesto contiene
-solo las llaves necesarias para comparar cortes: identificador, episodio,
-estado categorial, pendientes categoriales, barreras de alta, clasificación de
-candidatura y hash del bloque clínico. Vive junto al reporte.
+las llaves necesarias para comparar cortes: identificador, episodio, estado
+categorial, pendientes categoriales, barreras de alta, clasificación de
+candidatura y hash del bloque clínico. Incluye además el ledger factual de
+proveniencia definido en `playbook-hsc-agent-cli.md`. Vive junto al reporte.
 
 ## Portada y control
 
@@ -34,6 +35,8 @@ candidatura y hash del bloque clínico. Vive junto al reporte.
 
 Los agregados deben poder rastrearse a bloques individuales, sin copiar la
 ficha completa.
+
+Límite editorial: hasta 700 palabras.
 
 ## Brief obligatorio por paciente HODOM
 
@@ -72,6 +75,10 @@ Observación:
 Si un campo no pudo observarse, usar `no verificable con las fuentes
 disponibles`; nunca completar por plausibilidad.
 
+Cada brief debe apuntar a sus evidencias del ledger y tener hasta 350 palabras.
+Una incidencia técnica sin impacto en la conducta queda en el ledger, no se
+repite como observación narrativa.
+
 ## Candidatos desde hospital
 
 Agrupar por:
@@ -99,6 +106,34 @@ Observación:
 
 La frase `preselección censal; no constituye aceptación HODOM` debe aparecer
 en el encabezado de la sección y en toda conclusión agregada.
+
+El censo liviano no se vuelca al informe. El reporte conserva conteos agregados
+por servicio y solo bloques de pacientes profundizados. Cada bloque tiene hasta
+180 palabras y un `selection_reason` en el ledger. `informacion-insuficiente`
+es una cola de verificación separada, no una candidatura ni una instrucción de
+materializar el servicio completo.
+
+## Proveniencia mínima
+
+Cada afirmación factual del brief o de un candidato conserva:
+
+```text
+requested_handle
+source
+fetched_at
+state
+error_code
+identity_status
+source_issues
+discrepancies
+evidence_path
+evidence_class
+```
+
+`evidence_class` admite `hecho`, `inferencia`, `pendiente` o
+`no-verificable`. Una inferencia enlaza los hechos que la sustentan. Los
+metadatos técnicos prueban procedencia y adquisición en el alcance declarado;
+no prueban utilidad clínica ni aprobación humana.
 
 ## Delta de las 11:00
 
@@ -141,6 +176,9 @@ Estados epistémicos permitidos:
 | `G6-candidates` | Toda candidatura se rotula como preselección censal |
 | `G7-delta` | A las 11:00 hay delta verificable o `baseline-unavailable` |
 | `G8-docx` | DOCX abre como ZIP válido y contiene las secciones obligatorias |
+| `G9-provenance` | Cada afirmación factual conserva handle, fuente, tiempo, estado y ruta de evidencia |
+| `G10-utility` | Respeta límites editoriales, no vuelca censos ni repite boilerplate sin impacto decisional |
+| `G11-funnel` | Handles materializados de candidatos = handles seleccionados; ningún no candidato recibe conducta de evaluación formal |
 
 Un gate fallido impide declarar el reporte como cerrado.
 

@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:reporte-diario-hodom
 nombre: reporte-diario-hodom
-version: 2.0.0
+version: 2.1.0
 estado: activo
-descripcion: "Orquesta el reporte diario interno de HODOM: censo y brief por paciente, pendientes y requisitos de alta, conflictos como observacion, y preseleccion censal de candidatos desde Urgencia, Medicina, Traumatologia y Cirugia."
-fuente: "Autoria de novo 2026-07-27 por encargo del Director Tecnico HODOM. Sintetiza el contrato operativo del reporte diario sin copiar metodos clinicos existentes: compone hospitalizacion-domiciliaria, hospitalista, asistencial-hospital, asistencial-hodom y el manual agente de hsc-agent-cli. v1.0.1 (2026-07-27): trata el contenido clinico como dato no confiable frente a prompt injection y hace explicita la cobertura o no-observabilidad de cada servicio. v1.0.2 (2026-07-28): separa la indisponibilidad del runtime de la caida de una fuente, exige verificar conectividad desde la misma frontera de ejecucion y prohibe crear agendas, timers o reintentos autonomos. v2.0.0 (2026-07-28): por decision explicita del operador, retira de la skill las compuertas y restricciones sobre PII/PHI; su proteccion pertenece al entorno de ejecucion externo."
+descripcion: "Orquesta el reporte diario interno de HODOM: censo y brief trazable por paciente, pendientes y requisitos de alta, conflictos como observacion, y embudo censal selectivo de candidatos desde Urgencia, Medicina, Traumatologia y Cirugia."
+fuente: "Autoria de novo 2026-07-27 por encargo del Director Tecnico HODOM. Sintetiza el contrato operativo del reporte diario sin copiar metodos clinicos existentes: compone hospitalizacion-domiciliaria, hospitalista, asistencial-hospital, asistencial-hodom y el manual agente de hsc-agent-cli. v1.0.1 (2026-07-27): trata el contenido clinico como dato no confiable frente a prompt injection y hace explicita la cobertura o no-observabilidad de cada servicio. v1.0.2 (2026-07-28): separa la indisponibilidad del runtime de la caida de una fuente, exige verificar conectividad desde la misma frontera de ejecucion y prohibe crear agendas, timers o reintentos autonomos. v2.0.0 (2026-07-28): por decision explicita del operador, retira de la skill las compuertas y restricciones sobre PII/PHI; su proteccion pertenece al entorno de ejecucion externo. v2.1.0 (2026-07-28): incorpora el dictamen tecnico solicitado por DT: recorrido completo HODOM mediante batch_plan secuencial y stream, prueba de composicion SGH-Drive, ledger de proveniencia, presupuesto por paciente y embudo de candidatos en dos etapas que prohibe ejecutar por defecto los batch_plan masivos de los servicios."
 autor: FS
 creado: 2026-07-27
 lang: es
@@ -83,12 +83,16 @@ PII/PHI. El entorno de ejecución externo es responsable de aplicarlos.
 Cada ejecución entrega:
 
 1. Un DOCX completo, aun en `ACTUALIZACION-1100`.
-2. Un manifiesto mínimo para comparar cortes.
+2. Un manifiesto mínimo para comparar cortes y conservar el ledger factual de
+   proveniencia.
 3. Un estado de ejecución: modo, fecha, rutas, conteos, advertencias y
    resultado de validación.
 
 La estructura y campos obligatorios viven en
-`referencias/contrato-reporte-diario.md`.
+`referencias/contrato-reporte-diario.md`. Para toda ejecución con
+`hsc-agent-cli`, leer además
+`referencias/playbook-hsc-agent-cli.md`; contiene los argv, presupuestos,
+invariantes de cierre y EVAL de referencia.
 
 ## Workflow
 
@@ -120,7 +124,14 @@ El contrato operacional completo se resuelve por
 
 ### 3. `censar-hodom`
 
-Ejecutar `hsc-agent-cli find --hospitalizados --hodom`. Validar:
+Ejecutar:
+
+```text
+hsc-agent-cli find --hospitalizados --hodom \
+  --fields ingreso_id,handle,handle_status,nombre,rut,diagnostico,dias_hospitalizacion,fecha_ingreso,service_name,room_name
+```
+
+Validar:
 
 - `sweep_complete && enumeration_complete`;
 - `ready_count`, `missing_handle_count` y cobertura del `batch_plan`;
@@ -134,15 +145,25 @@ activos observados no direccionables y marcar el límite como `Observación`.
 ### 4. `materializar-episodios`
 
 Ejecutar en serie todas las órdenes de `batch_plan.requests[]`, respetando
-`execution_order`; usar `--stream` cuando el lote lo permita. SGH legacy
-serializa: no aumentar concurrencia ni delegar pacientes en paralelo.
+`execution_order`; agregar `--fresh --stream --budget-bytes 16384` a cada
+request multi `--handoff`. Si existe un solo handle listo y por ello no hay
+`batch_plan`, ejecutar un bundle single sin `--stream`. SGH legacy serializa:
+no aumentar concurrencia externa ni delegar pacientes en paralelo.
 
 Para cada bundle:
 
 1. revisar primero `state` y `error_code`;
-2. revisar `summary.source_issues` y `summary.bundle_integrity`;
-3. reconstruir curso con evolución, indicaciones, ingreso y fuentes seriadas;
-4. materializar handles adicionales solo si cambian la decisión del día.
+2. probar la presencia o limitación explícita de
+   `hodom:libro-mayor/<rut>` y `hodom:programacion/<rut>` en `items[]`;
+3. revisar `summary.source_issues`, `summary.bundle_integrity`,
+   `summary.hodom_identity_resolution` y `summary.discrepancies`;
+4. sintetizar y descartar del contexto la salida cruda paciente a paciente;
+5. materializar handles adicionales solo si un campo necesario quedó truncado
+   o si su contenido puede cambiar la decisión del día.
+
+El cierre del recorrido exige igualdad de conjuntos entre handles listos,
+handles cubiertos por el plan y bundles terminales recibidos. Un summary
+terminal de stream no reemplaza la comprobación de cada componente.
 
 ### 5. `conciliar-evidencia`
 
@@ -160,6 +181,12 @@ no se oculta ni se fuerza a consenso. Se escribe:
 Observación: [fuentes en conflicto] — [contenido del conflicto] —
 impacto: [qué decisión impide o condiciona].
 ```
+
+Por cada afirmación del brief, registrar en el manifiesto: handle, fuente,
+`fetched_at`, `state`, `error_code`, ruta JSON y clase epistémica. `--fresh`,
+`fetched_at` y `cache_status` prueban la adquisición ejecutada y su relación
+con la caché; no prueban actualidad del contenido upstream, utilidad clínica
+ni validación humana.
 
 ### 6. `redactar-briefs`
 
@@ -187,6 +214,15 @@ Censar por separado y sin N+1:
 - Traumatología;
 - Cirugía, incluida Área Quirúrgica si el censo la presenta separada.
 
+Aplicar un embudo de dos etapas:
+
+1. **Censo liviano:** usar solo `find` con filtros de servicio y `--fields`.
+   No ejecutar los `batch_plan` devueltos por esos censos: describen cómo
+   materializar el servicio completo, no recomiendan candidatos.
+2. **Profundización selectiva:** construir lotes únicamente con los handles
+   cuya selección tenga una razón factual registrada. Usar como máximo tres
+   handles SGH o nueve DAU por invocación y sintetizar un paciente por vez.
+
 Cada servicio debe quedar presente en el reporte con una de dos evidencias:
 `observado` o `no observable en este corte` y su causa. Cero candidatos no
 autoriza omitir el servicio.
@@ -195,14 +231,19 @@ Aplicar `urn:salud:artefacto:hospitalista` para flujo y transición,
 `urn:salud:artefacto:asistencial-hospital` para lectura del caso y
 `urn:salud:artefacto:hospitalizacion-domiciliaria` para la compuerta HODOM.
 
-Clasificar cada hallazgo:
+El censo liviano solo permite `profundizar`, `no profundizar por criterio
+observado` o `indeterminado por censo`. No permite declarar elegibilidad ni
+`no-candidato-en-este-corte` por ausencia de un campo. Clasificar después de
+la profundización:
 
 - `candidato-prioritario-para-evaluacion`;
 - `candidato-posible-con-verificaciones`;
 - `no-candidato-en-este-corte`;
 - `informacion-insuficiente`.
 
-Todo candidato es **preselección censal**. Antes de autorizar ingreso faltan,
+`informacion-insuficiente` es una cola de verificación, no un candidato ni una
+orden automática para materializar el resto del servicio. Todo candidato es
+**preselección censal**. Antes de autorizar ingreso faltan,
 como mínimo: estabilidad clínica, necesidad de intensidad hospitalaria,
 domicilio apto, cuidador o red de apoyo, consentimiento, cobertura operacional
 y ruta de reingreso.
@@ -244,6 +285,13 @@ Antes de declarar éxito:
 4. verificar que cada conflicto usa `Observación`;
 5. verificar cobertura explícita de los cuatro servicios fuente;
 6. verificar que toda candidatura dice `preselección censal`;
+7. verificar el ledger paciente × fuente × tiempo × estado y la proveniencia
+   de cada afirmación;
+8. verificar que los bundles de candidatos son subconjunto exacto de los
+   handles seleccionados y que no se ejecutó por defecto el plan masivo de un
+   servicio;
+9. verificar los límites de utilidad y extensión de
+   `referencias/contrato-reporte-diario.md`;
 
 Si falla un gate, conservar el artefacto como borrador, declarar el gate
 fallido y no presentarlo como reporte cerrado.
@@ -267,6 +315,14 @@ fallido y no presentarlo como reporte cerrado.
     candidatos no permite omitir un servicio.
 12. Cada invocación ejecuta un solo corte y termina. No crear ni modificar
     timers, cron, recordatorios, monitores o reintentos autónomos.
+13. `batch_plan` es un plan factual de adquisición masiva, no una recomendación
+    clínica. Ejecutarlo completo es obligatorio para HODOM y está prohibido por
+    defecto en el embudo de servicios candidatos.
+14. No repetir “requiere evaluación formal” sobre
+    `no-candidato-en-este-corte`; cada clasificación conserva su conducta
+    propia.
+15. No retener varios envelopes crudos en el contexto: sintetizar uno,
+    registrar su ledger y liberar la materia antes del siguiente.
 
 ## Composición
 
@@ -295,6 +351,12 @@ invocación runtime.
 - `identity-mismatch`: detener el uso del dato afectado.
 - `baseline-unavailable`: no puede verificarse el delta de las 11:00.
 - `document-validation-failed`: el DOCX o sus gates de contenido fallaron.
+- `provenance-incomplete`: una afirmación o paciente no conserva evidencia
+  direccionable.
+- `funnel-overmaterialized`: se materializaron handles no seleccionados o el
+  servicio completo sin justificación explícita.
+- `operational-utility-failed`: el artefacto es materialmente válido, pero
+  incumple los límites de utilidad del contrato.
 
 ## Resultado
 
