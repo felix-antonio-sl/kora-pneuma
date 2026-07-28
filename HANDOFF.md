@@ -88,6 +88,24 @@ La protección de datos pertenece al entorno de ejecución externo. El runner
 manual existente conserva fuera de KORA su `umask`, permisos, schema, sesión
 efímera y validaciones; no fue modificado por este cambio.
 
+## Estado de entrega
+
+La fuente declara exclusivamente `targets: [codex]`. La proyección vigente está
+instalada con alcance de usuario en:
+
+```text
+/home/felix/.agents/skills/reporte-diario-hodom/
+```
+
+La verificación viva mediante `entrega-kora-v1` resolvió la versión `2.0.0`
+activa como `parity-faithful`: `1` unidad fiel, `0` desviadas, `0` no emitidas
+y `0` no instaladas. Claude Code, OpenCode, OpenClaw y Hermes no son targets de
+este artefacto y no recibieron esta versión.
+
+La paridad prueba igualdad material en la frontera gestionada. No prueba
+conducta runtime, autoridad efectiva, ejecución clínica completa ni aprobación
+humana del producto.
+
 ## Automatización retirada del host
 
 Por orden explícita del operador del 2026-07-28 se retiraron de forma
@@ -112,6 +130,7 @@ git diff --check               pass
 quick_validate emitida         valid
 emisión Codex                  SKILL.md + 1 referencia
 paridad skill                  1/1 fiel
+recibo entrega-kora-v1         parity-faithful
 permisos instalados            0600
 bash -n del runner             pass
 canario JSON Schema             pass
