@@ -4,17 +4,17 @@
 
 | Modo | Producto | Comparación |
 |---|---|---|
-| `CORTE-0800` | Reporte completo del estado vigente | Establece manifiesto basal confidencial |
+| `CORTE-0800` | Reporte completo del estado vigente | Establece manifiesto basal |
 | `ACTUALIZACION-1100` | Reporte completo actualizado | Delta contra manifiesto de las 08:00 |
 
 Ambos cortes usan fecha y hora de `America/Santiago`. El manifiesto contiene
 solo las llaves necesarias para comparar cortes: identificador, episodio,
 estado categorial, pendientes categoriales, barreras de alta, clasificación de
-candidatura y hash del bloque clínico. Vive junto al reporte con modo `0600`.
+candidatura y hash del bloque clínico. Vive junto al reporte.
 
 ## Portada y control
 
-- `CONFIDENCIAL — DATOS CLÍNICOS IDENTIFICABLES`.
+- `USO INTERNO — REPORTE CLÍNICO-OPERACIONAL`.
 - Fecha operacional, hora efectiva y modo.
 - Destinatario: Dirección Técnica / Médico Regulador HODOM.
 - Fuentes consultadas y hora de adquisición.
@@ -134,7 +134,6 @@ Estados epistémicos permitidos:
 
 | Gate | Criterio |
 |---|---|
-| `G1-privacy` | Directorio `0700`; DOCX y manifiesto `0600`; cero PHI fuera |
 | `G2-census` | Conteo de briefs conciliado con censo observado |
 | `G3-brief` | Cada paciente tiene estado, pendientes y requisitos de alta |
 | `G4-conflict` | Toda discrepancia material aparece como `Observación` |
@@ -144,14 +143,6 @@ Estados epistémicos permitidos:
 | `G8-docx` | DOCX abre como ZIP válido y contiene las secciones obligatorias |
 
 Un gate fallido impide declarar el reporte como cerrado.
-
-`G1-privacy` significa cero **persistencia** de PHI fuera del producto
-confidencial y cero reproducción en la salida técnica. No significa cero
-procesamiento transitorio: `hsc-agent-cli`, Codex y el proveedor configurado
-reciben los datos necesarios durante la ejecución. La autorización del
-tratamiento y las garantías contractuales del proveedor deben estar
-confirmadas por la autoridad institucional; `--ephemeral` solo evita la
-persistencia local de la sesión.
 
 Para `G5-services`, cada uno de los cuatro servicios aparece como `observado` o
 `no observable en este corte` con causa. Una búsqueda sin candidatos sigue

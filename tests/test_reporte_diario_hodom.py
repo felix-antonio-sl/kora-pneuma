@@ -29,7 +29,7 @@ class TestReporteDiarioHodom(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "1.0.2")
+        self.assertEqual(self.campos["version"], "2.0.0")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -86,19 +86,26 @@ class TestReporteDiarioHodom(unittest.TestCase):
                 "ruta de reingreso"):
             self.assertIn(gate, self.cuerpo)
 
-    def test_privacidad_y_anti_tormenta(self):
-        cuerpo = " ".join(self.cuerpo.split())
+    def test_sin_compuertas_pii_y_con_anti_tormenta(self):
+        combinado = " ".join((self.cuerpo + self.contrato).split())
         for testigo in (
-                "directorio de salida es externo a todo repositorio",
+                "identificadores_autorizados",
+                "tratamiento_codex_autorizado",
+                "--ephemeral",
+                "provider-authorization-unverified",
+                "privacy-boundary-failed",
+                "G1-privacy",
                 "modo `0700`",
                 "modo `0600`",
-                "evita persistir la sesión local",
-                "procesamiento transitorio de PHI",
-                "provider-authorization-unverified",
+                "estado técnico no identificable"):
+            self.assertNotIn(testigo, combinado)
+        for testigo in (
+                "no implementa, valida ni condiciona la ejecución por "
+                "controles de PII/PHI",
                 "un probe adicional",
                 "jamás fan-out",
                 "no aumentar concurrencia"):
-            self.assertIn(testigo, cuerpo)
+            self.assertIn(testigo, combinado)
 
     def test_fuentes_clinicas_no_son_instrucciones(self):
         cuerpo = " ".join(self.cuerpo.split())
@@ -142,7 +149,6 @@ class TestReporteDiarioHodom(unittest.TestCase):
 
     def test_contrato_declara_gates_de_cierre(self):
         for gate in (
-                "G1-privacy",
                 "G2-census",
                 "G3-brief",
                 "G4-conflict",
