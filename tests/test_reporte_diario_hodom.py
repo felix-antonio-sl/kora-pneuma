@@ -29,7 +29,7 @@ class TestReporteDiarioHodom(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "1.0.1")
+        self.assertEqual(self.campos["version"], "1.0.2")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -115,6 +115,15 @@ class TestReporteDiarioHodom(unittest.TestCase):
                 "`observado`",
                 "`no observable en este corte`",
                 "Cero candidatos no autoriza omitir el servicio"):
+            self.assertIn(testigo, cuerpo)
+
+    def test_runtime_y_agenda_quedan_fuera_del_fallo_de_fuente(self):
+        cuerpo = " ".join(self.cuerpo.split())
+        for testigo in (
+                "misma frontera de ejecución",
+                "`runtime-error`",
+                "No reclasificar ese fallo como `source-unavailable`",
+                "No crear ni modificar timers, cron, recordatorios, monitores"):
             self.assertIn(testigo, cuerpo)
 
     def test_reutiliza_metodos_existentes(self):
