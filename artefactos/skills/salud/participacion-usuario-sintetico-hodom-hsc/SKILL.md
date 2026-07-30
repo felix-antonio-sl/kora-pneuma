@@ -1,19 +1,19 @@
 ---
 urn: urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc
 nombre: participacion-usuario-sintetico-hodom-hsc
-version: 1.1.0
+version: 2.0.0
 estado: activo
-descripcion: "Método compartido para que los roles profesionales HODOM-HSC actúen como usuarios sintéticos ideales: descubren necesidades, sintetizan requisitos y costuras, revisan diseño y emiten aceptación interna dentro de su ámbito."
-fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6). v1.1.0 (2026-07-30): adopta DEV_PERSONAL_FULL para investigación y validación con fuentes reales en el host privado; conserva la frontera Git/publicación y la autoridad profesional humana."
+descripcion: "Método compartido para que los roles HODOM-HSC actúen como personas sintéticas situadas: descubren necesidades, sintetizan requisitos y revisan candidatos mediante uso directo de la interfaz, sin atribuirse experiencia humana ni convertir fallas del montaje en defectos del producto."
+fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6). v1.1.0 (2026-07-30): adopta DEV_PERSONAL_FULL. v2.0.0 (2026-07-31): corrige el método desde evaluacion-usuarios-sinteticos-2026-07-30.md (sha256:0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db): persona situada, revisión UI ciega y visual, bloqueos de evaluación, evidencia epistémica e inconclusión explícita."
 autor: FS
 creado: 2026-07-23
 lang: es
-tags: [salud, hodom, hsc, usuario-sintetico, participacion, requisitos, validacion]
+tags: [salud, hodom, hsc, usuario-sintetico, participacion, requisitos, validacion, usabilidad]
 vector: [2, 0, 2, 0, 1]
 sigma: [3, 3, 3, 3, 2]
 arnes: disciplina
 forma: habilidad
-herramientas: []
+herramientas: [Bash]
 targets: [codex]
 alcance: proyecto
 conocimiento: [urn:salud:kb:perfil-dev-personal-full]
@@ -23,69 +23,68 @@ conocimiento: [urn:salud:kb:perfil-dev-personal-full]
 
 ## Propósito
 
-Convierte una perspectiva profesional R01–R14 en una fuente proactiva de
-necesidades y en un validador interno del producto. El usuario sintético ideal
-representa el oficio completo aunque el artefacto, la práctica o la dotación
-local todavía no existan. Lo que no esté demostrado se declara como supuesto;
-esa ausencia no impide diseñar.
+Convertir una perspectiva profesional R01–R14 en fuente proactiva de
+necesidades y en revisión interna del producto. Encarnar una **persona
+sintética situada**: una construcción explícita, parcial y reproducible del
+oficio bajo un contexto de uso. No afirmar que representa a todas las personas
+del rol, que posee experiencia vivida o que reemplaza investigación con seres
+humanos.
 
-Esta skill posee el método común. La competencia, el antirol, la voz y los
-límites de aceptación pertenecen a cada agente profesional.
+Separar dos capacidades:
+
+- usar una interfaz bajo límites humanos plausibles y registrar lo ocurrido;
+- aplicar después el juicio profesional del rol a la evidencia obtenida.
+
+La competencia, el antirol, la voz y la situación laboral pertenecen a cada
+agente. Esta skill posee sólo el método común.
 
 ## Perfil de datos
 
 En el host personal del operador rige
-`urn:salud:kb:perfil-dev-personal-full`. El rol puede inspeccionar PII/PHI,
-fuentes Drive, salidas de `hsc-agent-cli`, extracts, archivos privados y bases
-locales cuando sean necesarios para descubrir una necesidad, reconciliar
-identidad o validar una migración. No exige desidentificar antes de razonar ni
-una segunda persona para aprobar el trabajo local.
+`urn:salud:kb:perfil-dev-personal-full`. Se puede inspeccionar PII/PHI y fuentes
+privadas cuando el encargo lo requiera. No copiar secretos, credenciales ni
+identificadores a capturas publicables, Git, PR, documentación compartida,
+terminales persistentes o paquetes de salida.
 
-El paquete distingue superficie de trabajo y destino. PII/PHI puede permanecer
-en un artefacto privado o gitignored; el resultado que vaya a Git, PR,
-documentación compartida o evidencia publicable se emite sin identificadores.
-La relajación no amplía la competencia del rol ni convierte la aceptación
-sintética en acto profesional o institucional.
+El permiso de datos no amplía la competencia del rol ni convierte una
+aceptación sintética en acto profesional, institucional o humano.
 
 ## Vocabulario de procedencia
 
-Estas cinco etiquetas son autosuficientes dentro del contrato:
+Usar estas cinco etiquetas con sus límites:
 
 | label | meaning | claim_limit |
 |---|---|---|
 | N | norma o doctrina sanitaria del corpus KORA | obligación o criterio general según el corpus al corte |
 | L | documento oficial/local HSC | regla o diseño documental local; no prueba ejecución |
-| O | práctica operacional observada | funcionamiento de facto al corte; la superficie de salida determina si debe desidentificarse |
+| O | hecho operacional o de interfaz observado | acción y resultado visibles al corte; no acredita experiencia humana interna |
 | D | diseño objetivo o necesidad derivada | estado deseado que debe ratificarse |
 | V | validación propietaria pendiente | no se puede presentar todavía como contrato local |
 
-Una afirmación puede combinar etiquetas. La combinación conserva cada límite:
-por ejemplo, N/O/D distingue expectativa normativa, práctica observada y diseño
-objetivo. V obliga a declarar la validación pendiente, pero no impide producir
-el diseño.
+Una afirmación puede combinar etiquetas y conserva cada límite. No usar `O`
+para pensamientos, emociones, comprensión, carga o confianza supuestas.
 
 ## Modos
 
 `MODE = DISCOVER | SYNTHESIZE | REVIEW | ACCEPT`.
 
-- **DISCOVER:** descubre necesidades, cambios de journey e historias de usuario
-  sin exigir candidato ni artefacto previo.
-- **SYNTHESIZE:** convierte paquetes propios o pares en requisitos y costuras;
-  conserva conflictos y disenso sin fabricar consenso.
-- **REVIEW:** contrasta un candidato versionado contra criterios profesionales.
-- **ACCEPT:** emite aceptación interna final dentro del ámbito profesional del
-  rol; no produce actos clínicos, administrativos, directivos o regulatorios
-  reales.
+- **DISCOVER:** descubrir necesidades, cambios de journey e historias sin
+  exigir candidato previo.
+- **SYNTHESIZE:** convertir paquetes en requisitos y costuras; conservar
+  conflicto y disenso.
+- **REVIEW:** usar o contrastar un candidato versionado y calificar sólo lo
+  que la evidencia permite.
+- **ACCEPT:** emitir aceptación interna dentro del ámbito profesional; nunca
+  producir un acto real.
 
-Cada invocación ejecuta un modo solicitado por un orquestador externo. La
-continuidad vive en `run_id` y `context_packets`, no en memoria implícita ni en
-transiciones internas.
+Cada invocación ejecuta un solo modo. La continuidad vive en `run_id` y
+`context_packets`, no en memoria implícita ni en transiciones internas.
 
 ## Entrada `I_ROLE`
 
 ```text
 I_ROLE = {
-  schema_version: "2.0",
+  schema_version: "3.0",
   run_id: string,
   mode: DISCOVER | SYNTHESIZE | REVIEW | ACCEPT,
   scope: {
@@ -115,12 +114,38 @@ I_ROLE = {
     revision: string,
     body_or_ref: string
   },
+  use_context?: {
+    experience_level: novice | occasional | habitual | expert,
+    digital_fluency: low | medium | high,
+    context_of_use: string,
+    time_pressure: low | medium | high,
+    interruption_pattern: string,
+    accessibility_needs: string[],
+    known_before_use: string[],
+    task_goal: string,
+    success_signal: string
+  },
+  review_setup?: {
+    surface: browser-ui | document,
+    review_kind: experiential | professional | combined,
+    tasks: string[],
+    viewports: [{
+      id: string,
+      width: integer,
+      height: integer
+    }],
+    action_budget_per_task?: integer,
+    ui_driver?: string
+  },
   context_packets?: ROLE_PACKET[]
 }
 ```
 
-`authority_packet` acota la autoridad sintética ejercida en el diseño; no
-acredita delegación institucional ni convierte al artefacto en titular real.
+`authority_packet` acota la autoridad sintética. `use_context` evita inventar
+una persona promedio y es obligatorio para un REVIEW de `browser-ui`.
+`review_setup` hace observable qué se intentará; si faltan atributos no
+esenciales, declararlos en `assumptions`, no completarlos como experiencia
+vivida.
 
 ## Salida
 
@@ -128,7 +153,7 @@ acredita delegación institucional ni convierte al artefacto en titular real.
 
 ```text
 ROLE_PACKET = {
-  schema_version: "2.0",
+  schema_version: "3.0",
   run_id: string,
   packet_id: string,
   role: string,
@@ -138,7 +163,7 @@ ROLE_PACKET = {
     id: string,
     revision: string
   },
-  status: complete | complete-with-assumptions,
+  status: complete | complete-with-assumptions | partial | blocked,
   position: string,
   provenance: [{
     claim: string,
@@ -178,7 +203,7 @@ ROLE_PACKET = {
 | mode | DISCOVER,SYNTHESIZE,REVIEW,ACCEPT | required |
 | scope | object | required |
 | candidate_binding | object{id:string,revision:string} | required-in-REVIEW-and-ACCEPT |
-| status | complete,complete-with-assumptions | required |
+| status | complete,complete-with-assumptions,partial,blocked | required |
 | position | string | required |
 | provenance | list | required |
 | assumptions | list | required |
@@ -186,12 +211,13 @@ ROLE_PACKET = {
 | decision_handoffs | list | required |
 | payload | mode-discriminated-object | required |
 
-`candidate_binding` copia exactamente `candidate.id` y `candidate.revision`.
-Está prohibido en DISCOVER y SYNTHESIZE, y es obligatorio en REVIEW y ACCEPT.
+Copiar `candidate.id` y `candidate.revision` exactamente a
+`candidate_binding`. Prohibirlo en DISCOVER y SYNTHESIZE; exigirlo en REVIEW y
+ACCEPT.
 
 ```text
 ROLE_ERROR = {
-  schema_version: "2.0",
+  schema_version: "3.0",
   run_id: string,
   role: string,
   mode: DISCOVER | SYNTHESIZE | REVIEW | ACCEPT,
@@ -209,7 +235,7 @@ ROLE_ERROR = {
 |---|---|---|---|---|
 | DISCOVER | not-required | none | forbidden | needs,journey_deltas,user_stories |
 | SYNTHESIZE | optional | at-least-one-context-packet | forbidden | requirements,seams,conflicts,decision_owners |
-| REVIEW | required | none | required-equals-candidate | findings,acceptance_criteria,verdict |
+| REVIEW | required | none | required-equals-candidate | review_state,task_attempts,evaluation_blockers,findings,acceptance_criteria,verdict |
 | ACCEPT | required | matching-review-same-role-run-and-binding | required-equals-candidate | verdict,conditions,blocking_items,scope_of_acceptance |
 
 ## Payload discriminado
@@ -231,9 +257,12 @@ SYNTHESIZE_PAYLOAD = {
 }
 
 REVIEW_PAYLOAD = {
+  review_state: complete | partial | blocked,
+  task_attempts: list,
+  evaluation_blockers: list,
   findings: list,
   acceptance_criteria: list,
-  verdict: PASS | PASS_WITH_CHANGES | FAIL
+  verdict: PASS | PASS_WITH_CHANGES | FAIL | INCONCLUSIVE
 }
 
 ACCEPT_PAYLOAD = {
@@ -244,10 +273,136 @@ ACCEPT_PAYLOAD = {
 }
 ```
 
+Cada `task_attempt` identifica tarea, viewport, estado inicial, acciones
+visibles, resultado, señal de éxito y evidencia privada. Cada finding declara:
+
+```text
+FINDING = {
+  claim: string,
+  evidence_layer:
+    hecho_visible | interpretacion_del_rol | prediccion_sintetica |
+    brecha_de_validacion_humana,
+  causal_scope:
+    candidate | evaluation-setup | fixture | environment | unknown,
+  severity: P0 | P1 | P2 | P3 | E0 | E1,
+  evidence_ref: string,
+  criterion_ref?: string
+}
+```
+
+Usar `P0..P3` sólo con `causal_scope: candidate`. Usar `E0 | E1` para
+`evaluation-setup | fixture | environment | unknown`: `E0` impide evaluar la
+tarea; `E1` reduce cobertura o confianza. No elevar una causa desconocida a
+defecto del candidato.
+
+Reservar `P0` para daño inmediato, creíble y potencialmente irreversible
+observado en el candidato dentro del escenario profesional. Una identidad incorrecta,
+un fixture ausente, un entorno caído o una pantalla inaccesible por montaje son
+bloqueos de evaluación; no determinan `FAIL`.
+
+## Protocolo REVIEW de interfaz
+
+Aplicar esta sección cuando `review_setup.surface = browser-ui`.
+
+### 1. Preflight sin puntuar
+
+Antes de la tarea, verificar y registrar:
+
+1. candidato y revisión exactos;
+2. URL y superficie visibles;
+3. identidad y rol esperado después del login;
+4. fixture y estado inicial necesarios;
+5. driver con abrir URL, fijar viewport, crear contexto, tomar capturas de
+   pantalla, usar coordenadas de puntero y emitir teclas físicas.
+
+Si identidad, fixture, entorno o driver no coinciden, registrar
+`evaluation_blockers` con causalidad y severidad `E0 | E1`. No convertir el
+bloqueo en finding del producto. Continuar sólo las tareas independientes que
+sigan siendo evaluables.
+
+### 2. Primera pasada ciega
+
+Para `experiential` o `combined`, entregar al agente sólo rol, `use_context`,
+objetivo, señal de éxito, URL, credencial, fixture y límites. No leer antes el
+código de la aplicación, dossier de diseño, matriz de aceptación, criterios de
+prueba ni informes previos.
+
+Observar por capturas de pantalla e interactuar como superficie física:
+coordenadas de puntero y teclas físicas. Prohibir durante esta pasada:
+
+- árbol de accesibilidad, DOM, selectores CSS, XPath, locators o búsqueda por
+  texto programática;
+- extracción de `textContent`, enumeración de controles o estados internos;
+- identificadores de test, JavaScript inyectado, consola, red, API o base de
+  datos;
+- lectura del código de la aplicación para hallar rutas o controles.
+
+El arnés puede automatizar navegación, screenshot, puntero y teclado, pero no
+usar introspección semántica para decidir la acción. Si sólo existe un driver
+introspectivo, marcar `evaluation-setup/E0`; no fingir uso humano.
+
+Ejecutar máximo tres tareas críticas por rol y sesión. Respetar
+`action_budget_per_task` o usar doce interacciones significativas por defecto.
+Después de dos recuperaciones fallidas, detener la tarea y registrar la
+fricción; no compensar con búsqueda exhaustiva sobrehumana.
+
+Mantener el estado que producirían las acciones visibles. No mutar estado por
+atajos invisibles. Conservar un rastro privado de acción y pantalla suficiente
+para reproducir cada observación.
+
+### 3. Segunda pasada profesional
+
+Después de cerrar y preservar la primera pasada, consultar fuentes
+profesionales, criterios y diseño cuando `review_kind` sea `professional` o
+`combined`. Contrastar completitud, seguridad, continuidad y límites del oficio
+sin reescribir lo observado. El código puede servir a una investigación técnica
+posterior, nunca como evidencia de que una persona encontró o entendió algo en
+la UI.
+
+### 4. Viewports y accesibilidad
+
+Crear un contexto de navegador nuevo, restablecer el fixture y ejecutar la
+tarea completa en cada viewport. Redimensionar una sesión ya resuelta sólo
+prueba respuesta visual; no equivale a un journey móvil independiente.
+
+Probar teclado mediante teclas físicas. Afirmar compatibilidad con lector de
+pantalla u otra ayuda sólo usando tecnología de asistencia real configurada.
+Si no existe, registrar esa comprobación como `NOT_RUN`; el árbol de
+accesibilidad no sustituye a una persona que usa esa tecnología.
+
+## Capas de evidencia
+
+Clasificar cada afirmación:
+
+- `hecho_visible` (`O`): elemento visto, acción física intentada y resultado;
+- `interpretacion_del_rol` (`N/L/O`): significado profesional atribuido a ese
+  hecho;
+- `prediccion_sintetica` (`D/V`): dificultad o riesgo que una persona podría
+  experimentar;
+- `brecha_de_validacion_humana` (`V`): pregunta que sólo participantes humanos
+  pueden resolver.
+
+La carga cognitiva, la confianza, la comprensión, la frustración y los puntajes
+de experiencia no son mediciones humanas. Presentarlos sólo como
+`prediccion_sintetica`, con base visible y necesidad de validación. No narrar
+emociones como vividas por el agente.
+
+## Veredicto REVIEW
+
+- `PASS`: revisión completa y criterios del rol satisfechos.
+- `PASS_WITH_CHANGES`: revisión completa con cambios no bloqueantes.
+- `FAIL`: defecto del candidato observado y suficiente para rechazar dentro del
+  alcance profesional.
+- `INCONCLUSIVE`: un `E0`, cobertura parcial decisiva o evidencia insuficiente
+  impide adjudicar.
+
+Un blocker de montaje por sí solo no determina `FAIL`, `PASS_WITH_CHANGES` ni
+`PASS`. Si quedan criterios decisivos sin evaluar, usar `INCONCLUSIVE`.
+
 ## Ley determinista REVIEW a ACCEPT
 
-ACCEPT copia el `candidate_binding` del candidato y aplica el veredicto del
-único REVIEW admisible sin reinterpretarlo:
+ACCEPT copia el `candidate_binding` y aplica el único REVIEW con veredicto
+concluyente sin reinterpretarlo:
 
 | review_verdict | accept_verdict | conditions | blocking_items |
 |---|---|---|---|
@@ -255,26 +410,27 @@ ACCEPT copia el `candidate_binding` del candidato y aplica el veredicto del
 | PASS_WITH_CHANGES | ACCEPTED_WITH_CONDITIONS | non-empty | empty |
 | FAIL | REJECTED | empty | non-empty |
 
-No existe una cuarta combinación válida. `conditions` contiene cambios
-exigibles y verificables; `blocking_items` contiene defectos que impiden la
-aceptación dentro del alcance profesional.
+No existe una cuarta combinación válida de aceptación. Un REVIEW
+`INCONCLUSIVE` produce `inconclusive-review`; no se acepta ni rechaza un
+candidato sin evidencia suficiente.
 
 ## Errores observables
 
 - `malformed-input`: falta un campo obligatorio o su tipo es inválido.
 - `missing-candidate`: REVIEW o ACCEPT no recibe `candidate`.
 - `missing-context-packets`: SYNTHESIZE no recibe al menos un paquete.
-- `candidate-revision-mismatch`: ACCEPT no recibe un REVIEW del mismo rol y
-  `run_id` con `candidate_binding` idéntico al candidato.
-- `ambiguous-review`: ACCEPT recibe más de un REVIEW que satisface ese mismo
-  binding y no puede identificar un antecedente único.
-- `scope-outside-profession`: la pregunta queda fuera del oficio encarnado.
-- `authority-packet-conflict`: el sobre contradice la competencia o antirol.
-- `discipline-unbound`: R10 recibe SYNTHESIZE, REVIEW o ACCEPT sin
-  `authority_packet.discipline`.
+- `missing-use-context`: REVIEW de browser-ui no recibe `use_context`.
+- `unsupported-ui-driver`: el arnés no permite uso visual sin introspección.
+- `candidate-revision-mismatch`: ACCEPT no recibe un REVIEW coincidente.
+- `ambiguous-review`: ACCEPT recibe más de un REVIEW coincidente.
+- `inconclusive-review`: ACCEPT recibe un REVIEW `INCONCLUSIVE`.
+- `scope-outside-profession`: la pregunta queda fuera del oficio.
+- `authority-packet-conflict`: el sobre contradice competencia o antirol.
+- `discipline-unbound`: R10 recibe SYNTHESIZE, REVIEW o ACCEPT sin disciplina.
 
-Una referencia local ausente no es un error. Se registra en `assumptions` y se
-clasifica lo diseñado o pendiente mediante N/L/O/D/V.
+Una referencia local ausente se registra en `assumptions`; una dependencia de
+evaluación ausente se registra en `evaluation_blockers`. Ninguna se disfraza de
+defecto del producto.
 
 ## Guards de invocación
 
@@ -283,11 +439,11 @@ clasifica lo diseñado o pendiente mediante N/L/O/D/V.
 | DISCOVER | valid-I_ROLE | malformed-input |
 | SYNTHESIZE | at-least-one-context-packet | missing-context-packets |
 | REVIEW | candidate-present | missing-candidate |
-| ACCEPT | candidate-and-exactly-one-matching-review | missing-candidate-or-revision-mismatch-or-ambiguous-review |
+| ACCEPT | candidate-and-exactly-one-conclusive-matching-review | missing-candidate-or-revision-mismatch-or-ambiguous-review-or-inconclusive-review |
 
-Los guards profesionales R08, R10, R11 y R14 se aplican además de esta tabla.
-Un guard fallido produce `ROLE_ERROR`; nunca se degrada silenciosamente a otro
-modo ni fabrica un candidato.
+Aplicar además el guard condicional `missing-use-context` y los guards
+profesionales R08, R10, R11 y R14. Un guard fallido produce `ROLE_ERROR`; no
+degradar silenciosamente el modo ni fabricar candidato.
 
 ## Transiciones externas e idempotencia
 
@@ -298,68 +454,45 @@ modo ni fabrica un candidato.
 | self_invocation | forbidden |
 | revision_change | invalidates-prior-review-and-acceptance |
 | idempotence_basis | normalized-I_ROLE-plus-context |
-| idempotence_projection | packet_id,role,mode,candidate_binding,verdict,conditions,blocking_items,scope_of_acceptance |
+| idempotence_projection | packet_id,role,mode,candidate_binding,review_state,verdict,conditions,blocking_items,scope_of_acceptance |
 
-La skill no es una FSM y el agente no se autoinvoca. El orquestador decide qué
-modo solicitar y aporta explícitamente los paquetes que habilitan el siguiente.
-Una revisión nueva del candidato invalida todo REVIEW y ACCEPT de revisiones
-anteriores; esa aceptación no se transfiere ni se actualiza por inferencia.
-
-Ante la misma `I_ROLE` normalizada, los mismos `context_packets` y la misma
-fuente del rol, una repetición conserva la proyección de idempotencia de la
-tabla. Las listas se deduplican y mantienen orden estable. `packet_id` es una
-identidad determinista de esa entrada normalizada, no un valor aleatorio ni una
-marca de tiempo.
+El orquestador decide el modo y aporta paquetes. Una revisión nueva invalida
+REVIEW y ACCEPT anteriores. Para la misma entrada normalizada, contexto, fuente
+y estado inicial, conservar orden, deduplicación, `packet_id` y proyección.
+Cambiar fixture, viewport o estado inicial cambia la entrada.
 
 ## Invariantes
 
-1. DISCOVER no requiere candidato, historia previa ni evidencia de práctica.
-2. Todo supuesto declara afirmación, base, impacto y, cuando exista,
-   `validation_owner`; por sí solo no impide REVIEW ni ACCEPT.
-3. Cada afirmación trazable porta una o más etiquetas N/L/O/D/V según el
-   vocabulario de este contrato y vigencia cuando corresponda. Diseño no se
-   presenta como práctica.
-4. SYNTHESIZE conserva `dissent`, conflictos y posiciones minoritarias. Los
-   `decision_owners` adjudican; el agente no borra el desacuerdo.
-5. REVIEW y ACCEPT requieren `candidate` y devuelven `candidate_binding`
-   idéntico. ACCEPT requiere además exactamente un REVIEW del mismo rol,
-   `run_id`, candidato y revisión dentro de `context_packets`.
-6. `decision_handoffs` asigna decisiones externas sin suspender el trabajo que
-   sí pertenece al rol.
-7. `blocking_items` contiene defectos del candidato dentro del ámbito
-   profesional, no la mera falta de evidencia local.
-8. La aceptación es interna y queda delimitada por `scope_of_acceptance`.
-9. Los identificadores se conservan en la superficie privada cuando sostienen
-   identidad, trazabilidad o conciliación; se omiten del producto versionado o
-   compartido cuando no son necesarios.
-10. El paquete es autocontenido: no depende de memoria oculta entre
-    invocaciones.
-11. ACCEPT obedece la tabla REVIEW a ACCEPT; sus listas no pueden contradecir el
-    veredicto.
-12. No hay FSM interna, autoinvocación ni aceptación transferible entre
-    revisiones.
-13. Una repetición de la misma entrada normalizada conserva la proyección de
-    idempotencia declarada.
+1. DISCOVER no requiere candidato ni evidencia de práctica.
+2. Todo supuesto declara afirmación, base, impacto y dueño cuando exista.
+3. No presentar diseño, predicción o estado de montaje como práctica observada.
+4. SYNTHESIZE conserva disenso y dueño de adjudicación.
+5. REVIEW y ACCEPT copian exactamente el candidato; ACCEPT exige un REVIEW
+   coincidente y concluyente.
+6. Separar defectos `P0..P3` de bloqueos de evaluación `E0..E1`.
+7. No emitir PASS, cambio o FAIL desde criterios decisivos no evaluados.
+8. No convertir simulación sintética en medición o aceptación humana.
+9. Mantener cada rol dentro de su competencia y antirol.
+10. Conservar identificadores sólo en superficie privada cuando sean
+    necesarios; nunca publicar credenciales.
+11. No depender de memoria oculta, FSM interna ni autoinvocación.
+12. ACCEPT obedece la ley determinista y rechaza INCONCLUSIVE.
 
 ## Procedimiento
 
-1. Validar `I_ROLE`, condiciones del modo y coherencia de
-   `authority_packet`.
-2. Encarnar competencia y antirol del agente que ejerce la skill.
-3. Separar hechos y propuestas mediante N/L/O/D/V; convertir lagunas en
-   `assumptions`.
-4. Aplicar los guards del modo y la excepción profesional correspondiente.
-5. Ejecutar exactamente el modo solicitado y producir su payload.
-6. En REVIEW y ACCEPT, copiar el candidato a `candidate_binding`; en ACCEPT,
-   aplicar sin reinterpretación la tabla determinista.
-7. Conservar disenso y tipar decisiones externas en `decision_handoffs`.
-8. Estabilizar orden, deduplicación e identidad para entradas idempotentes.
-9. Emitir un único `ROLE_PACKET` o, sólo ante un error observable, un
-   `ROLE_ERROR`.
+1. Validar `I_ROLE`, modo, autoridad y candidato.
+2. Encarnar competencia, antirol y situación humana del agente.
+3. Separar N/L/O/D/V, supuestos y bloqueos del montaje.
+4. En REVIEW de interfaz, ejecutar preflight y las pasadas autorizadas.
+5. Registrar tareas, evidencia, causalidad y capa epistémica.
+6. Calibrar estado y veredicto sin exceder la evidencia.
+7. En ACCEPT, copiar binding y aplicar la ley determinista.
+8. Conservar disenso, `decision_handoffs`, orden e idempotencia.
+9. Emitir un único `ROLE_PACKET` o `ROLE_ERROR`.
 
 ## Adaptador de agente
 
-El agente consumidor aporta su `role`, competencia, antirol, voz y excepción
-profesional. La entrada de esta skill es su `I_ROLE`; la salida se devuelve sin
-cambiar el discriminador de modo. La relación declarada en `componible` es un
-candidato procedural y necesita esta activación explícita en cada invocación.
+El agente consumidor aporta rol, competencia, antirol, voz y situación humana
+de uso. Resolver esta skill por URN, leerla completa y activarla en cada
+invocación. La mera relación `componible` no demuestra wiring ni composición
+semántica.

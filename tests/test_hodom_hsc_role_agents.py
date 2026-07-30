@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Contrato v2 de usuarios sintéticos profesionales HODOM-HSC para Codex."""
+"""Contrato v3 de perspectivas sintéticas situadas HODOM-HSC para Codex."""
 import hashlib
 import json
 import subprocess
@@ -21,6 +21,7 @@ SKILL_URN = "urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc"
 PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
 MAPA_SHA256 = "bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd"
 CATALOGO_SHA256 = "d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6"
+EVALUACION_SHA256 = "0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db"
 
 ROLES = {
     "hodom-hsc-direccion-tecnica": (
@@ -70,6 +71,8 @@ INHIBIDORES = (
     "no mutas",
     "No eres la persona titular",
     "perspectiva regulatoria simulada",
+    "usuario sintético ideal",
+    "representa el oficio completo",
 )
 
 MODE_SCHEMA = {
@@ -89,7 +92,10 @@ MODE_SCHEMA = {
         "candidate": "required",
         "context_guard": "none",
         "candidate_binding": "required-equals-candidate",
-        "payload": "findings,acceptance_criteria,verdict",
+        "payload": (
+            "review_state,task_attempts,evaluation_blockers,findings,"
+            "acceptance_criteria,verdict"
+        ),
     },
     "ACCEPT": {
         "candidate": "required",
@@ -131,8 +137,11 @@ MODE_GUARDS = {
         "error": "missing-candidate",
     },
     "ACCEPT": {
-        "guard": "candidate-and-exactly-one-matching-review",
-        "error": "missing-candidate-or-revision-mismatch-or-ambiguous-review",
+        "guard": "candidate-and-exactly-one-conclusive-matching-review",
+        "error": (
+            "missing-candidate-or-revision-mismatch-or-ambiguous-review-or-"
+            "inconclusive-review"
+        ),
     },
 }
 
@@ -143,8 +152,8 @@ TRANSITION_LAWS = {
     "revision_change": "invalidates-prior-review-and-acceptance",
     "idempotence_basis": "normalized-I_ROLE-plus-context",
     "idempotence_projection": (
-        "packet_id,role,mode,candidate_binding,verdict,conditions,blocking_items,"
-        "scope_of_acceptance"
+        "packet_id,role,mode,candidate_binding,review_state,verdict,conditions,"
+        "blocking_items,scope_of_acceptance"
     ),
 }
 
@@ -158,8 +167,8 @@ PROVENANCE_VOCABULARY = {
         "regla o diseño documental local; no prueba ejecución",
     ),
     "O": (
-        "práctica operacional observada",
-        "funcionamiento de facto al corte; la superficie de salida determina si debe desidentificarse",
+        "hecho operacional o de interfaz observado",
+        "acción y resultado visibles al corte; no acredita experiencia humana interna",
     ),
     "D": (
         "diseño objetivo o necesidad derivada",
@@ -199,7 +208,7 @@ EXCEPTION_CONTRACTS = {
 }
 
 EXPECTED_SOURCE_SNAPSHOT_SHA256 = (
-    "3f48e416a22cd931691c046b3a62783393d88dd2a9ca031cf06b528e6facbc98"
+    "6da0907322a85b25ba97a07612b8d6926fa8c878c1dd3df37410c02b6d263457"
 )
 
 
@@ -249,6 +258,8 @@ def _accept_reference(law, request, review):
     binding = review["candidate_binding"]
     if binding != {"id": candidate["id"], "revision": candidate["revision"]}:
         return {"status": "error", "code": "candidate-revision-mismatch"}
+    if review["verdict"] == "INCONCLUSIVE":
+        return {"status": "error", "code": "inconclusive-review"}
 
     row = law[review["verdict"]]
     conditions = review["condition_items"] if row["conditions"] == "non-empty" else []
@@ -281,7 +292,7 @@ def _accept_reference(law, request, review):
     }
 
 
-class TestPanelRolesHodomHscV2(unittest.TestCase):
+class TestPanelRolesHodomHscV3(unittest.TestCase):
 
     def test_catalogo_cerrado_de_catorce_subagentes(self):
         self.assertEqual(len(ROLES), 14)
@@ -295,14 +306,14 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
         self.assertEqual(campos["urn"], SKILL_URN)
         self.assertEqual(campos["nombre"],
                          "participacion-usuario-sintetico-hodom-hsc")
-        self.assertEqual(campos["version"], "1.1.0")
+        self.assertEqual(campos["version"], "2.0.0")
         self.assertIn(PROFILE_URN, campos["conocimiento"])
         self.assertEqual(campos["estado"], "activo")
         self.assertEqual(campos["forma"], "habilidad")
         self.assertEqual(campos["arnes"], "disciplina")
         self.assertEqual(campos["vector"], [2, 0, 2, 0, 1])
         self.assertEqual(campos["sigma"], [3, 3, 3, 3, 2])
-        self.assertEqual(campos["herramientas"], [])
+        self.assertEqual(campos["herramientas"], ["Bash"])
         self.assertEqual(campos["targets"], ["codex"])
         self.assertEqual(campos["alcance"], "proyecto")
         self.assertNotIn("estados", campos)
@@ -316,12 +327,16 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
                 "needs:", "journey_deltas:", "user_stories:",
                 "requirements:", "seams:", "conflicts:",
                 "decision_owners:", "findings:",
+                "review_state:", "task_attempts:",
+                "evaluation_blockers:",
                 "acceptance_criteria:", "conditions:",
                 "blocking_items:", "scope_of_acceptance:",
-                "status: complete | complete-with-assumptions",
+                "status: complete | complete-with-assumptions | partial | blocked",
                 "`malformed-input`", "`missing-candidate`",
                 "`missing-context-packets`",
                 "`candidate-revision-mismatch`",
+                "`missing-use-context`",
+                "`inconclusive-review`",
                 "`scope-outside-profession`",
                 "`authority-packet-conflict`",
                 "`discipline-unbound`",
@@ -366,6 +381,24 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
         }
         self.assertEqual(actual, ACCEPTANCE_LAW)
         self.assertEqual(set(actual), {"PASS", "PASS_WITH_CHANGES", "FAIL"})
+
+    def test_review_inconcluso_no_puede_convertirse_en_accept(self):
+        request = {
+            "run_id": "run-setup-blocked",
+            "role": "R01",
+            "candidate": {"id": "app", "revision": "rev-1"},
+            "scope_of_acceptance": "technical-direction",
+        }
+        review = {
+            "candidate_binding": {"id": "app", "revision": "rev-1"},
+            "verdict": "INCONCLUSIVE",
+            "condition_items": [],
+            "blocking_items": [],
+        }
+        self.assertEqual(
+            _accept_reference(ACCEPTANCE_LAW, request, review),
+            {"status": "error", "code": "inconclusive-review"},
+        )
 
     def test_guards_de_modo_son_explicitos(self):
         _, cuerpo = kora.parsear_archivo(SKILL.read_text("utf-8"))
@@ -434,14 +467,14 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
                 self.assertEqual(campos["urn"],
                                  f"urn:salud:artefacto:{nombre}")
                 self.assertEqual(campos["nombre"], nombre)
-                self.assertEqual(campos["version"], "2.0.0")
+                self.assertEqual(campos["version"], "3.0.0")
                 self.assertEqual(campos["estado"], "activo")
                 self.assertEqual(campos["forma"], "subagente")
                 self.assertEqual(campos["arnes"], "persona")
                 self.assertEqual(campos["vector"], [2, 1, 2, 1, 2])
                 self.assertEqual(campos["sigma"], [3, 3, 3, 3, 2])
                 self.assertEqual(
-                    campos["herramientas"], ["Read", "Grep", "Glob"])
+                    campos["herramientas"], ["Read", "Grep", "Glob", "Bash"])
                 self.assertEqual(campos["targets"], ["codex"])
                 self.assertEqual(campos["alcance"], "proyecto")
                 self.assertNotIn("estados", campos)
@@ -450,6 +483,7 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
                     CONOCIMIENTO_COMUN.issubset(campos["conocimiento"]))
                 self.assertIn(MAPA_SHA256, campos["fuente"])
                 self.assertIn(CATALOGO_SHA256, campos["fuente"])
+                self.assertIn(EVALUACION_SHA256, campos["fuente"])
                 self.assertIn(f"`{role_type}`", cuerpo)
                 self.assertNotIn("/home/felix", campos["fuente"])
                 self.assertNotIn("/home/felix", cuerpo)
@@ -469,11 +503,72 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
                         "DISCOVER", "SYNTHESIZE", "REVIEW", "ACCEPT",
                         "`I_ROLE`", "`ROLE_PACKET`",
                         "`authority_packet`", "`context_packets`",
+                        "`use_context`", "`review_setup`",
                         "`assumptions`", "`dissent`",
                         "`decision_handoffs`", "N/L/O/D/V",
-                        "usuario sintético ideal",
+                        "persona sintética situada",
                 ):
                     self.assertIn(testigo, cuerpo_normalizado)
+
+    def test_review_ui_es_situada_ciega_visual_y_acotada(self):
+        _, cuerpo = kora.parsear_archivo(SKILL.read_text("utf-8"))
+        for testigo in (
+                "Primera pasada ciega",
+                "capturas de pantalla",
+                "coordenadas de puntero",
+                "teclas físicas",
+                "árbol de accesibilidad",
+                "selectores CSS",
+                "identificadores de test",
+                "código de la aplicación",
+                "matriz de aceptación",
+                "máximo tres tareas críticas",
+                "contexto de navegador nuevo",
+                "cada viewport",
+                "tecnología de asistencia real",
+                "NOT_RUN",
+        ):
+            self.assertIn(testigo, cuerpo)
+
+    def test_bloqueos_de_evaluacion_no_son_defectos_del_producto(self):
+        _, cuerpo = kora.parsear_archivo(SKILL.read_text("utf-8"))
+        for testigo in (
+                "evaluation-setup | fixture | environment | unknown",
+                "E0 | E1",
+                "candidate | evaluation-setup | fixture | environment | unknown",
+                "Una identidad incorrecta",
+                "no determina `FAIL`",
+                "P0",
+                "daño inmediato, creíble",
+                "INCONCLUSIVE",
+        ):
+            self.assertIn(testigo, cuerpo)
+
+    def test_prediccion_sintetica_no_se_presenta_como_medicion_humana(self):
+        _, cuerpo = kora.parsear_archivo(SKILL.read_text("utf-8"))
+        for testigo in (
+                "hecho_visible",
+                "interpretacion_del_rol",
+                "prediccion_sintetica",
+                "brecha_de_validacion_humana",
+                "carga cognitiva",
+                "confianza",
+                "no son mediciones humanas",
+        ):
+            self.assertIn(testigo, cuerpo)
+
+    def test_cada_persona_declara_una_situacion_de_uso_observable(self):
+        lentes = set()
+        for nombre in ROLES:
+            _, cuerpo = kora.parsear_archivo(
+                (ZONA / f"{nombre}.md").read_text("utf-8"))
+            with self.subTest(nombre=nombre):
+                seccion = _section(cuerpo, "Situación humana de uso")
+                self.assertIn("Primera tarea visible:", seccion)
+                self.assertIn("Presión e interrupción:", seccion)
+                self.assertIn("Límite de simulación:", seccion)
+                lentes.add(" ".join(seccion.split()))
+        self.assertEqual(len(lentes), len(ROLES))
 
     def test_no_quedan_inhibidores(self):
         textos = [SKILL.read_text("utf-8")]

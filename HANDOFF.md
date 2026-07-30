@@ -1,76 +1,117 @@
-# Handoff vigente — 2026-07-30 — perfil de datos personal del ecosistema
+# Handoff vigente — 2026-07-31 — revisión sintética situada HODOM-HSC
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> artefactos canónicos, Git, los sistemas clínicos ni el estado vivo del host.
+> artefactos canónicos, Git, la aplicación, la aceptación humana ni el estado
+> vivo del host.
 
 ## Objetivo vigente
 
-`urn:salud:kb:perfil-dev-personal-full` es la doctrina canónica para el host
-privado y mono-usuario del operador durante desarrollo, preparación,
-conciliación, migración, pruebas locales y soporte personal.
+El panel R01–R14 debe poder revisar una aplicación en desarrollo desde una
+perspectiva profesional situada sin presentarse como ser humano, usuario
+promedio ni representante exhaustivo del oficio.
 
-El perfil permite:
-
-- procesar, persistir, recuperar, cruzar y visualizar PII/PHI sin
-  desidentificación previa;
-- usar Drive, `hsc-agent-cli`, extracts, archivos privados, memoria, sesiones y
-  bases locales como fuentes;
-- conservar staging y cuarentena, usar la protección del host/volumen y
-  concentrar iniciación, ejecución y aprobación en el mismo operador;
-- transferir el mínimo pertinente a proveedores y conectores ya configurados.
-
-No relaja secretos, Git/publicación, mutación de fuentes, destinos nuevos,
-identidad, procedencia, temporalidad, idempotencia ni autoridad clínica final.
-Una superficie compartida, piloto o productiva usa
-`INSTITUTIONAL_CONTROLLED`.
-
-## Fuente y consumidores
+La fuente metodológica es:
 
 ```text
-urn:salud:kb:perfil-dev-personal-full                    v1.0.0
-urn:ops:artefacto:clawforge                             v1.2.0
-urn:salud:artefacto:urgenciologo                        v3.14.0
-urn:salud:artefacto:medico-hospitalista                 v1.11.0
-urn:salud:artefacto:salubrista                          v3.4.0
-urn:salud:artefacto:seguridad-informacion-salud         v1.2.0
-urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc v1.1.0
-urn:salud:artefacto:reporte-diario-hodom                v2.2.0
+urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc v2.0.0
+ROLE_PACKET schema                                             3.0
+urn:salud:artefacto:hodom-hsc-*                               v3.0.0
 ```
 
-Clawforge y los tres agentes de salud resuelven el perfil antes de imponer una
-compuerta de privacidad. La skill de seguridad distingue perfil personal de
-entorno institucional. Los usuarios sintéticos pueden inspeccionar fuentes
-reales privadas, pero su aceptación no se convierte en acto profesional. El
-reporte diario puede contener PHI en su artefacto protegido; chat, Git y
-salidas publicables conservan solo estado, conteos y rutas.
+Los 14 agentes conservan competencia, antirol y voz propios. La skill común
+posee la mecánica de participación y revisión.
+
+## Evidencia que motivó la reparación
+
+La evaluación
+`hd-hsc-os/docs/05-especificaciones/evidencia-prerelease-product/evaluacion-usuarios-sinteticos-2026-07-30.md`
+tiene SHA-256
+`0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db`.
+
+Su informe registra 14 roles, 140 revisiones de journey y 280 observaciones de
+viewport, con 12 desajustes de identidad y bloqueos de fixture/superficie. La
+inspección de las sesiones fuente mostró además:
+
+- uso no homogéneo de Playwright: algunos roles operaron por coordenadas y
+  capturas; otros usaron locators, árbol de accesibilidad, extracción de texto
+  y enumeración de controles;
+- lectura previa de dossiers, criterios y matrices antes del primer contacto
+  con la UI, lo que convirtió la prueba en auditoría informada;
+- cobertura amplia repetida por una sola instancia, sin límites de tarea,
+  fatiga, interrupción ni independencia real entre viewports;
+- ausencia de un estado inconcluso, que empujó fallas de identidad, fixture o
+  entorno hacia veredictos del producto;
+- carga cognitiva y confianza expresadas como si fueran observaciones humanas,
+  aunque sólo podían ser predicciones sintéticas.
+
+La evidencia histórica no se reescribió. Sus hallazgos sobre candidato y
+montaje conservan el estado original; esta reparación cambia el método de una
+próxima evaluación.
+
+## Contrato corregido
+
+- Cada REVIEW de UI recibe `use_context`: experiencia, fluidez digital,
+  contexto, presión, interrupciones, accesibilidad, conocimiento previo,
+  objetivo y señal de éxito.
+- El preflight verifica candidato, superficie, identidad, fixture, viewport y
+  driver antes de puntuar.
+- La primera pasada es ciega: pantalla, puntero y teclado, sin DOM, locators,
+  selectores, texto programático, consola, red, API, test IDs ni código.
+- La segunda pasada profesional ocurre sólo después de preservar la evidencia
+  experiencial; no puede reescribirla.
+- Cada rol ejecuta como máximo tres tareas críticas por sesión, con presupuesto
+  de acciones y recuperación acotada.
+- Cada viewport usa contexto de navegador y fixture nuevos. Redimensionar una
+  sesión resuelta no prueba un journey móvil.
+- Un lector de pantalla u otra ayuda sólo se declara probado con tecnología de
+  asistencia real; en otro caso queda `NOT_RUN`.
+- Defectos del candidato usan `P0..P3`; montaje, fixture, entorno o causa
+  desconocida usan `E0..E1`.
+- REVIEW admite `INCONCLUSIVE`; ACCEPT lo rechaza con
+  `inconclusive-review`.
+- Hechos visibles, interpretación profesional, predicción sintética y brecha
+  de validación humana son capas distintas. Carga, confianza o comprensión no
+  son mediciones humanas.
 
 ## Emisión e instalación
 
-- `main`, `urgenciologo`, `medico-hospitalista` y `salubrista` fueron
-  retransmutados a sus targets y aplicados donde corresponde.
-- `seguridad-informacion-salud` fue aplicada en Claude Code, Codex y OpenCode.
-- `reporte-diario-hodom` fue aplicada en Codex.
-- `participacion-usuario-sintetico-hodom-hsc` fue aplicada con alcance de
-  proyecto en `/home/felix/projects/hd-hsc-os`.
-- Las emisiones OpenClaw de `main` y los tres agentes de salud quedaron
-  actualizadas en `openclaw-fleet`; la materialización de los workspaces
-  pertenece al contrato de ese repo.
+- Skill y 14 agentes fueron retransmutados a Codex.
+- La skill emitida pasó `quick_validate.py`.
+- Los 15 artefactos se aplicaron con alcance de proyecto en
+  `/home/felix/projects/hd-hsc-os`.
+- La paridad manual emisión↔instalación quedó `PROJECT_PARITY=PASS`.
+- La publicación del consumidor queda pendiente hasta cerrar el commit
+  selectivo sin incorporar cambios concurrentes ajenos.
 
-## Evidencia
+Codex no puede imponer una allowlist exacta de herramientas built-in. La
+emisión declara esa pérdida para `[Bash]` y `[Read,Grep,Glob,Bash]`; el control
+observable reside en el protocolo, la separación de evidencia y las pruebas.
+
+## Evidencia de cierre KORA
 
 ```text
+test_hodom_hsc_role_agents       20/20
+suite KORA                       314/314
 velar --estricto                 13/13
-suite KORA                       309 passed; 224 subtests passed
-paridad global                   0 desviadas
-eval focal del perfil            4/4
+skill emitida                    valid
+snapshot de fuentes              6da0907322a85b25ba97a07612b8d6926fa8c878c1dd3df37410c02b6d263457
+paridad proyecto                 PASS
 ```
 
-Los targets declarados pero no instalados por decisión de alcance se informan
-como `no-instalada`; no equivalen a desviación.
+## Límites
+
+- Revisión sintética no equivale a prueba, aceptación ni utilidad humana.
+- REVIEW/ACCEPT no producen autoridad clínica, directiva, administrativa,
+  regulatoria, institucional ni productiva.
+- Esta corrección no arregla la app, sus fixtures, identidades ni journeys y no
+  reevalúa el candidato histórico.
+- `DEV_PERSONAL_FULL` sigue permitiendo fuentes privadas en el host personal,
+  pero no relaja secretos, Git, publicación ni autoridad profesional.
 
 ## Próxima acción
 
-Usar `DEV_PERSONAL_FULL` para inventariar y ensayar la migración real en
-superficies privadas. Antes de compartir, incorporar otro usuario o desplegar
-fuera del host, cambiar explícitamente a `INSTITUTIONAL_CONTROLLED` y ejecutar
-los controles del entorno receptor.
+Publicar de forma selectiva la instalación derivada en `hd-hsc-os`. Para una
+nueva evaluación: corregir primero identidad, fixture y superficie; ligar un
+candidato nuevo; ejecutar tareas críticas independientes por viewport con el
+contrato v3; y mantener `HUMAN_UTILITY`, `HUMAN_SAFETY`, `HUMAN_WORKFLOW_FIT` y
+`HUMAN_ACCEPTANCE` en `NOT_RUN` hasta participación humana real.
