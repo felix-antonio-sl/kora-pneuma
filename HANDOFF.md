@@ -80,8 +80,11 @@ próxima evaluación.
 - Los 15 artefactos se aplicaron con alcance de proyecto en
   `/home/felix/projects/hd-hsc-os`.
 - La paridad manual emisión↔instalación quedó `PROJECT_PARITY=PASS`.
-- La publicación del consumidor queda pendiente hasta cerrar el commit
-  selectivo sin incorporar cambios concurrentes ajenos.
+- El consumidor quedó publicado en `hd-hsc-os/master` mediante
+  `52c5e18d352895a7ce1e32ebe433ee7c67fb668d`, en paridad
+  local↔tracking↔remoto.
+- El commit fue selectivo sobre los 15 artefactos; no incorporó tres cambios
+  concurrentes ajenos en migración y pruebas PostgreSQL.
 
 Codex no puede imponer una allowlist exacta de herramientas built-in. La
 emisión declara esa pérdida para `[Bash]` y `[Read,Grep,Glob,Bash]`; el control
@@ -96,6 +99,9 @@ velar --estricto                 13/13
 skill emitida                    valid
 snapshot de fuentes              6da0907322a85b25ba97a07612b8d6926fa8c878c1dd3df37410c02b6d263457
 paridad proyecto                 PASS
+commit fuente KORA               7721184aac54e4ca838ff45d827d1fa66eb824cd
+commit consumidor                52c5e18d352895a7ce1e32ebe433ee7c67fb668d
+pre-push consumidor              21/21 archivos; 118/118 pruebas
 ```
 
 ## Límites
@@ -110,8 +116,8 @@ paridad proyecto                 PASS
 
 ## Próxima acción
 
-Publicar de forma selectiva la instalación derivada en `hd-hsc-os`. Para una
-nueva evaluación: corregir primero identidad, fixture y superficie; ligar un
-candidato nuevo; ejecutar tareas críticas independientes por viewport con el
-contrato v3; y mantener `HUMAN_UTILITY`, `HUMAN_SAFETY`, `HUMAN_WORKFLOW_FIT` y
-`HUMAN_ACCEPTANCE` en `NOT_RUN` hasta participación humana real.
+Para una nueva evaluación: corregir primero identidad, fixture y superficie;
+ligar un candidato nuevo; ejecutar tareas críticas independientes por viewport
+con el contrato v3; y mantener `HUMAN_UTILITY`, `HUMAN_SAFETY`,
+`HUMAN_WORKFLOW_FIT` y `HUMAN_ACCEPTANCE` en `NOT_RUN` hasta participación
+humana real.
