@@ -15,6 +15,7 @@ SKILL = (
 )
 CONTRATO = SKILL.parent / "referencias/contrato-reporte-diario.md"
 PLAYBOOK = SKILL.parent / "referencias/playbook-hsc-agent-cli.md"
+PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
 
 
 class TestReporteDiarioHodom(unittest.TestCase):
@@ -31,7 +32,7 @@ class TestReporteDiarioHodom(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "2.1.0")
+        self.assertEqual(self.campos["version"], "2.2.0")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
@@ -102,8 +103,9 @@ class TestReporteDiarioHodom(unittest.TestCase):
                 "estado técnico no identificable"):
             self.assertNotIn(testigo, combinado)
         for testigo in (
-                "no implementa, valida ni condiciona la ejecución por "
-                "controles de PII/PHI",
+                PROFILE_URN,
+                "no exige desidentificación previa",
+                "ruta privada o gitignored",
                 "un probe adicional",
                 "jamás fan-out",
                 "no aumentar concurrencia"):
@@ -138,7 +140,10 @@ class TestReporteDiarioHodom(unittest.TestCase):
     def test_reutiliza_metodos_existentes(self):
         self.assertEqual(
             self.campos["conocimiento"],
-            ["urn:salud:kb:manual-agente-hsc-agent-cli"])
+            [
+                "urn:salud:kb:manual-agente-hsc-agent-cli",
+                PROFILE_URN,
+            ])
         self.assertEqual(
             self.campos["componible"],
             [

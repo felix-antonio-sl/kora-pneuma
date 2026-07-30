@@ -1,93 +1,76 @@
-# Handoff vigente — 2026-07-29 — perfil clínico personal
+# Handoff vigente — 2026-07-30 — perfil de datos personal del ecosistema
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
 > artefactos canónicos, Git, los sistemas clínicos ni el estado vivo del host.
 
 ## Objetivo vigente
 
-`urgenciologo` y `medico-hospitalista` operan como agentes de uso personal en
-un servidor controlado, mono usuario. Por decisión explícita del operador:
+`urn:salud:kb:perfil-dev-personal-full` es la doctrina canónica para el host
+privado y mono-usuario del operador durante desarrollo, preparación,
+conciliación, migración, pruebas locales y soporte personal.
 
-- pueden procesar, persistir, recuperar y transferir PII/PHI cuando sea
-  pertinente al encargo;
-- la desidentificación y `/new` no son requisitos previos;
-- pueden usar autónomamente archivos, ejecución, web, memoria, mensajería,
-  sesiones y subagentes disponibles;
-- la memoria y el historial aportan continuidad, pero los hechos que sostienen
-  decisiones clínicas se revalidan en HSC.
+El perfil permite:
 
-Persisten cuatro límites: no conservar credenciales o secretos; no publicar
-fuera del flujo privado autorizado; no mutar HSC mediante `hsc-agent-cli`; y
-mantener confirmación explícita para operaciones destructivas o de
-control-plane.
+- procesar, persistir, recuperar, cruzar y visualizar PII/PHI sin
+  desidentificación previa;
+- usar Drive, `hsc-agent-cli`, extracts, archivos privados, memoria, sesiones y
+  bases locales como fuentes;
+- conservar staging y cuarentena, usar la protección del host/volumen y
+  concentrar iniciación, ejecución y aprobación en el mismo operador;
+- transferir el mínimo pertinente a proveedores y conectores ya configurados.
 
-## Fuente y versiones
+No relaja secretos, Git/publicación, mutación de fuentes, destinos nuevos,
+identidad, procedencia, temporalidad, idempotencia ni autoridad clínica final.
+Una superficie compartida, piloto o productiva usa
+`INSTITUTIONAL_CONTROLLED`.
 
-```text
-urn:salud:artefacto:urgenciologo
-  artefactos/agentes/salud/urgenciologo.md
-  versión 3.13.0
-
-urn:salud:artefacto:medico-hospitalista
-  artefactos/agentes/salud/medico-hospitalista.md
-  versión 1.10.0
-```
-
-Ambos declaran `targets: [claude-code, codex, opencode, openclaw]` y alcance
-`usuario`. Las cuatro emisiones y las cuatro instalaciones de cada agente
-quedaron materialmente fieles.
-
-## Runtime OpenClaw
-
-La configuración efectiva de ambos agentes usa:
+## Fuente y consumidores
 
 ```text
-tools.profile       full
-tools.exec.mode     full
-exec security       full
-exec ask            off
-exec askFallback    full
+urn:salud:kb:perfil-dev-personal-full                    v1.0.0
+urn:ops:artefacto:clawforge                             v1.2.0
+urn:salud:artefacto:urgenciologo                        v3.14.0
+urn:salud:artefacto:medico-hospitalista                 v1.11.0
+urn:salud:artefacto:salubrista                          v3.4.0
+urn:salud:artefacto:seguridad-informacion-salud         v1.2.0
+urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc v1.1.0
+urn:salud:artefacto:reporte-diario-hodom                v2.2.0
 ```
 
-Se conserva una allowlist funcional exacta orientada a adquisición de
-información clínica; Gateway, nodos, cron y otras superficies de control no son
-necesarias para ese propósito. Los workspaces materializados incorporan el
-perfil nuevo en `AGENTS.md`, `BOOT.md` y `TOOLS.md`. Sus memorias privadas
-permiten PII/PHI y continuidad, sin indexación masiva de transcripciones.
+Clawforge y los tres agentes de salud resuelven el perfil antes de imponer una
+compuerta de privacidad. La skill de seguridad distingue perfil personal de
+entorno institucional. Los usuarios sintéticos pueden inspeccionar fuentes
+reales privadas, pero su aceptación no se convierte en acto profesional. El
+reporte diario puede contener PHI en su artefacto protegido; chat, Git y
+salidas publicables conservan solo estado, conteos y rutas.
 
-El host es mono usuario, pero inferencia, embeddings, web y otros proveedores
-configurados pueden ser servicios externos. La decisión del operador autoriza
-el tránsito necesario de PII/PHI por esas superficies; esta entrega no prueba
-por sí sola sus condiciones contractuales, regulatorias ni de retención.
+## Emisión e instalación
+
+- `main`, `urgenciologo`, `medico-hospitalista` y `salubrista` fueron
+  retransmutados a sus targets y aplicados donde corresponde.
+- `seguridad-informacion-salud` fue aplicada en Claude Code, Codex y OpenCode.
+- `reporte-diario-hodom` fue aplicada en Codex.
+- `participacion-usuario-sintetico-hodom-hsc` fue aplicada con alcance de
+  proyecto en `/home/felix/projects/hd-hsc-os`.
+- Las emisiones OpenClaw de `main` y los tres agentes de salud quedaron
+  actualizadas en `openclaw-fleet`; la materialización de los workspaces
+  pertenece al contrato de ese repo.
 
 ## Evidencia
 
 ```text
-pruebas focales KORA             19/19
-suite KORA                       306/306
 velar --estricto                 13/13
-paridad por agente               5/5 fiel; 0 desviadas
-materialización OpenClaw         check fiel en ambos workspaces
-configuración OpenClaw           válida y recargada
-política exec efectiva           full/full/off/full en ambos
-canarios runtime                 2/2; una ejecución directa exitosa por agente
-memoria focal                    indexada y consultable en ambos
+suite KORA                       309 passed; 224 subtests passed
+paridad global                   0 desviadas
+eval focal del perfil            4/4
 ```
 
-La verificación viva integral del fleet conserva incidencias ajenas a este
-cambio: cola histórica `outbound/failed`, estados de memoria de otros agentes,
-ausencia de una observación Active Memory en 24 horas y drift de documentación
-upstream. No invalidan los checks focales anteriores y no fueron corregidas en
-este incremento.
+Los targets declarados pero no instalados por decisión de alcance se informan
+como `no-instalada`; no equivalen a desviación.
 
 ## Próxima acción
 
-Usar ambos agentes en un turno clínico real supervisado y revisar que:
-
-1. seleccionen inequívocamente paciente y episodio;
-2. obtengan la información necesaria sin bloqueos heredados de privacidad;
-3. revaliden en HSC los hechos decisivos;
-4. no expongan credenciales ni publiquen fuera del flujo autorizado.
-
-El handoff anterior quedó archivado en
-`_archivo/HANDOFF-2026-07-28-reporte-diario-hodom-manual.md`.
+Usar `DEV_PERSONAL_FULL` para inventariar y ensayar la migración real en
+superficies privadas. Antes de compartir, incorporar otro usuario o desplegar
+fuera del host, cambiar explícitamente a `INSTITUTIONAL_CONTROLLED` y ejecutar
+los controles del entorno receptor.

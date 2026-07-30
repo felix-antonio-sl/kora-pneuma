@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc
 nombre: participacion-usuario-sintetico-hodom-hsc
-version: 1.0.0
+version: 1.1.0
 estado: activo
 descripcion: "Método compartido para que los roles profesionales HODOM-HSC actúen como usuarios sintéticos ideales: descubren necesidades, sintetizan requisitos y costuras, revisan diseño y emiten aceptación interna dentro de su ámbito."
-fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6)."
+fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6). v1.1.0 (2026-07-30): adopta DEV_PERSONAL_FULL para investigación y validación con fuentes reales en el host privado; conserva la frontera Git/publicación y la autoridad profesional humana."
 autor: FS
 creado: 2026-07-23
 lang: es
@@ -16,6 +16,7 @@ forma: habilidad
 herramientas: []
 targets: [codex]
 alcance: proyecto
+conocimiento: [urn:salud:kb:perfil-dev-personal-full]
 ---
 
 # Participación de usuario sintético HODOM-HSC
@@ -31,6 +32,21 @@ esa ausencia no impide diseñar.
 Esta skill posee el método común. La competencia, el antirol, la voz y los
 límites de aceptación pertenecen a cada agente profesional.
 
+## Perfil de datos
+
+En el host personal del operador rige
+`urn:salud:kb:perfil-dev-personal-full`. El rol puede inspeccionar PII/PHI,
+fuentes Drive, salidas de `hsc-agent-cli`, extracts, archivos privados y bases
+locales cuando sean necesarios para descubrir una necesidad, reconciliar
+identidad o validar una migración. No exige desidentificar antes de razonar ni
+una segunda persona para aprobar el trabajo local.
+
+El paquete distingue superficie de trabajo y destino. PII/PHI puede permanecer
+en un artefacto privado o gitignored; el resultado que vaya a Git, PR,
+documentación compartida o evidencia publicable se emite sin identificadores.
+La relajación no amplía la competencia del rol ni convierte la aceptación
+sintética en acto profesional o institucional.
+
 ## Vocabulario de procedencia
 
 Estas cinco etiquetas son autosuficientes dentro del contrato:
@@ -39,7 +55,7 @@ Estas cinco etiquetas son autosuficientes dentro del contrato:
 |---|---|---|
 | N | norma o doctrina sanitaria del corpus KORA | obligación o criterio general según el corpus al corte |
 | L | documento oficial/local HSC | regla o diseño documental local; no prueba ejecución |
-| O | práctica operacional observada y desidentificada | funcionamiento de facto al corte de la observación |
+| O | práctica operacional observada | funcionamiento de facto al corte; la superficie de salida determina si debe desidentificarse |
 | D | diseño objetivo o necesidad derivada | estado deseado que debe ratificarse |
 | V | validación propietaria pendiente | no se puede presentar todavía como contrato local |
 
@@ -313,8 +329,9 @@ marca de tiempo.
 7. `blocking_items` contiene defectos del candidato dentro del ámbito
    profesional, no la mera falta de evidencia local.
 8. La aceptación es interna y queda delimitada por `scope_of_acceptance`.
-9. Los identificadores personales innecesarios se omiten o abstraen; el rol
-   continúa razonando sobre la estructura relevante sin reproducirlos.
+9. Los identificadores se conservan en la superficie privada cuando sostienen
+   identidad, trazabilidad o conciliación; se omiten del producto versionado o
+   compartido cuando no son necesarios.
 10. El paquete es autocontenido: no depende de memoria oculta entre
     invocaciones.
 11. ACCEPT obedece la tabla REVIEW a ACCEPT; sus listas no pueden contradecir el

@@ -18,6 +18,7 @@ SKILL = (
     / "SKILL.md"
 )
 SKILL_URN = "urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc"
+PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
 MAPA_SHA256 = "bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd"
 CATALOGO_SHA256 = "d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6"
 
@@ -157,8 +158,8 @@ PROVENANCE_VOCABULARY = {
         "regla o diseño documental local; no prueba ejecución",
     ),
     "O": (
-        "práctica operacional observada y desidentificada",
-        "funcionamiento de facto al corte de la observación",
+        "práctica operacional observada",
+        "funcionamiento de facto al corte; la superficie de salida determina si debe desidentificarse",
     ),
     "D": (
         "diseño objetivo o necesidad derivada",
@@ -198,7 +199,7 @@ EXCEPTION_CONTRACTS = {
 }
 
 EXPECTED_SOURCE_SNAPSHOT_SHA256 = (
-    "a67d9a88931e4891fea0b7192f2f720920da261d4557f30b677afc39dfc98270"
+    "3f48e416a22cd931691c046b3a62783393d88dd2a9ca031cf06b528e6facbc98"
 )
 
 
@@ -294,7 +295,8 @@ class TestPanelRolesHodomHscV2(unittest.TestCase):
         self.assertEqual(campos["urn"], SKILL_URN)
         self.assertEqual(campos["nombre"],
                          "participacion-usuario-sintetico-hodom-hsc")
-        self.assertEqual(campos["version"], "1.0.0")
+        self.assertEqual(campos["version"], "1.1.0")
+        self.assertIn(PROFILE_URN, campos["conocimiento"])
         self.assertEqual(campos["estado"], "activo")
         self.assertEqual(campos["forma"], "habilidad")
         self.assertEqual(campos["arnes"], "disciplina")

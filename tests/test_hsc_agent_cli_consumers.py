@@ -13,6 +13,7 @@ CONSUMIDORES_DIRECTOS = {
 }
 MANUAL_PATH = RAIZ / "artefactos/conocimiento/salud/manual-agente-hsc-agent-cli.md"
 MANUAL_URN = "urn:salud:kb:manual-agente-hsc-agent-cli"
+PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
 
 
 class TestContratoHscAgentCli(unittest.TestCase):
@@ -145,8 +146,9 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_capacidades_full_del_perfil_personal(self):
         for nombre, (campos, _) in self.consumidores.items():
             with self.subTest(consumidor=nombre):
-                self.assertIn(f"v{campos['version']}", campos["fuente"])
+                self.assertIn(PROFILE_URN, campos["conocimiento"])
         self.assert_cuerpo_contiene(
+            PROFILE_URN,
             "perfil personal, controlado y mono-usuario `full`",
             "`memory_search`",
             "`message`",
@@ -172,7 +174,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_urgenciologo_hace_ejecutable_procedencia_y_autoridad(self):
         campos, cuerpo = self.consumidores["urgenciologo"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("3.13.0", campos["version"])
+        self.assertEqual("3.14.0", campos["version"])
         for fragmento in (
             "`corpus-ref <URN#sección>`",
             "`fuera-de-corpus`",
@@ -282,7 +284,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_hospitalista_hace_ejecutable_el_plan_soap(self):
         campos, cuerpo = self.consumidores["medico-hospitalista"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("1.10.0", campos["version"])
+        self.assertEqual("1.11.0", campos["version"])
         for fragmento in (
             "Intervención — indicación — contraindicación relevante — monitor — duración/stop",
             "Disposición — criterios cumplidos — criterios pendientes — responsable — plazo",

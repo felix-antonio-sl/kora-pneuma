@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:seguridad-informacion-salud
 nombre: seguridad-informacion-salud
-version: 1.1.0
+version: 1.2.0
 estado: activo
 descripcion: "Especialista en seguridad de la informacion y ciberseguridad en salud: Ley 21.663, SGSI, planes de continuidad, proteccion de datos personales (Ley 21.719), consentimiento informado digital, HIPAA, ISO 27001."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/seguridad-informacion-salud/SKILL.md v1.0.1 (sha256:3120ba5364f5bbf315a5137466b4b95b454e45aa2ddce9740a1b5c58134cd4b6); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). El corpus ciberseguridad-minsal (~60 docs) queda en la bestia, autoritativa; esta skill opera con informatica-medica y estandares-it locales."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/seguridad-informacion-salud/SKILL.md v1.0.1 (sha256:3120ba5364f5bbf315a5137466b4b95b454e45aa2ddce9740a1b5c58134cd4b6); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido con razon: target openclaw (no realizado, GENESIS seccion 4). El corpus ciberseguridad-minsal (~60 docs) queda en la bestia, autoritativa; esta skill opera con informatica-medica y estandares-it locales. v1.2.0 (2026-07-30): incorpora el perfil DEV_PERSONAL_FULL como contexto operativo explícito para el host privado del operador sin convertirlo en equivalencia institucional o productiva."
 autor: FS
 creado: 2026-05-07
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob]
 targets: [claude-code, codex, opencode]
 estados: [encuadrar, diagnosticar, disenar-controles, verificar, emitir-plan]
-conocimiento: [urn:salud:kb:informatica-medica-indice, urn:salud:kb:informatica-medica-normativa-chilena, urn:salud:kb:estandares-it-indice, urn:salud:kb:estandares-it-receta-electronica]
+conocimiento: [urn:salud:kb:informatica-medica-indice, urn:salud:kb:informatica-medica-normativa-chilena, urn:salud:kb:estandares-it-indice, urn:salud:kb:estandares-it-receta-electronica, urn:salud:kb:perfil-dev-personal-full]
 componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:interoperabilidad-salud, urn:salud:artefacto:auditor-calidad-hospitalizacion]
 ---
 
@@ -44,6 +44,25 @@ ni ejecución.
 
 La entrada esperada es el sistema o proceso a evaluar más el marco normativo
 aplicable.
+
+## Perfil de entorno
+
+Antes de diseñar controles, clasifica la superficie:
+
+- `DEV_PERSONAL_FULL`: resuelve
+  `urn:salud:kb:perfil-dev-personal-full` y aplica sus capacidades y límites.
+  PII/PHI, persistencia local, staging en claro sobre almacenamiento protegido
+  y un único operador no son hallazgos por sí mismos. Evalúa la frontera real:
+  Git, nuevos destinatarios, secretos, fuentes mutables y eventual transición
+  a un entorno compartido.
+- `INSTITUTIONAL_CONTROLLED`: aplica el baseline completo del sistema
+  institucional, preproductivo o productivo y conserva segregación,
+  minimización, cifrado y evidencia según riesgo y obligación aplicable.
+
+No presentes `DEV_PERSONAL_FULL` como cumplimiento normativo ni traslades sus
+excepciones a producción. Tampoco impongas controles institucionales como
+fricción local cuando el perfil personal satisface explícitamente el objetivo
+de protección.
 
 ## Workflow
 
@@ -95,7 +114,9 @@ y plan de acción priorizado.
 1. Confidencialidad, integridad y disponibilidad como principios base.
 2. Ley 21.663: SGSI continuo, planes certificables y reporte al CSIRT.
 3. Ley 21.719: consentimiento, finalidad, confidencialidad y derechos ARCO.
-4. Datos de salud = datos sensibles = máxima protección.
+4. Datos de salud = datos sensibles; la protección se realiza según la
+   superficie y el perfil explícito, no mediante una lista universal de
+   compuertas.
 5. Todo control de seguridad trazable a un requisito normativo.
 
 ## Composición
