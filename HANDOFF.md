@@ -131,17 +131,23 @@ evidencia de evaluación desde esta sesión.
 
 Estado concurrente observado en el consumidor al cerrar:
 
-- `hd-hsc-os/master == origin/master ==
+- comenzó en
+  `hd-hsc-os/master == origin/master ==
   bc2bfcf5b827e390ac09d8d61843826cc2da5fcf`;
-- había cambios ajenos en `MEMORY.md` y
-  `docs/04-arquitectura/continuidad-operativa-2026-07-22-3.md`;
+- mientras se cerraba KORA, otro trabajo movió `master`, publicó un commit y
+  dejó el checkout local nuevamente adelantado respecto del remoto;
+- inicialmente había cambios ajenos en `MEMORY.md` y
+  `docs/04-arquitectura/continuidad-operativa-2026-07-22-3.md`; el primero fue
+  confirmado por ese trabajo concurrente y el segundo seguía modificado;
 - ya existían sin seguimiento el informe, manifiesto y paquetes R01–R14 bajo
   `docs/05-especificaciones/evidencia-prerelease-product/*UX-v3*` y
   `usuarios-sinteticos-v3/`.
 
 Esos archivos no fueron creados, revisados, preparados ni publicados por este
 cierre. Su procedencia, candidato, cumplimiento visual-only y validez semántica
-siguen pendientes; no deben sobrescribirse ni mezclarse con el cierre KORA.
+siguen pendientes; no deben sobrescribirse ni mezclarse con el cierre KORA. El
+estado exacto del consumidor debe releerse en vivo: los SHA anteriores prueban
+concurrencia, no vigencia.
 
 ## Límites
 
