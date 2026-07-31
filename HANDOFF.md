@@ -104,6 +104,45 @@ commit consumidor                52c5e18d352895a7ce1e32ebe433ee7c67fb668d
 pre-push consumidor              21/21 archivos; 118/118 pruebas
 ```
 
+## Preparación operativa de la próxima revisión
+
+En esta sesión se entregó un `/goal` listo para pegar de 3.679 caracteres. El
+Goal no se ejecutó desde esta conversación y no modifica el contrato canónico:
+lo operacionaliza con un integrador único, oleadas de hasta tres agentes,
+aislamiento entre roles, primera pasada visual ciega, segunda pasada
+profesional, evidencia tipada y cierre `COMPLETE|PARTIAL|BLOCKED`.
+
+La configuración recomendada vive fuera del Goal:
+
+```text
+integrador           gpt-5.6-sol / max
+agentes R01–R14      gpt-5.6-sol / xhigh
+concurrencia         3
+```
+
+Se descartó `Ultra` como valor por defecto porque añade delegación proactiva y
+la evaluación necesita conservar exactamente la división R01–R14 y sus
+oleadas. Si sólo existe un selector global, usar `gpt-5.6-sol / max`. El modelo
+y el esfuerzo efectivos deben comprobarse al iniciar; el prompt no los impone.
+
+No se creó un segundo documento para el Goal: este handoff conserva el contrato
+de continuidad y evita dos fuentes operativas divergentes. Tampoco se publicó
+evidencia de evaluación desde esta sesión.
+
+Estado concurrente observado en el consumidor al cerrar:
+
+- `hd-hsc-os/master == origin/master ==
+  bc2bfcf5b827e390ac09d8d61843826cc2da5fcf`;
+- había cambios ajenos en `MEMORY.md` y
+  `docs/04-arquitectura/continuidad-operativa-2026-07-22-3.md`;
+- ya existían sin seguimiento el informe, manifiesto y paquetes R01–R14 bajo
+  `docs/05-especificaciones/evidencia-prerelease-product/*UX-v3*` y
+  `usuarios-sinteticos-v3/`.
+
+Esos archivos no fueron creados, revisados, preparados ni publicados por este
+cierre. Su procedencia, candidato, cumplimiento visual-only y validez semántica
+siguen pendientes; no deben sobrescribirse ni mezclarse con el cierre KORA.
+
 ## Límites
 
 - Revisión sintética no equivale a prueba, aceptación ni utilidad humana.
@@ -116,8 +155,10 @@ pre-push consumidor              21/21 archivos; 118/118 pruebas
 
 ## Próxima acción
 
-Para una nueva evaluación: corregir primero identidad, fixture y superficie;
-ligar un candidato nuevo; ejecutar tareas críticas independientes por viewport
-con el contrato v3; y mantener `HUMAN_UTILITY`, `HUMAN_SAFETY`,
-`HUMAN_WORKFLOW_FIT` y `HUMAN_ACCEPTANCE` en `NOT_RUN` hasta participación
-humana real.
+Primero resolver la propiedad y procedencia del trabajo concurrente en
+`hd-hsc-os`. Después, sin sobrescribirlo, comprobar su binding
+candidato↔runtime, los 14 schemas, la evidencia visual-only, PHI/secretos y el
+diff exacto. Sólo entonces decidir si esos artefactos se corrigen, publican o se
+reemplazan mediante una nueva corrida con rutas propias. Mantener
+`HUMAN_UTILITY`, `HUMAN_SAFETY`, `HUMAN_WORKFLOW_FIT` y `HUMAN_ACCEPTANCE` en
+`NOT_RUN` hasta participación humana real.
