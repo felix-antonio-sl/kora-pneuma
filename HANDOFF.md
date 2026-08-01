@@ -47,7 +47,12 @@ Excluido deliberadamente:
 
 1. **Fugaz es `forma=subagente`, `arnes=delegado`, target Codex.** Su unidad de
    vida es una invocación efímera. La alternativa de conservar el agente
-   orquestador legado contradecía el cuerpo que se quería construir.
+   orquestador legado contradecía el cuerpo que se quería construir. Tras la
+   refutación adversarial, el operador autorizó conservar la URN con major
+   `2.0.0`: se trató como corrección durante la primera migración a pneuma, no
+   como democión de una fuente pneuma ya encarnada. Se descartó la alternativa
+   estricta de crear otra URN y retirar la identidad histórica; la procedencia
+   y este límite interpretativo permanecen explícitos en la fuente canónica.
 2. **Una tarea es un paquete tipado.** `objective`, `workspace`, `candidate`,
    `owned_scope`, `acceptance` y `authority` son obligatorios. El recibo liga
    cambios y evidencia al candidato final y distingue `COMPLETE`, `PARTIAL` y
