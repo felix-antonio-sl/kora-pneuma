@@ -1,170 +1,201 @@
-# Handoff vigente — 2026-07-31 — revisión sintética situada HODOM-HSC
+# Handoff vigente — 2026-08-01 — Steipete delega ejecución a Fugaz
 
 > Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> artefactos canónicos, Git, la aplicación, la aceptación humana ni el estado
-> vivo del host.
+> artefactos canónicos, Git, las instalaciones runtime ni el estado vivo del
+> host. Los hashes y resultados siguientes sólo describen el candidato exacto
+> evaluado.
 
-## Objetivo vigente
+## Objetivo y resultado
 
-El panel R01–R14 debe poder revisar una aplicación en desarrollo desde una
-perspectiva profesional situada sin presentarse como ser humano, usuario
-promedio ni representante exhaustivo del oficio.
+Se diseñó y realizó el ejecutor al que Steipete puede delegar tareas de código:
+`urn:dev:artefacto:fugaz` v2.0.1. Fugaz es un subagente Codex efímero,
+minimalista y estricto: recibe una tarea cerrada, implementa el menor cambio
+completo dentro de propiedad y autoridad explícitas, verifica hasta cierre y
+devuelve un recibo tipado. Steipete v1.2.1 conserva intención, arquitectura,
+topología, integración y juicio final.
 
-La fuente metodológica es:
+El resultado está completo en la fuente KORA y en el runtime Codex. La
+proyección actual de Steipete también está en paridad en Claude Code, Codex,
+OpenCode y OpenClaw. La rama limpia del blueprint OpenClaw fue publicada; no se
+publicó `openclaw-fleet/main` porque contenía dos commits locales anteriores a
+esta sesión.
+
+## Alcance cerrado
+
+Incluido:
+
+- migración `migrar-o-omitir` de la identidad histórica Fugaz a la ontología
+  vigente de pneuma;
+- contrato observable de entrada, salida, errores, autoridad y cierre;
+- adaptador Steipete → Fugaz para Codex;
+- pruebas canónicas, emisión, instalación, paridad y canarios in vivo;
+- actualización y materialización controlada del blueprint Steipete de
+  OpenClaw;
+- documentación, memoria durable, commits y publicación selectiva.
+
+Excluido deliberadamente:
+
+- fijar un modelo comercial o nivel de razonamiento dentro de la identidad;
+  esa selección pertenece al runtime y no amplía autoridad;
+- realizar Fugaz en targets distintos de Codex;
+- convertir Fugaz en coordinador, integrador o suborquestador recursivo;
+- resolver degradaciones globales de OpenClaw, colas, índices de memoria o
+  sincronización documental ajenas al contrato Steipete–Fugaz;
+- incorporar o publicar modificaciones concurrentes en `AGENTS.md`.
+
+## Decisiones consolidadas
+
+1. **Fugaz es `forma=subagente`, `arnes=delegado`, target Codex.** Su unidad de
+   vida es una invocación efímera. La alternativa de conservar el agente
+   orquestador legado contradecía el cuerpo que se quería construir.
+2. **Una tarea es un paquete tipado.** `objective`, `workspace`, `candidate`,
+   `owned_scope`, `acceptance` y `authority` son obligatorios. El recibo liga
+   cambios y evidencia al candidato final y distingue `COMPLETE`, `PARTIAL` y
+   `BLOCKED`.
+3. **La autoridad sólo se estrecha.** Es la intersección entre paquete,
+   autorización del principal y frontera efectiva del runtime. Fugaz no hace
+   commit, push, despliegue, destrucción ni acciones externas salvo concesión
+   explícita y exacta.
+4. **Steipete sigue siendo el integrador.** No se delegan intención borrosa,
+   arquitectura, dependencias, schema, boundaries, producto, taste ni cierre
+   integrado.
+5. **El adaptador Codex usa aislamiento.** `agent_type=fugaz` debe combinarse
+   con `fork_turns="none"` o aislamiento equivalente. La herencia completa
+   conserva el tipo padre y hace que Codex rechace el custom agent antes de
+   crear el hijo.
+6. **Calidad no se codifica como nombre de modelo.** Se expresa mediante
+   propiedad, aceptación, blast radius, autocorrección, evidencia y límites.
+   El modelo/esfuerzo efectivo debe verificarse en cada runtime.
+7. **Publicación Fleet selectiva.** Se descartó empujar `main`: estaba dos
+   commits por delante de `origin/main` antes del cambio. Se publicó una rama
+   limpia basada en `origin/main` que contiene sólo el blueprint de esta
+   entrega.
+
+Alternativas descartadas: una skill sin identidad delegada, un agente
+autónomo persistente, delegación recursiva, hardcodear un modelo, aceptar
+paquetes incompletos por inferencia, usar una suite verde como sustituto de
+integración y forzar la publicación de `main` con historial ajeno.
+
+## Artefactos y propósito
+
+| Ruta | Estado | Propósito |
+|---|---|---|
+| `artefactos/agentes/dev/fugaz.md` | creado | fuente canónica Fugaz v2.0.1 |
+| `artefactos/agentes/dev/steipete.md` | modificado | adaptador e integración responsable v1.2.1 |
+| `tests/test_fugaz.py` | creado | contrato estructural y semántico mínimo de ambos agentes |
+| `HANDOFF.md` | reemplazado | continuidad única de esta entrega |
+| `_archivo/HANDOFF-2026-07-31-revision-sintetica-hodom-hsc.md` | archivado, gitignored | continuidad anterior preservada |
+| `/home/felix/.codex/agents/fugaz.toml` | instalado | realización Codex de Fugaz |
+| `/home/felix/.codex/agents/steipete.toml` | actualizado | realización Codex de Steipete |
+| `/home/felix/.agents/skills/steipete/SKILL.md` | actualizado | proyección skill Codex declarada por KORA |
+| `/home/felix/.claude/agents/steipete.md` | actualizado | proyección Claude Code |
+| `/home/felix/.config/opencode/agents/steipete.md` | actualizado | proyección OpenCode |
+| `/home/felix/openclaw-fleet/blueprints/steipete/{AGENTS,SOUL}.md` | actualizado | blueprint OpenClaw |
+| `/home/felix/.openclaw/workspaces/steipete/` | materializado | runtime gestionado de Steipete |
+
+El skill Fugaz legado quedó fuera de la superficie activa en
+`/home/felix/_archive/codex-skills/fugaz-legacy-20260801T204112Z`. Los respaldos
+preoperación y precorrección viven bajo `/home/felix/backups/kora-runtime/`; el
+respaldo previo a materializar OpenClaw está en
+`/home/felix/backups/openclaw-managed/steipete-managed-pre-1.2.1-20260801T215133Z.tar.gz`.
+No se guardaron secretos ni datos personales en los artefactos canónicos.
+
+## Evidencia de comportamiento
+
+Canario positivo Codex:
+
+- cadena observada `root → steipete → fugaz`;
+- una única instancia Fugaz;
+- cierre `COMPLETE` con aceptación `PASS`;
+- un único archivo dentro de `owned_scope` modificado;
+- `HEAD` preservado y cero rechazos de invocación.
+
+Canarios negativos Codex:
+
+- paquete sin `authority` → `BLOCKED / malformed-packet`, sin escritura;
+- `candidate` falso → `BLOCKED / candidate-mismatch`, sin escritura;
+- ambos corrieron como custom agents aislados y el árbol quedó byte-idéntico.
+
+Estos canarios prueban observables puntuales del adaptador; no prueban
+determinismo universal, least privilege de herramientas built-in, safety
+general, calidad humana, taste ni rendimiento del modelo. El harness negativo
+consumió 914.912 tokens de entrada, 853.760 cacheados: es costo end-to-end del
+harness y no una medición aislada de eficiencia de Fugaz.
+
+## Comprobaciones ejecutadas
 
 ```text
-urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc v2.0.0
-ROLE_PACKET schema                                             3.0
-urn:salud:artefacto:hodom-hsc-*                               v3.0.0
+python3 kora.py velar --estricto                         13/13 PASS
+python3 -m unittest discover -s tests                   322/322 PASS
+paridad urn:dev:artefacto:fugaz                         1 fiel; 0 drift
+paridad urn:dev:artefacto:steipete                      5 fiel; 0 drift
+git diff --check                                        PASS
+OpenClaw verify-repo.sh estático                        28 PASS; 1 SKIP
+materialize-workspace.sh steipete                       PASS
+materialize-workspace.sh --check steipete               PASS
+rama Fleet limpia: materialización + check en destino   PASS
 ```
 
-Los 14 agentes conservan competencia, antirol y voz propios. La skill común
-posee la mecánica de participación y revisión.
+`verify-repo.sh --live` de OpenClaw terminó con 44 `PASS`, 4 `FAIL` y 2
+`WARN`. La materialización y paridad KORA pasaron. Fallaron salud global,
+runtime de memoria, búsqueda de memoria y docs upstream; además hubo avisos de
+frescura/e2e de memoria. No se atribuyen a Fugaz ni se presentan como
+preexistentes en todos los casos: sólo se confirma que son globales y quedan
+fuera del cambio acotado. Borrar colas, reindexar agentes o sincronizar docs
+sin diagnóstico habría ampliado alcance y riesgo.
 
-## Evidencia que motivó la reparación
+Una comprobación de la rama Fleet limpia contra el runtime vivo produjo un
+falso drift de manifiesto: el materializador incluye modos POSIX del checkout,
+y el worktree limpio nació `0600` mientras el checkout operativo usa `0664`
+salvo una referencia `0600`. El contenido Git y la lista de archivos eran
+idénticos. Materializar y verificar esa rama en un destino temporal propio
+pasó; el temporal fue enviado a la papelera. Esta dependencia de permisos del
+checkout queda como limitación conocida del materializador.
 
-La evaluación
-`hd-hsc-os/docs/05-especificaciones/evidencia-prerelease-product/evaluacion-usuarios-sinteticos-2026-07-30.md`
-tiene SHA-256
-`0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db`.
+## Git y publicación
 
-Su informe registra 14 roles, 140 revisiones de journey y 280 observaciones de
-viewport, con 12 desajustes de identidad y bloqueos de fixture/superficie. La
-inspección de las sesiones fuente mostró además:
+KORA `master`:
 
-- uso no homogéneo de Playwright: algunos roles operaron por coordenadas y
-  capturas; otros usaron locators, árbol de accesibilidad, extracción de texto
-  y enumeración de controles;
-- lectura previa de dossiers, criterios y matrices antes del primer contacto
-  con la UI, lo que convirtió la prueba en auditoría informada;
-- cobertura amplia repetida por una sola instancia, sin límites de tarea,
-  fatiga, interrupción ni independencia real entre viewports;
-- ausencia de un estado inconcluso, que empujó fallas de identidad, fixture o
-  entorno hacia veredictos del producto;
-- carga cognitiva y confianza expresadas como si fueran observaciones humanas,
-  aunque sólo podían ser predicciones sintéticas.
+- implementación: `7a9ac32a77c60e63ab358d6d05b9e67662440c23`
+  (`feat(agent): add delegated Fugaz executor`);
+- este handoff se confirma como unidad documental separada; su hash se obtiene
+  del `git log` vivo para evitar una referencia circular dentro del propio
+  commit;
+- `AGENTS.md` permanece modificado y fuera de staging por ser trabajo ajeno.
 
-La evidencia histórica no se reescribió. Sus hallazgos sobre candidato y
-montaje conservan el estado original; esta reparación cambia el método de una
-próxima evaluación.
+OpenClaw Fleet:
 
-## Contrato corregido
+- commit local sobre `main`: `6cb7e97ea2e5ffeb830ed7c5fdbdba3e10e63fc3`;
+- commit limpio publicado: `5faa01ab4166326ddac8bc8081cd1c5a2f521418`
+  (`chore(blueprint): update Steipete delegation contract`);
+- rama remota: `origin/codex/steipete-fugaz-20260801`, paridad local↔tracking
+  `0/0` confirmada;
+- `main` local conserva dos commits anteriores más el commit local de esta
+  sesión y no fue empujada;
+- `AGENTS.md` permanece modificado y excluido por ser trabajo ajeno.
 
-- Cada REVIEW de UI recibe `use_context`: experiencia, fluidez digital,
-  contexto, presión, interrupciones, accesibilidad, conocimiento previo,
-  objetivo y señal de éxito.
-- El preflight verifica candidato, superficie, identidad, fixture, viewport y
-  driver antes de puntuar.
-- La primera pasada es ciega: pantalla, puntero y teclado, sin DOM, locators,
-  selectores, texto programático, consola, red, API, test IDs ni código.
-- La segunda pasada profesional ocurre sólo después de preservar la evidencia
-  experiencial; no puede reescribirla.
-- Cada rol ejecuta como máximo tres tareas críticas por sesión, con presupuesto
-  de acciones y recuperación acotada.
-- Cada viewport usa contexto de navegador y fixture nuevos. Redimensionar una
-  sesión resuelta no prueba un journey móvil.
-- Un lector de pantalla u otra ayuda sólo se declara probado con tecnología de
-  asistencia real; en otro caso queda `NOT_RUN`.
-- Defectos del candidato usan `P0..P3`; montaje, fixture, entorno o causa
-  desconocida usan `E0..E1`.
-- REVIEW admite `INCONCLUSIVE`; ACCEPT lo rechaza con
-  `inconclusive-review`.
-- Hechos visibles, interpretación profesional, predicción sintética y brecha
-  de validación humana son capas distintas. Carga, confianza o comprensión no
-  son mediciones humanas.
+## Riesgos y límites vigentes
 
-## Emisión e instalación
+- La paridad material demuestra correspondencia de fuente, emisión e
+  instalación; no demuestra conducta, composición formal ni autoridad
+  efectiva.
+- Codex no ofrece una allowlist exacta de herramientas built-in para este
+  custom agent. El task packet es un control contractual, no un sandbox nuevo.
+- La selección del modelo y esfuerzo no está fijada por el artefacto. Debe
+  observarse al invocar; no se afirma que un nombre de modelo solicitado esté
+  disponible o activo.
+- El canario es evidencia localizada, no una evaluación estadística de calidad,
+  latencia, costo o regresión sobre tareas diversas.
+- Los fallos globales de Fleet y la sensibilidad del manifiesto a modos POSIX
+  siguen abiertos.
 
-- Skill y 14 agentes fueron retransmutados a Codex.
-- La skill emitida pasó `quick_validate.py`.
-- Los 15 artefactos se aplicaron con alcance de proyecto en
-  `/home/felix/projects/hd-hsc-os`.
-- La paridad manual emisión↔instalación quedó `PROJECT_PARITY=PASS`.
-- El consumidor quedó publicado en `hd-hsc-os/master` mediante
-  `52c5e18d352895a7ce1e32ebe433ee7c67fb668d`, en paridad
-  local↔tracking↔remoto.
-- El commit fue selectivo sobre los 15 artefactos; no incorporó tres cambios
-  concurrentes ajenos en migración y pruebas PostgreSQL.
+## Siguiente acción recomendada
 
-Codex no puede imponer una allowlist exacta de herramientas built-in. La
-emisión declara esa pérdida para `[Bash]` y `[Read,Grep,Glob,Bash]`; el control
-observable reside en el protocolo, la separación de evidencia y las pruebas.
-
-## Evidencia de cierre KORA
-
-```text
-test_hodom_hsc_role_agents       20/20
-suite KORA                       314/314
-velar --estricto                 13/13
-skill emitida                    valid
-snapshot de fuentes              6da0907322a85b25ba97a07612b8d6926fa8c878c1dd3df37410c02b6d263457
-paridad proyecto                 PASS
-commit fuente KORA               7721184aac54e4ca838ff45d827d1fa66eb824cd
-commit consumidor                52c5e18d352895a7ce1e32ebe433ee7c67fb668d
-pre-push consumidor              21/21 archivos; 118/118 pruebas
-```
-
-## Preparación operativa de la próxima revisión
-
-En esta sesión se entregó un `/goal` listo para pegar de 3.679 caracteres. El
-Goal no se ejecutó desde esta conversación y no modifica el contrato canónico:
-lo operacionaliza con un integrador único, oleadas de hasta tres agentes,
-aislamiento entre roles, primera pasada visual ciega, segunda pasada
-profesional, evidencia tipada y cierre `COMPLETE|PARTIAL|BLOCKED`.
-
-La configuración recomendada vive fuera del Goal:
-
-```text
-integrador           gpt-5.6-sol / max
-agentes R01–R14      gpt-5.6-sol / xhigh
-concurrencia         3
-```
-
-Se descartó `Ultra` como valor por defecto porque añade delegación proactiva y
-la evaluación necesita conservar exactamente la división R01–R14 y sus
-oleadas. Si sólo existe un selector global, usar `gpt-5.6-sol / max`. El modelo
-y el esfuerzo efectivos deben comprobarse al iniciar; el prompt no los impone.
-
-No se creó un segundo documento para el Goal: este handoff conserva el contrato
-de continuidad y evita dos fuentes operativas divergentes. Tampoco se publicó
-evidencia de evaluación desde esta sesión.
-
-Estado concurrente observado en el consumidor al cerrar:
-
-- comenzó en
-  `hd-hsc-os/master == origin/master ==
-  bc2bfcf5b827e390ac09d8d61843826cc2da5fcf`;
-- mientras se cerraba KORA, otro trabajo movió `master`, publicó un commit y
-  dejó el checkout local nuevamente adelantado respecto del remoto;
-- inicialmente había cambios ajenos en `MEMORY.md` y
-  `docs/04-arquitectura/continuidad-operativa-2026-07-22-3.md`; el primero fue
-  confirmado por ese trabajo concurrente y el segundo seguía modificado;
-- ya existían sin seguimiento el informe, manifiesto y paquetes R01–R14 bajo
-  `docs/05-especificaciones/evidencia-prerelease-product/*UX-v3*` y
-  `usuarios-sinteticos-v3/`.
-
-Esos archivos no fueron creados, revisados, preparados ni publicados por este
-cierre. Su procedencia, candidato, cumplimiento visual-only y validez semántica
-siguen pendientes; no deben sobrescribirse ni mezclarse con el cierre KORA. El
-estado exacto del consumidor debe releerse en vivo: los SHA anteriores prueban
-concurrencia, no vigencia.
-
-## Límites
-
-- Revisión sintética no equivale a prueba, aceptación ni utilidad humana.
-- REVIEW/ACCEPT no producen autoridad clínica, directiva, administrativa,
-  regulatoria, institucional ni productiva.
-- Esta corrección no arregla la app, sus fixtures, identidades ni journeys y no
-  reevalúa el candidato histórico.
-- `DEV_PERSONAL_FULL` sigue permitiendo fuentes privadas en el host personal,
-  pero no relaja secretos, Git, publicación ni autoridad profesional.
-
-## Próxima acción
-
-Primero resolver la propiedad y procedencia del trabajo concurrente en
-`hd-hsc-os`. Después, sin sobrescribirlo, comprobar su binding
-candidato↔runtime, los 14 schemas, la evidencia visual-only, PHI/secretos y el
-diff exacto. Sólo entonces decidir si esos artefactos se corrigen, publican o se
-reemplazan mediante una nueva corrida con rutas propias. Mantener
-`HUMAN_UTILITY`, `HUMAN_SAFETY`, `HUMAN_WORKFLOW_FIT` y `HUMAN_ACCEPTANCE` en
-`NOT_RUN` hasta participación humana real.
+Integrar mediante revisión la rama
+`codex/steipete-fugaz-20260801` sobre un `openclaw-fleet/main` limpio, sin
+arrastrar ni perder los dos commits locales anteriores. Después, en una tarea
+separada y con diagnóstico propio, resolver los cuatro fallos live globales y
+evaluar si el materializador debe normalizar modos desde Git o declarar una
+política de permisos reproducible. Para evolucionar Fugaz, la siguiente mejora
+de valor es una matriz pequeña de evals representativos ligada a costo,
+latencia, scope compliance y calidad integrada; no ampliar primero su prompt.
