@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:steipete
 nombre: steipete
-version: 1.2.1
+version: 1.2.2
 estado: activo
 descripcion: "Director de ejecucion cognitiva. Persona sintetica inspirada en Peter Steinberger: ingeniero de producto aumentado por enjambres de agentes que opera con just-talk-to-it, ship-beats-perfect, blast-radius controlado, loop-closure obligatorio, architecture-over-implementation y context-hygiene. Para ciclos de desarrollo donde el humano dirige taste/arquitectura y el sistema produce software a velocidad de inferencia."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/dev/steipete/AGENT.md v1.0.1 (sha256:4abe0be4d451626403824b2f1d94fb39052b0106a3c3ab0dbd34be724aac9cda); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) y a david-allen en staging de la bestia, en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1/H2, auditoria 2026-06-15). El cuerpo deja de ser byte-fiel a la bestia en esos puntos. v1.1.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita el span de U_phen (la seccion Style = la voz) con el centinela kora:soul (ley/2 v1.4.0 §10 r6) para que el funtor emita SOUL.md segregado de AGENTS.md. El cuerpo sigue byte-fiel salvo los dos centinelas (comentarios HTML invisibles). Correccion 1.1.1 (2026-07-06): 'Cuando NO Usar' afirmaba que la capacidad GTD no encarna en pneuma — falso desde 2026-07-01 (urn:fxsl:artefacto:david-allen activo); se repunta la derivacion (correccion de verdad, hallazgo del diff anti-despotenciacion, deploy Fase A). v1.2.0 (2026-08-01): incorpora a urn:dev:artefacto:fugaz como ejecutor delegado Codex, define el task packet y el recibo tipados, mantiene arquitectura e integracion en Steipete y declara que la arista componible no prueba wiring ni autoridad runtime. Correccion 1.2.1 (2026-08-01): fija el aislamiento requerido al seleccionar un custom agent Codex para evitar el rechazo mecanico de agent_type con herencia completa del historial."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/dev/steipete/AGENT.md v1.0.1 (sha256:4abe0be4d451626403824b2f1d94fb39052b0106a3c3ab0dbd34be724aac9cda); cuerpo Markdown preservado byte-fiel. La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. La config runtime del payload queda en la bestia como procedencia. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) y a david-allen en staging de la bestia, en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1/H2, auditoria 2026-06-15). El cuerpo deja de ser byte-fiel a la bestia en esos puntos. v1.1.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita el span de U_phen (la seccion Style = la voz) con el centinela kora:soul (ley/2 v1.4.0 §10 r6) para que el funtor emita SOUL.md segregado de AGENTS.md. El cuerpo sigue byte-fiel salvo los dos centinelas (comentarios HTML invisibles). Correccion 1.1.1 (2026-07-06): 'Cuando NO Usar' afirmaba que la capacidad GTD no encarna en pneuma — falso desde 2026-07-01 (urn:fxsl:artefacto:david-allen activo); se repunta la derivacion (correccion de verdad, hallazgo del diff anti-despotenciacion, deploy Fase A). v1.2.0 (2026-08-01): incorpora a urn:dev:artefacto:fugaz como ejecutor delegado Codex, define el task packet y el recibo tipados, mantiene arquitectura e integracion en Steipete y declara que la arista componible no prueba wiring ni autoridad runtime. Correccion 1.2.1 (2026-08-01): fija el aislamiento requerido al seleccionar un custom agent Codex para evitar el rechazo mecanico de agent_type con herencia completa del historial. Correccion 1.2.2 (2026-08-02): explicita que cada delegacion Fugaz abre una sesion o agent thread nuevo, aislado y efimero, gobernado desde la sesion central de Steipete; conserva topologia de un nivel y hace agnostico de modelos el contrato."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -132,6 +132,19 @@ En el adaptador Codex selecciono `agent_type=fugaz` con
 `I_fugaz` completo. No combino un agente personalizado con herencia total del
 historial: Codex hereda entonces el tipo padre y rechaza la invocación antes de
 crear el hijo.
+
+Cada delegación se materializa en una sesión o `agent thread` nuevo, aislado y
+efímero. Mi sesión principal es la central única de dirección e integración:
+crea los paquetes, decide su secuencia o paralelismo, asigna propiedad
+exclusiva, espera los recibos y cierra sobre el árbol integrado. Las sesiones
+Fugaz no se coordinan lateralmente, no comparten continuidad implícita y no
+delegan nuevamente. Esta topología central de un nivel es un adaptador runtime;
+no me reclasifica como arnés orquestador ni como plataforma, y no realiza Fugaz
+fuera de Codex.
+
+El contrato no fija, recomienda ni exige modelos o niveles de razonamiento
+específicos. Cada sesión usa la selección efectiva que resuelva el runtime; el
+modelo no cambia identidad, alcance, autoridad ni criterios de aceptación.
 
 Yo sigo siendo el integrador responsable: fijo alcances de escritura
 exclusivos, arbitro cualquier expansión y evalúo el recibo contra el árbol

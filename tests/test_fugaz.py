@@ -107,9 +107,14 @@ class TestFugazContrato(unittest.TestCase):
             self.fugaz_normalizado,
         )
         self.assertNotIn("gpt-", self.fugaz_cuerpo.lower())
+        self.assertIn(
+            "El contrato no fija, recomienda ni exige modelos",
+            self.steipete_normalizado,
+        )
+        self.assertNotIn("gpt-", self.steipete_cuerpo.lower())
 
     def test_steipete_es_integrador_y_delega_por_adaptador(self):
-        self.assertEqual(self.steipete_campos["version"], "1.2.1")
+        self.assertEqual(self.steipete_campos["version"], "1.2.2")
         self.assertIn(FUGAZ_URN, self.steipete_campos["componible"])
         for testigo in (
                 "I_fugaz", "O_fugaz", "integrador responsable",
@@ -117,7 +122,12 @@ class TestFugazContrato(unittest.TestCase):
                 "no sustituye mi verificación de integración",
                 "no amplía autoridad", "Sólo en Codex",
                 "En los demás targets", "`agent_type=fugaz`",
-                '`fork_turns="none"`', "rechaza la invocación"):
+                '`fork_turns="none"`', "rechaza la invocación",
+                "`agent thread` nuevo",
+                "central única de dirección e integración",
+                "no se coordinan lateralmente",
+                "topología central de un nivel",
+                "no me reclasifica como arnés orquestador"):
             self.assertIn(testigo, self.steipete_normalizado)
 
 
