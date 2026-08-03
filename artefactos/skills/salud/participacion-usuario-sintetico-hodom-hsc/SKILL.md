@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc
 nombre: participacion-usuario-sintetico-hodom-hsc
-version: 2.0.0
+version: 2.0.1
 estado: activo
 descripcion: "Método compartido para que los roles HODOM-HSC actúen como personas sintéticas situadas: descubren necesidades, sintetizan requisitos y revisan candidatos mediante uso directo de la interfaz, sin atribuirse experiencia humana ni convertir fallas del montaje en defectos del producto."
-fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6). v1.1.0 (2026-07-30): adopta DEV_PERSONAL_FULL. v2.0.0 (2026-07-31): corrige el método desde evaluacion-usuarios-sinteticos-2026-07-30.md (sha256:0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db): persona situada, revisión UI ciega y visual, bloqueos de evaluación, evidencia epistémica e inconclusión explícita."
+fuente: "Autoría KORA 2026-07-23 desde el dictamen de agent-architect para el panel R01-R14, anclada al mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:59ec4814155a8e5613f109f837693f8339485531b6e2a41c5a49a64f1e987f79) y al catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6). v1.1.0 (2026-07-30): adopta DEV_PERSONAL_FULL. v2.0.0 (2026-07-31): corrige el método desde evaluacion-usuarios-sinteticos-2026-07-30.md (sha256:0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db): persona situada, revisión UI ciega y visual, bloqueos de evaluación, evidencia epistémica e inconclusión explícita. v2.0.1 (2026-08-02): rebasa el binding al mapa DT vigente tras un cambio documental limitado al enlace del catálogo RBAC; no altera roles, journeys ni guards."
 autor: FS
 creado: 2026-07-23
 lang: es
@@ -106,7 +106,7 @@ I_ROLE = {
       as_of?: string
     }],
     map_sha256:
-      "bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd",
+      "59ec4814155a8e5613f109f837693f8339485531b6e2a41c5a49a64f1e987f79",
     discipline?: string
   },
   candidate?: {

@@ -19,7 +19,10 @@ SKILL = (
 )
 SKILL_URN = "urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc"
 PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
-MAPA_SHA256 = "bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd"
+SKILL_MAPA_SHA256 = "59ec4814155a8e5613f109f837693f8339485531b6e2a41c5a49a64f1e987f79"
+ROLE_SOURCE_MAPA_SHA256 = (
+    "bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd"
+)
 CATALOGO_SHA256 = "d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6"
 EVALUACION_SHA256 = "0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db"
 
@@ -208,7 +211,7 @@ EXCEPTION_CONTRACTS = {
 }
 
 EXPECTED_SOURCE_SNAPSHOT_SHA256 = (
-    "6da0907322a85b25ba97a07612b8d6926fa8c878c1dd3df37410c02b6d263457"
+    "2c57ddd43c036e75a9041bfe59284aa38258f1f85dcce60b40f7f388a0b98721"
 )
 
 
@@ -306,7 +309,7 @@ class TestPanelRolesHodomHscV3(unittest.TestCase):
         self.assertEqual(campos["urn"], SKILL_URN)
         self.assertEqual(campos["nombre"],
                          "participacion-usuario-sintetico-hodom-hsc")
-        self.assertEqual(campos["version"], "2.0.0")
+        self.assertEqual(campos["version"], "2.0.1")
         self.assertIn(PROFILE_URN, campos["conocimiento"])
         self.assertEqual(campos["estado"], "activo")
         self.assertEqual(campos["forma"], "habilidad")
@@ -316,6 +319,8 @@ class TestPanelRolesHodomHscV3(unittest.TestCase):
         self.assertEqual(campos["herramientas"], ["Bash"])
         self.assertEqual(campos["targets"], ["codex"])
         self.assertEqual(campos["alcance"], "proyecto")
+        self.assertIn(SKILL_MAPA_SHA256, campos["fuente"])
+        self.assertIn(SKILL_MAPA_SHA256, cuerpo)
         self.assertNotIn("estados", campos)
         self.assertNotIn("<!-- kora:soul -->", cuerpo)
 
@@ -481,7 +486,7 @@ class TestPanelRolesHodomHscV3(unittest.TestCase):
                 self.assertIn(SKILL_URN, campos["componible"])
                 self.assertTrue(
                     CONOCIMIENTO_COMUN.issubset(campos["conocimiento"]))
-                self.assertIn(MAPA_SHA256, campos["fuente"])
+                self.assertIn(ROLE_SOURCE_MAPA_SHA256, campos["fuente"])
                 self.assertIn(CATALOGO_SHA256, campos["fuente"])
                 self.assertIn(EVALUACION_SHA256, campos["fuente"])
                 self.assertIn(f"`{role_type}`", cuerpo)
