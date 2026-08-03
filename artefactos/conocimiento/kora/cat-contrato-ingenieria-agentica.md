@@ -1,16 +1,17 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.3.2
+version: 1.4.0
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad. v1.3.2 (2026-07-20): tipa por separado capacidades de proveedor, inventario MCP y autoridad visible al modelo; un contraste vivo del App Server confirma que no deben reunirse sin una resolución oficial."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad. v1.3.2 (2026-07-20): tipa por separado capacidades de proveedor, inventario MCP y autoridad visible al modelo; un contraste vivo del App Server confirma que no deben reunirse sin una resolución oficial. v1.4.0 (2026-08-03): enlaza la monografía cat-programacion-agentica-autonoma, separa su recorrido integrado de las fuentes conceptuales atómicas y adopta F/E/M/H/X para claims agénticos sin convertir las clases en una escala."
 autor: FS
 creado: 2026-07-18
 lang: es
 tags: [ingenieria-agentica, teoria-categorias, coalgebra, efectos, composicion, safety, kora]
 familia: bok
 depende: [urn:kora:kb:cat-agent-coalgebra, urn:kora:kb:cat-agent-modulo, urn:kora:kb:cat-kora-semantica-operacional, urn:fxsl:kb:icas-escala]
+cita: [urn:kora:kb:cat-programacion-agentica-autonoma]
 ---
 
 # Contrato categorial de ingeniería agéntica
@@ -441,6 +442,40 @@ cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y
 se limita a loop closure. Sí demuestra el patrón mínimo que debe seguir todo
 caso futuro: tipos completos, transición total con efecto explícito,
 invariante, prueba, test ejecutable y frontera runtime declarada.
+
+## 14. Recorrido integrado de programación agéntica
+
+`urn:kora:kb:cat-programacion-agentica-autonoma` reúne este contrato y las
+URNs conceptuales en una monografía continua. Es la entrada adecuada cuando
+un problema cruza más de una tensión; no reemplaza las piezas atómicas ni las
+fuentes primarias que sostienen una afirmación formal.
+
+| Problema | Recorrido en la monografía | Testigos que deben salir |
+|---|---|---|
+| plan, effects y loop | capítulos 3, 5 y 6 | `I`, `O`, `U`, `M`, `step`, signatura e intérprete |
+| composición y delegación | capítulos 10 a 12 | puertos, adaptadores, protocolo, autoridad, misión y receipt |
+| evals y tiempo | capítulos 13 y 14 | observables, equivalencia, cobertura, safety, liveness y cancelación |
+| adecuación y lifecycle | capítulos 16 y 17 | separación Spec/Model/Runtime, ledger, snapshot, gate y publicación |
+| diseño completo y refutación | capítulos 18 y 19 | instancia acotada, invariante, Goal, contraejemplo y claims calibrados |
+
+Cada claim agéntico atómico usa una clase de naturaleza:
+
+- `F`: formal, dentro de una estructura matemática y con prueba o fuente
+  primaria precisa;
+- `E`: observación empírica reproducible y acotada;
+- `M`: relación de modelado bajo hipótesis explícitas;
+- `H`: heurística de ingeniería refutable;
+- `X`: analogía, conjetura o frontera de investigación.
+
+Las clases no forman una escalera. Fuerza formal, evidencia runtime y
+adecuación al dominio son coordenadas separadas. En el vocabulario abreviado
+de `cat-thinking`, `X` contiene la lectura metafórica y `E` se reporta como
+evidencia, no como estatus matemático.
+
+La sección 11.5 de la monografía conserva un antecedente retirado sobre
+delegación jerárquica en `Poly`; su nota editorial lo degrada a `X`. Para
+decisiones operativas mandan el contrato de misión, el protocolo, el wiring y
+la autoridad efectiva, no aquella construcción.
 
 ## Fuentes primarias
 

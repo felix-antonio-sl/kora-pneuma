@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-sintesis
 nombre: icas-sintesis
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Síntesis del ADN cognitivo del Arquitecto de Sistemas Categorial: cómo ve (flechas antes que cajas), qué pregunta y cómo decide; pieza 00 y mapa de entrada al corpus ICAS-BoK."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/00-sintesis.md (sha256:136ec83762fb80d19c517256aff351193d0d1f8523b5a849ffdb0d37d0b26786) el 2026-06-12. Revisión de rigor 1.1.0 (2026-07-18): integra la escala epistémica y las correcciones de las piezas 08, 12, 12b, 14, 16, 18, 19 y 20. v1.2.0 (2026-07-18): separa Yoneda de encapsulacion API y propaga las correcciones agenticas sobre delegacion, tool use y e-logs."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/00-sintesis.md (sha256:136ec83762fb80d19c517256aff351193d0d1f8523b5a849ffdb0d37d0b26786) el 2026-06-12. Revisión de rigor 1.1.0 (2026-07-18): integra la escala epistémica y las correcciones de las piezas 08, 12, 12b, 14, 16, 18, 19 y 20. v1.2.0 (2026-07-18): separa Yoneda de encapsulacion API y propaga las correcciones agenticas sobre delegacion, tool use y e-logs. v1.2.1 (2026-08-03): propaga el retiro de arXiv 2410.08373 y degrada la delegación dinámica de esa fuente a antecedente exploratorio."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -236,7 +236,7 @@ Veinticuatro piezas disponibles para consulta profunda, organizadas como un arco
 - **12-topoi** -- Presheaves, sheaves, clasificador de subobjetos, logica intuicionista, geometric morphisms, multi-tenancy.
 - **12b-safety-alignment** -- Alineamiento, seguridad ICAR, verificacion formal vs empirica, Goodhart, coherencia.
 - **13-escala** -- Operads, wiring diagrams, double categories, structured cospans, metodo CMD, verificacion composicional, trazabilidad, simulacion, SoS, megamodelos.
-- **14-agencia** -- Free monad (plan), cofree comonad (sustrato), ley de interacción en `Poly`, delegación dinámica y su operad opuesto, contextads, e-logs con acciones como keys, modelos condicionales de tools, P-D-A y memoria.
+- **14-agencia** -- Free monad (plan), cofree comonad (sustrato), ley de interacción en `Poly`, delegación dinámica solo como antecedente retirado, contextads, e-logs con acciones como keys, modelos condicionales de tools, P-D-A y memoria.
 - **14b-protocolos-coreografia** -- Session types, coreografia, tolerancia a fallas, sagas, protocolos distribuidos.
 - **15-tiempo** -- Behavior types como sheaves, invariancia traslacional, modalidades temporales, hybrid sheaves, delays, contratos composicionales.
 - **16-lifecycle** -- Lifecycle como recursion composicional, V-model, DevOps, drift, categoria de versiones, deuda tecnica categorial.
@@ -259,3 +259,9 @@ Yoneda ya no se usa como sinónimo de encapsulación o caja negra. La síntesis
 propaga la separación entre operad de delegación y su opuesto, entre
 profunctores y polinomios de interfaces, y entre acciones-elemento de un e-log
 y morfismos categoriales.
+
+## Corrección 1.2.1
+
+El retiro de arXiv 2410.08373 invalida su uso como autoridad formal para
+delegación dinámica. La pieza 14 conserva esa línea solo como antecedente `X`
+y exige una reconstrucción monoidal o premonoidal antes de recuperar el claim.

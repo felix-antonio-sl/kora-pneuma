@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:icas-agencia
 nombre: icas-agencia
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Pieza 14 del ICAS-BoK: agencia categorial — free monad como plan, cofree comonad como sustrato, emparejamiento plan-sustrato y el patrón Percepción-Decisión-Acción para sistemas agénticos."
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12. Corrección 1.1.0 contrastada con Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.2.0 (2026-07-18) contrastada con Shapiro y Spivak, Dynamic Operads, Dynamic Categories, https://arxiv.org/abs/2205.03906; Libkind y Spivak, Dynamic task delegation for hierarchical agents, https://arxiv.org/abs/2410.08373; Niu y Spivak, Polynomial Functors, https://arxiv.org/abs/2312.00990; Fukada, Action is the primary key, https://arxiv.org/abs/2409.04793."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/fxsl/cat/corpus-categorico-arquitecto-sistemas-categorial-agentico/14-agencia.md (sha256:d682394465da6db1296cb149e4006e541fb45a9e26d0615214472999e7167b9b) el 2026-06-12. Corrección 1.1.0 contrastada con Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.2.0 (2026-07-18) contrastada con Shapiro y Spivak, Dynamic Operads, Dynamic Categories, https://arxiv.org/abs/2205.03906; Libkind y Spivak, Dynamic task delegation for hierarchical agents, https://arxiv.org/abs/2410.08373; Niu y Spivak, Polynomial Functors, https://arxiv.org/abs/2312.00990; Fukada, Action is the primary key, https://arxiv.org/abs/2409.04793. v1.2.1 (2026-08-03): el registro primario de arXiv 2410.08373 confirma que Dynamic task delegation fue retirado por su autora y declara el defecto de la definición 3.7; se elimina su uso como autoridad formal y se conserva solo como antecedente de investigación."
 autor: FS
 creado: 2026-04-14
 lang: es
@@ -102,34 +102,27 @@ Una dynamic operad es una operad enriquecida en Org. Para cada aridad n, los est
 
 El prediction market es el ejemplo canonico. Cada participante tiene una interfaz p_X = Delta^+_X * y^X: muestra una distribucion de probabilidad sobre X outcomes (posicion) y recibe el outcome real (direccion). El estado es la distribucion de confianza mu sobre los N participantes. La accion agrega las predicciones ponderadas por confianza. La actualizacion, usando la regla bayesiana gamma(x) * mu, redistribuye la confianza segun quien predijo correctamente. La composicion operadica permite anidar mercados: un mercado de mercados, donde cada participante es a su vez un mercado interno.
 
-## Delegacion jerarquica: el operad Org^#_m
+## Delegación jerárquica: antecedente retirado
 
-Libkind y Spivak extienden esta maquinaria al problema de la delegación
-dinámica de tareas. El operad enriquecido de patrones y su opuesto no deben
-confundirse. La definición 3.7 da:
+*Dynamic task delegation for hierarchical agents* no puede sostener hoy una
+construcción formal: el registro de arXiv 2410.08373 lo marca retirado por
+Sophie Libkind y declara que la definición 3.7 suponía una categoría de
+Kleisli monoidal respecto de `∨`, aunque la construcción era solo
+premonoidal.
 
-```
-Org^#_m(p_1, ..., p_k; q) := c_[p_1 V ... V p_k, m(q)]
-(Org^#_m)^op(q_1, ..., q_k; p) := c_[p, m(q_1 V ... V q_k)]
-```
+Por tanto:
 
-donde `V` es el producto monoidal «or», `m` la mónada libre, `c` la comónada
-cofree y `[-,-]` el hom interno correspondiente. La segunda fórmula expresa
-la lectura agéntica del artículo: `p` es la interfaz del manager y
-`q_1,...,q_k` las de sus subordinados. Una tarea de `p` se convierte en un
-proceso bien fundado de tareas subordinadas; sus resultados retornan hacia un
-resultado de `p`. La estructura cofree permite que la estrategia evolucione
-en el tiempo.
+- las fórmulas propuestas para los operads enriquecidos de delegación, su
+  opuesto y el funtor `[-,t]` no se incorporan como resultados válidos;
+- el ejemplo de desempate con subordinados se conserva solo como antecedente
+  exploratorio `X`, sin garantía de operad, composición ni time-scales;
+- una jerarquía agéntica concreta debe modelarse mediante interfaces, wiring,
+  protocolo, autoridad y transición efectivas; el nombre «delegación
+  dinámica» no aporta esas pruebas.
 
-El ejemplo 3.8 del artículo usa tres subordinados con interfaz `y^2`: consulta
-a los dos primeros y, si discrepan, invoca al tercero como desempate. Eso
-exhibe delegación asíncrona condicionada por resultados. Una regla posterior
-como «aprender a preferir al tercero» requeriría especificar el estado y la
-actualización de la coálgebra; no viene dada por el patrón de desempate.
-
-El funtor [-,t] : Org^{op}_m -> Org^c convierte patrones de delegacion en comportamientos. Para cualquier polynomial monad t, este funtor traduce "como el manager planea delegar" en "como se comportan el manager y sus subordinados." Si t = y (aritmetica simple), los subordinados devuelven numeros y el manager suma. Si t = lott (la monada de loterias), se introduce estocasticidad: las respuestas de los subordinados son distribuciones y la composicion introduce aleatoriedad controlada.
-
-La separacion de time-scales es otro resultado crucial. Los subordinados operan a velocidad mas rapida que el manager. En un solo paso del manager, cada subordinado puede ser consultado multiples veces. Esto modela naturalmente la asincronia de los sistemas reales: un orquestador emite una tarea, sus workers la ejecutan en multiples pasos internos, y el orquestador solo ve el resultado final.
+La pregunta de investigación permanece abierta. Una fuente sucesora deberá
+reconstruir la estructura monoidal o trabajar explícitamente en el marco
+premonoidal apropiado antes de recuperar claims formales.
 
 ## Contextads: la dependencia del contexto
 
@@ -293,3 +286,9 @@ Se distinguen el operad de delegación dinámica y su opuesto agéntico, se
 separan profuntores de polinomios y se retira una atribución inexistente a
 Fukada: en su e-log las acciones son elementos/keys del objeto `Actions`, no
 morfismos ni imágenes de un funtor `Idx`.
+
+## Corrección 1.2.1
+
+La fuente de delegación dinámica quedó retirada por un defecto en su
+estructura monoidal. Sus fórmulas, el operad opuesto, el funtor `[-,t]` y la
+separación de escalas pasan de afirmaciones formales a antecedente `X`.
