@@ -324,7 +324,8 @@ estén archivadas o sean restaurables.
 
 ```text
 KORA velar --estricto                                    13/13 PASS
-KORA unittest discover                                  338/338 PASS
+KORA unittest en `origin/master` limpio                  322/322 PASS
+KORA unittest en working tree concurrente                338/338 PASS informativo
 GN: fuente, SHA declarado y cuerpo normalizado            84/84 PASS
 archivos externos: sha256sum --check           9/9; 210 entradas PASS
 scan de claves privadas/tokens de proveedor              0 hallazgos
