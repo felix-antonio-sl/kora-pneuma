@@ -105,7 +105,8 @@ reemplazó la continuidad anterior.
 
 - upstream: `git ls-remote` confirma que `main` sigue en el commit fijado y los
   dos SHA-256 declarados coinciden byte a byte;
-- pruebas focales de las dos skills y sus adaptadores: 44/44 PASS;
+- pruebas focales de las dos skills y sus adaptadores en candidato limpio:
+  24/24 PASS (el circuito 44/44 anterior incluía pruebas concurrentes ajenas);
 - suite completa en el workspace escribible: 338/338 PASS;
 - `velar --estricto`: 13/13 PASS;
 - `git diff --check`: PASS;
