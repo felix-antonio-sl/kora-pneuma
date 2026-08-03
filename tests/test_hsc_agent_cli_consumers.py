@@ -281,6 +281,13 @@ class TestContratoHscAgentCli(unittest.TestCase):
             with self.subTest(fragmento=fragmento):
                 self.assertIn(" ".join(fragmento.split()), cuerpo_normalizado)
 
+    def test_manual_no_depende_del_claude_legacy(self):
+        _, cuerpo = self.manual
+        self.assertNotIn("§Universo de handles", cuerpo)
+        self.assertNotIn("§Shape hints", cuerpo)
+        self.assertIn("hsc-agent-cli catalog <rut>", cuerpo)
+        self.assertIn("hsc-agent-cli <comando> --help", cuerpo)
+
     def test_hospitalista_hace_ejecutable_el_plan_soap(self):
         campos, cuerpo = self.consumidores["medico-hospitalista"]
         cuerpo_normalizado = " ".join(cuerpo.split())

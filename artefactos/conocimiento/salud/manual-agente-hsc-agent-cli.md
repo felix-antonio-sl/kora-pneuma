@@ -140,8 +140,8 @@ upstream se verifica contra la identidad esperada o se rechaza con
 `identity_mismatch`. Tú **compones** handles; no negocias con un envelope
 monolítico.
 
-Gramática por scope (subconjunto operativo — universo cerrado completo en el
-`CLAUDE.md` del repo, §Universo de handles):
+Gramática por scope (subconjunto operativo; descubre el universo vigente con
+`hsc-agent-cli catalog <rut>`):
 
 | Scope | Forma | Eje |
 |---|---|---|
@@ -174,7 +174,7 @@ leer**:
 | `cache_status` / `cache_ttl_remaining_seconds` | en `get` y en cada sub-item de `bundle`: `hit`\|`miss` (no existe `stale`) + segundos de TTL restante. Decide `--fresh` con criterio en vez de actuar a ciegas sobre dato viejo. `catalog`/`find`/`health` no cachean en disco → omiten estos campos (siempre en vivo) |
 
 **Descubrimiento de shape:** nunca asumas la forma de `data`. Lee `data_keys` y
-navega. Shapes conocidos están en el `CLAUDE.md` del repo (§Shape hints).
+navega; usa `hsc-agent-cli <comando> --help` para la mecánica pública.
 
 ## 4. Errores: qué hacer con cada uno
 

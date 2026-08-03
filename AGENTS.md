@@ -23,6 +23,9 @@ Lee solo lo que la tarea exija:
 - Solo hay tres tipos de artefacto: conocimiento, agentes y skills. La ley no es un artefacto.
 - Fuente canónica: filesystem validado bajo `artefactos/` y `ley/`.
 - Derivados: `censo.json`, `_emision/`, conteos, reportes e instalaciones runtime. Nunca los edites como autoridad.
+- No trabajes sobre fuentes con el `cwd` bajo `_emision/`: sus `AGENTS.md` son
+  contratos del runtime y, por precedencia de Codex, prevalecen ante conflictos.
+  Vuelve a la raíz y cambia la fuente.
 - Un artefacto agéntico es una especificación gobernada. Vector, arnés, forma, herramientas, sello y paridad no demuestran modelo conductual ni enforcement del runtime.
 - La bestia `../kora` está congelada: para lo no migrado, migrar-o-omitir; toda doctrina futura nace aquí.
 

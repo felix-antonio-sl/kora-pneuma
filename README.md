@@ -26,6 +26,8 @@ reportes e instalaciones son derivados; no se editan como autoridad.
 
 ## Operación
 
+Requiere Python 3.11 o superior; `kora.py` usa solo la biblioteca estándar.
+
 ```bash
 python3 kora.py censo
 python3 kora.py nombre <urn>
