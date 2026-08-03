@@ -241,3 +241,153 @@ evaluar si el materializador debe normalizar modos desde Git o declarar una
 política de permisos reproducible. Para evolucionar Fugaz, la siguiente mejora
 de valor es una matriz pequeña de evals representativos ligada a costo,
 latencia, scope compliance y calidad integrada; no ampliar primero su prompt.
+
+---
+
+## Cierre de auditoría de fuentes del host — 2026-08-03
+
+Esta sección registra el frente de auditoría y consolidación documental. Se
+añade sin absorber los cambios concurrentes de skills descritos arriba.
+
+### Objetivo, alcance y resultado
+
+Se revisaron fuentes candidatas del host para decidir entre koraficar,
+conservar externamente, archivar o descartar. El criterio confirmado quedó
+publicado como `urn:kora:kb:frontera-fuentes-tecnicas`: KORA es la fuente única
+del conocimiento curado; los formatos cuya semántica depende de OWL/SKOS, XML,
+schemas o datos raw permanecen externos; un consumidor real usa symlink; y la
+ausencia de referencias no autoriza borrar.
+
+Resultado material:
+
+- 96 conocimientos incorporados a `artefactos/conocimiento/`: 11 publicados,
+  84 GN en borrador y el tutorial OPCloud en borrador;
+- nueve archivos externos reversibles con manifiestos SHA-256 completos para
+  210 archivos de contenido;
+- siete symlinks consumidores vivos y resolubles: cinco en OpenClaw Fleet, uno
+  en Ñuble AI y el directorio sanitario ya existente de `hd-dt`;
+- Fleet valida symlinks de fuente restringidos a archivos regulares bajo
+  `KORA/artefactos` y los materializa como archivos runtime regulares;
+- KORA y Ñuble fueron publicados en sus ramas principales; Fleet se publicó
+  selectivamente desde una rama limpia.
+
+No se eliminó ninguna fuente. No hubo despliegue ni materialización sobre
+runtime vivo. La validez formal no se presenta como aprobación semántica,
+institucional, clínica o productiva.
+
+### Decisiones y alternativas descartadas
+
+1. **Una fuente KORA por conocimiento curado.** Se descartaron copias activas
+   iguales en varios repositorios.
+2. **Conservar semántica técnica externa.** No se convirtieron
+   indiscriminadamente ontologías, catálogos, schemas ni datos raw a Markdown.
+3. **Archivar antes que borrar.** `DESCARTAR` exige redundancia u obsolescencia
+   completa y autoridad explícita; no se ejerció en este trabajo.
+4. **Symlink sólo para un consumidor físico.** Los enlaces OPM se hicieron
+   relativos. Fleet rechaza enlaces rotos, directorios y destinos fuera de
+   KORA, y el runtime recibe archivos regulares.
+5. **Ingestión no equivale a aceptación semántica.** Los 84 documentos GN no
+   se promovieron en bloque; OPCloud sigue siendo evidencia pedagógica, no
+   canon OPM.
+6. **Publicar primero la fuente.** KORA se publicó antes de sus consumidores.
+7. **No empujar Fleet `main`.** Esa rama contenía cinco commits anteriores al
+   cambio y acumuló modificaciones concurrentes; se publicó sólo el delta
+   propio desde `origin/main`.
+
+### Artefactos y propósito
+
+| Ruta | Propósito |
+|---|---|
+| `artefactos/conocimiento/dev/nuble-plan-ia-2026.md` | fuente KORA del plan regional |
+| `artefactos/conocimiento/fxsl/information-system-usage-theory-alter.md` | koraficación acotada de ISUT |
+| `artefactos/conocimiento/fxsl/{metodologia-modelamiento-opm,opm-iso-19450,opm-opl-es}.md` | fuentes OPM consumidas por Mente Omega |
+| `artefactos/conocimiento/fxsl/opcloud-tutorial-videos.md` | evidencia tutorial en borrador |
+| `artefactos/conocimiento/kora/frontera-fuentes-tecnicas.md` | criterio curatorial publicado |
+| `artefactos/conocimiento/openclaw-fleet/{fleet-canon-policy,handoff-policy}.md` | políticas Fleet canónicas |
+| `artefactos/conocimiento/salud/{hsc-cartera-servicios-2024,minsal-decreto-exento-74-2024-mcc,minsal-rem-2026}.md` | fuentes sanitarias trazables |
+| `artefactos/conocimiento/gn/*.md` | 84 fuentes GN migradas como borrador |
+| `/home/felix/openclaw-fleet/blueprints/mente-omega/{AGENTS,SOUL}.md` | declara la capacidad KORA consumida |
+| `/home/felix/openclaw-fleet/blueprints/mente-omega/skills/opm-modeler/references/*.md` | tres consumidores OPM relativos |
+| `/home/felix/openclaw-fleet/docs/{fleet-canon-policy,handoff-policy}.md` | dos consumidores de políticas KORA |
+| `/home/felix/openclaw-fleet/scripts/{materialize-workspace,verify-repo}.sh` | aplica y verifica la frontera KORA |
+| `/home/felix/openclaw-fleet/tests/{test-materialize-workspace,test-verify-repo}.sh` | regresiones de symlinks KORA |
+| `/home/felix/projects/nuble_ai_oc/PLAN_IA_NUBLE_2026.md` | consumidor del plan KORA |
+| `/home/felix/kora-external-sources/_archivo/*/sha256-manifest.txt` | nueve recibos de contenido archivado |
+| `/home/felix/.codex/memories/extensions/ad_hoc/notes/20260803T022819Z-kora-host-audit-closeout.md` | aprendizajes durables y pendientes |
+| `HANDOFF.md` | continuidad única; no se creó un handoff paralelo |
+
+El inventario Salubrista registra seis fuentes perdidas desde un working tree
+no versionado antes de esta auditoría. No fueron recuperadas y no se afirma que
+estén archivadas o sean restaurables.
+
+### Comprobaciones
+
+```text
+KORA velar --estricto                                    13/13 PASS
+KORA unittest discover                                  338/338 PASS
+GN: fuente, SHA declarado y cuerpo normalizado            84/84 PASS
+archivos externos: sha256sum --check           9/9; 210 entradas PASS
+scan de claves privadas/tokens de proveedor              0 hallazgos
+Fleet test-materialize-workspace.sh                      28/28 PASS
+Fleet test-verify-repo.sh                                74/74 PASS
+Fleet materialización + check en destino temporal        PASS
+Fleet symlinks de fuente KORA                              3/3 PASS
+Ñuble blob d404f81 vs cuerpo KORA             SHA-256 idéntico PASS
+symlinks consumidores del host                             7/7 PASS
+git diff --check en cambios propios                        PASS
+```
+
+El último `verify-repo.sh --live` del candidato Fleet limpio terminó
+`40 PASS / 10 FAIL / 0 WARN / 0 SKIP`. Fallaron `live-drift`,
+`runtime-materialization`, `openclaw-health`, `memory-runtime`,
+`memory-search`, `active-memory-e2e`, `docs-upstream-live`, `docs-web-live`,
+`kora-velar` y `kora-parity`. Los dos últimos observaron una ventana de cambios
+concurrentes; el `velar` directo posterior pasó. No se mutó runtime para forzar
+verde.
+
+### Git y publicación
+
+KORA `master`:
+
+- `dda9b132f9667b5e75e3845effb41667557fa098`
+  `feat(knowledge): consolidate canonical host sources`;
+- `f29d9b68ef491439a1557844834f2ad94062e2e4`
+  `feat(knowledge): stage audited GN corpus`;
+- `46a4d137c26408a4ce5f0e4af4d77b38910386f2`
+  `docs(knowledge): publish technical source boundary`;
+- el hash del commit documental se obtiene del `git log` vivo para evitar una
+  referencia circular.
+
+OpenClaw Fleet:
+
+- commits equivalentes locales sobre `main`:
+  `f264a3d54c94e144d3fe8aecebdd135f0edc5d87` y
+  `6dce01b76e5465c54095284ed2d4bf81c7c860cc`;
+- commits limpios publicados:
+  `768b9f64ed9d5e146b4ea997d37039df33b84410` y
+  `1e39b451d1860c1835aa4282b829409d14e91608`;
+- rama remota `origin/codex/kora-consumers-20260803`, paridad confirmada;
+- `main` no fue empujada y conserva historial/cambios concurrentes ajenos.
+
+Ñuble AI `master`:
+
+- `9d7f152bd0b7b3c242d8824c3ddb693f901e8ba8`
+  `docs: consume canonical KORA plan`, confirmado en `origin/master`.
+
+### Riesgos, pendientes y siguiente acción
+
+- Permanecen 85 conocimientos en borrador: 84 GN y OPCloud. Su forma es válida;
+  su promoción semántica no está demostrada en bloque.
+- Las seis fuentes Salubrista perdidas requieren otra copia verificable.
+- Los archivos externos y manifiestos son locales y no están publicados en
+  Git; dependen de conservar esa zona del host.
+- La rama Fleet publicada no fue integrada ni desplegada; el runtime vivo
+  conserva drift y fallos de memoria, salud y documentación.
+- KORA y Fleet mantienen modificaciones concurrentes no incluidas en estos
+  commits. La limpieza se afirma sólo para los commits y ramas exactos.
+
+Siguiente acción recomendada: revisar e integrar
+`codex/kora-consumers-20260803` sobre un Fleet `main` limpio; después,
+materializar en una operación runtime autorizada y repetir el gate live. En un
+frente documental separado, revisar los 84 borradores GN por lotes pequeños y
+promover únicamente los que demuestren fuente, vigencia y fidelidad.
