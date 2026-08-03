@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:cat-thinking
 nombre: cat-thinking
-version: 2.1.1
+version: 2.2.0
 estado: activo
-descripcion: "Skill de pensamiento categorial. Dota al agente de la capacidad de pensar sobre arquitectura, integracion, refactor, modelado de efectos y diseno de sistemas agenticos usando teoria de categorias aplicada, anclada al corpus ICAS-BoK (Arquitecto de Sistemas Categorial)."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la semántica operacional integral y el contrato de testigos para ingeniería agéntica. v2.1.1 (2026-07-18): corrige falsos positivos sobre iteradores, bisimulación y DSLs libres."
+descripcion: "Skill de pensamiento categorial para arquitectura, integración, refactor, efectos y sistemas agénticos. Usar cuando el problema exige distinguir composición, preservación, wiring, delegación, autonomía, evals, lifecycle o evidencia Spec/Model/Runtime mediante teoría de categorías aplicada y el corpus ICAS-BoK."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0 (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la semántica operacional integral y el contrato de testigos para ingeniería agéntica. v2.1.1 (2026-07-18): corrige falsos positivos sobre iteradores, bisimulación y DSLs libres. v2.2.0 (2026-08-03): integra la monografía de programación agéntica autónoma como ruta transversal, adopta F/E/M/H/X y bloquea la promoción de la delegación dinámica basada en arXiv 2410.08373 retirado."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob]
 targets: [claude-code, codex, opencode]
 estados: [triaje, reformular-categorialmente, localizar-corpus, aplicar-patron, validar-coherencia, entregar]
-conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales, urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension, urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment, urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura, urn:kora:kb:cat-kora-kernel, urn:kora:kb:cat-kora-semantica-operacional, urn:kora:kb:cat-contrato-ingenieria-agentica]
+conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales, urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento, urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension, urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment, urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura, urn:kora:kb:cat-kora-kernel, urn:kora:kb:cat-kora-semantica-operacional, urn:kora:kb:cat-contrato-ingenieria-agentica, urn:kora:kb:cat-programacion-agentica-autonoma]
 componible: [urn:kora:artefacto:modelamiento-opm]
 ---
 
@@ -30,12 +30,15 @@ No es una skill de programación ni de ejecución. Es una skill
 **introspectiva y adversarial**: intenta tipar un problema, elige la lectura
 epistémica más débil que baste y solo entonces aplica teoría de categorías.
 
-Anclaje canónico: las **24 URNs ICAS-BoK** y tres piezas propias para KORA:
+Anclaje canónico: las **24 URNs ICAS-BoK** y cuatro piezas propias para KORA:
 
 - `urn:kora:kb:cat-kora-kernel` — firma, coreflexión y fidelidad;
 - `urn:kora:kb:cat-kora-semantica-operacional` — todos los gestos;
 - `urn:kora:kb:cat-contrato-ingenieria-agentica` — testigos de conducta,
   efectos, composición, capacidades y runtime.
+- `urn:kora:kb:cat-programacion-agentica-autonoma` — ruta integrada para
+  planes, efectos, wiring, delegación, evals, liveness y lifecycle, con
+  afirmaciones clasificadas `F/E/M/H/X`.
 
 Las URNs resuelven la versión viva y dan trazabilidad. No confieren autoridad
 matemática: una afirmación formal necesita prueba o fuente primaria precisa.
@@ -50,6 +53,8 @@ matemática: una afirmación formal necesita prueba o fuente primaria precisa.
 - diagnostico de un anti-patron donde el sintoma es vago pero la falla estructural tiene forma definida.
 - modelado de efectos (parcialidad, no-determinismo, estado, IO, errores) que necesitan composicion limpia.
 - modelado agentico (plan/sustrato, free monad / cofree comonad, P-D-A).
+- diseño o auditoría transversal de autonomía, delegación, receipts, evals,
+  liveness y separación `Spec/Model/Runtime`.
 - modelado de tiempo, escala, multi-tenancy, safety, lifecycle con vocabulario formal.
 - razonamiento sobre dualidades cuando el concepto está definido
   categorialmente.
@@ -62,7 +67,7 @@ matemática: una afirmación formal necesita prueba o fuente primaria precisa.
 - modelado de sistemas con funcion transformadora identificable y necesidad de bimodalidad OPD/OPL — usar `urn:kora:artefacto:modelamiento-opm`.
 - diseno de schema relacional concreto con DDL — la skill puede dar la lectura categorial, pero la generacion del DDL la aporta otra herramienta.
 
-## Anclaje al corpus (24 piezas ICAS-BoK + núcleo KORA)
+## Anclaje al corpus (24 piezas ICAS-BoK + cuatro piezas KORA)
 
 Mapa abreviado (detalle navegacional en `referencias/mapa-corpus.md`):
 
@@ -95,19 +100,20 @@ Mapa abreviado (detalle navegacional en `referencias/mapa-corpus.md`):
 | KORA | `cat-kora-kernel` | retículo de firmas, coreflexión por target, fidelidad y grafos relacionales |
 | KORA-op | `cat-kora-semantica-operacional` | validación, censo, lifecycle, emisión, paridad, ley y fronteras |
 | KORA-agent | `cat-contrato-ingenieria-agentica` | coálgebra, efectos, wiring, capacidades, safety y testigos runtime |
+| KORA-book | `cat-programacion-agentica-autonoma` | monografía transversal: planes, efectos, composición, delegación, evals, liveness, lifecycle y `F/E/M/H/X` |
 
 ## Workflow
 
 ### Estado inicial: `triaje`
 
-Clasificar el problema del usuario. Tres preguntas guia:
+Clasificar el problema del usuario. Cuatro preguntas guía:
 
 1. **¿Que esta tensionando?** (composicion, preservacion, identidad, observabilidad, efectos, escala, tiempo, agencia, multi-tenancy, lifecycle, calidad, patron, infraestructura).
 2. **¿Es un problema operacional con respuesta directa?** Si si → declinar la skill, no aplica.
 3. **¿Admite lectura categorial sustantiva?** Si no → abortar con declaracion explicita.
-4. **¿Qué estatus puede sostener?** formal, modelo bajo hipótesis, heurística o
-   metáfora. No avanzar como formal si no se pueden nombrar categorías y
-   morfismos.
+4. **¿Qué clase puede sostener?** `F` formal, `E` empírica reproducible, `M`
+   modelo bajo hipótesis, `H` heurística o `X` metáfora/agenda de investigación.
+   No avanzar como `F` si no se pueden nombrar estructuras, leyes y prueba.
 
 Salida: hipotesis tematica que guia la consulta del corpus en `localizar-corpus`.
 
@@ -125,11 +131,14 @@ Traducir el problema al vocabulario categorial **antes** de buscar patron. Opera
 
 ### `localizar-corpus`
 
-Identificar la pieza del ICAS-BoK que aplica. Tres rutas:
+Identificar la pieza del corpus que aplica. Cuatro rutas:
 
 1. **Por sintoma** → tabla `disparadores-canonicos.md`.
 2. **Por vocablo categorial** que surgio en la reformulacion → mapa-corpus.md.
 3. **Por busqueda directa** en el corpus con `Grep` cuando los anteriores no resuelven.
+4. **Por problema agéntico transversal** → abrir primero
+   `urn:kora:kb:cat-programacion-agentica-autonoma` y después resolver cada
+   afirmación contra la pieza atómica pertinente.
 
 Si ninguno resuelve, abortar y declarar que el corpus no cubre el caso. No inventar.
 
@@ -146,6 +155,8 @@ Instanciar el patron canonico al problema concreto. Trabajo:
 - en ingeniería agéntica, separar `Spec`, `Model` y `Runtime`; exigir los
   testigos exactos de la afirmación antes de hablar de coálgebra,
   bisimulación, composición o safety.
+- clasificar cada afirmación agéntica como `F/E/M/H/X` y exigir evidencia
+  propia de su clase; estas clases no forman una jerarquía de madurez.
 - si no cierran tipos o leyes, bajar explícitamente a modelo/heurística y
   retirar la garantía teoremática.
 
@@ -159,7 +170,7 @@ Verificar que la aplicacion del patron es correcta usando `referencias/checklist
 - ¿hay conmutatividad de diagramas donde se afirma equivalencia?
 - ¿se distingue isomorfismo on-the-nose de equivalencia?
 - ¿se evita confundir functor con simple mapeo, monada con pipeline, etc. (`falsos-amigos.md`)?
-- ¿cada afirmación formal tiene prueba local o fuente primaria precisa?
+- ¿cada afirmación declara `F/E/M/H/X` y aporta la evidencia de esa clase?
 - ¿la URN se usa como trazabilidad y no como sustituto de evidencia?
 
 Si falla → volver a `aplicar-patron` (refinar mapeo). Si pasa → `entregar`.
@@ -169,11 +180,11 @@ Si falla → volver a `aplicar-patron` (refinar mapeo). Si pasa → `entregar`.
 Salida estructurada al agente invocador:
 
 1. **Diagnostico estructural** del problema en lenguaje categorial.
-2. **Patron canonico** aplicable, con estatus epistémico y cita a la URN.
+2. **Patron canonico** aplicable, con clase `F/E/M/H/X` y cita a la URN.
 3. **Checklist de coherencia**: leyes que el diseno debe satisfacer.
 4. **Alternativas** comparadas por trade-offs categoricos (cuando aplica).
-5. **Distincion** explícita entre formal, modelo bajo hipótesis, heurística y
-   metáfora.
+5. **Distincion** explícita entre `F`, `E`, `M`, `H` y `X`, incluida la
+   separación entre prueba del modelo y evidencia del runtime.
 
 Cada conclusión se traza a una URN. Cada conclusión **formal** añade prueba o
 fuente primaria; si el corpus contradice esa fuente, se corrige o degrada la
@@ -184,9 +195,10 @@ afirmación.
 1. **Cita la URN** que traza cada conclusión. Para una afirmación formal,
    aporta además prueba o fuente primaria precisa.
 2. **Reformula antes de aplicar**. Aplicar un patron sin haber traducido el problema al vocabulario categorial es el primer error.
-3. **Declara estatus**: formal, modelo bajo hipótesis, heurística o metáfora.
+3. **Declara clase**: `F` formal, `E` empírica, `M` modelo, `H` heurística o
+   `X` metáfora/agenda de investigación. No las ordenes como madurez.
 4. **Corpus delimitado**. Usa las 24 URNs ICAS-BoK; para KORA usa además las
-   tres piezas propias listadas en el anclaje canónico. No inventes piezas ni
+   cuatro piezas propias listadas en el anclaje canónico. No inventes piezas ni
    teoremas.
 5. **Consulta el corpus en tiempo de skill**. Para formalismo dudoso o ausente,
    contrasta una fuente primaria; no respondas de memoria ni conviertas la SSOT
@@ -198,6 +210,9 @@ afirmación.
 10. **No colapses declaración y conducta**. `componible`, `estados`,
     `herramientas`, firma o sello no sustituyen interfaces, transición,
     enforcement ni interpretación runtime.
+11. **No promociones la delegación retirada**. El §11.5 de la monografía sobre
+    operads enriquecidos para delegación dinámica y su fuente arXiv 2410.08373
+    permanecen en clase `X`; no sostienen un resultado formal ni runtime.
 
 ## Composicion con otras skills
 
@@ -215,7 +230,7 @@ URNs son la SSOT interna. Si una referencia o pieza del corpus contradice una
 prueba o fuente primaria, manda la matemática: corrige el corpus o degrada el
 estatus, dejando trazabilidad de la corrección.
 
-- `referencias/mapa-corpus.md` — las 24 piezas con su alcance, vocablo central, cuando activarlas.
+- `referencias/mapa-corpus.md` — las 24 piezas ICAS y cuatro piezas KORA con su alcance, vocablo central y cuándo activarlas.
 - `referencias/reformulacion-categorial.md` — protocolo de traduccion problema → vocabulario categorial.
 - `referencias/disparadores-canonicos.md` — tabla "sintoma → pieza del corpus a consultar".
 - `referencias/falsos-amigos.md` — vocablos que parecen pero no son: functor != mapeo, monada != pipeline, naturalidad != map, etc.

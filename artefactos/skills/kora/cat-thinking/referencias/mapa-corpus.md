@@ -71,13 +71,17 @@ además prueba o fuente primaria.
 | `urn:kora:kb:cat-kora-kernel` | retículo de firmas, coreflexión por target, fidelidad contravariante, grafos generadores | evaluar la firma, matrices o relaciones de KORA |
 | `urn:kora:kb:cat-kora-semantica-operacional` | subobjetos de validación, lifecycle parcial, censo, emisión, paridad, ley | evaluar categorialmente un gesto concreto de KORA sin forzar functorialidad |
 | `urn:kora:kb:cat-contrato-ingenieria-agentica` | `Spec/Model/Runtime`, coálgebra, efectos, wiring, capabilities, safety | afirmar que un agente compone, preserva conducta, está limitado o es seguro |
+| `urn:kora:kb:cat-programacion-agentica-autonoma` | planes, efectos, wiring, delegación, receipts, evals, liveness, lifecycle, `F/E/M/H/X` | orientar un problema agéntico transversal antes de resolver sus afirmaciones contra piezas atómicas |
 
 ## Como navegar el corpus
 
 1. Si **no sabes por donde empezar**, abre `00-sintesis` (`icas-sintesis`). Tiene el ADN cognitivo y el mapa completo del corpus.
 2. Si **conoces el sintoma** del problema, abre `disparadores-canonicos.md` (esta misma fibra).
 3. Si **conoces el vocablo categorial**, usa esta tabla.
-4. Si **ninguno aplica**, usa `Grep`/`Read` sobre los archivos `icas-*.md` del corpus en el catalogo central de KORA pneuma.
-5. Si **el corpus no cubre el problema**, declararlo. No inventar.
-6. Si una afirmación formal es dudosa, consulta una fuente primaria y corrige
+4. Si el problema cruza **varias tensiones agénticas**, abre primero
+   `cat-programacion-agentica-autonoma` y usa sus clases `F/E/M/H/X`; luego
+   verifica cada claim con la pieza atómica pertinente.
+5. Si **ninguno aplica**, usa `Grep`/`Read` sobre los archivos `icas-*.md` del corpus en el catalogo central de KORA pneuma.
+6. Si **el corpus no cubre el problema**, declararlo. No inventar.
+7. Si una afirmación formal es dudosa, consulta una fuente primaria y corrige
    o degrada el corpus si existe conflicto.

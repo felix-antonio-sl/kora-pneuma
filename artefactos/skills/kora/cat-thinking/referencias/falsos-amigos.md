@@ -129,6 +129,7 @@ Un DSL de comandos puede **implementarse** como monada libre cuando se especific
 | sello/paridad fiel | procedencia e igualdad material de la frontera gestionada; no bisimulación, safety ni preservación semántica. |
 | misma firma PMI × LFS | misma celda clasificatoria; no mismo agente, interfaz, coálgebra ni conducta. |
 | morfismo de coálgebras | mapa que preserva estructura entre coálgebras de un mismo funtor; no cableado serial de agentes. |
+| paper retirado citado por una monografía | antecedente trazable, no teorema utilizable; la delegación dinámica basada en arXiv 2410.08373 queda en `X`. |
 
 **Antes de afirmar conducta**, separar `Spec`, `Model` y `Runtime` y exhibir
 los testigos de `urn:kora:kb:cat-contrato-ingenieria-agentica`.

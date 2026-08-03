@@ -4,8 +4,10 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
 
 ## Bloque 0 — Estatuto epistemico
 
-- [ ] **CRITICO** cada afirmacion categorial se etiqueta como **formal**, **modelo**, **heuristica** o **metafora**.
-- [ ] **CRITICO** toda afirmacion formal incluye una demostracion suficiente o una fuente primaria que pruebe exactamente la afirmacion.
+- [ ] **CRITICO** cada afirmacion se etiqueta como `F` formal, `E` empírica reproducible, `M` modelo bajo hipótesis, `H` heurística o `X` metáfora/agenda de investigación.
+- [ ] **CRITICO** toda afirmacion `F` incluye una demostracion suficiente o una fuente primaria que pruebe exactamente la afirmacion.
+- [ ] **CRITICO** toda afirmacion `E` identifica artefacto, ejecución, entorno y evidencia reproducible observados.
+- [ ] **CRITICO** `F/E/M/H/X` no se presentan como una jerarquía de madurez ni se transfieren automáticamente entre `Spec`, `Model` y `Runtime`.
 - [ ] **CRITICO** la lectura elegida es la mas debil que resuelve el problema; una heuristica no fabrica categorias ni leyes que no necesita.
 
 ## Bloque 1 — Identificacion
@@ -76,6 +78,8 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
   la transicion modelada; allowlist y safety no se confunden.
 - [ ] **MEDIO** feedback, recursion o delegacion declaran su semantica de
   delay/terminacion, protocolo, errores y autoridad.
+- [ ] **CRITICO** la delegación dinámica basada en arXiv 2410.08373 no se usa
+  como resultado formal: la fuente está retirada y esa ruta permanece en `X`.
 
 ## Bloque 9 — Logica interna
 
@@ -87,7 +91,7 @@ Usar despues de aplicar un patron del corpus, antes de entregar al agente invoca
 
 - [ ] **CRITICO** cada conclusion sustantiva cita la **URN interna** que permite rastrear el artefacto del corpus.
 - [ ] **CRITICO** toda conclusion formal cita ademas una fuente primaria o aporta la prueba; una URN no confiere autoridad matematica.
-- [ ] **CRITICO** se distingue entre formal, modelo, heuristica y metafora.
+- [ ] **CRITICO** se distingue entre `F`, `E`, `M`, `H` y `X` y se aporta la evidencia propia de cada clase.
 - [ ] **MEDIO** se cita la seccion o pasaje preciso. Si el corpus contradice la matematica, se corrige o se declara la discrepancia: la fuente/proof manda.
 
 ## Bloque 11 — Anti-sobreingenieria

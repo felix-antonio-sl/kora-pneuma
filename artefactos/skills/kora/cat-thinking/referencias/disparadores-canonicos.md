@@ -81,6 +81,8 @@ Tabla de routing rapida desde el sintoma practico hacia una pieza candidata del 
 | "`componible` dice que A y B componen" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | exigir puertos, wiring, semántica y efectos; el campo solo declara candidato |
 | "el allowlist prueba least-privilege o safety" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | separar capacidades declaradas, autoridad runtime e invariante conductual |
 | "la emisión conserva el comportamiento del agente" | `urn:kora:kb:cat-contrato-ingenieria-agentica` | hace falta interpretación runtime y un criterio de preservación |
+| "diseñar o auditar un sistema agéntico autónomo completo" | `urn:kora:kb:cat-programacion-agentica-autonoma` | ruta transversal para planes, efectos, wiring, delegación, evals, liveness y lifecycle; resolver cada claim con la pieza atómica pertinente |
+| "la teoría prueba delegación jerárquica dinámica" | `urn:kora:kb:cat-programacion-agentica-autonoma` + `urn:fxsl:kb:icas-agencia` | el resultado basado en arXiv 2410.08373 está retirado y queda en clase `X`; usar interfaces, protocolos, autoridad y receipts como contratos separados |
 
 ## Tiempo y lifecycle
 
