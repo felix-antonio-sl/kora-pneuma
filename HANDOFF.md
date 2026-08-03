@@ -1,250 +1,183 @@
-# Handoff vigente — 2026-08-02 — Steipete delega ejecución a Fugaz
+# Handoff vigente — 2026-08-03 — skills de ingeniería con evidencia de uso
 
-> Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, los
-> artefactos canónicos, Git, las instalaciones runtime ni el estado vivo del
-> host. Los hashes y resultados siguientes sólo describen el candidato exacto
-> evaluado.
+> Memoria operativa auxiliar. No legisla ni sustituye `ALMA.md`, `ley/`, las
+> fuentes canónicas, Git ni el estado vivo de los runtimes. El handoff anterior
+> se preservó reversiblemente en
+> `_archivo/HANDOFF-2026-08-03-pre-simplificacion-skills.md`.
 
-## Objetivo y resultado
+## Resultado actual
 
-Se diseñó y realizó el ejecutor al que Steipete puede delegar tareas de código:
-`urn:dev:artefacto:fugaz` v2.0.1. Fugaz es un subagente Codex efímero,
-minimalista y estricto: recibe una tarea cerrada, implementa el menor cambio
-completo dentro de propiedad y autoridad explícitas, verifica hasta cierre y
-devuelve un recibo tipado. Steipete v1.2.2 conserva intención, arquitectura,
-topología, integración y juicio final.
+Se migraron selectivamente dos capacidades de `mattpocock/skills`, sin copiar
+el repositorio completo:
 
-Cada delegación Codex abre una sesión o `agent thread` nuevo, aislado y
-efímero. La sesión principal de Steipete es la central única que crea paquetes,
-asigna propiedad, decide secuencia o paralelismo, espera recibos e integra. La
-topología es de un nivel: los Fugaz no se coordinan lateralmente ni delegan. El
-contrato no nombra, recomienda ni exige modelos o niveles de razonamiento; esa
-selección pertenece al runtime.
+- `urn:dev:artefacto:diagnosing-bugs` v1.0.0: disciplina de diagnóstico con
+  bucle red-capaz, hipótesis falsables, probes y regresión ligada al candidato;
+- `urn:dev:artefacto:code-review` v1.0.0: revisión read-only desde punto fijo,
+  con paquetes Standards y Spec independientes y baseline auxiliar inspirado
+  en Fowler.
 
-El resultado está completo en la fuente KORA y en los runtimes declarados. La
-proyección actual de Steipete está en paridad en Claude Code, Codex, OpenCode y
-OpenClaw. La rama limpia del blueprint OpenClaw fue actualizada y publicada;
-no se publicó `openclaw-fleet/main` porque ya contenía historial local no
-destinado a esa publicación selectiva.
+Fugaz v2.1.0 usa `diagnosing-bugs` dentro de la misma sesión de corrección,
+sin descendencia ni expansión de autoridad. Steipete v1.3.0 activa
+`code-review` sólo en Codex; la skill conserva la fuente única del protocolo
+bifocal y Steipete declara únicamente su adaptador.
 
-## Alcance cerrado
+La procedencia de ambas reescrituras está ligada al upstream
+`2ab958093e83e0ec752e6c1c5932da465bf23e0c` y a los SHA-256 de sus archivos
+fuente. No depende de un path temporal del host y cada skill lleva consigo el
+aviso MIT íntegro de la fuente adaptada.
 
-Incluido:
+### Evaluación que fundamentó la selección
 
-- migración `migrar-o-omitir` de la identidad histórica Fugaz a la ontología
-  vigente de pneuma;
-- contrato observable de entrada, salida, errores, autoridad y cierre;
-- adaptador Steipete → Fugaz para Codex;
-- sesiones Fugaz nuevas y efímeras gobernadas desde una central Steipete de
-  dirección e integración;
-- pruebas canónicas, emisión, instalación, paridad y canarios in vivo;
-- actualización y materialización controlada del blueprint Steipete de
-  OpenClaw;
-- documentación, memoria durable, commits y publicación selectiva.
+El snapshot upstream fijado contiene 41 archivos `SKILL.md`; el manifest del
+plugin promueve 22 (17 de ingeniería y cinco de productividad). Se ensayaron
+cuatro candidatas antes de migrar:
 
-Excluido deliberadamente:
+- `diagnosing-bugs` reprodujo y corrigió un fallo sintético: **MIGRAR**;
+- `code-review` encontró defectos sembrados por los ejes Standards y Spec:
+  **MIGRAR**;
+- `to-tickets` produjo cinco tickets útiles, pero además escribió un sexto
+  duplicado fuera de su alcance y declaró un PASS falso: absorber conceptos,
+  no adoptar la skill;
+- `writing-great-skills` aportó una rúbrica útil, pero su forma de autoría no
+  respeta directamente el shape KORA: diferida como posible rúbrica adaptada.
 
-- fijar un modelo comercial o nivel de razonamiento dentro de la identidad;
-  esa selección pertenece al runtime y no amplía autoridad;
-- realizar Fugaz en targets distintos de Codex;
-- convertir Fugaz en coordinador, integrador o suborquestador recursivo;
-- resolver degradaciones globales de OpenClaw, colas, índices de memoria o
-  sincronización documental ajenas al contrato Steipete–Fugaz;
-- incorporar o publicar modificaciones concurrentes en `AGENTS.md`.
+`grill-with-docs`, TDD y `domain-modeling` quedaron como candidatas futuras;
+no son requisitos omitidos de esta entrega. Los residuos y commits de esos
+ensayos permanecen aislados bajo `/tmp`, no en la fuente canónica.
 
-## Decisiones consolidadas
+## Sesiones independientes y evidencia de uso
 
-1. **Fugaz es `forma=subagente`, `arnes=delegado`, target Codex.** Su unidad de
-   vida es una invocación efímera. La alternativa de conservar el agente
-   orquestador legado contradecía el cuerpo que se quería construir. Tras la
-   refutación adversarial, el operador autorizó conservar la URN con major
-   `2.0.0`: se trató como corrección durante la primera migración a pneuma, no
-   como democión de una fuente pneuma ya encarnada. Se descartó la alternativa
-   estricta de crear otra URN y retirar la identidad histórica; la procedencia
-   y este límite interpretativo permanecen explícitos en la fuente canónica.
-2. **Una tarea es un paquete tipado.** `objective`, `workspace`, `candidate`,
-   `owned_scope`, `acceptance` y `authority` son obligatorios. El recibo liga
-   cambios y evidencia al candidato final y distingue `COMPLETE`, `PARTIAL` y
-   `BLOCKED`.
-3. **La autoridad sólo se estrecha.** Es la intersección entre paquete,
-   autorización del principal y frontera efectiva del runtime. Fugaz no hace
-   commit, push, despliegue, destrucción ni acciones externas salvo concesión
-   explícita y exacta.
-4. **Steipete sigue siendo el integrador.** No se delegan intención borrosa,
-   arquitectura, dependencias, schema, boundaries, producto, taste ni cierre
-   integrado.
-5. **El adaptador Codex usa aislamiento.** `agent_type=fugaz` debe combinarse
-   con `fork_turns="none"` o aislamiento equivalente. La herencia completa
-   conserva el tipo padre y hace que Codex rechace el custom agent antes de
-   crear el hijo.
-6. **La central es la sesión principal de Steipete.** Cada paquete abre una
-   sesión hija nueva, aislada y efímera. Steipete gobierna su ciclo y realiza
-   el join; los Fugaz no se coordinan entre sí ni crean descendencia. Es una
-   topología runtime de un nivel, no una reclasificación a arnés orquestador o
-   plataforma.
-7. **Calidad no se codifica como nombre de modelo.** Se expresa mediante
-   propiedad, aceptación, blast radius, autocorrección, evidencia y límites.
-   El modelo/esfuerzo efectivo debe verificarse en cada runtime, pero ningún
-   nombre específico forma parte del contrato.
-8. **Publicación Fleet selectiva.** Se descartó empujar `main`: al iniciar la
-   entrega original ya estaba dos commits por delante de `origin/main`. Se
-   publicó una rama limpia basada en `origin/main` que contiene sólo el
-   blueprint de esta entrega y sus correcciones posteriores.
+En toda la interacción se abrieron 16 sesiones delegadas independientes. En 15
+logs persistidos se verificó `gpt-5.6-luna` con esfuerzo `max`; el smoke test
+efímero `019fc51a-11d4-7c33-a1e1-20c1a8c57f14` lo confirmó en el comando y la
+salida, pero por `--ephemeral` no dejó `turn_context` durable. La sesión central
+permaneció en `gpt-5.6-sol`/`max` y no se cuenta como sesión delegada. Esta es
+evidencia de la evaluación runtime; el modelo no forma parte de la identidad,
+contrato, tests ni proyección de los artefactos.
 
-Alternativas descartadas: una skill sin identidad delegada, un agente
-autónomo persistente, delegación recursiva, hardcodear un modelo, aceptar
-paquetes incompletos por inferencia, usar una suite verde como sustituto de
-integración y forzar la publicación de `main` con historial ajeno.
+Evaluación inicial independiente:
 
-## Artefactos y propósito
+- diagnosing-bugs: `019fc51d-6fde-7a33-9abd-d873391b1090`;
+- code-review central: `019fc51d-7006-76c3-828f-46a831355574`, con Standards
+  `019fc51e-af23-7c41-b293-d235580efe1b` y Spec
+  `019fc51e-af79-7ec3-bd95-ff9b97877fe9` solapados temporalmente;
+- to-tickets: `019fc51d-708a-7621-ba11-638f4406458c`;
+- writing-great-skills: `019fc51f-be48-7fd3-809d-7bc5144a6f0b`;
+- verificación adversarial: `019fc528-3e53-7010-9c0a-d02b9c232514`.
 
-| Ruta | Estado | Propósito |
-|---|---|---|
-| `artefactos/agentes/dev/fugaz.md` | creado | fuente canónica Fugaz v2.0.1 |
-| `artefactos/agentes/dev/steipete.md` | modificado | central de sesiones e integración responsable v1.2.2 |
-| `tests/test_fugaz.py` | creado | contrato estructural y semántico mínimo de ambos agentes |
-| `HANDOFF.md` | reemplazado | continuidad única de esta entrega |
-| `_archivo/HANDOFF-2026-07-31-revision-sintetica-hodom-hsc.md` | archivado, gitignored | continuidad anterior preservada |
-| `/home/felix/.codex/agents/fugaz.toml` | instalado | realización Codex de Fugaz |
-| `/home/felix/.codex/agents/steipete.toml` | actualizado | realización Codex de Steipete |
-| `/home/felix/.agents/skills/steipete/SKILL.md` | actualizado | proyección skill Codex declarada por KORA |
-| `/home/felix/.claude/agents/steipete.md` | actualizado | proyección Claude Code |
-| `/home/felix/.config/opencode/agents/steipete.md` | actualizado | proyección OpenCode |
-| `/home/felix/openclaw-fleet/blueprints/steipete/{AGENTS,SOUL}.md` | actualizado | blueprint OpenClaw |
-| `/home/felix/.openclaw/workspaces/steipete/` | materializado | runtime gestionado de Steipete |
-| `/home/felix/.codex/memories/extensions/ad_hoc/notes/20260802T074054+0200-steipete-central-sessions-model-neutral.md` | creado | aprendizaje durable, factual y referenciado |
+Autoría independiente:
 
-El skill Fugaz legado quedó fuera de la superficie activa en
-`/home/felix/_archive/codex-skills/fugaz-legacy-20260801T204112Z`. Los respaldos
-preoperación y precorrección viven bajo `/home/felix/backups/kora-runtime/`; el
-respaldo previo a materializar OpenClaw está en
-`/home/felix/backups/openclaw-managed/steipete-managed-pre-1.2.1-20260801T215133Z.tar.gz`.
-Antes de instalar Steipete v1.2.2 se crearon además los respaldos privados
-`kora-runtime-steipete-1.2.1-20260802T072850+0200.tar.gz`
-(`sha256:50c3080c5fcb3c3eef96cfc69a0d8987f920a58bce4a123178e0f66660f7f817`)
-y `openclaw-blueprint-steipete-1.2.1-20260802T072850+0200.tar.gz`
-(`sha256:73f73f3fdf11abc8616a3292b47f316b03d3af49f85ef54e0f16245c435e0ec8`)
-en `/home/felix/backups/kora-runtime/`, ambos modo
-`0600`.
-No se guardaron secretos ni datos personales en los artefactos canónicos.
+- diagnosing-bugs: `019fc542-3346-7531-aa68-c3346076e7fe`;
+- code-review: `019fc542-3578-7c43-b560-58cb817bd634`.
 
-## Evidencia de comportamiento
+### Piloto A/B de diagnóstico
 
-Canario positivo Codex:
+Ambos brazos partieron del mismo commit
+`9302b677b21490b7d63577bc6a8347b75137a369`, recibieron la misma corrección y
+autoridad sobre `kora.py` y `tests/test_kora.py`, y cerraron `COMPLETE` con
+182/182 pruebas y `velar` 13/13:
 
-- cadena observada `root → steipete → fugaz`;
-- una única instancia Fugaz;
-- cierre `COMPLETE` con aceptación `PASS`;
-- un único archivo dentro de `owned_scope` modificado;
-- `HEAD` preservado y cero rechazos de invocación.
+| Brazo | Sesión | Tokens totales | Duración por timestamps | Trazabilidad observable |
+|---|---|---:|---:|---|
+| con diagnosing-bugs | `019fc550-0f49-7200-adb0-c18beebb115a` | 1.390.391 | 382,751 s | tres hipótesis ordenadas, predicciones y probes explícitos antes del fix |
+| control normal | `019fc550-0e7f-70e3-b6cd-5681295c7475` | 825.719 | 416,700 s | sin lista equivalente de hipótesis/probes en el stream del asistente |
 
-Canarios negativos Codex:
+Resultado: no hubo mejora de éxito binario. El brazo con skill dejó mayor
+trazabilidad causal observable, consumió 68,4% más tokens y terminó 8,1% antes
+según timestamps. Es una sola tarea histórica, no evidencia estadística ni una
+promesa de eficiencia general. Los tokens son el campo `total_tokens` de los
+logs y la duración es tiempo de pared entre sus timestamps extremos.
 
-- paquete sin `authority` → `BLOCKED / malformed-packet`, sin escritura;
-- `candidate` falso → `BLOCKED / candidate-mismatch`, sin escritura;
-- ambos corrieron como custom agents aislados y el árbol quedó byte-idéntico.
+### Piloto de revisión bifocal
 
-Estos canarios prueban observables puntuales del adaptador; no prueban
-determinismo universal, least privilege de herramientas built-in, safety
-general, calidad humana, taste ni rendimiento del modelo. El harness negativo
-consumió 914.912 tokens de entrada, 853.760 cacheados: es costo end-to-end del
-harness y no una medición aislada de eficiencia de Fugaz.
+- Standards aislado `019fc55a-9caf-7c92-a781-37d09c910ca4`: detectó
+  duplicación heurística del protocolo;
+- Spec aislado `019fc55a-9da3-75f2-8e9d-828a08777e77`: detectó la procedencia
+  ligada a `/tmp`;
+- control monolítico `019fc55a-9e43-7683-a222-e7f4f7449614`: detectó la misma
+  procedencia y la continuidad obsoleta.
 
-## Comprobaciones ejecutadas
+Los paquetes aislados y el control aportaron hallazgos complementarios. La
+procedencia se estabilizó, Steipete dejó de duplicar el método y este handoff
+reemplazó la continuidad anterior.
 
-```text
-python3 kora.py velar --estricto                         13/13 PASS
-python3 -m unittest discover -s tests                   322/322 PASS
-paridad urn:dev:artefacto:fugaz                         1 fiel; 0 drift
-paridad urn:dev:artefacto:steipete                      5 fiel; 0 drift
-git diff --check                                        PASS
-OpenClaw verify-repo.sh estático                        28 PASS; 1 SKIP
-materialize-workspace.sh steipete                       PASS
-materialize-workspace.sh --check steipete               PASS
-rama Fleet limpia: materialización + check en destino   PASS
-scan de nombres/configuración de modelos                 PASS; 0 coincidencias
-```
+## Evidencia técnica del candidato
 
-`verify-repo.sh --live` de OpenClaw terminó con 43 `PASS`, 5 `FAIL` y 2
-`WARN`. Pasaron la materialización, la búsqueda vectorial, la memoria activa y
-la paridad KORA. Fallaron `live-drift`, `plugin-supply-chain`,
-`openclaw-health`, `memory-runtime` y `docs-upstream-live`; hubo avisos de
-frescura e2e de memoria. No se atribuyen a Fugaz ni se presentan como
-preexistentes en todos los casos: sólo se confirma que pertenecen al estado
-global vivo y quedan fuera del cambio acotado. Reescribir configuración viva,
-retirar paquetes, borrar colas, reindexar agentes o sincronizar docs sin un
-diagnóstico separado habría ampliado alcance y riesgo.
+- upstream: `git ls-remote` confirma que `main` sigue en el commit fijado y los
+  dos SHA-256 declarados coinciden byte a byte;
+- pruebas focales de las dos skills y sus adaptadores: 44/44 PASS;
+- suite completa en el workspace escribible: 338/338 PASS;
+- `velar --estricto`: 13/13 PASS;
+- `git diff --check`: PASS;
+- scan explícito de whitespace sobre archivos propios no trackeados: PASS;
+- verificación adversarial inicial: skills y adaptadores PASS; pidió corregir
+  únicamente continuidad y evidencia A/B;
+- reevaluación adversarial `019fc569-af10-7983-9771-d620a7901a44`: `READY`
+  para el candidato temporal exacto
+  `bd8ee251c837b8a06e81115a3e67d3c17fb03210`; fue anterior a las correcciones
+  finales de licencia, procedencia y consistencia del candidato, que se
+  auditaron y probaron centralmente, no en una nueva sesión adversarial.
 
-Una comprobación de la rama Fleet limpia contra el runtime vivo produjo un
-falso drift de manifiesto: el materializador incluye modos POSIX del checkout,
-y el worktree limpio nació `0600` mientras el checkout operativo usa `0664`
-salvo una referencia `0600`. El contenido Git y la lista de archivos eran
-idénticos. Materializar y verificar esa rama en un destino temporal propio
-pasó; el temporal fue enviado a la papelera. Esta dependencia de permisos del
-checkout queda como limitación conocida del materializador.
+La auditoría final incorporó el aviso MIT íntegro, estabilizó la procedencia de
+`diagnosing-bugs`, hizo autoritaria la `spec_source` explícita y bloqueó el join
+si `HEAD` cambia durante `code-review`. Las dos skills se reemitieron y sus
+referencias licenciadas quedaron incluidas en los derivados.
 
-## Git y publicación
+La fuente quedó separada en tres commits funcionales sobre `master`:
 
-KORA `master`:
+- `85492e4` — `feat(skill): add disciplined bug diagnosis`;
+- `d33715b` — `feat(skill): add bifocal code review`;
+- `ca24738` — `feat(agents): integrate diagnosis and review workflows`.
 
-- implementación: `7a9ac32a77c60e63ab358d6d05b9e67662440c23`
-  (`feat(agent): add delegated Fugaz executor`);
-- aclaración de topología y neutralidad de modelo:
-  `9238c84e6401124a1e10f353dd5f9089747a8453`
-  (`fix(agent): centralize Steipete Fugaz sessions`);
-- este handoff se confirma como unidad documental separada; su hash se obtiene
-  del `git log` vivo para evitar una referencia circular dentro del propio
-  commit;
-- `AGENTS.md`, el subárbol `artefactos/skills/dev/scaffold-repo/` y los
-  conocimientos no trackeados observados permanecen fuera de staging por ser
-  trabajo ajeno o concurrente.
+Se ejecutaron siete reemisiones iniciales por combinación URN/target y dos
+reemisiones finales de las skills, siempre sin `--aplicar`. La paridad final
+clasifica `diagnosing-bugs` y `code-review` como `no-instalada` (una unidad
+Codex cada una), y las instalaciones previas como `desviada`: Fugaz 1/1 y
+Steipete 5/5. No hay unidades `sin-emision`. Por tanto, fuente y derivados
+locales quedan coherentes, pero el cierre runtime permanece bloqueado hasta una
+tarea de despliegue autorizada. No se ejecutó instalación runtime, `--aplicar`
+ni despliegue. La publicación Git de los commits anteriores y de esta
+continuidad fue autorizada expresamente y debe verificarse contra el remoto
+vivo al cierre.
 
-OpenClaw Fleet:
+## Límites y siguiente paso
 
-- commit local sobre `main`: `6cb7e97ea2e5ffeb830ed7c5fdbdba3e10e63fc3`;
-- commit limpio publicado: `5faa01ab4166326ddac8bc8081cd1c5a2f521418`
-  (`chore(blueprint): update Steipete delegation contract`);
-- aclaración local sobre `main`:
-  `57b77cd89dc3e58f60b98d2f0b3f06ef50d2bb79`;
-- aclaración limpia publicada:
-  `38273b72429dca340d4332a38d14c7c76950ec0f`
-  (`chore(blueprint): centralize Steipete Fugaz sessions`);
-- rama remota: `origin/codex/steipete-fugaz-20260801`, paridad local↔tracking
-  `0/0` confirmada;
-- `main` local queda cuatro commits por delante de `origin/main` y no fue
-  empujada;
-- `AGENTS.md` y los cambios de tipo en `docs/fleet-canon-policy.md` y
-  `docs/handoff-policy.md` permanecen excluidos por ser trabajo ajeno.
+Shape, hashes, tests, emisión y paridad no prueban wiring runtime, creación real
+de dos sesiones por el artefacto instalado, least privilege, conducta
+universal, aceptación humana ni calidad estadística. El verificador
+adversarial fue una sesión independiente, pero la política global le exigió un
+quick-pass de memoria y acceso a recibos previos; no fue una evaluación ciega
+ni memory-zero.
 
-## Riesgos y límites vigentes
+El candidato funcional ya está identificado de forma inmutable por los tres
+commits anteriores, construidos sobre
+`c4306488703a48dc6a6a536b942963c679545d94`. El árbol principal conserva además
+cambios concurrentes no incluidos en esos commits; la verificación publicable
+debe ejecutarse desde un worktree limpio del `HEAD` documental final.
 
-- La paridad material demuestra correspondencia de fuente, emisión e
-  instalación; no demuestra conducta, composición formal ni autoridad
-  efectiva.
-- Codex no ofrece una allowlist exacta de herramientas built-in para este
-  custom agent. El task packet es un control contractual, no un sandbox nuevo.
-- La selección del modelo y esfuerzo no está fijada por el artefacto. Debe
-  observarse al invocar; no se afirma que un nombre de modelo solicitado esté
-  disponible o activo.
-- El canario es evidencia localizada, no una evaluación estadística de calidad,
-  latencia, costo o regresión sobre tareas diversas.
-- Los fallos globales de Fleet y la sensibilidad del manifiesto a modos POSIX
-  siguen abiertos.
+Evidencia temporal preservada para auditoría: snapshot upstream en
+`/tmp/mattpocock-skills-study.9yJmrI`, ensayos iniciales en
+`/tmp/matt-skills-eval.YFIOAV` y piloto/candidato en
+`/tmp/kora-matt-migration-20260803`. Este último conserva tres worktrees Git
+registrados (`diag-control`, `diag-treatment` y `review-candidate`). Un resumen
+inicial de code-review tiene enlaces absolutos incompletos, aunque los archivos
+y logs subyacentes existen. Los dos worktrees de diagnóstico conservan
+deliberadamente sus cambios de piloto en `kora.py` y `tests/test_kora.py`; el de
+revisión está limpio. No se reescribieron ni eliminaron estos recibos.
 
-## Siguiente acción recomendada
-
-Integrar mediante revisión la rama
-`codex/steipete-fugaz-20260801` sobre un `openclaw-fleet/main` limpio, sin
-arrastrar ni perder el historial local pendiente. Después, en una tarea
-separada y con diagnóstico propio, resolver los cinco fallos live globales y
-evaluar si el materializador debe normalizar modos desde Git o declarar una
-política de permisos reproducible. Para evolucionar Fugaz, la siguiente mejora
-de valor es una matriz pequeña de evals representativos ligada a costo,
-latencia, scope compliance y calidad integrada; no ampliar primero su prompt.
+Si el operador decide desplegar después, corresponde una tarea separada:
+releer instalaciones vivas, obtener autoridad explícita para `--aplicar`,
+respaldar y canariar. Esta entrega termina en fuente KORA, evidencia de uso y
+derivados locales coherentes; no declara paridad ni conducta runtime.
 
 ---
 
 ## Cierre de auditoría de fuentes del host — 2026-08-03
+
+> Recibo histórico del corte publicado en
+> `c4306488703a48dc6a6a536b942963c679545d94`. Sus referencias al working tree y
+> a cambios de skills “no publicados por este cierre” describen ese corte, no
+> la publicación posterior documentada arriba.
 
 Esta sección registra el frente de auditoría y consolidación documental. Se
 añade sin absorber los cambios concurrentes de skills presentes sólo en el
