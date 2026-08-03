@@ -10,6 +10,8 @@ RAIZ = Path(__file__).resolve().parent.parent
 FUGAZ = RAIZ / "artefactos/agentes/dev/fugaz.md"
 STEIPETE = RAIZ / "artefactos/agentes/dev/steipete.md"
 SHIP_DISCIPLINE = "urn:dev:artefacto:ship-discipline"
+DIAGNOSING_BUGS = "urn:dev:artefacto:diagnosing-bugs"
+CODE_REVIEW = "urn:dev:artefacto:code-review"
 FUGAZ_URN = "urn:dev:artefacto:fugaz"
 
 
@@ -26,7 +28,7 @@ class TestFugazContrato(unittest.TestCase):
 
     def test_es_subagente_delegado_efimero_codex_only(self):
         self.assertEqual(self.fugaz_campos["urn"], FUGAZ_URN)
-        self.assertEqual(self.fugaz_campos["version"], "2.0.1")
+        self.assertEqual(self.fugaz_campos["version"], "2.1.0")
         self.assertEqual(self.fugaz_campos["estado"], "activo")
         self.assertEqual(self.fugaz_campos["forma"], "subagente")
         self.assertEqual(self.fugaz_campos["arnes"], "delegado")
@@ -83,10 +85,23 @@ class TestFugazContrato(unittest.TestCase):
         )
 
     def test_compone_disciplina_sin_fingir_wiring_formal(self):
-        self.assertEqual(self.fugaz_campos["componible"], [SHIP_DISCIPLINE])
+        self.assertEqual(
+            self.fugaz_campos["componible"],
+            [SHIP_DISCIPLINE, DIAGNOSING_BUGS],
+        )
         for testigo in (
                 "uso procedural", "candidato declarado por `componible`",
                 "no prueba composición semántica"):
+            self.assertIn(testigo, self.fugaz_normalizado)
+
+    def test_fugaz_diagnostica_bugs_en_la_misma_sesion(self):
+        for testigo in (
+                DIAGNOSING_BUGS, "bucle red-capaz", "hipótesis falsables",
+                "una variable por vez", "regresión en el seam correcto",
+                "misma sesión Fugaz", "no crea otro agente",
+                "no habilita delegación descendiente",
+                "`BLOCKED/environment-blocked`", "`NOT_RUN`",
+                "instrumentación temporal retirada"):
             self.assertIn(testigo, self.fugaz_normalizado)
 
     def test_envelope_impide_scope_creep_y_delegacion_recursiva(self):
@@ -114,7 +129,7 @@ class TestFugazContrato(unittest.TestCase):
         self.assertNotIn("gpt-", self.steipete_cuerpo.lower())
 
     def test_steipete_es_integrador_y_delega_por_adaptador(self):
-        self.assertEqual(self.steipete_campos["version"], "1.2.2")
+        self.assertEqual(self.steipete_campos["version"], "1.3.0")
         self.assertIn(FUGAZ_URN, self.steipete_campos["componible"])
         for testigo in (
                 "I_fugaz", "O_fugaz", "integrador responsable",
@@ -129,6 +144,20 @@ class TestFugazContrato(unittest.TestCase):
                 "topología central de un nivel",
                 "no me reclasifica como arnés orquestador"):
             self.assertIn(testigo, self.steipete_normalizado)
+
+    def test_steipete_orquesta_revision_bifocal_sin_mezclar_ejes(self):
+        self.assertIn(CODE_REVIEW, self.steipete_campos["componible"])
+        for testigo in (
+                CODE_REVIEW, "Sólo en Codex, para revisar un cambio",
+                "fuente única del protocolo bifocal", "no los duplico aquí",
+                "dos sesiones Fugaz", "dos `O_task` separados", "read-only",
+                "filesystem vivo", "En los demás targets no prometo este adaptador",
+                "no amplío autoridad", "no prueba ejecución"):
+            self.assertIn(testigo, self.steipete_normalizado)
+        for duplicado in (
+                "git diff <fixed-point>...HEAD", "paquete `Standards`",
+                "paquete `Spec`", "sin ganador global"):
+            self.assertNotIn(duplicado, self.steipete_cuerpo)
 
 
 if __name__ == "__main__":
