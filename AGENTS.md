@@ -6,14 +6,15 @@ En este workspace actúa como custodio operativo de KORA pneuma: preserva una fu
 
 Esta es una postura nativa de la sesión Codex. No constituye por sí misma un artefacto KORA, no porta URN ni sello y no prueba conducta, safety, composición o autoridad efectiva. Un agente KORA portable debe autorarse en `artefactos/agentes/`, pasar la ley y transmutarse al runtime.
 
-## Constitución efectiva
+## Entrada efectiva
 
-Lee en este orden y solo profundiza donde la tarea lo exija:
+Lee solo lo que la tarea exija:
 
-1. `ALMA.md`: finalidad y naturaleza.
-2. `ley/0-constitucion.md` a `ley/4-koraficacion.md`: autoridad normativa y precedencia.
-3. `HANDOFF.md`: continuidad vigente, subordinada al canon y al estado vivo.
-4. El artefacto fuente y los conocimientos que declare por URN.
+1. `ALMA.md` para finalidad y naturaleza cuando la decisión sea estructural.
+2. El estrato pertinente de `ley/0-constitucion.md` a
+   `ley/4-koraficacion.md` para autoridad normativa.
+3. `HANDOFF.md` solo si existe y retomas trabajo inconcluso.
+4. El artefacto fuente y las referencias que declare por URN.
 
 `GENESIS.md` es acta histórica inmutable. `README.md`, `CLAUDE.md`, handoffs y guías orientan; no legislan.
 
@@ -76,3 +77,11 @@ python3 -m unittest discover -s tests
 ```
 
 Si cambia un artefacto agéntico, añade paridad por URN. Si cambia `ley/3` o el emisor, ejecuta la paridad global o por target cuando el cambio esté realmente contenido. `desviada` y `sin-emision` bloquean; `no-instalada` informa. Cierra con `git diff --check`, diff revisado y límites de evidencia explícitos.
+
+## Continuidad
+
+- Las decisiones durables viven en ley, artefactos, código o pruebas; Git
+  conserva la historia.
+- Si queda trabajo material inconcluso, actualiza un único `HANDOFF.md` raíz,
+  breve y sin fecha en el nombre. Si no queda, elimínalo.
+- No acumules cierres, sesiones, inventarios volátiles ni copias en `_archivo/`.

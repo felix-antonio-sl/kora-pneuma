@@ -256,7 +256,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_manual_v311_autonomy_5_preserva_contrato_completo(self):
         campos, cuerpo = self.manual
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("1.0.18", campos["version"])
+        self.assertEqual("1.0.19", campos["version"])
         for fragmento in (
             "último release `v3.1.1`",
             "`agent-autonomy-5`",
