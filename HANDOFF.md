@@ -26,9 +26,10 @@ Estado: política de iniciación verificada y parcialmente publicada
 - GORE_OS conserva 126 rutas ajenas preparadas en el índice. El commit documental
   `9c970033` se creó con `--only` y fue publicado sin incluirlas; no alterar ese
   índice sin adjudicación del operador.
-- Después del push documental de OpenClaw Fleet apareció una modificación ajena en
-  `openclaw.json.reference` sobre modelos y niveles de thinking. No pertenece a esta
-  migración, no fue preparada ni publicada y debe adjudicarse en Fleet.
+- Después del push documental de OpenClaw Fleet aparecieron modificaciones ajenas en
+  `openclaw.json.reference` (modelos y thinking) y `scripts/verify-repo.sh`. No
+  pertenecen a esta migración, no fueron preparadas ni publicadas y deben adjudicarse
+  en Fleet.
 
 ## Frente previo independiente
 
