@@ -2,7 +2,7 @@
 urn: urn:kora:kb:frontera-fuentes-tecnicas
 nombre: frontera-fuentes-tecnicas
 version: 1.0.0
-estado: borrador
+estado: publicado
 descripcion: "Criterio para decidir qué conocimiento se korafica y qué fuentes técnicas se conserva, archiva o descarta fuera de KORA."
 fuente: "Decisión confirmada por el operador después de la auditoría de fuentes del host y del corpus GN el 2026-08-03; doctrina operativa interna, sin hash externo."
 autor: FS
