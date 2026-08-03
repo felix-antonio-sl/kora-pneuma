@@ -1,14 +1,14 @@
 ---
 urn: urn:dev:artefacto:scaffold-repo
 nombre: scaffold-repo
-version: 1.3.1
+version: 1.4.0
 estado: activo
-descripcion: "Andamia un repo nuevo en este host (Hetzner/Ubuntu) con su CLAUDE.md como SSOT, README.md y AGENTS.md como punteros, y .gitignore base. Úsala cuando el operador quiera crear, iniciar, andamiar o «scaffoldear» un repositorio, proyecto o cuaderno nuevo en ~/projects/ (o un corpus de conocimiento / cuaderno de rol), aunque no diga «skill» ni «scaffold»: «creemos un repo para X», «arranquemos el proyecto Y», «necesito un cuaderno para el rol Z», «inicializa el corpus W». Destila el patrón CLAUDE.md del host en cuatro arquetipos: desarrollo, conocimiento, cuaderno de rol y modelamiento OPM (modelos construidos con opforja). Instaura además la vigencia documental: un solo vigente por especie, versionado por fecha sin sobrescritura, y los previos a una papelera _archivo/ gitignorada. Siembra el registro de evolución de cada repo: CHANGELOG.md (Keep a Changelog) en los de desarrollo, BITACORA.md en los demás."
-fuente: "Autorada runtime-first en ~/.claude/skills/scaffold-repo/ el 2026-06-21 (SKILL.md sha256:8d91319442a4232185ece0b28505b8c2d62a47d5b5306b0939bae15bdd12dd2d; assets/ preservados verbatim); absorbida a fuente canónica pneuma el 2026-06-21. No proviene de la bestia. Normalización aplicada: assets/ → referencias/ (única fibra legal de skill, ley/2 §6); descripcion plegada a una sola línea (sobre cerrado, ley/2 §1); frontmatter agéntico completo (vector/sigma/arnes/forma). Cuerpo preservado salvo el reapunte de rutas assets/ → referencias/. v1.1.0 (2026-06-21): añade la política de vigencia documental (handoff único + series por fecha + papelera _archivo/ gitignorada); unifica y reescribe las reglas de handoff divergentes de las 3 plantillas (cuaderno-rol descartaba el previo; conocimiento acumulaba docs/handoffs; desarrollo usaba docs/archive versionado) hacia _archivo/; gitignore-base suma _archivo/. v1.2.0 (2026-06-23): añade el 4º arquetipo `modelamiento` (modelos OPM/ISO 19450 construidos con opforja; firma `models/`+`opl/`+`scripts/`, bundle regenerado no editado, anclaje externo; plantilla austera nueva `claude-md-modelamiento.md`) y el registro de evolución como 5º satélite append-only y versionado: `CHANGELOG.md` (Keep a Changelog) en desarrollo, `BITACORA.md` en conocimiento/cuaderno-rol/modelamiento (seeds `changelog-base.md` + `bitacora-base.md`). §Vigencia distingue el registro (acumulativo, nunca a `_archivo/`) del patrón de reemplazo-por-versión. v1.2.1 (2026-07-13): elimina una longitud de archivo tomada como referencia; el tamaño de un documento no es un estándar de calidad y, si se necesita, se observa en vivo. v1.3.0 (2026-07-16): añade Codex como target realizado; el workflow ya producía `AGENTS.md` como puntero y era runtime-neutral, pero su contrato seguía limitando el despliegue a Claude Code. Diseñado por brainstorming con aprobación del operador. v1.3.1 (2026-07-16): retira la derivacion a `claude-md-management`, skill inexistente, y exige auditar el CLAUDE.md vivo sin pisarlo ni inventar dependencias."
+descripcion: "Andamia un repo nuevo en este host (Hetzner/Ubuntu) con AGENTS.md autónomo y específico para Codex, CLAUDE.md para Claude Code, README.md, .gitignore y registro de evolución. Úsala cuando el operador quiera crear, iniciar, andamiar o «scaffoldear» un repositorio, proyecto o cuaderno nuevo en ~/projects/ (o un corpus de conocimiento / cuaderno de rol), aunque no diga «skill» ni «scaffold»: «creemos un repo para X», «arranquemos el proyecto Y», «necesito un cuaderno para el rol Z», «inicializa el corpus W». Distingue cuatro arquetipos: desarrollo, conocimiento, cuaderno de rol y modelamiento OPM (modelos construidos con opforja). Instaura además la vigencia documental: un solo vigente por especie, versionado por fecha sin sobrescritura, y los previos a una papelera _archivo/ gitignorada. Siembra el registro de evolución de cada repo: CHANGELOG.md (Keep a Changelog) en los de desarrollo, BITACORA.md en los demás."
+fuente: "Autorada runtime-first en ~/.claude/skills/scaffold-repo/ el 2026-06-21 (SKILL.md sha256:8d91319442a4232185ece0b28505b8c2d62a47d5b5306b0939bae15bdd12dd2d; assets/ preservados verbatim); absorbida a fuente canónica pneuma el 2026-06-21. No proviene de la bestia. Normalización aplicada: assets/ → referencias/ (única fibra legal de skill, ley/2 §6); descripcion plegada a una sola línea (sobre cerrado, ley/2 §1); frontmatter agéntico completo (vector/sigma/arnes/forma). Cuerpo preservado salvo el reapunte de rutas assets/ → referencias/. v1.1.0 (2026-06-21): añade la política de vigencia documental (handoff único + series por fecha + papelera _archivo/ gitignorada); unifica y reescribe las reglas de handoff divergentes de las 3 plantillas (cuaderno-rol descartaba el previo; conocimiento acumulaba docs/handoffs; desarrollo usaba docs/archive versionado) hacia _archivo/; gitignore-base suma _archivo/. v1.2.0 (2026-06-23): añade el 4º arquetipo `modelamiento` (modelos OPM/ISO 19450 construidos con opforja; firma `models/`+`opl/`+`scripts/`, bundle regenerado no editado, anclaje externo; plantilla austera nueva `claude-md-modelamiento.md`) y el registro de evolución como 5º satélite append-only y versionado: `CHANGELOG.md` (Keep a Changelog) en desarrollo, `BITACORA.md` en conocimiento/cuaderno-rol/modelamiento (seeds `changelog-base.md` + `bitacora-base.md`). §Vigencia distingue el registro (acumulativo, nunca a `_archivo/`) del patrón de reemplazo-por-versión. v1.2.1 (2026-07-13): elimina una longitud de archivo tomada como referencia; el tamaño de un documento no es un estándar de calidad y, si se necesita, se observa en vivo. v1.3.0 (2026-07-16): añade Codex como target realizado; el workflow ya producía `AGENTS.md` como puntero y era runtime-neutral, pero su contrato seguía limitando el despliegue a Claude Code. Diseñado por brainstorming con aprobación del operador. v1.3.1 (2026-07-16): retira la derivacion a `claude-md-management`, skill inexistente, y exige auditar el CLAUDE.md vivo sin pisarlo ni inventar dependencias. v1.4.0 (2026-08-02): sustituye el puntero AGENTS→CLAUDE por un contrato autónomo y repo-specific para Codex, alinea el scaffold con la semántica oficial de descubrimiento de Codex, conserva CLAUDE.md como superficie separada pendiente de su propia revisión y renombra la plantilla fuente para que Codex no la descubra como instrucción anidada."
 autor: FS
 creado: 2026-06-21
 lang: es
-tags: [scaffold, repo, claude-md, ssot, host-conventions, bootstrap, vigencia-documental, archivo]
+tags: [scaffold, repo, agents-md, claude-md, host-conventions, bootstrap, vigencia-documental, archivo]
 vector: [2, 0, 2, 0, 1]
 sigma: [1, 1, 2, 1, 1]
 arnes: disciplina
@@ -22,17 +22,17 @@ estados: [resolver-parametros, cargar-plantilla, escribir-satelites, cerrar]
 # scaffold-repo
 
 Crea el esqueleto documental mínimo de un repo nuevo conforme a las convenciones
-del host: **`CLAUDE.md` es la única fuente de verdad (SSOT) del repo**; `README.md`
-y `AGENTS.md` solo redirigen a él. Esto materializa el principio de delegación del
-host (`~/CLAUDE.md`): "antes de operar en un subsistema, leer su propio CLAUDE.md"
-— que solo es confiable si *todo* repo nace con uno.
+del host. `AGENTS.md` es el contrato operativo autónomo que Codex descubre sin
+imports; `CLAUDE.md` conserva la superficie propia de Claude Code y `README.md`
+la entrada humana. Cada archivo tiene un consumidor claro y ninguno depende de
+que Codex interprete un puntero hacia otro runtime.
 
 ## Cuándo NO aplicar
 
 - El repo es un **workspace de flota OpenClaw** (`~/openclaw-fleet/*`): ahí
   `AGENTS.md` es una **definición de agente**, no un puntero. No lo sobreescribas.
-- Ya existe un `CLAUDE.md` en el destino: no lo pises; léelo y ofrece una
-  auditoría o mejora explícita antes de proponer cualquier cambio.
+- Ya existe `AGENTS.md` o `CLAUDE.md` en el destino: no lo pises; léelo y ofrece
+  una auditoría o mejora explícita antes de proponer cualquier cambio.
 
 ## Flujo
 
@@ -84,9 +84,11 @@ Reglas al rellenar:
 
 Desde `referencias/`, instancia tal cual (sustituyendo `{{nombre}}` y `{{una-línea}}`):
 
-- `README.md` ← `referencias/README.md` — puntero de una línea a CLAUDE.md.
-- `AGENTS.md` ← `referencias/AGENTS.md` — puntero idéntico (decisión del operador: puntero,
-  no symlink — robusto ante tarballs y clones).
+- `README.md` ← `referencias/README.md` — entrada humana actual.
+- `AGENTS.md` ← `referencias/agents-template.md` — contrato autónomo para Codex. Rellena
+  misión, fuentes, arquitectura o fronteras, verificaciones y seguridad con datos
+  reales del arquetipo; elimina comentarios y secciones que no apliquen. Nunca lo
+  reduzcas a `Ver CLAUDE.md` ni le inventes comandos.
 - `.gitignore` ← `referencias/gitignore-base`, y **añade** las líneas del runtime real
   (Node → `node_modules/ dist/`; Python → `.venv/ __pycache__/`; Go → `/bin/`).
   Las líneas `*.tar.gz` (backups del host) y `_archivo/` (papelera de no-vigentes,
@@ -141,8 +143,8 @@ el **handoff** es el snapshot vigente para continuar; la **bitácora** es el reg
 
 ## Por qué esta forma y no otra
 
-El host ya impone (`~/CLAUDE.md`, memoria del operador): docs en **es-CL**, código
-e identificadores en **inglés**; **CLAUDE.md = SSOT por repo**; **`*.tar.gz` fuera de
-git**; **fechas ISO absolutas**. Las plantillas no reinventan esas reglas: las heredan
-con una línea (`Hereda de ~/CLAUDE.md`) para no duplicar la ley del host en cada repo.
-Lo que cada plantilla añade es solo lo *propio del arquetipo*.
+El host impone docs en **es-CL**, código e identificadores en **inglés**,
+`*.tar.gz` fuera de git y fechas ISO absolutas. `AGENTS.md` concentra solo el
+contrato durable que Codex necesita para operar y verificar el repositorio; los
+procedimientos reutilizables siguen viviendo en skills y la configuración en su
+superficie propia. Lo que cada plantilla añade es solo lo propio del arquetipo.

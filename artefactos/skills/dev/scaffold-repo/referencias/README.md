@@ -2,5 +2,5 @@
 
 {{una-línea: qué es este repo}}
 
-Ver **[CLAUDE.md](./CLAUDE.md)** para propósito, comandos, estructura y convenciones.
-Es la única fuente de verdad documental del repositorio.
+Para trabajo agéntico, usa **[AGENTS.md](./AGENTS.md)** con Codex y
+**[CLAUDE.md](./CLAUDE.md)** con Claude Code.

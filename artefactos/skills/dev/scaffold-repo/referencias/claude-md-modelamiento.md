@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Fuente operativa única para agentes que trabajen en este repositorio. `README.md` y
-`AGENTS.md` solo redirigen aquí. Versionado independiente; para concerns cross-cutting del
-host, ver `~/CLAUDE.md`.
+Contrato operativo de Claude Code para este repositorio. Codex usa su contrato autónomo
+en `AGENTS.md`. Versionado independiente; para concerns cross-cutting del host, ver
+`~/CLAUDE.md`.
 
 ## Qué es este repo
 

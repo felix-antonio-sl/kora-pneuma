@@ -1,8 +1,7 @@
 # CLAUDE.md
 
-Guía de trabajo para agentes de código (Claude Code, OpenCode, Codex) en este
-repositorio. **`CLAUDE.md` es la única fuente de verdad documental**; `README.md`
-y `AGENTS.md` solo redirigen aquí.
+Contrato operativo de Claude Code para este repositorio. Codex usa su contrato
+autónomo en `AGENTS.md`; las fuentes de verdad del producto se declaran por separado.
 
 Versionado independiente. Para concerns cross-cutting del host, ver `~/CLAUDE.md`.
 

@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Fuente operativa única para agentes que trabajen en este repositorio. Si otra fuente
-(handoff, README externo, memoria vieja) contradice este archivo, manda **este archivo
-y las specs/checks vigentes**. `README.md` y `AGENTS.md` solo redirigen aquí.
+Contrato operativo de Claude Code para este corpus. Si un handoff, README externo o
+memoria vieja lo contradice, mandan las specs/checks vigentes y las fuentes canónicas
+que este archivo señale. Codex usa su contrato autónomo en `AGENTS.md`.
 
 Versionado independiente. Para concerns cross-cutting del host, ver `~/CLAUDE.md`.
 
