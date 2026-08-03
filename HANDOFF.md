@@ -247,7 +247,8 @@ latencia, scope compliance y calidad integrada; no ampliar primero su prompt.
 ## Cierre de auditoría de fuentes del host — 2026-08-03
 
 Esta sección registra el frente de auditoría y consolidación documental. Se
-añade sin absorber los cambios concurrentes de skills descritos arriba.
+añade sin absorber los cambios concurrentes de skills presentes sólo en el
+working tree y no publicados por este cierre.
 
 ### Objetivo, alcance y resultado
 
@@ -262,8 +263,8 @@ Resultado material:
 
 - 96 conocimientos incorporados a `artefactos/conocimiento/`: 11 publicados,
   84 GN en borrador y el tutorial OPCloud en borrador;
-- nueve archivos externos reversibles con manifiestos SHA-256 completos para
-  210 archivos de contenido;
+- nueve raíces de archivo externas y reversibles con manifiestos SHA-256
+  completos para 210 archivos de contenido;
 - siete symlinks consumidores vivos y resolubles: cinco en OpenClaw Fleet, uno
   en Ñuble AI y el directorio sanitario ya existente de `hd-dt`;
 - Fleet valida symlinks de fuente restringidos a archivos regulares bajo
