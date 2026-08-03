@@ -1,9 +1,5 @@
-# Backups automáticos del host (invariante — ver ~/CLAUDE.md)
+# Backups automáticos del host
 *.tar.gz
-
-# Archivo / papelera de no-vigentes (historia local, NO SSOT — ver CLAUDE.md §Vigencia documental)
-# Acumula versiones previas, handoffs superados y documentos deprecados. No se versiona.
-_archivo/
 
 # Sistema operativo / editores
 .DS_Store

@@ -1,6 +1,10 @@
 # {{nombre}}
 
-{{una-línea: qué es este repo}}
+{{una-línea: qué es este repositorio, para quién existe y qué resultado produce}}
 
-Para trabajo agéntico, usa **[AGENTS.md](./AGENTS.md)** con Codex y
-**[CLAUDE.md](./CLAUDE.md)** con Claude Code.
+## Orientación
+
+{{mapa humano mínimo: dónde empezar, cómo usarlo o cómo ejecutar el producto}}
+
+Para trabajo agéntico, `AGENTS.md` contiene el contrato operativo del repositorio.
+Claude Code importa ese mismo contrato mediante `CLAUDE.md`.
