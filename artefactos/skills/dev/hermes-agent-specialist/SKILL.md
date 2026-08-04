@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:hermes-agent-specialist
 nombre: hermes-agent-specialist
-version: 2.0.0
+version: 2.1.0
 estado: activo
-descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend (local/docker/ssh/modal/daytona/singularity), mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
-fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI remitido al canon vivo; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva. v2.0.0 (2026-07-13): decisión HITL retira `openclaw` de targets; la migracion OpenClaw→Hermes es un puente de entrada soportado por Hermes, no equivalencia ni destino de ejecucion. Elimina cifras de catalogo persistidas: comandos, proveedores, tools, modelos y canales se consultan bajo demanda en el canon oficial."
+descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend (local/docker/ssh/modal/daytona/vercel_sandbox/singularity), mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
+fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI remitido al canon vivo; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva. v2.0.0 (2026-07-13): decisión HITL retira `openclaw` de targets; la migracion OpenClaw→Hermes es un puente de entrada soportado por Hermes, no equivalencia ni destino de ejecucion. Elimina cifras de catalogo persistidas: comandos, proveedores, tools, modelos y canales se consultan bajo demanda en el canon oficial. v2.1.0 (2026-08-04): sondeo de fidelidad contra el canon vivo (llms-full.txt, 2026-08-04) — correcciones: ya EXISTE ejecucion/instalacion Docker oficial (imagen nousresearch/hermes-agent, doc en /docs/user-guide/docker); terminal.backend ahora son 7 (agregado vercel_sandbox); el modelo de seguridad ahora tiene 8 capas (nueva capa 3: file write safety); claude-marketplace ya no figura en los hub sources del canon. Resto de claims (SOUL.md/HERMES_HOME, memoria 2200/1375 con snapshot congelado, precedencia config, piso 64k, Ollama/vLLM, skills 3 niveles, MCP, mensajeria deny-by-default, hermes claw migrate) confirmados sin deriva."
 autor: FS
 creado: 2026-05-12
 lang: es
@@ -43,7 +43,7 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 ## Cuando Usar
 
 - crear un agente Hermes desde cero (instalacion, `hermes setup`, proveedor, primer `SOUL.md`).
-- configurar despliegue via `terminal.backend` (local, docker, ssh, modal, daytona, singularity).
+- configurar despliegue via `terminal.backend` (local, docker, ssh, modal, daytona, vercel_sandbox, singularity).
 - conectar canales de mensajeria sobre el gateway de Hermes.
 - integrar MCP servers (stdio/HTTP) o exponer Hermes como server MCP.
 - ciclo de vida de skills (agentskills.io, `skill_manage`, hub, curator, bundles).
@@ -65,7 +65,7 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 
 1. **Es Hermes Agent (plataforma) y no los modelos Hermes LLM?** Ambiguo -> aclarar.
 2. **Agente existente o nuevo?**
-3. **Backend objetivo?** (`terminal.backend`: local/docker/ssh/modal/daytona/singularity, o por decidir).
+3. **Backend objetivo?** (`terminal.backend`: local/docker/ssh/modal/daytona/vercel_sandbox/singularity, o por decidir).
 
 ### `clasificar-modo`
 
@@ -159,9 +159,9 @@ residual, siguiente paso si la tarea es multi-incremento.
 - **Secretos en `.env`** (API keys, tokens, passwords). Todo lo demas (modelo, backend,
   compresion, limites de memoria, toolsets) en `config.yaml`. Un secreto en `config.yaml`
   es brecha que se reporta.
-- **Despliegue = valor de `terminal.backend`** en `config.yaml`, no subpaginas aparte:
-  `local | docker | ssh | modal | daytona | singularity`. Los chequeos de comando
-  peligroso se **OMITEN** en backends containerizados (docker/singularity/modal/daytona):
+- **Despliegue = valor de `terminal.backend`** en `config.yaml`, no subpaginas aparte
+  (son 7 backends en el canon): `local | docker | ssh | modal | daytona | vercel_sandbox | singularity`.
+  Los chequeos de comando peligroso se **OMITEN** en backends containerizados (docker/singularity/modal/daytona):
   el contenedor es la frontera de seguridad.
 
 ### Proveedores
@@ -186,8 +186,8 @@ residual, siguiente paso si la tarea es multi-incremento.
   `requires_toolsets`/`fallback_for_toolsets`).
 - Tool `skill_manage`: el agente crea/parchea/edita/borra skills. Con
   `skills.write_approval: true`, los writes hacen staging en `~/.hermes/pending/skills/`.
-- Hub multi-fuente (official, skills-sh, well-known, github, clawhub, claude-marketplace,
-  lobehub, browse-sh, url) + `curator` para mantenimiento en background.
+- Hub multi-fuente (official, skills-sh, well-known, github, clawhub, lobehub, browse-sh,
+  url; verificar tabla viva) + `curator` para mantenimiento en background.
 
 ### MCP
 
@@ -204,12 +204,13 @@ residual, siguiente paso si la tarea es multi-incremento.
 - Autorizacion **deny-by-default**: allowlists (`TELEGRAM_ALLOWED_USERS`, ...) o **DM pairing**
   (codigos de 8 chars, expiran 1h, rate-limited; aprobar via `hermes pairing approve`).
 
-### Seguridad — 7 capas de defense-in-depth
+### Seguridad — 8 capas de defense-in-depth
 
 1. Autorizacion de usuario (allowlists + DM pairing). 2. Aprobacion de comandos peligrosos
-(`approvals.mode`: `manual`/`smart`/`off`). 3. Aislamiento por contenedor (docker/singularity/
-modal con hardening). 4. Filtrado de credenciales MCP. 5. Escaneo de prompt-injection en
-context files. 6. Aislamiento cross-session. 7. Sanitizacion de entrada/working-dir.
+(`approvals.mode`: `manual`/`smart`/`off`). 3. Seguridad de escritura de archivos (denylist
+y sandbox opcional para `write_file`/`patch`). 4. Aislamiento por contenedor (docker/singularity/
+modal con hardening). 5. Filtrado de credenciales MCP. 6. Escaneo de prompt-injection en
+context files. 7. Aislamiento cross-session. 8. Sanitizacion de entrada/working-dir.
 Ademas: **blocklist hardline siempre-on** (wipes irreversibles, fork bombs, escritura a
 block-device) y **escaneo Tirith** pre-ejecucion (homografos, pipe-to-interpreter, inyeccion
 de terminal). YOLO via `--yolo`, `/yolo` o `HERMES_YOLO_MODE=1`.
@@ -229,9 +230,13 @@ esta en `/docs/reference/cli-commands` u otra subpagina vigente, no existe.
 ## Instalacion
 
 - Linux/macOS/WSL2/Termux: `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
+  (tambien modo root: `sudo curl ... | sudo bash`, layout FHS bajo `/usr/local/`).
 - Windows: `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
-- **No hay metodo de instalacion Docker** (Docker es backend de `terminal`, no de install).
-  El instalador trae sus runtimes (Python via uv, Node, ripgrep, ffmpeg); binario en
+- **Docker**: la imagen oficial `nousresearch/hermes-agent` corre Hermes completo en un
+  contenedor montando `~/.hermes` en `/opt/data` (`docker run ... nousresearch/hermes-agent setup`,
+  luego `gateway run` supervisado por s6-overlay). Distinto de Docker como backend de `terminal`.
+- Nix tiene guia propia (flake/NixOS) pero el canon lo marca best-effort, no ruta soportada.
+- El instalador trae sus runtimes (Python via uv, Node, ripgrep, ffmpeg); launcher en
   `~/.local/bin/hermes`, estado en `~/.hermes/`.
 
 ## Reglas Duras
