@@ -10,7 +10,7 @@ creado: 2026-05-07
 lang: es
 tags: [salud, hodom, operacional, hospital-san-carlos, iaas, direccion-tecnica, indicadores]
 familia: bok
-cita: [urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:salubrista]
+cita: [urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:salubrista, urn:salud:kb:hsc-normativa-hodom-indice]
 ---
 
 # HODOM Operacional — Hospital San Carlos

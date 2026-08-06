@@ -11,7 +11,7 @@ lang: es
 tags: [salubrista, atlas, gestion-redes, hospitalista, hospitalizacion-domiciliaria, hodom]
 familia: bok
 depende: [urn:salud:kb:salubrista]
-cita: [urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:salubrista-fuentes-base-curadas, urn:salud:kb:salubrista-fuente-salud-publica-global, urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss, urn:salud:kb:gestion-redes-indice, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:gestion-redes-urgencias, urn:salud:kb:gestion-redes-salud-mental, urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-decreto-exento-31-2024, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad, urn:salud:kb:hodom-situacion-chile-2026]
+cita: [urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:salubrista-fuentes-base-curadas, urn:salud:kb:salubrista-fuente-salud-publica-global, urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss, urn:salud:kb:gestion-redes-indice, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:gestion-redes-urgencias, urn:salud:kb:gestion-redes-salud-mental, urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-decreto-exento-31-2024, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad, urn:salud:kb:hodom-situacion-chile-2026, urn:salud:kb:hsc-normativa-hodom-indice]
 ---
 
 # Atlas integrado Salubrista
@@ -44,6 +44,7 @@ red.
 | PAC/LTSS | `urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss` | Continuidad post-aguda, home health, LTSS y readmisiones |
 | Gestion de redes | `urn:salud:kb:gestion-redes-indice` | Operacion de redes, unidades, urgencias, salud mental y herramientas |
 | HODOM normativo y directivo | familia `hodom-*` | Reglas, direccion tecnica, alta complejidad y situacion Chile |
+| Normativa HSC situada | `urn:salud:kb:hsc-normativa-hodom-indice` | Protocolos y normativa local HSC de relevancia para HODOM |
 
 ## Rutas De Uso
 
