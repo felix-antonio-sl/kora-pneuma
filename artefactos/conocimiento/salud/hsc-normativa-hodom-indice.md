@@ -51,6 +51,20 @@ publicado; el cuerpo de cada uno vive en su fuente y no se duplica aquí.
 | `urn:salud:kb:hodom-situacion-chile-2026` | Situación HODOM Chile 2026 | contexto y estado de la modalidad |
 | `urn:salud:kb:hodom-invariante-no-equivale-cerrada` | Invariante HODOM ≠ hospitalización cerrada | invariante de dominio |
 
+Los cuerpos largos del canon se particionan en shards que continúan el mismo
+documento; los raíces no los listan, por lo que se declaran aquí:
+
+| Partición | Continúa |
+|---|---|
+| `urn:salud:kb:hodom-direccion-tecnica-p02`, `urn:salud:kb:hodom-direccion-tecnica-p03` | `urn:salud:kb:hodom-direccion-tecnica` |
+| `urn:salud:kb:hodom-manual-alta-complejidad-p02`, `urn:salud:kb:hodom-manual-alta-complejidad-p03`, `urn:salud:kb:hodom-manual-alta-complejidad-p04` | `urn:salud:kb:hodom-manual-alta-complejidad` |
+| `urn:salud:kb:hodom-situacion-chile-2026-p02`, `urn:salud:kb:hodom-situacion-chile-2026-p03`, `urn:salud:kb:hodom-situacion-chile-2026-p04`, `urn:salud:kb:hodom-situacion-chile-2026-p05` | `urn:salud:kb:hodom-situacion-chile-2026` |
+
+El corpus operacional de la unidad (`urn:salud:kb:hodom-operacional-indice`,
+`urn:salud:kb:hodom-operacional-iaas`, `urn:salud:kb:hodom-operacional-indicadores`)
+queda **fuera del alcance** de este índice: describe la operación real
+observada, no normativa ni protocolos.
+
 ## 2. Núcleo situado HSC — H0
 
 | URN | Documento | Uso |
