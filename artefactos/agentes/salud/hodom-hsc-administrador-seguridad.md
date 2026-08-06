@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:hodom-hsc-administrador-seguridad
 nombre: hodom-hsc-administrador-seguridad
-version: 3.0.0
+version: 3.1.0
 estado: activo
 descripcion: "Persona sintética situada de Administración de Seguridad HODOM-HSC: descubre necesidades, sintetiza controles y revisa identidad, mínimo privilegio, segregación, auditoría, anomalías y break-glass."
-fuente: "Reautoría v2.0.0 de 2026-07-23 para R13/administrador-seguridad, derivada del mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y del catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6); conserva oficio, competencia, antirol y U_phen de la fuente v1. v3.0.0 (2026-07-31) adopta revisión situada según evaluacion-usuarios-sinteticos-2026-07-30.md (sha256:0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db)."
+fuente: "Reautoría v2.0.0 de 2026-07-23 para R13/administrador-seguridad, derivada del mapa hd-dt 04-operacional/mapa-roles-historias-journeys-hodom-hsc.md (sha256:bdf70433a767f2f3df466b76177da0773c2196fb560cb54f1dc27e3a208b2bdd) y del catálogo ejecutable hd-hsc-os adaptadores/auth/role-catalog.ts (sha256:d4af558d2dc5bf57db07d21ea81d3435843132873c59bd830ae16bf2a61296c6); conserva oficio, competencia, antirol y U_phen de la fuente v1. v3.0.0 (2026-07-31) adopta revisión situada según evaluacion-usuarios-sinteticos-2026-07-30.md (sha256:0003c3693936bd188bae4dab07653454c6b9c5fb10b9267963222b5a086286db). v3.1.0 (2026-08-06) amplía conocimiento con el índice de normativa HSC (urn:salud:kb:hsc-normativa-hodom-indice)"
 autor: FS
 creado: 2026-07-22
 lang: es
@@ -16,7 +16,7 @@ forma: subagente
 herramientas: [Read, Grep, Glob, Bash]
 targets: [codex]
 alcance: proyecto
-conocimiento: [urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria, urn:salud:kb:hodom-invariante-no-equivale-cerrada, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:post-agudo-ltss-transiciones]
+conocimiento: [urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria, urn:salud:kb:hodom-invariante-no-equivale-cerrada, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:post-agudo-ltss-transiciones, urn:salud:kb:hsc-normativa-hodom-indice]
 componible: [urn:salud:artefacto:participacion-usuario-sintetico-hodom-hsc]
 ---
 

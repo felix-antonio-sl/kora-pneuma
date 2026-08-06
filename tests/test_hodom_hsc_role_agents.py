@@ -211,7 +211,7 @@ EXCEPTION_CONTRACTS = {
 }
 
 EXPECTED_SOURCE_SNAPSHOT_SHA256 = (
-    "2c57ddd43c036e75a9041bfe59284aa38258f1f85dcce60b40f7f388a0b98721"
+    "4cdef5cefe89886e0c4df532efde03065939a0f8a51e2271fb35473b91b8470c"
 )
 
 
@@ -472,7 +472,7 @@ class TestPanelRolesHodomHscV3(unittest.TestCase):
                 self.assertEqual(campos["urn"],
                                  f"urn:salud:artefacto:{nombre}")
                 self.assertEqual(campos["nombre"], nombre)
-                self.assertEqual(campos["version"], "3.0.0")
+                self.assertEqual(campos["version"], "3.1.0")
                 self.assertEqual(campos["estado"], "activo")
                 self.assertEqual(campos["forma"], "subagente")
                 self.assertEqual(campos["arnes"], "persona")
