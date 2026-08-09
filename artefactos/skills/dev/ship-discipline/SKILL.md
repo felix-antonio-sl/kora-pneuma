@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:ship-discipline
 nombre: ship-discipline
-version: 1.0.2
+version: 1.1.0
 estado: activo
 descripcion: "Skill de disciplina de envio: blast radius, loop closure, ship-beats-perfect, architecture-over-implementation, repo-shaping para agent-friendliness, agent-foreman. Para cualquier agente que produzca o intervenga software con velocidad de inferencia manteniendo steerability, taste y reversibilidad."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577); cuerpo Markdown preservado byte-fiel salvo la correccion 1.0.2. Correccion 1.0.2 (2026-06-15): las referencias de 'Cuando NO Usar' y de la tabla de composicion apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la bestia) en idiom de bestia (IR, staging); se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina de pneuma (H1, auditoria 2026-06-15). 4 referencias byte-identicas. Omitido con razon: target openclaw (no realizado, GENESIS seccion 4)."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577). Correccion 1.0.2 (2026-06-15): referencias de doctrina bestia se reapuntaron al regimen de pneuma; 4 referencias quedaron byte-identicas. v1.1.0 (2026-08-09): reemplaza el checklist universal build-test-lint por verificaciones aplicables y proporcionales al riesgo; ABSENT no obliga a crear tooling. Target openclaw sigue omitido porque no esta realizado para esta skill."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -40,7 +40,7 @@ correccion.
 - el agente va a modificar codigo y se necesita decidir topologia
   (secuencial cuidadoso, paralelo moderado, maximo paralelismo).
 - una tarea cambia archivos y antes de declararla hecha debe cerrar el
-  loop (build + test + lint + integracion + patch listo).
+  loop con evidencia proporcional al riesgo y a la aceptacion.
 - se va a estructurar un repositorio para que sea agent-friendly o se
   detecta que un repo existente penaliza a los agentes.
 - hay que distinguir lo que delegar a agentes vs lo irreducible humano.
@@ -118,15 +118,18 @@ Detalle en `referencias/separacion-estratos.md`.
 
 ### `cerrar-loop`
 
-Una tarea **NO** esta lista hasta que:
+Una tarea **NO** esta lista hasta que la aceptacion y los riesgos reales estan
+cubiertos sobre el arbol exacto:
 
-1. **Build** — compila/transpila. Si falla, corregir antes de seguir.
-2. **Test** — tests relevantes pasan. Si no hay y el cambio es no
-   trivial, escribirlos.
-3. **Lint** — corregir warnings criticos.
-4. **Integracion** — sin romper imports, tipos, deps existentes.
-5. **Feel** — la solucion se siente correcta al usarla.
-6. **Patch listo** — un cambio coherente, verificable y listo para commit; crear commit solo si esta autorizado.
+1. **Comportamiento** — verificar el outcome o journey solicitado.
+2. **Checks aplicables** — ejecutar primero la prueba focal; ampliar a build,
+   tests, typecheck, lint o integracion solo cuando existen y el cambio puede
+   afectarlos.
+3. **Estado honesto** — un `FAIL` relevante bloquea. `ABSENT` o `NOT_RUN` no
+   aportan evidencia: si el check cubre aceptacion o un riesgo real, bloquean;
+   si no, se declaran sin inventar tooling.
+4. **Feel** — usar o revisar la solucion; no basta con que compile.
+5. **Patch listo** — cambio coherente y verificable; commit solo autorizado.
 
 Detalle en `referencias/loop-closure-checklist.md`.
 
@@ -136,15 +139,15 @@ Reportar:
 
 - blast radius estimado y topologia elegida,
 - cambio aplicado con paths,
-- loop cerrado (build/test/lint/integracion verde),
+- loop cerrado con las comprobaciones aplicables y su estado,
 - patch listo o commit hash autorizado,
 - siguiente paso si la tarea es multi-incremento.
 
 ## Reglas Duras
 
 1. **Blast radius antes de exec**.
-2. **Loop closure obligatorio**: build + test + lint + integracion +
-   patch listo; commit atomico solo con autorizacion explicita.
+2. **Loop closure obligatorio**: aceptacion + checks proporcionales +
+   integracion + patch listo; commit solo con autorizacion explicita.
 3. **Ship beats perfect**: util hoy > ideal hipotetico.
 4. **Architecture over implementation**: humano en deps/schema/boundaries.
 5. **Less is more**: cada capa justifica existencia.
@@ -165,7 +168,7 @@ Reportar:
 | Background-first | Pierde steerability | Foreground por defecto |
 | Spec completa antes de tocar sistema | No calza con descubrimiento iterativo | Prototipar temprano |
 | Leer todo el codigo generado | Desperdicia atencion senior | Mirar puntos de leverage |
-| Loop abierto | Tarea declarada hecha sin build/test | Cerrar siempre |
+| Loop abierto | Tarea declarada hecha sin evidencia aplicable | Cerrar siempre |
 
 ## Composicion con otras skills
 
@@ -194,5 +197,5 @@ Reportar:
 - blast radius estimado con topologia,
 - decision de delegacion humano/agente declarada,
 - cambio aplicado,
-- loop cerrado con evidencia (build verde, tests verdes, patch listo o commit autorizado),
+- loop cerrado con evidencia proporcional y estados honestos,
 - siguiente paso operativo.

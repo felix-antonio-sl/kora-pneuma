@@ -1,23 +1,29 @@
 # Loop closure checklist
 
-Una tarea **NO esta lista** hasta que el loop cierra. Sin excepciones.
+Una tarea **NO esta lista** hasta que su aceptacion y sus riesgos reales quedan
+cubiertos sobre el arbol exacto.
 
 ## Pasos del loop
 
-1. **Build** — compilar/transpilar el proyecto. Si falla, corregir antes de seguir.
-2. **Test** — ejecutar tests relevantes al cambio. Si no hay y el cambio es no trivial, escribirlos.
-3. **Lint** — corregir warnings criticos.
-4. **Integracion** — el cambio se integra sin romper imports, tipos o deps existentes.
-5. **Feel** — la solucion se siente correcta al usarla; no solo compila, esta bien.
-6. **Commit atomico** — un cambio = un commit, mensaje descriptivo.
+1. **Outcome** — verificar el comportamiento o journey solicitado.
+2. **Prueba focal** — ejecutar la comprobacion mas cercana al cambio.
+3. **Ampliacion proporcional** — sumar build, tests, typecheck, lint o
+   integracion solo cuando existen y la superficie cambiada puede afectarlos.
+4. **Feel** — usar o revisar la solucion; no basta con que compile.
+5. **Patch listo** — un cambio coherente y verificable; commit solo si fue
+   autorizado.
 
 ## Reglas
 
-- Si el **build** falla, NO seguir adelante. Corregir primero.
-- Si los **tests** fallan, diagnosticar y arreglar antes de continuar.
-- **No saltear pasos** aunque el cambio parezca trivial.
-- Si el proyecto no tiene test runner configurado, declararlo y sugerir setup minimo (no fingir que el loop cerro).
-- **Watch mode no cuenta** como validacion: ejecutar build/test explicitamente.
+- Un `FAIL` relevante bloquea; diagnosticar y corregir antes de cerrar.
+- Registrar cada comprobacion pertinente como `PASS`, `FAIL`, `ABSENT` o
+  `NOT_RUN`. Los dos ultimos no aportan evidencia: si el check cubre aceptacion
+  o un riesgo real, bloquean; si no, se declaran con razon y limite exactos.
+- `ABSENT` no obliga a crear build, test runner o linter para satisfacer una
+  lista; agregar tooling requiere valor propio y alcance explicito.
+- Un check global ajeno a la superficie no se vuelve gate por existir;
+  ejecutarlo solo si el blast radius lo justifica.
+- **Watch mode no cuenta** cuando existe una ejecucion focal reproducible.
 
 ## Gotchas
 
@@ -31,17 +37,17 @@ Una tarea **NO esta lista** hasta que el loop cierra. Sin excepciones.
 
 | Antipatron | Falla | Correccion |
 |---|---|---|
-| "Cambio chico, no testeo" | Skip silencioso del loop | No saltear; sumar test si no hay |
+| "Cambio chico, no verifico" | Skip silencioso del outcome | Ejecutar la prueba focal aplicable |
+| "No hay linter, creo uno" | Tooling inventado para llenar una casilla | Declarar `ABSENT`; no expandir alcance |
 | Loop abierto declarado hecho | Tarea reportada cerrada sin verificar | Solo declarar hecho post-loop |
-| Watch mode como validacion | False positive: cambio se rompe en CI | Build/test explicito en cada cierre |
-| Commit gigante | Multiples cambios mezclados | Commit atomico: un cambio, una intencion |
+| Watch mode como validacion | False positive: no hay ejecucion reproducible | Ejecutar la prueba focal aplicable |
+| Suite global por reflejo | Tiempo sin reduccion de riesgo | Ampliar solo por blast radius |
 
 ## Cierre
 
 Reporte minimo al cerrar:
 
-- build: verde / falla
-- tests: verde / falla / no aplica
-- lint: verde / warnings ignorables / falla
-- integracion: verde / pendiente
-- commit: hash o pendiente
+- outcome: `PASS` / `FAIL`
+- checks aplicables: `PASS` / `FAIL` / `ABSENT` / `NOT_RUN`
+- integracion y feel: estado o limite exacto
+- patch o commit autorizado: identidad reproducible
