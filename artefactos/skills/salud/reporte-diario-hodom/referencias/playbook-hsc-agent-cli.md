@@ -28,9 +28,14 @@ hsc-agent-cli health
 
 Registrar `fetched_at`, `data.health_status`, `data.systems`,
 `data.beta_ready`, `data.all_capabilities_ready`,
-`data.degraded_capabilities` y `data.partially_probed_systems`. Continuar solo
-con los sistemas utilizables. Ante `upstream_unavailable`, realizar como máximo
-un probe adicional y no iniciar fan-out.
+`data.degraded_capabilities` y `data.partially_probed_systems`.
+`health_status=healthy` afirma que el núcleo requerido está disponible, no que
+todo esté completo: puede coexistir con `all_capabilities_ready=false`. Para
+Drive, `availability=available` con `data_quality_status=partial` conserva
+`positive_lookup_usable=true`, pero `negative_lookup_conclusive=false` impide
+leer una búsqueda negativa como ausencia. Continuar solo con los sistemas
+utilizables. Ante `upstream_unavailable`, realizar como máximo un probe
+adicional y no iniciar fan-out.
 
 ### 1.2 Censo
 

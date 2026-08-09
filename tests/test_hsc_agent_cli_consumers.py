@@ -12,6 +12,11 @@ CONSUMIDORES_DIRECTOS = {
     "urgenciologo": RAIZ / "artefactos/agentes/salud/urgenciologo.md",
 }
 MANUAL_PATH = RAIZ / "artefactos/conocimiento/salud/manual-agente-hsc-agent-cli.md"
+REPORT_SKILL_PATH = RAIZ / "artefactos/skills/salud/reporte-diario-hodom/SKILL.md"
+REPORT_PLAYBOOK_PATH = (
+    RAIZ
+    / "artefactos/skills/salud/reporte-diario-hodom/referencias/playbook-hsc-agent-cli.md"
+)
 MANUAL_URN = "urn:salud:kb:manual-agente-hsc-agent-cli"
 PROFILE_URN = "urn:salud:kb:perfil-dev-personal-full"
 
@@ -25,6 +30,10 @@ class TestContratoHscAgentCli(unittest.TestCase):
             campos, cuerpo = kora.parsear_archivo(path.read_text(encoding="utf-8"))
             cls.consumidores[nombre] = (campos, cuerpo)
         cls.manual = kora.parsear_archivo(MANUAL_PATH.read_text(encoding="utf-8"))
+        cls.report_skill = kora.parsear_archivo(
+            REPORT_SKILL_PATH.read_text(encoding="utf-8")
+        )
+        cls.report_playbook = REPORT_PLAYBOOK_PATH.read_text(encoding="utf-8")
 
     def assert_cuerpo_contiene(self, *fragmentos):
         for nombre, (_, cuerpo) in self.consumidores.items():
@@ -50,7 +59,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
                     self.assertIn(herramienta, campos["herramientas"])
                 self.assertIn(MANUAL_URN, campos["conocimiento"])
                 self.assertIn(
-                    "data.agent_guide` versión `agent-autonomy-5",
+                    "data.agent_guide` versión `agent-autonomy-6",
                     " ".join(self.consumidores[nombre][1].split()),
                 )
         self.assert_cuerpo_contiene(
@@ -58,12 +67,11 @@ class TestContratoHscAgentCli(unittest.TestCase):
             "no es requisito del flujo estándar",
         )
 
-    def test_procedencia_distingue_release_de_guia_post_tag(self):
+    def test_consumidores_fijan_el_corte_integrado_v320(self):
         self.assert_cuerpo_contiene(
-            "release `v3.1.1` (`afbdfaf`)",
-            "`agent-autonomy-4`",
-            "build post-tag limpio `de1e0b7`",
-            "`agent-autonomy-5` de `2dabc8b`",
+            "corte `v3.2.0` (`16ce950`)",
+            "contrato `beta-3`",
+            "`agent-autonomy-6`",
         )
 
     def test_eval_1_entrada_solo_con_nombre(self):
@@ -174,7 +182,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_urgenciologo_hace_ejecutable_procedencia_y_autoridad(self):
         campos, cuerpo = self.consumidores["urgenciologo"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("3.14.0", campos["version"])
+        self.assertEqual("3.15.0", campos["version"])
         for fragmento in (
             "`corpus-ref <URN#sección>`",
             "`fuera-de-corpus`",
@@ -231,7 +239,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
             with self.subTest(rotulo=rotulo):
                 self.assertIn(rotulo, cuerpo)
 
-    def test_consumidores_adoptan_guardas_agent_autonomy_5(self):
+    def test_consumidores_adoptan_guardas_agent_autonomy_6(self):
         self.assert_cuerpo_contiene(
             "ayuda global raíz",
             "`fields_coverage[].empty_count`",
@@ -251,15 +259,25 @@ class TestContratoHscAgentCli(unittest.TestCase):
             "componente fallido puede omitirlo",
             "summary terminal `kind:multi_bundle`",
             "fixtures/evals sintéticos",
+            "`health_status=healthy`",
+            "`all_capabilities_ready=false`",
+            "`data_quality_status=partial`",
+            "`positive_lookup_usable=true`",
+            "`negative_lookup_conclusive=false`",
         )
 
-    def test_manual_v311_autonomy_5_preserva_contrato_completo(self):
+    def test_manual_v320_autonomy_6_preserva_contrato_completo(self):
         campos, cuerpo = self.manual
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("1.0.19", campos["version"])
+        self.assertEqual("1.0.20", campos["version"])
         for fragmento in (
-            "último release `v3.1.1`",
-            "`agent-autonomy-5`",
+            "corte `v3.2.0` (`16ce950`)",
+            "`agent-autonomy-6`",
+            "`health_status=healthy`",
+            "`all_capabilities_ready=false`",
+            "`data_quality_status=partial`",
+            "`positive_lookup_usable=true`",
+            "`negative_lookup_conclusive=false`",
             "ayuda global raíz en texto",
             "`present_count` (la clave existe, incluso si su string está vacío)",
             "`missing_count` (la clave no existe)",
@@ -291,7 +309,7 @@ class TestContratoHscAgentCli(unittest.TestCase):
     def test_hospitalista_hace_ejecutable_el_plan_soap(self):
         campos, cuerpo = self.consumidores["medico-hospitalista"]
         cuerpo_normalizado = " ".join(cuerpo.split())
-        self.assertEqual("1.11.0", campos["version"])
+        self.assertEqual("1.12.0", campos["version"])
         for fragmento in (
             "Intervención — indicación — contraindicación relevante — monitor — duración/stop",
             "Disposición — criterios cumplidos — criterios pendientes — responsable — plazo",
@@ -346,6 +364,20 @@ class TestContratoHscAgentCli(unittest.TestCase):
             with self.subTest(fragmento=fragmento):
                 self.assertIn(" ".join(fragmento.split()), cuerpo_normalizado)
         self.assertNotRegex(cuerpo_normalizado, r"`--sala\s+\d+")
+
+    def test_reporte_hodom_lee_salud_completitud_y_calidad_por_separado(self):
+        campos, cuerpo = self.report_skill
+        self.assertEqual("2.2.1", campos["version"])
+        texto = " ".join((cuerpo + "\n" + self.report_playbook).split())
+        for fragmento in (
+            "`health_status=healthy`",
+            "`all_capabilities_ready=false`",
+            "`data_quality_status=partial`",
+            "`positive_lookup_usable=true`",
+            "`negative_lookup_conclusive=false`",
+        ):
+            with self.subTest(fragmento=fragmento):
+                self.assertIn(fragmento, texto)
 
     def test_artefactos_y_evals_no_contienen_identificadores_concretos(self):
         paths = (*CONSUMIDORES_DIRECTOS.values(), MANUAL_PATH, Path(__file__))

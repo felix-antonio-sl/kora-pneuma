@@ -32,7 +32,7 @@ class TestReporteDiarioHodom(unittest.TestCase):
             self.campos["urn"],
             "urn:salud:artefacto:reporte-diario-hodom")
         self.assertEqual(self.campos["nombre"], "reporte-diario-hodom")
-        self.assertEqual(self.campos["version"], "2.2.0")
+        self.assertEqual(self.campos["version"], "2.2.1")
         self.assertEqual(self.campos["estado"], "activo")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")

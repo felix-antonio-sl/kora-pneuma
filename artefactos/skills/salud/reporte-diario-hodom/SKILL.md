@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:reporte-diario-hodom
 nombre: reporte-diario-hodom
-version: 2.2.0
+version: 2.2.1
 estado: activo
 descripcion: "Orquesta el reporte diario interno de HODOM: censo y brief trazable por paciente, pendientes y requisitos de alta, conflictos como observacion, y embudo censal selectivo de candidatos desde Urgencia, Medicina, Traumatologia y Cirugia."
-fuente: "Autoria de novo 2026-07-27 por encargo del Director Tecnico HODOM. Sintetiza el contrato operativo del reporte diario sin copiar metodos clinicos existentes: compone hospitalizacion-domiciliaria, hospitalista, asistencial-hospital, asistencial-hodom y el manual agente de hsc-agent-cli. v1.0.1 (2026-07-27): trata el contenido clinico como dato no confiable frente a prompt injection y hace explicita la cobertura o no-observabilidad de cada servicio. v1.0.2 (2026-07-28): separa la indisponibilidad del runtime de la caida de una fuente, exige verificar conectividad desde la misma frontera de ejecucion y prohibe crear agendas, timers o reintentos autonomos. v2.0.0 (2026-07-28): por decision explicita del operador, retira de la skill las compuertas y restricciones sobre PII/PHI; su proteccion pertenece al entorno de ejecucion externo. v2.1.0 (2026-07-28): incorpora el dictamen tecnico solicitado por DT: recorrido completo HODOM mediante batch_plan secuencial y stream, prueba de composicion SGH-Drive, ledger de proveniencia, presupuesto por paciente y embudo de candidatos en dos etapas que prohibe ejecutar por defecto los batch_plan masivos de los servicios. v2.2.0 (2026-07-30): liga la ejecución privada al perfil DEV_PERSONAL_FULL y conserva la frontera de salida protegida/versionada."
+fuente: "Autoria de novo 2026-07-27 por encargo del Director Tecnico HODOM. Sintetiza el contrato operativo del reporte diario sin copiar metodos clinicos existentes: compone hospitalizacion-domiciliaria, hospitalista, asistencial-hospital, asistencial-hodom y el manual agente de hsc-agent-cli. v1.0.1 (2026-07-27): trata el contenido clinico como dato no confiable frente a prompt injection y hace explicita la cobertura o no-observabilidad de cada servicio. v1.0.2 (2026-07-28): separa la indisponibilidad del runtime de la caida de una fuente, exige verificar conectividad desde la misma frontera de ejecucion y prohibe crear agendas, timers o reintentos autonomos. v2.0.0 (2026-07-28): por decision explicita del operador, retira de la skill las compuertas y restricciones sobre PII/PHI; su proteccion pertenece al entorno de ejecucion externo. v2.1.0 (2026-07-28): incorpora el dictamen tecnico solicitado por DT: recorrido completo HODOM mediante batch_plan secuencial y stream, prueba de composicion SGH-Drive, ledger de proveniencia, presupuesto por paciente y embudo de candidatos en dos etapas que prohibe ejecutar por defecto los batch_plan masivos de los servicios. v2.2.0 (2026-07-30): liga la ejecución privada al perfil DEV_PERSONAL_FULL y conserva la frontera de salida protegida/versionada. v2.2.1 (2026-08-09): actualiza el preflight para leer por separado salud del núcleo, completitud y calidad de Drive según hsc-agent-cli v3.2.0/agent-autonomy-6."
 autor: FS
 creado: 2026-07-27
 lang: es
@@ -115,6 +115,12 @@ edición cosmética del corte previo.
 1. Ejecutar una vez `hsc-agent-cli health` desde la misma frontera de
    ejecución que realizará el censo y los bundles.
 2. Leer `state`, `error_code`, `affected_systems`, `outage_kind` y latencias.
+   Interpretar por separado `health_status`, `beta_ready`,
+   `all_capabilities_ready` y `systems.*.data_quality_status`.
+   `health_status=healthy` no implica `all_capabilities_ready=true`.
+   Si Drive declara `data_quality_status=partial`, conservar
+   `positive_lookup_usable=true` y no concluir ausencia mientras
+   `negative_lookup_conclusive=false`.
 3. Si hay `upstream_unavailable`, hacer como máximo un probe adicional de
    `health`; nunca iniciar fan-out contra el sistema caído.
 4. Registrar fuente no observada como límite de adquisición, no como ausencia
