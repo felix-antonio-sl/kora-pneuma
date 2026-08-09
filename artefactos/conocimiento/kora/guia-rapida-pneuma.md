@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:guia-rapida-pneuma
 nombre: guia-rapida-pneuma
-version: 1.7.0
+version: 1.8.0
 estado: publicado
 descripcion: "Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación y deudas."
-fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0). v1.5.0 (2026-07-16): sincroniza ley/3 v2.3.0: fidelidad separada para campos no reticulares, resolución URN por censo, congruencia con el generador incluyendo sidecars/referencias y guard de la colisión personal Codex→managed OpenClaw. v1.5.1 corrige el estatuto categorial del gesto: proyección coreflectiva de firmas seguida por emisión determinista. v1.6.0 (2026-07-18): incorpora semántica operacional, fidelidad contravariante, gate de promoción sobre el destino y contrato formal de ingeniería agéntica. v1.7.0 (2026-08-09): reemplaza inventarios temporales de corpus y targets por resolución viva desde censo y ley/3; incorpora los namespaces vigentes sin persistir conteos."
+fuente: "Producida bajo ley/4. v1.0.0 (2026-06-12): korificación de la guía de génesis sobre ley/0..4, GENESIS.md y kora.py al commit 4d44bfc. v1.1.0 (2026-06-14): añade el mapa de corpus albergados y la receta de síntesis tras la primera migración mayor (categorial, OPM, personas, cluster salud) y la síntesis steve-jobs; hechos derivados de los commits 0bf6aad..fa89bef y del censo vigente. v1.1.1 (2026-06-14): completa la enumeración de §Shape con los campos opcionales agénticos (conocimiento/componible/estados), que ley/2 §3 define pero la guía omitía; corrige una incompletitud que podía inducir a creer que componible no es campo válido. v1.2.0 (2026-06-15): refleja las capacidades de la sesión 2026-06-15 — el sello porta `contrato-conocimiento` (ley/3 §5 r6), el patrón de conocimiento web (receta 7), el reporte `censo --huerfanos` (receta 8) y la deuda deep-opm-pro→pneuma tras pneuma tomar la posta de la SSOT OPM. v1.2.1 (2026-06-22): retira `polymath` de la lista de personas (agente retirado; su único valor no-redundante se absorbió en `mente-omega`) y refleja la fusión analista-redes+constructor-tableros→apoyo-decision-sanitaria (evaluación funcional). Fuente interna al repo, sin hash externo. v1.2.2 (2026-07-06): tabla de gestos incorpora el modo --paridad de transmutar (ley/3 v1.4.0 §9.1, paridad de despliegue). v1.3.0 (2026-07-12): sincroniza openclaw realizado y T-codex-pneuma-v2, rutas oficiales, custom agents, paridad completa y despliegue solo de activos (ley/3 v2.0.0). v1.3.1 (2026-07-13): elimina recuentos y estimaciones volátiles; inventario, tamaño y checks se consultan bajo demanda con los gestos vivos. v1.4.0 (2026-07-16): explicita la frontera `herramientas` de Codex y registra `scaffold-repo` como capacidad Codex desplegable (ley/3 v2.1.0). v1.5.0 (2026-07-16): sincroniza ley/3 v2.3.0: fidelidad separada para campos no reticulares, resolución URN por censo, congruencia con el generador incluyendo sidecars/referencias y guard de la colisión personal Codex→managed OpenClaw. v1.5.1 corrige el estatuto categorial del gesto: proyección coreflectiva de firmas seguida por emisión determinista. v1.6.0 (2026-07-18): incorpora semántica operacional, fidelidad contravariante, gate de promoción sobre el destino y contrato formal de ingeniería agéntica. v1.7.0 (2026-08-09): reemplaza inventarios temporales de corpus y targets por resolución viva desde censo y ley/3; incorpora los namespaces vigentes sin persistir conteos. v1.8.0 (2026-08-09): separa checks cotidianos de diagnósticos derivados, retira la cardinalidad mínima de tags y reduce el recorrido normal a validación de fuente más transmutación focal."
 autor: FS
 creado: 2026-06-12
 lang: es
@@ -51,7 +51,7 @@ determinan identidad, tipo, lifecycle y relaciones.
 | Nombre verdadero | URN sin versión; resuelve incluso retirado el artefacto |
 | Coherencia | `velar` ejecuta el registro vigente de checks; el censo es derivado, jamás autoridad |
 | Proyección honesta | Sello inline: hash, fidelidad por eje/campo y pérdidas con razón; congruencia byte a byte con el generador |
-| Lifecycle digno | Solo hacia adelante; promoción gateada por `velar --estricto` y dignidad del estado destino; muertos siguen resolviendo |
+| Lifecycle digno | Solo hacia adelante; promoción gateada por checks de fuente y dignidad focal del estado destino; muertos siguen resolviendo |
 | Producción con verdad | Koraficación: FS=100%, hechos inventados = fallo (`ley/4`) |
 
 ## Los seis gestos
@@ -65,6 +65,17 @@ determinan identidad, tipo, lifecycle y relaciones.
 | `python3 kora.py transmutar --paridad [--urn U] [--target T]` | Completitud activo→emisión y paridad emisión↔instalación: sin-emisión/fiel/desviada/no-instalada (ley/3 §9.1) |
 | `python3 kora.py ciclo <urn> <estado>` | Transición de lifecycle, solo adelante |
 | `python3 kora.py ley` | ALMA + ley/0..4 a stdout |
+
+El recorrido cotidiano es:
+
+```bash
+python3 kora.py velar
+python3 kora.py transmutar --urn <urn> --target <target>
+python3 kora.py transmutar --paridad --urn <urn> --target <target>
+```
+
+`velar --estricto` y la paridad sin filtros son auditorías optativas de
+derivados o múltiples superficies, no gates de una edición rutinaria.
 
 ## Shape y zonas
 
@@ -106,8 +117,9 @@ tipo: `cita`, `depende`, `reemplaza`, `refina`.
 - Relaciones: todo URN citado debe resolver en el censo local; `depende` sin
   ciclos; `reemplaza` acíclico, antisimétrico y solo hacia artefactos
   deprecados o retirados; `refina` acíclico; `cita` libre.
-- `--estricto` agrega: conocimiento publicado con ≥3 `tags`, `descripcion`
-  y `fuente` no vacías.
+- `--estricto` agrega `descripcion` y `fuente` no vacías para artefactos
+  activos/publicados, más congruencia exacta de emisiones. `tags` es metadata
+  opcional, sin cardinalidad normativa.
 
 ## Lifecycle
 
@@ -118,7 +130,7 @@ tipo: `cita`, `depende`, `reemplaza`, `refina`.
 
 Saltos hacia adelante válidos; inversas inválidas siempre. `ciclo` hacia
 `publicado` o `activo` rechaza si el corpus completo no pasa
-`velar --estricto` o si el estado destino no satisface
+`velar` o si el estado destino no satisface
 `publicacion-digna`.
 `transmutar --aplicar` exige `estado: activo`. Retirado no se reactiva: se
 emite artefacto nuevo con `reemplaza`.
@@ -192,10 +204,10 @@ pasar a consumirla desde pneuma.
 
 ## Recetas
 
-1. Skill nueva: crear `SKILL.md` con `estado: borrador` → `velar --estricto`
+1. Skill nueva: crear `SKILL.md` con `estado: borrador` → `velar`
    → `ciclo <urn> activo` → `transmutar --urn <urn> --target codex
    --aplicar`.
-2. Conocimiento korificado: producir bajo `ley/4` → `velar --estricto` →
+2. Conocimiento korificado: producir bajo `ley/4` → `velar` →
    `ciclo <urn> publicado`.
 3. Cargar KORA entera a un LLM: `python3 kora.py ley`.
 4. Jubilar: `ciclo <urn> deprecado` — el URN sigue resolviendo.

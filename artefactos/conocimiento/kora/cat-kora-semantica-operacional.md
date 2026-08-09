@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-kora-semantica-operacional
 nombre: cat-kora-semantica-operacional
-version: 1.0.0
+version: 1.1.0
 estado: publicado
 descripcion: "Semántica formal mínima de las operaciones de KORA: snapshots válidos como subobjetos, lifecycle como cadenas delgadas con gates parciales, fidelidad contravariante y frontera no categorial de censo, emisión, paridad, ley y koraficación."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18 desde kora.py y ley/0..4. Base primaria: Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf. Las propiedades específicas de KORA se demuestran aquí y se verifican en tests/test_kora.py."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18 desde kora.py y ley/0..4. Base primaria: Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf. Las propiedades específicas de KORA se demuestran aquí y se verifican en tests/test_kora.py. v1.1.0 (2026-08-09): separa los once checks de fuente de los diagnósticos estrictos de publicación y frescura, y ajusta el dominio del gate de lifecycle."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -95,10 +95,12 @@ Cada inclusión `Valid_i ↪ R` es un monomorfismo en `Set`. La inclusión
 `velar` exige la conjunción de todos los checks, sin otorgar semántica de
 verdad al cuerpo Markdown.
 
-Para `q_pub = publicacion-digna`:
+Para `q_pub = publicacion-digna` y `q_fresh = sello-fresco`:
 
 ```text
-StrictValid = Valid ∩ {r | q_pub(r) = []}
+StrictValid = Valid
+              ∩ {r | q_pub(r) = []}
+              ∩ {r | q_fresh(r) = []}
 ```
 
 Por construcción:
@@ -108,8 +110,9 @@ StrictValid ⊆ Valid.
 ```
 
 La suite verifica que `velar --estricto` conserva sin modificación la familia
-base y añade exactamente `q_pub`. Esto es una afirmación sobre forma y
-dignidad declarativa, no sobre verdad factual, safety ni comportamiento.
+base y añade exactamente `q_pub` y `q_fresh`. Esto afirma forma, dignidad
+declarativa y congruencia material del derivado; no verdad factual, safety ni
+comportamiento.
 
 ## 5. Censo y resolución
 
@@ -183,7 +186,7 @@ coherencia solo en el dominio común.
 
 La promoción a `publicado` o `activo` exige:
 
-1. snapshot actual aprobado por `velar --estricto`;
+1. snapshot actual aprobado por los checks de fuente de `velar`;
 2. `publicacion-digna` evaluada como si el artefacto ya estuviera en el estado
    destino;
 3. escritura solo después de ambos gates.

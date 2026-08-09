@@ -13,8 +13,7 @@ Lee solo lo que la tarea exija:
 1. `ALMA.md` para finalidad y naturaleza cuando la decisión sea estructural.
 2. El estrato pertinente de `ley/0-constitucion.md` a
    `ley/4-koraficacion.md` para autoridad normativa.
-3. El handoff ISO más reciente bajo `docs/handoffs/` solo si retomas trabajo
-   inconcluso o necesitas el corte operativo vigente.
+3. `HANDOFF.md` en la raíz solo si retomas trabajo material inconcluso.
 4. El artefacto fuente y las referencias que declare por URN.
 
 `GENESIS.md` es acta histórica inmutable. `README.md`, `CLAUDE.md`, handoffs y guías orientan; no legislan.
@@ -59,7 +58,7 @@ Para autoría agéntica, usa el agente KORA `agent-architect` solo cuando el ope
 ```bash
 python3 kora.py censo
 python3 kora.py nombre <urn>
-python3 kora.py velar --estricto
+python3 kora.py velar
 python3 kora.py transmutar --urn <urn> --target <target> [--stdout|--aplicar]
 python3 kora.py transmutar --paridad [--urn <urn>] [--target <target>]
 python3 kora.py ciclo <urn> <estado>
@@ -80,23 +79,25 @@ Sin `--aplicar`, transmutar solo reemite un derivado local. `--aplicar`, cambios
 ## Verificación y cierre
 
 ```bash
-python3 kora.py velar --estricto
+python3 kora.py velar
 python3 -m unittest discover -s tests
 ```
 
-Si cambia un artefacto agéntico, añade paridad por URN. Si cambia `ley/3` o el emisor, ejecuta la paridad global o por target cuando el cambio esté realmente contenido. `desviada` y `sin-emision` bloquean; `no-instalada` informa. Cierra con `git diff --check`, diff revisado y límites de evidencia explícitos.
+Si cambia un artefacto agéntico, verifica paridad por URN y target. Usa
+`velar --estricto` o paridad global solo cuando cambie la frontera que esos
+diagnósticos observan. Ejecuta la suite completa para cambios del núcleo; una
+edición focal usa primero pruebas focales. `desviada` y `sin-emision` bloquean;
+`no-instalada` informa. Cierra con `git diff --check`, diff revisado y límites
+de evidencia explícitos.
 
 ## Continuidad
 
 - Las decisiones durables viven en ley, artefactos, código o pruebas; Git
   conserva la historia.
-- Si queda trabajo material inconcluso, mantén un único
-  `docs/handoffs/handoff-AAAA-MM-DD.md` activo. Usa `-2`, `-3`, etc. si hay
-  más de una versión el mismo día.
-- Antes de crear una actualización, mueve el handoff activo anterior a
-  `_archivo/` sin editarlo. Aplica la misma regla por especie a informes,
-  auditorías, actas y otros documentos operativos.
+- Si una interrupción deja trabajo material inconcluso, usa un único
+  `HANDOFF.md` breve en la raíz y elimínalo al retomar y cerrar. No mantengas
+  rotaciones fechadas, informes de sesión ni recibos de cierre.
 - `_archivo/` y `*.tar.gz` permanecen en `.gitignore`: conservan historia
   local reversible, pero no son autoridad ni parte del árbol Git activo.
 - No acumules cierres, sesiones ni inventarios volátiles en superficies
-  activas. El handoff vigente contiene solo estado, límites y siguiente paso.
+  activas.

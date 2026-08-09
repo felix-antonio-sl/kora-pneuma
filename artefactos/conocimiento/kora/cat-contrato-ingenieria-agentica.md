@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-contrato-ingenieria-agentica
 nombre: cat-contrato-ingenieria-agentica
-version: 1.4.0
+version: 1.5.0
 estado: publicado
 descripcion: "Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos para interfaces, coálgebras con efectos, equivalencia conductual, composición por cableado, capacidades, safety y preservación en runtime."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. v1.1.0 (2026-07-19): enlaza el primer caso vertical steipete→Codex y conserva explícitamente sus límites. v1.2.0 (2026-07-19): registra obs_r mecanizado para codex exec --json y mantiene fuera de alcance las demás superficies Codex. v1.3.0 (2026-07-19): reemplaza el mapping funcional forzado de tools por una relación tipada, distingue configuración, intento, éxito y autoridad efectiva, y registra el contraejemplo steipete→Codex en un contexto vivo acotado. v1.3.1 (2026-07-20): distingue manifiesto resuelto de contrato operacional y registra el predicado ejecutable endurecido sin convertirlo en prueba total de autoridad. v1.3.2 (2026-07-20): tipa por separado capacidades de proveedor, inventario MCP y autoridad visible al modelo; un contraste vivo del App Server confirma que no deben reunirse sin una resolución oficial. v1.4.0 (2026-08-03): enlaza la monografía cat-programacion-agentica-autonoma, separa su recorrido integrado de las fuentes conceptuales atómicas y adopta F/E/M/H/X para claims agénticos sin convertir las clases en una escala."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18. Fuentes primarias: Rutten, Universal Coalgebra, https://fldit-www.cs.tu-dortmund.de/~peter/Rutten/UniversalCoalgebra.pdf; Beohar et al., Predicate and relation liftings for coalgebras with side effects, https://arxiv.org/abs/2110.09911; Vagner, Spivak y Lerman, Algebras of Open Dynamical Systems on the Operad of Wiring Diagrams, https://arxiv.org/abs/1408.1598; Libkind y Spivak, Pattern Runs on Matter, https://arxiv.org/abs/2404.16321. Las versiones v1.1.0-v1.4.0 desarrollaron el caso Steipete-Codex, autoridad efectiva y la monografía integrada; Git conserva el detalle. v1.5.0 (2026-08-09): depreca el caso runtime versionado como gate general y conserva solo sus conclusiones epistémicas."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -359,7 +359,7 @@ hace el runtime con ella.
 | «preserva conducta» | morfismo coalgebraico o relación observacional definida | abierto por artefacto/target |
 | «es bisimilar» | `R`, estructura/lifting e hipótesis sobre `H` | abierto |
 | «compone con b» | puertos, wiring, álgebra semántica y efectos compatibles | `componible` solo declara candidato |
-| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ R_T[D_a]` | depende del runtime; un contexto Codex vivo aporta un contraejemplo y el contrato endurecido solo prueba su recibo |
+| «tools están limitadas» | evidencia de `Eff_T(a,r) ⊆ R_T[D_a]` | depende del runtime; el antecedente Codex aportó un contraejemplo y el contrato endurecido solo probó su recibo |
 | «es seguro» | subobjeto `S` cerrado bajo transición | abierto |
 | «la emisión preserva semántica» | `interpret_T` + diagrama de preservación | abierto |
 | «PMI realiza pattern/matter» | objetos/morfismos en `Poly` y acción de módulo | abierto |
@@ -378,70 +378,25 @@ Este contrato **no** añade `inputs`, `outputs`, `effects`, `transition` ni
 4. un contrato de evidencia debe nacer de al menos un caso operacional
    completo, no de una taxonomía anticipada.
 
-El primer caso ya existe y confirma la forma documental mínima: referenciar
-por URN un testigo versionado, no duplicar una teoría completa dentro del
-frontmatter. Su observación ya está mecanizada para una superficie estrecha,
-`codex exec --json`, pero depende de markers locales y cubre una sola
-propiedad. Todavía no justifica ampliar el shape. La honestidad formal vale
-más que la cobertura nominal.
+El primer caso histórico confirmó la forma documental mínima: referenciar por
+URN un testigo acotado, no duplicar una teoría completa dentro del
+frontmatter. También mostró que un monitor ligado a markers y versiones
+locales no debe convertirse en gate permanente del repositorio. La honestidad
+formal vale más que la cobertura nominal.
 
-## 13. Primer caso vertical
+## 13. Antecedente vertical deprecado
 
-`urn:kora:kb:cat-caso-vertical-steipete-codex` instancia un caso estrecho:
+`urn:kora:kb:cat-caso-vertical-steipete-codex` conserva el antecedente de una
+observación estrecha de Steipete sobre Codex. Su resultado válido fue
+epistémico: una traza finita no prueba ejecuciones futuras; una declaración de
+tools no determina autoridad efectiva; un contrato endurecido prueba su
+recibo, no safety universal.
 
-```text
-agente      steipete
-target      Codex, modo persona
-interfaz    eventos observables de trabajo
-propiedad   no cerrar sin evidencia verde vigente
-```
-
-El objeto coalgebraico demostrado es un **monitor de trazas** con mónada de
-excepciones, no el estado cognitivo completo de `steipete`. Para Codex CLI,
-la proyección se mecaniza como una extensión por concatenación:
-
-```text
-o     : R_ok -> I*
-obs_r : R_ok* -> I*
-obs_r(r1 ... rn) = o(r1) ... o(rn).
-```
-
-Aquí `R_ok` contiene los registros JSONL bien formados que satisfacen el
-protocolo local. La tarea del 2026-07-19 aporta una traza aceptada; ello es
-evidencia de un caso, no una cuantificación sobre ejecuciones futuras.
-
-El mismo caso aporta un segundo testigo independiente para autoridad. Sobre
-las cinco familias públicas de capability item de `codex exec --json`,
-`tests/steipete_codex_authority.py` mecaniza `Succ`. En el contexto personal
-vivo observado, `web_search` fue invocado con éxito aunque no pertenece a
-`R_codex[D_steipete]`; esto refuta la no amplificación **solo en ese contexto
-y vocabulario finito de familias de tool**. No prueba ampliación de efectos de
-red respecto de `Bash`, cuyo scope fuente está sin especificar. Una ejecución
-endurecida eliminó el contraejemplo observado, pero no se presenta como prueba
-universal de autoridad.
-
-La búsqueda de un manifiesto unificado en las superficies públicas
-inspeccionadas de `codex-cli 0.144.6` fue negativa. El caso no compone las
-listas parciales como sustituto. En cambio,
-`tests/steipete_codex_hardened_contract.py` fija versión, invocación, dos
-comandos permitidos, denegación de escritura y ausencia del archivo testigo,
-y decide `Sat_C` sobre el recibo normalizado. Su ejecución viva satisface el
-contrato; la conclusión permanece en el nivel de evidencia finita.
-
-El corte posterior del App Server mantuvo separados `r_cli` y el daemon vivo
-`r_app`: este último ejecutaba `0.144.3`, aunque el CLI y el binario gestionado
-eran `0.144.6`. El schema exacto y dos respuestas vivas confirmaron la
-distinción tipada entre booleanos de proveedor e inventario MCP por servidor.
-El schema de destino conservaba las mismas superficies relevantes. No se
-reinició el daemon con clientes activos ni se elevó ese inventario parcial a
-`A(r_app)`.
-
-Este primer testigo no justifica todavía ampliar el shape: la proyección solo
-cubre `codex exec --json`; `estimate` y `feel-review` son autoatestados, y
-`change` también puede serlo como fallback de escrituras shell. La propiedad
-se limita a loop closure. Sí demuestra el patrón mínimo que debe seguir todo
-caso futuro: tipos completos, transición total con efecto explícito,
-invariante, prueba, test ejecutable y frontera runtime declarada.
+El monitor y los probes ligados a aquel runtime fueron retirados de la suite
+general cuando dejaron de representar una frontera vigente. Un nuevo testigo
+runtime debe vivir junto a su consumidor, declarar versión e invariante y
+ejecutarse focalmente. El antecedente no justifica ampliar el shape ni imponer
+sus gates a cambios ordinarios de KORA.
 
 ## 14. Recorrido integrado de programación agéntica
 

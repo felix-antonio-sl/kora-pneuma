@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.8.0
+# KORA/Transmutación — ley pneuma v2.9.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -488,7 +488,8 @@ o unidad/counit y sus identidades triangulares. Las ecuaciones históricas
 
 Si existe `_emision/`, cada unidad descubierta DEBE ser congruente con tres
 fuentes de identidad: archivo fuente actual, target de su ruta y generador
-vigente. Check: `sello-fresco`.
+vigente. Check diagnóstico: `sello-fresco`, ejecutado por
+`velar --estricto`; no pertenece a la validación cotidiana de fuentes.
 
 Antes de leer contenido, el check enumera `_emision/` sin seguir enlaces:
 la raíz y todos sus descendientes DEBEN ser directorios o archivos regulares
@@ -724,3 +725,9 @@ v2.8.0 (2026-07-18): formaliza la fidelidad como funtor contravariante desde
 las cadenas de demanda hacia `none ≤ partial ≤ full`. La suite verifica que
 mayor demanda nunca mejora fidelidad y que `full`, `none` y las razones de
 pérdida son coherentes. No cambia matrices, sello ni bytes emitidos.
+
+v2.9.0 (2026-08-09): mueve `sello-fresco` desde el registro cotidiano de
+fuentes al diagnóstico optativo `velar --estricto`. La comparación exacta de
+fuente, generador, sidecars y `referencias/` no cambia; solo deja de bloquear
+validaciones y promociones no relacionadas con un derivado rancio. No cambia
+matrices, formato de sello ni bytes emitidos.

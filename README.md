@@ -16,13 +16,11 @@ no cambian su arquetipo principal.
 ## Orientación en cinco minutos
 
 1. Lee este archivo para ubicarte.
-2. Revisa el [estado vigente](docs/handoffs/handoff-2026-08-09.md) antes de
-   asumir que una versión, un conteo o un runtime siguen iguales.
-3. Lee [ALMA.md](ALMA.md) y el estrato pertinente de `ley/` si la decisión es
+2. Lee [ALMA.md](ALMA.md) y el estrato pertinente de `ley/` si la decisión es
    estructural o normativa.
-4. Lee [AGENTS.md](AGENTS.md) antes de modificar fuentes. `CLAUDE.md` importa
+3. Lee [AGENTS.md](AGENTS.md) antes de modificar fuentes. `CLAUDE.md` importa
    ese contrato sin duplicarlo.
-5. Usa `python3 kora.py nombre <urn>` para resolver un objeto y sigue las URN
+4. Usa `python3 kora.py nombre <urn>` para resolver un objeto y sigue las URN
    que declare su frontmatter.
 
 ## Mapa de autoridad y vigencia
@@ -35,7 +33,6 @@ no cambian su arquetipo principal.
 | `artefactos/` | Fuentes canónicas de conocimiento, agentes y skills | manda el `estado` de cada frontmatter |
 | [Guía rápida](artefactos/conocimiento/kora/guia-rapida-pneuma.md) | Operación detallada | vigente, subordinada a la ley |
 | `AGENTS.md` y `CLAUDE.md` | Contrato operativo para agentes de desarrollo | vigente, no normativo para KORA |
-| `docs/handoffs/` | Estado verificable y próximos pasos | solo el archivo ISO más reciente está activo |
 | Notas exploratorias fuera del canon | Hipótesis y trabajo en curso aún no clasificado | no autoritativas |
 | `GENESIS.md` | Decisiones de fundación y pérdidas de la sublimación | histórico e inmutable |
 | Git y `_archivo/` | Trazabilidad histórica | no describen por sí solos el estado actual |
@@ -50,7 +47,6 @@ son obsoletos para uso nuevo, pero sus URN siguen resolviendo por diseño.
 - `artefactos/conocimiento/`: corpus que consumen sistemas LLM.
 - `artefactos/agentes/`: especificaciones gobernadas de actores.
 - `artefactos/skills/`: capacidades proyectables y sus referencias.
-- `docs/handoffs/`: un solo corte operativo vigente por especie.
 - `_archivo/`: versiones operativas históricas, fuera del árbol Git activo.
 - `kora.py`: censo, resolución, validación, lifecycle y transmutación.
 - `tests/`: pruebas del núcleo y de contratos focales.
@@ -62,14 +58,17 @@ instalaciones runtime y notas locales ignoradas tampoco son autoridad.
 
 Requiere Python 3.11 o superior y no instala dependencias externas.
 
+El recorrido cotidiano tiene tres gestos:
+
 ```bash
-python3 kora.py censo
-python3 kora.py nombre <urn>
-python3 kora.py velar --estricto
-python3 kora.py transmutar --urn <urn> --target <target> --stdout
-python3 kora.py transmutar --paridad
-python3 -m unittest discover -s tests
+python3 kora.py velar
+python3 kora.py transmutar --urn <urn> --target <target>
+python3 kora.py transmutar --paridad --urn <urn> --target <target>
 ```
+
+`censo` y `nombre` ayudan a descubrir o resolver. `velar --estricto`, la
+paridad sin filtros y la suite completa son auditorías proporcionales para
+cambios de ley, emisor o varias superficies; no son ceremonia rutinaria.
 
 `transmutar` sin `--aplicar` solo materializa una emisión local derivada.
 Instalación, lifecycle, publicación Git, despliegue y aceptación humana son
@@ -84,8 +83,8 @@ paridad o tests verdes no prueban conducta, safety ni autorización runtime.
 - Un mecanismo vive en `kora.py` y queda respaldado por pruebas.
 - Una exploración no es autoridad hasta incorporarse en una de esas
   superficies.
-- El estado temporal y el próximo paso viven en el handoff vigente; no se
-  duplican en informes acumulativos.
+- Git conserva la historia cerrada. Un `HANDOFF.md` raíz solo existe mientras
+  una interrupción deja trabajo material inconcluso y se elimina al cerrar.
 
 La documentación y las explicaciones se escriben en español de Chile. Código,
 comandos e identificadores permanecen en inglés. Las fechas se expresan como

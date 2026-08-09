@@ -111,8 +111,8 @@ CAMPOS_RELACION = ("cita", "depende", "reemplaza", "refina")
 CHECKS = ("forma-valida", "nombre-verdadero", "lugar-coincide",
           "vector-en-reticulo", "leyes-inter-eje", "dominio-forma",
           "arnes-compatible", "estado-valido", "referencias-resuelven",
-          "relaciones-legales", "targets-conocidos", "sello-fresco")
-CHECK_ESTRICTO = "publicacion-digna"
+          "relaciones-legales", "targets-conocidos")
+CHECKS_ESTRICTOS = ("publicacion-digna", "sello-fresco")
 
 
 def raiz_corpus() -> Path:
@@ -1033,12 +1033,6 @@ def _fallos_publicacion_art(art, estado=None):
     if art.error_parse or art.tipo is None:
         return fallos
     estado = art.campos.get("estado") if estado is None else estado
-    if art.tipo == "conocimiento" and estado == "publicado":
-        tags = art.campos.get("tags")
-        n = len(tags) if isinstance(tags, list) else 0
-        if n < 3:
-            fallos.append((art.rel, f"conocimiento publicado exige >=3 "
-                           f"tags (tiene {n})"))
     if estado in ("activo", "publicado"):
         for campo in ("descripcion", "fuente"):
             v = art.campos.get(campo)
@@ -1067,15 +1061,17 @@ FUNCIONES_CHECK = {
     "referencias-resuelven": chk_referencias_resuelven,
     "relaciones-legales": chk_relaciones_legales,
     "targets-conocidos": chk_targets_conocidos,
+    "publicacion-digna": chk_publicacion_digna,
     "sello-fresco": chk_sello_fresco,
-    CHECK_ESTRICTO: chk_publicacion_digna,
 }
 
 
 def velar_todo(raiz: Path, estricto: bool = False) -> dict[str, list]:
     """Corre todos los checks. Devuelve {check_id: [(path, mensaje), ...]}."""
     arts = cargar_corpus(raiz)
-    ids = list(CHECKS) + ([CHECK_ESTRICTO] if estricto else [])
+    ids = list(CHECKS)
+    if estricto:
+        ids.extend(CHECKS_ESTRICTOS)
     return {cid: FUNCIONES_CHECK[cid](arts, raiz) for cid in ids}
 
 
@@ -2615,20 +2611,19 @@ def cmd_ciclo(raiz: Path, urn: str, nuevo: str) -> int:
               f"reactiva — se emite artefacto nuevo con 'reemplaza'.",
               file=sys.stderr)
         return 1
-    # Gate de promoción: el corpus actual pasa el registro estricto y el
+    # Gate de promoción: el corpus actual pasa los checks de fuente y el
     # artefacto satisface `publicacion-digna` EN EL ESTADO DESTINO. Evaluar
     # solo el borrador de origen dejaría pasar una publicación indigna.
     # Las transiciones hacia deprecado/retirado no exigen gate.
     if nuevo in ("publicado", "activo"):
-        resultados = velar_todo(raiz, estricto=True)
-        resultados[CHECK_ESTRICTO].extend(
-            _fallos_publicacion_art(art, nuevo))
+        resultados = velar_todo(raiz)
+        resultados["publicacion-digna"] = _fallos_publicacion_art(art, nuevo)
         fallos = [(cid, p, m) for cid, fs in resultados.items()
                   for p, m in fs]
         if fallos:
             for cid, p, m in fallos:
                 print("error: promoción rechazada: el corpus completo no "
-                      f"pasa velar --estricto o el estado destino no es digno: "
+                      f"pasa velar o el estado destino no es digno: "
                       f"[{cid}] {p} :: {m}.", file=sys.stderr)
             return 1
     # Reescritura quirúrgica: solo cambia el valor del campo estado; el
@@ -2804,7 +2799,7 @@ def principal(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("velar", help="corre todos los checks de coherencia")
     p.add_argument("--estricto", action="store_true",
-                   help="añade publicacion-digna")
+                   help="añade dignidad de publicación y frescura de emisiones")
 
     p = sub.add_parser(
         "transmutar", help="proyección reticular y emisión a un runtime")

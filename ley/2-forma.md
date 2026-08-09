@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.7.0
+# KORA/Forma — ley pneuma v1.8.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -77,7 +77,7 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | `autor` | no | string | |
 | `creado` | no | `YYYY-MM-DD` | |
 | `lang` | no | `es` \| `en` | default `es` |
-| `tags` | cond. | lista | obligatoria con ≥3 ítems para conocimiento `publicado`; opcional en el resto |
+| `tags` | no | lista | metadata opcional, sin cardinalidad normativa |
 | `cita` | no | lista URNs | relación libre; admite ciclos (§9) |
 | `depende` | no | lista URNs | aristas de DAG (§9) |
 | `reemplaza` | no | lista URNs | aristas de DAG temporal; target muerto (§9) |
@@ -353,7 +353,7 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | Referencias resuelven (incluso muertos) | §9 r1 | mecanizado (`referencias-resuelven`) |
 | Leyes de relaciones | §9 r2-r5 | mecanizado (`relaciones-legales`) |
 | Targets reconocidos | §3, ley/3 §2 | mecanizado (`targets-conocidos`) |
-| Publicación digna | con `--estricto`: tags ≥3 en conocimiento `publicado`; `descripcion` y `fuente` no vacías en todo artefacto `activo`/`publicado` | mecanizado (`publicacion-digna`) |
+| Publicación digna | con `--estricto`: `descripcion` y `fuente` no vacías en todo artefacto `activo`/`publicado`; `tags` es metadata sin cardinalidad normativa | mecanizado (`publicacion-digna`) |
 | Cuerpo subordinado al frontmatter | §10 r3 | declarado |
 | Compresión sin grasa | §10 r4 | declarado |
 | Centinela `kora:soul` bien formado (≤1 par balanceado) | §10 r6 | declarado (validado al emitir por `transmutar`, no por `velar`) |
@@ -390,3 +390,7 @@ v1.7.0 (2026-07-18): precisa la frontera semántica agéntica sin expandir el
 shape. `herramientas`, `componible` y `estados` quedan tipados como
 declaraciones; coálgebra, composición, enforcement y preservación runtime
 requieren testigos externos explícitos.
+
+v1.8.0 (2026-08-09): retira la cardinalidad arbitraria de tres `tags` para
+conocimiento publicado. La dignidad conserva solo `descripcion` y `fuente` no
+vacías; `tags` vuelve a ser metadata opcional y no un sustituto de calidad.

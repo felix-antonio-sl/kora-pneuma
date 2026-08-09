@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.7.0
+# KORA/Constitución — ley pneuma v1.8.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -163,9 +163,10 @@ Reglas:
 3. El gesto `ciclo` es el único camino mecanizado de transición; edita el
    campo `estado` in-place preservando el resto del archivo byte-idéntico.
 4. La promoción a `publicado` o `activo` exige que el snapshot actual pase
-   `velar --estricto` y que `publicacion-digna` se evalúe sobre el **estado
-   destino** antes de escribir. Las transiciones a `deprecado` o `retirado`
-   no exigen ese gate: una fuente incoherente debe poder jubilarse.
+   los checks de fuente de `velar` y que `publicacion-digna` se evalúe sobre
+   el **estado destino** antes de escribir. La frescura de emisiones ajenas no
+   bloquea una transición de fuente. Las transiciones a `deprecado` o
+   `retirado` no exigen ese gate: una fuente incoherente debe poder jubilarse.
 
 Rationale: la encarnación anterior declaraba las cadenas y prohibía las
 inversas, pero callaba sobre los saltos hacia adelante. Esta ley PRECISA esa
@@ -210,8 +211,9 @@ Python < 3.11.
 
 ## 11. Registro de checks
 
-El registro es **cerrado**: `velar` corre exactamente estos checks; añadir,
-quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
+El registro es **cerrado**: `velar` corre los once checks de fuente numerados;
+`velar --estricto` añade los dos diagnósticos marcados `+`. Añadir, quitar o
+renombrar un id es cambio de ley (§12). Cada estrato detalla los suyos.
 
 | # | Check | Vela por | Estrato |
 |---|---|---|---|
@@ -226,8 +228,8 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 | 9 | `referencias-resuelven` | toda referencia URN resuelve en el censo | ley/2 |
 | 10 | `relaciones-legales` | aciclicidad, antisimetría, estado del target de `reemplaza` | ley/2 |
 | 11 | `targets-conocidos` | `targets` ⊆ los cinco reconocidos | ley/3 |
-| 12 | `sello-fresco` | congruencia fuente↔generador↔producto emitido: sello/hash actuales, factores auxiliares y fibra `referencias/` (ley/3 §9) | ley/3 |
 | + | `publicacion-digna` | solo con `--estricto`: exigencias de publicación | ley/2 |
+| + | `sello-fresco` | solo con `--estricto`: congruencia fuente↔generador↔producto emitido, incluidos factores auxiliares y `referencias/` (ley/3 §9) | ley/3 |
 
 ## 12. Cambio de la propia ley
 
@@ -255,7 +257,7 @@ quitar o renombrar uno es cambio de ley (§12). Cada estrato detalla los suyos.
 | URN bien formado y único | regex §7, sin versión embebida | mecanizado (`nombre-verdadero`) |
 | Estado pertenece a la cadena del tipo | §8 | mecanizado (`estado-valido`) |
 | Transición solo hacia adelante | §8 | mecanizado (gesto `ciclo`) |
-| Dignidad de promoción | snapshot actual estricto + estado destino digno | mecanizado (gesto `ciclo`) |
+| Dignidad de promoción | checks de fuente actuales + estado destino digno | mecanizado (gesto `ciclo`) |
 | Dignidad del URN | muertos resuelven en `censo` y `nombre` | mecanizado (`censo`, `nombre`) |
 | Censo jamás versionado | `censo.json` en `.gitignore` | mecanizado (`.gitignore`) |
 | Derivados sin voz normativa | §5, §6 | declarado |
@@ -288,3 +290,9 @@ v1.7.0 (2026-07-18): tipa los seis gestos con la estructura mínima que
 sostienen, formaliza las cadenas de lifecycle sin fingir una acción functorial
 total y fortalece el gate de promoción: registro estricto actual más dignidad
 evaluada en el estado destino.
+
+v1.8.0 (2026-08-09): separa coherencia canónica de diagnósticos derivados.
+`velar` ejecuta once checks de fuente; `--estricto` añade
+`publicacion-digna` y `sello-fresco`. `ciclo` conserva el gate de fuente y la
+dignidad focal del estado destino, pero ya no queda bloqueado por una emisión
+rancia no relacionada.

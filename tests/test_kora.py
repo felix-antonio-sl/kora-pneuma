@@ -375,12 +375,12 @@ class TestCiclo(CasoPneuma):
 
     def test_promocion_evalua_dignidad_del_estado_destino(self):
         path = self.escribir_conocimiento(conocimiento_campos(
-            estado="borrador", tags=["insuficiente"]))
+            estado="borrador", fuente='""'))
         codigo, _, err = self.correr(
             ["ciclo", "urn:kora:kb:nota-x", "publicado"])
         self.assertEqual(codigo, 1)
         self.assertIn("[publicacion-digna]", err)
-        self.assertIn(">=3 tags", err)
+        self.assertIn("'fuente' no vacío", err)
         self.assertIn("estado: borrador", path.read_text(encoding="utf-8"))
 
 
@@ -601,7 +601,7 @@ class TestNucleoCategorial(CasoPneuma):
         estricto = kora.velar_todo(self.raiz, estricto=True)
         self.assertEqual(list(base), list(kora.CHECKS))
         self.assertEqual(
-            list(estricto), list(kora.CHECKS) + [kora.CHECK_ESTRICTO])
+            list(estricto), list(kora.CHECKS) + list(kora.CHECKS_ESTRICTOS))
         for check in kora.CHECKS:
             self.assertEqual(base[check], estricto[check], check)
 
@@ -632,7 +632,7 @@ class TestTransmutacion(CasoPneuma):
         self.assertIn("allowed-tools: Read", texto)
         self.assertNotIn("perdidas:", texto)
         # con sello fresco, velar no reclama
-        self.assertEqual(self.fallos("sello-fresco"), [])
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
 
     def test_contrato_conocimiento_en_sello(self):
         # Una skill con corpus declarado: el sello porta el contrato
@@ -858,7 +858,8 @@ class TestTransmutacion(CasoPneuma):
         fuente.write_text(
             fuente.read_text(encoding="utf-8") + "\nLínea nueva.\n",
             encoding="utf-8")
-        self.assert_fallo("sello-fresco", "emisión rancia, re-transmutar")
+        self.assert_fallo(
+            "sello-fresco", "emisión rancia, re-transmutar", estricto=True)
 
     def test_conocimiento_no_se_transmuta(self):
         self.escribir_conocimiento()
@@ -923,7 +924,7 @@ class TestOpenclaw(CasoPneuma):
         self.assertIn("<!-- kora:sello", ta)
         self.assertIn("<!-- kora:sello", ts)
         # sello fresco no reclama sobre el workspace recién emitido.
-        self.assertEqual(self.fallos("sello-fresco"), [])
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
 
     def test_otros_targets_conservan_el_cuerpo_completo(self):
         campos = agente_campos(targets=["claude-code", "openclaw"])
@@ -1060,7 +1061,8 @@ class TestOpenclaw(CasoPneuma):
         fuente = self.raiz / "artefactos/agentes/dev/agente-x.md"
         fuente.write_text(fuente.read_text(encoding="utf-8") + "\nx\n",
                           encoding="utf-8")
-        self.assert_fallo("sello-fresco", "emisión rancia, re-transmutar")
+        self.assert_fallo(
+            "sello-fresco", "emisión rancia, re-transmutar", estricto=True)
 
     def test_stdout_multi_archivo(self):
         campos = agente_campos(targets=["openclaw"])
@@ -1131,13 +1133,30 @@ class TestVelarCorpusValido(CasoPneuma):
         self.assertEqual(codigo, 0)
         self.assertIn("todo coherente", salida)
 
-    def test_publicacion_digna_solo_estricto(self):
+    def test_velar_base_ignora_emision_rancia_y_estricto_la_detecta(self):
+        fuente = self.escribir_skill()
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "claude-code",
+        ])[0], 0)
+        fuente.write_text(
+            fuente.read_text(encoding="utf-8") + "\nCambio válido.\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(self.correr(["velar"])[0], 0)
+        self.assertNotIn("sello-fresco", kora.velar_todo(self.raiz))
+        self.assert_fallo(
+            "sello-fresco", "emisión rancia", estricto=True)
+
+    def test_publicacion_no_exige_cantidad_arbitraria_de_tags(self):
         self.escribir_conocimiento(conocimiento_campos(tags=["uno"]))
-        codigo, _, _ = self.correr(["velar"])
-        self.assertEqual(codigo, 0)
-        self.assert_fallo("publicacion-digna", ">=3 tags", estricto=True)
-        codigo, _, _ = self.correr(["velar", "--estricto"])
-        self.assertEqual(codigo, 1)
+        self.assertEqual(
+            self.fallos("publicacion-digna", estricto=True), [])
+
+    def test_publicacion_exige_procedencia_no_vacia(self):
+        self.escribir_conocimiento(conocimiento_campos(fuente='""'))
+        self.assert_fallo(
+            "publicacion-digna", "'fuente' no vacío", estricto=True)
 
     def test_ley_ausente_falla_limpio(self):
         codigo, _, err = self.correr(["ley"])
@@ -1285,6 +1304,7 @@ class TestSelloUltimoBloque(CasoPneuma):
         self.assert_fallo(
             "sello-fresco",
             "emisión es enlace simbólico; no se recorrió",
+            estricto=True,
         )
 
     def test_sello_fresco_no_sigue_symlink_de_emision(self):
@@ -1298,6 +1318,7 @@ class TestSelloUltimoBloque(CasoPneuma):
         self.assert_fallo(
             "sello-fresco",
             "emisión contiene enlace simbólico; no se siguió",
+            estricto=True,
         )
 
     def test_sello_citado_en_cuerpo_no_da_rancia(self):
@@ -1316,7 +1337,7 @@ class TestSelloUltimoBloque(CasoPneuma):
         texto = emitido.read_text(encoding="utf-8")
         self.assertGreaterEqual(texto.count("<!-- kora:sello"), 2,
                                 "el escenario exige sello citado + sello real")
-        self.assertEqual(self.fallos("sello-fresco"), [],
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [],
                          "el sello real (último) está fresco")
 
 
@@ -1331,7 +1352,8 @@ class TestCongruenciaGenerador(CasoPneuma):
         doctrina_nueva = kora.DOCTRINA_DUAL_MODE + "\n\nCambio del generador."
         with mock.patch.object(kora, "DOCTRINA_DUAL_MODE", doctrina_nueva):
             self.assert_fallo("sello-fresco",
-                              "no coincide con el generador vigente")
+                              "no coincide con el generador vigente",
+                              estricto=True)
 
     def test_detecta_derivado_manipulado_con_hash_valido(self):
         self.escribir_skill()
@@ -1343,7 +1365,8 @@ class TestCongruenciaGenerador(CasoPneuma):
             emitido.read_text("utf-8").replace(
                 "Texto sintético.", "Texto manipulado.", 1), "utf-8")
         self.assert_fallo("sello-fresco",
-                          "no coincide con el generador vigente")
+                          "no coincide con el generador vigente",
+                          estricto=True)
 
     def test_detecta_sidecar_codex_rancio(self):
         self.escribir_agente(agente_campos(targets=["codex"]))
@@ -1355,7 +1378,8 @@ class TestCongruenciaGenerador(CasoPneuma):
         sidecar.write_text("policy:\n  allow_implicit_invocation: true\n",
                            "utf-8")
         self.assert_fallo("sello-fresco",
-                          "no coincide con el generador vigente")
+                          "no coincide con el generador vigente",
+                          estricto=True)
 
     def test_detecta_sidecar_codex_extra(self):
         self.escribir_agente(agente_campos(targets=["codex"]))
@@ -1365,7 +1389,8 @@ class TestCongruenciaGenerador(CasoPneuma):
         extra = self.raiz / (
             "_emision/codex/skills/agente-x/agents/obsoleto.yaml")
         extra.write_text("policy: {}\n", "utf-8")
-        self.assert_fallo("sello-fresco", "factor obsoleto")
+        self.assert_fallo(
+            "sello-fresco", "factor obsoleto", estricto=True)
 
     def test_rechaza_emision_de_target_no_realizado(self):
         self.escribir_agente(
@@ -1379,7 +1404,8 @@ class TestCongruenciaGenerador(CasoPneuma):
         destino.write_text(
             origen.read_text("utf-8").replace(
                 "target: claude-code", "target: hermes"), "utf-8")
-        self.assert_fallo("sello-fresco", "target no realizado")
+        self.assert_fallo(
+            "sello-fresco", "target no realizado", estricto=True)
 
     def test_rechaza_emision_de_target_no_declarado(self):
         self.escribir_skill(skill_campos(targets=["claude-code"]))
@@ -1393,7 +1419,8 @@ class TestCongruenciaGenerador(CasoPneuma):
         destino.write_text(
             origen.read_text("utf-8").replace(
                 "target: claude-code", "target: codex"), "utf-8")
-        self.assert_fallo("sello-fresco", "no declarado por la fuente")
+        self.assert_fallo(
+            "sello-fresco", "no declarado por la fuente", estricto=True)
 
     def test_detecta_referencia_rancia(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
@@ -1404,7 +1431,8 @@ class TestCongruenciaGenerador(CasoPneuma):
              "--target", "codex"])[0], 0)
         ref.write_text("v2\n", "utf-8")
         self.assert_fallo("sello-fresco",
-                          "fibra referencias/ no coincide")
+                          "fibra referencias/ no coincide",
+                          estricto=True)
 
     def test_retransmutar_retira_referencias_eliminadas(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
@@ -1419,7 +1447,7 @@ class TestCongruenciaGenerador(CasoPneuma):
         ref.parent.rmdir()
         self.assertEqual(self.correr(gesto)[0], 0)
         self.assertFalse(destino.exists())
-        self.assertEqual(self.fallos("sello-fresco"), [])
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
 
     def test_retransmutar_retira_factor_obsoleto_del_producto(self):
         self.escribir_agente(agente_campos(targets=["codex"]))
@@ -1429,10 +1457,11 @@ class TestCongruenciaGenerador(CasoPneuma):
         extra = self.raiz / (
             "_emision/codex/skills/agente-x/agents/obsoleto.yaml")
         extra.write_text("policy: {}\n", "utf-8")
-        self.assert_fallo("sello-fresco", "factor obsoleto")
+        self.assert_fallo(
+            "sello-fresco", "factor obsoleto", estricto=True)
         self.assertEqual(self.correr(gesto)[0], 0)
         self.assertFalse(extra.exists())
-        self.assertEqual(self.fallos("sello-fresco"), [])
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
 
 
 class TestListaEstricta(unittest.TestCase):
@@ -1562,6 +1591,25 @@ class TestGatePromocion(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("corpus completo no pasa velar", err)
         self.assertIn("estado: borrador", path.read_text(encoding="utf-8"))
+
+    def test_promocion_no_depende_de_emision_rancia(self):
+        fuente = self.escribir_skill()
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "claude-code",
+        ])[0], 0)
+        fuente.write_text(
+            fuente.read_text(encoding="utf-8") + "\nCambio válido.\n",
+            encoding="utf-8",
+        )
+        self.escribir_skill(skill_campos(
+            urn="urn:kora:artefacto:util-y",
+            nombre="util-y", estado="borrador",
+        ))
+        codigo, _, err = self.correr([
+            "ciclo", "urn:kora:artefacto:util-y", "activo",
+        ])
+        self.assertEqual(codigo, 0, err)
 
 
 class TestTransmutacionProyecto(CasoPneuma):
@@ -1751,15 +1799,26 @@ class TestParidad(CasoPneuma):
         }), encoding="utf-8")
         return mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True)
 
-    def test_paridad_fiel_exit_0(self):
+    def test_recorrido_cotidiano_focal_es_fiel(self):
+        urn = "urn:kora:artefacto:util-x"
+        target = "claude-code"
         self.escribir_skill()
         with self.con_rutas():
-            self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
-                         "--target", "claude-code", "--aplicar"])
-            codigo, salida, _ = self.correr(["transmutar", "--paridad"])
-        self.assertEqual(codigo, 0, salida)
-        self.assertIn("fiel", salida)
-        self.assertIn("util-x", salida)
+            codigo, salida, err = self.correr(["velar"])
+            self.assertEqual(codigo, 0, err or salida)
+            codigo, _, err = self.correr([
+                "transmutar", "--urn", urn, "--target", target,
+                "--aplicar",
+            ])
+            self.assertEqual(codigo, 0, err)
+            codigo, salida, err = self.correr([
+                "transmutar", "--paridad", "--urn", urn,
+                "--target", target,
+            ])
+        self.assertEqual(codigo, 0, err or salida)
+        self.assertIn("paridad: fiel", salida)
+        self.assertTrue(
+            (self.raiz / "runtime/claude/skills/util-x/SKILL.md").is_file())
 
     def test_paridad_desviada_exit_1(self):
         self.escribir_skill()
@@ -2194,7 +2253,8 @@ class TestParidad(CasoPneuma):
                 "developer_instructions = 1\n",
                 "utf-8",
             )
-            self.assert_fallo("sello-fresco", "emisión TOML inválida")
+            self.assert_fallo(
+                "sello-fresco", "emisión TOML inválida", estricto=True)
             codigo, salida, _ = self.correr(
                 ["transmutar", "--paridad", "--target", "codex"])
         self.assertEqual(codigo, 1, salida)
