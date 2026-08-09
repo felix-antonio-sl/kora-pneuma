@@ -13,10 +13,15 @@ Lee solo lo que la tarea exija:
 1. `ALMA.md` para finalidad y naturaleza cuando la decisión sea estructural.
 2. El estrato pertinente de `ley/0-constitucion.md` a
    `ley/4-koraficacion.md` para autoridad normativa.
-3. `HANDOFF.md` solo si existe y retomas trabajo inconcluso.
+3. El handoff ISO más reciente bajo `docs/handoffs/` solo si retomas trabajo
+   inconcluso o necesitas el corte operativo vigente.
 4. El artefacto fuente y las referencias que declare por URN.
 
 `GENESIS.md` es acta histórica inmutable. `README.md`, `CLAUDE.md`, handoffs y guías orientan; no legislan.
+
+La documentación y las explicaciones se escriben en español de Chile. Código,
+comandos e identificadores permanecen en inglés. Las fechas usan siempre el
+formato absoluto `AAAA-MM-DD`.
 
 ## Ontología del repositorio
 
@@ -85,6 +90,13 @@ Si cambia un artefacto agéntico, añade paridad por URN. Si cambia `ley/3` o el
 
 - Las decisiones durables viven en ley, artefactos, código o pruebas; Git
   conserva la historia.
-- Si queda trabajo material inconcluso, actualiza un único `HANDOFF.md` raíz,
-  breve y sin fecha en el nombre. Si no queda, elimínalo.
-- No acumules cierres, sesiones, inventarios volátiles ni copias en `_archivo/`.
+- Si queda trabajo material inconcluso, mantén un único
+  `docs/handoffs/handoff-AAAA-MM-DD.md` activo. Usa `-2`, `-3`, etc. si hay
+  más de una versión el mismo día.
+- Antes de crear una actualización, mueve el handoff activo anterior a
+  `_archivo/` sin editarlo. Aplica la misma regla por especie a informes,
+  auditorías, actas y otros documentos operativos.
+- `_archivo/` y `*.tar.gz` permanecen en `.gitignore`: conservan historia
+  local reversible, pero no son autoridad ni parte del árbol Git activo.
+- No acumules cierres, sesiones ni inventarios volátiles en superficies
+  activas. El handoff vigente contiene solo estado, límites y siguiente paso.
