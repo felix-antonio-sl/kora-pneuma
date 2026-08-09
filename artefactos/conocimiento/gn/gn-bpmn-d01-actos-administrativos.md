@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d01-actos-administrativos
 nombre: gn-bpmn-d01-actos-administrativos
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D01: Tramitación de Actos Administrativos; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D01_actos_administrativos_koda.yml (sha256:4a0d3d345ad0d6641f7c8529de3ab73f4cdde1e3894b9bdc936e02f32ce2f419); URN KODA legado urn:gorenuble:gn:bpmn-d01-actos-administrativos:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D01_actos_administrativos_koda.yml (sha256:4a0d3d345ad0d6641f7c8529de3ab73f4cdde1e3894b9bdc936e02f32ce2f419); URN KODA legado urn:gorenuble:gn:bpmn-d01-actos-administrativos:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): reemplaza rutas `file://` no portables de referencias cruzadas por URN KORA resolubles."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -282,15 +282,15 @@ Referencias_Cruzadas:
   Filas:
     - Dominio_Relacionado: "D03 Gestión IPR"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D03_gestion_ipr.md"
+        - "urn:gn:kb:gn-bpmn-d03-gestion-ipr"
       Vinculo: "Fase 4 Formalización"
     - Dominio_Relacionado: "D02 Ciclo Presupuestario"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D02_ciclo_presupuestario.md"
+        - "urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario"
       Vinculo: "Modificaciones, resoluciones"
     - Dominio_Relacionado: "D08 Rendiciones"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D08_rendiciones.md"
+        - "urn:gn:kb:bpmn-d08-rendiciones"
       Vinculo: "Convenios de transferencia"
 
 Ultima_Actualizacion:

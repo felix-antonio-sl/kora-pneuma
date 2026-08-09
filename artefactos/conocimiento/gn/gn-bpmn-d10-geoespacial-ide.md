@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d10-geoespacial-ide
 nombre: gn-bpmn-d10-geoespacial-ide
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D10: Gestión de Información Geoespacial (IDE/Geonodo); migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D10_geoespacial_ide_koda.yml (sha256:1f3b0850692785ec7d579d3da34dc7e4fa524ca1cf7ccc2436fac661c947494d); URN KODA legado urn:gorenuble:gn:bpmn-d10-geoespacial-ide:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D10_geoespacial_ide_koda.yml (sha256:1f3b0850692785ec7d579d3da34dc7e4fa524ca1cf7ccc2436fac661c947494d); URN KODA legado urn:gorenuble:gn:bpmn-d10-geoespacial-ide:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -98,7 +98,7 @@ Body_MD:
     | **Dueño**       | Coordinador Regional IDE                                                                                                                               |
     | **Procesos**    | 3                                                                                                                                                      |
     | **Subprocesos** | ~10                                                                                                                                                    |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.4308-4478 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.4308-4478 |
 
     ---
 
@@ -382,8 +382,8 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                          | Vínculo                      |
     | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-    | [D03 Gestión IPR](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D03_gestion_ipr.md) | Georreferenciación proyectos |
-    | [D09 CIES/SITIA](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D09_cies_sitia.md)   | Ubicación cámaras            |
+    | [D03 Gestión IPR](urn:gn:kb:gn-bpmn-d03-gestion-ipr) | Georreferenciación proyectos |
+    | [D09 CIES/SITIA](urn:gn:kb:gn-bpmn-d09-cies-sitia)   | Ubicación cámaras            |
 
     ---
 

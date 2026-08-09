@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d09-cies-sitia
 nombre: gn-bpmn-d09-cies-sitia
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D09: Gestión Operativa CIES/SITIA (Seguridad Pública); migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D09_cies_sitia_koda.yml (sha256:241ec2453eb13b93bd85c83aa69bb696852a42af43d8073533ffd7e95ff6e685); URN KODA legado urn:gorenuble:gn:bpmn-d09-cies-sitia:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D09_cies_sitia_koda.yml (sha256:241ec2453eb13b93bd85c83aa69bb696852a42af43d8073533ffd7e95ff6e685); URN KODA legado urn:gorenuble:gn:bpmn-d09-cies-sitia:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -98,7 +98,7 @@ Body_MD:
     | **Dueño**       | Supervisor CIES                                                                                                                                        |
     | **Procesos**    | 3                                                                                                                                                      |
     | **Subprocesos** | ~8                                                                                                                                                     |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.4142-4306 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.4142-4306 |
 
     ---
 
@@ -386,7 +386,7 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                                              | Vínculo                 |
     | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-    | [D01 Actos Administrativos](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D01_actos_administrativos.md) | Convenios con entidades |
+    | [D01 Actos Administrativos](urn:gn:kb:gn-bpmn-d01-actos-administrativos) | Convenios con entidades |
 
     ---
 

@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:kb:david-allen-gemelo-digital-intelectual
 nombre: david-allen-gemelo-digital-intelectual
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Gemelo digital intelectual de David Allen, creador de GTD: el metodo como loop de siete movimientos, las tres capas (regulacion, operacion, generacion), co-agencia humano-agente y las preguntas maestras — fuente de la persona david-allen y de la skill gtd-flow."
-fuente: "Migrado de la bestia (~/kora) artifacts/knowledge/pro/perfiles/david-allen-integral-definitivo-septiembre-2026.md v1.1.0 (sha256:406d9ea729ce832dd95bb51e43d3401e001e51d5e59797f9bf45485c4b0fa36a) el 2026-06-21; cuerpo byte-fiel. La cita urn:korvo:kb:manual-de-vida se omite: el namespace korvo no existe en pneuma (doctrina migrar-o-omitir); el cuerpo puede mencionarla en prosa sin relacion formal. Fuentes originales: David Allen «Getting Things Done», gettingthingsdone.com (what-is-gtd, choosing-what-to-do, Threefold-Nature-of-Work), y perfiles pca-v4 + manual-de-vida del operador."
+fuente: "Migrado de la bestia (~/kora) artifacts/knowledge/pro/perfiles/david-allen-integral-definitivo-septiembre-2026.md v1.1.0 (sha256:406d9ea729ce832dd95bb51e43d3401e001e51d5e59797f9bf45485c4b0fa36a) el 2026-06-21; cuerpo originalmente byte-fiel. La cita urn:korvo:kb:manual-de-vida se omite: el namespace korvo no existe en pneuma (doctrina migrar-o-omitir); el cuerpo puede mencionarla en prosa sin relacion formal. Fuentes originales: David Allen «Getting Things Done», gettingthingsdone.com (what-is-gtd, choosing-what-to-do, Threefold-Nature-of-Work), y perfiles pca-v4 + manual-de-vida del operador. Corrección editorial 1.0.1 (2026-08-09): elimina cinco enlaces absolutos no portables y conserva sus títulos como procedencia histórica; el cuerpo deja de ser byte-fiel solo en esas referencias."
 autor: FS
 creado: 2026-03-26
 lang: es
@@ -795,12 +795,12 @@ Es un sistema integral para:
 
 | Fuente | Aporte principal |
 | --- | --- |
-| [David Allen definitivo mayo 2026](/Users/felixsanhueza/Developer/kora/KNOWLEDGE/pro/david-allen-definitivo-septiembre-2026.md) | snapshot post-PCA previo |
-| [Manual de Vida](/Users/felixsanhueza/Developer/kora/KNOWLEDGE/korvo/manual-de-vida.md) | regulacion, operacion, generacion, anti-vision, LWLG, yo-futuro, HUMAN 3.0 |
-| [David Allen mayo 2026](/Users/felixsanhueza/Developer/kora/KNOWLEDGE/pro/david-allen-gemelo-digital-intelectual-era-agentica.md) | base pre-integral |
-| [PCA v4.1](/Users/felixsanhueza/Developer/_workspaces/pca/pca-v4.md) | co-agencia, ontologia minima, atencion soberana, esclusa, energia |
+| David Allen definitivo mayo 2026 (fuente local histórica) | snapshot post-PCA previo |
+| Manual de Vida (fuente local histórica) | regulacion, operacion, generacion, anti-vision, LWLG, yo-futuro, HUMAN 3.0 |
+| David Allen mayo 2026 (fuente local histórica) | base pre-integral |
+| PCA v4.1 (fuente local histórica) | co-agencia, ontologia minima, atencion soberana, esclusa, energia |
 | [About GTD](https://gettingthingsdone.com/about/) | principios centrales |
 | [What is GTD](https://gettingthingsdone.com/what-is-gtd/) | cinco fases |
 | [Choosing what to do](https://gettingthingsdone.com/2023/01/choosing-what-to-do/) | engage y prioridades |
 | [Threefold Nature of Work](https://gettingthingsdone.com/wp-content/uploads/2021/09/Threefold-Nature-of-Work.pdf) | naturaleza del trabajo |
-| [Getting Things Done PDF](/Users/felixsanhueza/Downloads/getting-things-done-the-art-of-stress-free-productivity-david-allen-z-lib.org_.pdf) | sistema original y principios base |
+| *Getting Things Done* (libro; fuente local histórica) | sistema original y principios base |

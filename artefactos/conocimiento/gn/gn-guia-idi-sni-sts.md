@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-guia-idi-sni-sts
 nombre: gn-guia-idi-sni-sts
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – Guía Formulación Iniciativas de Inversión (IDI) en SNI para GOREs; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/03_operacion/ipr/guias_iprs/kb_gn_024_guia_idi_sni_koda.yml (sha256:fdf0d99029aa2bfef65551992311fb867d74ca7819ebd1abfc55e235bb78203f); URN KODA legado urn:gorenuble:gn:guia-idi-sni-sts:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/03_operacion/ipr/guias_iprs/kb_gn_024_guia_idi_sni_koda.yml (sha256:fdf0d99029aa2bfef65551992311fb867d74ca7819ebd1abfc55e235bb78203f); URN KODA legado urn:gorenuble:gn:guia-idi-sni-sts:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): reemplaza el `canonical_url` absoluto no portable por la URN canónica KORA."
 autor: "FS"
 creado: 2025-11-28
 lang: es
@@ -23,7 +23,7 @@ _manifest:
     min_consumer_version: "1.0.0"
     breaking_changes_from: null
   resolution:
-    canonical_url: "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/kb_gn_024_guia_idi_sni_koda.yml"
+    canonical_url: "urn:gn:kb:gn-guia-idi-sni-sts"
     mirrors: []
   dependencies:
     requires:

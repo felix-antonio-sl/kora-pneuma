@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:bpmn-d08-rendiciones
 nombre: bpmn-d08-rendiciones
-version: 1.0.0
+version: 1.0.1
 estado: borrador
 descripcion: "Documento GN heredado de KODA sobre bpmn d08 rendiciones; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-active/D08_rendiciones_koda.yml (sha256:624802750125b9ad16be5efae2d293461e6482d3c306ce19b00010e6428a9171); URN KODA legado urn:gorenuble:gn:bpmn-d08-rendiciones:1.0.0; estado KODA original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Dependencia KODA declarada hacia bpmn-c4 no encontrada en el corpus GN auditado; se mantiene como borrador."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-active/D08_rendiciones_koda.yml (sha256:624802750125b9ad16be5efae2d293461e6482d3c306ce19b00010e6428a9171); URN KODA legado urn:gorenuble:gn:bpmn-d08-rendiciones:1.0.0; estado KODA original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Dependencia KODA declarada hacia bpmn-c4 no encontrada en el corpus GN auditado; se mantiene como borrador. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -98,7 +98,7 @@ Body_MD:
     | **Dueño**       | UCR/DAF                                                                                                                                                |
     | **Procesos**    | 3                                                                                                                                                      |
     | **Subprocesos** | ~10                                                                                                                                                    |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.3735-4140 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.3735-4140 |
 
     ---
 
@@ -482,8 +482,8 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                                            | Vínculo                  |
     | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-    | [D03 Gestión IPR](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D03_gestion_ipr.md)                   | Cierre financiero Fase 7 |
-    | [D02 Ciclo Presupuestario](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D02_ciclo_presupuestario.md) | Contabilización, devengo |
+    | [D03 Gestión IPR](urn:gn:kb:gn-bpmn-d03-gestion-ipr)                   | Cierre financiero Fase 7 |
+    | [D02 Ciclo Presupuestario](urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario) | Contabilización, devengo |
 
     ---
 

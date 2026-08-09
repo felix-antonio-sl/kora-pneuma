@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d03-gestion-ipr
 nombre: gn-bpmn-d03-gestion-ipr
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D03: Gestión de Intervenciones Públicas Regionales (IPR); migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D03_gestion_ipr_koda.yml (sha256:8f9cd9ac6b78076b660b756607902d3fba4a7a876d71fd0a9b8e04bb8c3db88b); URN KODA legado urn:gorenuble:gn:bpmn-d03-gestion-ipr:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D03_gestion_ipr_koda.yml (sha256:8f9cd9ac6b78076b660b756607902d3fba4a7a876d71fd0a9b8e04bb8c3db88b); URN KODA legado urn:gorenuble:gn:bpmn-d03-gestion-ipr:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): reemplaza rutas `file://` no portables de referencias cruzadas por URN KORA resolubles."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -543,15 +543,15 @@ Referencias_Cruzadas:
   Filas:
     - Dominio_Relacionado: "D02 Ciclo Presupuestario"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D02_ciclo_presupuestario.md"
+        - "urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario"
       Vinculo: "CDP, modificaciones, SIGFE"
     - Dominio_Relacionado: "D08 Rendiciones"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D08_rendiciones.md"
+        - "urn:gn:kb:bpmn-d08-rendiciones"
       Vinculo: "Cierre financiero, SISREC"
     - Dominio_Relacionado: "D01 Actos Administrativos"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D01_actos_administrativos.md"
+        - "urn:gn:kb:gn-bpmn-d01-actos-administrativos"
       Vinculo: "Resoluciones, Convenios"
 
 Ultima_Actualizacion:

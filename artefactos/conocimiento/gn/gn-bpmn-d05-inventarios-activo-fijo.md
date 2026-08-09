@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d05-inventarios-activo-fijo
 nombre: gn-bpmn-d05-inventarios-activo-fijo
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D05: Gestión de Inventarios y Activo Fijo; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D05_inventarios_activo_fijo_koda.yml (sha256:9b177e845de959ac248b771cc4e3acccd6fc3089df897ec0a486c08d370ff43f); URN KODA legado urn:gorenuble:gn:bpmn-d05-inventarios-activo-fijo:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D05_inventarios_activo_fijo_koda.yml (sha256:9b177e845de959ac248b771cc4e3acccd6fc3089df897ec0a486c08d370ff43f); URN KODA legado urn:gorenuble:gn:bpmn-d05-inventarios-activo-fijo:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -98,7 +98,7 @@ Body_MD:
     | **Dueño**       | DAF                                                                                                                                                   |
     | **Procesos**    | 2                                                                                                                                                     |
     | **Subprocesos** | ~10                                                                                                                                                   |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.960-1200 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.960-1200 |
 
     ---
 
@@ -361,8 +361,8 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                                            | Vínculo            |
     | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-    | [D04 Compras](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D04_compras_contrataciones.md)            | Recepción desde OC |
-    | [D02 Ciclo Presupuestario](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D02_ciclo_presupuestario.md) | Contabilización AF |
+    | [D04 Compras](urn:gn:kb:gn-bpmn-d04-compras-contrataciones)            | Recepción desde OC |
+    | [D02 Ciclo Presupuestario](urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario) | Contabilización AF |
 
     ---
 

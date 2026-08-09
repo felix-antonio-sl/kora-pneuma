@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d07-rrhh
 nombre: gn-bpmn-d07-rrhh
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D07: Gestión de Personas (RRHH); migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D07_rrhh_koda.yml (sha256:c064276d700f76bab1da5b41600069ee7602a8decbca7fd5a44d01545f126b2e); URN KODA legado urn:gorenuble:gn:bpmn-d07-rrhh:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D07_rrhh_koda.yml (sha256:c064276d700f76bab1da5b41600069ee7602a8decbca7fd5a44d01545f126b2e); URN KODA legado urn:gorenuble:gn:bpmn-d07-rrhh:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -98,7 +98,7 @@ Body_MD:
     | **Dueño**       | Área de Gestión de Personas                                                                                                                            |
     | **Procesos**    | 7                                                                                                                                                      |
     | **Subprocesos** | ~20                                                                                                                                                    |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.1410-1880 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.1410-1880 |
 
     ---
 
@@ -468,8 +468,8 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                                              | Vínculo                      |
     | ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------- |
-    | [D02 Ciclo Presupuestario](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D02_ciclo_presupuestario.md)   | Subtítulo 21, Remuneraciones |
-    | [D01 Actos Administrativos](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D01_actos_administrativos.md) | Resoluciones de nombramiento |
+    | [D02 Ciclo Presupuestario](urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario)   | Subtítulo 21, Remuneraciones |
+    | [D01 Actos Administrativos](urn:gn:kb:gn-bpmn-d01-actos-administrativos) | Resoluciones de nombramiento |
 
     ---
 

@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-guia-frpd-nuble
 nombre: gn-guia-frpd-nuble
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – Guía Operativa FRPD Ñuble 2025; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/03_operacion/ipr/guias_iprs/kb_gn_027_guia_frpd_koda.yml (sha256:955f7ff1a1e8be7249e6d7115280929e0bfd7df7d54318345ea5316dffa43c28); URN KODA legado urn:gorenuble:gn:guia-frpd-nuble:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/03_operacion/ipr/guias_iprs/kb_gn_027_guia_frpd_koda.yml (sha256:955f7ff1a1e8be7249e6d7115280929e0bfd7df7d54318345ea5316dffa43c28); URN KODA legado urn:gorenuble:gn:guia-frpd-nuble:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): añade el esquema HTTPS al enlace institucional sin cambiar su destino."
 autor: "FS"
 creado: 2025-11-28
 lang: es
@@ -744,7 +744,7 @@ Guia_Operativa_FRPD_Ñuble_2025:
     Canales:
       ID: GN-FRPD-COMUNICACION-CANALES-01
       Medio_Principal:
-        - "Publicación en página web del GORE Ñuble ([www.goredenuble.cl](www.goredenuble.cl))."
+        - "Publicación en página web del GORE Ñuble ([www.goredenuble.cl](https://www.goredenuble.cl))."
       Medio_Secundario:
         - "Comunicación vía correo electrónico a coordinadores de iniciativas desde difoi.nuble@goredenuble.cl."
 

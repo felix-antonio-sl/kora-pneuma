@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d06-flota-vehicular
 nombre: gn-bpmn-d06-flota-vehicular
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D06: Gestión de Flota Vehicular; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D06_flota_vehicular_koda.yml (sha256:064e7007a7d539e354ec9cb679c3d9c1054ebc12fafe97d7e399d12edc9031ef); URN KODA legado urn:gorenuble:gn:bpmn-d06-flota-vehicular:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D06_flota_vehicular_koda.yml (sha256:064e7007a7d539e354ec9cb679c3d9c1054ebc12fafe97d7e399d12edc9031ef); URN KODA legado urn:gorenuble:gn:bpmn-d06-flota-vehicular:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): sustituye enlaces `file://` no portables por URN KORA cuando el dominio existe y conserva como texto la fuente externa sin URN."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -97,7 +97,7 @@ Body_MD:
     | **Criticidad**  | 🟡 Media                                                                                                                                                |
     | **Dueño**       | Jefe Servicios Generales                                                                                                                               |
     | **Procesos**    | 1 (con 6 subprocesos)                                                                                                                                  |
-    | **Ref. Fuente** | [kb_gn_054_bpmn_c4_koda.yml](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/kb_gn_054_bpmn_c4_koda.yml) L.1210-1400 |
+    | **Ref. Fuente** | `kb_gn_054_bpmn_c4_koda.yml` (fuente externa archivada; sin URN KORA) L.1210-1400 |
 
     ---
 
@@ -311,8 +311,8 @@ Body_MD:
 
     | Dominio Relacionado                                                                                                                           | Vínculo                            |
     | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-    | [D05 Inventarios y AF](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D05_inventarios_activo_fijo.md) | Vehículos como activo fijo         |
-    | [D04 Compras](file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D04_compras_contrataciones.md)           | Adquisición vehículos, combustible |
+    | [D05 Inventarios y AF](urn:gn:kb:gn-bpmn-d05-inventarios-activo-fijo) | Vehículos como activo fijo         |
+    | [D04 Compras](urn:gn:kb:gn-bpmn-d04-compras-contrataciones)           | Adquisición vehículos, combustible |
 
     ---
 

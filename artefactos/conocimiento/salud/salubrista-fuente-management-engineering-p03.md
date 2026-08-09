@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:salubrista-fuente-management-engineering-p03
 nombre: salubrista-fuente-management-engineering-p03
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "healthcare management engineering - Parte 03"
-fuente: "Migrado de la bestia (~/kora @ 9de5dc38b78c23574d24a481a5f84d70173c2203) artifacts/knowledge/salud/salubrista/fuentes/management-engineering-sanitario--p03.md (sha256:005aea1491c2372bbcc2b46b710bc78f1c8216b268ce3c5ebf7e6268eee2919e) el 2026-07-17; cuerpo byte-fiel; frontmatter normalizado a ley/2; shard enlazado por cita a urn:salud:kb:salubrista-fuente-management-engineering."
+fuente: "Migrado de la bestia (~/kora @ 9de5dc38b78c23574d24a481a5f84d70173c2203) artifacts/knowledge/salud/salubrista/fuentes/management-engineering-sanitario--p03.md (sha256:005aea1491c2372bbcc2b46b710bc78f1c8216b268ce3c5ebf7e6268eee2919e) el 2026-07-17; cuerpo originalmente byte-fiel; frontmatter normalizado a ley/2; shard enlazado por cita a urn:salud:kb:salubrista-fuente-management-engineering. Corrección editorial 1.0.1 (2026-08-09): protege una fórmula como código para evitar que Markdown interprete un factor como enlace; el contenido matemático se preserva y el cuerpo deja de ser byte-fiel solo en ese marcado."
 autor: FS
 creado: 2026-04-10
 lang: es
@@ -82,7 +82,7 @@ cita: [urn:salud:kb:salubrista-fuente-management-engineering]
 - [P160] **REGLA** — tradicional escasez capacidad: presupuestar staff/equipo adicional; restringido aprobación tight
 - [P161] **DEFINICIÓN** — pooled testing: lote muestras combinado; lote negativo → todas negativas 1 test; lote positivo → retesteo individual
 - [P162] **HECHO** — trade-off: reducción tests (lote negativo) vs retesteo (lote positivo); tamaño lote óptimo minimiza tests/espécimen
-- [P163] **HECHO** — tests esperados/espécimen N = [1-(1-P)^n](n+1)/n + (1-P)^n; n=tamaño lote, P=prob positivo
+- [P163] **HECHO** — tests esperados/espécimen `N = (1-(1-P)^n)(n+1)/n + (1-P)^n`; n=tamaño lote, P=prob positivo
 - [P164] **RESTRICCIÓN** — reducción tests (N<1) solo si prevalencia P < ~30.6%
 - [P165] **REGLA** — P 12.4-30.6%: lote óptimo = 3; P < 11.1%: lote ≈ 1/√P + 0.5 redondeado
 - [P166] **HECHO** — CDC 2008: prevalencia HIV US fin 2006 P ≈ 0.447% (95% CI: 0.427-0.468%)

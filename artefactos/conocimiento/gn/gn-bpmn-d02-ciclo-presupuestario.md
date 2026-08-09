@@ -1,10 +1,10 @@
 ---
 urn: urn:gn:kb:gn-bpmn-d02-ciclo-presupuestario
 nombre: gn-bpmn-d02-ciclo-presupuestario
-version: "1.0.0"
+version: "1.0.1"
 estado: borrador
 descripcion: "Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – BPMN D02: Ciclo Presupuestario Regional; migrado como borrador y no publicado."
-fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D02_ciclo_presupuestario_koda.yml (sha256:bbb3612714e061f306087001083128ae701c0fa6da781ed7a46cf7318b4e4bd7); URN KODA legado urn:gorenuble:gn:bpmn-d02-ciclo-presupuestario:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02."
+fuente: "Fuente externa archivada en /home/felix/kora-external-sources/_archivo/2026-08-02-gn-gore-os-remaining/migrated/domains/gn/04_habilitadores/arquitectura/bpmn/D02_ciclo_presupuestario_koda.yml (sha256:bbb3612714e061f306087001083128ae701c0fa6da781ed7a46cf7318b4e4bd7); URN KODA legado urn:gorenuble:gn:bpmn-d02-ciclo-presupuestario:1.0.0; estado original Draft; cuerpo original completo preservado; migración KORA 2026-08-02. Corrección editorial 1.0.1 (2026-08-09): reemplaza rutas `file://` no portables de referencias cruzadas por URN KORA resolubles."
 autor: "FS"
 creado: 2025-12-22
 lang: es
@@ -267,15 +267,15 @@ Referencias_Cruzadas:
   Filas:
     - Dominio_Relacionado: "D03 Gestión IPR"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D03_gestion_ipr.md"
+        - "urn:gn:kb:gn-bpmn-d03-gestion-ipr"
       Vinculo: "CDP, financiamiento proyectos"
     - Dominio_Relacionado: "D08 Rendiciones"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D08_rendiciones.md"
+        - "urn:gn:kb:bpmn-d08-rendiciones"
       Vinculo: "Contabilización, SIGFE"
     - Dominio_Relacionado: "D04 Compras"
       Ctx_Optional:
-        - "file:///Users/felixsanhueza/Developer/gorenuble/knowledge/domains/gn/arquitectura/bpmn/D04_compras_contrataciones.md"
+        - "urn:gn:kb:gn-bpmn-d04-compras-contrataciones"
       Vinculo: "Órdenes de compra, contratos"
 
 Ultima_Actualizacion:
