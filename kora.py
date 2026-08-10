@@ -2181,11 +2181,18 @@ def _unidades_emision(emision: Path):
     return unidades, anomalias
 
 
-def _unidades_esperadas(arts: list[Artefacto]):
+def _alcance_admite(art: Artefacto, proyecto: bool) -> bool:
+    alcance = art.campos.get("alcance", "ambos")
+    return alcance in (("proyecto", "ambos") if proyecto
+                       else ("usuario", "ambos"))
+
+
+def _unidades_esperadas(arts: list[Artefacto], proyecto: bool = False):
     """Unidades que todo artefacto agéntico activo promete por `targets`."""
     for art in arts:
         if art.tipo not in ("skill", "agente") or \
-                art.campos.get("estado") != "activo":
+                art.campos.get("estado") != "activo" or \
+                not _alcance_admite(art, proyecto):
             continue
         nombre = art.campos.get("nombre")
         targets = art.campos.get("targets")
@@ -2202,8 +2209,9 @@ def _unidades_esperadas(arts: list[Artefacto]):
                     yield target, "skill", nombre, art
 
 
-def _unidades_runtime_posibles(arts: list[Artefacto]):
-    """Rutas user-level de toda forma donde el mismo URN puede persistir."""
+def _unidades_runtime_posibles(arts: list[Artefacto], proyecto: bool = False):
+    """Rutas del nivel donde el mismo URN puede persistir como residual."""
+    rutas = RUTAS_APLICAR_PROYECTO if proyecto else RUTAS_APLICAR
     for art in arts:
         nombre = art.campos.get("nombre")
         if art.tipo not in ("skill", "agente") or not art.urn \
@@ -2212,7 +2220,7 @@ def _unidades_runtime_posibles(arts: list[Artefacto]):
             continue
         for target in TARGETS_REALIZADOS:
             for tipo in ("skill", "agente"):
-                if (target, tipo) in RUTAS_APLICAR:
+                if (target, tipo) in rutas:
                     yield target, tipo, nombre, art
 
 
@@ -2339,17 +2347,33 @@ def _diferencias_blueprint(origen: Path, destino: Path) -> list[str]:
     return _diferencias_materia(origen, destino, esperados, observados)
 
 
-def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
-    """Paridad emisión↔instalación de nivel usuario (ley/3 §9.1). Solo
+def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
+                proyecto: str | None = None) -> int:
+    """Paridad emisión↔instalación user-level o project-level (ley/3 §9.1). Solo
     lectura: `fiel` = frontera KORA gestionada byte-idéntica a la emisión;
     `desviada` = instalación presente que difiere (stale o editada);
     `no-instalada` = informativo (el gesto no decide si debe instalarse).
     Las skills se comparan como directorios cerrados. En blueprints OpenClaw
     solo gobierna AGENTS.md y el SOUL.md atribuible al mismo par KORA; el
-    scaffolding y la memoria del runtime quedan fuera. Nivel proyecto fuera
-    del barrido (declarado)."""
+    scaffolding y la memoria del runtime quedan fuera."""
     emision = raiz / "_emision"
     arts = cargar_corpus(raiz)
+    base_proyecto = None
+    rutas_runtime = RUTAS_APLICAR
+    if proyecto is not None:
+        base_proyecto = Path(proyecto).expanduser()
+        if not base_proyecto.is_dir():
+            print(f"error: el proyecto '{proyecto}' no es un directorio.",
+                  file=sys.stderr)
+            return 1
+        rutas_runtime = RUTAS_APLICAR_PROYECTO
+        if target is not None and not any(
+                tgt == target for tgt, _ in rutas_runtime):
+            soportados = ", ".join(sorted({t for t, _ in rutas_runtime}))
+            print(f"error: el target '{target}' no soporta instalacion a "
+                  f"nivel proyecto (soportados: {soportados}).",
+                  file=sys.stderr)
+            return 1
     nombre_filtro = None
     if urn:
         try:
@@ -2370,6 +2394,17 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                   "corre `velar` y corrige antes de verificar paridad.",
                   file=sys.stderr)
             return 1
+        if not _alcance_admite(art, proyecto is not None):
+            alcance = art.campos.get("alcance", "ambos")
+            if proyecto is not None:
+                print(f"error: '{art.campos.get('nombre')}' declara alcance "
+                      f"'{alcance}'; no admite instalacion a nivel proyecto "
+                      "(--proyecto).", file=sys.stderr)
+            else:
+                print(f"error: '{art.campos.get('nombre')}' declara alcance "
+                      f"'{alcance}'; requiere --proyecto PATH (no se instala "
+                      "a nivel usuario).", file=sys.stderr)
+            return 1
         nombre_filtro = art.campos.get("nombre")
     for fuente in arts:
         if fuente.tipo not in ("skill", "agente"):
@@ -2384,14 +2419,23 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                   f"'{nombre}'. Corrige `forma-valida` primero.",
                   file=sys.stderr)
             return 1
-    esperadas = list(_unidades_esperadas(arts))
+    esperadas = list(_unidades_esperadas(arts, proyecto is not None))
     esperadas = [u for u in esperadas
                  if (target is None or u[0] == target)
-                 and (urn is None or u[3].urn == urn)]
+                 and (urn is None or u[3].urn == urn)
+                 and (u[0], u[1]) in rutas_runtime]
     unidades, anomalias_emision = _unidades_emision(emision)
     unidades = [u for u in unidades
                 if (target is None or u[0] == target)
-                and (nombre_filtro is None or u[2] == nombre_filtro)]
+                and (nombre_filtro is None or u[2] == nombre_filtro)
+                and (u[0], u[1]) in rutas_runtime]
+    por_urn = {art.urn: art for art in arts if art.urn}
+    unidades = [
+        unidad for unidad in unidades
+        if (fuente := _campos_sello_unidad(
+            unidad[3], unidad[1]).get("fuente")) not in por_urn
+        or _alcance_admite(por_urn[fuente], proyecto is not None)
+    ]
     if urn is not None:
         claves_esperadas = {u[:3] for u in esperadas}
         unidades = [
@@ -2402,6 +2446,8 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     anomalias_emision = [
         a for a in anomalias_emision
         if (target is None or a[0] is None or a[0] == target)
+        and (a[0] is None or any(
+            tgt == a[0] for tgt, _ in rutas_runtime))
         and (nombre_filtro is None or a[1] is None
              or a[1] == nombre_filtro)
     ]
@@ -2447,10 +2493,13 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     jerarquias_inseguras = set()
     for tgt, tipo, nombre, origen in unidades:
         clave = (tgt, tipo, nombre)
-        plantilla = RUTAS_APLICAR.get((tgt, tipo))
+        plantilla = rutas_runtime.get((tgt, tipo))
         if plantilla is None:
             continue
-        destino = Path(plantilla.format(nombre=nombre)).expanduser()
+        destino_rel = Path(plantilla.format(nombre=nombre))
+        destino = ((base_proyecto / destino_rel)
+                   if base_proyecto is not None
+                   else destino_rel.expanduser())
         conflicto_jerarquia = _conflicto_ancestros(destino)
         if conflicto_jerarquia is not None:
             jerarquias_inseguras.add(conflicto_jerarquia)
@@ -2524,7 +2573,7 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
                   "conflicto de propiedad: el proof-carrier no atribuye la "
                   f"instalación a ({fuente_esperada.urn}, {tgt})")
             continue
-        if tgt == "openclaw" and tipo == "skill":
+        if proyecto is None and tgt == "openclaw" and tipo == "skill":
             sombra = _skill_personal_sombrea_openclaw(nombre)
             if sombra is not None:
                 desviadas += 1
@@ -2558,7 +2607,7 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
         else:
             fiel += 1
             print(f"paridad: fiel          {tgt}  {nombre}")
-    posibles = list(_unidades_runtime_posibles(arts))
+    posibles = list(_unidades_runtime_posibles(arts, proyecto is not None))
     posibles = [
         unidad for unidad in posibles
         if (target is None or unidad[0] == target)
@@ -2569,10 +2618,13 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
         clave = (tgt, tipo, nombre)
         if clave in fuentes:
             continue
-        plantilla = RUTAS_APLICAR.get((tgt, tipo))
+        plantilla = rutas_runtime.get((tgt, tipo))
         if plantilla is None:
             continue
-        destino = Path(plantilla.format(nombre=nombre)).expanduser()
+        destino_rel = Path(plantilla.format(nombre=nombre))
+        destino = ((base_proyecto / destino_rel)
+                   if base_proyecto is not None
+                   else destino_rel.expanduser())
         conflicto_jerarquia = _conflicto_ancestros(destino)
         if conflicto_jerarquia is not None:
             if conflicto_jerarquia not in jerarquias_inseguras:
@@ -2851,13 +2903,13 @@ def principal(argv: list[str] | None = None) -> int:
     p.add_argument("--stdout", action="store_true",
                    help="imprime la emisión en vez de escribirla")
     p.add_argument("--proyecto", metavar="PATH",
-                   help="instala a nivel proyecto en <PATH>/.opencode|.claude/ "
-                        "(plural) en vez del home del operador; requiere "
-                        "--aplicar")
+                   help="selecciona nivel proyecto en PATH para --aplicar "
+                        "o --paridad, en vez del home del operador")
     p.add_argument("--paridad", action="store_true",
-                   help="verifica emisión↔instalación (nivel usuario, ley/3 "
-                        "§9.1): fiel / desviada / no-instalada; exit 1 si hay "
-                        "desviadas. Sin --urn ni --target barre todo")
+                   help="verifica emisión↔instalación (user-level por defecto; "
+                        "project-level con --proyecto, ley/3 §9.1): fiel / "
+                        "desviada / no-instalada; exit 1 si hay desviadas. "
+                        "Sin --urn ni --target barre todo")
 
     p = sub.add_parser("ciclo", help="transición de lifecycle (solo adelante)")
     p.add_argument("urn")
@@ -2887,12 +2939,13 @@ def principal(argv: list[str] | None = None) -> int:
         return cmd_velar(raiz, args.estricto)
     if args.gesto == "transmutar":
         if args.paridad:
-            if args.aplicar or args.stdout or args.proyecto:
+            if args.aplicar or args.stdout:
                 print("error: --paridad es verificación de solo lectura; no "
-                      "admite --aplicar, --stdout ni --proyecto.",
+                      "admite --aplicar ni --stdout.",
                       file=sys.stderr)
                 return 1
-            return cmd_paridad(raiz, args.target, args.urn)
+            return cmd_paridad(
+                raiz, args.target, args.urn, args.proyecto)
         if not args.urn or not args.target:
             print("error: transmutar requiere --urn y --target (salvo en "
                   "modo --paridad).", file=sys.stderr)

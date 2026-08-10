@@ -63,7 +63,7 @@ El recorrido cotidiano tiene tres gestos:
 ```bash
 python3 kora.py velar
 python3 kora.py transmutar --urn <urn> --target <target>
-python3 kora.py transmutar --paridad --urn <urn> --target <target>
+python3 kora.py transmutar --paridad --urn <urn> --target <target> [--proyecto <path>]
 ```
 
 `censo` y `nombre` ayudan a descubrir o resolver. `velar --estricto`, la

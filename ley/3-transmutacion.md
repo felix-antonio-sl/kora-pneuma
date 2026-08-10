@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.9.0
+# KORA/Transmutación — ley pneuma v2.10.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -303,7 +303,8 @@ el núcleo demostrado, la evidencia operacional y los puentes por formalizar.
 ## 7. Emisión por target
 
 Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout] [--proyecto PATH]`,
-o en modo verificación `transmutar --paridad [--urn U] [--target T]` (§9.1).
+o en modo verificación `transmutar --paridad [--urn U] [--target T] [--proyecto PATH]`
+(§9.1).
 Default: escribe bajo `_emision/{target}/...` (derivado, gitignored) y
 reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 
@@ -438,7 +439,7 @@ fuera: lo materializa el deploy fleet preservando memoria y estado mutable. Los
 agentes de archivo único solo administran su archivo exacto y no tocan hermanos
 del directorio.
 
-`--proyecto PATH` (requiere `--aplicar`): redirige la instalación al nivel
+`--aplicar --proyecto PATH` redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
 claude-code → `PATH/.claude/skills/{nombre}/` y `PATH/.claude/agents/{nombre}.md`;
 codex → `PATH/.agents/skills/{nombre}/` y `PATH/.codex/agents/{nombre}.toml`;
@@ -516,9 +517,10 @@ declaradas de §6.
 
 La frescura tiene dos aguas. `sello-fresco` (§9) vigila **emisión↔fuente**;
 la **paridad** vigila **emisión↔instalación**: que la frontera KORA gestionada
-en el runtime de nivel usuario sea byte-idéntica a lo emitido. Gesto:
-`transmutar --paridad [--urn U] [--target T]` — solo lectura; sin filtros
-barre todas las emisiones.
+en el runtime elegido sea byte-idéntica a lo emitido. Gesto:
+`transmutar --paridad [--urn U] [--target T] [--proyecto PATH]` — solo lectura;
+sin `--proyecto` audita nivel usuario/flota y con él usa exactamente el layout
+project-level de `--aplicar --proyecto` sin mutar el proyecto ni `_emision/`.
 
 Reglas:
 
@@ -559,9 +561,11 @@ Reglas:
    los factores KORA emitidos ni residuales atribuibles es `no-instalada`: el
    scaffolding contenedor no equivale a despliegue. Un factor ajeno presente
    bloquea solo si ocupa un nombre que el producto intenta gestionar.
-4. Alcance honesto: la paridad cubre las instalaciones de **nivel
-   usuario/flota** (las rutas de `--aplicar`); las instalaciones `--proyecto`
-   quedan fuera del barrido (declarado, no mecanizado).
+4. Alcance honesto: el barrido user-level espera unidades activas con
+   `alcance: usuario|ambos`; el barrido `--proyecto` espera
+   `alcance: proyecto|ambos` (ausente = `ambos`). Un `--urn` focal incompatible
+   con el nivel falla como `--aplicar`. `PATH` DEBE ser un directorio existente
+   y un target explícito DEBE tener layout project-level; OpenClaw no lo tiene.
 5. La paridad NO es check de `velar` (registro cerrado, constitución §11):
    `velar` vela el corpus; la paridad mira el mundo. Por eso vive como modo
    del gesto `transmutar`, que ya gobierna la relación IR↔runtime.
@@ -602,11 +606,10 @@ clase de fallos sin fingir que la instalación es corpus.
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
-| Paridad exacta y tipada de la superficie KORA (emisión↔instalación de nivel usuario) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad`) |
+| Paridad exacta y tipada de la superficie KORA (emisión↔instalación user-level o project-level) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad [--proyecto PATH]`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
 | Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
 | Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
-| Paridad de instalaciones `--proyecto` | §9.1 r4 | declarado |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
 | `naturalidad-xi` | §6 | deuda por tipar |
 | `cierre-safety` | §6 | deuda por tipar |
@@ -731,3 +734,10 @@ fuentes al diagnóstico optativo `velar --estricto`. La comparación exacta de
 fuente, generador, sidecars y `referencias/` no cambia; solo deja de bloquear
 validaciones y promociones no relacionadas con un derivado rancio. No cambia
 matrices, formato de sello ni bytes emitidos.
+
+v2.10.0 (2026-08-10): mecaniza la paridad project-level con
+`transmutar --paridad --proyecto PATH`, usando el mismo layout que
+`--aplicar --proyecto` y conservando la inspección de solo lectura, atribución,
+tipos e igualdad byte a byte. Cada nivel deriva sus unidades esperadas desde
+`alcance` (`usuario|ambos` o `proyecto|ambos`; ausente = `ambos`) y los focales
+incompatibles fallan cerrados. Extensión aditiva del modo de verificación.

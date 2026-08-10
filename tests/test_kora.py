@@ -1838,6 +1838,194 @@ class TestParidad(CasoPneuma):
         }), encoding="utf-8")
         return mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True)
 
+    def snapshot_arbol(self, raiz):
+        snapshot = {}
+        for path in sorted(raiz.rglob("*")):
+            rel = path.relative_to(raiz).as_posix()
+            if path.is_symlink():
+                snapshot[rel] = ("symlink", os.readlink(path))
+            elif path.is_dir():
+                snapshot[rel] = ("directorio", None)
+            else:
+                snapshot[rel] = ("archivo", path.read_bytes())
+        return snapshot
+
+    def test_paridad_proyecto_codex_persona_dual_es_fiel_y_solo_lectura(self):
+        urn = "urn:dev:artefacto:agente-x"
+        self.escribir_agente(agente_campos(
+            targets=["codex"], alcance="proyecto"))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", urn, "--target", "codex",
+            "--aplicar", "--proyecto", str(proyecto),
+        ])[0], 0)
+        proyecto_antes = self.snapshot_arbol(proyecto)
+        emision_antes = self.snapshot_arbol(self.raiz / "_emision")
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--paridad", "--urn", urn,
+            "--target", "codex", "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 0, err or salida)
+        self.assertEqual(salida.count("paridad: fiel"), 2, salida)
+        self.assertIn("codex  agente-x", salida)
+        self.assertEqual(self.snapshot_arbol(proyecto), proyecto_antes)
+        self.assertEqual(
+            self.snapshot_arbol(self.raiz / "_emision"), emision_antes)
+
+    def test_paridad_proyecto_drift_bloquea(self):
+        urn = "urn:kora:artefacto:util-x"
+        self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="proyecto"))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", urn, "--target", "codex",
+            "--aplicar", "--proyecto", str(proyecto),
+        ])[0], 0)
+        instalada = proyecto / ".agents/skills/util-x/SKILL.md"
+        instalada.write_text(
+            instalada.read_text("utf-8") + "\nDRIFT\n", "utf-8")
+
+        codigo, salida, _ = self.correr([
+            "transmutar", "--paridad", "--urn", urn,
+            "--target", "codex", "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 1, salida)
+        self.assertIn("paridad: desviada", salida)
+        self.assertIn("difiere SKILL.md", salida)
+
+    def test_paridad_proyecto_path_inexistente_falla(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        inexistente = self.raiz / "no-existe"
+
+        codigo, _, err = self.correr([
+            "transmutar", "--paridad", "--target", "codex",
+            "--proyecto", str(inexistente),
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("no es un directorio", err)
+        self.assertFalse(inexistente.exists())
+
+    def test_paridad_proyecto_target_sin_layout_falla(self):
+        self.escribir_skill(skill_campos(targets=["openclaw"]))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+
+        codigo, _, err = self.correr([
+            "transmutar", "--paridad", "--target", "openclaw",
+            "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("no soporta instalacion a nivel proyecto", err)
+
+    def test_paridad_usuario_omite_unidad_solo_proyecto(self):
+        urn = "urn:kora:artefacto:util-x"
+        self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="proyecto"))
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", urn, "--target", "codex",
+        ])[0], 0)
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--paridad", "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 0, err or salida)
+        self.assertNotIn("util-x", salida)
+        self.assertNotIn("paridad: no-instalada", salida)
+
+    def test_paridad_focal_rechaza_alcance_incompatible(self):
+        urn = "urn:kora:artefacto:util-x"
+        self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="usuario"))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+
+        codigo, _, err = self.correr([
+            "transmutar", "--paridad", "--urn", urn,
+            "--target", "codex", "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("alcance 'usuario'", err)
+
+    def test_paridad_proyecto_detecta_residual_de_alcance_usuario(self):
+        urn = "urn:kora:artefacto:util-x"
+        fuente = self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="ambos"))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", urn, "--target", "codex",
+            "--aplicar", "--proyecto", str(proyecto),
+        ])[0], 0)
+        fuente.write_text(doc(skill_campos(
+            targets=["codex"], alcance="usuario")), "utf-8")
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--paridad", "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 1, err or salida)
+        self.assertIn(
+            "paridad: desviada      codex  util-x :: "
+            "instalación residual de unidad no vigente", salida)
+        self.assertNotIn("paridad: no-instalada", salida)
+
+    def test_paridad_usuario_detecta_residual_de_alcance_proyecto(self):
+        urn = "urn:kora:artefacto:util-x"
+        fuente = self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="ambos"))
+        with self.con_rutas():
+            self.assertEqual(self.correr([
+                "transmutar", "--urn", urn, "--target", "codex",
+                "--aplicar",
+            ])[0], 0)
+            fuente.write_text(doc(skill_campos(
+                targets=["codex"], alcance="proyecto")), "utf-8")
+
+            codigo, salida, err = self.correr([
+                "transmutar", "--paridad",
+            ])
+
+        self.assertEqual(codigo, 1, err or salida)
+        self.assertIn(
+            "paridad: desviada      codex  util-x :: "
+            "instalación residual de unidad no vigente", salida)
+        self.assertNotIn("paridad: no-instalada", salida)
+
+    def test_paridad_proyecto_barre_target_completo(self):
+        urn_skill = "urn:kora:artefacto:util-x"
+        urn_agente = "urn:dev:artefacto:agente-x"
+        self.escribir_skill(skill_campos(
+            targets=["codex"], alcance="ambos"))
+        self.escribir_agente(agente_campos(
+            targets=["codex"], alcance="proyecto"))
+        self.escribir_skill(skill_campos(
+            urn="urn:kora:artefacto:solo-openclaw",
+            nombre="solo-openclaw", targets=["openclaw"], alcance="ambos"))
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        for urn in (urn_skill, urn_agente):
+            self.assertEqual(self.correr([
+                "transmutar", "--urn", urn, "--target", "codex",
+                "--aplicar", "--proyecto", str(proyecto),
+            ])[0], 0)
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--paridad", "--proyecto", str(proyecto),
+        ])
+
+        self.assertEqual(codigo, 0, err or salida)
+        self.assertEqual(salida.count("paridad: fiel"), 3, salida)
+        self.assertNotIn("solo-openclaw", salida)
+
     def test_recorrido_cotidiano_focal_es_fiel(self):
         urn = "urn:kora:artefacto:util-x"
         target = "claude-code"
