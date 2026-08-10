@@ -1100,6 +1100,21 @@ class TestCenso(CasoPneuma):
         contenido = (self.raiz / "censo.json").read_text(encoding="utf-8")
         self.assertEqual(contenido, self.correr(["censo", "--json"])[1])
 
+    def test_rechaza_modos_de_salida_incompatibles(self):
+        combinaciones = (
+            ("--json", "--escribir"),
+            ("--json", "--huerfanos"),
+            ("--escribir", "--huerfanos"),
+        )
+        for izquierda, derecha in combinaciones:
+            with self.subTest(izquierda=izquierda, derecha=derecha):
+                codigo, salida, err = self.correr(
+                    ["censo", izquierda, derecha])
+                self.assertEqual(codigo, 2)
+                self.assertEqual(salida, "")
+                self.assertIn("modos de salida incompatibles", err)
+                self.assertFalse((self.raiz / "censo.json").exists())
+
     def test_nombre_inexistente_falla(self):
         codigo, _, err = self.correr(["nombre", "urn:kora:kb:fantasma"])
         self.assertEqual(codigo, 1)
@@ -1115,6 +1130,30 @@ class TestCenso(CasoPneuma):
         self.assertIn(
             "path: artefactos/skills/kora/nombre-runtime/SKILL.md", salida)
         self.assertNotIn("artefactos/skills/kora/identidad-estable", salida)
+
+    def test_gestos_rechazan_urn_duplicado_sin_mutar(self):
+        urn = "urn:kora:artefacto:util-x"
+        primera = self.escribir_skill(skill_campos(nombre="alpha"))
+        segunda = self.escribir_skill(skill_campos(nombre="beta"))
+        originales = (primera.read_bytes(), segunda.read_bytes())
+        gestos = (
+            ["nombre", urn],
+            ["transmutar", "--urn", urn, "--target", "claude-code",
+             "--stdout"],
+            ["transmutar", "--paridad", "--urn", urn,
+             "--target", "claude-code"],
+            ["ciclo", urn, "deprecado"],
+        )
+        for argv in gestos:
+            with self.subTest(argv=argv):
+                codigo, _, err = self.correr(argv)
+                self.assertEqual(codigo, 1)
+                self.assertIn("URN ambiguo", err)
+                self.assertIn(primera.relative_to(self.raiz).as_posix(), err)
+                self.assertIn(segunda.relative_to(self.raiz).as_posix(), err)
+        self.assertEqual(
+            (primera.read_bytes(), segunda.read_bytes()), originales)
+        self.assertFalse((self.raiz / "_emision").exists())
 
 
 # ------------------------------------------- 13. velar sobre corpus válido
@@ -1819,6 +1858,52 @@ class TestParidad(CasoPneuma):
         self.assertIn("paridad: fiel", salida)
         self.assertTrue(
             (self.raiz / "runtime/claude/skills/util-x/SKILL.md").is_file())
+
+    def test_urn_de_conocimiento_no_audita_homonimo_agentico(self):
+        nombre = "colision-x"
+        urn_conocimiento = "urn:kora:kb:colision-x"
+        urn_skill = "urn:kora:artefacto:colision-x"
+        self.escribir_conocimiento(conocimiento_campos(
+            urn=urn_conocimiento, nombre=nombre))
+        self.escribir_skill(skill_campos(
+            urn=urn_skill, nombre=nombre, targets=["claude-code"]))
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", urn_skill,
+            "--target", "claude-code",
+        ])[0], 0)
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--paridad", "--urn", urn_conocimiento,
+            "--target", "claude-code",
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertEqual(salida, "")
+        self.assertIn("el conocimiento no se transmuta", err)
+
+    def test_paridad_focal_ignora_emision_homonima_de_otro_urn(self):
+        nombre = "colision-x"
+        urn_agente = "urn:dev:artefacto:colision-agent"
+        urn_skill = "urn:kora:artefacto:colision-skill"
+        self.escribir_agente(agente_campos(
+            urn=urn_agente, nombre=nombre, targets=["claude-code"]))
+        with self.con_rutas():
+            self.assertEqual(self.correr([
+                "transmutar", "--urn", urn_agente,
+                "--target", "claude-code", "--aplicar",
+            ])[0], 0)
+            self.escribir_skill(skill_campos(
+                urn=urn_skill, nombre=nombre, targets=["claude-code"]))
+
+            codigo, salida, err = self.correr([
+                "transmutar", "--paridad", "--urn", urn_skill,
+                "--target", "claude-code",
+            ])
+
+        self.assertEqual(codigo, 1, err or salida)
+        self.assertIn(
+            "sin-emision    claude-code  colision-x (skill)", salida)
+        self.assertNotIn("emisión histórica", salida)
 
     def test_paridad_desviada_exit_1(self):
         self.escribir_skill()

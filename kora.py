@@ -134,6 +134,10 @@ class ErrorDeForma(Exception):
         super().__init__(f"línea {linea}: {mensaje}")
 
 
+class ErrorResolucion(Exception):
+    """Un URN no identifica unívocamente una fuente del corpus."""
+
+
 def _quitar_comentario(crudo: str) -> str:
     """Recorta un comentario al final de línea, respetando comillas dobles."""
     dentro = False
@@ -348,10 +352,13 @@ def cargar_corpus(raiz: Path) -> list[Artefacto]:
 
 def resolver(arts: list[Artefacto], urn: str) -> Artefacto | None:
     """Resuelve un URN en el corpus — incluidos deprecados y retirados."""
-    for art in arts:
-        if art.urn == urn:
-            return art
-    return None
+    coincidencias = [art for art in arts if art.urn == urn]
+    if len(coincidencias) > 1:
+        rutas = ", ".join(art.rel for art in coincidencias)
+        raise ErrorResolucion(
+            f"URN ambiguo '{urn}': resuelve a {len(coincidencias)} fuentes: "
+            f"{rutas}. Corrige el duplicado antes de operar")
+    return coincidencias[0] if coincidencias else None
 
 
 # ----------------------------------------------------------------- censo
@@ -1817,7 +1824,11 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
               file=sys.stderr)
         return 1
     arts = cargar_corpus(raiz)
-    art = resolver(arts, urn)
+    try:
+        art = resolver(arts, urn)
+    except ErrorResolucion as exc:
+        print(f"error: {exc}.", file=sys.stderr)
+        return 1
     if art is None:
         print(f"error: el URN '{urn}' no resuelve en el censo.",
               file=sys.stderr)
@@ -2341,14 +2352,29 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     arts = cargar_corpus(raiz)
     nombre_filtro = None
     if urn:
-        art = resolver(arts, urn)
+        try:
+            art = resolver(arts, urn)
+        except ErrorResolucion as exc:
+            print(f"error: {exc}.", file=sys.stderr)
+            return 1
         if art is None:
             print(f"error: el URN '{urn}' no resuelve en el censo.",
+                  file=sys.stderr)
+            return 1
+        if art.tipo == "conocimiento":
+            print("error: el conocimiento no se transmuta ni tiene "
+                  "instalación cuya paridad verificar.", file=sys.stderr)
+            return 1
+        if art.tipo not in ("skill", "agente"):
+            print(f"error: '{urn}' no tiene un frontmatter agéntico íntegro; "
+                  "corre `velar` y corrige antes de verificar paridad.",
                   file=sys.stderr)
             return 1
         nombre_filtro = art.campos.get("nombre")
     for fuente in arts:
         if fuente.tipo not in ("skill", "agente"):
+            continue
+        if urn is not None and fuente.urn != urn:
             continue
         nombre = fuente.campos.get("nombre")
         if nombre_filtro is not None and nombre != nombre_filtro:
@@ -2361,11 +2387,18 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     esperadas = list(_unidades_esperadas(arts))
     esperadas = [u for u in esperadas
                  if (target is None or u[0] == target)
-                 and (nombre_filtro is None or u[2] == nombre_filtro)]
+                 and (urn is None or u[3].urn == urn)]
     unidades, anomalias_emision = _unidades_emision(emision)
     unidades = [u for u in unidades
                 if (target is None or u[0] == target)
                 and (nombre_filtro is None or u[2] == nombre_filtro)]
+    if urn is not None:
+        claves_esperadas = {u[:3] for u in esperadas}
+        unidades = [
+            u for u in unidades
+            if u[:3] in claves_esperadas
+            or _sello_atribuye_unidad(u[3], u[1], urn, u[0])
+        ]
     anomalias_emision = [
         a for a in anomalias_emision
         if (target is None or a[0] is None or a[0] == target)
@@ -2529,7 +2562,7 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None) -> int:
     posibles = [
         unidad for unidad in posibles
         if (target is None or unidad[0] == target)
-        and (nombre_filtro is None or unidad[2] == nombre_filtro)
+        and (urn is None or unidad[3].urn == urn)
     ]
     residuos_reportados = set()
     for tgt, tipo, nombre, fuente in posibles:
@@ -2589,7 +2622,11 @@ RE_LINEA_ESTADO = re.compile(
 
 def cmd_ciclo(raiz: Path, urn: str, nuevo: str) -> int:
     arts = cargar_corpus(raiz)
-    art = resolver(arts, urn)
+    try:
+        art = resolver(arts, urn)
+    except ErrorResolucion as exc:
+        print(f"error: {exc}.", file=sys.stderr)
+        return 1
     if art is None:
         print(f"error: el URN '{urn}' no resuelve en el censo.",
               file=sys.stderr)
@@ -2745,7 +2782,11 @@ def cmd_censo(raiz: Path, como_json: bool, escribir: bool,
 
 
 def cmd_nombre(raiz: Path, urn: str) -> int:
-    art = resolver(cargar_corpus(raiz), urn)
+    try:
+        art = resolver(cargar_corpus(raiz), urn)
+    except ErrorResolucion as exc:
+        print(f"error: {exc}.", file=sys.stderr)
+        return 1
     if art is None:
         print(f"error: el URN '{urn}' no resuelve en el censo.",
               file=sys.stderr)
@@ -2827,6 +2868,18 @@ def principal(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     raiz = raiz_corpus()
     if args.gesto == "censo":
+        modos = [
+            nombre for nombre, activo in (
+                ("--json", args.json),
+                ("--escribir", args.escribir),
+                ("--huerfanos", args.huerfanos),
+            )
+            if activo
+        ]
+        if len(modos) > 1:
+            print("error: modos de salida incompatibles para censo: "
+                  + ", ".join(modos) + ".", file=sys.stderr)
+            return 2
         return cmd_censo(raiz, args.json, args.escribir, args.huerfanos)
     if args.gesto == "nombre":
         return cmd_nombre(raiz, args.urn)
