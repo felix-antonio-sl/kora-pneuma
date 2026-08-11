@@ -1,7 +1,7 @@
 interface:
   display_name: "Codex Route"
-  short_description: "Diseña una ruta Sol/Terra/Luna y el grafo mínimo de sesiones."
-  default_prompt: "Usa $codex-route para evaluar esta tarea en modo route-only y emitir la ruta mínima."
+  short_description: "Enruta superficie, Sol/Terra/Luna, esfuerzo y goal."
+  default_prompt: "Usa $codex-route en modo route-only para proponer la superficie, el modelo, el esfuerzo, el goal y el grafo mínimos."
 
 policy:
   allow_implicit_invocation: false

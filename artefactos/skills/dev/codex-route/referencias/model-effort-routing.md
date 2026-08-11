@@ -1,4 +1,4 @@
-# Routing trifamiliar de modelo y esfuerzo
+# Routing trifamiliar de superficie, modelo y esfuerzo
 
 ## Política cerrada
 
@@ -19,15 +19,17 @@ fallback fuera de la allowlist está prohibido.
 
 ## Unidad de decisión
 
-Seleccionar un **par modelo–esfuerzo**, no una familia y luego un esfuerzo por
-inercia. El par candidato más barato debe satisfacer primero calidad, seguridad
-y aceptación. Sin contabilidad comparable, enrutar por gates y declarar costo
-`unknown`. Comparar esfuerzos iguales entre familias no prueba eficiencia:
-una Luna con más esfuerzo o una Sol con menos esfuerzo puede superar a Terra.
+Seleccionar un **triple superficie–modelo–esfuerzo**, no una familia, esfuerzo o
+superficie por inercia. La forma canónica vive en `execution-surfaces.md`:
+`route_candidate = (execution_surface, model, effort)`. El triple candidato más
+barato debe satisfacer primero calidad, seguridad y aceptación. Sin contabilidad
+comparable, enrutar por gates y declarar costo `unknown`. Comparar esfuerzos
+iguales entre familias no prueba eficiencia: una Luna con más esfuerzo o una Sol
+con menos esfuerzo puede superar a Terra.
 
-Un par está **dominado en sentido de Pareto** cuando otro par ejecutable no es
+Un triple está **dominado en sentido de Pareto** cuando otro triple ejecutable no es
 peor en calidad ni seguridad, cuesta lo mismo o menos y mejora al menos una de
-esas dimensiones. No recomendar un par dominado dentro del conjunto disponible.
+esas dimensiones. No recomendar un triple dominado dentro del conjunto disponible.
 Solo una evaluación representativa o evidencia operacional comparable prueba
 esa dominancia para el workload local; un índice agregado es un prior de
 calibración, no un oráculo de la tarea.
@@ -37,6 +39,8 @@ Separar para la directora y cada sesión:
 ```text
 recommended_model / available_models / effective_model / model_compliance
 recommended_effort / available_efforts / effective_effort / effort_compliance
+recommended_execution_surface / available_execution_surfaces
+effective_execution_surface / execution_surface_compliance
 cost_status / routing_basis
 ```
 
@@ -44,9 +48,34 @@ Cumplimiento: `exact | degraded | unknown | blocked`. Costo:
 `optimal | cost_degraded | overprovisioned | unknown`. Si lo efectivo o la contabilidad
 son desconocidos, declarar `unknown`; nunca inferirlos desde una recomendación.
 
+## Comparación privilegiada Luna Max ↔ Sol High
+
+Cuando **ambos pares ejecutables** existen en alguna superficie permitida y el
+gate de Luna se satisface, registrar una **comparación privilegiada Luna Max ↔
+Sol High**. Luna Max es candidata prioritaria para implementación y ejecución
+específica, determinada, con oráculo fuerte e integración baja; Sol High es la
+referencia para juicio, arquitectura, adjudicación e integración difícil.
+
+```yaml
+privileged_comparison:
+  candidates: [gpt-5.6-luna:max, gpt-5.6-sol:high]
+  executable_surfaces: []
+  evidence: []
+  selected_candidate: id | unknown
+  discarded_candidate_reason: text | evidence_missing
+```
+
+La ruta debe explicar por qué descarta uno de los dos. Si persiste un gate
+obligatorio de Sol, Luna queda inelegible y se registra esa razón; si Luna pasa
+su gate, comparar costo total, calidad, latencia, corrección humana e integración
+con una eval representativa local. Sin evidencia comparable se puede decidir por
+gates y prior oficial, pero `cost_status` y dominancia quedan `unknown`. Esta
+preferencia **no establece dominancia universal** ni prueba por sí sola que Luna
+sea más barata o Sol mejor para el workload.
+
 ## Preflight y fallos cerrados
 
-Inspeccionar el contrato vivo de creación. No inferir disponibilidad desde una
+Inspeccionar el contrato vivo de cada superficie. No inferir disponibilidad desde una
 ejecución anterior, documentación general o el catálogo de la cuenta.
 
 - Directora efectiva observada fuera de allowlist:
@@ -55,14 +84,15 @@ ejecución anterior, documentación general o el catálogo de la cuenta.
   `ROUTE_ERROR · director_model_unobserved`.
 - Sol requerido y no disponible:
   `ROUTE_ERROR · sol_required_unavailable`; Terra y Luna no lo sustituyen.
-- Luna preferida e indisponible: reevaluar Terra si pasa su gate; después Sol,
-  `collapse` o `blocked`. Declarar `cost_degraded` solo con costo observado;
-  de otro modo `cost_status: unknown`.
+- Luna preferida e indisponible en la superficie propuesta: reevaluar otra
+  superficie autorizada; después Terra si pasa su gate, Sol, `collapse` o
+  `blocked`. Declarar `cost_degraded` solo con costo observado; de otro modo
+  `cost_status: unknown`.
 - Terra preferida e indisponible: comparar Luna con más esfuerzo y Sol con
-  menos esfuerzo; usar el par más barato que todavía cumpla aceptación.
+  menos esfuerzo; usar el triple más barato que todavía cumpla aceptación.
 - Ningún override permitido en allowlist: no crear el descendiente.
 
-No existe fallback fijo por nombre de familia. Recalcular sobre pares
+No existe fallback fijo por nombre de familia. Recalcular sobre triples
 ejecutables y declarar `recommended ≠ effective`. Sol→Terra o Sol→Luna está
 prohibido mientras persista un gate obligatorio de Sol.
 
@@ -125,11 +155,11 @@ juicio exige Sol y gate humano.
 ## Dos pasadas
 
 ```text
-director_pair = route(CEM_global_residual, available_pairs)
+director_route = route(CEM_global_residual, available_triples)
 SGM = design_graph(task)
 integration_load = J(SGM)
-director_pair = adjust_effort(director_pair, integration_load)
-node_pair_i = route(CEM_local_residual_i, available_pairs_i)
+director_route = adjust_effort(director_route, integration_load)
+node_route_i = route(CEM_local_residual_i, available_triples_i)
 ```
 
 `integration_load` ajusta el esfuerzo de la directora, no el de cada worker.

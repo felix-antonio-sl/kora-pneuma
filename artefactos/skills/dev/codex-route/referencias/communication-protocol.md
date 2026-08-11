@@ -8,6 +8,8 @@ Inspeccionar la superficie viva antes de crear sesiones:
 runtime_preflight:
   root_model_observed: true | false
   root_model_allowed: true | false
+  available_execution_surfaces: []
+  current_session_available: true | false
   spawn_available: true | false
   model_override_available: true | false
   luna_override_available: true | false
@@ -16,11 +18,18 @@ runtime_preflight:
   effort_override_available: true | false
   fork_control_available: true | false
   lifecycle_controls: []
+  independent_thread_surface:
+    create_available: true | false
+    project_resolved: true | false
+    available_models: []
+    available_efforts: []
+    creation_authorized: true | false
+  native_goal_controls: []
 ```
 
-No inferir un override desde documentación o ejecuciones pasadas. Si la
-directora no es observable o permitida, o el modelo requerido no puede fijarse,
-aplicar los fallos cerrados de `model-effort-routing.md`.
+No inferir una superficie u override desde documentación o ejecuciones pasadas.
+Si la directora no es observable o permitida, o el triple requerido no puede
+fijarse, aplicar los fallos cerrados de `model-effort-routing.md`.
 
 ## Planos del grafo
 
@@ -82,6 +91,10 @@ stop_conditions: []
 escalation_conditions: []
 cognitive_class: bounded-verifiable | judgment-intensive
 routing_basis: []
+recommended_execution_surface: current_session | subagent | independent_thread
+available_execution_surfaces: []
+effective_execution_surface: id | unknown
+execution_surface_compliance: exact | degraded | unknown | blocked
 recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
 available_models: []
 effective_model: id | unknown
@@ -105,9 +118,19 @@ route:
   mode: route-only | route-and-run
   evidence_status: proposed | preflighted | executed | verified
   confidence: low | medium | high
+  native_goal:
+    fit: yes | no | unknown
+    scope: thread | objective | none
+    activation: proposed | active | not_authorized | blocked_existing_goal
+    reason: text
+    stopping_condition: text | none
   director:
     global_profile: optional
     integration_load: 0..4
+    recommended_execution_surface: current_session
+    available_execution_surfaces: []
+    effective_execution_surface: id | unknown
+    execution_surface_compliance: exact | degraded | unknown | blocked
     recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
     available_models: []
     effective_model: id | unknown
@@ -126,7 +149,11 @@ route:
   dependencies: []
   peer_edges: []
   worktrees: []
-  candidate_pairs: []
+  candidate_triples: []
+  privileged_comparison:
+    candidates: [gpt-5.6-luna:max, gpt-5.6-sol:high]
+    selected_candidate: id | unknown
+    discarded_candidate_reason: text | evidence_missing
   cheaper_route_not_used: text | none
   stop: []
   verification: []
@@ -135,6 +162,23 @@ route:
 `confidence` expresa confianza en que la ruta es adecuada, no confianza en la
 solución de la tarea. `evidence_status` distingue diseño, capacidad observada,
 ejecución y resultado global verificado.
+
+## Goal nativo
+
+Toda propuesta `COMPACT_GRAPH_ROUTE` o `FULL_GRAPH_ROUTE` evalúa `native_goal`;
+`S0 + goal` es una ruta válida y puede ser menor que un grafo. Usarlo cuando un
+objetivo durable de varios turnos tiene una condición de término verificable y
+la continuidad aporta más que el costo de seguimiento.
+
+La activación requiere autorización explícita. Antes de `create_goal`, llamar
+`get_goal`: un goal inconcluso impide crear otro. Presupuesto o token budget solo
+se fija si el usuario lo pide. `update_goal` marca `complete` únicamente con el
+objetivo logrado, o `blocked` según el contrato vivo; no inventar pausa o resume.
+
+El Goal no reemplaza el objetivo, el DAG, el contrato de sesión, la aceptación,
+la verificación ni el ownership. Su scope es el thread donde se crea y su
+condición de término debe formar parte de la ruta, incluso si la activación queda
+`proposed` o `not_authorized`.
 
 ## Contexto y operaciones vivas
 
@@ -150,6 +194,15 @@ necesita todo, `K` es baja y probablemente no debe delegarse.
 - `list_agents`: observar estado y slots;
 - `interrupt_agent`: detener y redirigir sin descartar automáticamente contexto.
 
+Para threads independientes, resolver primero con `list_projects`; crear con
+`create_thread` solo tras solicitud explícita; observar con `list_threads` y
+`read_thread`; dirigir seguimientos con `send_message_to_thread`. Título, pin y
+archivo requieren operaciones expuestas y autoridad específica. Un
+`route-and-run` genérico no autoriza crear un thread de propiedad del usuario.
+
+Para goal nativo, usar solo `get_goal`, `create_goal` y `update_goal` según sus
+precondiciones observadas.
+
 Usar solo operaciones expuestas. No inventar nombres, campos o lifecycle.
 
 ## Lifecycle
@@ -162,6 +215,10 @@ No tratar `completed` como integrado. Evaluar el resultado, incorporarlo y
 verificar el objetivo global antes de `integrated`. Si `close_agent` está
 expuesto, cerrar L0/L1 después de integrar. Si no está expuesto, no inventarlo
 y declarar la limitación de lifecycle.
+
+Un thread independiente sigue `planned → created → running → completed →
+integrated`; no se vuelve hijo ni se archiva por completar. Permanece bajo
+propiedad del usuario y la directora registra qué evidencia integró.
 
 ## Concurrencia, escritura y worktrees
 

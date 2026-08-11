@@ -26,7 +26,7 @@ class TestCodexRoute(unittest.TestCase):
         self.assertEqual(
             self.campos["urn"], "urn:dev:artefacto:codex-route")
         self.assertEqual(self.campos["nombre"], "codex-route")
-        self.assertEqual(self.campos["version"], "2.1.0")
+        self.assertEqual(self.campos["version"], "2.2.0")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
         self.assertEqual(self.campos["targets"], ["codex"])
@@ -47,7 +47,7 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("`route-and-run` — explícito", cuerpo)
         self.assertIn("no amplía permisos", cuerpo)
 
-    def test_politica_trifamiliar_fija_modelo_y_evade_dominancia_pareto(self):
+    def test_politica_trifamiliar_fija_triple_y_evade_dominancia_pareto(self):
         archivos = [SKILL] + sorted(REFERENCIAS.glob("*.md"))
         corpus = "\n".join(p.read_text("utf-8") for p in archivos).lower()
         self.assertNotRegex(corpus, r"\bultra\b")
@@ -63,7 +63,8 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("allowlist estricta", routing_normalizado)
         self.assertIn("descendiente sin modelo fijado", routing_normalizado)
         self.assertIn("fallback fuera de la allowlist", routing_normalizado)
-        self.assertIn("par modelo–esfuerzo", routing_normalizado)
+        self.assertIn(
+            "triple superficie–modelo–esfuerzo", routing_normalizado)
         self.assertIn("dominado en sentido de pareto", routing_normalizado)
 
     def test_fallbacks_fallan_cerrado_y_preflight_observa_runtime(self):
@@ -109,6 +110,57 @@ class TestCodexRoute(unittest.TestCase):
             self.assertIn(campo, schema)
         self.assertIn("cognitive_class", schema)
         self.assertIn("routing_basis", schema)
+
+    def test_ruta_decide_superficie_modelo_y_esfuerzo(self):
+        superficies_path = REFERENCIAS / "execution-surfaces.md"
+        self.assertTrue(superficies_path.is_file())
+        superficies = superficies_path.read_text("utf-8")
+        superficies_normalizadas = " ".join(superficies.lower().split())
+        for testigo in (
+                "route_candidate = (execution_surface, model, effort)",
+                "current_session", "subagent", "independent_thread",
+                "`create_thread`", "`list_projects`", "`read_thread`",
+                "`send_message_to_thread`"):
+            self.assertIn(testigo, superficies)
+        self.assertIn("solicitud explícita", superficies_normalizadas)
+        self.assertIn("propiedad del usuario", superficies_normalizadas)
+        self.assertIn(
+            "no elimina la candidata en route-only",
+            superficies_normalizadas,
+        )
+        self.assertIn(
+            "separar recomendación de activación",
+            superficies_normalizadas,
+        )
+        self.assertIn("no archivar automáticamente", superficies_normalizadas)
+        self.assertIn("checkout local", superficies_normalizadas)
+        self.assertIn("worktree", superficies_normalizadas)
+
+    def test_goal_nativo_se_evalua_sin_activacion_implicita(self):
+        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        protocolo_normalizado = " ".join(protocolo.lower().split())
+        for campo in (
+                "native_goal", "fit:", "scope:", "activation:",
+                "stopping_condition:"):
+            self.assertIn(campo, protocolo)
+        self.assertIn("s0 + goal", protocolo_normalizado)
+        self.assertIn("`create_goal`", protocolo)
+        self.assertIn("`get_goal`", protocolo)
+        self.assertIn("goal no reemplaza", protocolo_normalizado)
+        self.assertIn("autorización explícita", protocolo_normalizado)
+
+    def test_comparacion_privilegiada_luna_max_con_sol_high(self):
+        routing = (REFERENCIAS / "model-effort-routing.md").read_text(
+            "utf-8")
+        routing_normalizado = " ".join(routing.lower().split())
+        self.assertIn("luna max ↔ sol high", routing_normalizado)
+        self.assertIn("ambos pares ejecutables", routing_normalizado)
+        self.assertIn("comparación privilegiada", routing_normalizado)
+        self.assertIn("discarded_candidate_reason", routing)
+        self.assertIn("no establece dominancia universal", routing_normalizado)
+        self.assertIn("eval representativa", routing_normalizado)
+        self.assertIn("gate obligatorio de sol", routing_normalizado)
 
     def test_fast_path_y_salida_por_defecto_son_compactos(self):
         cuerpo = " ".join(self.cuerpo.split()).lower()
@@ -175,6 +227,7 @@ class TestCodexRoute(unittest.TestCase):
             "session-graph-matrix.md",
             "topology-catalog.md",
             "communication-protocol.md",
+            "execution-surfaces.md",
             "model-effort-routing.md",
             "domain-overrides.md",
             "calibration.md",
@@ -200,7 +253,9 @@ class TestCodexRoute(unittest.TestCase):
         calibracion = (REFERENCIAS / "calibration.md").read_text("utf-8")
         for metrica in (
                 "model_policy_compliance", "unobserved_model_rate",
+                "execution_surface_compliance",
                 "routing_regret", "graph_regret",
+                "goal_regret", "independent_thread_regret",
                 "pareto_dominated_route_rate",
                 "cost_degraded_fallback_rate", "late_escalation_rate",
                 "human_major_correction_rate"):

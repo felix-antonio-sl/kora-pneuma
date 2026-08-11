@@ -23,6 +23,7 @@ prueban costo del runtime Codex. No persistir sus cifras como umbrales.
 ## Comparaciones prioritarias
 
 ```text
+Luna max vs Sol high por cada superficie donde ambos sean ejecutables
 Luna low/medium/high vs Terra low/medium, incluidos esfuerzos adyacentes
 Luna high/xhigh/max vs Terra medium/high
 Terra medium/high/xhigh vs Sol low/medium/high
@@ -33,8 +34,16 @@ S0 Sol vs Sol directora + sidecars Luna/Terra
 S0 vs S2 estrella
 S2 estrella vs S6 DAG contractual
 sesión nueva vs sesión reutilizada
+current_session vs subagent vs independent_thread
+S0 vs S0 + goal nativo para objetivos durables
 un escritor vs worktrees por dominios disjuntos
 ```
+
+La primera comparación es privilegiada por la hipótesis de relación
+desempeño–costo señalada por el operador. Debe informar el par descartado y su
+razón, pero no presume dominancia: requiere eval representativa local y costo
+total comparable. Si un gate Sol vuelve inelegible a Luna o una superficie no
+expone uno de los pares, registrar la exclusión en vez de fingir el experimento.
 
 ## Métricas de resultado y política
 
@@ -47,9 +56,12 @@ tiempo humano
 defectos de integración
 cambios fuera de alcance
 model_policy_compliance
+execution_surface_compliance
 unobserved_model_rate
 routing_regret
 graph_regret
+goal_regret
+independent_thread_regret
 pareto_dominated_route_rate
 cost_degraded_fallback_rate
 late_escalation_rate
@@ -61,6 +73,8 @@ más barata que habría satisfecho calidad y seguridad. `graph_regret` es el
 costo del grafo menos el costo de S0 cuando S0 habría alcanzado el mismo
 resultado. `pareto_dominated_route_rate` cuenta rutas cuyo par elegido fue
 dominado por otro par ejecutable bajo evidencia representativa disponible.
+`goal_regret` compara la ruta con `S0 + goal`; `independent_thread_regret`
+incorpora dirección, seguimiento e integración, no solo inferencia.
 
 Medir acuerdo entre evaluadores al puntuar CEM y SGM. Desacuerdo recurrente en
 una dimensión indica definición insuficiente, no error del evaluador.
@@ -70,8 +84,10 @@ una dimensión indica definición insuficiente, no error del evaluador.
 - Comunicación: mediación central vs peer edges contractuales.
 - Independencia: candidatas aisladas vs comunicación temprana.
 - Persistencia: sesión nueva vs reuso dentro del runtime observado.
+- Superficie: subagente vs thread independiente con el mismo contrato y oráculo.
+- Goal: grafo efímero vs `S0 + goal` con igual condición de término.
 - Profundidad: directora→hojas vs supervisoras con reducción local.
-- Worktrees: solo tareas con escritores realmente concurrentes.
+- Worktrees: checkout local vs worktree solo con escritores concurrentes.
 
 Medir latencia, mensajes, duplicación, anclaje, conflictos, merges, pérdida de
 contrato, tiempo de integración y calidad global.
@@ -103,6 +119,8 @@ generalización, seguridad, aceptación ni ventaja costo/calidad.
 - [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 - [Build skills](https://learn.chatgpt.com/docs/build-skills)
 - [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)
+- [Projects and chats](https://learn.chatgpt.com/docs/projects)
+- [Follow goals](https://learn.chatgpt.com/use-cases/follow-goals)
 - [Models](https://developers.openai.com/api/docs/models)
 - [Using GPT-5.6](https://developers.openai.com/api/docs/guides/latest-model)
 - [Artificial Analysis: Sol, Terra y Luna](https://artificialanalysis.ai/articles/gpt-5-6-intelligence-vs-cost-across-sol-terra-luna)
