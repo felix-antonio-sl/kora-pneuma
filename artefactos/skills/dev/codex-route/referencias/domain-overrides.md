@@ -28,7 +28,7 @@ No sumar códigos en un campo `topology`.
 
 ## Clínica
 
-- Caso simple o resumen diagnóstico: S0; Sol o Luna según juicio residual.
+- Caso simple o resumen diagnóstico: S0; Sol, Terra o Luna según juicio residual.
 - Diferencial complejo con hipótesis rivales: S4 Sol, candidatas aisladas y
   profesional adjudicador.
 - Manejo clínico: **Sol monosession** con integración central. Añadir sidecars
@@ -46,7 +46,8 @@ directora adjudica seguridad, datos, rendimiento, operabilidad y mantenibilidad.
 
 ## Creatividad
 
-Ideas rutinarias: `S0 · Luna medium`. Usar S4 solo si la diversidad
+Ideas rutinarias: `S0 · Luna medium`. Elaboración acotada con criterios
+estables puede usar Terra si pasa su gate. Usar S4 solo si la diversidad
 independiente justifica candidatas aisladas y crítica posterior.
 
 ## Interoperabilidad

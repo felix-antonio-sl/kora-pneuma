@@ -1,14 +1,14 @@
 ---
 urn: urn:dev:artefacto:codex-route
 nombre: codex-route
-version: 2.0.0
+version: 2.1.0
 estado: activo
-descripcion: "Evalua explicitamente una tarea para Codex y recomienda Sol o Luna, esfuerzo low-max y la topologia minima de sesiones. Invocar cuando se necesite una decision de routing; por defecto no ejecuta."
-fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360, contrastado con documentacion oficial viva de Codex sobre skills, subagentes y modelos. Las rubricas siguen siendo heuristicas no validadas como escalas predictivas."
+descripcion: "Evalua explicitamente una tarea para Codex y recomienda Sol, Terra o Luna, esfuerzo low-max y la topologia minima de sesiones. Invocar cuando se necesite una decision de routing; por defecto no ejecuta."
+fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360. Version 2.1.0 incorpora Terra y seleccion conjunta modelo-esfuerzo desde documentacion oficial GPT-5.6 y tres graficos Artificial Analysis aportados el 2026-08-11; la evidencia agregada calibra, no gobierna disponibilidad ni sustituye evals locales. Las rubricas siguen siendo heuristicas no validadas como escalas predictivas."
 autor: FS
 creado: 2026-08-11
 lang: es
-tags: [codex, sesiones, routing, grafos, sol, luna, delegacion, concurrencia, worktrees, verificacion]
+tags: [codex, sesiones, routing, grafos, sol, terra, luna, delegacion, concurrencia, worktrees, verificacion]
 vector: [2, 0, 2, 0, 1]
 sigma: [2, 1, 3, 3, 1]
 arnes: disciplina
@@ -26,7 +26,7 @@ Elegir la organización mínima de sesiones Codex que alcance un resultado
 verificable bajo costo, riesgo, contexto y coordinación. Invocar explícitamente
 `$codex-route`; la metadata del target impide activación implícita.
 
-Usar solo `gpt-5.6-sol` y `gpt-5.6-luna`. No crear un descendiente sin modelo
+Usar solo `gpt-5.6-sol`, `gpt-5.6-terra` y `gpt-5.6-luna`. No crear un descendiente sin modelo
 fijado si el runtime pudiera escoger fuera de esa allowlist. Preferir S0: un
 grafo debe pagar su costo con menor tiempo, contaminación, riesgo o
 incertidumbre.
@@ -45,9 +45,9 @@ usar subagentes. La activación no amplía permisos, alcance ni autoridad.
 
 ## Fast path
 
-- Operación literal, fuente y checker exactos: `Luna low · S0`.
-- Varios pasos acotados con oráculo fuerte: `Luna medium · S0`.
-- Edge cases numerosos bajo contrato estable: `Luna high · S0`.
+- Operación literal, fuente y checker exactos: `Luna low · S0`; Terra low si Luna no está disponible.
+- Varios pasos acotados con oráculo fuerte: `Luna medium · S0`; comparar Terra solo como par modelo–esfuerzo.
+- Juicio acotado bajo contrato estable, sin gate Sol: `Terra medium · S0`.
 
 Emitir una sola línea `SIMPLE_ROUTE`. Si la sesión efectiva difiere, separar
 recomendación y ejecución; por ejemplo: `recommended: Luna low · effective:
@@ -72,12 +72,11 @@ Sol medium · cost_status: overprovisioned`.
 7. Calcular una **CEM local residual** por nodo y asignar modelo, esfuerzo,
    contexto, autoridad, persistencia y verificación propios.
 
-Luna exige objetivo, entregable, método o búsqueda, fuente de verdad, oráculo e
-integración local determinados, sin juicio material de alta consecuencia. Sol
-es obligatorio ante ambigüedad residual, arquitectura, novedad conceptual,
-evidencia contradictoria, oráculo débil, acoplamiento, integración difícil,
-adjudicación o juicio de alta consecuencia. `R` gobierna primero autonomía y
-verificación; no eleva modelo o esfuerzo sin razonamiento sustantivo.
+Luna exige trabajo determinado, oráculo fuerte e integración baja. Terra exige
+juicio acotado o fallback de disponibilidad, sin gate Sol. Sol es obligatorio
+ante ambigüedad, arquitectura, novedad conceptual, evidencia contradictoria,
+oráculo débil, acoplamiento, integración difícil, adjudicación o juicio de alta
+consecuencia. `R` gobierna primero autonomía y verificación.
 
 ## Preflight de ejecución
 
@@ -87,10 +86,10 @@ inspeccionar el contrato vivo: modelo raíz, overrides de modelo/esfuerzo,
 creación, contexto, concurrencia y lifecycle.
 
 - Directora observada fuera de allowlist: `ROUTE_ERROR ·
-  director_model_not_allowed` y recomendar reinicio en Sol o Luna.
+  director_model_not_allowed` y recomendar reinicio en Sol, Terra o Luna.
 - Sol requerido e indisponible: bloquear.
-- Luna recomendada e indisponible: `collapse`, Sol con `cost_degraded`, o
-  `blocked`; nunca fallback silencioso.
+- Par recomendado indisponible: reevaluar pares permitidos, declarar fallback
+  y costo, o bloquear; nunca sustituir silenciosamente.
 - Modelo o esfuerzo efectivo desconocido: `compliance: unknown`; no afirmar
   cumplimiento exacto.
 - Sin override permitido en allowlist: no crear ese descendiente.
@@ -119,7 +118,7 @@ route:
     effective_effort: unknown, effort_compliance: unknown}
   orchestration: {mode: director-managed, base_topology: S2}
   sessions:
-    - {id: repo-map, cognitive_class: bounded-verifiable, recommended_model: gpt-5.6-luna,
+    - {id: repo-map, cognitive_class: bounded-verifiable, recommended_model: gpt-5.6-terra,
        available_models: [], effective_model: unknown, model_compliance: unknown,
        recommended_effort: medium, available_efforts: [], effective_effort: unknown,
        effort_compliance: unknown, cost_status: unknown}

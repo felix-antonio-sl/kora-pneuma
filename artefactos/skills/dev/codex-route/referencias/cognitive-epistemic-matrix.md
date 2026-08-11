@@ -38,6 +38,21 @@ Luna exige todas:
 - integración local baja;
 - ningún juicio material de alta consecuencia pendiente.
 
+## Gate de Terra
+
+Terra exige que ningún gate Sol permanezca y todas:
+
+- objetivo, aceptación, arquitectura e invariantes determinados;
+- método conocido o combinación acotada de patrones;
+- oráculo al menos revisable (`O ≤ 2`);
+- acoplamiento e integración locales o moderados (`C ≤ 2`, `J ≤ 2`);
+- ningún juicio de alta consecuencia ni adjudicación pendiente.
+
+Además, el nodo debe exceder el gate Luna de forma acotada, Luna debe estar
+indisponible, o una eval representativa debe favorecer el par Terra. La CEM
+clasifica necesidad cognitiva; la frontera costo–capacidad decide entre pares
+que ya pasan el gate.
+
 ## Gate obligatorio de Sol
 
 Sol exige cualquiera:

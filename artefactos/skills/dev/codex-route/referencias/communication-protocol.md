@@ -11,6 +11,7 @@ runtime_preflight:
   spawn_available: true | false
   model_override_available: true | false
   luna_override_available: true | false
+  terra_override_available: true | false
   sol_override_available: true | false
   effort_override_available: true | false
   fork_control_available: true | false
@@ -81,7 +82,7 @@ stop_conditions: []
 escalation_conditions: []
 cognitive_class: bounded-verifiable | judgment-intensive
 routing_basis: []
-recommended_model: gpt-5.6-sol | gpt-5.6-luna
+recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
 available_models: []
 effective_model: id | unknown
 model_compliance: exact | degraded | unknown | blocked
@@ -89,12 +90,13 @@ recommended_effort: low | medium | high | xhigh | max
 available_efforts: []
 effective_effort: level | unknown
 effort_compliance: exact | degraded | unknown | blocked
+cost_status: optimal | cost_degraded | overprovisioned | unknown
 ```
 
 `recommended ≠ effective` exige declarar degradación y consecuencia. Un valor
-efectivo desconocido impide afirmar cumplimiento exacto. Para escritura, añadir
-workspace, candidato, ownership exclusivo y prohibición de revertir trabajo
-ajeno.
+efectivo o costo desconocido impide afirmar cumplimiento u optimalidad. Para
+escritura, añadir workspace, candidato, ownership exclusivo y prohibición de
+revertir trabajo ajeno.
 
 ## Schema completo de ruta
 
@@ -106,7 +108,7 @@ route:
   director:
     global_profile: optional
     integration_load: 0..4
-    recommended_model: gpt-5.6-sol | gpt-5.6-luna
+    recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
     available_models: []
     effective_model: id | unknown
     model_compliance: exact | degraded | unknown | blocked
@@ -114,6 +116,7 @@ route:
     available_efforts: []
     effective_effort: level | unknown
     effort_compliance: exact | degraded | unknown | blocked
+    cost_status: optimal | cost_degraded | overprovisioned | unknown
   orchestration:
     mode: none | director-managed
     base_topology: S0..S9
@@ -123,6 +126,7 @@ route:
   dependencies: []
   peer_edges: []
   worktrees: []
+  candidate_pairs: []
   cheaper_route_not_used: text | none
   stop: []
   verification: []

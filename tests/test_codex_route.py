@@ -26,7 +26,7 @@ class TestCodexRoute(unittest.TestCase):
         self.assertEqual(
             self.campos["urn"], "urn:dev:artefacto:codex-route")
         self.assertEqual(self.campos["nombre"], "codex-route")
-        self.assertEqual(self.campos["version"], "2.0.0")
+        self.assertEqual(self.campos["version"], "2.1.0")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
         self.assertEqual(self.campos["targets"], ["codex"])
@@ -47,18 +47,24 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("`route-and-run` — explícito", cuerpo)
         self.assertIn("no amplía permisos", cuerpo)
 
-    def test_politica_de_modelos_es_allowlist_sol_luna_sin_excepciones(self):
+    def test_politica_trifamiliar_fija_modelo_y_evade_dominancia_pareto(self):
         archivos = [SKILL] + sorted(REFERENCIAS.glob("*.md"))
         corpus = "\n".join(p.read_text("utf-8") for p in archivos).lower()
-        self.assertNotRegex(corpus, r"\bterra\b|\bultra\b")
+        self.assertNotRegex(corpus, r"\bultra\b")
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
             "utf-8")
-        self.assertIn("gpt-5.6-sol", routing)
-        self.assertIn("gpt-5.6-luna", routing)
+        self.assertIn(
+            "allowed: [gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna]",
+            routing,
+        )
+        for modelo in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
+            self.assertIn(modelo, routing)
         routing_normalizado = " ".join(routing.lower().split())
         self.assertIn("allowlist estricta", routing_normalizado)
         self.assertIn("descendiente sin modelo fijado", routing_normalizado)
         self.assertIn("fallback fuera de la allowlist", routing_normalizado)
+        self.assertIn("par modelo–esfuerzo", routing_normalizado)
+        self.assertIn("dominado en sentido de pareto", routing_normalizado)
 
     def test_fallbacks_fallan_cerrado_y_preflight_observa_runtime(self):
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
@@ -72,7 +78,8 @@ class TestCodexRoute(unittest.TestCase):
         for campo in (
                 "root_model_observed", "root_model_allowed",
                 "spawn_available", "model_override_available",
-                "luna_override_available", "sol_override_available",
+                "luna_override_available", "terra_override_available",
+                "sol_override_available",
                 "effort_override_available", "fork_control_available",
                 "lifecycle_controls"):
             self.assertIn(campo, protocolo)
@@ -183,6 +190,7 @@ class TestCodexRoute(unittest.TestCase):
         sgm = (REFERENCIAS / "session-graph-matrix.md").read_text("utf-8")
         self.assertIn("complejidad residual", cem)
         self.assertIn("Gate de Luna", cem)
+        self.assertIn("Gate de Terra", cem)
         self.assertIn("Gate obligatorio de Sol", cem)
         self.assertIn("R gobierna autonomía y verificación", cem)
         self.assertIn("D ≥ 2", sgm)
@@ -193,6 +201,7 @@ class TestCodexRoute(unittest.TestCase):
         for metrica in (
                 "model_policy_compliance", "unobserved_model_rate",
                 "routing_regret", "graph_regret",
+                "pareto_dominated_route_rate",
                 "cost_degraded_fallback_rate", "late_escalation_rate",
                 "human_major_correction_rate"):
             self.assertIn(metrica, calibracion)
