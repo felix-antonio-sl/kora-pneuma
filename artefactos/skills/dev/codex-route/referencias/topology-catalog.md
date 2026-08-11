@@ -99,14 +99,24 @@ devuelven el mismo schema. El reducer sintetiza; el auditor desafía.
 ## S8 — Evaluador–optimizador
 
 ```text
-BASELINE → OPTIMIZADOR → CANDIDATO → EVALUADOR FIJO
-              ↑                 keep | revert
-              └───────────────────────┘
+iteration_1: candidate_1 → evaluation_1 → decision_1
+iteration_2: candidate_2 → evaluation_2 → decision_2
 ```
 
-Exige baseline, métrica objetiva, superficie mutable acotada, evaluador
-inmutable, rollback, presupuesto y criterio keep/revert. El optimizador no
-puede modificar el oráculo.
+El controlador decide si crea la siguiente iteración; cada iteración finita es
+un DAG. Exige baseline, métrica objetiva, superficie mutable acotada y:
+
+```yaml
+iteration_control:
+  max_iterations: 10
+  max_consecutive_failures: 2
+  minimum_improvement: defined
+  evaluator_mutable: false
+  rollback: required
+```
+
+Fijar valores adecuados a la tarea antes de ejecutar. El optimizador no puede
+modificar el evaluador, el baseline ni el criterio keep/revert.
 
 ## S9 — Escritores federados
 

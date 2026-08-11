@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.10.0
+# KORA/Transmutación — ley pneuma v2.11.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -198,9 +198,10 @@ aborta (none, igual que el resto).
 Todo factor doctrinal emitido (`SKILL.md`, agente, `AGENTS.md`, `SOUL.md`) DEBE
 terminar con un sello de procedencia y congruencia: comentario HTML, formato
 EXACTO, **sin timestamp** — el hash identifica los bytes de la fuente, no una
-identidad semántica. Los sidecars
-de runtime y el contenido auxiliar `referencias/` no duplican el sello; pertenecen al mismo
-producto y `sello-fresco` prueba sus bytes contra el generador (§9).
+identidad semántica. Los sidecars de runtime —incluido
+`agents/openai.yaml` de una skill Codex— y el contenido auxiliar
+`referencias/` no duplican el sello; pertenecen al mismo producto y
+`sello-fresco` prueba sus bytes contra el generador (§9).
 
 ```text
 <!-- kora:sello
@@ -312,7 +313,7 @@ reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
 |---|---|---|
 | `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia `referencias/` conservando su nombre si existe |
 | `claude-code` | agente | `_emision/claude-code/agents/{nombre}.md`; frontmatter `name`, `description`, `tools` (lista separada por comas); body = body fuente; si `arnes` = `persona`, sección final `## Modos de invocacion` con la doctrina dual-mode (modo subagente batch vs modo persona por encarnación) |
-| `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre |
+| `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre y, si la fuente lo declara, transporta byte-idéntico `agents/openai.yaml` como metadata e invocation policy del mismo producto cerrado |
 | `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y el sidecar `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime. Codex permite estrechar configuración del custom agent, pero no una allowlist exacta de built-ins; el sello declara la pérdida de campo sin fingir enforcement |
 | `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
@@ -503,7 +504,9 @@ cuerpo puede citar sellos de ejemplo— y verifica:
    fuente y realizado por esta encarnación, y `hash-fuente` coincide con el
    sha256 actual del archivo fuente principal;
 2. al regenerar en memoria el par `(URN,target)`, el conjunto y los bytes de
-   todos los factores coinciden, incluidos sidecars sin sello;
+   todos los factores coinciden, incluidos sidecars sin sello; para una skill
+   Codex, `agents/openai.yaml` se lee desde la fuente y se transporta sin
+   reinterpretarlo;
 3. para skills, los paths y bytes de `referencias/` coinciden con el contenido
    fuente, aunque esos archivos no participen en `hash-fuente`.
 
@@ -606,6 +609,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
+| Sidecar fuente `agents/openai.yaml` de skill Codex conservado en emisión, aplicación y paridad | §7, §9, ley/2 §6 | mecanizado (`transmutar`, `sello-fresco`, `transmutar --paridad`) |
 | Paridad exacta y tipada de la superficie KORA (emisión↔instalación user-level o project-level) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad [--proyecto PATH]`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
 | Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
@@ -741,3 +745,8 @@ v2.10.0 (2026-08-10): mecaniza la paridad project-level con
 tipos e igualdad byte a byte. Cada nivel deriva sus unidades esperadas desde
 `alcance` (`usuario|ambos` o `proyecto|ambos`; ausente = `ambos`) y los focales
 incompatibles fallan cerrados. Extensión aditiva del modo de verificación.
+
+v2.11.0 (2026-08-11): transporta el sidecar fuente opcional
+`agents/openai.yaml` de una skill Codex como factor byte-idéntico del producto
+cerrado. Emisión, aplicación, frescura y paridad conservan su ruta anidada;
+otros targets y skills sin sidecar mantienen sus bytes previos.

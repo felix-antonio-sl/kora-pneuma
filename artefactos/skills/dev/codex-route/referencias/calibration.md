@@ -1,97 +1,92 @@
 # Calibración y estatus epistémico
 
-## Estatus
-
-CEM-8, SGM-8 y S0–S9 son una rúbrica de ingeniería informada por capacidades
-observadas y documentación oficial. No son una escala psicométrica ni un
-predictor validado. Los umbrales iniciales son hipótesis conservadoras.
-
-No atribuir una mejora al modelo, esfuerzo, topología o comunicación sin una
-comparación sobre candidatos y tareas equivalentes.
+CEM-8, SGM-8 y S0–S9 son una rúbrica de ingeniería, no un predictor validado.
+Los umbrales son hipótesis conservadoras. No atribuir ventaja a modelo,
+esfuerzo o grafo sin comparar tareas y candidatos equivalentes.
 
 ## Comparaciones prioritarias
 
-1. S0 monosession vs S2 estrella.
-2. S2 estrella vs S6 DAG contractual.
-3. S4 aislado vs hipótesis con comunicación temprana.
-4. S7 map-reduce vs lectura monolítica.
-5. S9 con checkout compartido vs aislamiento por dominio de escritura.
-6. sesión nueva vs sesión reutilizada.
-7. profundidad uno vs supervisoras de profundidad dos.
-8. `xhigh` vs `max` en tareas quality-first con evaluador fuerte.
+```text
+Luna low vs Luna medium
+Luna medium vs Luna high
+Luna high vs Sol medium
+Luna xhigh vs Sol medium, solo con oracle fuerte
+Sol high vs Sol xhigh
+Sol xhigh vs Sol max
+Sol directora + Luna hojas vs todo Sol
+S0 Sol vs Sol directora + Luna sidecars
+S0 vs S2 estrella
+S2 estrella vs S6 DAG contractual
+sesión nueva vs sesión reutilizada
+un escritor vs worktrees por dominios disjuntos
+```
 
-## Experimentos
-
-### Comunicación lateral
-
-Comparar mediación exclusiva de directora contra aristas peer sobre
-dependencias. Medir latencia, mensajes, pérdida de contrato, bloqueos, errores
-de integración, costo y duplicación.
-
-### Independencia epistemológica
-
-Comparar candidatas aisladas contra candidatas comunicadas. Medir diversidad,
-cobertura, errores correlacionados, anclaje y calidad de adjudicación.
-
-### Persistencia local
-
-Comparar sesión nueva contra reutilizada. Medir tokens de reorientación,
-supuestos obsoletos, continuidad, tiempo y errores por contexto heredado.
-
-### Profundidad
-
-Comparar directora→hojas contra directora→supervisoras→hojas. Medir carga de
-integración central, pérdida durante reducción, tiempo, mensajes y calidad.
-
-### Worktrees
-
-Comparar solo en tareas de escritura. Medir conflictos, merges, tiempo de
-integración, pruebas rotas, cambios fuera de alcance y reversibilidad.
-
-## Métricas globales
+## Métricas de resultado y política
 
 ```text
 éxito verificable
 errores críticos
 completitud
-tokens y créditos
-wall-clock y tiempo humano
-sesiones creadas y profundidad
-mensajes y duplicación
+tokens, créditos y wall-clock
+tiempo humano
 defectos de integración
 cambios fuera de alcance
-intervenciones humanas
+model_policy_compliance
+unobserved_model_rate
+routing_regret
+graph_regret
+cost_degraded_fallback_rate
+late_escalation_rate
+human_major_correction_rate
 ```
 
-Función objetivo:
+`routing_regret` es el costo de la configuración elegida menos el costo de la
+más barata que habría satisfecho calidad y seguridad. `graph_regret` es el
+costo del grafo menos el costo de S0 cuando S0 habría alcanzado el mismo
+resultado.
+
+Medir acuerdo entre evaluadores al puntuar CEM y SGM. Desacuerdo recurrente en
+una dimensión indica definición insuficiente, no error del evaluador.
+
+## Experimentos
+
+- Comunicación: mediación central vs peer edges contractuales.
+- Independencia: candidatas aisladas vs comunicación temprana.
+- Persistencia: sesión nueva vs reuso dentro del runtime observado.
+- Profundidad: directora→hojas vs supervisoras con reducción local.
+- Worktrees: solo tareas con escritores realmente concurrentes.
+
+Medir latencia, mensajes, duplicación, anclaje, conflictos, merges, pérdida de
+contrato, tiempo de integración y calidad global.
+
+## Función objetivo
 
 ```text
 minimizar costo total
 sujeto a calidad ≥ umbral y seguridad ≥ umbral
 ```
 
-No maximizar sesiones, mensajes, paralelismo ni esfuerzo.
+No maximizar sesiones, paralelismo, mensajes ni esfuerzo. Cada ruta debe
+declarar `cheaper_route_not_used` o reconocer que no descartó una alternativa
+más barata.
 
-## Evidencia mínima de una ruta ejecutada
+## Evidencia mínima de una ejecución
 
+- preflight vivo y configuración efectiva observable;
 - árbol y sesiones realmente creadas;
-- paquetes entregados;
-- modelo/esfuerzo efectivos cuando sean observables;
-- resultados y bloqueos por nodo;
-- candidato y write sets finales;
-- integración en la directora;
-- verificación del objetivo global;
+- paquetes, resultados y bloqueos por nodo;
+- integración y verificación del objetivo global;
 - límites de inferencia.
 
-Una demo, un log o una paridad de configuración no prueba generalización,
-seguridad, aceptación humana ni ventaja costo/calidad.
+Una demo, un log, una configuración o paridad de archivos no prueba
+generalización, seguridad, aceptación ni ventaja costo/calidad.
 
-## Fuentes de capacidad
+## Fuentes a revalidar
 
 - [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 - [Build skills](https://learn.chatgpt.com/docs/build-skills)
 - [Worktrees](https://learn.chatgpt.com/docs/environments/git-worktrees)
-- [Model guidance](https://developers.openai.com/api/docs/guides/latest-model)
+- [Models](https://developers.openai.com/api/docs/models)
 
-Revalidar estas fuentes cuando cambien modelos, niveles de razonamiento,
-permisos, herramientas, límites de concurrencia o semántica de sesiones.
+Revalidar al cambiar modelos, esfuerzos, herramientas, permisos, límites de
+concurrencia o semántica de lifecycle.

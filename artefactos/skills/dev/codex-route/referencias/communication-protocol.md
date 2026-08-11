@@ -1,160 +1,187 @@
-# Comunicación, contexto, escritura y control
+# Runtime, comunicación, schema y lifecycle
 
-## Principio
+## Preflight obligatorio para `route-and-run`
 
-```text
-la capacidad de comunicarse no implica que deban comunicarse
+Inspeccionar la superficie viva antes de crear sesiones:
+
+```yaml
+runtime_preflight:
+  root_model_observed: true | false
+  root_model_allowed: true | false
+  spawn_available: true | false
+  model_override_available: true | false
+  luna_override_available: true | false
+  sol_override_available: true | false
+  effort_override_available: true | false
+  fork_control_available: true | false
+  lifecycle_controls: []
 ```
 
-Autorizar una arista lateral solo si existe dependencia explícita, el dato no
-cabía razonablemente en el paquete inicial, la respuesta puede cambiar el
-trabajo receptor, la retransmisión central perdería precisión o tiempo y el
-intercambio puede mantenerse acotado.
+No inferir un override desde documentación o ejecuciones pasadas. Si la
+directora no es observable o permitida, o el modelo requerido no puede fijarse,
+aplicar los fallos cerrados de `model-effort-routing.md`.
 
-## Tipos de mensaje
+## Planos del grafo
 
 ```text
-ASK
-CONTRACT
-EVIDENCE
-BLOCKER
-RESULT
-CHALLENGE
-DECISION
+T_g = árbol de autoridad y control
+M_parent = mensajes parent↔child permitidos por T_g
+M_peer ⊆ E_dependency ∪ E_review
+M_c = M_parent ∪ M_peer
 ```
+
+`E_dependency` contiene dependencias de conocimiento o trabajo; `E_review`
+contiene aristas dirigidas de revisión. El árbol de gobierno no se finge como
+dependencia de datos.
+
+Plano de control:
+
+```text
+TASK · BLOCKER · INTERRUPT · LOCAL_DECISION · GLOBAL_DECISION · CLOSE
+```
+
+Plano de conocimiento:
+
+```text
+CONTRACT · EVIDENCE · RESULT · CHALLENGE
+```
+
+Una supervisora puede emitir `LOCAL_DECISION` dentro de autoridad delegada.
+Solo `/root` emite `GLOBAL_DECISION` sobre objetivo, alcance, interfaces
+globales, presupuesto, riesgo y aceptación.
 
 Formato:
 
 ```text
-TYPE | petición o afirmación | evidencia o referencia | impacto | qué bloquea
+TYPE | petición o afirmación | evidencia | impacto | qué bloquea
 ```
 
-Solo la directora emite `DECISION` sobre objetivo, alcance, interfaces
-globales, presupuesto, riesgo y aceptación final.
+Autorizar un peer edge solo si una dependencia explícita surgió después del
+paquete, la respuesta cambia el trabajo receptor y el intercambio es acotado.
+No usar broadcast, conversación ambiental ni mensajería para sincronizar
+archivos.
 
-No habilitar mensajería lateral para actualizaciones periódicas, conversación
-general, consenso previo a una evaluación independiente, compartir todas las
-notas, compensar una mala descomposición o sincronizar archivos.
+## Contrato de sesión y routing efectivo
 
-## Paquete de sesión
-
-Toda sesión delegada recibe:
+Toda sesión delegada recibe y reporta:
 
 ```yaml
-task_name: slug
+id: slug
 role: responsabilidad local
 objective: resultado local
-inputs: []
 source_of_truth: []
 scope: []
 non_scope: []
 deliverable: []
 verification: []
 write_set: none | []
-allowed_actions: []
+authority: []
 allowed_message_edges: []
 stop_conditions: []
 escalation_conditions: []
-authority: []
+cognitive_class: bounded-verifiable | judgment-intensive
+routing_basis: []
+recommended_model: gpt-5.6-sol | gpt-5.6-luna
+available_models: []
+effective_model: id | unknown
+model_compliance: exact | degraded | unknown | blocked
+recommended_effort: low | medium | high | xhigh | max
+available_efforts: []
+effective_effort: level | unknown
+effort_compliance: exact | degraded | unknown | blocked
 ```
 
-Para una sesión que escribe, añadir explícitamente: workspace, candidato,
-ownership exclusivo, criterios de aceptación y prohibición de revertir cambios
-ajenos.
+`recommended ≠ effective` exige declarar degradación y consecuencia. Un valor
+efectivo desconocido impide afirmar cumplimiento exacto. Para escritura, añadir
+workspace, candidato, ownership exclusivo y prohibición de revertir trabajo
+ajeno.
 
-## Contexto
+## Schema completo de ruta
 
-La directora conserva objetivo global, restricciones, aceptación, decisiones,
-contratos, riesgos, grafo, presupuesto y estado resumido.
+```yaml
+route:
+  mode: route-only | route-and-run
+  evidence_status: proposed | preflighted | executed | verified
+  confidence: low | medium | high
+  director:
+    global_profile: optional
+    integration_load: 0..4
+    recommended_model: gpt-5.6-sol | gpt-5.6-luna
+    available_models: []
+    effective_model: id | unknown
+    model_compliance: exact | degraded | unknown | blocked
+    recommended_effort: low | medium | high | xhigh | max
+    available_efforts: []
+    effective_effort: level | unknown
+    effort_compliance: exact | degraded | unknown | blocked
+  orchestration:
+    mode: none | director-managed
+    base_topology: S0..S9
+    phases: []
+    modifiers: []
+  sessions: []
+  dependencies: []
+  peer_edges: []
+  worktrees: []
+  cheaper_route_not_used: text | none
+  stop: []
+  verification: []
+```
 
-Por defecto, usar `fork_turns: none` y entregar el paquete mínimo. Usar
-`fork_turns: all` solo cuando la conversación completa sea una entrada
-load-bearing. Si el nodo necesita siempre todo el contexto, su separabilidad
-`K` es baja y probablemente no debe delegarse.
+`confidence` expresa confianza en que la ruta es adecuada, no confianza en la
+solución de la tarea. `evidence_status` distingue diseño, capacidad observada,
+ejecución y resultado global verificado.
 
-Una sesión devuelve conclusión, evidencia, incertidumbre, impacto, archivos o
-artefactos modificados, verificaciones y bloqueos. No devuelve la narración
-completa ni logs crudos salvo que sean el artefacto solicitado.
+## Contexto y operaciones vivas
 
-## Operaciones vivas
+Preferir contexto mínimo para tareas delimitadas si el runtime ofrece control
+de fork. Heredar todo solo si es una entrada load-bearing; si el nodo siempre
+necesita todo, `K` es baja y probablemente no debe delegarse.
 
-Usar solo las herramientas expuestas en la sesión actual:
+- `spawn_agent`: crear una sesión concreta con modelo permitido fijado;
+- `send_message` no inicia por sí mismo un turno; entrega información a una
+  sesión que ya trabaja;
+- `followup_task`: asignar trabajo nuevo o reactivar una sesión inactiva;
+- `wait_agent`: esperar solo por una dependencia del camino crítico;
+- `list_agents`: observar estado y slots;
+- `interrupt_agent`: detener y redirigir sin descartar automáticamente contexto.
 
-- `spawn_agent`: crear una sesión para una tarea concreta e independiente;
-- `send_message`: entregar información sin iniciar por sí sola una nueva
-  tarea;
-- `followup_task`: asignar trabajo nuevo a una sesión existente;
-- `wait_agent`: esperar solo cuando el camino crítico esté bloqueado;
-- `list_agents`: inspeccionar sesiones vivas y slots;
-- `interrupt_agent`: detener el turno actual para redirigir o contener riesgo.
+Usar solo operaciones expuestas. No inventar nombres, campos o lifecycle.
 
-No inventar `close_agent` ni otra llamada ausente. Si el runtime ofrece una
-capacidad adicional, verificar su contrato vivo antes de usarla.
-
-## Concurrencia y profundidad
-
-Default conservador inicial:
+## Lifecycle
 
 ```text
-máximo 3 sesiones hijas concurrentes
-profundidad normal máxima 2
-una ronda lateral de aclaraciones
+planned → spawned → acknowledged → running → completed → integrated → closed
 ```
 
-Son heurísticas, no límites oficiales. Reducirlas ante integración difícil,
-escritura o riesgo; ampliarlas solo si existen slots, independencia y valor de
-tiempo de pared.
+No tratar `completed` como integrado. Evaluar el resultado, incorporarlo y
+verificar el objetivo global antes de `integrated`. Si `close_agent` está
+expuesto, cerrar L0/L1 después de integrar. Si no está expuesto, no inventarlo
+y declarar la limitación de lifecycle.
 
-No esperar de forma refleja. Mientras un descendiente trabaja, continuar el
-camino local no solapado.
+## Concurrencia, escritura y worktrees
 
-## Escritura y worktrees
-
-`W_f` modela interferencia; la mensajería no da exclusión mutua.
-
-No requieren worktree: lectura, revisión, mappers, hipótesis, arquitectura,
-adjudicación o un único escritor.
-
-Pueden requerirlo: escritores simultáneos con dominios disjuntos, ramas
-especulativas, implementaciones alternativas o cambios descartables por
-separado.
-
-Regla:
+Comenzar con hasta tres hijas y profundidad dos solo si el runtime tiene slots,
+la tarea lo justifica y las instrucciones aplicables autorizan subagentes. Son
+heurísticas, no límites oficiales.
 
 ```text
-un worktree por dominio independiente de escritura
-no un worktree por sesión
+workspace compartido + un escritor → sin worktree adicional
+dos escritores + write sets realmente disjuntos → considerar worktrees
+interfaces inestables → serializar aunque existan worktrees
 ```
 
-Mantener un integrador único y pruebas de contrato. Si los write sets dejan de
-ser disjuntos, detener S9 y volver a un escritor o serializar.
+Un worktree por dominio independiente de escritura, nunca por sesión. Si los
+write sets dejan de ser disjuntos, detener S9 y volver a un escritor.
 
-## Autonomía
+## Autonomía y detención
 
-Acciones locales normales dentro de autoridad: leer, buscar, analizar, crear
-sesiones autorizadas, enviar mensajes contractuales, editar dentro de
-ownership, ejecutar pruebas no destructivas, reparar fallos locales e integrar.
+Los descendientes no reciben más autoridad que la directora. Exigir gate humano
+para efectos externos, destrucción irreversible, gasto extraordinario, cambio
+material de alcance y decisiones aplicadas de alta consecuencia.
 
-Exigir confirmación para despliegue no autorizado, escritura externa,
-migración productiva, eliminación irreversible, gasto extraordinario, cambio
-material de alcance, comunicación externa, decisión clínica aplicada o acción
-legal/financiera.
-
-Los descendientes no reciben más autoridad que la sesión directora. Las
-permisiones y overrides vivos del runtime prevalecen sobre el contrato textual.
-
-## Condiciones de detención
-
-- aceptación satisfecha;
-- presupuesto o límite de iteraciones agotado;
-- fallos causales equivalentes repetidos;
-- oráculo indisponible;
-- dependencias contradictorias;
-- blast radius mayor al previsto;
-- write sets ya no disjuntos;
-- comunicación continua;
-- efecto externo o irreversible emergente;
-- nueva evidencia invalida el contrato.
-
-Al detener, devolver estado, evidencia y decisión mínima: continuar,
-redirigir, fusionar, serializar o bloquear.
+Detener ante aceptación, presupuesto o iteraciones agotadas, dos fallos
+causales equivalentes, oráculo ausente, blast radius creciente, write sets
+solapados, comunicación continua o nueva autoridad necesaria. Devolver estado,
+evidencia y decisión mínima: continuar, redirigir, fusionar, serializar o
+bloquear.

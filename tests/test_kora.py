@@ -765,6 +765,42 @@ class TestTransmutacion(CasoPneuma):
         self.assertIn("allow_implicit_invocation: false",
                       politica.read_text(encoding="utf-8"))
 
+    def test_codex_skill_transporta_sidecar_fuente_sin_aplanarlo(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        metadata = (
+            'interface:\n'
+            '  display_name: "Util X"\n'
+            'policy:\n'
+            '  allow_implicit_invocation: false\n'
+        )
+        self.escribir(
+            "artefactos/skills/kora/util-x/agents/openai.yaml", metadata)
+        codigo, salida, error = self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "codex",
+        ])
+        self.assertEqual(codigo, 0, error)
+        emitido = self.raiz / (
+            "_emision/codex/skills/util-x/agents/openai.yaml")
+        self.assertEqual(emitido.read_text("utf-8"), metadata)
+        self.assertIn("agents/openai.yaml", salida)
+
+        with mock.patch.dict(
+                kora.RUTAS_APLICAR,
+                {("codex", "skill"): str(
+                    self.raiz / "runtime/skills/{nombre}")},
+                clear=False):
+            codigo, _, error = self.correr([
+                "transmutar", "--urn", "urn:kora:artefacto:util-x",
+                "--target", "codex", "--aplicar",
+            ])
+        self.assertEqual(codigo, 0, error)
+        instalado = self.raiz / (
+            "runtime/skills/util-x/agents/openai.yaml")
+        self.assertEqual(instalado.read_text("utf-8"), metadata)
+        self.assertFalse(
+            (self.raiz / "runtime/skills/util-x/openai.yaml").exists())
+
     def test_codex_subagente_emite_solo_custom_agent(self):
         self.escribir_agente(agente_campos(
             forma="subagente", arnes="delegado",

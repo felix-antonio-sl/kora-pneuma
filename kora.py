@@ -1479,8 +1479,28 @@ def _emitir_codex(art: Artefacto, proy: dict,
     sello = construir_sello(art, "codex", hash_hex, proy, perdidas_extra)
     if art.tipo == "skill":
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
-        return [(f"codex/skills/{nombre}/SKILL.md",
-                 _componer(fm, art.cuerpo, "", sello))], perdidas_extra
+        archivos = [(f"codex/skills/{nombre}/SKILL.md",
+                     _componer(fm, art.cuerpo, "", sello))]
+        sidecar = art.path.parent / "agents/openai.yaml"
+        try:
+            tipo_sidecar = _tipo_nodo(sidecar)
+        except OSError as exc:
+            raise ErrorTransmutacion(
+                f"sidecar Codex ilegible '{sidecar}': {exc}") from exc
+        if tipo_sidecar is not None:
+            if tipo_sidecar != "archivo regular":
+                raise ErrorTransmutacion(
+                    "agents/openai.yaml debe ser un archivo regular")
+            try:
+                contenido_sidecar = sidecar.read_text(encoding="utf-8")
+            except (OSError, UnicodeError) as exc:
+                raise ErrorTransmutacion(
+                    f"sidecar Codex ilegible '{sidecar}': {exc}") from exc
+            archivos.append((
+                f"codex/skills/{nombre}/agents/openai.yaml",
+                contenido_sidecar,
+            ))
+        return archivos, perdidas_extra
 
     extra = DOCTRINA_DUAL_MODE if art.campos.get("forma") == "agente" else ""
     archivos = [(f"codex/agents/{nombre}.toml",
@@ -2079,7 +2099,16 @@ def _aplicar(art: Artefacto, target: str,
                     soul, art.urn or "", "openclaw"):
                 soul.unlink()
         for rel, contenido in archivos:
-            (ruta / Path(rel).name).write_text(contenido, encoding="utf-8")
+            partes = Path(rel).parts
+            if art.tipo == "skill" and len(partes) >= 4 \
+                    and partes[1] == "skills" \
+                    and partes[2] == nombre_art:
+                relativo = Path(*partes[3:])
+            else:
+                relativo = Path(rel).name
+            destino = ruta / relativo
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            destino.write_text(contenido, encoding="utf-8")
         if art.tipo == "skill":
             _copiar_referencias(art, ruta)
     else:

@@ -12,6 +12,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 SKILL_DIR = RAIZ / "artefactos/skills/dev/codex-route"
 SKILL = SKILL_DIR / "SKILL.md"
 REFERENCIAS = SKILL_DIR / "referencias"
+OPENAI_YAML = SKILL_DIR / "agents/openai.yaml"
 
 
 class TestCodexRoute(unittest.TestCase):
@@ -21,39 +22,145 @@ class TestCodexRoute(unittest.TestCase):
         cls.campos, cls.cuerpo = kora.parsear_archivo(
             SKILL.read_text("utf-8"))
 
-    def test_identidad_forma_y_target_codex_only(self):
+    def test_identidad_forma_version_y_target_codex_only(self):
         self.assertEqual(
             self.campos["urn"], "urn:dev:artefacto:codex-route")
         self.assertEqual(self.campos["nombre"], "codex-route")
-        self.assertEqual(self.campos["version"], "1.0.0")
+        self.assertEqual(self.campos["version"], "2.0.0")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
         self.assertEqual(self.campos["targets"], ["codex"])
         self.assertEqual(self.campos["alcance"], "usuario")
 
-    def test_route_only_es_default_y_run_requiere_instruccion_explicita(self):
+    def test_invocacion_es_explicita_en_metadata_runtime(self):
+        metadata = OPENAI_YAML.read_text("utf-8")
+        self.assertIn('display_name: "Codex Route"', metadata)
+        self.assertIn("short_description:", metadata)
+        self.assertIn("default_prompt:", metadata)
+        self.assertIn("allow_implicit_invocation: false", metadata)
+        self.assertIn("invocar explícitamente", self.cuerpo.lower())
+
+    def test_route_only_es_default_y_run_requiere_autoridad_explicita(self):
         cuerpo = " ".join(self.cuerpo.split()).lower()
         self.assertIn("`route-only` — predeterminado", cuerpo)
         self.assertIn("no crear sesiones", cuerpo)
         self.assertIn("`route-and-run` — explícito", cuerpo)
         self.assertIn("no amplía permisos", cuerpo)
 
-    def test_modela_cinco_grafos_y_autoridad_central(self):
-        cuerpo = self.cuerpo.lower()
-        for testigo in (
-                "γ = (v, t_g, d_t, m_c, w_f, θ)",
-                "árbol de gobierno explícito",
-                "`m_c ⊆ d_t ∪ e_review`",
-                "la directora conserva objetivo",
-                "la mensajería coordina información; no sincroniza escrituras",
-        ):
-            self.assertIn(testigo, cuerpo)
+    def test_politica_de_modelos_es_allowlist_sol_luna_sin_excepciones(self):
+        archivos = [SKILL] + sorted(REFERENCIAS.glob("*.md"))
+        corpus = "\n".join(p.read_text("utf-8") for p in archivos).lower()
+        self.assertNotRegex(corpus, r"\bterra\b|\bultra\b")
+        routing = (REFERENCIAS / "model-effort-routing.md").read_text(
+            "utf-8")
+        self.assertIn("gpt-5.6-sol", routing)
+        self.assertIn("gpt-5.6-luna", routing)
+        routing_normalizado = " ".join(routing.lower().split())
+        self.assertIn("allowlist estricta", routing_normalizado)
+        self.assertIn("descendiente sin modelo fijado", routing_normalizado)
+        self.assertIn("fallback fuera de la allowlist", routing_normalizado)
 
-    def test_fast_path_no_fabrica_ceremonia(self):
+    def test_fallbacks_fallan_cerrado_y_preflight_observa_runtime(self):
+        routing = (REFERENCIAS / "model-effort-routing.md").read_text(
+            "utf-8")
+        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        for testigo in (
+                "collapse", "cost_degraded", "blocked",
+                "director_model_not_allowed", "sol_required_unavailable"):
+            self.assertIn(testigo, routing)
+        for campo in (
+                "root_model_observed", "root_model_allowed",
+                "spawn_available", "model_override_available",
+                "luna_override_available", "sol_override_available",
+                "effort_override_available", "fork_control_available",
+                "lifecycle_controls"):
+            self.assertIn(campo, protocolo)
+
+    def test_routing_es_dos_pasadas_y_perfila_cada_sesion(self):
+        cuerpo = " ".join(self.cuerpo.lower().split())
+        self.assertIn("cem global residual", cuerpo)
+        self.assertIn("selección provisional", cuerpo)
+        self.assertIn("calcular `j`", cuerpo)
+        self.assertIn("ajustar el esfuerzo de la directora", cuerpo)
+        self.assertIn("cem local residual", cuerpo)
+        self.assertLess(cuerpo.index("calcular `j`"),
+                        cuerpo.index("ajustar el esfuerzo de la directora"))
+        routing = (REFERENCIAS / "model-effort-routing.md").read_text(
+            "utf-8")
+        self.assertNotIn("max(A,N,E,O,C,J)", routing.replace(" ", ""))
+        self.assertIn("integration_load", routing)
+
+    def test_schema_separa_recomendado_disponible_efectivo_y_cumplimiento(self):
+        schema = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        for campo in (
+                "recommended_model", "available_models", "effective_model",
+                "model_compliance", "recommended_effort",
+                "available_efforts", "effective_effort",
+                "effort_compliance"):
+            self.assertIn(campo, schema)
+        self.assertIn("cognitive_class", schema)
+        self.assertIn("routing_basis", schema)
+
+    def test_fast_path_y_salida_por_defecto_son_compactos(self):
         cuerpo = " ".join(self.cuerpo.split()).lower()
-        self.assertIn("usar s0 sin desplegar matrices", cuerpo)
-        self.assertIn("no usar dos matrices", cuerpo)
-        self.assertIn("no maximizar sesiones", cuerpo)
+        self.assertIn("luna low", cuerpo)
+        self.assertIn("luna medium", cuerpo)
+        self.assertIn("`compact_graph_route` — predeterminado", cuerpo)
+        self.assertIn("`full_graph_route`", cuerpo)
+        self.assertLessEqual(len(self.cuerpo.splitlines()), 150)
+
+    def test_grafos_separan_control_datos_y_decision_local_global(self):
+        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        for testigo in (
+                "M_c = M_parent ∪ M_peer",
+                "M_peer ⊆ E_dependency ∪ E_review",
+                "TASK", "INTERRUPT", "CLOSE", "CONTRACT", "EVIDENCE",
+                "LOCAL_DECISION", "GLOBAL_DECISION"):
+            self.assertIn(testigo, protocolo)
+
+    def test_s8_es_iteracion_acotada_y_cada_iteracion_es_dag(self):
+        catalogo = " ".join((
+            REFERENCIAS / "topology-catalog.md").read_text("utf-8").split())
+        for testigo in (
+                "iteration_control", "max_iterations",
+                "max_consecutive_failures", "minimum_improvement",
+                "evaluator_mutable: false", "rollback: required",
+                "cada iteración finita es un DAG"):
+            self.assertIn(testigo, catalogo)
+
+    def test_lifecycle_usa_operaciones_segun_contrato_vivo(self):
+        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        protocolo_normalizado = " ".join(protocolo.lower().split())
+        self.assertIn(
+            "planned → spawned → acknowledged → running → completed → "
+            "integrated → closed", " ".join(protocolo.split()))
+        self.assertIn("`send_message` no inicia", protocolo)
+        self.assertIn("`followup_task`", protocolo)
+        self.assertIn("si `close_agent` está expuesto", protocolo_normalizado)
+        self.assertIn("limitación de lifecycle", protocolo_normalizado)
+
+    def test_persistencia_no_colisiona_y_worktree_exige_interferencia_real(self):
+        sgm = (REFERENCIAS / "session-graph-matrix.md").read_text("utf-8")
+        for nivel in range(5):
+            self.assertIn(f"L{nivel}", sgm)
+        self.assertNotRegex(sgm, r"\bP[0-4]\b")
+        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
+            "utf-8")
+        self.assertIn("workspace compartido + un escritor", protocolo)
+        self.assertIn("interfaces inestables", protocolo)
+
+    def test_topologia_base_fases_y_modificadores_no_son_suma_de_codigos(self):
+        dominios = (REFERENCIAS / "domain-overrides.md").read_text("utf-8")
+        self.assertIn("base_topology", dominios)
+        self.assertIn("phases", dominios)
+        self.assertIn("modifiers", dominios)
+        self.assertNotRegex(dominios, r"S\d\s*\+\s*S\d")
+        self.assertIn("manejo clínico", dominios.lower())
+        self.assertIn("Sol monosession", dominios)
 
     def test_referencias_progresivas_existen_y_estan_enlazadas(self):
         nombres = (
@@ -70,58 +177,28 @@ class TestCodexRoute(unittest.TestCase):
                 self.assertTrue((REFERENCIAS / nombre).is_file())
                 self.assertIn(f"referencias/{nombre}", self.cuerpo)
 
-    def test_matrices_tienen_dimensiones_y_gates_completos(self):
+    def test_matrices_miden_complejidad_residual_y_gates_locales(self):
         cem = (REFERENCIAS / "cognitive-epistemic-matrix.md").read_text(
             "utf-8")
         sgm = (REFERENCIAS / "session-graph-matrix.md").read_text("utf-8")
-        for dimension in (
-                "A — Ambigüedad", "N — Novedad", "E — Especialización",
-                "O — Debilidad", "B — Amplitud", "C — Acoplamiento",
-                "H — Horizonte", "R — Riesgo"):
-            self.assertIn(dimension, cem)
-        for dimension in (
-                "D — Descomponibilidad", "K — Separabilidad",
-                "P — Holgura", "M — Comunicación", "W — Contención",
-                "J — Integración", "L — Valor", "I — Independencia"):
-            self.assertIn(dimension, sgm)
-        self.assertIn("No promediar", cem)
+        self.assertIn("complejidad residual", cem)
+        self.assertIn("Gate de Luna", cem)
+        self.assertIn("Gate obligatorio de Sol", cem)
+        self.assertIn("R gobierna autonomía y verificación", cem)
         self.assertIn("D ≥ 2", sgm)
         self.assertIn("K ≥ 2", sgm)
 
-    def test_catalogo_contiene_s0_a_s9(self):
-        catalogo = (REFERENCIAS / "topology-catalog.md").read_text("utf-8")
-        for codigo in range(10):
-            self.assertIn(f"## S{codigo} —", catalogo)
-
-    def test_routing_de_modelo_falla_cerrado_a_capacidad_viva(self):
-        routing = (REFERENCIAS / "model-effort-routing.md").read_text(
-            "utf-8")
-        for testigo in (
-                "modelo recomendado, disponible y efectivamente usado",
-                "superficie actual",
-                "gpt-5.6-sol",
-                "gpt-5.6-terra",
-                "gpt-5.6-luna",
-                "no un override ejecutable garantizado",
-                "Ultra es una política de ejecución, no una topología",
-        ):
-            self.assertIn(testigo, routing)
-
-    def test_protocolo_usa_solo_operaciones_vivas(self):
-        protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
-            "utf-8")
-        for operacion in (
-                "`spawn_agent`", "`send_message`", "`followup_task`",
-                "`wait_agent`", "`list_agents`", "`interrupt_agent`"):
-            self.assertIn(operacion, protocolo)
-        self.assertIn("No inventar `close_agent`", protocolo)
-
-    def test_calibracion_no_finge_validacion_predictiva(self):
+    def test_calibracion_mide_cumplimiento_y_arrepentimiento(self):
         calibracion = (REFERENCIAS / "calibration.md").read_text("utf-8")
-        self.assertIn("predictor validado", calibracion.lower())
-        self.assertIn("no prueba generalización", calibracion.lower())
+        for metrica in (
+                "model_policy_compliance", "unobserved_model_rate",
+                "routing_regret", "graph_regret",
+                "cost_degraded_fallback_rate", "late_escalation_rate",
+                "human_major_correction_rate"):
+            self.assertIn(metrica, calibracion)
+        self.assertIn("acuerdo entre evaluadores", calibracion)
 
-    def test_emision_codex_es_materializable(self):
+    def test_emision_codex_incluye_politica_de_invocacion(self):
         resultado = subprocess.run(
             [
                 sys.executable,
@@ -137,8 +214,12 @@ class TestCodexRoute(unittest.TestCase):
             text=True,
         )
         self.assertEqual(resultado.returncode, 0, resultado.stderr)
-        self.assertIn("name: codex-route", resultado.stdout)
-        self.assertIn("target: codex", resultado.stdout)
+        self.assertIn("=== codex/skills/codex-route/SKILL.md ===",
+                      resultado.stdout)
+        self.assertIn(
+            "=== codex/skills/codex-route/agents/openai.yaml ===",
+            resultado.stdout)
+        self.assertIn("allow_implicit_invocation: false", resultado.stdout)
 
 
 if __name__ == "__main__":

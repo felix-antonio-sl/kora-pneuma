@@ -1,85 +1,114 @@
-# Routing de modelo y esfuerzo
+# Routing binario de modelo y esfuerzo
 
-La selección de modelo es una decisión runtime y volátil. La skill recomienda;
-solo configura un descendiente cuando `spawn_agent` expone ese valor.
+## Política cerrada
 
-## Gate de capacidad viva
+Esta skill solo recomienda y utiliza:
 
-Antes de emitir o ejecutar una asignación:
+```yaml
+model_policy:
+  allowed: [gpt-5.6-sol, gpt-5.6-luna]
+  unpinned_descendants: forbidden
+  fallback_outside_allowlist: forbidden
+```
 
-1. inspeccionar los modelos y esfuerzos permitidos por la superficie actual;
-2. separar modelo recomendado, disponible y efectivamente usado;
-3. si el recomendado no está disponible, escoger el fallback más cercano y
-   declarar la pérdida;
-4. omitir el override cuando heredar sea más fiel que inventar soporte;
-5. no crear perfiles TOML ni cambiar configuración global salvo solicitud
-   explícita.
+La allowlist estricta es una restricción deliberada del producto, no una
+afirmación sobre todos los modelos existentes. No crear un descendiente sin
+modelo fijado cuando el runtime pueda seleccionar automáticamente fuera de la
+allowlist. No omitir el override para heredar una selección incierta. Todo
+fallback fuera de la allowlist está prohibido.
 
-La sesión directora activa normalmente no puede cambiarse desde una skill.
-Presentar su modelo como `actual` y una alternativa como `recomendado`, no como
-aplicada.
+Separar para la directora y cada sesión:
 
-## Familia GPT-5.6 vigente al 2026-08-11
+```text
+recommended_model / available_models / effective_model / model_compliance
+recommended_effort / available_efforts / effective_effort / effort_compliance
+```
 
-La documentación oficial distingue:
+Cumplimiento: `exact | degraded | unknown | blocked`. Si lo efectivo es
+desconocido, declarar `unknown`; nunca inferir ejecución exacta desde una
+recomendación o configuración.
 
-- `gpt-5.6` / `gpt-5.6-sol`: capacidad frontier para trabajo ambiguo,
-  multietapa, con planificación, herramientas, validación e integración;
-- `gpt-5.6-terra`: balance de capacidad, velocidad y costo; preferente para
-  exploración, lectura amplia y workers que reducen resultados;
-- `gpt-5.6-luna`: trabajo rápido, estrecho, repetible o de alto volumen.
+## Preflight y fallos cerrados
 
-No asumir que los tres están expuestos por cada cliente o herramienta. En la
-superficie de esta autoría, `spawn_agent` expone Sol y Terra; por tanto Luna es
-una recomendación condicionada, no un override ejecutable garantizado.
+Inspeccionar el contrato vivo de creación. No inferir disponibilidad desde una
+ejecución anterior, documentación general o el catálogo de la cuenta.
 
-## Selección por trabajo
+- Directora efectiva observada fuera de allowlist:
+  `ROUTE_ERROR · director_model_not_allowed`.
+- Directora efectiva no observable en `route-and-run`:
+  `ROUTE_ERROR · director_model_unobserved`.
+- Sol requerido y no disponible:
+  `ROUTE_ERROR · sol_required_unavailable`.
+- Luna recomendada y no disponible: elegir explícitamente una:
+  - `collapse`: mantener el nodo en una directora permitida;
+  - `cost_degraded`: usar Sol y declarar mayor costo;
+  - `blocked`: recomendar abrir una sesión Luna.
+- Ningún override permitido en allowlist: no crear el descendiente.
 
-| Trabajo | Tier inicial |
+El fallback Luna→Sol puede degradar costo, no capacidad. Sol→Luna está
+prohibido cuando permanecen arquitectura, integración difícil o juicio de alta
+consecuencia.
+
+## Gate de Luna
+
+Luna es elegible solo si todas son verdaderas para el nodo local:
+
+```text
+objetivo y entregable determinados
+método conocido o búsqueda acotada
+fuente de verdad identificada
+oráculo fuerte
+integración local baja
+sin juicio de alta consecuencia no resuelto
+```
+
+Esfuerzo:
+
+| Nivel | Uso |
 |---|---|
-| Búsqueda, mapeo, extracción, logs, corpus | Luna si está disponible; si no, Terra |
-| Implementación con contrato estable | Terra medium/high |
-| Arquitectura local o revisión adversarial | Sol medium/high |
-| Diagnóstico, evidencia contradictoria, integración interdisciplinaria | Sol high/xhigh |
-| Síntesis global extremadamente difícil y evaluable | Sol xhigh/max |
+| `low` | operación literal y checker exacto |
+| `medium` | varios pasos acotados y oracle fuerte |
+| `high` | tarea estrecha con edge cases o varios ciclos verificables |
+| `xhigh` / `max` | solo con oráculo fuerte y ventaja medida frente a Sol |
 
-Escalar de tier cuando el fallo sea causal, arquitectónico o de integración.
-No sustituir un modelo inadecuado aumentando esfuerzo indefinidamente.
+## Gate obligatorio de Sol
 
-## Esfuerzo
+Usar Sol si persiste cualquiera: ambigüedad material, arquitectura o
+invariantes no resueltos, novedad conceptual, síntesis interdisciplinaria,
+oráculo débil con juicio sustantivo, evidencia contradictoria, acoplamiento,
+integración difícil, recomendación de alta consecuencia o adjudicación entre
+resultados rivales.
 
-Usar `peak = max(A,N,E,O,C,J)` y contar cuántas de esas dimensiones son ≥3.
-
-| Esfuerzo | Uso |
+| Nivel | Uso |
 |---|---|
-| low | Operación directa, oráculo exacto, velocidad prioritaria |
-| medium | Default equilibrado para trabajo delimitado |
-| high | Lógica compleja, edge cases, revisión o varios ciclos |
-| xhigh | Varias dimensiones difíciles, riesgo o síntesis profunda |
-| max | Problema quality-first excepcional, evaluable y esencialmente serial |
+| `low` | excepcional, problema claro pero no delegable a Luna |
+| `medium` | problema moderado y delimitado |
+| `high` | lógica compleja, trade-offs o revisión adversarial |
+| `xhigh` | varias dimensiones difíciles o síntesis interdisciplinaria |
+| `max` | problema excepcional, evaluable y esencialmente serial |
 
-`max` no se justifica por archivos numerosos, logs extensos, duración o mala
-especificación. Comparar `xhigh` y `max` sobre tareas representativas cuando el
-costo importe.
+No aumentar esfuerzo para compensar un modelo inadecuado. Riesgo alto con
+transformación determinista puede seguir en Luna con gate humano y verificación
+fuerte; riesgo alto con juicio exige Sol y gate humano.
 
-## Ultra
+## Dos pasadas
 
-Ultra es una política de ejecución, no una topología. Combina razonamiento
-máximo y delegación proactiva cuando el producto/cliente lo soporta.
+```text
+director_model = route(CEM_global_residual)
+SGM = design_graph(task)
+integration_load = J(SGM)
+director_effort = adjust_effort(CEM_global_residual, integration_load)
+node_model_i = route(CEM_local_residual_i)
+node_effort_i = effort(CEM_local_residual_i)
+```
 
-Recomendarla solo si la descomposición debe descubrirse dinámicamente, existe
-paralelismo amplio, importa el tiempo de pared, el presupuesto tolera más
-trabajo y las acciones están acotadas.
+`integration_load` ajusta el esfuerzo de la directora, no el de cada worker.
+Registrar solo las bases que gobernaron una ruta fronteriza.
 
-No recomendarla para grafo conocido, trabajo serial, escritura compartida,
-riesgo alto, independencia cegada o presupuesto restringido. En Codex local,
-la delegación sigue requiriendo solicitud directa o una instrucción aplicable;
-no presentar la etiqueta Ultra como herramienta invocable si no existe.
-
-## Fuentes oficiales consultadas
+## Fuentes oficiales
 
 - [Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
-- [Model guidance](https://developers.openai.com/api/docs/guides/latest-model)
+- [Models](https://developers.openai.com/api/docs/models)
 
-Estas páginas describen capacidad del producto y recomendaciones actuales; no
-prueban disponibilidad para una cuenta, cliente o turno específico.
+Las páginas describen capacidades generales; el contrato vivo decide qué
+override puede ejecutarse en el turno actual.

@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.8.0
+# KORA/Forma — ley pneuma v1.9.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -184,13 +184,19 @@ Reglas:
 artefactos/
 ├── conocimiento/{ns}/{nombre}.md
 ├── agentes/{ns}/{nombre}.md
-└── skills/{ns}/{nombre}/SKILL.md    (+ referencias/ opcional)
+└── skills/{ns}/{nombre}/
+    ├── SKILL.md
+    ├── referencias/                (opcional)
+    └── agents/openai.yaml          (opcional, metadata Codex)
 ```
 
 1. El nombre de archivo DEBE ser `SKILL.md` para skills (cada skill en su
    propio directorio) y `{nombre}.md` para agentes y conocimiento.
 2. El namespace del URN DEBE coincidir con el primer subdirectorio bajo la
    zona. Check: `lugar-coincide`.
+3. `agents/openai.yaml` PUEDE existir solo como sidecar de metadata del target
+   Codex. No es un artefacto, no amplía el shape ni porta URN: pertenece al
+   mismo producto cerrado que `SKILL.md` y `ley/3` gobierna su transporte.
 
 Correcto: `artefactos/agentes/dev/polymath.md` ⟷ `urn:dev:artefacto:polymath`.
 Incorrecto: `artefactos/agentes/kora/polymath.md` con URN de namespace `dev`.
@@ -394,3 +400,7 @@ requieren testigos externos explícitos.
 v1.8.0 (2026-08-09): retira la cardinalidad arbitraria de tres `tags` para
 conocimiento publicado. La dignidad conserva solo `descripcion` y `fuente` no
 vacías; `tags` vuelve a ser metadata opcional y no un sustituto de calidad.
+
+v1.9.0 (2026-08-11): reconoce `agents/openai.yaml` como sidecar opcional de
+metadata Codex dentro de una skill. No agrega campos al shape ni crea un cuarto
+tipo de artefacto; `ley/3` lo transporta como factor del producto cerrado.

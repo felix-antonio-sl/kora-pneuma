@@ -1,72 +1,72 @@
-# CEM-8 — Cognitive and Epistemic Matrix
+# CEM-8 — complejidad cognitiva y epistémica residual
 
-Usar esta matriz para seleccionar profundidad cognitiva, esfuerzo,
-verificación y autonomía. Puntuar cada dimensión de 0 a 4 a partir de hechos de
-la tarea. No promediar.
+Puntuar de 0 a 4 después de usar fuente de verdad, contrato vigente o una
+aclaración acotada. La unidad es la tarea global para la directora y cada
+subtrabajo local para su sesión. Medir complejidad residual, no dificultad
+inicial del prompt. No promediar.
 
 | Dimensión | 0 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|---|
-| A — Ambigüedad | Operación y resultado exactos | Objetivo claro, supuestos menores | Falta una decisión material | Varios resultados o trade-offs legítimos | Objetivo emergente, disputado o contradictorio |
-| N — Novedad y abstracción | Ejecutar procedimiento | Aplicar patrón conocido | Combinar patrones | Derivar solución no evidente | Construcción teórica o problema frontera |
-| E — Especialización | Conocimiento general | Un dominio habitual | Dominio especializado con fuentes | Expertise profundo o varias disciplinas | Varios dominios profundos, regulados o controvertidos |
-| O — Debilidad del oráculo | Checker exacto | Tests o criterios fuertes | Objetivo más juicio acotado | Triangulación experta | Sin verificación directa o resultado disputado |
-| B — Amplitud | Un dato o archivo | Pocos elementos | Varios archivos o fuentes | Subsistema o corpus grande | Sistema de sistemas o corpus masivo |
-| C — Acoplamiento y dinamismo | Independiente | Dependencias locales estables | Varias interfaces | Feedback o cambio durante el trabajo | Sistema no estacionario, adversarial o muy interdependiente |
-| H — Horizonte | Una respuesta | Pocos pasos | Un ciclo inspección–acción–verificación | Varios ciclos con objetivo estable | Programa adaptativo prolongado |
-| R — Riesgo | Sin efectos externos | Local y reversible | Consecuencia relevante pero revisable | Alto impacto clínico, legal, financiero, operativo o reputacional | Daño grave, irreversible, sistémico o de seguridad |
+| A — Ambigüedad | Operación exacta | Supuestos menores | Decisión material acotada | Varios resultados legítimos | Objetivo emergente o contradictorio |
+| N — Novedad | Procedimiento | Patrón conocido | Combinar patrones | Solución no evidente | Construcción frontera |
+| E — Especialización | General | Dominio habitual | Fuente especializada | Expertise profundo | Varios dominios profundos |
+| O — Debilidad del oráculo | Checker exacto | Tests fuertes | Juicio acotado | Triangulación experta | Sin verificación directa |
+| B — Amplitud | Un dato | Pocos elementos | Varios archivos | Subsistema/corpus | Sistema de sistemas |
+| C — Acoplamiento | Independiente | Dependencias locales | Varias interfaces | Feedback durante trabajo | Interdependencia no estacionaria |
+| H — Horizonte | Una respuesta | Pocos pasos | Un loop completo | Varios loops | Programa adaptativo |
+| R — Riesgo | Sin efecto | Local reversible | Relevante revisable | Alto impacto | Daño grave o irreversible |
 
 ## Fast path cognitivo
 
-Tratar como tarea acotada sin desplegar la matriz completa cuando:
+No desplegar la matriz completa si existe objetivo, entregable, fuente,
+restricción y checker claros, y se cumple:
 
 ```text
-A ≤ 1
-N ≤ 2
-E ≤ 2
-O ≤ 1
-C ≤ 2
+A ≤ 1 · N ≤ 2 · E ≤ 2 · O ≤ 1 · C ≤ 2
 ```
 
-y existen objetivo definido, resultado reconocible, fuente de verdad,
-restricciones claras y ausencia de acción externa de alto impacto.
+La amplitud no exige por sí sola un modelo más capaz.
 
-La amplitud por sí sola no exige el modelo más capaz. Una transformación de
-muchos registros puede ser estrecha si el oráculo es exacto.
+## Gate de Luna
 
-## Gate de capacidad frontier
+Luna exige todas:
 
-Recomendar el tier más capaz disponible cuando se cumple alguna:
+- objetivo local y entregable determinados;
+- método conocido o búsqueda acotada;
+- fuente de verdad identificada;
+- oráculo fuerte;
+- integración local baja;
+- ningún juicio material de alta consecuencia pendiente.
 
-```text
-A ≥ 2
-N ≥ 3
-E ≥ 3
-C ≥ 3
-O ≥ 2 con juicio sustantivo
-R ≥ 3 con recomendación o decisión
-```
+## Gate obligatorio de Sol
 
-También para descubrir el problema, arquitectura, integración
-interdisciplinaria, diagnóstico, evidencia contradictoria, reconciliación de
-interfaces o síntesis global.
+Sol exige cualquiera:
 
-No confundir este gate con autorización para actuar. Riesgo alto puede exigir
-mejor razonamiento y simultáneamente menor autonomía.
+- ambigüedad residual material;
+- arquitectura, invariantes o novedad conceptual;
+- síntesis interdisciplinaria o evidencia contradictoria;
+- oráculo débil con juicio sustantivo;
+- acoplamiento o integración difícil;
+- recomendación de alta consecuencia;
+- adjudicación entre resultados rivales.
 
-## Verificación por perfil
+## Riesgo, autonomía y verificación
+
+`R gobierna autonomía y verificación` antes que modelo o esfuerzo. Solo elevar
+capacidad cognitiva si el riesgo contiene juicio sustantivo.
 
 | Señal | Verificación mínima |
 |---|---|
-| O 0–1 | Checker o test focal y candidato exacto |
-| O 2 | Evidencia objetiva más revisión explícita del juicio |
-| O 3–4 | Fuentes independientes, incertidumbre y adjudicador competente |
-| R 0–1 | Loop local reversible |
-| R 2 | Revisión de diff/resultado y rollback posible |
-| R 3 | Gate humano antes del efecto; evidencia adversarial |
-| R 4 | No ejecutar sin autoridad específica y controles del dominio |
+| O 0–1 | checker/test focal y candidato exacto |
+| O 2 | evidencia objetiva más revisión del juicio |
+| O 3–4 | fuentes independientes, incertidumbre y adjudicación competente |
+| R 0–1 | loop local reversible |
+| R 2 | revisión y rollback posible |
+| R 3 | gate humano antes del efecto y evidencia adversarial |
+| R 4 | no ejecutar sin autoridad y controles de dominio |
 
-## Regla de salida
+## Salida
 
-Registrar el perfil como ocho enteros con una justificación breve para las
-dimensiones que gobiernan la ruta. No fabricar precisión explicando cada cero
-si el caso es obvio.
+En rutas obvias, emitir solo `cognitive_class` y `routing_basis`. Mostrar los
+ocho enteros únicamente si una dimensión gobierna una decisión fronteriza o el
+usuario pide `FULL_GRAPH_ROUTE`.
