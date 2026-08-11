@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:codex-route
 nombre: codex-route
-version: 2.2.0
+version: 2.2.1
 estado: activo
 descripcion: "Evalua explicitamente una tarea para Codex y recomienda superficie de ejecucion, modelo Sol/Terra/Luna, esfuerzo low-max, goal nativo y topologia minima. Invocar para decidir routing; por defecto no ejecuta."
-fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360. Version 2.1.0 incorpora Terra y seleccion conjunta modelo-esfuerzo desde documentacion oficial GPT-5.6 y tres graficos Artificial Analysis aportados el 2026-08-11. Version 2.2.0 incorpora superficies de ejecucion, threads independientes, evaluacion de goal nativo y comparacion privilegiada Luna Max frente a Sol High desde documentacion oficial Codex revalidada el 2026-08-11. La evidencia agregada calibra, no gobierna disponibilidad ni sustituye evals locales; las rubricas siguen siendo heuristicas no validadas como escalas predictivas."
+fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360. Version 2.1.0 incorpora Terra y seleccion conjunta modelo-esfuerzo desde documentacion oficial GPT-5.6 y tres graficos Artificial Analysis aportados el 2026-08-11. Version 2.2.0 incorpora superficies de ejecucion, threads independientes, evaluacion de goal nativo y comparacion privilegiada Luna Max frente a Sol High desde documentacion oficial Codex revalidada el 2026-08-11. Version 2.2.1 separa autorizacion de crear un thread y de fijar su modelo. La evidencia agregada calibra, no gobierna disponibilidad ni sustituye evals locales; las rubricas siguen siendo heuristicas no validadas como escalas predictivas."
 autor: FS
 creado: 2026-08-11
 lang: es
@@ -44,7 +44,10 @@ ni ejecutar el trabajo enrutado.
 
 Activar solo si la solicitud o una instrucción aplicable autoriza delegar o
 usar subagentes. Crear un thread independiente exige además solicitud explícita
-para esa superficie. La activación no amplía permisos, alcance ni autoridad.
+para esa superficie; fijar su modelo exige que el usuario haya pedido ese
+modelo concreto. Si falta esa autorización, emitir `ROUTE_ERROR ·
+model_override_not_authorized` y no crear el thread. La activación no amplía
+permisos, alcance ni autoridad.
 
 ## Fast path
 

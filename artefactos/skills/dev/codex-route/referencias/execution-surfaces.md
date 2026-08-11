@@ -35,6 +35,9 @@ ventaja.
 - `route-and-run` genérico tampoco basta para crear un thread de propiedad del
   usuario: se requiere una solicitud explícita de crear, abrir o ejecutar en
   una sesión independiente o en segundo plano.
+- Autorizar el thread no autoriza fijar su modelo: el usuario debe pedir ese
+  modelo concreto. Si no lo hace, `model_override_not_authorized` y no crear el
+  thread; no omitir el override para heredar un default fuera de la allowlist.
 - Antes de `create_thread`, usar `list_projects` y resolver el proyecto exacto.
 - Un thread creado queda bajo propiedad del usuario. La directora puede
   observarlo y dirigirlo, pero no archivar automáticamente al terminar.
@@ -68,11 +71,13 @@ thread_surface:
   local_target_available: true | false
   worktree_target_available: true | false
   creation_authorized: true | false
+  model_override_authorized: true | false
 ```
 
 Operaciones canónicas:
 
-- `create_thread`: crear solo con autoridad explícita y modelo/esfuerzo fijados;
+- `create_thread`: crear solo con `creation_authorized` y
+  `model_override_authorized`, modelo concreto y esfuerzo fijados;
 - `list_projects`: resolver el destino antes de crear;
 - `list_threads`: observar threads del alcance autorizado;
 - `read_thread`: inspeccionar progreso y evidencia;

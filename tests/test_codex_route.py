@@ -26,7 +26,7 @@ class TestCodexRoute(unittest.TestCase):
         self.assertEqual(
             self.campos["urn"], "urn:dev:artefacto:codex-route")
         self.assertEqual(self.campos["nombre"], "codex-route")
-        self.assertEqual(self.campos["version"], "2.2.0")
+        self.assertEqual(self.campos["version"], "2.2.1")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
         self.assertEqual(self.campos["targets"], ["codex"])
@@ -135,6 +135,20 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("no archivar automáticamente", superficies_normalizadas)
         self.assertIn("checkout local", superficies_normalizadas)
         self.assertIn("worktree", superficies_normalizadas)
+
+    def test_thread_separa_creacion_de_override_de_modelo(self):
+        superficies = (
+            REFERENCIAS / "execution-surfaces.md").read_text("utf-8")
+        protocolo = (
+            REFERENCIAS / "communication-protocol.md").read_text("utf-8")
+        contrato = " ".join(
+            f"{self.cuerpo}\n{superficies}\n{protocolo}".lower().split())
+
+        self.assertIn("creation_authorized", protocolo)
+        self.assertIn("model_override_authorized", protocolo)
+        self.assertIn("modelo concreto", contrato)
+        self.assertIn("model_override_not_authorized", contrato)
+        self.assertIn("no crear el thread", contrato)
 
     def test_goal_nativo_se_evalua_sin_activacion_implicita(self):
         protocolo = (REFERENCIAS / "communication-protocol.md").read_text(

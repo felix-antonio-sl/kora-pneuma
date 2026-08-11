@@ -24,12 +24,16 @@ runtime_preflight:
     available_models: []
     available_efforts: []
     creation_authorized: true | false
+    model_override_authorized: true | false
   native_goal_controls: []
 ```
 
 No inferir una superficie u override desde documentación o ejecuciones pasadas.
 Si la directora no es observable o permitida, o el triple requerido no puede
 fijarse, aplicar los fallos cerrados de `model-effort-routing.md`.
+Para un thread independiente, autorización de creación y de override son
+distintas: si el usuario no pidió el modelo concreto, emitir `ROUTE_ERROR ·
+model_override_not_authorized` y no crear el thread.
 
 ## Planos del grafo
 
@@ -195,10 +199,11 @@ necesita todo, `K` es baja y probablemente no debe delegarse.
 - `interrupt_agent`: detener y redirigir sin descartar automáticamente contexto.
 
 Para threads independientes, resolver primero con `list_projects`; crear con
-`create_thread` solo tras solicitud explícita; observar con `list_threads` y
-`read_thread`; dirigir seguimientos con `send_message_to_thread`. Título, pin y
-archivo requieren operaciones expuestas y autoridad específica. Un
-`route-and-run` genérico no autoriza crear un thread de propiedad del usuario.
+`create_thread` solo tras solicitud explícita de la superficie y del modelo
+concreto; observar con `list_threads` y `read_thread`; dirigir seguimientos con
+`send_message_to_thread`. Título, pin y archivo requieren operaciones expuestas
+y autoridad específica. Un `route-and-run` genérico no autoriza crear un thread
+de propiedad del usuario ni fijar su modelo.
 
 Para goal nativo, usar solo `get_goal`, `create_goal` y `update_goal` según sus
 precondiciones observadas.
