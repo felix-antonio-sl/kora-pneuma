@@ -1,9 +1,9 @@
 # KORA pneuma
 
-KORA pneuma es un repositorio de **conocimiento gobernado** con una herramienta
-de soporte. Mantiene una fuente canónica por objeto, identifica cada artefacto
-mediante URN y proyecta agentes y skills a distintos runtimes declarando toda
-pérdida de fidelidad.
+KORA pneuma es un canon gobernado de **conocimiento y especificaciones
+agénticas** con una herramienta de soporte. Mantiene una fuente canónica por
+objeto, identifica cada artefacto mediante URN y proyecta agentes y skills a
+distintos runtimes declarando toda pérdida de fidelidad.
 
 El problema que resuelve es la deriva: que una capacidad tenga versiones
 aparentemente equivalentes, pero semánticamente distintas, repartidas entre
@@ -12,6 +12,10 @@ la fuente y hace que las demás representaciones sean derivables y auditables.
 
 No es una aplicación ni un runtime. `kora.py` y `tests/` sostienen el corpus;
 no cambian su arquetipo principal.
+
+El canon agéntico es agnóstico al runtime. Codex es la realización operacional
+principal; Claude Code, OpenCode y OpenClaw permanecen como compatibilidad
+mantenida cuando el operador los selecciona explícitamente.
 
 ## Orientación en cinco minutos
 
@@ -62,15 +66,16 @@ El recorrido cotidiano tiene tres gestos:
 
 ```bash
 python3 kora.py velar
-python3 kora.py transmutar --urn <urn> --target <target>
-python3 kora.py transmutar --paridad --urn <urn> --target <target> [--proyecto <path>]
+python3 kora.py transmutar --urn <urn>
+python3 kora.py transmutar --paridad --urn <urn> --target codex [--proyecto <path>]
 ```
 
 `censo` y `nombre` ayudan a descubrir o resolver. `velar --estricto`, la
 paridad sin filtros y la suite completa son auditorías proporcionales para
 cambios de ley, emisor o varias superficies; no son ceremonia rutinaria.
 
-`transmutar` sin `--aplicar` solo materializa una emisión local derivada.
+`transmutar` elige Codex si se omite `--target`; cualquier otro runtime exige
+selección explícita. Sin `--aplicar` solo materializa una emisión local derivada.
 Instalación, lifecycle, publicación Git, despliegue y aceptación humana son
 acciones distintas y requieren su autoridad correspondiente. Forma válida,
 paridad o tests verdes no prueban conducta, safety ni autorización runtime.

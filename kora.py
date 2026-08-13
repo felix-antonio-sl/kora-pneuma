@@ -33,6 +33,7 @@ from pathlib import Path
 
 TARGETS_CONOCIDOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
 TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw")
+TARGET_PRINCIPAL = "codex"
 
 # Arneses que portan U_phen (ley/2 §10 r5): su personalidad se segrega a SOUL.md
 # en los targets que separan voz de operativa (openclaw, ley/3 §7.1).
@@ -102,7 +103,7 @@ CAMPOS_CONOCIMIENTO = {"familia"}
 CAMPOS_OBLIGATORIOS_COMUNES = ("urn", "nombre", "version", "estado",
                                "descripcion", "fuente")
 CAMPOS_OBLIGATORIOS_AGENTICOS = ("vector", "sigma", "arnes", "forma",
-                                 "herramientas", "targets")
+                                 "herramientas")
 CAMPOS_LISTA = ("tags", "cita", "depende", "reemplaza", "refina",
                 "herramientas", "targets", "conocimiento", "componible",
                 "estados", "vector", "sigma")
@@ -442,9 +443,7 @@ def chk_forma_valida(arts, raiz):
                 f(art, f"el campo '{clave}' debe ser una lista de strings")
         if art.tipo == "conocimiento":
             familia = art.campos.get("familia")
-            if familia is None:
-                f(art, "campo obligatorio ausente: 'familia'")
-            elif familia not in FAMILIAS:
+            if familia is not None and familia not in FAMILIAS:
                 f(art, f"familia inválida: '{familia}' "
                        f"(esperado: {'|'.join(FAMILIAS)})")
         elif art.tipo in ("skill", "agente"):
@@ -929,8 +928,9 @@ def chk_sello_fresco(arts, raiz):
                            f"con la ruta de emisión '{target_ruta}'"))
             info["regenerable"] = False
         targets_fuente = fuente.campos.get("targets")
-        if not isinstance(targets_fuente, list) or \
-                target_ruta not in targets_fuente:
+        if targets_fuente is not None and (
+                not isinstance(targets_fuente, list)
+                or target_ruta not in targets_fuente):
             fallos.append((rel, f"target de emisión '{target_ruta}' no "
                            "declarado por la fuente"))
             info["regenerable"] = False
@@ -1865,7 +1865,8 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
               file=sys.stderr)
         return 1
     targets = art.campos.get("targets")
-    if not isinstance(targets, list) or target not in targets:
+    if targets is not None and (
+            not isinstance(targets, list) or target not in targets):
         print(f"error: el artefacto '{urn}' no declara el target '{target}'; "
               "la transmutacion no puede ampliar su contrato de despliegue.",
               file=sys.stderr)
@@ -2216,8 +2217,14 @@ def _alcance_admite(art: Artefacto, proyecto: bool) -> bool:
                        else ("usuario", "ambos"))
 
 
-def _unidades_esperadas(arts: list[Artefacto], proyecto: bool = False):
-    """Unidades que todo artefacto agéntico activo promete por `targets`."""
+def _unidades_esperadas(arts: list[Artefacto], proyecto: bool = False,
+                        target_solicitado: str | None = None):
+    """Unidades operacionales prometidas por fuentes agénticas activas.
+
+    Una lista `targets` presente restringe la fuente. Si se omite, la fuente es
+    agnóstica: promete Codex en la operación ordinaria y el target realizado que
+    el operador solicite explícitamente en una auditoría focal.
+    """
     for art in arts:
         if art.tipo not in ("skill", "agente") or \
                 art.campos.get("estado") != "activo" or \
@@ -2225,6 +2232,8 @@ def _unidades_esperadas(arts: list[Artefacto], proyecto: bool = False):
             continue
         nombre = art.campos.get("nombre")
         targets = art.campos.get("targets")
+        if targets is None:
+            targets = [target_solicitado or TARGET_PRINCIPAL]
         if not isinstance(nombre, str) or not isinstance(targets, list):
             continue
         for target in targets:
@@ -2385,6 +2394,12 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
     Las skills se comparan como directorios cerrados. En blueprints OpenClaw
     solo gobierna AGENTS.md y el SOUL.md atribuible al mismo par KORA; el
     scaffolding y la memoria del runtime quedan fuera."""
+    if target is not None and target not in TARGETS_REALIZADOS:
+        print(f"error: el target '{target}' es reconocido por la ley pero no "
+              f"está realizado en esta encarnación; GENESIS.md declara esa "
+              f"deuda. Realizados: {', '.join(TARGETS_REALIZADOS)}.",
+              file=sys.stderr)
+        return 1
     emision = raiz / "_emision"
     arts = cargar_corpus(raiz)
     base_proyecto = None
@@ -2423,6 +2438,13 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
                   "corre `velar` y corrige antes de verificar paridad.",
                   file=sys.stderr)
             return 1
+        targets = art.campos.get("targets")
+        if target is not None and targets is not None and (
+                not isinstance(targets, list) or target not in targets):
+            print(f"error: el artefacto '{urn}' no declara el target "
+                  f"'{target}'; la paridad no puede ampliar su contrato de "
+                  "despliegue.", file=sys.stderr)
+            return 1
         if not _alcance_admite(art, proyecto is not None):
             alcance = art.campos.get("alcance", "ambos")
             if proyecto is not None:
@@ -2448,7 +2470,8 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
                   f"'{nombre}'. Corrige `forma-valida` primero.",
                   file=sys.stderr)
             return 1
-    esperadas = list(_unidades_esperadas(arts, proyecto is not None))
+    esperadas = list(_unidades_esperadas(
+        arts, proyecto is not None, target_solicitado=target))
     esperadas = [u for u in esperadas
                  if (target is None or u[0] == target)
                  and (urn is None or u[3].urn == urn)
@@ -2926,7 +2949,9 @@ def principal(argv: list[str] | None = None) -> int:
     p = sub.add_parser(
         "transmutar", help="proyección reticular y emisión a un runtime")
     p.add_argument("--urn")
-    p.add_argument("--target", choices=list(TARGETS_CONOCIDOS))
+    p.add_argument("--target", choices=list(TARGETS_CONOCIDOS),
+                   help=(f"runtime destino; en emisión, ausente = "
+                         f"{TARGET_PRINCIPAL}; en paridad, ausente = barrido global"))
     p.add_argument("--aplicar", action="store_true",
                    help="instala en los paths del runtime")
     p.add_argument("--stdout", action="store_true",
@@ -2937,7 +2962,8 @@ def principal(argv: list[str] | None = None) -> int:
     p.add_argument("--paridad", action="store_true",
                    help="verifica emisión↔instalación (user-level por defecto; "
                         "project-level con --proyecto, ley/3 §9.1): fiel / "
-                        "desviada / no-instalada; exit 1 si hay desviadas. "
+                        "desviada / no-instalada; exit 1 si hay desviadas o "
+                        "sin-emision. "
                         "Sin --urn ni --target barre todo")
 
     p = sub.add_parser("ciclo", help="transición de lifecycle (solo adelante)")
@@ -2975,11 +3001,12 @@ def principal(argv: list[str] | None = None) -> int:
                 return 1
             return cmd_paridad(
                 raiz, args.target, args.urn, args.proyecto)
-        if not args.urn or not args.target:
-            print("error: transmutar requiere --urn y --target (salvo en "
-                  "modo --paridad).", file=sys.stderr)
+        if not args.urn:
+            print("error: transmutar requiere --urn (salvo en modo "
+                  "--paridad).", file=sys.stderr)
             return 2
-        return cmd_transmutar(raiz, args.urn, args.target, args.aplicar,
+        target = args.target or TARGET_PRINCIPAL
+        return cmd_transmutar(raiz, args.urn, target, args.aplicar,
                               args.stdout, args.proyecto)
     if args.gesto == "ciclo":
         return cmd_ciclo(raiz, args.urn, args.estado)

@@ -31,6 +31,7 @@ formato absoluto `AAAA-MM-DD`.
   contratos del runtime y, por precedencia de Codex, prevalecen ante conflictos.
   Vuelve a la raíz y cambia la fuente.
 - Un artefacto agéntico es una especificación gobernada. Vector, arnés, forma, herramientas, sello y paridad no demuestran modelo conductual ni enforcement del runtime.
+- El canon agéntico es agnóstico al runtime. Codex es el target operacional principal; otros adaptadores se invocan y verifican solo bajo demanda explícita. `targets` es una allowlist opcional, no identidad.
 - La bestia `../kora` está congelada: para lo no migrado, migrar-o-omitir; toda doctrina futura nace aquí.
 
 ## Modo de trabajo KORA
@@ -59,7 +60,7 @@ Para autoría agéntica, usa el agente KORA `agent-architect` solo cuando el ope
 python3 kora.py censo
 python3 kora.py nombre <urn>
 python3 kora.py velar
-python3 kora.py transmutar --urn <urn> --target <target> [--stdout|--aplicar]
+python3 kora.py transmutar --urn <urn> [--target <target>] [--stdout|--aplicar]
 python3 kora.py transmutar --paridad [--urn <urn>] [--target <target>]
 python3 kora.py ciclo <urn> <estado>
 python3 kora.py ley
@@ -73,7 +74,8 @@ Sin `--aplicar`, transmutar solo reemite un derivado local. `--aplicar`, cambios
 - Un URN no lleva versión y sigue resolviendo tras deprecación o retiro.
 - No demuevas formas; promociona solo hacia arriba con major y gate, o depreca y reemplaza.
 - `conocimiento` y `componible` declaran referencias/candidatos, no composición probada.
-- Koraficación exige fidelidad semántica total a la fuente; `velar` no la mecaniza.
+- Koraficación exige cobertura, sustento y preservación relacional respecto de fuente y alcance; reporta `PASS|FAIL|ABSENT|NOT_RUN`. `velar` no la mecaniza.
+- `familia` es metadata documental heredada y opcional; no la reemplaces por otro enum.
 - No persistas cifras volátiles ni rutas derivadas de un id; resuelve en vivo.
 
 ## Verificación y cierre

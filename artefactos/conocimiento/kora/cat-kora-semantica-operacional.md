@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:cat-kora-semantica-operacional
 nombre: cat-kora-semantica-operacional
-version: 1.1.0
+version: 1.2.0
 estado: publicado
 descripcion: "Semántica formal mínima de las operaciones de KORA: snapshots válidos como subobjetos, lifecycle como cadenas delgadas con gates parciales, fidelidad contravariante y frontera no categorial de censo, emisión, paridad, ley y koraficación."
-fuente: "Doctrina propia pneuma formalizada el 2026-07-18 desde kora.py y ley/0..4. Base primaria: Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf. Las propiedades específicas de KORA se demuestran aquí y se verifican en tests/test_kora.py. v1.1.0 (2026-08-09): separa los once checks de fuente de los diagnósticos estrictos de publicación y frescura, y ajusta el dominio del gate de lifecycle."
+fuente: "Doctrina propia pneuma formalizada el 2026-07-18 desde kora.py y ley/0..4. Base primaria: Riehl, Category Theory in Context, https://emilyriehl.github.io/files/context.pdf. Las propiedades específicas de KORA se demuestran aquí y se verifican en tests/test_kora.py. v1.1.0 (2026-08-09): separa los once checks de fuente de los diagnósticos estrictos de publicación y frescura, y ajusta el dominio del gate de lifecycle. v1.2.0 (2026-08-13): sincroniza la koraficación v2 con fuente, alcance e inventario semántico; retira FS como falsa precisión sin alterar la frontera no categorial."
 autor: FS
 creado: 2026-07-18
 lang: es
@@ -298,11 +298,12 @@ observacional, bisimulación, naturalidad ni enforcement de herramientas.
 normativo, pero la operación es concatenación textual; no requiere ni obtiene
 una construcción categorial.
 
-La koraficación relaciona una fuente documental con un artefacto mediante
-preservación de hechos, `FS` y compresión. Mientras la fuente, los hechos y
-las transformaciones admisibles no formen categorías con acción sobre
-morfismos, «funtor K» permanece nombre histórico. `FS=100%` es obligación
-editorial declarada, no propiedad verificada por `velar`.
+La koraficación relaciona un snapshot fuente `s`, un alcance `Ω`, un
+inventario semántico `I_Ω` y una salida `k` mediante cobertura, sustento y
+preservación relacional. Mientras esos objetos y las transformaciones
+admisibles no formen categorías con acción sobre morfismos, `K_Ω` es notación
+operacional y «funtor K» permanece nombre histórico. `PASS` es un estado de
+auditoría contra fuente y alcance, no una propiedad verificada por `velar`.
 
 ## 11. Frontera de no invención
 

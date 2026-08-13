@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.9.0
+# KORA/Forma — ley pneuma v1.10.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -112,7 +112,7 @@ el sello `(URN,target)` conforme a `ley/3 §7`.
 | `arnes` | sí | enum | `utilidad\|disciplina\|delegado\|persona\|orquestador\|servicio\|arquetipo` |
 | `forma` | sí | enum | `habilidad\|subagente\|agente\|plataforma` |
 | `herramientas` | sí | lista | capacidades fuente declaradas; su enforcement es específico del target; PUEDE ser `[]` solo si `forma` = `habilidad` |
-| `targets` | sí | lista no vacía | subconjunto de `{claude-code, codex, opencode, openclaw, hermes}` |
+| `targets` | no | lista no vacía | allowlist explícita de compatibilidad mantenida; ausente = especificación agnóstica al runtime (ley/3 §2) |
 | `conocimiento` | no | lista URNs `kb` | conocimiento permitido |
 | `componible` | no | lista URNs `artefacto` | candidatos declarados de composición; la arista no prueba interfaces ni composición semántica |
 | `estados` | no | lista | etiquetas ordenadas de workflow; no son FSM ni estado coalgebraico |
@@ -121,6 +121,13 @@ el sello `(URN,target)` conforme a `ley/3 §7`.
 Renombres pneuma sobre la bestia: `agente-propiamente-tal` → `agente`,
 `agente-plataforma` → `plataforma`. Estos campos NO DEBEN aparecer en un
 artefacto de conocimiento (serían claves no permitidas para su tipo).
+
+`targets` no forma parte de la identidad ni del modelo conductual. Si está
+presente, restringe la transmutación a los destinos enumerados y declara que
+esa compatibilidad se mantiene. Si está ausente, la fuente permanece agnóstica:
+Codex es solo la selección operacional ordinaria y cualquier otro target
+realizado requiere selección explícita conforme a `ley/3`. Ninguna de las dos
+formas prueba instalación ni conducta runtime.
 
 ### 3.1 Frontera semántica agéntica
 
@@ -149,18 +156,20 @@ deberá nacer de un caso operacional completo y referenciar un testigo
 versionado por URN; el shape plano no debe fingir que serializa una semántica
 que todavía no existe.
 
-## 4. Campo de conocimiento
+## 4. Metadata opcional de conocimiento
 
 | Clave | Oblig. | Tipo | Notas |
 |---|---|---|---|
-| `familia` | sí | enum | `nota\|fuente\|bok` |
+| `familia` | no | enum | metadata heredada `nota\|fuente\|bok`; sin efecto operacional |
 
-- `nota` — descriptiva, catch-all: lo que se lee como contexto general.
-- `fuente` — material fuente preservado para trazabilidad.
-- `bok` — body of knowledge: corpus extendido.
+- `nota` — etiqueta descriptiva general.
+- `fuente` — etiqueta histórica; no prueba procedencia ni fidelidad.
+- `bok` — etiqueta histórica de corpus extendido.
 
-La familia `spec` **NO existe como artefacto**: la ley vive en `ley/`
-(constitución §4).
+`familia` puede conservarse por compatibilidad, pero no decide tipo, lifecycle,
+koraficación, resolución ni consumo. No se reemplaza por otro enum. La
+procedencia vive en `fuente:` y la ley `spec` **NO existe como artefacto**: la
+ley vive en `ley/` (constitución §4).
 
 ## 5. Derivación de tipo
 
@@ -170,7 +179,7 @@ No hay campo `tipo`: el tipo no se declara, **se es**. Regla mecanizada:
 |---|---|---|
 | `vector` presente y `forma` = `habilidad` | skill | `artefacto` |
 | `vector` presente y `forma` ∈ {`subagente`, `agente`, `plataforma`} | agente | `artefacto` |
-| `vector` ausente | conocimiento (requiere `familia`) | `kb` |
+| `vector` ausente | conocimiento | `kb` |
 
 Reglas:
 
@@ -294,12 +303,11 @@ no se reemplaza a los vivos.
    headings, listas, tablas, definiciones, ejemplos mínimos.
 3. El cuerpo NO DEBE contradecir el frontmatter; en conflicto, el frontmatter
    prevalece.
-4. La disciplina de compresión de la bestia se hereda como DEBERIA, no DEBE:
-   el cuerpo DEBERIA eliminar grasa (introducciones vacías, transiciones,
-   hedging) y conservar siempre toda condición, umbral, excepción, fecha,
-   cifra o referencia. No hay telegrafía impuesta ni métricas de compresión
-   mecanizadas — con una excepción: el producto de una koraficación se rige
-   por `ley/4`, donde la disciplina completa es DEBE.
+4. El cuerpo DEBERIA eliminar superficie sin función actual y preservar toda
+   unidad semántica pertinente: condiciones, modalidad, incertidumbre,
+   excepciones, fechas, cifras, relaciones y procedencia. No hay telegrafía ni
+   umbral de compresión universal. El producto de una koraficación se rige por
+   los invariantes y el alcance explícito de `ley/4`.
 
 5. Un agente cuyo `arnes` porta `U_phen` (`persona`, `orquestador`,
    `servicio`-persona) DEBERIA portar su `U_phen` —su disposición de
@@ -358,10 +366,10 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | Estado en la cadena del tipo | constitución §8 | mecanizado (`estado-valido`) |
 | Referencias resuelven (incluso muertos) | §9 r1 | mecanizado (`referencias-resuelven`) |
 | Leyes de relaciones | §9 r2-r5 | mecanizado (`relaciones-legales`) |
-| Targets reconocidos | §3, ley/3 §2 | mecanizado (`targets-conocidos`) |
+| Targets reconocidos, si se declaran | §3, ley/3 §2 | mecanizado (`targets-conocidos`) |
 | Publicación digna | con `--estricto`: `descripcion` y `fuente` no vacías en todo artefacto `activo`/`publicado`; `tags` es metadata sin cardinalidad normativa | mecanizado (`publicacion-digna`) |
 | Cuerpo subordinado al frontmatter | §10 r3 | declarado |
-| Compresión sin grasa | §10 r4 | declarado |
+| Integridad semántica y economía superficial | §10 r4 | declarado |
 | Centinela `kora:soul` bien formado (≤1 par balanceado) | §10 r6 | declarado (validado al emitir por `transmutar`, no por `velar`) |
 
 Sublimado de autoria-spec v2.0.0, md-spec v12.0.0, knowledge-spec v3.0.0 y
@@ -404,3 +412,9 @@ vacías; `tags` vuelve a ser metadata opcional y no un sustituto de calidad.
 v1.9.0 (2026-08-11): reconoce `agents/openai.yaml` como sidecar opcional de
 metadata Codex dentro de una skill. No agrega campos al shape ni crea un cuarto
 tipo de artefacto; `ley/3` lo transporta como factor del producto cerrado.
+
+v1.10.0 (2026-08-13): hace opcionales `familia` y `targets` sin cambiar los
+tres tipos ni invalidar fuentes existentes. `familia` queda como metadata
+heredada sin efecto operacional. Una fuente agéntica sin `targets` es agnóstica
+al runtime; una lista presente sigue siendo allowlist de compatibilidad
+mantenida. No se añade ningún enum sustituto.

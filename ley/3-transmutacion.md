@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.11.0
+# KORA/Transmutación — ley pneuma v2.12.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -59,8 +59,8 @@ Reglas:
 | `openclaw` | realizado | emite (workspace, §7) |
 | `hermes` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
 
-1. `targets` DEBE ser subconjunto de los cinco reconocidos (check
-   `targets-conocidos`, ley/2).
+1. `targets` es opcional. Si se declara, DEBE ser una lista no vacía y
+   subconjunto de los cinco reconocidos (check `targets-conocidos`, ley/2).
 2. Un artefacto PUEDE declarar `hermes` en `targets` — la ley lo reconoce — pero
    transmutar hacia él DEBE fallar con mensaje que remita a `GENESIS.md`. La ley
    no nombra capacidades inexistentes como si existieran. `openclaw` está
@@ -71,10 +71,15 @@ Reglas:
    vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
    `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`. La v2 de Codex reemplaza
    el antiguo colapso agente→skill por custom agents nativos (§7).
-4. `transmutar --target T` exige que la fuente declare `T` en `targets`:
-   proyectar hacia un destino no declarado ampliaría silenciosamente el
-   contrato de despliegue del artefacto.
-5. La emisión histórica puede producirse desde cualquier estado válido, pero
+4. Una fuente sin `targets` es agnóstica al runtime. `transmutar --urn U` elige
+   **Codex** como target operacional principal; otro target realizado solo se
+   usa mediante `--target T` explícito. Esta selección situada no altera la
+   identidad ni el dominio de autoría de la fuente.
+5. Si la fuente declara `targets`, la lista es una allowlist de compatibilidad
+   mantenida y `transmutar --target T` exige que contenga `T`. Codex es el único
+   camino principal; los demás adaptadores se conservan y verifican bajo
+   demanda, sin que su estado redefina la salud ordinaria de Codex.
+6. La emisión histórica puede producirse desde cualquier estado válido, pero
    `--aplicar` exige `estado: activo`. Un artefacto deprecado o retirado se
    conserva y resuelve; no se reinstala como si siguiera vigente.
 
@@ -303,11 +308,12 @@ el núcleo demostrado, la evidencia operacional y los puentes por formalizar.
 
 ## 7. Emisión por target
 
-Firma del gesto: `transmutar --urn U --target T [--aplicar] [--stdout] [--proyecto PATH]`,
+Firma del gesto: `transmutar --urn U [--target T] [--aplicar] [--stdout] [--proyecto PATH]`,
 o en modo verificación `transmutar --paridad [--urn U] [--target T] [--proyecto PATH]`
 (§9.1).
-Default: escribe bajo `_emision/{target}/...` (derivado, gitignored) y
-reporta. `--stdout` imprime; `--aplicar` instala en el runtime real.
+Default de emisión: `T=codex`. Escribe bajo `_emision/{target}/...` (derivado,
+gitignored) y reporta. `--stdout` imprime; `--aplicar` instala en el runtime
+real. En paridad, omitir `--target` conserva el barrido global (§9.1).
 
 | Target | Forma | Emisión |
 |---|---|---|
@@ -500,9 +506,9 @@ reales. Un symlink, nodo especial o nodo ilegible invalida la frescura.
 El check lee el **último** bloque `kora:sello` de cada factor doctrinal —el
 cuerpo puede citar sellos de ejemplo— y verifica:
 
-1. el sello existe, su `target` coincide con la ruta, está declarado por la
-   fuente y realizado por esta encarnación, y `hash-fuente` coincide con el
-   sha256 actual del archivo fuente principal;
+1. el sello existe, su `target` coincide con la ruta, está permitido por la
+   allowlist `targets` cuando esta existe y realizado por esta encarnación, y
+   `hash-fuente` coincide con el sha256 actual del archivo fuente principal;
 2. al regenerar en memoria el par `(URN,target)`, el conjunto y los bytes de
    todos los factores coinciden, incluidos sidecars sin sello; para una skill
    Codex, `agents/openai.yaml` se lee desde la fuente y se transporta sin
@@ -572,13 +578,17 @@ Reglas:
 5. La paridad NO es check de `velar` (registro cerrado, constitución §11):
    `velar` vela el corpus; la paridad mira el mundo. Por eso vive como modo
    del gesto `transmutar`, que ya gobierna la relación IR↔runtime.
-6. La completitud se deriva de los artefactos agénticos `activos` y sus
-   `targets` realizados. Una persona Codex promete dos unidades —custom agent
-   y skill explícita—; un subagente Codex promete una. Un directorio sin su
-   archivo raíz (`SKILL.md` o `AGENTS.md`) no constituye una unidad emitida.
-   Esta promesa exige **emisión**, no instalación: cada runtime se despliega de
-   forma independiente y una unidad ausente puede seguir siendo
-   `no-instalada` sin conflicto.
+6. La completitud se deriva de los artefactos agénticos `activos`. Una lista
+   `targets` presente promete sus destinos realizados. Si falta, el barrido
+   ordinario promete Codex y un `--target T` focal promete ese target realizado
+   durante la auditoría explícita. Un target explícito no realizado falla; con
+   `--urn U`, un target fuera de la allowlist presente en `U` también falla.
+   Ninguna selección inválida se degrada a un barrido vacío exitoso. Una persona
+   Codex promete dos unidades —custom agent y skill explícita—; un subagente
+   Codex promete una. Un directorio sin su archivo raíz (`SKILL.md` o
+   `AGENTS.md`) no constituye una unidad emitida. Esta promesa exige **emisión**,
+   no instalación: cada runtime se despliega de forma independiente y una
+   unidad ausente puede seguir siendo `no-instalada` sin conflicto.
 7. Si una skill managed OpenClaw existe pero el homónimo del layout personal
    Codex/KORA también existe, la unidad es `desviada`, no `fiel`. Otras fuentes
    de precedencia permanecen fuera de este barrido y pertenecen al deploy.
@@ -593,7 +603,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Regla | Detalle | Enforcement |
 |---|---|---|
 | Eje a ∅ aborta | §3 r3: exit 1 nombrando eje, valor y runtime alternativo | mecanizado (`transmutar`) |
-| Target no realizado falla honesto | §2 r2 | mecanizado (`transmutar`) |
+| Target no realizado falla honesto | §2 r2, §9.1 r6 | mecanizado (`transmutar`, incluida paridad) |
 | Monotonía de los cinco ejes y cinco componentes de Σ | proyección `min` sobre matriz | mecanizado (por construcción y tests exhaustivos por ley) |
 | Descenso e idempotencia | §3 | mecanizado (por construcción y tests) |
 | Composición e identidad de `P_T` | §3, categorías delgadas | mecanizado (por monotonía y tests) |
@@ -612,8 +622,8 @@ clase de fallos sin fingir que la instalación es corpus.
 | Sidecar fuente `agents/openai.yaml` de skill Codex conservado en emisión, aplicación y paridad | §7, §9, ley/2 §6 | mecanizado (`transmutar`, `sello-fresco`, `transmutar --paridad`) |
 | Paridad exacta y tipada de la superficie KORA (emisión↔instalación user-level o project-level) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad [--proyecto PATH]`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
-| Target de transmutación declarado por la fuente | §2 r4 | mecanizado (`transmutar`) |
-| Aplicación solo de artefactos activos | §2 r5 | mecanizado (`transmutar --aplicar`) |
+| Target permitido por allowlist opcional; Codex por defecto si falta | §2 r4-r5, §9.1 r6 | mecanizado (`transmutar`, incluida paridad focal) |
+| Aplicación solo de artefactos activos | §2 r6 | mecanizado (`transmutar --aplicar`) |
 | Determinismo byte-idéntico | §5 r5 | mecanizado (sin timestamps; cubierto por tests) |
 | `naturalidad-xi` | §6 | deuda por tipar |
 | `cierre-safety` | §6 | deuda por tipar |
@@ -750,3 +760,11 @@ v2.11.0 (2026-08-11): transporta el sidecar fuente opcional
 `agents/openai.yaml` de una skill Codex como factor byte-idéntico del producto
 cerrado. Emisión, aplicación, frescura y paridad conservan su ruta anidada;
 otros targets y skills sin sidecar mantienen sus bytes previos.
+
+v2.12.0 (2026-08-13): separa especificación agnóstica de selección
+operacional. `targets` pasa a ser una allowlist opcional: si falta, Codex es el
+target principal por defecto y cualquier otro realizado exige selección
+explícita; si existe, conserva la restricción vigente. Paridad global promete
+Codex para fuentes agnósticas y una auditoría focal promete el target solicitado.
+Una selección focal inválida falla en vez de convertirse en éxito vacío. No
+cambia matrices, adaptadores, formato de sello ni bytes de fuentes existentes.

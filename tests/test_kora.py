@@ -197,6 +197,26 @@ class TestDerivacion(CasoPneuma):
         self.escribir_skill(campos)
         self.assert_fallo("forma-valida", "'forma' es obligatorio")
 
+    def test_conocimiento_no_requiere_familia(self):
+        campos = conocimiento_campos()
+        del campos["familia"]
+        self.escribir_conocimiento(campos)
+        self.assert_todo_coherente()
+
+    def test_familia_presente_sigue_siendo_enum_cerrado(self):
+        self.escribir_conocimiento(conocimiento_campos(familia="otra"))
+        self.assert_fallo("forma-valida", "familia inválida: 'otra'")
+
+    def test_artefacto_agentico_no_requiere_targets(self):
+        campos = skill_campos()
+        del campos["targets"]
+        self.escribir_skill(campos)
+        self.assert_todo_coherente()
+
+    def test_targets_presentes_siguen_siendo_lista_no_vacia(self):
+        self.escribir_skill(skill_campos(targets=[]))
+        self.assert_fallo("forma-valida", "targets no puede ser una lista vacía")
+
 
 # --------------------------------------------------------------- 3. URN
 
@@ -615,6 +635,37 @@ class TestNucleoCategorial(CasoPneuma):
 # ---------------------------------------------------------- 11. transmutación
 
 class TestTransmutacion(CasoPneuma):
+
+    def test_sin_target_emite_codex_por_defecto(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        codigo, _, error = self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+        ])
+        self.assertEqual(codigo, 0, error)
+        self.assertTrue((self.raiz /
+                         "_emision/codex/skills/util-x/SKILL.md").is_file())
+
+    def test_sin_target_no_busca_fallback_fuera_de_codex(self):
+        self.escribir_skill(skill_campos(targets=["claude-code"]))
+        codigo, _, error = self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+        ])
+        self.assertEqual(codigo, 1, error)
+        self.assertIn("no declara el target 'codex'", error)
+        self.assertFalse((self.raiz / "_emision/claude-code").exists())
+
+    def test_sin_targets_admite_target_explicito_realizado(self):
+        campos = skill_campos()
+        del campos["targets"]
+        self.escribir_skill(campos)
+        codigo, _, error = self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "claude-code",
+        ])
+        self.assertEqual(codigo, 0, error)
+        self.assertTrue((self.raiz /
+                         "_emision/claude-code/skills/util-x/SKILL.md").is_file())
+        self.assert_todo_coherente()
 
     def test_emision_porta_sello_y_hash(self):
         fuente = self.escribir_skill()
@@ -1885,6 +1936,64 @@ class TestParidad(CasoPneuma):
             else:
                 snapshot[rel] = ("archivo", path.read_bytes())
         return snapshot
+
+    def test_fuente_sin_targets_promete_codex_no_emision_historica(self):
+        campos = skill_campos()
+        del campos["targets"]
+        self.escribir_skill(campos)
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+        ])[0], 0)
+        with self.con_rutas():
+            codigo, salida, error = self.correr([
+                "transmutar", "--paridad",
+                "--urn", "urn:kora:artefacto:util-x",
+                "--target", "codex",
+            ])
+        self.assertEqual(codigo, 0, error or salida)
+        self.assertIn("paridad: no-instalada  codex  util-x", salida)
+        self.assertNotIn("emisión histórica", salida)
+
+    def test_fuente_sin_targets_admite_paridad_explicita_de_compatibilidad(self):
+        campos = skill_campos()
+        del campos["targets"]
+        self.escribir_skill(campos)
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "claude-code",
+        ])[0], 0)
+        with self.con_rutas():
+            codigo, salida, error = self.correr([
+                "transmutar", "--paridad",
+                "--urn", "urn:kora:artefacto:util-x",
+                "--target", "claude-code",
+            ])
+        self.assertEqual(codigo, 0, error or salida)
+        self.assertIn("paridad: no-instalada  claude-code  util-x", salida)
+        self.assertNotIn("emisión histórica", salida)
+
+    def test_paridad_rechaza_target_reconocido_no_realizado(self):
+        campos = skill_campos()
+        del campos["targets"]
+        self.escribir_skill(campos)
+        with self.con_rutas():
+            codigo, salida, error = self.correr([
+                "transmutar", "--paridad", "--target", "hermes",
+            ])
+        self.assertEqual(codigo, 1, salida or error)
+        self.assertIn("no está realizado", error)
+
+    def test_paridad_focal_rechaza_target_fuera_de_allowlist(self):
+        self.escribir_skill(skill_campos(targets=["claude-code"]))
+        with self.con_rutas():
+            codigo, salida, error = self.correr([
+                "transmutar", "--paridad",
+                "--urn", "urn:kora:artefacto:util-x",
+                "--target", "codex",
+            ])
+        self.assertEqual(codigo, 1, salida or error)
+        self.assertIn("no declara el target 'codex'", error)
+        self.assertNotIn("sin artefactos activos", salida)
 
     def test_paridad_proyecto_codex_persona_dual_es_fiel_y_solo_lectura(self):
         urn = "urn:dev:artefacto:agente-x"
