@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-dolor-toracico
 nombre: me-dolor-toracico
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Dolor Torácico No Traumático: <!-- kora-canario-marker: 2026-04-22-dolor-toracico-baseline-v1 -->"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/dolor-toracico.md (sha256:657bf2aa7901badea2fef891812f69b7ddcb968430012672cbdc0d83fc237ab6) el 2026-06-12; cuerpo byte-fiel (renombrado de dolor-toracico.md a me-dolor-toracico.md por lugar-coincide). Fuente original: MUE Andes — dolor toracico.txt"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/dolor-toracico.md (sha256:657bf2aa7901badea2fef891812f69b7ddcb968430012672cbdc0d83fc237ab6) el 2026-06-12; cuerpo byte-fiel (renombrado de dolor-toracico.md a me-dolor-toracico.md por lugar-coincide). Fuente original: MUE Andes — dolor toracico.txt. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [dolor-toracico, SCA, cardiovascular, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-dolor-toracico-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

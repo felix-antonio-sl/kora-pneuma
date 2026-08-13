@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-compromiso-conciencia
 nombre: me-compromiso-conciencia
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Compromiso de Conciencia: Recibe una llamada sobre un paciente masculino de 40 años, encontrado inconsciente en la vía pública"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/compromiso-conciencia.md (sha256:6bc3a73d304dec44f00710d1f3bf1fc54acb84284218451e49d1822bcee0241c) el 2026-06-12; cuerpo byte-fiel (renombrado de compromiso-conciencia.md a me-compromiso-conciencia.md por lugar-coincide). Fuente original: MUE Andes — Compromiso de Conciencia.txt"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/compromiso-conciencia.md (sha256:6bc3a73d304dec44f00710d1f3bf1fc54acb84284218451e49d1822bcee0241c) el 2026-06-12; cuerpo byte-fiel (renombrado de compromiso-conciencia.md a me-compromiso-conciencia.md por lugar-coincide). Fuente original: MUE Andes — Compromiso de Conciencia.txt. v1.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p03 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [conciencia, coma, neurologico, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-compromiso-conciencia-p02, urn:salud:kb:me-compromiso-conciencia-p03]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

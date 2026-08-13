@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-sincope
 nombre: me-sincope
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Síncope: **Epidemiología**: Prevalencia de 20-40%, más común en mujeres"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/sincope.md (sha256:a333f7278e554eed16e1897f6190945cbce9a92212a7bee2f5bfa238d10ae87a) el 2026-06-12; cuerpo byte-fiel (renombrado de sincope.md a me-sincope.md por lugar-coincide). Fuente original: MUE Andes — sincope rosen.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/sincope.md (sha256:a333f7278e554eed16e1897f6190945cbce9a92212a7bee2f5bfa238d10ae87a) el 2026-06-12; cuerpo byte-fiel (renombrado de sincope.md a me-sincope.md por lugar-coincide). Fuente original: MUE Andes — sincope rosen.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [sincope, cardiovascular, perdida-conciencia, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-sincope-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:gestion-redes-herramientas
 nombre: gestion-redes-herramientas
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes Asistenciales — Herramientas y Anexos: Notación: `**[ROL]** Acción → Decisión? {Sí: ruta / No: ruta} → Siguiente`"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/05-herramientas-anexos.md (sha256:3b543412df41ef06d746319db5023a988b92ac9b303d1b2722776b22e04d985c) el 2026-06-12; cuerpo byte-fiel (renombrado de 05-herramientas-anexos.md a gestion-redes-herramientas.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM HaH"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/05-herramientas-anexos.md (sha256:3b543412df41ef06d746319db5023a988b92ac9b303d1b2722776b22e04d985c) el 2026-06-12; cuerpo byte-fiel (renombrado de 05-herramientas-anexos.md a gestion-redes-herramientas.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM HaH. v2.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p03 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-03
 lang: es
 tags: [gestion-redes, kpi, bpmn, plantillas, fhir, simulacion, madurez, herramientas]
+cita: [urn:salud:kb:gestion-redes-herramientas-p02, urn:salud:kb:gestion-redes-herramientas-p03]
 familia: bok
 ---
 

@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:gestion-redes-salud-mental
 nombre: gestion-redes-salud-mental
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes — Salud Mental y Adicciones: Marco axiológico que orienta el diseño, operación y evaluación de la red de salud mental"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/04-salud-mental.md (sha256:e06a2bfb7b119fe1aceab4d59cc282f808156a08f83b4571127b8c31b904dbfa) el 2026-06-12; cuerpo byte-fiel (renombrado de 04-salud-mental.md a gestion-redes-salud-mental.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, OMS mhGAP, NICE, MINSAL, Ley 21.331"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/04-salud-mental.md (sha256:e06a2bfb7b119fe1aceab4d59cc282f808156a08f83b4571127b8c31b904dbfa) el 2026-06-12; cuerpo byte-fiel (renombrado de 04-salud-mental.md a gestion-redes-salud-mental.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, OMS mhGAP, NICE, MINSAL, Ley 21.331. v2.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p06 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-03
 lang: es
 tags: [gestion-redes, salud-mental, adicciones, crisis, suicidio, TUS, derechos, PROMs]
+cita: [urn:salud:kb:gestion-redes-salud-mental-p02, urn:salud:kb:gestion-redes-salud-mental-p03, urn:salud:kb:gestion-redes-salud-mental-p04, urn:salud:kb:gestion-redes-salud-mental-p05, urn:salud:kb:gestion-redes-salud-mental-p06]
 familia: bok
 ---
 

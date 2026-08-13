@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-fiebre-sin-foco
 nombre: me-fiebre-sin-foco
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Unidad 3 'Fiebre sin foco evidente': En esta unidad revisaremos las siguientes temáticas:"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/fiebre-sin-foco.md (sha256:ca0f58e0a1ad0d8b3e3b7dc389b03b81042b7d192fac40c5a6f6f741487d656f) el 2026-06-12; cuerpo byte-fiel (renombrado de fiebre-sin-foco.md a me-fiebre-sin-foco.md por lugar-coincide). Fuente original: MUE Andes — Fiebre sin foco evidente_original.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/fiebre-sin-foco.md (sha256:ca0f58e0a1ad0d8b3e3b7dc389b03b81042b7d192fac40c5a6f6f741487d656f) el 2026-06-12; cuerpo byte-fiel (renombrado de fiebre-sin-foco.md a me-fiebre-sin-foco.md por lugar-coincide). Fuente original: MUE Andes — Fiebre sin foco evidente_original.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [fiebre, infeccion, sepsis, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-fiebre-sin-foco-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

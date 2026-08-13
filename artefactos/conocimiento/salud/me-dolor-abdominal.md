@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-dolor-abdominal
 nombre: me-dolor-abdominal
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Dolor Abdominal en Urgencia: Enfoque Especial en C y U:"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/dolor-abdominal.md (sha256:82dd0aad841616ef914d9b9978735374f511065b52c25b5f8e8a50c25d84d0e2) el 2026-06-12; cuerpo byte-fiel (renombrado de dolor-abdominal.md a me-dolor-abdominal.md por lugar-coincide). Fuente original: MUE Andes — dolor-abd.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/dolor-abdominal.md (sha256:82dd0aad841616ef914d9b9978735374f511065b52c25b5f8e8a50c25d84d0e2) el 2026-06-12; cuerpo byte-fiel (renombrado de dolor-abdominal.md a me-dolor-abdominal.md por lugar-coincide). Fuente original: MUE Andes — dolor-abd.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [dolor-abdominal, abdomen-agudo, cirugia, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-dolor-abdominal-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

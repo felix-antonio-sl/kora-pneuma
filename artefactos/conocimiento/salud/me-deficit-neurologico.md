@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-deficit-neurologico
 nombre: me-deficit-neurologico
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Déficit Neurológico: El examen mental es fundamental y se divide en:"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/deficit-neurologico.md (sha256:258a6e985e483c16f7b005d45f0691897c00d67e70616e1cbf2ad98655d4bd5e) el 2026-06-12; cuerpo byte-fiel (renombrado de deficit-neurologico.md a me-deficit-neurologico.md por lugar-coincide). Fuente original: MUE Andes — ƒ deficit neurologico.txt"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/deficit-neurologico.md (sha256:258a6e985e483c16f7b005d45f0691897c00d67e70616e1cbf2ad98655d4bd5e) el 2026-06-12; cuerpo byte-fiel (renombrado de deficit-neurologico.md a me-deficit-neurologico.md por lugar-coincide). Fuente original: MUE Andes — ƒ deficit neurologico.txt. v1.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p06 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [deficit-neurologico, ACV, stroke, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-deficit-neurologico-p02, urn:salud:kb:me-deficit-neurologico-p03, urn:salud:kb:me-deficit-neurologico-p04, urn:salud:kb:me-deficit-neurologico-p05, urn:salud:kb:me-deficit-neurologico-p06]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

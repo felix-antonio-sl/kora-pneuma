@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:hodom-situacion-chile-2026
 nombre: hodom-situacion-chile-2026
-version: 1.0.1
+version: 1.0.2
 estado: publicado
 descripcion: "Situacion de la Hospitalizacion Domiciliaria en Chile 2024-2026: 1"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/03-situacion-chile-2026.md (sha256:a0ddde75eadd0d5ba59371a02dd36c54bb5263f6365b3326f98e2f9223705acd) el 2026-06-12; cuerpo byte-fiel (renombrado de 03-situacion-chile-2026.md a hodom-situacion-chile-2026.md por lugar-coincide). Fuente original: source/pro/hodom/situacion-hodom-chile-2026.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/03-situacion-chile-2026.md (sha256:a0ddde75eadd0d5ba59371a02dd36c54bb5263f6365b3326f98e2f9223705acd) el 2026-06-12; cuerpo byte-fiel (renombrado de 03-situacion-chile-2026.md a hodom-situacion-chile-2026.md por lugar-coincide). Fuente original: source/pro/hodom/situacion-hodom-chile-2026.md. v1.0.2 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p05 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-10
 lang: es
 tags: [hodom, hospitalizacion-domiciliaria, chile, salud-publica, analisis-situacional]
+cita: [urn:salud:kb:hodom-situacion-chile-2026-p02, urn:salud:kb:hodom-situacion-chile-2026-p03, urn:salud:kb:hodom-situacion-chile-2026-p04, urn:salud:kb:hodom-situacion-chile-2026-p05]
 familia: bok
 ---
 

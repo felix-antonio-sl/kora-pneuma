@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:salubrista-fuente-management-engineering
 nombre: salubrista-fuente-management-engineering
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "healthcare management engineering: <!-- /atomize · 290 proposiciones · ~125 entidades · 1 archivo · 2026-04-10 -->"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/fuentes/management-engineering-sanitario.md (sha256:7315105cef61a341538a7692891f9c15ec46e192408140f15e2e6b3272d31f78) el 2026-06-12; cuerpo byte-fiel (renombrado de management-engineering-sanitario.md a salubrista-fuente-management-engineering.md por lugar-coincide). Fuente original: Movido desde artifacts/knowledge/_SCRIPTORIUM/INBOX/salud/salubrista/healthcare management engineering.md; integrado fisicamente al corpus salubrista el 2026-04-27."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/fuentes/management-engineering-sanitario.md (sha256:7315105cef61a341538a7692891f9c15ec46e192408140f15e2e6b3272d31f78) el 2026-06-12; cuerpo byte-fiel (renombrado de management-engineering-sanitario.md a salubrista-fuente-management-engineering.md por lugar-coincide). Fuente original: Movido desde artifacts/knowledge/_SCRIPTORIUM/INBOX/salud/salubrista/healthcare management engineering.md; integrado fisicamente al corpus salubrista el 2026-04-27. v1.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p04 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-10
 lang: es
 tags: [salubrista, fuente, gestion-sanitaria, management-engineering, capacidad, colas, simulacion]
+cita: [urn:salud:kb:salubrista-fuente-management-engineering-p02, urn:salud:kb:salubrista-fuente-management-engineering-p03, urn:salud:kb:salubrista-fuente-management-engineering-p04]
 familia: fuente
 depende: [urn:salud:kb:salubrista]
 ---

@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-disnea
 nombre: me-disnea
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Disnea Aguda: Mientras está de turno en la urgencia de un hospital primario, le toca atender a un paciente joven que consulta por disnea"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/disnea.md (sha256:96bf938751101ee3980c6c49c83c7884189e05763f97dfc0387dea8d9f6f1049) el 2026-06-12; cuerpo byte-fiel (renombrado de disnea.md a me-disnea.md por lugar-coincide). Fuente original: MUE Andes — Disnea.txt"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/disnea.md (sha256:96bf938751101ee3980c6c49c83c7884189e05763f97dfc0387dea8d9f6f1049) el 2026-06-12; cuerpo byte-fiel (renombrado de disnea.md a me-disnea.md por lugar-coincide). Fuente original: MUE Andes — Disnea.txt. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [disnea, respiratorio, insuficiencia-respiratoria, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-disnea-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

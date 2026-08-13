@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026
 nombre: hsc-arsenal-farmacoterapeutico-2026
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Arsenal Farmacoterapéutico 2026 del Hospital de San Carlos: medicamentos, presentaciones, restricciones y ámbitos CAE, hospitalización y urgencia"
-fuente: "Arsenal Farmacoterapeutico HSC_2026.pdf aportado por el operador (sha256:68dcf81258d1f6544440e6e47a201b707a9dcf2df181fe2cc2df39e1372c7dd7; 15 páginas) y transcripción estructurada /home/felix/projects/hd-dt/01-normativo/hsc/arsenal-farmacoterapeutico-hsc-2026.md (sha256:42758211ee09d57314358f3c5d3317a7ce3ebe8e2174bc6edc5b6584b1976dc6); 519 filas consecutivas; koraficación íntegra sin recorte; el PDF conserva autoridad primaria"
+fuente: "Arsenal Farmacoterapeutico HSC_2026.pdf aportado por el operador (sha256:68dcf81258d1f6544440e6e47a201b707a9dcf2df181fe2cc2df39e1372c7dd7; 15 páginas) y transcripción estructurada en el blob Git 104efce192644cd82ed0403fcfdb65a51fdb0a96:01-normativo/hsc/arsenal-farmacoterapeutico-hsc-2026.md de /home/felix/projects/hd-dt (sha256:42758211ee09d57314358f3c5d3317a7ce3ebe8e2174bc6edc5b6584b1976dc6); 519 filas consecutivas; koraficación íntegra sin recorte; el PDF conserva autoridad primaria. v1.0.1 (2026-08-14): fija la transcripción a su blob histórico porque la ruta de trabajo continuó evolucionando; el contenido clínico no cambia"
 autor: Codex
 creado: 2026-07-20
 lang: es

@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-infecciones-respiratorias-altas
 nombre: me-infecciones-respiratorias-altas
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Unidad 'Infecciones Respiratorias Altas y afecciones otorrinolaringológicas': En esta unidad revisaremos las siguientes temáticas:"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/infecciones-respiratorias-altas.md (sha256:bc9d3107cea80f3560386f7c260891bd21550ec7f17dc4fbbde59a8d8f344063) el 2026-06-12; cuerpo byte-fiel (renombrado de infecciones-respiratorias-altas.md a me-infecciones-respiratorias-altas.md por lugar-coincide). Fuente original: MUE Andes — Infecciones Respiratorias Altas y OTL original.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/infecciones-respiratorias-altas.md (sha256:bc9d3107cea80f3560386f7c260891bd21550ec7f17dc4fbbde59a8d8f344063) el 2026-06-12; cuerpo byte-fiel (renombrado de infecciones-respiratorias-altas.md a me-infecciones-respiratorias-altas.md por lugar-coincide). Fuente original: MUE Andes — Infecciones Respiratorias Altas y OTL original.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [infeccion, respiratorio, otl, faringitis, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-infecciones-respiratorias-altas-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

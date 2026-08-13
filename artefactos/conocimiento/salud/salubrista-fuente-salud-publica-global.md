@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:salubrista-fuente-salud-publica-global
 nombre: salubrista-fuente-salud-publica-global
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Oxford Textbook of Global Public Health: (7th Edition, 2022)"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/fuentes/salud-publica-global.md (sha256:3ec73f914258e8c7afa2db350182f8511206d0deabec6e5c8fa27506173f4bd0) el 2026-06-12; cuerpo byte-fiel (renombrado de salud-publica-global.md a salubrista-fuente-salud-publica-global.md por lugar-coincide). Fuente original: Movido desde artifacts/knowledge/_SCRIPTORIUM/INBOX/salud/salubrista/Oxford Textbook of Global Public Health.md; integrado fisicamente al corpus salubrista el 2026-04-27."
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/fuentes/salud-publica-global.md (sha256:3ec73f914258e8c7afa2db350182f8511206d0deabec6e5c8fa27506173f4bd0) el 2026-06-12; cuerpo byte-fiel (renombrado de salud-publica-global.md a salubrista-fuente-salud-publica-global.md por lugar-coincide). Fuente original: Movido desde artifacts/knowledge/_SCRIPTORIUM/INBOX/salud/salubrista/Oxford Textbook of Global Public Health.md; integrado fisicamente al corpus salubrista el 2026-04-27. v1.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p06 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-10
 lang: es
 tags: [salubrista, fuente, salud-publica, determinantes-sociales, inequidad, salud-global]
+cita: [urn:salud:kb:salubrista-fuente-salud-publica-global-p02, urn:salud:kb:salubrista-fuente-salud-publica-global-p03, urn:salud:kb:salubrista-fuente-salud-publica-global-p04, urn:salud:kb:salubrista-fuente-salud-publica-global-p05, urn:salud:kb:salubrista-fuente-salud-publica-global-p06]
 familia: fuente
 depende: [urn:salud:kb:salubrista]
 ---

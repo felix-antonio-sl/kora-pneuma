@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:hodom-manual-alta-complejidad
 nombre: hodom-manual-alta-complejidad
-version: 1.1.1
+version: 1.1.2
 estado: publicado
 descripcion: "Manual de Hospitalizacion Domiciliaria de Alta Complejidad"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/02-manual-alta-complejidad.md (sha256:c8379325ee83d5a91c1a37084c9144ae76d49bec4f78cf01225631699dbd7da3) el 2026-06-12; cuerpo byte-fiel (renombrado de 02-manual-alta-complejidad.md a hodom-manual-alta-complejidad.md por lugar-coincide). Fuente original: source/pro/hodom/manual-general-hodom-2026.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/02-manual-alta-complejidad.md (sha256:c8379325ee83d5a91c1a37084c9144ae76d49bec4f78cf01225631699dbd7da3) el 2026-06-12; cuerpo byte-fiel (renombrado de 02-manual-alta-complejidad.md a hodom-manual-alta-complejidad.md por lugar-coincide). Fuente original: source/pro/hodom/manual-general-hodom-2026.md. v1.1.2 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p04 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-10
 lang: es
 tags: [hodom, hospitalizacion-domiciliaria, alta-complejidad, hospital-at-home, gestion-clinica]
+cita: [urn:salud:kb:hodom-manual-alta-complejidad-p02, urn:salud:kb:hodom-manual-alta-complejidad-p03, urn:salud:kb:hodom-manual-alta-complejidad-p04]
 familia: bok
 ---
 

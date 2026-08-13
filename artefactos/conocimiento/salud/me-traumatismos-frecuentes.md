@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-traumatismos-frecuentes
 nombre: me-traumatismos-frecuentes
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Unidad 8 'Traumatismos frecuentes': El Dolor Lumbar es una de las patologías más frecuentes tanto de consultas ambulatorias como de consultas traumatológicas en los Servicios de Urgencia"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/traumatismos-frecuentes.md (sha256:01399b0f0c1631f230ed977f9ad439d27d82c42fcbfd0d3fad691d99591d3220) el 2026-06-12; cuerpo byte-fiel (renombrado de traumatismos-frecuentes.md a me-traumatismos-frecuentes.md por lugar-coincide). Fuente original: MUE Andes — traumatismos frecuentes.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/traumatismos-frecuentes.md (sha256:01399b0f0c1631f230ed977f9ad439d27d82c42fcbfd0d3fad691d99591d3220) el 2026-06-12; cuerpo byte-fiel (renombrado de traumatismos-frecuentes.md a me-traumatismos-frecuentes.md por lugar-coincide). Fuente original: MUE Andes — traumatismos frecuentes.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [trauma, fractura, esguince, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-traumatismos-frecuentes-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

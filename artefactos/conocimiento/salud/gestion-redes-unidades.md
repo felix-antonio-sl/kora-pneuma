@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:gestion-redes-unidades
 nombre: gestion-redes-unidades
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes Asistenciales — Gestión por Tipo de Unidad: Primer contacto y resolutividad"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/02-unidades-asistenciales.md (sha256:bbd7582af8f19aae327a1d5436d6e5f2c0ae253db2b6f00a5e5532e944b6c0f4) el 2026-06-12; cuerpo byte-fiel (renombrado de 02-unidades-asistenciales.md a gestion-redes-unidades.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM 46 fuentes HaH"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/02-unidades-asistenciales.md (sha256:bbd7582af8f19aae327a1d5436d6e5f2c0ae253db2b6f00a5e5532e944b6c0f4) el 2026-06-12; cuerpo byte-fiel (renombrado de 02-unidades-asistenciales.md a gestion-redes-unidades.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane, NotebookLM 46 fuentes HaH. v2.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p04 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-03
 lang: es
 tags: [gestion-redes, unidades, ambulatorio, hospitalario, hospital-at-home, HaH, asistencial]
+cita: [urn:salud:kb:gestion-redes-unidades-p02, urn:salud:kb:gestion-redes-unidades-p03, urn:salud:kb:gestion-redes-unidades-p04]
 familia: bok
 ---
 

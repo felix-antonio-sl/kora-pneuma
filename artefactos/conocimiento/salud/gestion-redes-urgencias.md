@@ -1,16 +1,16 @@
 ---
 urn: urn:salud:kb:gestion-redes-urgencias
 nombre: gestion-redes-urgencias
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes Asistenciales — Red de Urgencias: Red escalonada de dispositivos de urgencia articulados por nivel de complejidad, cobertura territorial y capacidad resolutiva"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/03-urgencias.md (sha256:947c5ef69a2f4768e0f4600de97d8841979c70dcacb4bb8192631aea76cc40e4) el 2026-06-12; cuerpo byte-fiel (renombrado de 03-urgencias.md a gestion-redes-urgencias.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, AHA, ACC, ESC, Cochrane"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/03-urgencias.md (sha256:947c5ef69a2f4768e0f4600de97d8841979c70dcacb4bb8192631aea76cc40e4) el 2026-06-12; cuerpo byte-fiel (renombrado de 03-urgencias.md a gestion-redes-urgencias.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, AHA, ACC, ESC, Cochrane. v2.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p06 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-03
 lang: es
 tags: [gestion-redes, urgencias, emergencias, EMS, SUH, protocolos, triaje, desastres, MCI]
 familia: bok
-cita: [urn:salud:kb:gestion-redes-herramientas]
+cita: [urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:gestion-redes-urgencias-p02, urn:salud:kb:gestion-redes-urgencias-p03, urn:salud:kb:gestion-redes-urgencias-p04, urn:salud:kb:gestion-redes-urgencias-p05, urn:salud:kb:gestion-redes-urgencias-p06]
 ---
 
 

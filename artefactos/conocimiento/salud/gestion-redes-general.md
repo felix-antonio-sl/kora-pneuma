@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:gestion-redes-general
 nombre: gestion-redes-general
-version: 2.0.0
+version: 2.0.1
 estado: publicado
 descripcion: "Gestión de Redes Asistenciales — Marco General: Estructura organizacional que articula establecimientos de distintos niveles de complejidad para garantizar continuidad asistencial longitudinal, relacional e informacional"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/01-gestion-redes-general.md (sha256:a94a6137630ba03ecd4874d89467d67984d48d4c13be76d9b3fb695a5d3e7704) el 2026-06-12; cuerpo byte-fiel (renombrado de 01-gestion-redes-general.md a gestion-redes-general.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/gestion-redes/01-gestion-redes-general.md (sha256:a94a6137630ba03ecd4874d89467d67984d48d4c13be76d9b3fb695a5d3e7704) el 2026-06-12; cuerpo byte-fiel (renombrado de 01-gestion-redes-general.md a gestion-redes-general.md por lugar-coincide). Fuente original: Síntesis multi-fuente: OPS, IHI, NICE, AHRQ, MINSAL, Cochrane. v2.0.1 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p09 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-03
 lang: es
 tags: [gestion-redes, gobernanza, calidad, procesos, digital, finanzas, cambio, red-asistencial]
+cita: [urn:salud:kb:gestion-redes-general-p02, urn:salud:kb:gestion-redes-general-p03, urn:salud:kb:gestion-redes-general-p04, urn:salud:kb:gestion-redes-general-p05, urn:salud:kb:gestion-redes-general-p06, urn:salud:kb:gestion-redes-general-p07, urn:salud:kb:gestion-redes-general-p08, urn:salud:kb:gestion-redes-general-p09]
 familia: bok
 ---
 

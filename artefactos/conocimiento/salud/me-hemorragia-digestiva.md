@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:me-hemorragia-digestiva
 nombre: me-hemorragia-digestiva
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Hemorragia digestiva: La hemorragia digestiva es una condición clínica crítica que representa una de las emergencias más frecuentes en los servicios de urgencias hospitalarias"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/hemorragia-digestiva.md (sha256:4ba33cfc3b8077cfdb13f437c648a7ee65d820c8c5a0ab1f4604672bf6eb5a68) el 2026-06-12; cuerpo byte-fiel (renombrado de hemorragia-digestiva.md a me-hemorragia-digestiva.md por lugar-coincide). Fuente original: MUE Andes — hemorragia-digestiva.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/med-emergencia/hemorragia-digestiva.md (sha256:4ba33cfc3b8077cfdb13f437c648a7ee65d820c8c5a0ab1f4604672bf6eb5a68) el 2026-06-12; cuerpo byte-fiel (renombrado de hemorragia-digestiva.md a me-hemorragia-digestiva.md por lugar-coincide). Fuente original: MUE Andes — hemorragia-digestiva.md. v1.0.1 (2026-08-14): enlaza desde esta raíz la continuación p02 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-04-15
 lang: es
 tags: [hemorragia, digestivo, sangrado, medicina-emergencia, urgencias, salud]
+cita: [urn:salud:kb:me-hemorragia-digestiva-p02]
 familia: bok
 depende: [urn:salud:kb:med-emergencia]
 ---

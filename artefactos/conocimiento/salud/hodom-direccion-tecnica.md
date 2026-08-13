@@ -1,14 +1,15 @@
 ---
 urn: urn:salud:kb:hodom-direccion-tecnica
 nombre: hodom-direccion-tecnica
-version: 1.0.1
+version: 1.0.2
 estado: publicado
 descripcion: "Direccion Tecnica en Hospitalizacion Domiciliaria"
-fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/01-manual-direccion-tecnica.md (sha256:63c668132dabe0a3b06239561edde3a46d1f4d3ca16d9c629d38ca0b43ca13ac) el 2026-06-12; cuerpo byte-fiel (renombrado de 01-manual-direccion-tecnica.md a hodom-direccion-tecnica.md por lugar-coincide). Fuente original: source/pro/hodom/manual-director-tecnico-hodom.md"
+fuente: "Migrado de la bestia (~/kora @ 017dc1b9) artifacts/knowledge/salud/salubrista/hodom/director/01-manual-direccion-tecnica.md (sha256:63c668132dabe0a3b06239561edde3a46d1f4d3ca16d9c629d38ca0b43ca13ac) el 2026-06-12; cuerpo byte-fiel (renombrado de 01-manual-direccion-tecnica.md a hodom-direccion-tecnica.md por lugar-coincide). Fuente original: source/pro/hodom/manual-director-tecnico-hodom.md. v1.0.2 (2026-08-14): enlaza desde esta raíz las continuaciones p02-p03 para que el corpus completo sea descubrible por URN sin depender de nombres de archivo."
 autor: FS
 creado: 2026-03-10
 lang: es
 tags: [hodom, hospitalizacion-domiciliaria, direccion-tecnica, regulacion, gestion-clinica]
+cita: [urn:salud:kb:hodom-direccion-tecnica-p02, urn:salud:kb:hodom-direccion-tecnica-p03]
 familia: bok
 ---
 
