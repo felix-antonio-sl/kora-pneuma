@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:auditoria-artefactos-kora
 nombre: auditoria-artefactos-kora
-version: 1.2.0
+version: 1.2.1
 estado: activo
 descripcion: "Evalua, decide y actua sobre el DESTINO de agentes y skills frente a kora-pneuma: tres pilares (formalidad kora, calidad funcional, valor en uso real), cuatro veredictos (migrar/descartar/reubicar/conservar-externo), verificacion adversarial y ejecucion con gate. Usar al auditar el ecosistema agentico, decidir que conservar/descartar, o reconciliar artefactos no-controlados con el corpus."
-fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude: 3 pilares + 4 veredictos + verificacion adversarial + convergencia con velar. v1.1.0 (2026-07-12): generaliza el censo y REUBICAR a Codex/OpenCode. v1.2.0 (2026-07-18): corrige el alcance del sello; certifica procedencia, integridad y congruencia, no teoremas semanticos."
+fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado en la auditoria del ecosistema ~/.claude: 3 pilares + 4 veredictos + verificacion adversarial + convergencia con velar. v1.1.0 (2026-07-12): generaliza el censo y REUBICAR a Codex/OpenCode. v1.2.0 (2026-07-18): corrige el alcance del sello; certifica procedencia, integridad y congruencia, no teoremas semanticos. v1.2.1 (2026-08-14): alinea el método con borrador in-place, Codex como target principal, compatibilidad bajo demanda, delegación solo autorizada y checks resueltos en vivo."
 autor: FS
 creado: 2026-06-22
 lang: es
@@ -58,7 +58,7 @@ Antes de evaluar, clasificar de dónde viene el artefacto — cambia qué signif
 |---|---|---|
 | **controlado-pneuma** | fuente en `artefactos/` del corpus | shape ley/2 directo |
 | **bestia** | `Source URN` KORA, fuente en la encarnación congelada (~/kora), no en pneuma | evaluar la FUENTE bestia contra ley/2; candidato migrar-o-omitir |
-| **taller / pre-categorial** | fuente en `_TALLER`/scriptorium/INBOX, sin URN canónico | no canonizado; juzgar valor antes que forma |
+| **pre-canónico externo** | nota o fuente fuera del canon, sin URN canónico | no canonizado; juzgar valor antes que forma; si se admite, nace `borrador` en su zona final |
 | **nativo (no-KORA)** | sin `Source URN`, del ecosistema del runtime | formalidad = conformidad con el shape del runtime, no con ley/2 |
 
 Regla clave: un artefacto en un runtime (`~/.claude`) es una **emisión**, no una
@@ -91,7 +91,7 @@ nunca afirmar un veredicto de memoria.
 
 | Veredicto | Condición | Acción |
 |---|---|---|
-| **MIGRAR** | valor real + NO redundante + fuente sana o reparable | sublimar a pneuma (shape ley/2, doctrina reanclada a ley/0..4, vector corregido si está fuera de dominio); transmutar a los runtimes |
+| **MIGRAR** | valor real + NO redundante + fuente sana o reparable | sublimar a pneuma (shape ley/2, doctrina reanclada a ley/0..4, vector corregido si está fuera de dominio); transmutar a Codex y a otros targets solo bajo alcance explícito |
 | **DESCARTAR** | redundante con pneuma vigente, U obsoleto, U sin valor | retirar la emisión del runtime; NO migrar; la fuente bestia queda congelada in situ (respaldo reversible) |
 | **REUBICAR** | repo-local instalado por error a nivel global | mover a la ruta de proyecto del runtime (`.claude/`, `.codex/`, `.agents/` o `.opencode/`); no canonizar en pneuma |
 | **CONSERVAR-EXTERNO** | nativo legítimo del ecosistema del runtime, no-KORA | dejar como está, fuera del régimen pneuma |
@@ -110,7 +110,8 @@ no-controlado. Confirmar paths y existencia antes de nombrar nada.
 
 ### evaluar-pilares
 Por artefacto, leer la emisión y (si existe) su fuente. Puntuar los tres pilares
-0-5 con evidencia citada. Paralelizar: un evaluador por artefacto.
+0-5 con evidencia citada. Si la sesión autoriza delegación y el volumen lo
+justifica, separar evaluadores por artefacto; de otro modo, evaluar en serie.
 
 ### detectar-redundancia
 Cruzar el propósito contra el índice pneuma vigente. Confirmar solapamiento real
@@ -133,8 +134,9 @@ que cruzan varios artefactos).
 Las acciones destructivas (DESCARTAR = borrar del runtime; REUBICAR = mover)
 exigen, ANTES de tocar: backup, confirmación de reversibilidad (¿la fuente queda
 como respaldo?), y `diff` contra el destino si se sobreescribe. Las constructivas
-(MIGRAR = escribir en pneuma) cierran con `velar` como red, luego `transmutar` a
-cada runtime. Tras cada lote, re-`velar`.
+(MIGRAR = escribir en pneuma) cierran con `velar` como red, luego `transmutar`
+a Codex. Emitir o instalar otros targets exige alcance explícito. Tras cada
+lote, re-`velar`.
 
 ## Reglas duras
 
@@ -142,7 +144,8 @@ cada runtime. Tras cada lote, re-`velar`.
    leen del filesystem, no del handoff ni del reporte de un subagente.
 2. **`velar` es la red de convergencia.** Garantiza la FORMA, no la verdad del
    contenido: tras escribir migraciones, `velar --estricto` caza frontmatter
-   inválido y referencias que no resuelven. Re-velar hasta 13/13.
+   inválido y referencias que no resuelven. Re-velar hasta que todos los
+   checks vigentes pasen.
 3. **Frontera destructiva con red.** Nunca borrar/sobreescribir sin backup +
    reversibilidad confirmada; mirar el destino antes de actuar.
 4. **Sin evidencia no hay veredicto.** Cada afirmación anclada a lo leído; lo no
@@ -160,7 +163,8 @@ cada runtime. Tras cada lote, re-`velar`.
 
 ## Salidas
 
-- censo clasificado (controlado / bestia / taller / nativo) del universo auditado.
+- censo clasificado (controlado / bestia / pre-canónico externo / nativo) del universo auditado.
 - por artefacto: scores de los tres pilares con evidencia, redundancia, veredicto verificado, acción concreta, confianza.
 - hallazgos transversales (patrones que cruzan artefactos).
-- tras ejecución: estado verificado contra filesystem + `velar` 13/13.
+- tras ejecución: estado verificado contra filesystem + todos los checks de
+  `velar` en `PASS`.

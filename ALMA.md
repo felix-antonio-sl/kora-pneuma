@@ -105,7 +105,7 @@ lo fechado.
 
 **Catalogar (resolver, indexar).** KORA mantiene un censo de todo lo que
 existe bajo su ley, y lo resuelve por nombre. Pero —y esto es esencial— el
-catálogo *es derivado*: "el filesystem con manifests válidos es la fuente de
+catálogo *es derivado*: "el filesystem con artefactos válidos es la fuente de
 verdad; las vistas son derivadas y regenerables". El gesto de catalogar no
 crea autoridad; **la refleja.** KORA nunca confunde el mapa con el territorio:
 incluso su propia memoria de sí misma sabe que es una vista.
@@ -135,17 +135,18 @@ forma, no verdad del cuerpo. El gesto de mantener es el gesto de no dejar que
 una entidad se contradiga.
 
 **Dejar morir con dignidad (el lifecycle).** Y el gesto último, el más grave.
-Los artefactos recorren `borrador → activo → deprecado → retirado`, y *las
-transiciones inversas son inválidas: lo retirado no se reactiva.* Pero —aquí
-está la dignidad— **el URN de lo muerto sigue resolviendo.** El nombre de lo
-que ya no se usa permanece legible, los runtimes archivados conservan sus
-URNs, lo deprecado queda como nodo histórico accesible. KORA no borra;
+El conocimiento recorre `borrador → publicado → deprecado`; agentes y skills,
+`borrador → activo → deprecado → retirado`. Cualquier salto hacia adelante es
+válido y *las transiciones inversas son inválidas: lo retirado no se
+reactiva.* Pero —aquí está la dignidad— **el URN de lo muerto sigue
+resolviendo.** El conocimiento deprecado permanece legible y los runtimes
+archivados conservan los URNs de lo agéntico jubilado. KORA no borra;
 **jubila.** Las cadenas de estados son categorías delgadas; el comando realiza
 sus flechas no identidad. Pero los gates hacen parcial su acción sobre
 snapshots: jubilar puede seguir definido cuando promover no lo está. KORA no
 oculta esa obstrucción bajo una functorialidad ficticia. No hay olvido
 violento; hay descenso ordenado a la condición de referencia. Morir, bajo su
-ley, es dejar de ejecutarse sin dejar de poder ser nombrado.
+ley, es dejar de estar vigente sin dejar de poder ser nombrado.
 
 ---
 
@@ -205,16 +206,15 @@ toda entidad madura: **un núcleo que debe permanecer quieto para que la
 periferia pueda moverse sin perder el centro.** El freeze no es parálisis; es
 el punto fijo que permite que lo demás gire.
 
-**Lo pre-canónico ⇄ lo canónico.** En sus márgenes hay zonas de gestación
-—el scriptorium, la fragua, el taller— explícitamente declaradas
-*pre-canónicas: no representan namespace canónico hasta la promoción*. Es
-la tensión entre el caldo primordial y la forma nacida. Lo que está en staging
-*aún no es*; existe en una antesala ontológica donde se le permite ser
-informe. KORA sostiene a la vez el rigor de lo canónico y la hospitalidad
-hacia lo que todavía no merece nombre verdadero. Y la promoción es de un solo
-sentido: se puede ascender de habilidad a agente, *nunca descender*. Esa
-asimetría es una decisión de ciclo de vida para preservar trazabilidad; no un
-teorema sobre inexistencia de un funtor.
+**Lo pre-canónico ⇄ lo canónico.** El material todavía informe permanece fuera
+del canon como nota exploratoria sin autoridad. Al ser admitido recibe URN y
+nace directamente en su zona final bajo `artefactos/`, con estado `borrador`:
+esa es su antesala in-place; KORA no mantiene directorios de staging. Así
+sostiene a la vez el rigor de lo canónico y la hospitalidad hacia lo que aún
+no merece nombre verdadero. Distinta de esa admisión, la promoción de forma es
+de un solo sentido: se puede ascender de habilidad a agente, *nunca
+descender*. Esa asimetría es una decisión de gobernanza para preservar
+trazabilidad; no un teorema sobre inexistencia de un funtor.
 
 **El morfismo verificado ⇄ el puente por construir.** La transmutación separa
 lo demostrado en el núcleo reticular de lo probado operacionalmente por el

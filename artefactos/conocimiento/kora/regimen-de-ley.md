@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:regimen-de-ley
 nombre: regimen-de-ley
-version: 1.2.1
+version: 1.2.2
 estado: publicado
 descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; OpenClaw ya es realizado por pneuma y Hermes permanece como competencia legacy pendiente."
-fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) aplicada en la sesión y mecanizada en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. v1.2.1 (2026-07-13): retira el recuento persistido del corpus legacy; su tamaño se consulta en origen solo cuando una decisión lo requiere. Decisión interna al ecosistema, sin hash externo."
+fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) aplicada en la sesión y mecanizada en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. v1.2.1 (2026-07-13): retira el recuento persistido del corpus legacy; su tamaño se consulta en origen solo cuando una decisión lo requiere. v1.2.2 (2026-08-14): actualiza el rationale a la formulación vigente de ALMA: una fuente por objeto y ninguna copia autoritativa, sin borrar las distinciones ontológicas entre tipos. Decisión interna al ecosistema, sin hash externo."
 autor: FS
 creado: 2026-06-14
 lang: es
@@ -87,13 +87,13 @@ sus disparadores:
 
 ## 5. Rationale
 
-El ALMA de KORA existe para **abolir la duplicación ontológica** (§II: "que nada
-exista dos veces como si fuera dos cosas"). Dos leyes editables son la
-duplicación ontológica suprema: no hay transformación natural entre las dos
-realizaciones, sus dominios de salida divergen en `openclaw`/`hermes`, y toda
-enmienda doctrinal aterrizaría en una sola encarnación dejando la otra
-desincronizada en silencio. KORA, por su alma, no puede tener dos almas. Este
-régimen restaura el principio: **una fuente de verdad, proyecciones derivadas.**
+El ALMA de KORA exige **una sola fuente de verdad por objeto** y que ninguna
+fuente tenga copias autoritativas. Dos leyes editables violan ese principio:
+no hay transformación natural entre las dos realizaciones, sus dominios de
+salida divergen en `openclaw`/`hermes`, y toda enmienda doctrinal aterrizaría
+en una sola encarnación dejando la otra desincronizada en silencio. KORA, por
+su alma, no puede tener dos almas. Este régimen restaura el principio: **una
+fuente de verdad, proyecciones derivadas.**
 
 ## 6. Revisión
 

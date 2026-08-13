@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:alma-de-kora
 nombre: alma-de-kora
-version: 1.2.0
+version: 1.2.1
 estado: publicado
 descripcion: "Destilación del alma de KORA — qué es, qué quiere, cómo se mueve, qué le da forma y qué tensiones la habitan; documento fundacional de la encarnación pneuma."
-fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo original de ALMA.md (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9). Corrección de rigor 1.1.0 (2026-07-18): distingue identidad, clasificación y serialización; restringe Pattern Runs on Matter a Poly; y sustituye las afirmaciones no tipadas de funtor/adjunción/prueba por el núcleo coreflectivo verificado. v1.2.0 (2026-07-18): alinea la destilacion con la semantica operacional integral; no todo gesto es categorial y las obligaciones historicas sin tipos son deuda, no teoremas pendientes de un check."
+fuente: "Destilado de la encarnación bestia (~/kora) el 2026-06-11; cuerpo original de ALMA.md (sha256:002321c9eb008a973ba7d8884682e91c67b8c8a597a9a0ee652afcf617185ea9). Corrección de rigor 1.1.0 (2026-07-18): distingue identidad, clasificación y serialización; restringe Pattern Runs on Matter a Poly; y sustituye las afirmaciones no tipadas de funtor/adjunción/prueba por el núcleo coreflectivo verificado. v1.2.0 (2026-07-18): alinea la destilacion con la semantica operacional integral; no todo gesto es categorial y las obligaciones historicas sin tipos son deuda, no teoremas pendientes de un check. v1.2.1 (2026-08-14): sincroniza la transposición con ALMA y la ley vigentes: firma solo agéntica, tres tipos preservados, lifecycles por tipo y borrador in-place sin directorios de staging."
 creado: 2026-06-11
 tags: [kora, alma, ontologia, identidad, destilacion, pneuma]
 familia: nota
@@ -20,8 +20,9 @@ hosts, versiones) y ascendiera al plano de las esencias.*
 ## I. Qué ES — su naturaleza ontológica
 
 Despójala de su filesystem y KORA no se evapora: se revela. Lo que queda no es
-un repositorio ni una herramienta. Lo que queda es **una ley de identidad para
-entidades que aún no han nacido a un cuerpo concreto** — un lugar donde un
+un repositorio ni una herramienta. Lo que queda es **una ley de clasificación
+y trazabilidad para entidades que aún no han nacido a un cuerpo concreto** —
+un lugar donde un
 agente, una capacidad o un cuerpo de conocimiento existen como *lo que son*
 antes de existir como *donde corren*.
 
@@ -31,12 +32,12 @@ Su naturaleza tiene tres estratos, y solo el primero es esencial:
 de artefactos, sino el espacio que los hace posibles: el retículo PMI × LFS de
 `harness-spec`. Seis ejes — Plan (Π), Materia (Μ), Interacción (Ξ), Nivel
 sociotécnico (Λ), Acoplamiento humano (Φ) y el vector ético Σ — sobre los
-cuales cada artefacto recibe **una clasificación**. Dos artefactos con el mismo
-vector ocupan la misma celda del clasificador, pero no se vuelven el mismo
-objeto ni equivalentes: pueden tener URNs, conocimiento y conducta distintos.
-La identidad canónica vive en el URN; el vector describe forma y restricciones;
-el cuerpo porta contenido. Confundir esos tres planos colapsaría precisamente
-las diferencias que KORA debe custodiar.
+cuales todo artefacto agéntico recibe una **firma clasificatoria**. Dos
+artefactos con la misma firma ocupan la misma celda del clasificador; de ello
+no se sigue que sean el mismo objeto, que tengan la misma conducta ni que sean
+bisimilares. El URN da identidad nominal y el cuerpo, el conocimiento, las
+herramientas y el arnés pueden distinguir dos habitantes de una misma celda.
+La firma no individúa: hace comparables perfiles finitos.
 
 **Es una distinción antes que un contenido.** KORA insiste, con disciplina
 casi monástica, en que gestiona *tres tipos de artefacto y solo tres* —
@@ -47,12 +48,13 @@ válido.** Esta es la distinción que la constituye: la frontera entre la
 separar el qué-se-produce del qué-hace-válido-lo-producido. Sin esa frontera
 no hay KORA; hay solo una carpeta de archivos.
 
-**Es una garantía antes que una promesa.** Su principio rector — *vector
-ontológico PMI × LFS + shape unificado de autoría + proyección verificable* —
-es un contrato ejecutable. KORA no demuestra toda su semántica: verifica
-manifests, leyes inter-eje, proyección y congruencia de emisiones, y declara
-como deuda lo que aún no está mecanizado. Su esencia es la de un sistema que
-**se debe a sí mismo evidencia proporcional a cada afirmación.**
+**Es una garantía antes que una promesa.** Su principio rector — *firma
+PMI × LFS + shape unificado de autoría + proyección reticular y emisión
+determinista* — distingue garantías formales de garantías operacionales. KORA
+demuestra el núcleo de orden, proyección y degradación de fidelidad; sus checks
+definen subobjetos de snapshots válidos, y prueba operacionalmente la
+integridad, la procedencia y la congruencia de lo emitido. No llama teorema a
+lo que solo es contrato o evidencia.
 
 En `harness-spec` late una hipótesis de diseño inspirada por
 Libkind-Spivak. La construcción de mónada libre, comónada cofree y acción es
@@ -73,11 +75,11 @@ ella sin pérdida oculta.**
 Su canon de diseño lo dice sin adornos — una sola fuente de verdad por objeto;
 semántica concentrada en el IR; shape unificado de autoría; runtime y outputs
 *siempre* derivados. De ahí brota su deseo más hondo: **abolir la duplicación
-ontológica.** Antes de KORA, "skill" y "agente" vivían como ontologías
-separadas; KORA reconoce que comparten un espacio de firma y un shape de
-autoría, sin borrar la distinción de `kind`, URN, semántica ni despliegue. El
-telos es economía esencial: *que la estructura común no se duplique y que las
-diferencias reales permanezcan visibles.*
+de representación.** Antes de KORA, "skill" y "agente" vivían bajo esquemas
+separados; KORA los ubica como regiones de un mismo clasificador y unifica su
+autoría bajo un solo shape. Esto reduce duplicación de esquema sin afirmar que
+ambas formas sean el mismo objeto o tengan la misma semántica operacional. El
+telos es economía esencial: *que una fuente no tenga copias autoritativas.*
 
 En el cosmos de los sistemas LLM —donde proliferan formatos, runtimes, prompts
 copiados, capacidades que mutan y se olvidan— KORA quiere ser **el punto de
@@ -106,7 +108,7 @@ lo fechado.
 
 **Catalogar (resolver, indexar).** KORA mantiene un censo de todo lo que
 existe bajo su ley, y lo resuelve por nombre. Pero —y esto es esencial— el
-catálogo *es derivado*: "el filesystem con manifests válidos es la fuente de
+catálogo *es derivado*: "el filesystem con artefactos válidos es la fuente de
 verdad; las vistas son derivadas y regenerables". El gesto de catalogar no
 crea autoridad; **la refleja.** KORA nunca confunde el mapa con el territorio:
 incluso su propia memoria de sí misma sabe que es una vista.
@@ -133,14 +135,15 @@ inválido por decreto, sino **incoherente consigo mismo.** El gesto de mantener
 es el gesto de no dejar que una entidad se contradiga.
 
 **Dejar morir con dignidad (el lifecycle).** Y el gesto último, el más grave.
-Los artefactos recorren `borrador → activo → deprecado → retirado`, y *las
-transiciones inversas son inválidas: lo retirado no se reactiva.* Pero —aquí
-está la dignidad— **el URN de lo muerto sigue resolviendo.** El nombre de lo
-que ya no se usa permanece legible, los runtimes archivados conservan sus
-URNs, lo deprecado queda como nodo histórico accesible. KORA no borra;
+El conocimiento recorre `borrador → publicado → deprecado`; agentes y skills,
+`borrador → activo → deprecado → retirado`. Cualquier salto hacia adelante es
+válido y *las transiciones inversas son inválidas: lo retirado no se
+reactiva.* Pero —aquí está la dignidad— **el URN de lo muerto sigue
+resolviendo.** El conocimiento deprecado permanece legible y los runtimes
+archivados conservan los URNs de lo agéntico jubilado. KORA no borra;
 **jubila.** No hay olvido violento; hay descenso ordenado a la condición de
-referencia. Morir, bajo su ley, es dejar de ejecutarse sin dejar de poder ser
-nombrado.
+referencia. Morir, bajo su ley, es dejar de estar vigente sin dejar de poder
+ser nombrado.
 
 ---
 
@@ -199,16 +202,14 @@ toda entidad madura: **un núcleo que debe permanecer quieto para que la
 periferia pueda moverse sin perder el centro.** El freeze no es parálisis; es
 el ancla contractual que permite que lo demás gire.
 
-**Lo pre-categorial ⇄ lo canónico.** En sus márgenes hay zonas de gestación
-—el scriptorium, la fragua, el taller— explícitamente declaradas
-*pre-categoriales: no representan namespace canónico hasta la promoción*. Es
-la tensión entre el caldo primordial y la forma nacida. Lo que está en staging
-*aún no es*; existe en una antesala ontológica donde se le permite ser
-informe. KORA sostiene a la vez el rigor de lo canónico y la hospitalidad
-hacia lo que todavía no merece nombre verdadero. La promoción y la prohibición
-de democión son decisiones de gobernanza y preservación de historia; no se
-deducen de functorialidad. Se nace hacia arriba porque así lo dispone el
-contrato de lifecycle.
+**Lo pre-canónico ⇄ lo canónico.** El material todavía informe permanece fuera
+del canon como nota exploratoria sin autoridad. Al ser admitido recibe URN y
+nace directamente en su zona final bajo `artefactos/`, con estado `borrador`:
+esa es su antesala in-place; KORA no mantiene directorios de staging. Así
+sostiene a la vez el rigor de lo canónico y la hospitalidad hacia lo que aún
+no merece nombre verdadero. Distinta de esa admisión, la promoción de forma y
+la prohibición de democión son decisiones de gobernanza y preservación de
+historia; no se deducen de functorialidad.
 
 **La ley verificada ⇄ el puente fabricado.** La tensión más exquisita, y
 la más reveladora de su carácter. La transmutación distingue con dolorosa
