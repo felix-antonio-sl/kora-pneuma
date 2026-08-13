@@ -1470,6 +1470,17 @@ class TestSelloUltimoBloque(CasoPneuma):
 class TestCongruenciaGenerador(CasoPneuma):
     """sello-fresco prueba fuente, generador, sidecars y referencias/."""
 
+    def test_rechaza_factor_fuera_de_un_producto_kora(self):
+        self.escribir(
+            "_emision/hermes/instruccion-sesion.md",
+            "puente manual sin sello ni fuente KORA\n",
+        )
+        self.assert_fallo(
+            "sello-fresco",
+            "factor no atribuible a un producto KORA",
+            estricto=True,
+        )
+
     def test_detecta_cambio_del_generador_sin_cambio_de_fuente(self):
         self.escribir_agente(agente_campos(targets=["claude-code"]))
         self.assertEqual(self.correr(

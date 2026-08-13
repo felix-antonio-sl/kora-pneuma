@@ -885,6 +885,30 @@ def chk_sello_fresco(arts, raiz):
         if workspaces.is_dir():
             emitidos.extend(sorted(workspaces.glob("*/AGENTS.md")))
             emitidos.extend(sorted(workspaces.glob("*/SOUL.md")))
+
+    # `_emision/` es un espacio derivado cerrado. Un archivo solo pertenece a
+    # él si es una raíz de producto reconocible o un factor dentro de esa raíz.
+    # Sin esta atribución, un puente manual podía quedar invisible para el
+    # chequeo estricto y aparentar autoridad KORA por mera ubicación.
+    atribuidos: set[Path] = set()
+    for path in emitidos:
+        atribuidos.add(path)
+        if path.name in ("SKILL.md", "AGENTS.md", "SOUL.md"):
+            atribuidos.update(
+                factor for factor in path.parent.rglob("*")
+                if factor.is_file()
+            )
+    for rel, tipo in sorted(inventario.items()):
+        if tipo != "archivo regular":
+            continue
+        path = emision / rel
+        if path not in atribuidos:
+            fallos.append((
+                path.relative_to(raiz).as_posix(),
+                "factor no atribuible a un producto KORA reconocible; "
+                "retirar de _emision o transmutar desde una fuente",
+            ))
+
     pares: dict[tuple[str, str], dict] = {}
     for path in emitidos:
         rel = path.relative_to(raiz).as_posix()

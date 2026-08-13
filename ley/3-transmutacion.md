@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.12.0
+# KORA/Transmutación — ley pneuma v2.12.1
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -503,6 +503,11 @@ Antes de leer contenido, el check enumera `_emision/` sin seguir enlaces:
 la raíz y todos sus descendientes DEBEN ser directorios o archivos regulares
 reales. Un symlink, nodo especial o nodo ilegible invalida la frescura.
 
+Cada archivo regular DEBE poder atribuirse a una raíz de producto reconocible:
+un agente, una skill o un workspace emitido. Un archivo suelto o un factor sin
+esa raíz invalida la frescura; estar bajo `_emision/` no le confiere autoridad
+KORA por ubicación.
+
 El check lee el **último** bloque `kora:sello` de cada factor doctrinal —el
 cuerpo puede citar sellos de ejemplo— y verifica:
 
@@ -768,3 +773,8 @@ explícita; si existe, conserva la restricción vigente. Paridad global promete
 Codex para fuentes agnósticas y una auditoría focal promete el target solicitado.
 Una selección focal inválida falla en vez de convertirse en éxito vacío. No
 cambia matrices, adaptadores, formato de sello ni bytes de fuentes existentes.
+
+v2.12.1 (2026-08-14): corrige el cierre de `_emision/`: `sello-fresco` rechaza
+todo archivo regular que no pueda atribuirse a una raíz de producto KORA
+reconocible. Precisa y mecaniza el carácter derivado cerrado ya vigente; no
+cambia matrices, adaptadores, formato de sello ni bytes emitidos.
