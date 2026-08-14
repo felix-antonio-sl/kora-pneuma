@@ -1,4 +1,4 @@
-# KORA/Constitución — ley pneuma v1.8.0
+# KORA/Constitución — ley pneuma v1.9.0
 
 Estrato 0 de la ley. Por encima de él no hay norma; por debajo, toda norma se
 le subordina. Define qué es KORA, qué gestiona y qué no, cómo se ordena la
@@ -55,6 +55,11 @@ migración— se declara en `urn:kora:kb:regimen-de-ley`.
   matemática.
 
 ## 3. Tres tipos de artefacto, y solo tres
+
+KORA organiza su materia en **dos dominios funcionales, no dos tipos**: el
+**documental**, que produce y mantiene conocimiento mediante koraficación, y
+el **agéntico**, que autora agentes y skills y los proyecta a runtimes. La ley
+gobierna ambos desde fuera: no es artefacto ni constituye un tercer dominio.
 
 KORA gestiona **tres tipos de artefacto, y solo tres**:
 
@@ -296,3 +301,8 @@ v1.8.0 (2026-08-09): separa coherencia canónica de diagnósticos derivados.
 `publicacion-digna` y `sello-fresco`. `ciclo` conserva el gate de fuente y la
 dignidad focal del estado destino, pero ya no queda bloqueado por una emisión
 rancia no relacionada.
+
+v1.9.0 (2026-08-14): nombra explícitamente los dominios funcionales documental
+y agéntico, los distingue de los tres tipos de artefacto y mantiene la ley
+fuera de ambos. Precisión compatible: no añade tipos, URNs, campos, checks,
+zonas ni efectos runtime.
