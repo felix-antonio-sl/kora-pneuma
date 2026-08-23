@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:kb:regimen-de-ley
 nombre: regimen-de-ley
-version: 1.2.2
+version: 2.0.0
 estado: publicado
-descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única de doctrina futura; la ley de la encarnación bestia queda congelada salvo correcciones de verdad; OpenClaw ya es realizado por pneuma y Hermes permanece como competencia legacy pendiente."
-fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) aplicada en la sesión y mecanizada en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. v1.2.1 (2026-07-13): retira el recuento persistido del corpus legacy; su tamaño se consulta en origen solo cuando una decisión lo requiere. v1.2.2 (2026-08-14): actualiza el rationale a la formulación vigente de ALMA: una fuente por objeto y ninguna copia autoritativa, sin borrar las distinciones ontológicas entre tipos. Decisión interna al ecosistema, sin hash externo."
+descripcion: "Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única, genérica y agnóstica de doctrina futura; la bestia queda congelada salvo correcciones de verdad; los runtimes son adaptadores derivados, no identidades de KORA."
+fuente: "Decisión HITL del operador (FS) el 2026-06-14, en sesión de evaluación bestia↔pneuma. Deriva de dos dictámenes producidos en la sesión: polymath (cuantificación del cruce, veredicto ALT-B) y steipete (filo de ejecución: el debt real es el cisma de ley, no la cola de deudas técnicas). v1.1.0 (2026-06-15): formaliza la doctrina de acceso al corpus de la bestia (origen de migración por demanda, no destino de resolución; migrar-o-omitir) aplicada en la sesión y mecanizada en el contrato de conocimiento de emitir(). v1.2.0 (2026-07-12): registra el cierre ya legislado de OpenClaw en ley/3 v1.3.0; Hermes queda como única competencia delegada legacy. v1.2.1 (2026-07-13): retira el recuento persistido del corpus legacy; su tamaño se consulta en origen solo cuando una decisión lo requiere. v1.2.2 (2026-08-14): actualiza el rationale a la formulación vigente de ALMA: una fuente por objeto y ninguna copia autoritativa, sin borrar las distinciones ontológicas entre tipos. v2.0.0 (2026-08-23): cierra la deuda Hermes realizada por ley/3 v3.0.0 y v4.0.0, elimina la revisión legacy vencida y explicita la distinción solicitada por el operador: KORA es genérica y agnóstica; el diagnóstico examina adaptadores situados y no redefine su identidad. Decisión interna al ecosistema, sin hash externo."
 autor: FS
 creado: 2026-06-14
 lang: es
@@ -26,7 +26,7 @@ fijando una sola fuente de doctrina y congelando la otra.
 |---|---|
 | 1 | **pneuma es la fuente única de doctrina futura de KORA.** |
 | 2 | **La ley de la encarnación bestia queda congelada.** |
-| 3 | **OpenClaw ya es realizado por pneuma; Hermes permanece como competencia delegada legacy**, con fecha de revisión. |
+| 3 | **OpenClaw y Hermes se realizan como adaptadores derivados de pneuma; ningún runtime define la identidad de KORA.** |
 | 4 | **El corpus de la bestia es origen de migración por demanda, nunca destino de resolución**: migrar-o-omitir, jamás enlazar. |
 
 ## 1. Fuente única de doctrina futura
@@ -64,24 +64,29 @@ fijando una sola fuente de doctrina y congelando la otra.
    blindada por `lugar-coincide`) deriva siempre contra el catálogo central de
    pneuma, nunca contra la estructura de la bestia.
 
-## 3. OpenClaw realizado; Hermes delegado legacy
+## 3. Runtimes realizados como derivados
 
 1. pneuma realiza `openclaw` desde ley/3 v1.3.0 mediante una proyección leve:
    workspace `AGENTS.md` + `SOUL.md`, sin absorber configuración, memoria ni
    scaffolding del runtime. La fuente doctrinal y la emisión ya viven aquí.
-2. `hermes` sigue reconocido pero no realizado; transmutar falla honestamente
-   y remite a GENESIS mientras esta deuda permanezca.
-3. **No-limbo**: en la fecha de revisión se decide si Hermes se encarna en
-   forma leve o se declara competencia permanentemente archivada de la bestia.
+2. pneuma realiza `hermes` por dos contratos nativos y acotados: skills
+   agentskills.io (`T-hermes-pneuma-v1`) y agentes completos como profile
+   distributions (`T-hermes-pneuma-v2`). No absorbe configuración, memoria,
+   secretos, cron ni estado del operador. La forma subagente permanece fuera
+   del dominio porque un perfil no es una unidad delegable.
+3. Estas realizaciones son adaptadores situados. KORA conserva fuente, ley y
+   ontología genéricas y agnósticas; `targets` sólo restringe compatibilidad de
+   despliegue. Un diagnóstico de Codex, OpenClaw o Hermes puede corregir el
+   adaptador sin elevar particularidades del runtime al canon común.
 
 ## 4. Disparadores (forcing functions)
 
 Para que "migración por demanda" no decaiga en estancamiento, el régimen porta
 sus disparadores:
 
-1. **Nacimiento**: todo artefacto agéntico nuevo nace en pneuma. Si exige Μ=3,
-   se proyecta a `openclaw`; la falta de Hermes no es razón para nacer en la
-   bestia.
+1. **Nacimiento**: todo artefacto agéntico nuevo nace en pneuma. Su target se
+   selecciona por necesidad y compatibilidad verificadas; ninguna ausencia de
+   adaptador es razón para nacer en la bestia.
 2. **Flota**: todo agente de flota que se toque se realiza desde pneuma. No se
    realiza nada nuevo desde la bestia por inercia.
 
@@ -97,6 +102,6 @@ fuente de verdad, proyecciones derivadas.**
 
 ## 6. Revisión
 
-- Fecha de revisión del destino de `hermes` (§3): **2026-09-14**.
-- El régimen se revisa si cambia el supuesto de coexistencia (p. ej. la flota
-  migra de runtime, o pneuma encarna `openclaw` leve).
+El régimen se revisa si cambia el supuesto de coexistencia, la bestia deja de
+ser respaldo histórico o un runtime exige alterar —y no sólo adaptar— la
+ontología común.
