@@ -1216,8 +1216,10 @@ MATRICES = {
     # canon oficial /docs/user-guide/features/skills). El frontmatter Hermes
     # no tiene allowlist de herramientas (a diferencia de claude-code), y los
     # agentes-persona viven como perfiles con SOUL.md, no como archivos de
-    # agente: forma agéntica sigue siendo puente manual (ley/3 §7.5). Gateway
-    # siempre-activo + 21+ plataformas justifican mu=3 (full).
+    # agente: forma agéntica sigue siendo puente manual (ley/3 §7.5).
+    # El gateway siempre-activo justifica mu=3 en el modelo del runtime. El
+    # transporte v1 sigue limitado a skills y no vuelve alcanzable ese nivel
+    # para una fuente KORA (ley/2 limita habilidad a mu <= 1).
     "hermes": {
         "pi": _m({0: (0, "full", None), 1: (1, "full", None),
                   2: (2, "full", None),
@@ -1290,8 +1292,7 @@ SIGMA_RAZONES = {
 # Quién sí soporta un eje que el target rechaza (para el mensaje de fallo).
 # openclaw realizado desde ley/3 v1.3.0: sostiene mu=3 (full) y lambda=3 (partial).
 QUIEN_SOPORTA = {
-    ("mu", 3): "openclaw (transmutar --target openclaw); hermes "
-               "(gateway always-on, forma habilidad)",
+    ("mu", 3): "openclaw (transmutar --target openclaw)",
     ("lambda", 3): "openclaw (parcial; transmutar --target openclaw)",
     ("phi", 4): "ninguno de los runtimes reconocidos",
 }
@@ -1844,10 +1845,8 @@ RUTAS_APLICAR = {
     # el materializador fleet los proyecta luego al workspace runtime privado.
     ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
     ("openclaw", "agente"): "~/openclaw-fleet/blueprints/{nombre}",
-    # hermes: skills personales del perfil default (canon oficial:
-    # ~/.hermes/skills/ es la fuente de verdad local). Los perfiles concretos
-    # (hospitalista, urgencia, ...) son instalaciones separadas y quedan fuera
-    # de --aplicar: copiar a un perfil vivo es despliegue manual autorizado.
+    # hermes: skills del perfil default. Si HERMES_HOME está definido, la ruta
+    # efectiva se resuelve dinámicamente en _ruta_aplicar_usuario.
     ("hermes", "skill"): "~/.hermes/skills/{nombre}",
 }
 
@@ -1861,7 +1860,18 @@ RUTAS_APLICAR_PROYECTO = {
     ("codex", "agente"): ".codex/agents/{nombre}.toml",
     ("opencode", "skill"): ".opencode/skills/{nombre}",
     ("opencode", "agente"): ".opencode/agents/{nombre}.md",
+    ("hermes", "skill"): ".hermes/skills/{nombre}",
 }
+
+
+def _ruta_aplicar_usuario(target: str, tipo: str, nombre: str) -> Path:
+    """Resuelve el hogar efectivo del runtime para una unidad de usuario."""
+    if target == "hermes" and tipo == "skill":
+        hermes_home = os.environ.get("HERMES_HOME")
+        if hermes_home:
+            return Path(hermes_home).expanduser() / "skills" / nombre
+    return Path(RUTAS_APLICAR[(target, tipo)].format(
+        nombre=nombre)).expanduser()
 
 
 def _skill_personal_sombrea_openclaw(nombre: str) -> Path | None:
@@ -2091,8 +2101,7 @@ def _aplicar(art: Artefacto, target: str,
         ruta = base / RUTAS_APLICAR_PROYECTO[(target, art.tipo)].format(
             nombre=nombre_art)
     else:
-        ruta = Path(RUTAS_APLICAR[(target, art.tipo)].format(
-            nombre=nombre_art)).expanduser()
+        ruta = _ruta_aplicar_usuario(target, art.tipo, nombre_art)
     conflicto_jerarquia = _conflicto_ancestros(ruta)
     if conflicto_jerarquia is not None:
         print(f"error: {conflicto_jerarquia}.", file=sys.stderr)
@@ -2642,7 +2651,7 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
         destino_rel = Path(plantilla.format(nombre=nombre))
         destino = ((base_proyecto / destino_rel)
                    if base_proyecto is not None
-                   else destino_rel.expanduser())
+                   else _ruta_aplicar_usuario(tgt, tipo, nombre))
         conflicto_jerarquia = _conflicto_ancestros(destino)
         if conflicto_jerarquia is not None:
             jerarquias_inseguras.add(conflicto_jerarquia)
@@ -2767,7 +2776,7 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
         destino_rel = Path(plantilla.format(nombre=nombre))
         destino = ((base_proyecto / destino_rel)
                    if base_proyecto is not None
-                   else destino_rel.expanduser())
+                   else _ruta_aplicar_usuario(tgt, tipo, nombre))
         conflicto_jerarquia = _conflicto_ancestros(destino)
         if conflicto_jerarquia is not None:
             if conflicto_jerarquia not in jerarquias_inseguras:

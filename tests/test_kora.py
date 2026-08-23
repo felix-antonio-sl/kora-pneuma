@@ -762,6 +762,7 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("mu=3", err)
         self.assertIn("openclaw", err)
+        self.assertNotIn("hermes", err)
 
     def test_determinismo_byte_a_byte(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
@@ -3136,6 +3137,37 @@ class TestHermes(CasoPneuma):
         emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
         self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
 
+    def test_aplicar_honra_hermes_home_del_perfil(self):
+        perfil = self.raiz / "perfil-hermes"
+        base_default = self.raiz / "runtime/hermes/skills/util-x"
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True), \
+                mock.patch.dict(
+                    os.environ, {"HERMES_HOME": str(perfil)}, clear=False):
+            codigo, salida, err = self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "hermes", "--aplicar"])
+        self.assertEqual(codigo, 0, salida or err)
+        instalado = perfil / "skills/util-x/SKILL.md"
+        self.assertTrue(instalado.is_file())
+        self.assertFalse(base_default.exists())
+        emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
+        self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
+
+    def test_aplicar_instala_hermes_a_nivel_proyecto(self):
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        codigo, salida, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes", "--aplicar", "--proyecto",
+             str(proyecto)])
+        self.assertEqual(codigo, 0, salida or err)
+        instalado = proyecto / ".hermes/skills/util-x/SKILL.md"
+        self.assertTrue(instalado.is_file())
+        emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
+        self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
+
     def test_paridad_focal_verifica_unidad_hermes(self):
         base = self.raiz / "runtime"
         with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True):
@@ -3157,6 +3189,37 @@ class TestHermes(CasoPneuma):
                 ["transmutar", "--paridad", "--target", "hermes"])
             self.assertEqual(codigo, 0, salida)
             self.assertIn("paridad: fiel          hermes  util-x", salida)
+
+    def test_paridad_honra_hermes_home_del_perfil(self):
+        perfil = self.raiz / "perfil-hermes"
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True), \
+                mock.patch.dict(
+                    os.environ, {"HERMES_HOME": str(perfil)}, clear=False):
+            self.assertEqual(self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "hermes"])[0], 0)
+            shutil.copytree(
+                self.raiz / "_emision/hermes/skills/util-x",
+                perfil / "skills/util-x")
+            codigo, salida, err = self.correr(
+                ["transmutar", "--paridad", "--target", "hermes"])
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertIn("paridad: fiel          hermes  util-x", salida)
+
+    def test_paridad_verifica_hermes_a_nivel_proyecto(self):
+        proyecto = self.raiz / "proyecto"
+        proyecto.mkdir()
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes", "--aplicar", "--proyecto",
+             str(proyecto)])[0], 0)
+        codigo, salida, err = self.correr(
+            ["transmutar", "--paridad", "--target", "hermes",
+             "--proyecto", str(proyecto)])
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertIn("paridad: fiel          hermes  util-x", salida)
 
 
 if __name__ == "__main__":
