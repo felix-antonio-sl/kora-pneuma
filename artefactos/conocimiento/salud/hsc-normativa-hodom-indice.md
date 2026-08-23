@@ -75,6 +75,7 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel` | PRO-167 (2022, vigencia nov 2027) | Índice de Barthel ≥65 años al ingreso (Enfermería) y egreso (Médico): métrica de dependencia para egreso a domicilio y traspaso APS vía CAE |
 | `urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia` | PRO-053 (2013, Res. Ex. 0378/2014) | compuerta UE→cama: orden en DAU, recetón 24 h, cama vía UGCC hábil/enfermería fuera de hora, categorización de riesgo y hoja de ruta con 4 tiempos |
 | `urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias` | PRO-076 (2016, Res. Ex. 4292/2016) | flota SAMU/traslado: registro de kilometraje y combustible por móvil, tarjeta en convenio y circuito Mantención→Abastecimiento→Finanzas; línea base decisión #10 |
+| `urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar` | PRO-126 (2019) | programa de rehabilitación pulmonar (EPOC/ERA): inclusión/exclusión, TM6M, 24 sesiones al 70% de carga; escalamiento y egreso kinésico del paciente HD respiratorio |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -286,7 +287,8 @@ directa), pendiente de gates de lectura íntegra por fuente:
   anticoagulantes (continuidad farmacológica al egreso).
 - DCIYE: **PRO-23 manejo de brotes**, **PRO-170 plan anual de prevención y
   control de infecciones** (vigilancia en domicilio).
-- Rehabilitación: **PRO-126 rehabilitación pulmonar**, PRO-152 crítico VMI
+- Rehabilitación: ~~PRO-126 rehabilitación pulmonar~~ **koraficada 2026-08-23**
+  (`urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`); queda PRO-152 crítico VMI
   (kinesioterapia domiciliaria).
 - UGCC: ~~PRO-076 carga de combustible de ambulancias~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias`) — insumo decisión #10.
 - DAIU: PRO-099 visitas y acompañamiento; Telemedicina: PRO-186 TACO,
