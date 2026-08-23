@@ -87,6 +87,8 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-046-pielonefritis-aguda` | PRO-046 (2013) | PNA en Urgencia/Medicina: ITU complicada y criterios de ingreso (SIRS/sepsis, complicación local, condiciones especiales); diagnóstico frecuente de egreso a HD |
 | `urn:salud:kb:hsc-pro-048-pancreatitis-aguda` | PRO-048 (2013) | PA en UE/Medicina/Cirugía: definiciones, Ranson/APACHE/Balthazar y derivación a centro de referencia; perfil típico de egreso precoz con continuidad domiciliaria |
 | `urn:salud:kb:hsc-pro-185-telegastroenterologia` | PRO 185 (2024) | telegastroenterología UNITEL: objetivo explícito de atención a pacientes con movilidad limitada; consulta gastro sin traslado durante el episodio HD; cierra el trío UNITEL koraficado |
+| `urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi` | PRO-152 (2020) | rehabilitación kine-fono del crítico VMI: contraindicaciones de movilización, fases Gosselink, disfagia GUSS/FILS y derivación ambulatoria al 100% post-VMI; marco del paciente HD complejo |
+| `urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd` | PRO-156 (2021) | atención preferente Ley 21.168: acreditación PM/PCD, prioridad ESI, ventanillas y 5% mínimo de oferta; derecho aplicable a toda la población HODOM |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -302,14 +304,16 @@ directa), pendiente de gates de lectura íntegra por fuente:
   prevención y control de infecciones~~ **koraficada 2026-08-23**
   (`urn:salud:kb:hsc-pro-170-plan-anual-prevencion-control-infecciones`).
 - Rehabilitación: ~~PRO-126 rehabilitación pulmonar~~ **koraficada 2026-08-23**
-  (`urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`); queda PRO-152 crítico VMI
-  (kinesioterapia domiciliaria).
+  (`urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`); ~~PRO-152 crítico VMI~~
+  **koraficada 2026-08-23**
+  (`urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi`).
 - UGCC: ~~PRO-076 carga de combustible de ambulancias~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias`) — insumo decisión #10.
 - DAIU: ~~PRO-099 visitas y acompañamiento~~ **koraficada 2026-08-23**
   (`urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento`);
   ~~PRO-043 ingreso de usuarios~~ **koraficada 2026-08-23**
-  (`urn:salud:kb:hsc-pro-043-ingreso-de-usuarios`); queda PRO-156 atención
-  preferente PM/PCD.
+  (`urn:salud:kb:hsc-pro-043-ingreso-de-usuarios`); ~~PRO-156 atención
+  preferente PM/PCD~~ **koraficada 2026-08-23**
+  (`urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd`).
   PRO-187 telediabetes~~ **koraficadas 2026-08-23**
   (`urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral`,
   `urn:salud:kb:hsc-pro-187-telediabetes`); ~~PRO-185 telegastro~~
