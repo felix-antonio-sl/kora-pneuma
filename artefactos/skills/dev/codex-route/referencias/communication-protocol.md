@@ -12,10 +12,10 @@ runtime_preflight:
   current_session_available: true | false
   spawn_available: true | false
   model_override_available: true | false
-  luna_override_available: true | false
-  terra_override_available: true | false
-  sol_override_available: true | false
-  effort_override_available: true | false
+  luna_max_available: true | false
+  sol_high_available: true | false
+  sol_max_available: true | false
+  exact_pair_override_available: true | false
   fork_control_available: true | false
   lifecycle_controls: []
   independent_thread_surface:
@@ -24,7 +24,7 @@ runtime_preflight:
     available_models: []
     available_efforts: []
     creation_authorized: true | false
-    model_override_authorized: true | false
+    pair_override_authorized: true | false
   native_goal_controls: []
 ```
 
@@ -32,7 +32,7 @@ No inferir una superficie u override desde documentación o ejecuciones pasadas.
 Si la directora no es observable o permitida, o el triple requerido no puede
 fijarse, aplicar los fallos cerrados de `model-effort-routing.md`.
 Para un thread independiente, autorización de creación y de override son
-distintas: si el usuario no pidió el modelo concreto, emitir `ROUTE_ERROR ·
+distintas: si el usuario no pidió el par concreto, emitir `ROUTE_ERROR ·
 model_override_not_authorized` y no crear el thread.
 
 ## Planos del grafo
@@ -95,15 +95,16 @@ stop_conditions: []
 escalation_conditions: []
 cognitive_class: bounded-verifiable | judgment-intensive
 routing_basis: []
+recommended_pair: gpt-5.6-sol:high | gpt-5.6-sol:max | gpt-5.6-luna:max
 recommended_execution_surface: current_session | subagent | independent_thread
 available_execution_surfaces: []
 effective_execution_surface: id | unknown
 execution_surface_compliance: exact | degraded | unknown | blocked
-recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
+recommended_model: gpt-5.6-sol | gpt-5.6-luna
 available_models: []
 effective_model: id | unknown
 model_compliance: exact | degraded | unknown | blocked
-recommended_effort: low | medium | high | xhigh | max
+recommended_effort: high | max
 available_efforts: []
 effective_effort: level | unknown
 effort_compliance: exact | degraded | unknown | blocked
@@ -113,7 +114,9 @@ cost_status: optimal | cost_degraded | overprovisioned | unknown
 `recommended ≠ effective` exige declarar degradación y consecuencia. Un valor
 efectivo o costo desconocido impide afirmar cumplimiento u optimalidad. Para
 escritura, añadir workspace, candidato, ownership exclusivo y prohibición de
-revertir trabajo ajeno.
+revertir trabajo ajeno. `recommended_model` y `recommended_effort` deben
+coincidir con `recommended_pair`; la enumeración separada no autoriza
+combinaciones cruzadas.
 
 ## Schema completo de ruta
 
@@ -131,15 +134,16 @@ route:
   director:
     global_profile: optional
     integration_load: 0..4
+    recommended_pair: gpt-5.6-sol:high | gpt-5.6-sol:max | gpt-5.6-luna:max
     recommended_execution_surface: current_session
     available_execution_surfaces: []
     effective_execution_surface: id | unknown
     execution_surface_compliance: exact | degraded | unknown | blocked
-    recommended_model: gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna
+    recommended_model: gpt-5.6-sol | gpt-5.6-luna
     available_models: []
     effective_model: id | unknown
     model_compliance: exact | degraded | unknown | blocked
-    recommended_effort: low | medium | high | xhigh | max
+    recommended_effort: high | max
     available_efforts: []
     effective_effort: level | unknown
     effort_compliance: exact | degraded | unknown | blocked
@@ -198,12 +202,16 @@ necesita todo, `K` es baja y probablemente no debe delegarse.
 - `list_agents`: observar estado y slots;
 - `interrupt_agent`: detener y redirigir sin descartar automáticamente contexto.
 
-Para threads independientes, resolver primero con `list_projects`; crear con
-`create_thread` solo tras solicitud explícita de la superficie y del modelo
-concreto; observar con `list_threads` y `read_thread`; dirigir seguimientos con
-`send_message_to_thread`. Título, pin y archivo requieren operaciones expuestas
-y autoridad específica. Un `route-and-run` genérico no autoriza crear un thread
-de propiedad del usuario ni fijar su modelo.
+Para threads independientes, descubrir primero las primitivas diferidas y
+resolver el proyecto con `codex_app__list_projects`. Crear con
+`codex_app__create_thread` sólo tras una solicitud explícita de tarea nueva y,
+si se enviarán overrides, del par concreto. En proyectos Git usar worktree por
+defecto; local sólo por solicitud explícita o proyecto no Git. Observar con
+`codex_app__list_threads`, `codex_app__list_archived_threads` y
+`codex_app__read_thread`; dirigir con
+`codex_app__send_message_to_thread` y esperar con
+`codex_app__wait_threads`. Handoff, share, título, pin y archivo son efectos
+separados y exigen autoridad específica.
 
 Para goal nativo, usar solo `get_goal`, `create_goal` y `update_goal` según sus
 precondiciones observadas.
@@ -222,8 +230,10 @@ expuesto, cerrar L0/L1 después de integrar. Si no está expuesto, no inventarlo
 y declarar la limitación de lifecycle.
 
 Un thread independiente sigue `planned → created → running → completed →
-integrated`; no se vuelve hijo ni se archiva por completar. Permanece bajo
-propiedad del usuario y la directora registra qué evidencia integró.
+integrated`; no se vuelve hijo ni se archiva por completar. Puede necesitar
+atención antes de completar, estado que `codex_app__wait_threads` hace
+observable. Permanece bajo propiedad del usuario y la directora registra qué
+evidencia integró.
 
 ## Concurrencia, escritura y worktrees
 

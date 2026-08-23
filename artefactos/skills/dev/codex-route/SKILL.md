@@ -1,19 +1,19 @@
 ---
 urn: urn:dev:artefacto:codex-route
 nombre: codex-route
-version: 2.2.1
+version: 3.0.0
 estado: activo
-descripcion: "Evalua explicitamente una tarea para Codex y recomienda superficie de ejecucion, modelo Sol/Terra/Luna, esfuerzo low-max, goal nativo y topologia minima. Invocar para decidir routing; por defecto no ejecuta."
-fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360. Version 2.1.0 incorpora Terra y seleccion conjunta modelo-esfuerzo desde documentacion oficial GPT-5.6 y tres graficos Artificial Analysis aportados el 2026-08-11. Version 2.2.0 incorpora superficies de ejecucion, threads independientes, evaluacion de goal nativo y comparacion privilegiada Luna Max frente a Sol High desde documentacion oficial Codex revalidada el 2026-08-11. Version 2.2.1 separa autorizacion de crear un thread y de fijar su modelo. La evidencia agregada calibra, no gobierna disponibilidad ni sustituye evals locales; las rubricas siguen siendo heuristicas no validadas como escalas predictivas."
+descripcion: "Evalua explicitamente una tarea para Codex y recomienda superficie, uno de tres pares permitidos (Sol high, Sol max o Luna max), goal nativo y topologia minima. Excluye Terra y toda degradacion silenciosa. Invocar para decidir routing; por defecto no ejecuta."
+fuente: "Version 1.0.0 creada el 2026-08-11 desde Rediseño codex-route como router de grafos de sesiones, sha256:6a7eebfa997fe1095ed67bd289ee0c1c957523fed19dc978fbe4e1c0e1ca166a. Version 2.0.0 reescrita el 2026-08-11 desde el dictamen operativo Sol-Luna, sha256:c1878d4c1c7d0715b3c88d5ec9a5bd86f7d817111d914f0247d1bebd32a54360. Version 2.1.0 incorpora Terra y seleccion conjunta modelo-esfuerzo desde documentacion oficial GPT-5.6 y tres graficos Artificial Analysis aportados el 2026-08-11. Version 2.2.0 incorpora superficies de ejecucion, threads independientes, evaluacion de goal nativo y comparacion privilegiada Luna Max frente a Sol High desde documentacion oficial Codex revalidada el 2026-08-11. Version 2.2.1 separa autorizacion de crear un thread y de fijar su modelo. La evidencia agregada calibra, no gobierna disponibilidad ni sustituye evals locales; las rubricas siguen siendo heuristicas no validadas como escalas predictivas. Version 3.0.0 (2026-08-23) ratifica una politica cerrada del operador: Terra queda excluida; Sol se usa solo en high o max y Luna solo en max. Actualiza las superficies al contrato vivo codex_app__*, hace worktree el default para proyectos Git, reserva local para solicitud explicita o proyecto no Git, e incorpora wait, handoff y share sin confundirlos con delegacion ni autorizacion. Baseline previo: proponia Luna low/medium y Terra, nombraba primitivas sin namespace y sustituyo un thread independiente por subagentes; ensayo post-cambio requerido antes de despliegue."
 autor: FS
 creado: 2026-08-11
 lang: es
-tags: [codex, sesiones, threads, routing, grafos, goal, sol, terra, luna, delegacion, concurrencia, worktrees, verificacion]
+tags: [codex, sesiones, threads, routing, grafos, goal, sol, luna, delegacion, concurrencia, worktrees, verificacion]
 vector: [2, 0, 2, 0, 1]
 sigma: [2, 1, 3, 3, 1]
 arnes: disciplina
 forma: habilidad
-herramientas: [Read, Write, Edit, Glob, Grep, Bash, spawn_agent, send_message, followup_task, wait_agent, interrupt_agent, list_agents, create_thread, fork_thread, list_projects, list_threads, read_thread, send_message_to_thread, set_thread_archived, set_thread_pinned, set_thread_title, create_goal, get_goal, update_goal]
+herramientas: [Read, Write, Edit, Glob, Grep, Bash, spawn_agent, send_message, followup_task, wait_agent, interrupt_agent, list_agents, codex_app__create_thread, codex_app__fork_thread, codex_app__list_projects, codex_app__list_threads, codex_app__list_archived_threads, codex_app__read_thread, codex_app__read_thread_terminal, codex_app__send_message_to_thread, codex_app__wait_threads, codex_app__handoff_thread, codex_app__get_handoff_status, codex_app__share_thread, codex_app__open_in_codex, codex_app__set_thread_archived, codex_app__set_thread_pinned, codex_app__set_thread_title, create_goal, get_goal, update_goal]
 targets: [codex]
 alcance: usuario
 estados: [perfilar-global, preflight, construir-grafo, perfilar-nodos, enrutar, ejecutar, integrar, verificar, cerrar]
@@ -24,14 +24,23 @@ estados: [perfilar-global, preflight, construir-grafo, perfilar-nodos, enrutar, 
 
 Elegir la organización mínima de sesiones Codex que alcance un resultado
 verificable bajo costo, riesgo, contexto y coordinación. Cada candidata es
-`superficie × modelo × esfuerzo`; evaluar además si el goal nativo mejora la
+`superficie × par-modelo-esfuerzo`; evaluar además si el goal nativo mejora la
 continuidad. Invocar explícitamente `$codex-route`; la metadata impide
 activación implícita.
 
-Usar solo `gpt-5.6-sol`, `gpt-5.6-terra` y `gpt-5.6-luna`. No crear un descendiente sin modelo
-fijado si el runtime pudiera escoger fuera de esa allowlist. Preferir S0: un
-grafo debe pagar su costo con menor tiempo, contaminación, riesgo o
-incertidumbre.
+La política es cerrada y no negociable dentro de esta skill:
+
+```text
+gpt-5.6-sol:high
+gpt-5.6-sol:max
+gpt-5.6-luna:max
+```
+
+Terra y cualquier otro esfuerzo quedan excluidos. No recomendar, crear,
+continuar ni reconfigurar una sesión con un par distinto. No omitir un override
+si eso puede heredar un par fuera de política, y nunca degradar silenciosamente.
+Preferir S0: un grafo debe pagar su costo con menor tiempo, contaminación,
+riesgo o incertidumbre.
 
 ## Modos
 
@@ -43,21 +52,22 @@ ni ejecutar el trabajo enrutado.
 ### `route-and-run` — explícito
 
 Activar solo si la solicitud o una instrucción aplicable autoriza delegar o
-usar subagentes. Crear un thread independiente exige además solicitud explícita
-para esa superficie; fijar su modelo exige que el usuario haya pedido ese
-modelo concreto. Si falta esa autorización, emitir `ROUTE_ERROR ·
-model_override_not_authorized` y no crear el thread. La activación no amplía
-permisos, alcance ni autoridad.
+usar subagentes. `codex_app__create_thread` crea otra tarea visible al usuario:
+usarlo únicamente si pidió explícitamente una tarea nueva. Fijar modelo o
+esfuerzo en esa tarea exige que haya pedido el par concreto; una allowlist o la
+mera autorización de crear no eligen el par. Si falta esa autorización, emitir
+`ROUTE_ERROR · model_override_not_authorized` y no crear. La activación no
+amplía permisos, alcance ni autoridad.
 
 ## Fast path
 
-- Operación literal, fuente y checker exactos: `current_session · Luna low · S0`; Terra low si Luna no está disponible.
-- Varios pasos acotados con oráculo fuerte: `current_session · Luna medium · S0`; comparar Terra como triple ejecutable.
-- Juicio acotado bajo contrato estable, sin gate Sol: `current_session · Terra medium · S0`.
+- Operación determinada, fuente y checker exactos: `current_session · Luna max · S0`.
+- Juicio acotado o integración revisable: `current_session · Sol high · S0`.
+- Síntesis difícil, adjudicación o integración excepcional: `current_session · Sol max · S0`.
 
 Emitir una sola línea `SIMPLE_ROUTE`. Si la sesión efectiva difiere, separar
-recomendación y ejecución; por ejemplo: `recommended: Luna low · effective:
-Sol medium · cost_status: overprovisioned`.
+recomendación y ejecución; por ejemplo: `recommended: Luna max · effective:
+unknown · compliance: unknown`.
 
 ## Routing en dos pasadas
 
@@ -77,16 +87,15 @@ Sol medium · cost_status: overprovisioned`.
 6. Aplicar SGM-8 desde
    [session-graph-matrix.md](referencias/session-graph-matrix.md), diseñar el
    grafo y calcular `J`, carga de integración.
-7. Ajustar el esfuerzo de la directora usando `J`; no cargar `J` a cada worker.
+7. Ajustar el par de la directora usando `J`; no cargar `J` a cada worker.
 8. Calcular una **CEM local residual** por nodo y asignar superficie, modelo,
    esfuerzo, contexto, autoridad, persistencia y verificación propios.
 
-Luna exige trabajo determinado, oráculo fuerte e integración baja. Comparar
-obligatoriamente Luna Max ↔ Sol High si ambos triples son ejecutables. Terra exige
-juicio acotado o fallback de disponibilidad, sin gate Sol. Sol es obligatorio
-ante ambigüedad, arquitectura, novedad conceptual, evidencia contradictoria,
-oráculo débil, acoplamiento, integración difícil, adjudicación o juicio de alta
-consecuencia. `R` gobierna primero autonomía y verificación.
+Luna Max exige trabajo determinado, oráculo fuerte e integración baja. Comparar
+obligatoriamente Luna Max ↔ Sol High si ambos triples son ejecutables. Sol High
+es la ruta de juicio e integración normal. Sol Max se reserva para síntesis,
+adjudicación o integración excepcional que High no cubra con confianza. `R`
+gobierna primero autonomía y verificación.
 
 ## Preflight de ejecución
 
@@ -96,14 +105,17 @@ Antes de `route-and-run`, leer
 inspeccionar por superficie: creación, modelo, esfuerzo, contexto, concurrencia,
 goal y lifecycle.
 
-- Directora observada fuera de allowlist: `ROUTE_ERROR ·
-  director_model_not_allowed` y recomendar reinicio en Sol, Terra o Luna.
-- Sol requerido e indisponible: bloquear.
-- Par recomendado indisponible: reevaluar pares permitidos, declarar fallback
-  y costo, o bloquear; nunca sustituir silenciosamente.
+- Directora observada fuera de los tres pares: `ROUTE_ERROR ·
+  director_pair_not_allowed` y recomendar reinicio en uno permitido.
+- Par solicitado fuera de los tres permitidos: `ROUTE_ERROR ·
+  requested_pair_not_allowed`; no reinterpretar la solicitud como autorización
+  de otro par.
+- Sol requerido e indisponible en High y Max: bloquear.
+- Par recomendado indisponible: reevaluar sólo los otros pares permitidos y
+  declarar el cambio, o bloquear; nunca sustituir silenciosamente.
 - Modelo o esfuerzo efectivo desconocido: `compliance: unknown`; no afirmar
   cumplimiento exacto.
-- Sin override permitido en allowlist: no crear ese descendiente.
+- Sin override permitido para un par exacto: no crear ese descendiente.
 
 ## Grafo mínimo
 
@@ -133,14 +145,14 @@ route:
   orchestration: {mode: director-managed, base_topology: S2}
   sessions:
     - {id: repo-map, cognitive_class: bounded-verifiable, recommended_execution_surface: subagent,
-       recommended_model: gpt-5.6-terra,
+       recommended_model: gpt-5.6-luna,
        available_models: [], effective_model: unknown, model_compliance: unknown,
-       recommended_effort: medium, available_efforts: [], effective_effort: unknown,
+       recommended_effort: max, available_efforts: [], effective_effort: unknown,
        effort_compliance: unknown, cost_status: unknown}
   critical_path: implementation remains in director
   communication: results to director only
   worktrees: none
-  privileged_comparison: {candidates: [luna-max, sol-high],
+  privileged_comparison: {candidates: [gpt-5.6-luna:max, gpt-5.6-sol:high],
     discarded_candidate_reason: luna gate not satisfied}
   cheaper_route_not_used: graph reduces critical-path uncertainty
   stop: acceptance or two equivalent causal failures
@@ -153,9 +165,17 @@ matrices salvo ruta fronteriza o solicitud expresa.
 ## Ejecutar, integrar y cerrar
 
 Entregar a cada sesión objetivo, ownership, aceptación, autoridad,
-restricciones, salida y verificación. Mantener un escritor cuando sea posible;
-worktree solo ante interferencia real de escritura. No habilitar broadcast ni
+restricciones, salida y verificación. Para subagentes, usar las primitivas de
+colaboración expuestas. Para tareas independientes, descubrir primero las
+primitivas `codex_app__*`, llamar `codex_app__list_projects` y, si el proyecto
+es Git, crear en worktree por defecto; `local` sólo para proyecto no Git o
+solicitud explícita de usar el checkout guardado. No habilitar broadcast ni
 usar mensajería para sincronizar archivos.
+
+Esperar tareas independientes con `codex_app__wait_threads`; dirigirlas con
+`codex_app__read_thread` y `codex_app__send_message_to_thread`. Handoff, share,
+título, pin y archivo son efectos separados y requieren necesidad y autoridad
+propias. No sustituir un thread solicitado por un subagente ni viceversa.
 
 Evaluar resultados antes de incorporarlos, adjudicar contradicciones en la
 directora y verificar el objetivo global. Gestionar lifecycle hasta

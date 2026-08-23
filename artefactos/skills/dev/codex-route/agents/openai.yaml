@@ -1,7 +1,7 @@
 interface:
   display_name: "Codex Route"
-  short_description: "Enruta superficie, Sol/Terra/Luna, esfuerzo y goal."
-  default_prompt: "Usa $codex-route en modo route-only para proponer la superficie, el modelo, el esfuerzo, el goal y el grafo mínimos."
+  short_description: "Enruta superficie y pares Sol/Luna ratificados."
+  default_prompt: "Usa $codex-route en modo route-only para proponer la superficie, uno de Sol high, Sol max o Luna max, el goal y el grafo mínimos."
 
 policy:
   allow_implicit_invocation: false

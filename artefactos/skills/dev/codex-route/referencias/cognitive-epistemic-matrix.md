@@ -27,9 +27,9 @@ A ≤ 1 · N ≤ 2 · E ≤ 2 · O ≤ 1 · C ≤ 2
 
 La amplitud no exige por sí sola un modelo más capaz.
 
-## Gate de Luna
+## Gate de Luna Max
 
-Luna exige todas:
+Luna Max exige todas:
 
 - objetivo local y entregable determinados;
 - método conocido o búsqueda acotada;
@@ -38,32 +38,24 @@ Luna exige todas:
 - integración local baja;
 - ningún juicio material de alta consecuencia pendiente.
 
-## Gate de Terra
+## Gate de Sol High
 
-Terra exige que ningún gate Sol permanezca y todas:
-
-- objetivo, aceptación, arquitectura e invariantes determinados;
-- método conocido o combinación acotada de patrones;
-- oráculo al menos revisable (`O ≤ 2`);
-- acoplamiento e integración locales o moderados (`C ≤ 2`, `J ≤ 2`);
-- ningún juicio de alta consecuencia ni adjudicación pendiente.
-
-Además, el nodo debe exceder el gate Luna de forma acotada, Luna debe estar
-indisponible, o una eval representativa debe favorecer el par Terra. La CEM
-clasifica necesidad cognitiva; la frontera costo–capacidad decide entre pares
-que ya pasan el gate.
-
-## Gate obligatorio de Sol
-
-Sol exige cualquiera:
+Sol High es la ruta normal cuando Luna no pasa su gate o cuando existe alguno:
 
 - ambigüedad residual material;
-- arquitectura, invariantes o novedad conceptual;
+- arquitectura acotada, invariantes o novedad conceptual;
 - síntesis interdisciplinaria o evidencia contradictoria;
 - oráculo débil con juicio sustantivo;
 - acoplamiento o integración difícil;
 - recomendación de alta consecuencia;
 - adjudicación entre resultados rivales.
+
+## Elevación a Sol Max
+
+Elevar desde High sólo cuando la señal anterior es excepcional: varios dominios
+profundos, invariantes materialmente abiertos, adjudicación difícil, oráculo muy
+débil o integración de sistema de sistemas. Resolver primero ambigüedad que una
+fuente o pregunta acotada pueda eliminar. Max no sustituye un contrato ausente.
 
 ## Riesgo, autonomía y verificación
 

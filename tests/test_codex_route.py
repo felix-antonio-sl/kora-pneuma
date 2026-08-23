@@ -26,7 +26,7 @@ class TestCodexRoute(unittest.TestCase):
         self.assertEqual(
             self.campos["urn"], "urn:dev:artefacto:codex-route")
         self.assertEqual(self.campos["nombre"], "codex-route")
-        self.assertEqual(self.campos["version"], "2.2.1")
+        self.assertEqual(self.campos["version"], "3.0.0")
         self.assertEqual(self.campos["forma"], "habilidad")
         self.assertEqual(self.campos["arnes"], "disciplina")
         self.assertEqual(self.campos["targets"], ["codex"])
@@ -47,25 +47,20 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("`route-and-run` — explícito", cuerpo)
         self.assertIn("no amplía permisos", cuerpo)
 
-    def test_politica_trifamiliar_fija_triple_y_evade_dominancia_pareto(self):
-        archivos = [SKILL] + sorted(REFERENCIAS.glob("*.md"))
-        corpus = "\n".join(p.read_text("utf-8") for p in archivos).lower()
-        self.assertNotRegex(corpus, r"\bultra\b")
+    def test_politica_cerrada_admite_solo_tres_pares(self):
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
             "utf-8")
-        self.assertIn(
-            "allowed: [gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna]",
-            routing,
-        )
-        for modelo in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
-            self.assertIn(modelo, routing)
         routing_normalizado = " ".join(routing.lower().split())
-        self.assertIn("allowlist estricta", routing_normalizado)
-        self.assertIn("descendiente sin modelo fijado", routing_normalizado)
-        self.assertIn("fallback fuera de la allowlist", routing_normalizado)
-        self.assertIn(
-            "triple superficie–modelo–esfuerzo", routing_normalizado)
-        self.assertIn("dominado en sentido de pareto", routing_normalizado)
+        for par in (
+                "{model: gpt-5.6-sol, effort: high}",
+                "{model: gpt-5.6-sol, effort: max}",
+                "{model: gpt-5.6-luna, effort: max}"):
+            self.assertIn(par, routing)
+        self.assertIn("terra: forbidden", routing)
+        self.assertIn("sol en `low|medium|xhigh|ultra`", routing_normalizado)
+        self.assertIn("luna por debajo de `max`", routing_normalizado)
+        self.assertIn("silent_fallback: forbidden", routing)
+        self.assertIn("unpinned_descendants: forbidden", routing)
 
     def test_fallbacks_fallan_cerrado_y_preflight_observa_runtime(self):
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
@@ -73,15 +68,16 @@ class TestCodexRoute(unittest.TestCase):
         protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
             "utf-8")
         for testigo in (
-                "collapse", "cost_degraded", "blocked",
-                "director_model_not_allowed", "sol_required_unavailable"):
+                "colapsar", "blocked", "director_pair_not_allowed",
+                "director_pair_unobserved", "requested_pair_not_allowed",
+                "sol_required_unavailable"):
             self.assertIn(testigo, routing)
         for campo in (
                 "root_model_observed", "root_model_allowed",
                 "spawn_available", "model_override_available",
-                "luna_override_available", "terra_override_available",
-                "sol_override_available",
-                "effort_override_available", "fork_control_available",
+                "luna_max_available", "sol_high_available",
+                "sol_max_available", "exact_pair_override_available",
+                "fork_control_available",
                 "lifecycle_controls"):
             self.assertIn(campo, protocolo)
 
@@ -90,10 +86,10 @@ class TestCodexRoute(unittest.TestCase):
         self.assertIn("cem global residual", cuerpo)
         self.assertIn("selección provisional", cuerpo)
         self.assertIn("calcular `j`", cuerpo)
-        self.assertIn("ajustar el esfuerzo de la directora", cuerpo)
+        self.assertIn("ajustar el par de la directora", cuerpo)
         self.assertIn("cem local residual", cuerpo)
         self.assertLess(cuerpo.index("calcular `j`"),
-                        cuerpo.index("ajustar el esfuerzo de la directora"))
+                        cuerpo.index("ajustar el par de la directora"))
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
             "utf-8")
         self.assertNotIn("max(A,N,E,O,C,J)", routing.replace(" ", ""))
@@ -119,22 +115,23 @@ class TestCodexRoute(unittest.TestCase):
         for testigo in (
                 "route_candidate = (execution_surface, model, effort)",
                 "current_session", "subagent", "independent_thread",
-                "`create_thread`", "`list_projects`", "`read_thread`",
-                "`send_message_to_thread`"):
+                "codex_app__create_thread", "codex_app__list_projects",
+                "codex_app__read_thread",
+                "codex_app__send_message_to_thread",
+                "codex_app__wait_threads", "codex_app__handoff_thread",
+                "codex_app__share_thread",
+                "codex_app__list_archived_threads",
+                "codex_app__read_thread_terminal",
+                "codex_app__open_in_codex"):
             self.assertIn(testigo, superficies)
         self.assertIn("solicitud explícita", superficies_normalizadas)
         self.assertIn("propiedad del usuario", superficies_normalizadas)
-        self.assertIn(
-            "no elimina la candidata en route-only",
-            superficies_normalizadas,
-        )
-        self.assertIn(
-            "separar recomendación de activación",
-            superficies_normalizadas,
-        )
-        self.assertIn("no archivar automáticamente", superficies_normalizadas)
-        self.assertIn("checkout local", superficies_normalizadas)
-        self.assertIn("worktree", superficies_normalizadas)
+        self.assertIn("worktree por defecto", superficies_normalizadas)
+        self.assertIn("isgitrepository=false", superficies_normalizadas)
+        self.assertIn("environment.type=local", superficies_normalizadas)
+        self.assertIn("clientthreadid", superficies_normalizadas)
+        self.assertIn("fork_thread` a worktree", superficies_normalizadas)
+        self.assertIn("no archivarlo", superficies_normalizadas)
 
     def test_thread_separa_creacion_de_override_de_modelo(self):
         superficies = (
@@ -145,8 +142,8 @@ class TestCodexRoute(unittest.TestCase):
             f"{self.cuerpo}\n{superficies}\n{protocolo}".lower().split())
 
         self.assertIn("creation_authorized", protocolo)
-        self.assertIn("model_override_authorized", protocolo)
-        self.assertIn("modelo concreto", contrato)
+        self.assertIn("pair_override_authorized", protocolo)
+        self.assertIn("par concreto", contrato)
         self.assertIn("model_override_not_authorized", contrato)
         self.assertIn("no crear el thread", contrato)
 
@@ -168,21 +165,21 @@ class TestCodexRoute(unittest.TestCase):
         routing = (REFERENCIAS / "model-effort-routing.md").read_text(
             "utf-8")
         routing_normalizado = " ".join(routing.lower().split())
-        self.assertIn("luna max ↔ sol high", routing_normalizado)
-        self.assertIn("ambos pares ejecutables", routing_normalizado)
+        self.assertIn("gpt-5.6-luna:max, gpt-5.6-sol:high", routing_normalizado)
+        self.assertIn("ambos triples sean ejecutables", routing_normalizado)
         self.assertIn("comparación privilegiada", routing_normalizado)
         self.assertIn("discarded_candidate_reason", routing)
-        self.assertIn("no establece dominancia universal", routing_normalizado)
         self.assertIn("eval representativa", routing_normalizado)
-        self.assertIn("gate obligatorio de sol", routing_normalizado)
+        self.assertIn("sol max", routing_normalizado)
 
     def test_fast_path_y_salida_por_defecto_son_compactos(self):
         cuerpo = " ".join(self.cuerpo.split()).lower()
-        self.assertIn("luna low", cuerpo)
-        self.assertIn("luna medium", cuerpo)
+        self.assertIn("luna max", cuerpo)
+        self.assertIn("sol high", cuerpo)
+        self.assertIn("sol max", cuerpo)
         self.assertIn("`compact_graph_route` — predeterminado", cuerpo)
         self.assertIn("`full_graph_route`", cuerpo)
-        self.assertLessEqual(len(self.cuerpo.splitlines()), 150)
+        self.assertLessEqual(len(self.cuerpo.splitlines()), 180)
 
     def test_grafos_separan_control_datos_y_decision_local_global(self):
         protocolo = (REFERENCIAS / "communication-protocol.md").read_text(
@@ -256,9 +253,10 @@ class TestCodexRoute(unittest.TestCase):
             "utf-8")
         sgm = (REFERENCIAS / "session-graph-matrix.md").read_text("utf-8")
         self.assertIn("complejidad residual", cem)
-        self.assertIn("Gate de Luna", cem)
-        self.assertIn("Gate de Terra", cem)
-        self.assertIn("Gate obligatorio de Sol", cem)
+        self.assertIn("Gate de Luna Max", cem)
+        self.assertIn("Gate de Sol High", cem)
+        self.assertIn("Elevación a Sol Max", cem)
+        self.assertNotIn("Gate de Terra", cem)
         self.assertIn("R gobierna autonomía y verificación", cem)
         self.assertIn("D ≥ 2", sgm)
         self.assertIn("K ≥ 2", sgm)
@@ -266,15 +264,15 @@ class TestCodexRoute(unittest.TestCase):
     def test_calibracion_mide_cumplimiento_y_arrepentimiento(self):
         calibracion = (REFERENCIAS / "calibration.md").read_text("utf-8")
         for metrica in (
-                "model_policy_compliance", "unobserved_model_rate",
+                "pair_policy_compliance", "unobserved_pair_rate",
                 "execution_surface_compliance",
                 "routing_regret", "graph_regret",
                 "goal_regret", "independent_thread_regret",
                 "pareto_dominated_route_rate",
-                "cost_degraded_fallback_rate", "late_escalation_rate",
+                "late_escalation_rate",
                 "human_major_correction_rate"):
             self.assertIn(metrica, calibracion)
-        self.assertIn("acuerdo entre evaluadores", calibracion)
+        self.assertIn("tres pares permitidos", calibracion)
 
     def test_emision_codex_incluye_politica_de_invocacion(self):
         resultado = subprocess.run(
