@@ -76,6 +76,8 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia` | PRO-053 (2013, Res. Ex. 0378/2014) | compuerta UE→cama: orden en DAU, recetón 24 h, cama vía UGCC hábil/enfermería fuera de hora, categorización de riesgo y hoja de ruta con 4 tiempos |
 | `urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias` | PRO-076 (2016, Res. Ex. 4292/2016) | flota SAMU/traslado: registro de kilometraje y combustible por móvil, tarjeta en convenio y circuito Mantención→Abastecimiento→Finanzas; línea base decisión #10 |
 | `urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar` | PRO-126 (2019) | programa de rehabilitación pulmonar (EPOC/ERA): inclusión/exclusión, TM6M, 24 sesiones al 70% de carga; escalamiento y egreso kinésico del paciente HD respiratorio |
+| `urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos` | PRO-091 (2022, Res. Ex. 1365) | ciclo de mermas: CAF mensual, ajuste SIGBO, comisión ministros de fe, resolución semestral, segregación REAS y SIDREP; destino del fármaco devuelto desde domicilio |
+| `urn:salud:kb:hsc-pro-023-manejo-brotes-iaas` | PRO-023 (2022, 4ª ed.) | brotes IAAS: definiciones y umbrales, notificación SICARS/SEREMI, estudio en 10 pasos; régimen aplicable a conglomerados infecciosos en pacientes HD |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -283,10 +285,11 @@ de cobertura en el ámbito HD. Candidatura curada Tier A (interfaz operativa
 directa), pendiente de gates de lectura íntegra por fuente:
 
 - Medicina: PRO-046/PRO-048 (pielonefritis, pancreatitis — egresos frecuentes a HD). ~~PRO-053~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia`).
-- Farmacia: **PRO-091 eliminación de medicamentos vencidos**, PRO-085
-  anticoagulantes (continuidad farmacológica al egreso).
-- DCIYE: **PRO-23 manejo de brotes**, **PRO-170 plan anual de prevención y
-  control de infecciones** (vigilancia en domicilio).
+- Farmacia: PRO-085 anticoagulantes (continuidad farmacológica al egreso);
+  ~~PRO-091~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos`).
+- DCIYE: ~~PRO-23 manejo de brotes~~ **koraficada 2026-08-23**
+  (`urn:salud:kb:hsc-pro-023-manejo-brotes-iaas`); queda **PRO-170 plan anual
+  de prevención y control de infecciones** (vigilancia en domicilio).
 - Rehabilitación: ~~PRO-126 rehabilitación pulmonar~~ **koraficada 2026-08-23**
   (`urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`); queda PRO-152 crítico VMI
   (kinesioterapia domiciliaria).
