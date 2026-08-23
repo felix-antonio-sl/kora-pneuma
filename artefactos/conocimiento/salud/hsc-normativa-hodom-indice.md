@@ -86,6 +86,7 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-043-ingreso-de-usuarios` | PRO-043 (2019, 3ª ed.) | proceso madre de ingreso HSC: vías, orden escrita, camas UGCC hábil/enfermería fuera de hora y egreso con epicrisis + devolución de ficha en 72 h |
 | `urn:salud:kb:hsc-pro-046-pielonefritis-aguda` | PRO-046 (2013) | PNA en Urgencia/Medicina: ITU complicada y criterios de ingreso (SIRS/sepsis, complicación local, condiciones especiales); diagnóstico frecuente de egreso a HD |
 | `urn:salud:kb:hsc-pro-048-pancreatitis-aguda` | PRO-048 (2013) | PA en UE/Medicina/Cirugía: definiciones, Ranson/APACHE/Balthazar y derivación a centro de referencia; perfil típico de egreso precoz con continuidad domiciliaria |
+| `urn:salud:kb:hsc-pro-185-telegastroenterologia` | PRO 185 (2024) | telegastroenterología UNITEL: objetivo explícito de atención a pacientes con movilidad limitada; consulta gastro sin traslado durante el episodio HD; cierra el trío UNITEL koraficado |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -311,7 +312,8 @@ directa), pendiente de gates de lectura íntegra por fuente:
   preferente PM/PCD.
   PRO-187 telediabetes~~ **koraficadas 2026-08-23**
   (`urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral`,
-  `urn:salud:kb:hsc-pro-187-telediabetes`); queda PRO-185 telegastro.
+  `urn:salud:kb:hsc-pro-187-telediabetes`); ~~PRO-185 telegastro~~
+  **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-185-telegastroenterologia`).
 
 
 ## 16. Límites del índice
