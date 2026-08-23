@@ -89,6 +89,9 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-185-telegastroenterologia` | PRO 185 (2024) | telegastroenterología UNITEL: objetivo explícito de atención a pacientes con movilidad limitada; consulta gastro sin traslado durante el episodio HD; cierra el trío UNITEL koraficado |
 | `urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi` | PRO-152 (2020) | rehabilitación kine-fono del crítico VMI: contraindicaciones de movilización, fases Gosselink, disfagia GUSS/FILS y derivación ambulatoria al 100% post-VMI; marco del paciente HD complejo |
 | `urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd` | PRO-156 (2021) | atención preferente Ley 21.168: acreditación PM/PCD, prioridad ESI, ventanillas y 5% mínimo de oferta; derecho aplicable a toda la población HODOM |
+| `urn:salud:kb:hsc-pro-018-acv-isquemico-medicina` | PRO-018 (2012) | ACV isquémico en Medicina: Glasgow/NIHSS + **Barthel y Rankin al ingreso y egreso** con equipo kine-fono-psicología; eje neurológico de dependencia post-aguda |
+| `urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides` | PRO-041 (2011) | ref-contrarref tiroides APS↔CAE; patrón bidireccional para patología crónica que HD debe seguir al alta |
+| `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control` | PRO-058 (2014) | ref-contrarref DM2 insulinorrequiriente APS↔Medicina: ajuste de insulina intramural y retorno a APS; cierre natural del episodio HD diabético |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -295,7 +298,7 @@ drift sino de cobertura: la familia **PRO** (protocolos de unidad) tiene ~9%
 de cobertura en el ámbito HD. Candidatura curada Tier A (interfaz operativa
 directa), pendiente de gates de lectura íntegra por fuente:
 
-- Medicina: ~~PRO-046/PRO-048~~ **koraficadas 2026-08-23** (`urn:salud:kb:hsc-pro-046-pielonefritis-aguda`, `urn:salud:kb:hsc-pro-048-pancreatitis-aguda`). ~~PRO-053~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia`).
+- Medicina: ~~PRO-046/PRO-048~~ **koraficadas 2026-08-23** (`urn:salud:kb:hsc-pro-046-pielonefritis-aguda`, `urn:salud:kb:hsc-pro-048-pancreatitis-aguda`); ~~PRO-018 ACV~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-018-acv-isquemico-medicina`); ~~PRO-041 tiroides~~ y ~~PRO-058 DM2~~ (ref-contrarref) **koraficadas 2026-08-23** (`urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides`, `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control`). ~~PRO-053~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia`).
 - Farmacia: ~~PRO-085 anticoagulantes~~ **koraficada 2026-08-23**
   (`urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes`);
   ~~PRO-091~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos`).
