@@ -82,6 +82,7 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-187-telediabetes` | PRO 187 (2024) | telediabetes UNITEL: ajuste de insulina/fármacos vía teleconsulta; exige declarar dependencia, red de apoyo y hospitalizaciones recientes; precedente de atención con facilitador a domicilio |
 | `urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes` | PRO-085 (2022) | atención farmacéutica TACO (~650 px): inclusión por INR fuera de rango/adherencia/ERC, Morisky-Green, conciliación farmacéutica post-hospitalización y PRM; cierre del ciclo farmacológico del paciente HD anticoagulado |
 | `urn:salud:kb:hsc-pro-170-plan-anual-prevencion-control-infecciones` | PRO-170 (2023, 3ª ed.) | programa anual IAAS obligatorio institucional: 9 actividades con umbrales (SICARS cuatrimestral, prevalencia, brotes/ARAISP, EPP, capacitación); rector de la prevención en HD |
+| `urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento` | PRO-099 (2023, 4ª ed.) | figuras de Familiar Responsable y Acompañante 12/24 h, circuito de información acreditado y horarios por servicio; anclaje institucional del rol del cuidador que HD traslada al domicilio |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -300,7 +301,9 @@ directa), pendiente de gates de lectura íntegra por fuente:
   (`urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`); queda PRO-152 crítico VMI
   (kinesioterapia domiciliaria).
 - UGCC: ~~PRO-076 carga de combustible de ambulancias~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias`) — insumo decisión #10.
-- DAIU: PRO-099 visitas y acompañamiento; Telemedicina: ~~PRO-186 TACO,
+- DAIU: ~~PRO-099 visitas y acompañamiento~~ **koraficada 2026-08-23**
+  (`urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento`); quedan
+  PRO-043 ingreso de usuarios y PRO-156 atención preferente PM/PCD.
   PRO-187 telediabetes~~ **koraficadas 2026-08-23**
   (`urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral`,
   `urn:salud:kb:hsc-pro-187-telediabetes`); queda PRO-185 telegastro.
