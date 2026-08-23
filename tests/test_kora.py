@@ -717,6 +717,26 @@ class TestTransmutacion(CasoPneuma):
         cola = salida[salida.rindex("preservado-por-construccion"):]
         self.assertNotIn("contrato-conocimiento", cola)
 
+    def test_sello_distingue_depende_operacional_de_componible_candidato(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["codex"]), ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"],
+            componible=["urn:kora:artefacto:candidato-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex", "--stdout",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertIn(
+            "depende: urn:dev:artefacto:disciplina-x", salida)
+        self.assertIn(
+            "componible: urn:kora:artefacto:candidato-x", salida)
+
     def test_sin_corpus_no_emite_contrato(self):
         # Un agéntico sin conocimiento ni componible no carga bloque vacío:
         # la emisión queda byte-idéntica a la previa al contrato.
@@ -816,6 +836,108 @@ class TestTransmutacion(CasoPneuma):
         self.assertNotIn("->sesion-padre", datos["developer_instructions"])
         self.assertIn("allow_implicit_invocation: false",
                       politica.read_text(encoding="utf-8"))
+
+    def test_codex_depende_emite_skill_requerida_como_unidad_propia(self):
+        dependencia = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["codex"])
+        self.escribir_skill(dependencia, ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        requerida = self.raiz / (
+            "_emision/codex/skills/disciplina-x/SKILL.md")
+        self.assertTrue(requerida.is_file())
+        texto = requerida.read_text(encoding="utf-8")
+        self.assertIn("fuente: urn:dev:artefacto:disciplina-x", texto)
+        self.assertNotIn("fuente: urn:dev:artefacto:agente-x", texto)
+
+    def test_depende_materializa_cierre_transitivo_de_skills(self):
+        base = skill_campos(
+            urn="urn:dev:artefacto:base-x",
+            nombre="base-x", targets=["codex"])
+        disciplina = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["codex"],
+            depende=["urn:dev:artefacto:base-x"])
+        self.escribir_skill(base, ns="dev")
+        self.escribir_skill(disciplina, ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertTrue((self.raiz /
+                         "_emision/codex/skills/base-x/SKILL.md").is_file())
+        self.assertTrue((self.raiz /
+                         "_emision/codex/skills/disciplina-x/SKILL.md").is_file())
+
+    def test_dependencia_agentica_no_realizable_falla_antes_de_emitir(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["claude-code"]), ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, _, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("dependencia", err)
+        self.assertIn("no declara el target 'codex'", err)
+        self.assertFalse((self.raiz / "_emision").exists())
+
+    def test_dependencia_agentica_inactiva_falla_antes_de_emitir(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", estado="deprecado",
+            targets=["codex"]), ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, _, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("dependencia agentica", err)
+        self.assertIn("no esta activa (estado: deprecado)", err)
+        self.assertFalse((self.raiz / "_emision").exists())
+
+    def test_depende_agentico_rechaza_agente_como_requisito_no_realizado(self):
+        self.escribir_agente(agente_campos(
+            urn="urn:dev:artefacto:agente-y", nombre="agente-y",
+            targets=["codex"]))
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:agente-y"]))
+
+        codigo, _, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "codex",
+        ])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("dependencia agentica", err)
+        self.assertIn("solo realiza dependencias de forma habilidad", err)
+        self.assertFalse((self.raiz / "_emision").exists())
 
     def test_codex_skill_transporta_sidecar_fuente_sin_aplanarlo(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
@@ -3117,6 +3239,143 @@ class TestHermes(CasoPneuma):
         self.assertFalse(
             (self.raiz / "_emision/hermes/agents/agente-x.md").exists())
 
+    def test_hermes_depende_empaqueta_skill_y_declara_propiedad_exacta(self):
+        dependencia = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"])
+        self.escribir_skill(dependencia, ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        perfil = self.raiz / "_emision/hermes/profiles/agente-x"
+        manifest = (perfil / "distribution.yaml").read_text("utf-8")
+        requerida = perfil / "skills/disciplina-x/SKILL.md"
+        self.assertTrue(requerida.is_file())
+        self.assertIn("  - skills/disciplina-x/\n", manifest)
+        self.assertIn(
+            "fuente: urn:dev:artefacto:disciplina-x",
+            requerida.read_text(encoding="utf-8"))
+
+    def test_hermes_componible_no_empaqueta_candidato(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"]), ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            componible=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        perfil = self.raiz / "_emision/hermes/profiles/agente-x"
+        self.assertFalse((perfil / "skills").exists())
+        self.assertNotIn(
+            "skills/disciplina-x/",
+            (perfil / "distribution.yaml").read_text("utf-8"))
+
+    def test_aplicar_hermes_depende_preserva_skills_ajenas_del_perfil(self):
+        hermes_root = self.raiz / "hermes-root"
+        dependencia = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"])
+        self.escribir_skill(dependencia, ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+        args = [
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes", "--aplicar",
+        ]
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, salida, err = self.correr(args)
+            self.assertEqual(codigo, 0, salida or err)
+            perfil = hermes_root / "profiles/agente-x"
+            ajena = perfil / "skills/operador/SKILL.md"
+            ajena.parent.mkdir(parents=True)
+            ajena.write_text("---\nname: operador\n---\n", "utf-8")
+            codigo, salida, err = self.correr(args)
+
+        self.assertEqual(codigo, 0, salida or err)
+        requerida = perfil / "skills/disciplina-x/SKILL.md"
+        self.assertTrue(requerida.is_file())
+        self.assertIn(
+            "fuente: urn:dev:artefacto:disciplina-x",
+            requerida.read_text(encoding="utf-8"))
+        self.assertEqual(
+            ajena.read_text(encoding="utf-8"),
+            "---\nname: operador\n---\n")
+
+    def test_aplicar_hermes_no_adquiere_dependencia_anidada_ajena(self):
+        hermes_root = self.raiz / "hermes-root"
+        dependencia = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"])
+        self.escribir_skill(dependencia, ns="dev")
+        fuente_agente = self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+        args = [
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes", "--aplicar",
+        ]
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            self.assertEqual(self.correr(args)[0], 0)
+            perfil = hermes_root / "profiles/agente-x"
+            soul_antes = (perfil / "SOUL.md").read_bytes()
+            requerida = perfil / "skills/disciplina-x/SKILL.md"
+            requerida.write_text(
+                "---\nname: disciplina-x\n---\n\n# Ajena\n", "utf-8")
+            fuente_agente.write_text(
+                fuente_agente.read_text("utf-8") + "\nCambio nuevo.\n",
+                "utf-8")
+            codigo, _, err = self.correr(args)
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("conflicto de propiedad", err)
+        self.assertIn(str(requerida.parent), err)
+        self.assertEqual(
+            requerida.read_text("utf-8"),
+            "---\nname: disciplina-x\n---\n\n# Ajena\n")
+        self.assertEqual((perfil / "SOUL.md").read_bytes(), soul_antes)
+
+    def test_aplicar_codex_depende_instala_skill_requerida_por_su_urn(self):
+        base = self.raiz / "runtime"
+        dependencia = skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["codex"])
+        self.escribir_skill(dependencia, ns="dev")
+        self.escribir_agente(agente_campos(
+            targets=["codex"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True):
+            codigo, salida, err = self.correr([
+                "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "codex", "--aplicar",
+            ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        requerida = base / "agents/skills/disciplina-x/SKILL.md"
+        self.assertTrue(requerida.is_file())
+        self.assertIn(
+            "fuente: urn:dev:artefacto:disciplina-x",
+            requerida.read_text(encoding="utf-8"))
+        self.assertTrue((base / "codex/agents/agente-x.toml").is_file())
+
     def test_reemision_perfil_reconcilia_directorio_cerrado(self):
         self.escribir_agente(agente_campos(targets=["hermes"]))
         args = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
@@ -3136,6 +3395,22 @@ class TestHermes(CasoPneuma):
 
     def test_sello_fresco_reconoce_producto_profile_distribution(self):
         self.escribir_agente(agente_campos(targets=["hermes"]))
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes"])[0], 0)
+
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
+
+    def test_sello_fresco_reconoce_dependencia_empaquetada_del_perfil(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"]), ns="dev")
+        self.escribir(
+            "artefactos/skills/dev/disciplina-x/referencias/guia.md",
+            "guia vigente\n")
+        self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
         self.assertEqual(self.correr([
             "transmutar", "--urn", "urn:dev:artefacto:agente-x",
             "--target", "hermes"])[0], 0)

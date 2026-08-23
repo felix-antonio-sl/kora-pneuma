@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.10.0
+# KORA/Forma — ley pneuma v1.11.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -79,7 +79,7 @@ para que ningún artefacto esconda estructura fuera de la ley.
 | `lang` | no | `es` \| `en` | default `es` |
 | `tags` | no | lista | metadata opcional, sin cardinalidad normativa |
 | `cita` | no | lista URNs | relación libre; admite ciclos (§9) |
-| `depende` | no | lista URNs | aristas de DAG (§9) |
+| `depende` | no | lista URNs | aristas de DAG (§9); en una fuente agéntica, los destinos agénticos son requisitos de disponibilidad runtime conforme a ley/3 §7.6 |
 | `reemplaza` | no | lista URNs | aristas de DAG temporal; target muerto (§9) |
 | `refina` | no | lista URNs | aristas de DAG (§9) |
 
@@ -138,8 +138,11 @@ No constituye por sí solo un modelo de conducta.
    conjuntos de entradas, salidas o estados ni una transición.
 2. `estados` no declara eventos, aristas, guards, acciones ni estado inicial;
    por tanto no es una máquina de estados ni una coálgebra.
-3. `componible` genera un grafo de **candidatos**. Incluso su categoría libre
-   de caminos compone declaraciones, no agentes.
+3. `depende` y `componible` no son sinónimos. Una dependencia agéntica exige
+   disponibilidad del requisito en los targets compatibles que la realizan;
+   no prueba invocación ni composición. `componible` genera sólo un grafo de
+   **candidatos**: incluso su categoría libre de caminos compone declaraciones,
+   no agentes.
 4. `herramientas` es un subconjunto de capacidades declaradas. Probar
    least-privilege exige comparar ese conjunto con la autoridad efectiva del
    runtime bajo todos los overrides incluidos en el alcance.
@@ -418,3 +421,11 @@ tres tipos ni invalidar fuentes existentes. `familia` queda como metadata
 heredada sin efecto operacional. Una fuente agéntica sin `targets` es agnóstica
 al runtime; una lista presente sigue siendo allowlist de compatibilidad
 mantenida. No se añade ningún enum sustituto.
+
+v1.11.0 (HITL 2026-08-23): tipa el efecto ya expresable de `depende` para
+fuentes agénticas: una referencia a conocimiento sigue siendo una relación
+semántica, mientras una referencia a otro artefacto agéntico exige su
+disponibilidad runtime donde el adaptador la realiza. No demuestra invocación,
+wiring ni composición y no altera `componible`. El primer contrato operacional
+de ley/3 realiza dependencias de forma habilidad, exige estado activo y target
+compatible, y falla cerrado para agentes requeridos.

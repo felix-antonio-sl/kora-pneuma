@@ -988,7 +988,25 @@ def chk_sello_fresco(arts, raiz):
         try:
             proy = proyectar(vector, sigma, target)
             hash_hex = hashlib.sha256(fuente.path.read_bytes()).hexdigest()
-            archivos, _ = emitir(fuente, target, proy, hash_hex)
+            dependencias = _dependencias_agenticas(fuente, arts, target)
+            factores_dependencia = []
+            for dep in dependencias:
+                vector_dep = dep.vector_valido()
+                sigma_dep = dep.sigma_valido()
+                if vector_dep is None or sigma_dep is None:
+                    raise ErrorTransmutacion(
+                        f"la dependencia '{dep.urn}' no tiene vector/sigma "
+                        "agenticos integros")
+                proy_dep = proyectar(vector_dep, sigma_dep, target)
+                hash_dep = hashlib.sha256(dep.path.read_bytes()).hexdigest()
+                archivos_dep, _ = emitir(
+                    dep, target, proy_dep, hash_dep)
+                factores_dependencia.append((dep, archivos_dep))
+            para_perfil = (
+                factores_dependencia
+                if target == "hermes" and fuente.tipo == "agente" else None)
+            archivos, _ = emitir(
+                fuente, target, proy, hash_hex, para_perfil)
         except (ErrorTransmutacion, KeyError, TypeError) as exc:
             rel = info["paths"][0].relative_to(raiz).as_posix()
             fallos.append((rel, f"emisión no regenerable con el generador "
@@ -997,6 +1015,15 @@ def chk_sello_fresco(arts, raiz):
 
         esperados = {rel: contenido.encode("utf-8")
                      for rel, contenido in archivos}
+        if target == "hermes" and fuente.tipo == "agente":
+            base_perfil = (
+                f"hermes/profiles/{fuente.campos['nombre']}/skills")
+            for dep, _ in factores_dependencia:
+                for rel_ref, bytes_ref in _mapa_archivos(
+                        dep.path.parent / "referencias").items():
+                    esperados[
+                        f"{base_perfil}/{dep.campos['nombre']}/"
+                        f"referencias/{rel_ref}"] = bytes_ref
         for rel_esperado, bytes_esperados in sorted(esperados.items()):
             path = emision / rel_esperado
             rel = path.relative_to(raiz).as_posix()
@@ -1335,6 +1362,59 @@ class ErrorTransmutacion(Exception):
     """La transmutación no procede; el mensaje explica por qué."""
 
 
+def _dependencias_agenticas(art: Artefacto, arts: list[Artefacto],
+                            target: str) -> list[Artefacto]:
+    """Resuelve el cierre postorden de requisitos agénticos realizables.
+
+    `depende` también relaciona conocimiento; sólo los requisitos agénticos
+    producen unidades runtime. Esta primera realización operacional admite
+    habilidades: un agente requerido necesitaría un contrato de invocación o
+    composición que la arista, por sí sola, no demuestra.
+    """
+    por_urn = {candidato.urn: candidato for candidato in arts if candidato.urn}
+    orden: list[Artefacto] = []
+    visitados: set[str] = set()
+    visitando: set[str] = set()
+
+    def visitar(actual: Artefacto) -> None:
+        for urn_dep in actual.campos.get("depende") or []:
+            dep = por_urn.get(urn_dep)
+            if dep is None:
+                raise ErrorTransmutacion(
+                    f"la dependencia '{urn_dep}' de '{actual.urn}' no "
+                    "resuelve en el censo")
+            if dep.tipo == "conocimiento":
+                continue
+            if dep.tipo != "skill":
+                raise ErrorTransmutacion(
+                    f"la dependencia agentica '{urn_dep}' de '{actual.urn}' "
+                    "no es realizable: depende solo realiza dependencias de "
+                    "forma habilidad; una arista hacia un agente no prueba "
+                    "invocacion ni composicion")
+            if dep.campos.get("estado") != "activo":
+                raise ErrorTransmutacion(
+                    f"la dependencia agentica '{urn_dep}' de '{actual.urn}' "
+                    f"no esta activa (estado: {dep.campos.get('estado')})")
+            targets_dep = dep.campos.get("targets")
+            if targets_dep is not None and target not in targets_dep:
+                raise ErrorTransmutacion(
+                    f"la dependencia '{urn_dep}' de '{actual.urn}' no declara "
+                    f"el target '{target}'")
+            if urn_dep in visitando:
+                raise ErrorTransmutacion(
+                    f"ciclo en dependencias agenticas al resolver '{urn_dep}'")
+            if urn_dep in visitados:
+                continue
+            visitando.add(urn_dep)
+            visitar(dep)
+            visitando.remove(urn_dep)
+            visitados.add(urn_dep)
+            orden.append(dep)
+
+    visitar(art)
+    return orden
+
+
 def proyectar(vector: list, sigma: list, target: str) -> dict:
     """Proyecta el vector por la matriz del target.
 
@@ -1400,17 +1480,19 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
     """El contrato de conocimiento del sello: ancla + resolución por censo +
     los URN declarados, sin materializar paths (ley/3 §5 r6; cierra GENESIS §4).
 
-    Proyecta `conocimiento` (kb a leer como contexto) y `componible` (otros
-    artefactos declarados como componibles). Esa relación no prueba una
-    composición de Kleisli. Devuelve [] si el artefacto
-    no declara ninguno: un agéntico sin corpus no carga un bloque vacío, y la
-    emisión queda byte-idéntica a la previa al contrato.
+    Proyecta `conocimiento` (kb a leer como contexto), `depende` (requisitos
+    cuya disponibilidad realiza el adaptador cuando son agénticos) y
+    `componible` (candidatos sin wiring implícito). Devuelve [] si el artefacto
+    no declara ninguno: un agéntico sin corpus ni requisitos no carga un bloque
+    vacío, y la emisión queda byte-idéntica a la previa al contrato.
     """
     conocimiento = art.campos.get("conocimiento")
+    depende = art.campos.get("depende")
     componible = art.campos.get("componible")
     conocimiento = conocimiento if isinstance(conocimiento, list) else []
+    depende = depende if isinstance(depende, list) else []
     componible = componible if isinstance(componible, list) else []
-    if not conocimiento and not componible:
+    if not conocimiento and not depende and not componible:
         return []
     lineas = [
         "contrato-conocimiento:",
@@ -1420,6 +1502,8 @@ def _bloque_contrato(art: Artefacto) -> list[str]:
     ]
     if conocimiento:
         lineas.append("  conocimiento: " + " ".join(conocimiento))
+    if depende:
+        lineas.append("  depende: " + " ".join(depende))
     if componible:
         lineas.append("  componible: " + " ".join(componible))
     return lineas
@@ -1650,8 +1734,11 @@ def _emitir_openclaw(art: Artefacto, proy: dict,
     return archivos, perdidas_extra
 
 
-def _emitir_hermes(art: Artefacto, proy: dict,
-                    hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+def _emitir_hermes(
+        art: Artefacto, proy: dict, hash_hex: str,
+        dependencias: list[tuple[Artefacto,
+                                 list[tuple[str, str]]]] | None = None,
+) -> tuple[list[tuple[str, str]], list]:
     """Hermes v2: skills agentskills.io y agentes como profile distribution.
 
     Un perfil es un agente completo, no un subagente. El cuerpo gobernado
@@ -1703,24 +1790,44 @@ def _emitir_hermes(art: Artefacto, proy: dict,
             "materializa la allowlist KORA en SKILL.md ni SOUL.md",
         ))
     sello = construir_sello(art, "hermes", hash_hex, proy, perdidas_extra)
-    manifest = "\n".join([
+    dependencias = list(dependencias or [])
+    lineas_manifest = [
         f"name: {nombre}",
         f"version: {art.campos.get('version')}",
         f"description: {_fm_str(descripcion)}",
         "distribution_owned:",
         "  - SOUL.md",
         "  - distribution.yaml",
-        "",
-    ])
+    ]
+    lineas_manifest.extend(
+        f"  - skills/{dep.campos['nombre']}/" for dep, _ in dependencias)
+    lineas_manifest.append("")
+    manifest = "\n".join(lineas_manifest)
     base = f"hermes/profiles/{nombre}"
-    return [
+    archivos = [
         (f"{base}/distribution.yaml", manifest),
         (f"{base}/SOUL.md", _componer_plano(art.cuerpo, sello)),
-    ], perdidas_extra
+    ]
+    for dep, archivos_dep in dependencias:
+        nombre_dep = dep.campos["nombre"]
+        prefijo = ("hermes", "skills", nombre_dep)
+        for rel, contenido in archivos_dep:
+            partes = Path(rel).parts
+            if partes[:3] != prefijo or len(partes) < 4:
+                raise ErrorTransmutacion(
+                    f"la dependencia '{dep.urn}' emitio un factor Hermes "
+                    f"fuera de su skill: {rel}")
+            relativo = "/".join(partes[3:])
+            archivos.append((
+                f"{base}/skills/{nombre_dep}/{relativo}", contenido))
+    return archivos, perdidas_extra
 
 
-def emitir(art: Artefacto, target: str, proy: dict,
-           hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+def emitir(
+        art: Artefacto, target: str, proy: dict, hash_hex: str,
+        dependencias: list[tuple[Artefacto,
+                                 list[tuple[str, str]]]] | None = None,
+) -> tuple[list[tuple[str, str]], list]:
     """Construye la emisión: (lista de (path relativo bajo _emision, contenido),
     pérdidas extra ya selladas — colapso de forma).
 
@@ -1732,7 +1839,7 @@ def emitir(art: Artefacto, target: str, proy: dict,
     if target == "codex":
         return _emitir_codex(art, proy, hash_hex)
     if target == "hermes":
-        return _emitir_hermes(art, proy, hash_hex)
+        return _emitir_hermes(art, proy, hash_hex, dependencias)
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
     herramientas = art.campos.get("herramientas") or []
@@ -2169,6 +2276,45 @@ def _validar_blueprint_openclaw(nombre: str, ruta: Path) -> str | None:
     return None
 
 
+def _materializar_emision(raiz: Path, art: Artefacto, target: str,
+                          archivos: list[tuple[str, str]]) -> None:
+    """Reconcilia una unidad derivada ya validada bajo `_emision/`."""
+    nombre = art.campos["nombre"]
+    destinos = [raiz / "_emision" / rel for rel, _ in archivos]
+    if target == "codex":
+        rels = {rel for rel, _ in archivos}
+        skill_anterior = raiz / "_emision/codex/skills" / nombre
+        agente_anterior = raiz / "_emision/codex/agents" / f"{nombre}.toml"
+        if not any(
+                rel.startswith(f"codex/skills/{nombre}/") for rel in rels):
+            destinos.append(skill_anterior)
+        if f"codex/agents/{nombre}.toml" not in rels:
+            destinos.append(agente_anterior)
+    for destino in destinos:
+        conflicto = _conflicto_ancestros(destino)
+        if conflicto is not None:
+            raise ErrorTransmutacion(f"emisión bloqueada: {conflicto}")
+    if target == "codex":
+        _limpiar_derivados_codex_v1(raiz, art, archivos)
+    for directorio in _directorios_emitidos(raiz, archivos):
+        _recrear_directorio_gestionado(directorio)
+    skill_dir = None
+    for rel, contenido in archivos:
+        destino = raiz / "_emision" / rel
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        if _tipo_nodo(destino) not in (None, "archivo regular"):
+            _retirar_ruta_gestionada(destino)
+        destino.write_text(contenido, encoding="utf-8")
+        print(f"emitido: _emision/{rel}")
+        if rel.endswith("/SKILL.md"):
+            skill_dir = destino.parent
+    if art.tipo == "skill" and skill_dir is not None:
+        refs = _copiar_referencias(art, skill_dir)
+        if refs:
+            print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
+                  f"(copia de referencias/)")
+
+
 def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
                    a_stdout: bool, proyecto: str | None = None) -> int:
     if proyecto and not aplicar:
@@ -2245,68 +2391,106 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
                   f"transmutar exige fuente coherente.", file=sys.stderr)
         return 1
     try:
+        dependencias = _dependencias_agenticas(art, arts, target)
+        unidades_dep = []
+        for dep in dependencias:
+            vector_dep = dep.vector_valido()
+            sigma_dep = dep.sigma_valido()
+            if vector_dep is None or sigma_dep is None:
+                raise ErrorTransmutacion(
+                    f"la dependencia '{dep.urn}' no tiene vector/sigma "
+                    "agenticos integros")
+            fallos_dep = []
+            for cid in ("vector-en-reticulo", "leyes-inter-eje",
+                        "dominio-forma", "arnes-compatible"):
+                fallos_dep += [
+                    (cid, mensaje)
+                    for path, mensaje in FUNCIONES_CHECK[cid](arts, raiz)
+                    if path == dep.rel
+                ]
+            if fallos_dep:
+                cid, mensaje = fallos_dep[0]
+                raise ErrorTransmutacion(
+                    f"la dependencia '{dep.urn}' no pasa velar: "
+                    f"[{cid}] :: {mensaje}")
+            proy_dep = proyectar(vector_dep, sigma_dep, target)
+            hash_dep = hashlib.sha256(dep.path.read_bytes()).hexdigest()
+            archivos_dep, perdidas_dep = emitir(
+                dep, target, proy_dep, hash_dep)
+            unidades_dep.append(
+                (dep, archivos_dep, proy_dep, perdidas_dep))
         proy = proyectar(vector, sigma, target)
         hash_hex = hashlib.sha256(art.path.read_bytes()).hexdigest()
-        archivos, perdidas_extra = emitir(art, target, proy, hash_hex)
+        para_perfil = (
+            [(dep, archivos_dep)
+             for dep, archivos_dep, _, _ in unidades_dep]
+            if target == "hermes" and art.tipo == "agente" else None)
+        archivos, perdidas_extra = emitir(
+            art, target, proy, hash_hex, para_perfil)
     except ErrorTransmutacion as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     if a_stdout:
-        for i, (rel, contenido) in enumerate(archivos):
-            if len(archivos) > 1:
+        archivos_stdout = [
+            factor
+            for _, factores, _, _ in unidades_dep
+            for factor in factores
+        ] + archivos
+        for i, (rel, contenido) in enumerate(archivos_stdout):
+            if len(archivos_stdout) > 1:
                 sys.stdout.write(("\n" if i else "") + f"=== {rel} ===\n")
             sys.stdout.write(contenido)
         return 0
-    destinos_emision = [
-        raiz / "_emision" / rel for rel, _ in archivos
-    ]
-    if target == "codex":
-        rels = {rel for rel, _ in archivos}
-        skill_anterior = raiz / "_emision/codex/skills" / nombre
-        agente_anterior = (
-            raiz / "_emision/codex/agents" / f"{nombre}.toml")
-        if not any(
-                rel.startswith(f"codex/skills/{nombre}/") for rel in rels):
-            destinos_emision.append(skill_anterior)
-        if f"codex/agents/{nombre}.toml" not in rels:
-            destinos_emision.append(agente_anterior)
-    for destino in destinos_emision:
-        conflicto = _conflicto_ancestros(destino)
-        if conflicto is not None:
-            print(f"error: emisión bloqueada: {conflicto}.", file=sys.stderr)
-            return 1
-    if target == "codex":
-        _limpiar_derivados_codex_v1(raiz, art, archivos)
-    for directorio in _directorios_emitidos(raiz, archivos):
-        _recrear_directorio_gestionado(directorio)
-    skill_dir = None
-    for rel, contenido in archivos:
-        destino = raiz / "_emision" / rel
-        destino.parent.mkdir(parents=True, exist_ok=True)
-        if _tipo_nodo(destino) not in (None, "archivo regular"):
-            _retirar_ruta_gestionada(destino)
-        destino.write_text(contenido, encoding="utf-8")
-        print(f"emitido: _emision/{rel}")
-        if rel.endswith("/SKILL.md"):
-            skill_dir = destino.parent
-    if art.tipo == "skill" and skill_dir is not None:
-        refs = _copiar_referencias(art, skill_dir)
-        if refs:
-            print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
-                  f"(copia de referencias/)")
+    try:
+        for dep, archivos_dep, _, _ in unidades_dep:
+            _materializar_emision(raiz, dep, target, archivos_dep)
+        _materializar_emision(raiz, art, target, archivos)
+        if target == "hermes" and art.tipo == "agente":
+            perfil = (raiz / "_emision/hermes/profiles" /
+                      art.campos["nombre"])
+            for dep in dependencias:
+                refs = _copiar_referencias(
+                    dep, perfil / "skills" / dep.campos["nombre"])
+                if refs:
+                    print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
+                          "(copia de referencias/)")
+    except (ErrorTransmutacion, OSError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    for _, _, proy_dep, perdidas_dep in unidades_dep:
+        for etiqueta, a, b, razon in (
+                list(proy_dep["perdidas"]) + list(perdidas_dep)):
+            print(f"pérdida declarada: {etiqueta}: {a}->{b} :: {razon}")
     for etiqueta, a, b, razon in list(proy["perdidas"]) + list(perdidas_extra):
         print(f"pérdida declarada: {etiqueta}: {a}->{b} :: {razon}")
     if aplicar:
-        return _aplicar(art, target, archivos, proyecto)
+        aplicar_deps = not (target == "hermes" and art.tipo == "agente")
+        if aplicar_deps:
+            for dep, archivos_dep, _, _ in unidades_dep:
+                if _aplicar(dep, target, archivos_dep, proyecto,
+                            solo_validar=True) != 0:
+                    return 1
+        if _aplicar(art, target, archivos, proyecto,
+                    dependencias=dependencias, solo_validar=True) != 0:
+            return 1
+        if aplicar_deps:
+            for dep, archivos_dep, _, _ in unidades_dep:
+                if _aplicar(dep, target, archivos_dep, proyecto) != 0:
+                    return 1
+        return _aplicar(
+            art, target, archivos, proyecto, dependencias=dependencias)
     return 0
 
 
 def _aplicar(art: Artefacto, target: str,
-             archivos: list[tuple[str, str]], proyecto: str | None) -> int:
+             archivos: list[tuple[str, str]], proyecto: str | None,
+             dependencias: list[Artefacto] | None = None,
+             solo_validar: bool = False) -> int:
     """Instala la emisión en el runtime real, honrando el `alcance` (ley/3 §7).
     Las skills son productos cerrados; el blueprint OpenClaw preserva todo lo
     ajeno a sus factores KORA; los agentes file-based solo pisan su archivo."""
     nombre_art = art.campos["nombre"]
+    dependencias = list(dependencias or [])
     alcance = art.campos.get("alcance", "ambos")
     if proyecto and alcance == "usuario":
         print(f"error: '{nombre_art}' declara alcance 'usuario'; no admite "
@@ -2371,23 +2555,61 @@ def _aplicar(art: Artefacto, target: str,
             print(f"error: {conflicto}.", file=sys.stderr)
             return 1
         factores = {}
+        factores_dep: dict[str, list[tuple[str, str]]] = {
+            dep.campos["nombre"]: [] for dep in dependencias
+        }
         for rel, contenido in archivos:
             partes = Path(rel).parts
-            if partes[:3] != ("hermes", "profiles", nombre_art) \
-                    or len(partes) != 4 \
-                    or partes[3] not in ("SOUL.md", "distribution.yaml"):
+            if partes[:3] != ("hermes", "profiles", nombre_art):
                 print("error: emisión Hermes contiene un factor ajeno a la "
                       f"frontera del perfil '{nombre_art}': {rel}.",
                       file=sys.stderr)
                 return 1
-            factores[partes[3]] = contenido
+            if len(partes) == 4 and partes[3] in (
+                    "SOUL.md", "distribution.yaml"):
+                factores[partes[3]] = contenido
+            elif len(partes) >= 6 and partes[3] == "skills" \
+                    and partes[4] in factores_dep:
+                factores_dep[partes[4]].append((
+                    "/".join(partes[5:]), contenido))
+            else:
+                print("error: emisión Hermes contiene un factor ajeno a la "
+                      f"frontera del perfil '{nombre_art}': {rel}.",
+                      file=sys.stderr)
+                return 1
         if set(factores) != {"SOUL.md", "distribution.yaml"}:
             print("error: emisión Hermes incompleta para el perfil "
                   f"'{nombre_art}'.", file=sys.stderr)
             return 1
+        por_nombre_dep = {dep.campos["nombre"]: dep for dep in dependencias}
+        for nombre_dep, factores_skill in factores_dep.items():
+            if not any(rel == "SKILL.md" for rel, _ in factores_skill):
+                print("error: emisión Hermes incompleta para la dependencia "
+                      f"'{nombre_dep}' del perfil '{nombre_art}'.",
+                      file=sys.stderr)
+                return 1
+            destino_dep = ruta / "skills" / nombre_dep
+            conflicto_jerarquia = _conflicto_ancestros(destino_dep)
+            if conflicto_jerarquia is not None:
+                print(f"error: {conflicto_jerarquia}.", file=sys.stderr)
+                return 1
+            conflicto_dep = _conflicto_propiedad_skill(
+                destino_dep, por_nombre_dep[nombre_dep].urn or "", "hermes")
+            if conflicto_dep is not None:
+                print(f"error: {conflicto_dep}.", file=sys.stderr)
+                return 1
+        if solo_validar:
+            return 0
         ruta.mkdir(parents=True, exist_ok=True)
         for nombre, contenido in factores.items():
             (ruta / nombre).write_text(contenido, encoding="utf-8")
+        perfil_emitido = (raiz_corpus() / "_emision/hermes/profiles" /
+                          nombre_art)
+        for nombre_dep in factores_dep:
+            origen_dep = perfil_emitido / "skills" / nombre_dep
+            destino_dep = ruta / "skills" / nombre_dep
+            _recrear_directorio_gestionado(destino_dep)
+            shutil.copytree(origen_dep, destino_dep, dirs_exist_ok=True)
         print(f"aplicado: {ruta}")
         return 0
     if target == "codex" and art.tipo == "agente":
@@ -2425,6 +2647,9 @@ def _aplicar(art: Artefacto, target: str,
             if conflicto is not None:
                 print(f"error: {conflicto}.", file=sys.stderr)
                 return 1
+        if solo_validar:
+            return 0
+        if hay_skill:
             _recrear_directorio_gestionado(skill)
         elif _tipo_nodo(skill) == "directorio" and _sello_atribuye(
                 skill / "SKILL.md", art.urn or "", "codex"):
@@ -2455,6 +2680,8 @@ def _aplicar(art: Artefacto, target: str,
             if conflicto is not None:
                 print(f"error: {conflicto}.", file=sys.stderr)
                 return 1
+            if solo_validar:
+                return 0
             _recrear_directorio_gestionado(ruta)
         else:
             for rel, _ in archivos:
@@ -2464,6 +2691,8 @@ def _aplicar(art: Artefacto, target: str,
                 if conflicto is not None:
                     print(f"error: {conflicto}.", file=sys.stderr)
                     return 1
+            if solo_validar:
+                return 0
             emitidos = {Path(rel).name for rel, _ in archivos}
             soul = ruta / "SOUL.md"
             if "SOUL.md" not in emitidos and _sello_atribuye(
@@ -2488,6 +2717,8 @@ def _aplicar(art: Artefacto, target: str,
         if conflicto is not None:
             print(f"error: {conflicto}.", file=sys.stderr)
             return 1
+        if solo_validar:
+            return 0
         ruta.parent.mkdir(parents=True, exist_ok=True)
         ruta.write_text(archivos[0][1], encoding="utf-8")
     print(f"aplicado: {ruta}")

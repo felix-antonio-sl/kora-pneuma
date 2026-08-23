@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:ship-discipline
 nombre: ship-discipline
-version: 1.2.0
+version: 1.3.0
 estado: activo
 descripcion: "Skill de disciplina de envio: blast radius, loop closure, ship-beats-perfect, architecture-over-implementation, repo-shaping para agent-friendliness, agent-foreman. Para cualquier agente que produzca o intervenga software con velocidad de inferencia manteniendo steerability, taste y reversibilidad."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577). Correccion 1.0.2 (2026-06-15): referencias de doctrina bestia se reapuntaron al regimen de pneuma; 4 referencias quedaron byte-identicas. v1.1.0 (2026-08-09): reemplaza el checklist universal build-test-lint por verificaciones aplicables y proporcionales al riesgo; ABSENT no obliga a crear tooling. Target openclaw sigue omitido porque no esta realizado para esta skill. v1.2.0 (2026-08-23): incorpora hermes a targets — target realizado para forma habilidad en ley/3 v3.0.0 (T-hermes-pneuma-v1); la emision Hermes porta frontmatter oficial name/description/version y declara la ausencia de allowlist de herramientas como perdida del sello."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/dev/ship-discipline/SKILL.md v1.0.1 (sha256:a5193d217901f2f23bc1d6a43e4446d7ac9b710212b8cc14c5a866084c4b5577). Correccion 1.0.2 (2026-06-15): referencias de doctrina bestia se reapuntaron al regimen de pneuma; 4 referencias quedaron byte-identicas. v1.1.0 (2026-08-09): reemplaza el checklist universal build-test-lint por verificaciones aplicables y proporcionales al riesgo; ABSENT no obliga a crear tooling. Target openclaw seguia omitido por una lectura ya obsoleta de su realizacion. v1.2.0 (2026-08-23): incorpora hermes a targets — target realizado para forma habilidad en ley/3 v3.0.0 (T-hermes-pneuma-v1); la emision Hermes porta frontmatter oficial name/description/version y declara la ausencia de allowlist de herramientas como perdida del sello. v1.3.0 (2026-08-23): incorpora openclaw a la allowlist, pues ley/3 realiza skills para ese target desde v1.3.0. Completa la compatibilidad requerida por steipete v1.6.0 sin cambiar la doctrina conductual ni autorizar despliegue OpenClaw en esta ola."
 autor: FS
 creado: 2026-04-28
 lang: es
@@ -14,7 +14,7 @@ sigma: [2, 1, 3, 2, 1]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Write, Edit, Glob, Grep, Bash]
-targets: [claude-code, codex, opencode, hermes]
+targets: [claude-code, codex, opencode, openclaw, hermes]
 estados: [triaje, estimar-blast-radius, decidir-topologia, ejecutar-o-delegar, cerrar-loop, cierre]
 conocimiento: [urn:dev:kb:peter-steinberger-ingeniero-agentico-prodigio]
 componible: [urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking]

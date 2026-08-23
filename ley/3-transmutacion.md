@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v4.0.0
+# KORA/Transmutación — ley pneuma v5.0.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -256,7 +256,7 @@ declarado-no-mecanizado: naturalidad-xi, cierre-safety, composicion-kleisli
 -->
 ```
 
-Si el artefacto declara `conocimiento` o `componible`, el sello incluye
+Si el artefacto declara `conocimiento`, `depende` o `componible`, el sello incluye
 además —entre `perdidas:` y las dos líneas fijas— un bloque
 `contrato-conocimiento:` (r6):
 
@@ -266,6 +266,7 @@ contrato-conocimiento:
   resolucion-bash: python3 {ancla}/kora.py nombre <URN>
   resolucion-lectura: Grep exacto '^urn: <URN>$' bajo {ancla}/artefactos; exigir coincidencia unica
   conocimiento: urn:fxsl:kb:icas-sintesis
+  depende: urn:dev:artefacto:ship-discipline
   componible: urn:kora:artefacto:cat-thinking
 ```
 
@@ -291,10 +292,10 @@ Reglas:
 5. Determinismo: misma fuente → emisión byte-idéntica. Ninguna emisión lleva
    timestamp ni estado de máquina.
 6. `contrato-conocimiento:` aparece **solo si** el artefacto declara
-   `conocimiento` o `componible`, e inmediatamente **antes** de las dos líneas
+   `conocimiento`, `depende` o `componible`, e inmediatamente **antes** de las dos líneas
    fijas (r4). Porta `ancla` (raíz del repo central / `$KORA_RAIZ`),
    `resolucion-bash`, `resolucion-lectura` y las listas
-   `conocimiento`/`componible` de URN. El path NO se deriva del id del URN:
+   `conocimiento`/`depende`/`componible` de URN. El path NO se deriva del id del URN:
    `ley/2 §6` lo vincula al campo `nombre`, que puede diferir. Con Bash se usa
    el gesto canónico `kora.py nombre <URN>`; con acceso de solo lectura se busca
    la línea de frontmatter exacta `^urn: <URN>$` bajo `artefactos/` y se exige
@@ -357,7 +358,7 @@ real. En paridad, omitir `--target` conserva el barrido global (§9.1).
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
 | `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo sin el span `U_phen` + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
 | `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`, `version`; copia `referencias/`; contrato `T-hermes-pneuma-v1` (§7.5) |
-| `hermes` | agente (sólo forma `agente`) | **profile distribution** `_emision/hermes/profiles/{nombre}/`: `SOUL.md` = cuerpo completo + sello y `distribution.yaml` = manifest nativo que declara ambos nombres como `distribution_owned`; contrato `T-hermes-pneuma-v2` (§7.5). `subagente` falla cerrado |
+| `hermes` | agente (sólo forma `agente`) | **profile distribution** `_emision/hermes/profiles/{nombre}/`: `SOUL.md` = cuerpo completo + sello y `distribution.yaml` = manifest nativo que declara ambos nombres y, si existen, los subárboles exactos de skills requeridas por `depende` como `distribution_owned`; contrato `T-hermes-pneuma-v2` (§7.5-§7.6). `subagente` falla cerrado |
 
 ### 7.1 La emisión de workspace de `openclaw`
 
@@ -478,11 +479,12 @@ En OpenClaw, KORA gobierna únicamente `AGENTS.md` y el `SOUL.md` efectivamente
 emitido. Si el producto vigente deja de emitir `SOUL.md`, sólo retira el
 residual cuando su sello lo atribuye al mismo `(URN,target)`; preserva
 scaffolding y material ajeno. El workspace runtime privado queda fuera. En
-Hermes, KORA gobierna exactamente `SOUL.md` y `distribution.yaml`; preserva
-`config.yaml`, `.env`, memoria, sesiones, skills, cron y cualquier otro estado
-del perfil. Un perfil preexistente sólo se reconcilia cuando su `SOUL.md`
-atribuye el mismo `(URN,hermes)`. Los agentes de archivo único administran su
-archivo exacto y no tocan hermanos del directorio.
+Hermes, KORA gobierna exactamente `SOUL.md`, `distribution.yaml` y los
+subárboles `skills/{nombre}/` declarados por dependencias agénticas realizadas
+(§7.6); preserva `config.yaml`, `.env`, memoria, sesiones, las demás skills,
+cron y cualquier otro estado del perfil. Un perfil preexistente sólo se
+reconcilia cuando su `SOUL.md` atribuye el mismo `(URN,hermes)`. Los agentes de
+archivo único administran su archivo exacto y no tocan hermanos del directorio.
 
 `--aplicar --proyecto PATH` redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
@@ -550,7 +552,7 @@ configuración del operador.
 | Forma KORA | Emisión Hermes |
 |---|---|
 | `habilidad` | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version`; copia `referencias/`. El frontmatter no expresa la allowlist KORA: `herramientas` se registra como pérdida de campo y permanece disciplina del cuerpo |
-| `agente` | `_emision/hermes/profiles/{nombre}/SOUL.md` con cuerpo completo y sello, más `distribution.yaml` determinista con `name`, `version`, `description` y `distribution_owned: [SOUL.md, distribution.yaml]` |
+| `agente` | `_emision/hermes/profiles/{nombre}/SOUL.md` con cuerpo completo y sello, más `distribution.yaml` determinista con `name`, `version`, `description` y propiedad exacta de `SOUL.md`, `distribution.yaml` y, si existen, `skills/{nombre-dependencia}/` realizadas conforme a §7.6 |
 | `subagente` | fuera del dominio: falla cerrado porque un perfil es el agente completo, no una unidad delegable dentro de otro perfil |
 
 Reglas:
@@ -562,10 +564,13 @@ Reglas:
    paralelo que permita separar operativa y `U_phen` sin inventar semántica.
    `distribution.yaml` es sidecar derivado, no segundo portador doctrinal.
 2. **Frontera del perfil**: la emisión NO incluye `config.yaml`, `.env`, MCP,
-   cron, skills, memoria, sesiones ni credenciales. `componible` declara
-   candidatos y no autoriza autoempaquetarlos. El perfil instalado es superficie
-   abierta: KORA reconcilia únicamente `SOUL.md` y `distribution.yaml` cuando el
-   primero atribuye el mismo `(URN,hermes)`; todo lo demás se preserva.
+   cron, memoria, sesiones ni credenciales. Sólo empaqueta las skills activas
+   exigidas mediante `depende`, cada una bajo `skills/{nombre}/` y con su propio
+   sello (§7.6). `componible` declara candidatos y no autoriza
+   autoempaquetarlos. El perfil instalado es superficie abierta: KORA reconcilia
+   `SOUL.md`, `distribution.yaml` y sólo esos subárboles de dependencia cuando
+   cada destino es ausente o atribuible al mismo `(URN-dependencia,hermes)`;
+   todo lo demás se preserva.
 3. **Nombre nativo**: la forma `agente` rechaza los nombres reservados por
    Hermes (`hermes`, `default`, `test`, `tmp`, `root`, `sudo`) y nombres de más
    de 64 caracteres. Nunca se deriva una ruta nativa inválida desde un slug KORA
@@ -590,10 +595,47 @@ Reglas:
    perfil no se anida dentro de otro. No hay instalación project-level de un
    agente completo.
 8. **Paridad y límite runtime**: una skill se compara como producto cerrado. Un
-   perfil compara sólo los dos factores emitidos y tolera configuración/estado
-   adicional. La igualdad de bytes no prueba que Hermes haya cargado el SOUL:
-   el runtime aplica un límite dinámico según la ventana de contexto y puede
-   truncarlo; esa observación pertenece al canario runtime, no al sello.
+   perfil compara sus dos factores raíz y los subárboles exactos de dependencia
+   declarados, y tolera configuración/estado adicional fuera de esa propiedad.
+   La igualdad de bytes no prueba que Hermes haya cargado el SOUL: el runtime
+   aplica un límite dinámico según la ventana de contexto y puede truncarlo;
+   esa observación pertenece al canario runtime, no al sello.
+
+### 7.6 Dependencias agénticas
+
+`depende` conserva su semántica genérica de arista DAG. Cuando el origen es un
+artefacto agéntico y el destino también lo es, el adaptador realiza además una
+obligación mínima: la unidad requerida debe quedar disponible en el mismo
+target. Esta disponibilidad no demuestra invocación, orden de ejecución,
+wiring ni composición.
+
+Reglas:
+
+1. Una dependencia hacia conocimiento permanece relación semántica y no copia
+   corpus al runtime. `componible` permanece un grafo de candidatos y nunca
+   produce emisión o instalación implícita.
+2. El primer dominio realizado acepta sólo destinos de forma `habilidad`, en
+   estado `activo` y compatibles con el target solicitado. Una dependencia
+   hacia `agente` o `subagente` falla cerrado: la arista no porta contrato de
+   invocación ni composición.
+3. El cierre es transitivo, acíclico y se ordena desde las hojas. Cada skill se
+   emite como unidad propia, conserva su URN, hash, sello y pérdidas y pasa las
+   mismas validaciones que una transmutación focal. Una incompatibilidad aborta
+   antes de escribir o aplicar el producto padre.
+4. En Codex y en los targets de archivo independientes, cada requisito se
+   instala en la raíz canónica de skills del target como producto separado. El
+   agente no incorpora paths absolutos ni duplica el cuerpo requerido.
+5. En Hermes, la distribución del agente empaqueta cada requisito bajo
+   `skills/{nombre}/` y declara exactamente ese subárbol en
+   `distribution_owned`. La aplicación adquiere propiedad por el sello propio
+   de la skill y preserva todas las demás skills y el estado del perfil.
+6. Antes de cualquier mutación runtime, `--aplicar` preflighta la propiedad y
+   compatibilidad de todas las unidades del cierre y del padre. Un conflicto
+   bloquea el conjunto; no se entrega una dependencia parcial.
+
+La materialización expresa disponibilidad requerida. La conducta emergente
+sólo puede afirmarse con evidencia runtime de discovery e invocación; la
+paridad de bytes no la sustituye.
 
 ## 8. El gesto inverso (Lift)
 
@@ -747,6 +789,8 @@ clase de fallos sin fingir que la instalación es corpus.
 | Nombre nativo y propiedad abierta del perfil Hermes | §7.5 r2-r3 | mecanizado (`transmutar --aplicar`, paridad) |
 | Colisión nominal en discovery local/project-level de skills Hermes | §7, §7.5 r6 | mecanizado (`transmutar --aplicar`, paridad); external dirs/plugins/trust quedan en deploy |
 | Calificación `mu=3` de perfil separada de gateway vivo | §4.5, §7.5 r4 | declaración mecanizada en sello; conducta verificada en deploy |
+| Cierre transitivo de dependencias agénticas realizables | §7.6: skill activa, target compatible, unidad propia; agentes requeridos fallan cerrado | mecanizado (`transmutar`, `transmutar --aplicar`) |
+| `componible` sin efecto de despliegue implícito | §7.6 r1 | mecanizado por construcción y tests |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
 | Sidecar fuente `agents/openai.yaml` de skill Codex conservado en emisión, aplicación y paridad | §7, §9, ley/2 §6 | mecanizado (`transmutar`, `sello-fresco`, `transmutar --paridad`) |
@@ -938,3 +982,14 @@ locales/project-level explícitas. El sello de un agente `mu=3` separa perfil
 conforme de gateway vivo. Es major porque sustituye el fallo cerrado de toda
 forma agéntica por un producto, ruta, propiedad y contrato de paridad nuevos;
 no altera los bytes de skills Hermes v1 ni la identidad agnóstica de KORA.
+
+v5.0.0 (HITL 2026-08-23): realiza el efecto operacional de `depende` entre
+artefactos agénticos como disponibilidad runtime de skills activas y
+compatibles, sin confundirlo con invocación ni composición. El cierre es
+transitivo y cada requisito conserva unidad, URN y sello. Codex y los targets
+de archivo instalan la skill por separado; Hermes la empaqueta bajo el subárbol
+exacto `skills/{nombre}/` de la distribución y preserva todo estado ajeno. Un
+destino de forma agente, una incompatibilidad o un conflicto de propiedad
+fallan cerrado antes de mutar el runtime. Es major porque amplía la propiedad,
+emisión y aplicación observables de una fuente agéntica que declara `depende`;
+`componible` permanece sin efecto automático.
