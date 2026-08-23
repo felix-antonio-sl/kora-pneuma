@@ -3317,6 +3317,73 @@ class TestHermes(CasoPneuma):
             ajena.read_text(encoding="utf-8"),
             "---\nname: operador\n---\n")
 
+    def test_aplicar_hermes_retira_dependencia_que_deja_de_ser_propiedad(self):
+        hermes_root = self.raiz / "hermes-root"
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"]), ns="dev")
+        fuente_agente = self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+        args = [
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes", "--aplicar",
+        ]
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            self.assertEqual(self.correr(args)[0], 0)
+            perfil = hermes_root / "profiles/agente-x"
+            ajena = perfil / "skills/operador/SKILL.md"
+            ajena.parent.mkdir(parents=True)
+            ajena.write_text("---\nname: operador\n---\n", "utf-8")
+            fuente_agente.write_text(
+                doc(agente_campos(targets=["hermes"])), encoding="utf-8")
+            codigo, salida, err = self.correr(args)
+
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertFalse((perfil / "skills/disciplina-x").exists())
+        self.assertTrue(ajena.is_file())
+        self.assertNotIn(
+            "skills/disciplina-x/",
+            (perfil / "distribution.yaml").read_text("utf-8"))
+
+    def test_aplicar_hermes_bloquea_retiro_de_dependencia_no_atribuible(self):
+        hermes_root = self.raiz / "hermes-root"
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"]), ns="dev")
+        fuente_agente = self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+        args = [
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes", "--aplicar",
+        ]
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            self.assertEqual(self.correr(args)[0], 0)
+            perfil = hermes_root / "profiles/agente-x"
+            manifest_antes = (perfil / "distribution.yaml").read_bytes()
+            soul_antes = (perfil / "SOUL.md").read_bytes()
+            requerida = perfil / "skills/disciplina-x/SKILL.md"
+            requerida.write_text(
+                "---\nname: disciplina-x\n---\n\n# Operador\n", "utf-8")
+            fuente_agente.write_text(
+                doc(agente_campos(targets=["hermes"])), encoding="utf-8")
+            codigo, _, err = self.correr(args)
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("conflicto de propiedad", err)
+        self.assertIn(str(requerida.parent), err)
+        self.assertEqual(
+            requerida.read_text("utf-8"),
+            "---\nname: disciplina-x\n---\n\n# Operador\n")
+        self.assertEqual(
+            (perfil / "distribution.yaml").read_bytes(), manifest_antes)
+        self.assertEqual((perfil / "SOUL.md").read_bytes(), soul_antes)
+
     def test_aplicar_hermes_no_adquiere_dependencia_anidada_ajena(self):
         hermes_root = self.raiz / "hermes-root"
         dependencia = skill_campos(

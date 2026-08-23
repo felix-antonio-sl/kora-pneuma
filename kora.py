@@ -2091,6 +2091,62 @@ def _conflicto_propiedad_perfil_hermes(path: Path, urn: str) -> str | None:
     return None
 
 
+def _skills_gestionadas_perfil_hermes(
+        path: Path) -> tuple[set[str], str | None]:
+    """Lee la propiedad previa exacta sin ampliar la frontera del perfil."""
+    manifest = path / "distribution.yaml"
+    try:
+        tipo = _tipo_nodo(manifest)
+    except OSError:
+        tipo = "nodo ilegible"
+    if tipo is None:
+        return set(), None
+    if tipo != "archivo regular":
+        return set(), (
+            f"conflicto de propiedad en '{manifest}': el factor gestionado "
+            f"es {tipo}; no se siguió ni interpretó")
+    try:
+        lineas = manifest.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        return set(), (
+            f"conflicto de propiedad en '{manifest}': no se pudo leer "
+            f"({exc.strerror or 'error de entrada/salida'})")
+    dentro = False
+    nombres: set[str] = set()
+    for linea in lineas:
+        if linea == "distribution_owned:":
+            dentro = True
+            continue
+        if not dentro:
+            continue
+        if not linea.startswith("  - "):
+            if linea.strip():
+                break
+            continue
+        ruta = linea[4:]
+        match = re.fullmatch(r"skills/([a-z0-9]+(?:-[a-z0-9]+)*)/", ruta)
+        if match is not None:
+            nombres.add(match.group(1))
+        elif ruta.startswith("skills/"):
+            return set(), (
+                f"conflicto de propiedad en '{manifest}': la ruta "
+                f"distribution_owned '{ruta}' no es una skill inmediata "
+                "segura")
+    return nombres, None
+
+
+def _conflicto_retiro_skill_perfil_hermes(path: Path) -> str | None:
+    """Autoriza retiro sólo cuando manifest previo y sello atribuyen la ruta."""
+    campos = _campos_sello_unidad(path, "skill")
+    urn = campos.get("fuente")
+    if not urn or campos.get("target") != "hermes":
+        return (
+            f"conflicto de propiedad en '{path}': la dependencia antes "
+            "declarada por el perfil ya no porta un sello KORA para Hermes; "
+            "no se retiró")
+    return _conflicto_propiedad_skill(path, urn, "hermes")
+
+
 HERMES_SKILL_DIRS_EXCLUIDOS = frozenset((
     ".git", ".github", ".hub", ".archive", ".venv", "venv",
     "node_modules", "site-packages", "__pycache__", ".tox", ".nox",
@@ -2582,6 +2638,12 @@ def _aplicar(art: Artefacto, target: str,
                   f"'{nombre_art}'.", file=sys.stderr)
             return 1
         por_nombre_dep = {dep.campos["nombre"]: dep for dep in dependencias}
+        gestionadas_antes, error_manifest = \
+            _skills_gestionadas_perfil_hermes(ruta)
+        if error_manifest is not None:
+            print(f"error: {error_manifest}.", file=sys.stderr)
+            return 1
+        retiradas = gestionadas_antes - set(factores_dep)
         for nombre_dep, factores_skill in factores_dep.items():
             if not any(rel == "SKILL.md" for rel, _ in factores_skill):
                 print("error: emisión Hermes incompleta para la dependencia "
@@ -2598,6 +2660,15 @@ def _aplicar(art: Artefacto, target: str,
             if conflicto_dep is not None:
                 print(f"error: {conflicto_dep}.", file=sys.stderr)
                 return 1
+        for nombre_dep in sorted(retiradas):
+            destino_dep = ruta / "skills" / nombre_dep
+            if _tipo_nodo(destino_dep) is None:
+                continue
+            conflicto_dep = _conflicto_retiro_skill_perfil_hermes(
+                destino_dep)
+            if conflicto_dep is not None:
+                print(f"error: {conflicto_dep}.", file=sys.stderr)
+                return 1
         if solo_validar:
             return 0
         ruta.mkdir(parents=True, exist_ok=True)
@@ -2610,6 +2681,8 @@ def _aplicar(art: Artefacto, target: str,
             destino_dep = ruta / "skills" / nombre_dep
             _recrear_directorio_gestionado(destino_dep)
             shutil.copytree(origen_dep, destino_dep, dirs_exist_ok=True)
+        for nombre_dep in sorted(retiradas):
+            _retirar_ruta_gestionada(ruta / "skills" / nombre_dep)
         print(f"aplicado: {ruta}")
         return 0
     if target == "codex" and art.tipo == "agente":

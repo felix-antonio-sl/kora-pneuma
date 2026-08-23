@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v5.0.0
+# KORA/Transmutación — ley pneuma v5.1.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -570,7 +570,10 @@ Reglas:
    autoempaquetarlos. El perfil instalado es superficie abierta: KORA reconcilia
    `SOUL.md`, `distribution.yaml` y sólo esos subárboles de dependencia cuando
    cada destino es ausente o atribuible al mismo `(URN-dependencia,hermes)`;
-   todo lo demás se preserva.
+   todo lo demás se preserva. Al reaplicar, el manifest instalado anterior
+   identifica los subárboles que la distribución gestionaba: si uno deja de
+   estar declarado, KORA lo retira sólo cuando su sello todavía lo atribuye a
+   Hermes; una edición o pérdida de sello bloquea toda la mutación.
 3. **Nombre nativo**: la forma `agente` rechaza los nombres reservados por
    Hermes (`hermes`, `default`, `test`, `tmp`, `root`, `sudo`) y nombres de más
    de 64 caracteres. Nunca se deriva una ruta nativa inválida desde un slug KORA
@@ -628,7 +631,10 @@ Reglas:
 5. En Hermes, la distribución del agente empaqueta cada requisito bajo
    `skills/{nombre}/` y declara exactamente ese subárbol en
    `distribution_owned`. La aplicación adquiere propiedad por el sello propio
-   de la skill y preserva todas las demás skills y el estado del perfil.
+   de la skill, retira requisitos anteriormente gestionados que dejaron de
+   pertenecer al cierre y preserva todas las demás skills y el estado del
+   perfil. El retiro exige a la vez propiedad previa en el manifest instalado y
+   sello KORA Hermes vigente en el subárbol.
 6. Antes de cualquier mutación runtime, `--aplicar` preflighta la propiedad y
    compatibilidad de todas las unidades del cierre y del padre. Un conflicto
    bloquea el conjunto; no se entrega una dependencia parcial.
@@ -721,9 +727,10 @@ Reglas:
    factor instalado sobrante también es drift. En un blueprint OpenClaw
    aplicado sólo se comparan los nombres emitidos y un `SOUL.md` residual cuyo
    sello lo atribuya al mismo `(URN,target)`; los demás nombres y el workspace
-   runtime privado quedan fuera (§7.1). En un perfil Hermes sólo se comparan
-   `SOUL.md` y `distribution.yaml`; configuración, memoria y demás estado quedan
-   fuera (§7.5). Una skill complementaria Codex
+   runtime privado quedan fuera (§7.1). En un perfil Hermes se comparan
+   `SOUL.md`, `distribution.yaml` y cada subárbol de skill que el manifest
+   emitido declara en `distribution_owned`; configuración, memoria, skills no
+   declaradas y demás estado quedan fuera (§7.5). Una skill complementaria Codex
    histórica que siga atribuida a la misma fuente pero ya no forme parte del
    producto vigente es
    `desviada`; su limpieza no presupone ni legitima una democión de forma
@@ -790,6 +797,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Colisión nominal en discovery local/project-level de skills Hermes | §7, §7.5 r6 | mecanizado (`transmutar --aplicar`, paridad); external dirs/plugins/trust quedan en deploy |
 | Calificación `mu=3` de perfil separada de gateway vivo | §4.5, §7.5 r4 | declaración mecanizada en sello; conducta verificada en deploy |
 | Cierre transitivo de dependencias agénticas realizables | §7.6: skill activa, target compatible, unidad propia; agentes requeridos fallan cerrado | mecanizado (`transmutar`, `transmutar --aplicar`) |
+| Reconciliación de dependencias retiradas del perfil Hermes | §7.5 r2, §7.6 r5-r6: manifest previo + sello de skill; preflight antes de retirar | mecanizado (`transmutar --aplicar`) |
 | `componible` sin efecto de despliegue implícito | §7.6 r1 | mecanizado por construcción y tests |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
@@ -993,3 +1001,11 @@ destino de forma agente, una incompatibilidad o un conflicto de propiedad
 fallan cerrado antes de mutar el runtime. Es major porque amplía la propiedad,
 emisión y aplicación observables de una fuente agéntica que declara `depende`;
 `componible` permanece sin efecto automático.
+
+v5.1.0 (2026-08-24): completa la reconciliación de `depende` en perfiles
+Hermes. Al reaplicar, `distribution_owned` del manifest instalado aporta la
+frontera previa y KORA retira sólo las skills que dejaron de ser requisito y
+que conservan sello Hermes atribuible. Una ruta editada o no atribuible bloquea
+antes de mutar; las skills ajenas permanecen fuera de la frontera. Precisa
+además que la paridad del perfil incluye los subárboles de dependencia
+declarados, sin convertir el resto del estado del perfil en propiedad KORA.
