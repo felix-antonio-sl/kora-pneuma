@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:artefacto:hospitalizacion-domiciliaria
 nombre: hospitalizacion-domiciliaria
-version: 1.2.0
+version: 1.3.0
 estado: activo
-descripcion: "Skill para activar modo hospitalista a domicilio: HODOM/HaH, direccion tecnica HD, criterios de ingreso-egreso, continuidad hospital-domicilio, capacidad virtual, seguridad, normativa y escalamiento."
-fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/hospitalizacion-domiciliaria/SKILL.md v1.1.1 (sha256:7b02cc57850655d9521d735ce740ea9b8e7d6b3370a93cb5e143123ca1b0f7bf); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): skill de gestion meso componible del agente salubrista, frontera meso-gestion declarada. Herramientas OpenClaw mapeadas al idiom estandar (KB-first con Read/Grep sobre corpus local). Omitido con razon: target openclaw (GENESIS seccion 4)."
+descripcion: "Skill para activar modo hospitalista a domicilio: HODOM/HaH, direccion tecnica HD, criterios de ingreso-egreso, continuidad hospital-domicilio, capacidad virtual, seguridad, normativa nacional y local HSC, escalamiento."
+fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/hospitalizacion-domiciliaria/SKILL.md v1.1.1 (sha256:7b02cc57850655d9521d735ce740ea9b8e7d6b3370a93cb5e143123ca1b0f7bf); payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): skill de gestion meso componible del agente salubrista, frontera meso-gestion declarada. Herramientas OpenClaw mapeadas al idiom estandar (KB-first con Read/Grep sobre corpus local). Omitido con razon: target openclaw (GENESIS seccion 4). v1.3.0 (2026-08-23): cableado del corpus local HSC koraficado al punto de uso — se añaden a 'conocimiento' el índice hsc-normativa-hodom-indice, PRO 002, PRO-110, glosario ontológico HODOM, y los PRO koraficados del ciclo 2026-08-23 (PRO-167 Barthel, PRO-053 hospitalización desde UE, PRO-076 combustible ambulancias); estado recuperar-normativa extendido con la ruta local HSC y regla dura 9 de citación local-first."
 autor: FS
 creado: 2026-04-27
 lang: es
@@ -16,7 +16,7 @@ forma: habilidad
 herramientas: [Read, Grep, Glob, WebSearch]
 targets: [claude-code, codex, opencode]
 estados: [clasificar-consulta-hodom, fijar-escala-y-decision, recuperar-normativa, recuperar-operacion, coordinar-hospitalista, evaluar-seguridad-y-continuidad, proponer-salida, salida-hodom-trazable]
-conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-atlas-integrado, urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:salubrista-fuentes-base-curadas, urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-decreto-exento-31-2024, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad, urn:salud:kb:hodom-situacion-chile-2026, urn:salud:kb:post-agudo-ltss-indice, urn:salud:kb:post-agudo-ltss-transiciones]
+conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-atlas-integrado, urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:salubrista-fuentes-base-curadas, urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades, urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-decreto-exento-31-2024, urn:salud:kb:hodom-norma-tecnica-2024, urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad, urn:salud:kb:hodom-situacion-chile-2026, urn:salud:kb:hodom-glosario-ontologia, urn:salud:kb:post-agudo-ltss-indice, urn:salud:kb:post-agudo-ltss-transiciones, urn:salud:kb:hsc-normativa-hodom-indice, urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria, urn:salud:kb:hsc-pro-110-hodom-historico-2019, urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel, urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia, urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias]
 componible: [urn:salud:artefacto:firs-razonamiento-sanitario, urn:salud:artefacto:hospitalista, urn:salud:artefacto:salubrista]
 ---
 
@@ -79,6 +79,13 @@ requisitos en juego. Priorizar DS 1/2022, DE 31/2024 y Norma Técnica HD 2024
 para cumplimiento normativo. KB-first con Read/Grep sobre el corpus local; la
 verificación web solo cuando se requiera vigencia normativa o dato actual.
 
+Ruta local HSC (local-first): partir de `urn:salud:kb:hsc-normativa-hodom-indice`
+y resolver por URN el protocolo o recurso institucional pertinente — PRO 002 y
+PRO-110 (protocolo HD local), PRO-167 (Índice de Barthel: dependencia al
+ingreso/egreso), PRO-053 (hospitalización desde UE), PRO-076 (flota y
+combustible) — citando siempre la fuente local cuando la decisión toque la
+operación concreta del HSC.
+
 ### recuperar-operacion
 
 Recuperar gestión-redes unidades/herramientas cuando hay flujo, camas, KPI,
@@ -127,6 +134,10 @@ pendiente; decisión humana requerida. Estado terminal.
    sustitución de cama. Debe existir intensidad hospitalaria real, estabilidad
    suficiente para domicilio, capacidad de respuesta, continuidad con el
    establecimiento de origen y ruta de reingreso.
+9. Local-first HSC: cuando la decisión toque la operación concreta del
+   Hospital de San Carlos, citar la fuente local del corpus koraficado (índice
+   `urn:salud:kb:hsc-normativa-hodom-indice` y sus URNs) además de la norma
+   nacional; la norma nacional no sustituye el protocolo local vigente.
 
 ## Composición
 
