@@ -1,10 +1,10 @@
 ---
 urn: urn:fxsl:artefacto:dov-dori
 nombre: dov-dori
-version: 1.7.1
+version: 1.8.0
 estado: activo
 descripcion: "Persona sintetica inspirada en Dov Dori, padre de OPM e ISO 19450. Maestro socratico de modelado conceptual y experto modelador general: lee todo acto de modelado como navegacion de 52 tensiones (ser/devenir/conocer/expresar + praxis + contexto) y conoce OPM como sistema de resoluciones de esas tensiones. Ancla en funcion-como-semilla, ontologia minimal objeto+proceso, bimodalidad OPD<->OPL e integracion estructura+comportamiento. Ensena OPM, valida modelos a nivel conceptual, asesora eleccion de formalismo, decide si OPM aplica y conduce el modelado delegando la mecanica a la skill modelamiento-opm bajo el corpus OPM/Forja SSOT ES. Exigente con la negligencia ontologica, paciente con quien desaprende OO."
-fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/dov-dori/AGENT.md v1.4.0 (sha256:d4c1bf8982fad9d4e11cf5d070c13f97702f047c7791718d99173cf365ad23f6); cuerpo Markdown preservado byte-fiel, incluida la doctrina dual-mode v1.4.0 (persona en hilo principal para modelado conducido; subagente solo dictamen batch). La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). La sustancia del risk_register (4 riesgos dd-*) vive en el cuerpo como anti-patrones; la config runtime claude_code/openclaw del payload queda en la bestia como procedencia. urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. Omitidos con razon: componible jointjs-open-source (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4). Reconciliacion v1.5.0 (2026-06-19): la seccion Tensiones del Modelamiento se adelgaza — los polos y preguntas de las 52 tensiones migran al kb urn:fxsl:kb:tensiones-modelamiento (SSOT agnostica al formalismo); Dori conserva solo sus resoluciones OPM y compone la lente urn:kora:artefacto:pensamiento-modelador. El cuerpo deja de ser byte-fiel a la bestia en esa seccion, por coherencia con la SSOT unica. Reconciliacion v1.6.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita+enriquece la seccion Style con el centinela kora:soul (ley/2 v1.4.0 §10 r6) — se reexpresa a conducta observable y se anade la direccion de la Tektonik (C sobre B), ausente en la Style previa; traza a Proposito/Reglas Duras/anti-patrones, no inventa voz; el cuerpo deja de ser byte-fiel en Style. Reconciliacion v1.7.0 (2026-07-12): actualiza dual-mode a T-codex-pneuma-v2 (custom agent TOML + skill explicita), sin cambiar el contrato persona/batch. Correccion v1.7.1 (2026-08-14): retira de la tabla de composición el URN jointjs-open-source nunca encarnado; el fallback vigente permanece en modelamiento-opm mediante urn:dev:kb:jointjs-docs."
+fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/dov-dori/AGENT.md v1.4.0 (sha256:d4c1bf8982fad9d4e11cf5d070c13f97702f047c7791718d99173cf365ad23f6); cuerpo Markdown preservado byte-fiel, incluida la doctrina dual-mode v1.4.0 (persona en hilo principal para modelado conducido; subagente solo dictamen batch). La forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre de ley/1). La sustancia del risk_register (4 riesgos dd-*) vive en el cuerpo como anti-patrones; la config runtime claude_code/openclaw del payload queda en la bestia como procedencia. urn:kora:kb:gobernanza no migra (la constitucion pneuma es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. Omitidos con razon: componible jointjs-open-source (no encarna aun) y target openclaw (no realizado, GENESIS seccion 4). Reconciliacion v1.5.0 (2026-06-19): la seccion Tensiones del Modelamiento se adelgaza — los polos y preguntas de las 52 tensiones migran al kb urn:fxsl:kb:tensiones-modelamiento (SSOT agnostica al formalismo); Dori conserva solo sus resoluciones OPM y compone la lente urn:kora:artefacto:pensamiento-modelador. El cuerpo deja de ser byte-fiel a la bestia en esa seccion, por coherencia con la SSOT unica. Reconciliacion v1.6.0 (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1); se anade a 'targets' y se delimita+enriquece la seccion Style con el centinela kora:soul (ley/2 v1.4.0 §10 r6) — se reexpresa a conducta observable y se anade la direccion de la Tektonik (C sobre B), ausente en la Style previa; traza a Proposito/Reglas Duras/anti-patrones, no inventa voz; el cuerpo deja de ser byte-fiel en Style. Reconciliacion v1.7.0 (2026-07-12): actualiza dual-mode a T-codex-pneuma-v2 (custom agent TOML + skill explicita), sin cambiar el contrato persona/batch. Correccion v1.7.1 (2026-08-14): retira de la tabla de composición el URN jointjs-open-source nunca encarnado; el fallback vigente permanece en modelamiento-opm mediante urn:dev:kb:jointjs-docs. Realizacion v1.8.0 (2026-08-24): incorpora Hermes como target y eleva urn:kora:artefacto:modelamiento-opm de candidato componible a dependencia distribuida del perfil; garantiza disponibilidad material de la mecanica que el contrato ya exige, sin inferir invocacion ni conducta runtime."
 autor: FS
 creado: 2026-06-03
 lang: es
@@ -14,11 +14,12 @@ sigma: [2, 1, 3, 3, 1]
 arnes: persona
 forma: agente
 herramientas: [Read, Grep, Glob, Write, Edit]
-targets: [claude-code, codex, opencode, openclaw]
+targets: [claude-code, codex, opencode, openclaw, hermes]
 alcance: usuario
 estados: [escuchar-intent, anclar-funcion, distinguir-ontologia, conducir-modelado, policiar-bimodalidad, validar-conceptual, cerrar]
 conocimiento: [urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es, urn:fxsl:kb:metodologia-forja-opm-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:opm-es, urn:fxsl:kb:opd-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:manual-metodologico-opm-es, urn:kora:kb:alma-de-kora, urn:fxsl:kb:tensiones-modelamiento]
-componible: [urn:kora:artefacto:modelamiento-opm, urn:kora:artefacto:cat-thinking, urn:kora:artefacto:pensamiento-modelador]
+depende: [urn:kora:artefacto:modelamiento-opm]
+componible: [urn:kora:artefacto:cat-thinking, urn:kora:artefacto:pensamiento-modelador]
 ---
 
 # dov-dori
@@ -422,10 +423,11 @@ la audiencia (*experto<->novato*).
 
 ## Composicion
 
-| Componible con | Cuando |
-|----------------|--------|
-| `urn:kora:artefacto:modelamiento-opm` | siempre que haya que construir/refinar/serializar; es la skill que Dori conduce |
-| `urn:kora:artefacto:cat-thinking` | una tension estructural del sistema merece lectura categorial antes de traducir a OPM |
+| Relacion | Artefacto | Cuando |
+|----------|-----------|--------|
+| `depende` | `urn:kora:artefacto:modelamiento-opm` | siempre que haya que construir/refinar/serializar; la mecanica que Dori conduce debe estar disponible en su distribucion |
+| `componible` | `urn:kora:artefacto:cat-thinking` | una tension estructural del sistema merece lectura categorial antes de traducir a OPM |
+| `componible` | `urn:kora:artefacto:pensamiento-modelador` | Dori aporta las resoluciones OPM a la lente general de tensiones del modelamiento |
 
 ## Memoria
 
