@@ -34,6 +34,7 @@ from pathlib import Path
 TARGETS_CONOCIDOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
 TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
 TARGET_PRINCIPAL = "codex"
+FIBRAS_SKILL = ("referencias", "scripts")
 
 # Arneses que portan U_phen (ley/2 §10 r5): su personalidad se segrega a SOUL.md
 # en los targets que separan voz de operativa (openclaw, ley/3 §7.1).
@@ -539,13 +540,13 @@ def chk_lugar_coincide(arts, raiz):
             partes = p.relative_to(base_skills).parts
             if len(partes) == 3 and partes[2] == "SKILL.md":
                 continue  # artefacto legítimo: skills/{ns}/{nombre}/SKILL.md
-            if len(partes) >= 3 and partes[2] == "referencias":
-                continue  # fibra conocida: referencias/ se ignora
+            if len(partes) >= 3 and partes[2] in FIBRAS_SKILL:
+                continue  # fibra conocida: no constituye otro artefacto
             rel = p.relative_to(raiz).as_posix()
             fallos.append((rel, "archivo .md fuera de lugar bajo artefactos/"
                            "skills/: solo se reconoce skills/{ns}/{nombre}/"
                            "SKILL.md como artefacto y skills/{ns}/{nombre}/"
-                           "referencias/ como fibra ignorada; muévelo o "
+                           "referencias/ o scripts/ como fibras; muévelo o "
                            "elimínalo"))
     return fallos
 
@@ -972,7 +973,7 @@ def chk_sello_fresco(arts, raiz):
 
     # El hash prueba identidad de la fuente principal, no identidad del
     # generador. Regenerar en memoria cierra ese segundo diagrama y cubre el
-    # producto completo: factores doctrinales, sidecars y fibra referencias/.
+    # producto completo: factores doctrinales, sidecars y fibras de la skill.
     for (urn, target), info in sorted(pares.items()):
         if not info["regenerable"]:
             continue
@@ -1019,11 +1020,12 @@ def chk_sello_fresco(arts, raiz):
             base_perfil = (
                 f"hermes/profiles/{fuente.campos['nombre']}/skills")
             for dep, _ in factores_dependencia:
-                for rel_ref, bytes_ref in _mapa_archivos(
-                        dep.path.parent / "referencias").items():
-                    esperados[
-                        f"{base_perfil}/{dep.campos['nombre']}/"
-                        f"referencias/{rel_ref}"] = bytes_ref
+                for fibra in FIBRAS_SKILL:
+                    for rel_fibra, bytes_fibra in _mapa_archivos(
+                            dep.path.parent / fibra).items():
+                        esperados[
+                            f"{base_perfil}/{dep.campos['nombre']}/"
+                            f"{fibra}/{rel_fibra}"] = bytes_fibra
         for rel_esperado, bytes_esperados in sorted(esperados.items()):
             path = emision / rel_esperado
             rel = path.relative_to(raiz).as_posix()
@@ -1053,7 +1055,7 @@ def chk_sello_fresco(arts, raiz):
                 relativo = path.relative_to(directorio)
                 if fuente.tipo == "skill" and \
                         directorio.parent.name == "skills" and \
-                        relativo.parts[0] == "referencias":
+                        relativo.parts[0] in FIBRAS_SKILL:
                     continue  # se compara como fibra, con diagnóstico propio
                 observados.add(path)
         for path in sorted(observados):
@@ -1064,16 +1066,21 @@ def chk_sello_fresco(arts, raiz):
                                "re-transmutar"))
 
         if fuente.tipo == "skill":
-            origen_refs = fuente.path.parent / "referencias"
-            destino_refs = (emision / target / "skills" /
-                            fuente.campos["nombre"] / "referencias")
-            refs_fuente = _mapa_archivos(origen_refs)
-            refs_emision = _mapa_archivos(destino_refs)
-            if refs_fuente != refs_emision:
-                faltan = sorted(refs_fuente.keys() - refs_emision.keys())
-                sobran = sorted(refs_emision.keys() - refs_fuente.keys())
-                cambian = sorted(k for k in refs_fuente.keys() & refs_emision.keys()
-                                 if refs_fuente[k] != refs_emision[k])
+            for fibra in FIBRAS_SKILL:
+                origen_fibra = fuente.path.parent / fibra
+                destino_fibra = (emision / target / "skills" /
+                                 fuente.campos["nombre"] / fibra)
+                materia_fuente = _mapa_archivos(origen_fibra)
+                materia_emision = _mapa_archivos(destino_fibra)
+                if materia_fuente == materia_emision:
+                    continue
+                faltan = sorted(
+                    materia_fuente.keys() - materia_emision.keys())
+                sobran = sorted(
+                    materia_emision.keys() - materia_fuente.keys())
+                cambian = sorted(
+                    k for k in materia_fuente.keys() & materia_emision.keys()
+                    if materia_fuente[k] != materia_emision[k])
                 detalle = []
                 if faltan:
                     detalle.append("faltan " + ", ".join(faltan))
@@ -1081,8 +1088,8 @@ def chk_sello_fresco(arts, raiz):
                     detalle.append("sobran " + ", ".join(sobran))
                 if cambian:
                     detalle.append("difieren " + ", ".join(cambian))
-                rel = (destino_refs.relative_to(raiz).as_posix() + "/")
-                fallos.append((rel, "fibra referencias/ no coincide con la "
+                rel = (destino_fibra.relative_to(raiz).as_posix() + "/")
+                fallos.append((rel, f"fibra {fibra}/ no coincide con la "
                                "fuente; re-transmutar (" + "; ".join(detalle)
                                + ")"))
     return fallos
@@ -1878,22 +1885,45 @@ def emitir(
     return [(rel, _componer(fm, art.cuerpo, extra, sello))], perdidas_extra
 
 
-def _copiar_referencias(art: Artefacto, destino_dir: Path) -> Path | None:
-    """Copia la fibra referencias/ junto a la emisión, conservando su nombre.
-
-    El cuerpo emitido cita paths `referencias/...`; renombrar el directorio
-    rompería todos los enlaces, y ningún target exige otro nombre.
-    """
+def _validar_fibras_skill(art: Artefacto) -> None:
+    """Exige una fibra local regular antes de cualquier mutación derivada."""
     if art.tipo != "skill":
-        return None
-    origen = art.path.parent / "referencias"
-    destino = destino_dir / "referencias"
-    if destino.exists():
-        shutil.rmtree(destino)
-    if origen.is_dir():
+        return
+    for nombre in FIBRAS_SKILL:
+        origen = art.path.parent / nombre
+        tipo_origen = _tipo_nodo(origen)
+        if tipo_origen is None:
+            continue
+        if tipo_origen != "directorio":
+            raise ErrorTransmutacion(
+                f"la fibra fuente '{origen}' es {tipo_origen}; se exige un "
+                "directorio real")
+        inventario = _inventario_nodos(origen)
+        irregulares = [
+            f"{tipo} {rel}" for rel, tipo in inventario.items()
+            if tipo not in ("directorio", "archivo regular")
+        ]
+        if irregulares:
+            raise ErrorTransmutacion(
+                f"la fibra fuente '{origen}' contiene "
+                + ", ".join(irregulares))
+
+
+def _copiar_fibras_skill(art: Artefacto, destino_dir: Path) -> list[Path]:
+    """Copia las fibras gestionadas sin reinterpretar nombres ni bytes."""
+    if art.tipo != "skill":
+        return []
+    _validar_fibras_skill(art)
+    copiadas = []
+    for nombre in FIBRAS_SKILL:
+        origen = art.path.parent / nombre
+        destino = destino_dir / nombre
+        _retirar_ruta_gestionada(destino)
+        if _tipo_nodo(origen) is None:
+            continue
         shutil.copytree(origen, destino)
-        return destino
-    return None
+        copiadas.append(destino)
+    return copiadas
 
 
 def _limpiar_derivados_codex_v1(raiz: Path, art: Artefacto,
@@ -2365,10 +2395,9 @@ def _materializar_emision(raiz: Path, art: Artefacto, target: str,
         if rel.endswith("/SKILL.md"):
             skill_dir = destino.parent
     if art.tipo == "skill" and skill_dir is not None:
-        refs = _copiar_referencias(art, skill_dir)
-        if refs:
-            print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
-                  f"(copia de referencias/)")
+        for fibra in _copiar_fibras_skill(art, skill_dir):
+            print(f"emitido: {fibra.relative_to(raiz).as_posix()}/ "
+                  f"(copia de {fibra.name}/)")
 
 
 def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
@@ -2473,6 +2502,7 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
             hash_dep = hashlib.sha256(dep.path.read_bytes()).hexdigest()
             archivos_dep, perdidas_dep = emitir(
                 dep, target, proy_dep, hash_dep)
+            _validar_fibras_skill(dep)
             unidades_dep.append(
                 (dep, archivos_dep, proy_dep, perdidas_dep))
         proy = proyectar(vector, sigma, target)
@@ -2483,6 +2513,7 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
             if target == "hermes" and art.tipo == "agente" else None)
         archivos, perdidas_extra = emitir(
             art, target, proy, hash_hex, para_perfil)
+        _validar_fibras_skill(art)
     except ErrorTransmutacion as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
@@ -2505,11 +2536,10 @@ def cmd_transmutar(raiz: Path, urn: str, target: str, aplicar: bool,
             perfil = (raiz / "_emision/hermes/profiles" /
                       art.campos["nombre"])
             for dep in dependencias:
-                refs = _copiar_referencias(
-                    dep, perfil / "skills" / dep.campos["nombre"])
-                if refs:
-                    print(f"emitido: {refs.relative_to(raiz).as_posix()}/ "
-                          "(copia de referencias/)")
+                for fibra in _copiar_fibras_skill(
+                        dep, perfil / "skills" / dep.campos["nombre"]):
+                    print(f"emitido: {fibra.relative_to(raiz).as_posix()}/ "
+                          f"(copia de {fibra.name}/)")
     except (ErrorTransmutacion, OSError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
@@ -2783,7 +2813,7 @@ def _aplicar(art: Artefacto, target: str,
             destino.parent.mkdir(parents=True, exist_ok=True)
             destino.write_text(contenido, encoding="utf-8")
         if art.tipo == "skill":
-            _copiar_referencias(art, ruta)
+            _copiar_fibras_skill(art, ruta)
     else:
         conflicto = _conflicto_propiedad_archivo(
             ruta, art.urn or "", target)

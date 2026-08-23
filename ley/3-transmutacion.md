@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v5.1.0
+# KORA/Transmutación — ley pneuma v5.2.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -235,8 +235,8 @@ terminar con un sello de procedencia y congruencia: comentario HTML, formato
 EXACTO, **sin timestamp** — el hash identifica los bytes de la fuente, no una
 identidad semántica. Los sidecars de runtime —incluidos
 `agents/openai.yaml` de una skill Codex y `distribution.yaml` de un perfil
-Hermes— y el contenido auxiliar
-`referencias/` no duplican el sello; pertenecen al mismo producto y
+Hermes— y las fibras auxiliares `referencias/` y `scripts/` no duplican el
+sello; pertenecen al mismo producto y
 `sello-fresco` prueba sus bytes contra el generador (§9).
 
 ```text
@@ -349,15 +349,15 @@ real. En paridad, omitir `--target` conserva el barrido global (§9.1).
 
 | Target | Forma | Emisión |
 |---|---|---|
-| `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia `referencias/` conservando su nombre si existe |
+| `claude-code` | skill | `_emision/claude-code/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (+ `allowed-tools` como lista separada por comas si `herramientas` no es vacía); copia las fibras opcionales `referencias/` y `scripts/` conservando nombres y bytes |
 | `claude-code` | agente | `_emision/claude-code/agents/{nombre}.md`; frontmatter `name`, `description`, `tools` (lista separada por comas); body = body fuente; si `arnes` = `persona`, sección final `## Modos de invocacion` con la doctrina dual-mode (modo subagente batch vs modo persona por encarnación) |
-| `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` conservando su nombre y, si la fuente lo declara, transporta byte-idéntico `agents/openai.yaml` como metadata e invocation policy del mismo producto cerrado |
+| `codex` | skill | `_emision/codex/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`; copia `referencias/` y `scripts/` conservando nombres y bytes y, si la fuente lo declara, transporta byte-idéntico `agents/openai.yaml` como metadata e invocation policy del mismo producto cerrado |
 | `codex` | agente | `_emision/codex/agents/{nombre}.toml`, custom agent nativo con `name`, `description` y `developer_instructions`; el cuerpo y el sello viajan dentro de `developer_instructions`. Si `forma: agente` (persona dual-mode), emite además `_emision/codex/skills/{nombre}/SKILL.md` y el sidecar `agents/openai.yaml` con `allow_implicit_invocation: false`: el TOML preserva delegación y el skill preserva encarnación explícita en el hilo principal. Si `forma: subagente`, solo emite TOML. No fija `model`: hereda la selección del runtime. Codex permite estrechar configuración del custom agent, pero no una allowlist exacta de built-ins; el sello declara la pérdida de campo sin fingir enforcement |
-| `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato codex) |
+| `opencode` | skill | `_emision/opencode/skills/{nombre}/SKILL.md` (mismo formato Codex) y fibras opcionales `referencias/` y `scripts/` |
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
-| `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
+| `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/` y `scripts/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
 | `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo sin el span `U_phen` + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
-| `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`, `version`; copia `referencias/`; contrato `T-hermes-pneuma-v1` (§7.5) |
+| `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`, `version`; copia `referencias/` y `scripts/`; contrato `T-hermes-pneuma-v1` (§7.5) |
 | `hermes` | agente (sólo forma `agente`) | **profile distribution** `_emision/hermes/profiles/{nombre}/`: `SOUL.md` = cuerpo completo + sello y `distribution.yaml` = manifest nativo que declara ambos nombres y, si existen, los subárboles exactos de skills requeridas por `depende` como `distribution_owned`; contrato `T-hermes-pneuma-v2` (§7.5-§7.6). `subagente` falla cerrado |
 
 ### 7.1 La emisión de workspace de `openclaw`
@@ -438,8 +438,8 @@ para el agente, y
 `~/.openclaw/skills/{nombre}/` (managed skills) para la skill; hermes →
 `$HERMES_HOME/skills/{nombre}/` para la skill del perfil efectivo y
 `<raíz-hermes>/profiles/{nombre}/` para el agente completo. En toda emisión y
-aplicación el contenido auxiliar `referencias/` conserva su nombre: el cuerpo emitido cita
-paths `referencias/...` y ningún target exige otro nombre.
+aplicación las fibras `referencias/` y `scripts/` conservan nombre y bytes:
+el cuerpo emitido puede citar esos paths y ningún target exige renombrarlos.
 
 La aplicación de un agente OpenClaw es **fail-closed**: el nombre debe figurar
 en `openclaw.json.reference.agents.list` de esa flota y el directorio
@@ -551,7 +551,7 @@ configuración del operador.
 
 | Forma KORA | Emisión Hermes |
 |---|---|
-| `habilidad` | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version`; copia `referencias/`. El frontmatter no expresa la allowlist KORA: `herramientas` se registra como pérdida de campo y permanece disciplina del cuerpo |
+| `habilidad` | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version`; copia `referencias/` y `scripts/`. El frontmatter no expresa la allowlist KORA: `herramientas` se registra como pérdida de campo y permanece disciplina del cuerpo |
 | `agente` | `_emision/hermes/profiles/{nombre}/SOUL.md` con cuerpo completo y sello, más `distribution.yaml` determinista con `name`, `version`, `description` y propiedad exacta de `SOUL.md`, `distribution.yaml` y, si existen, `skills/{nombre-dependencia}/` realizadas conforme a §7.6 |
 | `subagente` | fuera del dominio: falla cerrado porque un perfil es el agente completo, no una unidad delegable dentro de otro perfil |
 
@@ -681,8 +681,8 @@ cuerpo puede citar sellos de ejemplo— y verifica:
    todos los factores coinciden, incluidos sidecars sin sello; para una skill
    Codex, `agents/openai.yaml` se lee desde la fuente y se transporta sin
    reinterpretarlo;
-3. para skills, los paths y bytes de `referencias/` coinciden con el contenido
-   fuente, aunque esos archivos no participen en `hash-fuente`.
+3. para skills, los paths y bytes de `referencias/` y `scripts/` coinciden con
+   el contenido fuente, aunque esos archivos no participen en `hash-fuente`.
 
 Una diferencia implica re-transmutar. Alcance honesto: si una unidad completa
 no existe, este check no tiene un sello desde el cual descubrirla; la
@@ -800,7 +800,7 @@ clase de fallos sin fingir que la instalación es corpus.
 | Reconciliación de dependencias retiradas del perfil Hermes | §7.5 r2, §7.6 r5-r6: manifest previo + sello de skill; preflight antes de retirar | mecanizado (`transmutar --aplicar`) |
 | `componible` sin efecto de despliegue implícito | §7.6 r1 | mecanizado por construcción y tests |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
-| Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
+| Congruencia fuente↔generador↔producto (sidecars, `referencias/` y `scripts/` incluidos) | §9 | mecanizado (`sello-fresco`) |
 | Sidecar fuente `agents/openai.yaml` de skill Codex conservado en emisión, aplicación y paridad | §7, §9, ley/2 §6 | mecanizado (`transmutar`, `sello-fresco`, `transmutar --paridad`) |
 | Paridad exacta y tipada de la superficie KORA (emisión↔instalación user-level o project-level) | §9.1: incluye residuos atribuibles, conflictos de propiedad y nodos no regulares | mecanizado (`transmutar --paridad [--proyecto PATH]`) |
 | Completitud artefacto activo→emisión por target | §9.1 | mecanizado (`sin-emision`) |
@@ -1009,3 +1009,10 @@ que conservan sello Hermes atribuible. Una ruta editada o no atribuible bloquea
 antes de mutar; las skills ajenas permanecen fuera de la frontera. Precisa
 además que la paridad del perfil incluye los subárboles de dependencia
 declarados, sin convertir el resto del estado del perfil en propiedad KORA.
+
+v5.2.0 (2026-08-24): transporta `scripts/` como segunda fibra gestionada de
+las skills en todos los targets realizados, también cuando Hermes empaqueta una
+skill requerida dentro de un perfil. Emisión, aplicación, frescura y paridad
+comparan paths y bytes del producto cerrado. La prevalidación rechaza enlaces y
+nodos especiales antes de mutar una emisión previa. No agrega campos, tipos,
+targets ni la fibra preventiva `assets/`.

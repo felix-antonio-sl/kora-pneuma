@@ -1,4 +1,4 @@
-# KORA/Forma — ley pneuma v1.11.0
+# KORA/Forma — ley pneuma v1.12.0
 
 Estrato 2 de la ley. Define cómo se escribe un artefacto: **un solo shape
 para los tres tipos**. Todo artefacto consta de exactamente dos capas:
@@ -199,6 +199,7 @@ artefactos/
 └── skills/{ns}/{nombre}/
     ├── SKILL.md
     ├── referencias/                (opcional)
+    ├── scripts/                    (opcional)
     └── agents/openai.yaml          (opcional, metadata Codex)
 ```
 
@@ -209,6 +210,11 @@ artefactos/
 3. `agents/openai.yaml` PUEDE existir solo como sidecar de metadata del target
    Codex. No es un artefacto, no amplía el shape ni porta URN: pertenece al
    mismo producto cerrado que `SKILL.md` y `ley/3` gobierna su transporte.
+4. `referencias/` y `scripts/` son fibras opcionales del mismo producto, no
+   artefactos ni campos del shape. `scripts/` contiene utilidades ejecutables o
+   invocables por intérprete que la skill usa de forma determinista. Al
+   transmutar, ambas fibras exigen directorios reales con descendientes
+   regulares y conservan sus nombres y bytes; no se siguen enlaces.
 
 Correcto: `artefactos/agentes/dev/polymath.md` ⟷ `urn:dev:artefacto:polymath`.
 Incorrecto: `artefactos/agentes/kora/polymath.md` con URN de namespace `dev`.
@@ -361,6 +367,7 @@ borra — pero pneuma la quiere como oficio, no como ley mecanizada.
 | `nombre` seguro para todo tipo | §2.1: slug ASCII y componente único de ruta | mecanizado (`forma-valida`) |
 | URN: gramática, régimen, unicidad | constitución §7 | mecanizado (`nombre-verdadero`) |
 | Zona, namespace y nombre de archivo | §6 | mecanizado (`lugar-coincide`) |
+| Fibras `referencias/` y `scripts/` dentro de una skill | §6 r4 | zona mecanizada (`lugar-coincide`); regularidad validada por `transmutar` |
 | Rangos del vector | §3 | mecanizado (`vector-en-reticulo`) |
 | Leyes inter-eje | ley/1 §4 | mecanizado (`leyes-inter-eje`) |
 | Dominio por forma | §7 | mecanizado (`dominio-forma`) |
@@ -429,3 +436,8 @@ disponibilidad runtime donde el adaptador la realiza. No demuestra invocación,
 wiring ni composición y no altera `componible`. El primer contrato operacional
 de ley/3 realiza dependencias de forma habilidad, exige estado activo y target
 compatible, y falla cerrado para agentes requeridos.
+
+v1.12.0 (2026-08-24): reconoce `scripts/` como fibra opcional de una skill,
+junto a `referencias/`, sin abrir el shape ni crear otro tipo de artefacto.
+Ambas permanecen dentro del producto cerrado, conservan nombre y bytes y deben
+ser directorios reales con materia regular para transmutarse.

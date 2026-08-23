@@ -1444,6 +1444,48 @@ class TestEmisionReferencias(CasoPneuma):
                             f"enlace roto en la emisión: {ref}")
 
 
+class TestEmisionScripts(CasoPneuma):
+    """Una skill transporta scripts como parte de su producto cerrado."""
+
+    def test_scripts_se_transportan_sin_reinterpretar_a_cada_target(self):
+        self.escribir_skill(skill_campos(targets=["codex", "hermes"]))
+        contenido = b"#!/usr/bin/env python3\nprint('ok')\n"
+        script = self.raiz / (
+            "artefactos/skills/kora/util-x/scripts/verificar.py")
+        script.parent.mkdir(parents=True)
+        script.write_bytes(contenido)
+
+        for target in ("codex", "hermes"):
+            with self.subTest(target=target):
+                codigo, salida, err = self.correr([
+                    "transmutar", "--urn", "urn:kora:artefacto:util-x",
+                    "--target", target,
+                ])
+                self.assertEqual(codigo, 0, salida or err)
+                emitido = (self.raiz / "_emision" / target / "skills" /
+                           "util-x/scripts/verificar.py")
+                self.assertEqual(emitido.read_bytes(), contenido)
+
+    def test_script_fuente_no_regular_bloquea_sin_destruir_emision_previa(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        script = self.escribir(
+            "artefactos/skills/kora/util-x/scripts/verificar.py", "v1\n")
+        gesto = ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "codex"]
+        self.assertEqual(self.correr(gesto)[0], 0)
+        emitido = self.raiz / (
+            "_emision/codex/skills/util-x/scripts/verificar.py")
+        script.unlink()
+        externo = self.escribir("externo.py", "no pertenece a la skill\n")
+        script.symlink_to(externo)
+
+        codigo, _, err = self.correr(gesto)
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("enlace simbólico verificar.py", err)
+        self.assertEqual(emitido.read_text("utf-8"), "v1\n")
+
+
 class TestTransmutarVelaFuente(CasoPneuma):
     """Fix 2: transmutar valida su fuente con los checks ontológicos."""
 
@@ -1682,6 +1724,18 @@ class TestCongruenciaGenerador(CasoPneuma):
                           "fibra referencias/ no coincide",
                           estricto=True)
 
+    def test_detecta_script_rancio(self):
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        script = self.escribir(
+            "artefactos/skills/kora/util-x/scripts/verificar.py", "v1\n")
+        self.assertEqual(self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "codex"])[0], 0)
+        script.write_text("v2\n", "utf-8")
+        self.assert_fallo("sello-fresco",
+                          "fibra scripts/ no coincide",
+                          estricto=True)
+
     def test_retransmutar_retira_referencias_eliminadas(self):
         self.escribir_skill(skill_campos(targets=["codex"]))
         ref = self.escribir(
@@ -1750,6 +1804,16 @@ class TestZonaSkillsLimpia(CasoPneuma):
         self.escribir_skill()
         self.escribir("artefactos/skills/kora/util-x/referencias/SKILL.md",
                       "esto no es un artefacto y no debe parsearse\n")
+        censo = kora.construir_censo(kora.cargar_corpus(self.raiz))
+        self.assertEqual(len(censo), 1)
+        self.assertEqual(censo[0]["path"],
+                         "artefactos/skills/kora/util-x/SKILL.md")
+        self.assert_todo_coherente()
+
+    def test_skill_md_en_scripts_no_se_indexa_ni_contamina_la_zona(self):
+        self.escribir_skill()
+        self.escribir("artefactos/skills/kora/util-x/scripts/SKILL.md",
+                      "fixture de un script; no es un artefacto\n")
         censo = kora.construir_censo(kora.cargar_corpus(self.raiz))
         self.assertEqual(len(censo), 1)
         self.assertEqual(censo[0]["path"],
@@ -2318,6 +2382,31 @@ class TestParidad(CasoPneuma):
         self.assertIn("paridad: fiel", salida)
         self.assertTrue(
             (self.raiz / "runtime/claude/skills/util-x/SKILL.md").is_file())
+
+    def test_aplicacion_y_paridad_incluyen_scripts_de_la_skill(self):
+        urn = "urn:kora:artefacto:util-x"
+        self.escribir_skill(skill_campos(targets=["codex"]))
+        self.escribir(
+            "artefactos/skills/kora/util-x/scripts/verificar.py",
+            "print('vigente')\n")
+        with self.con_rutas():
+            codigo, salida, err = self.correr([
+                "transmutar", "--urn", urn, "--target", "codex",
+                "--aplicar",
+            ])
+            self.assertEqual(codigo, 0, salida or err)
+            instalado = self.raiz / (
+                "runtime/agents/skills/util-x/scripts/verificar.py")
+            self.assertEqual(instalado.read_text("utf-8"),
+                             "print('vigente')\n")
+            instalado.write_text("print('deriva')\n", "utf-8")
+            codigo, salida, err = self.correr([
+                "transmutar", "--paridad", "--urn", urn,
+                "--target", "codex",
+            ])
+
+        self.assertEqual(codigo, 1, err or salida)
+        self.assertIn("difiere scripts/verificar.py", salida)
 
     def test_urn_de_conocimiento_no_audita_homonimo_agentico(self):
         nombre = "colision-x"
@@ -3262,6 +3351,28 @@ class TestHermes(CasoPneuma):
         self.assertIn(
             "fuente: urn:dev:artefacto:disciplina-x",
             requerida.read_text(encoding="utf-8"))
+
+    def test_hermes_depende_empaqueta_scripts_de_la_skill(self):
+        self.escribir_skill(skill_campos(
+            urn="urn:dev:artefacto:disciplina-x",
+            nombre="disciplina-x", targets=["hermes"]), ns="dev")
+        self.escribir(
+            "artefactos/skills/dev/disciplina-x/scripts/verificar.py",
+            "print('vigente')\n")
+        self.escribir_agente(agente_campos(
+            targets=["hermes"],
+            depende=["urn:dev:artefacto:disciplina-x"]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes",
+        ])
+
+        self.assertEqual(codigo, 0, salida or err)
+        script = self.raiz / (
+            "_emision/hermes/profiles/agente-x/skills/"
+            "disciplina-x/scripts/verificar.py")
+        self.assertEqual(script.read_text("utf-8"), "print('vigente')\n")
 
     def test_hermes_componible_no_empaqueta_candidato(self):
         self.escribir_skill(skill_campos(
