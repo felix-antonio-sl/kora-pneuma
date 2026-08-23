@@ -95,6 +95,8 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-hsc44-1-nutricion-parenteral` | HSC 44.1 (2026) | NPT adulto: equipo accesos vasculares, CVC/PICC, técnica estéril, farmacovigilancia; caso límite técnico para HPN y señal de actualización viva del Drive |
 | `urn:salud:kb:hsc-pro-160-teletrombolisis` | PRO-160 (2021) | teletrombólisis UE-HSC con Neurología HCHM en ventana <4,5 h; frontera hiperaguda del eje ACV que después alimenta trayectorias post-aguda/HD |
 | `urn:salud:kb:hsc-pro-054-derivacion-tdah` | PRO-054 (2014) | derivación TDAH APS→HSC; cobertura ambulatoria de salud mental |
+| `urn:salud:kb:hsc-pro-005-alimentacion-asistida` | PRO-005 (2019) | alimentación asistida oral/SNG/gastrostomía con entrenamiento del cuidador «para la continuidad post-alta»: currículo local del cuidado alimentario domiciliario |
+| `urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive` | PRO-103 (2024) | acompañamiento psicosocial Ley 21.030: eje salud mental/continuidad con la red; capacidad local de S.A. Psicosocial derivable desde HD |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -320,10 +322,42 @@ directa), pendiente de gates de lectura íntegra por fuente:
   (`urn:salud:kb:hsc-pro-043-ingreso-de-usuarios`); ~~PRO-156 atención
   preferente PM/PCD~~ **koraficada 2026-08-23**
   (`urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd`).
-  PRO-187 telediabetes~~ **koraficadas 2026-08-23**
+  Telemedicina: ~~PRO-186 TACO, PRO-187 telediabetes~~ **koraficadas 2026-08-23**
   (`urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral`,
   `urn:salud:kb:hsc-pro-187-telediabetes`); ~~PRO-185 telegastro~~
   **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-185-telegastroenterologia`).
+- Nutrición: ~~HSC 44.1 NPT~~ (`urn:salud:kb:hsc-hsc44-1-nutricion-parenteral`),
+  ~~PRO-005 alimentación asistida~~
+  (`urn:salud:kb:hsc-pro-005-alimentacion-asistida`) — **koraficadas 2026-08-23**.
+- Psicosocial: ~~PRO-103 IVE~~
+  (`urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive`) — **koraficada
+  2026-08-23**. Urgencia: ~~PRO-160 teletrombólisis~~
+  (`urn:salud:kb:hsc-pro-160-teletrombolisis`), ~~PRO-054 TDAH~~
+  (`urn:salud:kb:hsc-pro-054-derivacion-tdah`) — **koraficadas 2026-08-23**.
+
+### Cierre de la candidatura y exclusiones razonadas (2026-08-23)
+
+La candidatura Tier A queda **cerrada**: toda fuente con pertinencia HODOM
+sostenible explícitamente fue koraficada (25 fuentes nuevas en la jornada). Las
+siguientes fuentes del árbol se **excluyen** de koraficación por ausencia de
+pertinencia HD demostrable; su inclusión futura exige un hecho nuevo (pilotaje,
+decisión DT o cambio de cartera), no mera pertenencia al corpus:
+
+| Fuente(s) | Razón de exclusión |
+|---|---|
+| GCL 1.5 UCI/UTI ×20 | Normas intramurales de unidades críticas cerradas; HSC 44.1 + GCL 1.2 ya cubren lo transferible (CVC/PICC). Sin paciente HD crítico en cartera actual |
+| DP 4.1 convenios docencia | Relación docente-asistencial sin efecto sobre operación HD |
+| Familias API/APE/APA/APK (imagenología, esterilización, anatomía, kine instrumental) | Servicios de apoyo intramural; el paciente HD consume sus prestaciones vía interconsulta ya cubierta por PRO-043/PRO-053 |
+| Modelos de Gestión (carpetas transversales) | Documentos marco gerenciales sin reglas operativas HD adicionales a las ya koraficadas |
+| HSC 14.2 préstamo de catres clínicos, HSC 36.x ropa/ascensores/ropería, HSC 35 leche materna/fórmulas | Logística intramural específica; el equipamiento domiciliario se rige por la NT 2024 y el manual de alta complejidad ya koraficados |
+| HSC 7.x restantes (hanta, procuramiento, constatación de lesiones, endocraneano) | Flujos de urgencia/agudos no aplicables al episodio HD estable; PRO-045 contingencia UE excede el ámbito micro-asistencial |
+| HSC 45 test VPH | Tamizaje ambulatorio ginecológico sin gancho HD |
+| PRO-079 lavado de manos / HSC 35.2 aspectos del personal SAN | Precauciones estándar ya cubiertas por PRO-170/PRO-023 en su aplicación HD |
+
+Nota de límite: estas exclusiones son una decisión curatorial del DT con la
+evidencia disponible hoy; no implican que las fuentes carezcan de valor
+institucional, solo que su representación KORA no cambia decisiones HODOM.
+Cualquier re-inclusión pasa por el mismo gate de lectura íntegra que el resto.
 
 
 ## 16. Límites del índice
