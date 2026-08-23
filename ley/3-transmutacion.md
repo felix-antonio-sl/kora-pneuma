@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v2.12.1
+# KORA/Transmutación — ley pneuma v3.0.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -57,19 +57,22 @@ Reglas:
 | `codex` | realizado | emite |
 | `opencode` | realizado | emite |
 | `openclaw` | realizado | emite (workspace, §7) |
-| `hermes` | reconocido, no realizado | falla (exit 1) con mensaje honesto |
+| `hermes` | realizado (habilidad, §7.5) | emite; forma agéntica falla cerrada |
 
 1. `targets` es opcional. Si se declara, DEBE ser una lista no vacía y
    subconjunto de los cinco reconocidos (check `targets-conocidos`, ley/2).
-2. Un artefacto PUEDE declarar `hermes` en `targets` — la ley lo reconoce — pero
-   transmutar hacia él DEBE fallar con mensaje que remita a `GENESIS.md`. La ley
-   no nombra capacidades inexistentes como si existieran. `openclaw` está
-   **realizado** desde v1.3.0 (cierra la deuda de `GENESIS §4`, registrada aquí
-   sin editar GENESIS).
+2. `hermes` está **realizado** desde v3.0.0 para la forma habilidad (cierra
+   aquí la deuda declarada en `GENESIS §4`, sin editar GENESIS): una skill
+   transmuta vía `T-hermes-pneuma-v1` (§7.5); la forma agéntica sigue siendo
+   puente manual porque Hermes no tiene primitivo nativo de archivo-agente
+   (los agentes-persona son perfiles gateway con `SOUL.md`). La ley no nombra
+   capacidades inexistentes como si existieran. `openclaw` está **realizado**
+   desde v1.3.0 (misma regla de cierre sin editar GENESIS).
 3. El campo histórico `funtor` del sello identifica la versión del contrato de
    emisión; el nombre se conserva para no invalidar productos. Identificadores
    vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
-   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`. La v2 de Codex reemplaza
+   `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`,
+   `T-hermes-pneuma-v1`. La v2 de Codex reemplaza
    el antiguo colapso agente→skill por custom agents nativos (§7).
 4. Una fuente sin `targets` es agnóstica al runtime. `transmutar --urn U` elige
    **Codex** como target operacional principal; otro target realizado solo se
@@ -197,6 +200,27 @@ confirmada contra el openclaw real (`~/openclaw-fleet/`, `docs.openclaw.ai`).
 Consecuencia: agentes `plataforma`/`servicio` (μ=3) — sin hogar en los otros
 targets, que abortan μ=3 — encuentran hogar pleno en `openclaw`. Sólo `phi`=4
 aborta (none, igual que el resto).
+
+### 4.5 `hermes`
+
+Igual a `claude-code` en todos sus ejes salvo `mu`: el gateway systemd
+siempre-activo sobre 21+ plataformas de mensajería realiza materia ambiental
+always-on (`mu:3 full`). Fuente canónica del contrato: la doc oficial
+(`hermes-agent.nousresearch.com/docs`, skills y gateway); verificación viva
+2026-08-23 contra Hermes v0.20.5 instalado.
+
+| Eje | Proyecciones |
+|---|---|
+| `pi` | 0→0, 1→1, 2→2 full · 3→2 partial — delegación jerárquica vía perfiles gateway, sin árbol nativo dentro de una skill |
+| `mu` | 0→0, 1→1, 2→2 full · 3→3 full — always-on vía gateway systemd; techo de RUNTIME: una fuente habilidad sigue limitada por `dominio-forma` (ley/2, mu ∈ {0,1}) |
+| `xi` | 0→0, 1→1, 2→2 full · 3→2 partial (multi-fase se aplana) · 4→2 partial (operad dinámica no soportada) |
+| `lambda` | 0→0, 1→1, 2→1 partial — ecosistema colapsa a organizacional · 3→∅ none — society-in-the-loop no soportado |
+| `phi` | 0→0, 1→1 full · 2→2 partial — colaborativo vía Bot Mode y grupos, sin identidad persistente en la skill · 3→2 partial — cognición híbrida no nativa · 4→∅ none — co-evolutivo no soportado |
+| `sigma` | máx soportado `[3,2,2,2,1]` |
+
+Alcance del contrato `T-hermes-pneuma-v1`: **sólo la forma habilidad**. La
+forma agéntica falla cerrada (§7.5 r1): los perfiles con SOUL.md son un puente
+manual gobernado, no una emisión.
 
 ## 5. El sello
 
@@ -479,6 +503,37 @@ emitirse — `transmutar` falla nombrando la colisión; renombra uno.
 Antes de construir o retirar una ruta, `transmutar` exige el slug canónico
 definido en `ley/2 §2.1`; cualquier otro `nombre` aborta sin mutar el producto.
 `forma-valida` denuncia la misma incoherencia en el corpus.
+
+### 7.5 La emisión de habilidad de `hermes`
+
+Hermes Agent (Nous Research) se incorpora como target **realizado** para la
+forma **habilidad** (v3.0.0, 2026-08-23). El primitivo nativo es la skill
+agentskills.io del canon oficial
+(`/docs/user-guide/features/skills#skillmd-format`): toda skill vive en
+`~/.hermes/skills/`, que es fuente de verdad local; cada perfil Hermes es un
+directorio análogo aislado.
+
+| Target | Forma | Emisión |
+|---|---|---|
+| `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version` (campo opcional del canon Hermes); copia `referencias/` conservando su nombre si existe. El frontmatter Hermes NO tiene allowlist de herramientas: si `herramientas` no es vacía, la frontera se registra como pérdida de campo (`herramientas -> sin-allowlist-runtime`) y queda como disciplina del cuerpo, jamás como enforcement fingido |
+
+1. **Frontera de forma**: la forma agéntica NO tiene primitivo nativo en
+   Hermes — los agentes-persona viven como perfiles gateway con `SOUL.md`
+   (puente manual documentado, kora-custodia). `transmutar --target hermes`
+   sobre un agente DEBE fallar cerrado nombrando esa frontera; jamás colapsa
+   a otra forma ni emite un archivo-agente ad hoc.
+2. **Matriz** (§4.5): idéntica a claude-code salvo `mu:3 full` — el gateway
+   systemd siempre-activo sobre 21+ plataformas realiza materia ambiental
+   always-on. Ese techo es capacidad del *runtime*: una FUENTE de forma
+   habilidad sigue limitada por `dominio-forma` de ley/2 (mu ∈ {0,1}), que
+   manda antes que cualquier matriz.
+3. **Instalación**: `RUTAS_APLICAR[("hermes","skill")] =
+   ~/.hermes/skills/{nombre}` (perfil default). Los perfiles concretos
+   (hospitalista, urgencia, …) son instalaciones runtime separadas: copiar a
+   ellos es despliegue manual autorizado por el operador, fuera de
+   `--aplicar`; la paridad los reporta como `no-instalada`.
+4. **Sello**: `funtor: T-hermes-pneuma-v1`. La paridad aplica sin cambios:
+   compara el directorio cerrado de la skill contra `~/.hermes/skills/`.
 
 ## 8. El gesto inverso (Lift)
 
@@ -778,3 +833,17 @@ v2.12.1 (2026-08-14): corrige el cierre de `_emision/`: `sello-fresco` rechaza
 todo archivo regular que no pueda atribuirse a una raíz de producto KORA
 reconocible. Precisa y mecaniza el carácter derivado cerrado ya vigente; no
 cambia matrices, adaptadores, formato de sello ni bytes emitidos.
+
+v3.0.0 (HITL 2026-08-23): **realiza `hermes` para la forma habilidad** —
+contrato `T-hermes-pneuma-v1`, matriz §4.5 y emisión §7.5. Cierra la deuda
+declarada en `GENESIS §4` sin editar GENESIS (misma regla que openclaw
+v1.3.0). La forma agéntica NO se mecaniza: Hermes no tiene primitivo nativo
+de archivo-agente (los agentes-persona son perfiles gateway con SOUL.md), así
+que `transmutar --target hermes` sobre un agente falla cerrado y el puente
+manual queda como camino gobernado — lección aplicada de `T-openclaw`
+(revert `8ef7c6e`). Verificación viva contra el canon oficial
+(hermes-agent.nousresearch.com/docs: SKILL.md frontmatter `name`,
+`description`, `version` opcional; skills en `~/.hermes/skills/`; gateway
+siempre-activo) y contra Hermes v0.20.5 instalado. Extensión aditiva
+(constitución §12.1): nueva matriz, nuevo adaptador, nuevas rutas de
+instalación; no cambia bytes ni contratos de targets previos.

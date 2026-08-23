@@ -32,7 +32,7 @@ from pathlib import Path
 # ------------------------------------------------------------------ constantes
 
 TARGETS_CONOCIDOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
-TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw")
+TARGETS_REALIZADOS = ("claude-code", "codex", "opencode", "openclaw", "hermes")
 TARGET_PRINCIPAL = "codex"
 
 # Arneses que portan U_phen (ley/2 §10 r5): su personalidad se segrega a SOUL.md
@@ -1211,10 +1211,49 @@ MATRICES = {
                    4: (None, "none", "co-evolutivo no modelado")}),
         "sigma-max": [3, 3, 3, 3, 2],
     },
+    # hermes: realizado desde ley/3 v3.0.0 (2026-08-23). Target de HABILIDAD:
+    # el primitivo nativo es la skill agentskills.io (~/.hermes/skills/,
+    # canon oficial /docs/user-guide/features/skills). El frontmatter Hermes
+    # no tiene allowlist de herramientas (a diferencia de claude-code), y los
+    # agentes-persona viven como perfiles con SOUL.md, no como archivos de
+    # agente: forma agéntica sigue siendo puente manual (ley/3 §7.5). Gateway
+    # siempre-activo + 21+ plataformas justifican mu=3 (full).
+    "hermes": {
+        "pi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (2, "partial", "delegación jerárquica vía perfiles "
+                      "gateway, sin árbol nativo en la skill")}),
+        "mu": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (3, "full", None)}),  # gateway systemd always-on
+        "xi": _m({0: (0, "full", None), 1: (1, "full", None),
+                  2: (2, "full", None),
+                  3: (2, "partial", "multi-fase se aplana"),
+                  4: (2, "partial", "operad dinámica no soportada")}),
+        "lambda": _m({0: (0, "full", None), 1: (1, "full", None),
+                      2: (1, "partial",
+                          "ecosistema colapsa a organizacional"),
+                      3: (None, "none",
+                          "society-in-the-loop no soportado")}),
+        "phi": _m({0: (0, "full", None), 1: (1, "full", None),
+                   2: (2, "partial", "colaborativo vía Bot Mode y grupos, "
+                       "sin identidad persistente en la skill"),
+                   3: (2, "partial", "cognición híbrida no nativa"),
+                   4: (None, "none", "co-evolutivo no soportado")}),
+        "sigma-max": [3, 2, 2, 2, 1],
+    },
 }
 
 # Razón por componente de sigma cuando la fuente excede el máximo del target.
 SIGMA_RAZONES = {
+    "hermes": {
+        "safety": "máximo del runtime",
+        "fairness": "declarativo, sin enforcement en runtime",
+        "transparency": "explicabilidad limitada al output de la sesión",
+        "accountability": "sesiones persistentes y logs del gateway, sin "
+                          "audit trail cross-session transparente",
+        "sustainability": "solo declarativo",
+    },
     "claude-code": {
         "safety": "máximo del runtime",
         "fairness": "declarativo, sin enforcement en runtime",
@@ -1251,7 +1290,8 @@ SIGMA_RAZONES = {
 # Quién sí soporta un eje que el target rechaza (para el mensaje de fallo).
 # openclaw realizado desde ley/3 v1.3.0: sostiene mu=3 (full) y lambda=3 (partial).
 QUIEN_SOPORTA = {
-    ("mu", 3): "openclaw (transmutar --target openclaw)",
+    ("mu", 3): "openclaw (transmutar --target openclaw); hermes "
+               "(gateway always-on, forma habilidad)",
     ("lambda", 3): "openclaw (parcial; transmutar --target openclaw)",
     ("phi", 4): "ninguno de los runtimes reconocidos",
 }
@@ -1609,6 +1649,14 @@ def emitir(art: Artefacto, target: str, proy: dict,
         return _emitir_openclaw(art, proy, hash_hex)
     if target == "codex":
         return _emitir_codex(art, proy, hash_hex)
+    if target == "hermes" and art.tipo != "skill":
+        # ley/3 §7.5: Hermes no tiene primitivo nativo de archivo-agente; los
+        # agentes-persona viven como perfiles con SOUL.md. Fallar cerrado,
+        # jamás colapsar a otra forma (lección T-openclaw 8ef7c6e).
+        raise ErrorTransmutacion(
+            "la forma agéntica no tiene primitivo nativo en Hermes: los "
+            "agentes-persona viven como perfiles gateway con SOUL.md. Usar "
+            "el puente manual documentado (kora-custodia; ley/3 §7.5).")
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
     herramientas = art.campos.get("herramientas") or []
@@ -1618,6 +1666,20 @@ def emitir(art: Artefacto, target: str, proy: dict,
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
         if target == "claude-code" and herramientas:
             fm.append("allowed-tools: " + ", ".join(herramientas))
+        if target == "hermes":
+            # Campo oficial opcional del canon Hermes
+            # (/docs/user-guide/features/skills#skillmd-format).
+            fm.append(f"version: {art.campos.get('version')}")
+            if herramientas:
+                # El frontmatter Hermes no tiene allowlist de herramientas;
+                # declararla como comentario sería silencio disfrazado: la
+                # frontera queda registrada en el sello como pérdida.
+                perdidas_extra.append((
+                    "herramientas",
+                    ",".join(str(h) for h in herramientas),
+                    "sin-allowlist-runtime",
+                    "el frontmatter Hermes no soporta allowlist de "
+                    "herramientas; la frontera es disciplina del cuerpo"))
         rel = f"{target}/skills/{nombre}/SKILL.md"
     elif target == "claude-code":
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
@@ -1782,6 +1844,11 @@ RUTAS_APLICAR = {
     # el materializador fleet los proyecta luego al workspace runtime privado.
     ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
     ("openclaw", "agente"): "~/openclaw-fleet/blueprints/{nombre}",
+    # hermes: skills personales del perfil default (canon oficial:
+    # ~/.hermes/skills/ es la fuente de verdad local). Los perfiles concretos
+    # (hospitalista, urgencia, ...) son instalaciones separadas y quedan fuera
+    # de --aplicar: copiar a un perfil vivo es despliegue manual autorizado.
+    ("hermes", "skill"): "~/.hermes/skills/{nombre}",
 }
 
 # Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/

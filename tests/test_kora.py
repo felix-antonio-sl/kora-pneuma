@@ -773,15 +773,16 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(self.correr(argv)[0], 0)
         self.assertEqual(primera, emitido.read_bytes())
 
-    def test_target_no_realizado_falla_honesto(self):
-        # hermes sigue reconocido-no-realizado; openclaw YA está realizado
-        # (ley/3 v1.3.0) y se prueba en TestOpenclaw.
-        self.escribir_skill()
-        codigo, _, err = self.correr(
+    def test_target_realizado_emite(self):
+        # hermes REALIZADO desde ley/3 v3.0.0 (forma habilidad); openclaw ya
+        # lo estaba (v1.3.0). El fallo honesto residual vive en emitir() para
+        # la forma agéntica (test_hermes_agente_falla_cerrado).
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        codigo, salida, _ = self.correr(
             ["transmutar", "--urn", "urn:kora:artefacto:util-x",
              "--target", "hermes"])
-        self.assertEqual(codigo, 1)
-        self.assertIn("GENESIS", err)
+        self.assertEqual(codigo, 0)
+        self.assertIn("_emision/hermes/skills/util-x/SKILL.md", salida)
 
     def test_codex_persona_emite_agente_y_skill_explicito(self):
         self.escribir_agente(agente_campos(targets=["codex"]))
@@ -1529,22 +1530,10 @@ class TestCongruenciaGenerador(CasoPneuma):
         self.assert_fallo(
             "sello-fresco", "factor obsoleto", estricto=True)
 
-    def test_rechaza_emision_de_target_no_realizado(self):
-        self.escribir_agente(
-            agente_campos(targets=["claude-code", "hermes"]))
-        self.assertEqual(self.correr(
-            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
-             "--target", "claude-code"])[0], 0)
-        origen = self.raiz / "_emision/claude-code/agents/agente-x.md"
-        destino = self.raiz / "_emision/hermes/agents/agente-x.md"
-        destino.parent.mkdir(parents=True)
-        destino.write_text(
-            origen.read_text("utf-8").replace(
-                "target: claude-code", "target: hermes"), "utf-8")
-        self.assert_fallo(
-            "sello-fresco", "target no realizado", estricto=True)
-
     def test_rechaza_emision_de_target_no_declarado(self):
+        # hermes ya no está en TARGETS_REALIZADOS como agujero: una emisión
+        # falsificada bajo hermes/ ahora se atribuiría a un producto válido,
+        # así que la protección que importa es el allowlist de la fuente.
         self.escribir_skill(skill_campos(targets=["claude-code"]))
         self.assertEqual(self.correr(
             ["transmutar", "--urn", "urn:kora:artefacto:util-x",
@@ -1983,7 +1972,11 @@ class TestParidad(CasoPneuma):
         self.assertIn("paridad: no-instalada  claude-code  util-x", salida)
         self.assertNotIn("emisión histórica", salida)
 
-    def test_paridad_rechaza_target_reconocido_no_realizado(self):
+    def test_paridad_focal_hermes_no_falla_por_target(self):
+        # hermes es target realizado desde ley/3 v3.0.0: la auditoría focal
+        # ya no rechaza el target. Fuente agnóstica sin emisión previa:
+        # corrida informativa vacía (nada promete hermes), sin error de
+        # realización.
         campos = skill_campos()
         del campos["targets"]
         self.escribir_skill(campos)
@@ -1991,8 +1984,9 @@ class TestParidad(CasoPneuma):
             codigo, salida, error = self.correr([
                 "transmutar", "--paridad", "--target", "hermes",
             ])
-        self.assertEqual(codigo, 1, salida or error)
-        self.assertIn("no está realizado", error)
+        self.assertEqual(codigo, 0, salida or error)
+        self.assertIn("sin artefactos activos que verificar", salida)
+        self.assertNotIn("no está realizado", error)
 
     def test_paridad_focal_rechaza_target_fuera_de_allowlist(self):
         self.escribir_skill(skill_campos(targets=["claude-code"]))
@@ -3040,6 +3034,129 @@ class TestParidad(CasoPneuma):
             ["transmutar", "--paridad", "--aplicar"])
         self.assertEqual(codigo, 1)
         self.assertIn("--paridad", err)
+
+
+# ------------------------------------------------- hermes: T-hermes-pneuma-v1
+# (ley/3 v3.0.0, 2026-08-23: target realizado para forma habilidad)
+
+class TestHermes(CasoPneuma):
+    """ley/3 §7.5: emisión de skills hacia Hermes.
+
+    Primitivo nativo: SKILL.md agentskills.io en ~/.hermes/skills/ (canon
+    oficial). Forma agéntica NO tiene primitivo nativo (perfiles con SOUL.md)
+    y falla cerrada en vez de colapsar a otra forma."""
+
+    def rutas_tmp(self):
+        base = self.raiz / "runtime"
+        return {
+            ("claude-code", "skill"): str(base / "claude/skills/{nombre}"),
+            ("claude-code", "agente"): str(base / "claude/agents/{nombre}.md"),
+            ("codex", "skill"): str(base / "agents/skills/{nombre}"),
+            ("codex", "agente"): str(base / "codex/agents/{nombre}.toml"),
+            ("opencode", "skill"): str(base / "oc/skills/{nombre}"),
+            ("opencode", "agente"): str(base / "oc/agents/{nombre}.md"),
+            ("openclaw", "skill"): str(base / "claw/skills/{nombre}"),
+            ("openclaw", "agente"): str(base / "fleet/blueprints/{nombre}"),
+            ("hermes", "skill"): str(base / "hermes/skills/{nombre}"),
+        }
+
+    def test_skill_emite_frontmatter_oficial(self):
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 0, salida)
+        emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
+        texto = emitido.read_text(encoding="utf-8")
+        self.assertIn("name: util-x", texto)
+        self.assertIn('description: "Skill sintética de prueba."', texto)
+        # Campo oficial opcional del canon Hermes
+        self.assertRegex(texto, r"(?m)^version: 1\.0\.0$")
+
+    def test_sello_declara_contrato_v1(self):
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        self.correr(["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                     "--target", "hermes"])
+        texto = (self.raiz /
+                 "_emision/hermes/skills/util-x/SKILL.md").read_text(
+                     encoding="utf-8")
+        self.assertIn("target: hermes", texto)
+        self.assertIn("funtor: T-hermes-pneuma-v1", texto)
+
+    def test_herramientas_sin_allowlist_es_perdida_declarada(self):
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        codigo, salida, _ = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 0, salida)
+        texto = (self.raiz /
+                 "_emision/hermes/skills/util-x/SKILL.md").read_text(
+                     encoding="utf-8")
+        # El frontmatter Hermes no tiene allowlist: nada de allowed-tools.
+        self.assertNotIn("allowed-tools:", texto.split("---")[1])
+        # La frontera queda registrada como pérdida en el sello.
+        self.assertIn("fidelidad-campos: herramientas:partial", texto)
+        self.assertIn("sin-allowlist-runtime", texto)
+
+    def test_hermes_agente_falla_cerrado(self):
+        self.escribir_agente(agente_campos(targets=["claude-code", "hermes"]))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("no tiene primitivo nativo en Hermes", err)
+        self.assertFalse(
+            (self.raiz / "_emision/hermes/agents/agente-x.md").exists())
+
+    def test_mu3_en_fuente_habilidad_rechazado_por_dominio(self):
+        # Dos capas separadas: ley/2 `dominio-forma` rechaza mu=3 declarado
+        # en una FUENTE de forma habilidad (permitido {0,1}); el techo mu=3
+        # del target hermes es capacidad del RUNTIME (gateway always-on),
+        # no alcanzable desde una skill. La matriz lo declara; el dominio
+        # de forma manda primero.
+        self.escribir_skill(skill_campos(
+            targets=["hermes"], vector=[1, 3, 1, 0, 1]))
+        codigo, _, err = self.correr(
+            ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 1)
+        self.assertIn("dominio-forma", err)
+        self.assertIn("mu=3", err)
+
+    def test_aplicar_instala_en_ruta_hermes(self):
+        base = self.raiz / "runtime"
+        with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True):
+            self.escribir_skill(skill_campos(targets=["hermes"]))
+            codigo, salida, err = self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "hermes", "--aplicar"])
+        self.assertEqual(codigo, 0, salida or err)
+        instalado = base / "hermes/skills/util-x/SKILL.md"
+        self.assertTrue(instalado.is_file())
+        emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
+        self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
+
+    def test_paridad_focal_verifica_unidad_hermes(self):
+        base = self.raiz / "runtime"
+        with mock.patch.dict(kora.RUTAS_APLICAR, self.rutas_tmp(), clear=True):
+            self.escribir_skill(skill_campos(targets=["hermes"]))
+            self.assertEqual(self.correr(
+                ["transmutar", "--urn", "urn:kora:artefacto:util-x",
+                 "--target", "hermes"])[0], 0)
+            # Emitida pero sin instalar: no-instalada (informativo, exit 0).
+            codigo, salida, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "hermes"])
+            self.assertEqual(codigo, 0)
+            self.assertIn("no-instalada", salida)
+            # Instalada byte-idéntica desde la emisión: fiel.
+            import shutil
+            shutil.copytree(
+                self.raiz / "_emision/hermes/skills/util-x",
+                base / "hermes/skills/util-x")
+            codigo, salida, _ = self.correr(
+                ["transmutar", "--paridad", "--target", "hermes"])
+            self.assertEqual(codigo, 0, salida)
+            self.assertIn("paridad: fiel          hermes  util-x", salida)
 
 
 if __name__ == "__main__":
