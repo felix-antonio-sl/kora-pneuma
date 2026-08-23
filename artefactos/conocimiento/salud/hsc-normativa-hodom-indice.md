@@ -72,6 +72,7 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria` | PRO 002 (2022) | dispositivo local HODOM: campaña de invierno, horarios y escalamiento |
 | `urn:salud:kb:hsc-pro-110-hodom-historico-2019` | HSC 34.1 PRO-110 (2019) | versión anterior; relación controladora con PRO 002 abierta |
 | `urn:salud:kb:hsc-cartera-servicios-2024` | Res. Exenta 1206/2024 | cartera de servicios HSC 2024, prestaciones HODOM por estamento |
+| `urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel` | PRO-167 (2022, vigencia nov 2027) | Índice de Barthel ≥65 años al ingreso (Enfermería) y egreso (Médico): métrica de dependencia para egreso a domicilio y traspaso APS vía CAE |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
@@ -268,6 +269,29 @@ inferencia documental**:
 - Desempeño: fichas de indicadores con propósito, numerador, denominador y
   procedencia.
 - Software: contratos vivos de dominio, requisito, prueba, release y operación.
+
+### Brechas de koraficación PRO en unidades de interfaz HODOM (recenso vivo 2026-08-23)
+
+Re-recenso completo de la biblioteca Drive (906 carpetas, 1396 archivos,
+comparación por Drive ID contra el censo 2026-07-20): **cero altas, cero
+bajas** — la fuente viva no cambió desde el corte de julio. La brecha no es de
+drift sino de cobertura: la familia **PRO** (protocolos de unidad) tiene ~9%
+de cobertura en el ámbito HD. Candidatura curada Tier A (interfaz operativa
+directa), pendiente de gates de lectura íntegra por fuente:
+
+- Medicina: **PRO-053 Hospitalización desde UE** (compuerta UE→HD);
+  PRO-046/PRO-048 (pielonefritis, pancreatitis — egresos frecuentes a HD).
+- Farmacia: **PRO-091 eliminación de medicamentos vencidos**, PRO-085
+  anticoagulantes (continuidad farmacológica al egreso).
+- DCIYE: **PRO-23 manejo de brotes**, **PRO-170 plan anual de prevención y
+  control de infecciones** (vigilancia en domicilio).
+- Rehabilitación: **PRO-126 rehabilitación pulmonar**, PRO-152 crítico VMI
+  (kinesioterapia domiciliaria).
+- UGCC: **PRO-076 carga de combustible de ambulancias** (decisión #10,
+  kilometraje/flota).
+- DAIU: PRO-099 visitas y acompañamiento; Telemedicina: PRO-186 TACO,
+  PRO-187 telediabetes (modelo híbrido HD-telesalud).
+
 
 ## 16. Límites del índice
 
