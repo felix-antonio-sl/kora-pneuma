@@ -1,10 +1,10 @@
 ---
 urn: urn:dev:artefacto:hermes-agent-specialist
 nombre: hermes-agent-specialist
-version: 2.2.1
+version: 2.3.0
 estado: activo
-descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend (local/docker/ssh/modal/daytona/vercel_sandbox/singularity), mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
-fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI remitido al canon vivo; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva. v2.0.0 (2026-07-13): decisión HITL retira `openclaw` de targets; la migracion OpenClaw→Hermes es un puente de entrada soportado por Hermes, no equivalencia ni destino de ejecucion. Elimina cifras de catalogo persistidas: comandos, proveedores, tools, modelos y canales se consultan bajo demanda en el canon oficial. v2.1.0 (2026-08-04): sondeo de fidelidad contra el canon vivo (llms-full.txt, 2026-08-04) — correcciones: ya EXISTE ejecucion/instalacion Docker oficial (imagen nousresearch/hermes-agent, doc en /docs/user-guide/docker); terminal.backend ahora son 7 (agregado vercel_sandbox); el modelo de seguridad ahora tiene 8 capas (nueva capa 3: file write safety); claude-marketplace ya no figura en los hub sources del canon. Resto de claims (SOUL.md/HERMES_HOME, memoria 2200/1375 con snapshot congelado, precedencia config, piso 64k, Ollama/vLLM, skills 3 niveles, MCP, mensajeria deny-by-default, hermes claw migrate) confirmados sin deriva. v2.2.0 (2026-08-06): decision HITL del operador — el indice oficial llms.txt (asset llms-faaf9398aa5828403fd56f6be7989c9f.txt, sha256 f502e5ad7b0d0273631be772af4b665addadec066a8a7ff0255804e4796c2e93, sondeo 2026-08-06) se incorpora como base de conocimiento fundamental de la emision Hermes: cache navegable con clausula de staleness (cada URL se resuelve en vivo antes de afirmar; refrescar cuando el hash del asset llms-*.txt cambie). EXCEPCION explicita a la regla dura #3 (no-snapshot): unico snapshot permitido, declarado en esta version; todo otro snapshot sigue prohibido. Copia byte-identica custodiada en referencias/llms-index.txt de este canon; la emision Hermes la sincroniza en references/official-docs-index.md y declara metadata.hermes.source apuntando a este canon. v2.2.1 (2026-08-23): primer refresco del indice por clausula de staleness — el asset hasheado llms-faaf9398aa5828403fd56f6be7989c9f.txt (sha256 f502e5ad..., sondeo 2026-08-06) murio con 404 tras un redeploy del sitio (el hash embebido en el nombre del archivo es efimero); el indice vivo se resuelve SIEMPRE via el atajo estable /docs/llms.txt, nuevo manifiesto sha256 d3e6618022a0a0e3378e827dd30493dda8fc78ff9172ae3b93237fc139c1c9a2 (sondeo 2026-08-23; indice crece de 135 a 247 entradas: Bot Mode, Automation Blueprints, Desktop App/Plugin SDK, secretos 1Password/Bitwarden, A2A, AWS Bedrock, entre otras). Copia byte-identica re-custodiada en referencias/llms-index.txt. Regla dura #3 actualizada en consecuencia: refrescar por atajo estable, nunca reconstruyendo URLs hasheadas."
+descripcion: "Especialista en agentes Hermes (Nous Research) para crear, configurar, desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/. Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills, terminal.backend, perfiles o bots, mensajeria sobre Hermes, MCP en Hermes, migracion desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque no nombre la skill."
+fuente: "Rehecha a fidelidad el 2026-06-22 contra la doc oficial viva (hermes-agent.nousresearch.com/docs/, sondeo de estado 2026-06-22). Deriva de la bestia artifacts/skills/dev/hermes-agent-specialist/SKILL.md v0.1.1 (sha256:656d2b29d2c56ce4b50051625ae475b3051ee2b178b5012d1681798198666991): se conservan proposito, doctrina canon-vivo/no-snapshot, regla >=64k tokens y secretos-en-.env (todas vigentes y confirmadas en el canon). Normalizacion pneuma: frontmatter _manifest/extensions.kora anidado -> shape plano ley/2; vector [2,0,2,0,1] preservado (legal para habilidad); conocimiento (urn:kora:kb:hermes-runtime-extension etc.) OMITIDO por migrar-o-omitir (no encarna en pneuma; ademas esta skill ancla su SSOT al canon web vivo, no a kb congelado). Correcciones de fidelidad: SOUL.md SOLO en HERMES_HOME (nunca cwd); paths/limites de memoria (~/.hermes/memories/, MEMORY.md ~2200c, USER.md ~1375c, snapshot congelado); inventario CLI remitido al canon vivo; deploy = valores de terminal.backend (no subpaginas); proveedores con IDs y catch self-hosted; skills progressive-disclosure 3 niveles + skill_manage; MCP stdio/HTTP detallado; mensajeria con allowlists/pairing; seguridad 7 capas; migracion nativa OpenClaw (hermes claw). bump major: reescritura sustantiva. v1.0.1 (2026-06-23): correccion de fidelidad contra la doc viva (verificacion web adversarial, sondeo 2026-06-23) — `OLLAMA_CONTEXT_LENGTH=64000` se reformula de requisito duro a ajuste necesario para alcanzar el piso de 64k que el canon lista como *recomendado* (default Ollama 4096); el anti-patron auditable deja de marcar falso-incumplimiento. Resto de claims (SOUL.md/HERMES_HOME, limites de memoria, terminal.backend, precedencia config, skills 3-niveles, mensajeria deny-by-default, seguridad 7-capas, hermes claw migrate) confirmados sin deriva. v2.0.0 (2026-07-13): decisión HITL retira `openclaw` de targets; la migracion OpenClaw→Hermes es un puente de entrada soportado por Hermes, no equivalencia ni destino de ejecucion. Elimina cifras de catalogo persistidas: comandos, proveedores, tools, modelos y canales se consultan bajo demanda en el canon oficial. v2.1.0 (2026-08-04): sondeo de fidelidad contra el canon vivo (llms-full.txt, 2026-08-04) — correcciones: ya EXISTE ejecucion/instalacion Docker oficial (imagen nousresearch/hermes-agent, doc en /docs/user-guide/docker); terminal.backend ahora son 7 (agregado vercel_sandbox); el modelo de seguridad ahora tiene 8 capas (nueva capa 3: file write safety); claude-marketplace ya no figura en los hub sources del canon. Resto de claims (SOUL.md/HERMES_HOME, memoria 2200/1375 con snapshot congelado, precedencia config, piso 64k, Ollama/vLLM, skills 3 niveles, MCP, mensajeria deny-by-default, hermes claw migrate) confirmados sin deriva. v2.2.0 (2026-08-06): decision HITL del operador — el indice oficial llms.txt (asset llms-faaf9398aa5828403fd56f6be7989c9f.txt, sha256 f502e5ad7b0d0273631be772af4b665addadec066a8a7ff0255804e4796c2e93, sondeo 2026-08-06) se incorpora como base de conocimiento fundamental de la emision Hermes: cache navegable con clausula de staleness (cada URL se resuelve en vivo antes de afirmar; refrescar cuando el hash del asset llms-*.txt cambie). EXCEPCION explicita a la regla dura #3 (no-snapshot): unico snapshot permitido, declarado en esta version; todo otro snapshot sigue prohibido. Copia byte-identica custodiada en referencias/llms-index.txt de este canon; el puente runtime manual entonces vigente la sincronizo en references/official-docs-index.md y declaro metadata.hermes.source apuntando a este canon; no fue una emision KORA. v2.2.1 (2026-08-23): primer refresco del indice por clausula de staleness — el asset hasheado llms-faaf9398aa5828403fd56f6be7989c9f.txt (sha256 f502e5ad..., sondeo 2026-08-06) murio con 404 tras un redeploy del sitio (el hash embebido en el nombre del archivo es efimero); el indice vivo se resuelve SIEMPRE via el atajo estable /docs/llms.txt, nuevo manifiesto sha256 d3e6618022a0a0e3378e827dd30493dda8fc78ff9172ae3b93237fc139c1c9a2 (sondeo 2026-08-23; indice crece de 135 a 247 entradas: Bot Mode, Automation Blueprints, Desktop App/Plugin SDK, secretos 1Password/Bitwarden, A2A, AWS Bedrock, entre otras). Copia byte-identica re-custodiada en referencias/llms-index.txt. Regla dura #3 actualizada en consecuencia: refrescar por atajo estable, nunca reconstruyendo URLs hasheadas. v2.3.0 (2026-08-23): corrige la frontera fuente/derivado/runtime tras realizar T-hermes-pneuma-v1: la emision KORA conserva el nombre hermes-agent-specialist y referencias/llms-index.txt; el skill incorporado hermes-agent permanece externo; elimina el catalogo volatil de backends y alinea perfiles/proyectos con el canon vivo."
 autor: FS
 creado: 2026-05-12
 lang: es
@@ -40,10 +40,16 @@ ni comandos inventados.
 **Distincion canonica**: **Hermes Agent** (plataforma CLI) != **modelos Hermes LLM**
 de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 
+**Frontera KORA v2.3.0**: esta fuente proyecta el skill
+`hermes-agent-specialist`. El skill incorporado `hermes-agent` pertenece al
+runtime Hermes y se conserva como fuente externa; no es una emisión KORA ni se
+sobrescribe para simular paridad. La referencia histórica v2.2.x a ese puente
+manual no gobierna la instalación vigente.
+
 ## Cuando Usar
 
 - crear un agente Hermes desde cero (instalacion, `hermes setup`, proveedor, primer `SOUL.md`).
-- configurar despliegue via `terminal.backend` (local, docker, ssh, modal, daytona, vercel_sandbox, singularity).
+- configurar despliegue via `terminal.backend` (resolver sus valores vigentes en el canon).
 - conectar canales de mensajeria sobre el gateway de Hermes.
 - integrar MCP servers (stdio/HTTP) o exponer Hermes como server MCP.
 - ciclo de vida de skills (agentskills.io, `skill_manage`, hub, curator, bundles).
@@ -65,7 +71,7 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 
 1. **Es Hermes Agent (plataforma) y no los modelos Hermes LLM?** Ambiguo -> aclarar.
 2. **Agente existente o nuevo?**
-3. **Backend objetivo?** (`terminal.backend`: local/docker/ssh/modal/daytona/vercel_sandbox/singularity, o por decidir).
+3. **Backend objetivo?** (resolver los valores vigentes de `terminal.backend`, o dejarlo por decidir).
 
 ### `clasificar-modo`
 
@@ -81,10 +87,10 @@ de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
 
 Hacer **fetch vivo** (WebFetch) de la URL primaria antes de producir nada; fetch en
 paralelo de las subpaginas que apliquen. Atajo para LLMs: `/docs/llms.txt`
-(indice) y `/docs/llms-full.txt` (completo). La emision Hermes (skill vivo
-`hermes-agent`) porta el indice cacheado con manifiesto (`referencias/llms-index.txt`
-de este canon, sondeo 2026-08-06); es atajo de navegacion offline, no reemplaza
-el fetch vivo. Mapa de canon:
+(indice) y `/docs/llms-full.txt` (completo). Esta fuente custodia el índice
+cacheado en `referencias/llms-index.txt`; toda transmutación de la skill copia
+esa referencia conservando su nombre. Es un atajo de navegación offline, no
+reemplaza el fetch vivo. Mapa de canon:
 
 | Pagina | Cubre |
 |--------|-------|
@@ -93,7 +99,7 @@ el fetch vivo. Mapa de canon:
 | `/docs/getting-started/learning-path` | ruta de aprendizaje |
 | `/docs/integrations/providers` | proveedores, IDs, requisitos (confirma >=64k) |
 | `/docs/user-guide/configuration` | `config.yaml`, `.env`, `terminal.backend`, precedencia |
-| `/docs/user-guide/security` | modelo de seguridad de 7 capas |
+| `/docs/user-guide/security` | modelo de seguridad vigente |
 | `/docs/user-guide/features/overview` | catalogo de capacidades |
 | `/docs/user-guide/features/tools` | catalogo vivo de tools y toolsets |
 | `/docs/user-guide/features/personality` | `SOUL.md` (canonico) |
@@ -162,8 +168,8 @@ residual, siguiente paso si la tarea es multi-incremento.
 - **Secretos en `.env`** (API keys, tokens, passwords). Todo lo demas (modelo, backend,
   compresion, limites de memoria, toolsets) en `config.yaml`. Un secreto en `config.yaml`
   es brecha que se reporta.
-- **Despliegue = valor de `terminal.backend`** en `config.yaml`, no subpaginas aparte
-  (son 7 backends en el canon): `local | docker | ssh | modal | daytona | vercel_sandbox | singularity`.
+- **Despliegue = valor de `terminal.backend`** en `config.yaml`, no subpaginas aparte.
+  Resolver la allowlist vigente en el canon antes de escribirla.
   Los chequeos de comando peligroso se **OMITEN** en backends containerizados (docker/singularity/modal/daytona):
   el contenedor es la frontera de seguridad.
 
@@ -246,10 +252,10 @@ esta en `/docs/reference/cli-commands` u otra subpagina vigente, no existe.
 
 1. **Fetch vivo antes de afirmar.** Memoria de entrenamiento != fuente.
 2. **Canon = SSOT.** Fuente externa que contradice -> gana el canon.
-3. **Prohibido snapshot local del canon** (no `referencias/`, no mirror offline).
-   EXCEPCION UNICA v2.2.0 (2026-08-06, HITL): la emision Hermes porta
-   `references/official-docs-index.md` (indice llms.txt) como base de conocimiento
-   fundamental — cache navegable, NUNCA autoridad: cada URL se resuelve en vivo
+3. **Prohibido snapshot local del canon** (no mirror offline adicional).
+   EXCEPCION UNICA v2.2.0 (2026-08-06, HITL): esta fuente KORA custodia
+   `referencias/llms-index.txt` (indice llms.txt) y sus transmutaciones lo copian
+   con el mismo nombre — cache navegable, NUNCA autoridad: cada URL se resuelve en vivo
    antes de afirmar; refrescar cuando el indice cambie. v2.2.1 (2026-08-23):
    primer refresco por clausula de staleness — el asset hasheado
    llms-faaf9398aa5828403fd56f6be7989c9f.txt (sha256 f502e5ad..., sondeo
@@ -300,6 +306,9 @@ Reglas de puente:
   (opera la flota OpenClaw): no improvisar, verificar el comando vivo antes de ejecutar.
 - Skills agentskills.io son cercanas a las de Claude Code y a las skills KORA pero **no
   intercambiables sin verificacion** de formato contra `/docs/user-guide/features/skills`.
+- El skill incorporado `hermes-agent` es una fuente externa mantenida por Hermes;
+  el artefacto KORA se emite e instala como `hermes-agent-specialist`. No fusionar
+  ambos objetos ni usar una copia manual del primero como prueba de paridad KORA.
 - `SOUL.md` (Hermes) != agente KORA != subagente Claude Code: no mezclar frontmatter ni
   convenciones sin declarar la traduccion.
 
