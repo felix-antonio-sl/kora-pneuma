@@ -775,9 +775,8 @@ class TestTransmutacion(CasoPneuma):
         self.assertEqual(primera, emitido.read_bytes())
 
     def test_target_realizado_emite(self):
-        # hermes REALIZADO desde ley/3 v3.0.0 (forma habilidad); openclaw ya
-        # lo estaba (v1.3.0). El fallo honesto residual vive en emitir() para
-        # la forma agéntica (test_hermes_agente_falla_cerrado).
+        # Hermes está realizado desde ley/3 v3.0.0 para habilidades y v4.0.0
+        # para agentes completos; este caso fija el contrato skill v1.
         self.escribir_skill(skill_campos(targets=["hermes"]))
         codigo, salida, _ = self.correr(
             ["transmutar", "--urn", "urn:kora:artefacto:util-x",
@@ -3041,11 +3040,12 @@ class TestParidad(CasoPneuma):
 # (ley/3 v3.0.0, 2026-08-23: target realizado para forma habilidad)
 
 class TestHermes(CasoPneuma):
-    """ley/3 §7.5: emisión de skills hacia Hermes.
+    """ley/3 §7.5: skills y agentes completos hacia Hermes.
 
-    Primitivo nativo: SKILL.md agentskills.io en ~/.hermes/skills/ (canon
-    oficial). Forma agéntica NO tiene primitivo nativo (perfiles con SOUL.md)
-    y falla cerrada en vez de colapsar a otra forma."""
+    Una habilidad se materializa como SKILL.md agentskills.io. Una fuente con
+    ``forma: agente`` se materializa como profile distribution nativa; la forma
+    ``subagente`` sigue fallando cerrada porque un perfil es un agente completo.
+    """
 
     def rutas_tmp(self):
         base = self.raiz / "runtime"
@@ -3059,6 +3059,7 @@ class TestHermes(CasoPneuma):
             ("openclaw", "skill"): str(base / "claw/skills/{nombre}"),
             ("openclaw", "agente"): str(base / "fleet/blueprints/{nombre}"),
             ("hermes", "skill"): str(base / "hermes/skills/{nombre}"),
+            ("hermes", "agente"): str(base / "hermes/profiles/{nombre}"),
         }
 
     def test_skill_emite_frontmatter_oficial(self):
@@ -3099,15 +3100,71 @@ class TestHermes(CasoPneuma):
         self.assertIn("fidelidad-campos: herramientas:partial", texto)
         self.assertIn("sin-allowlist-runtime", texto)
 
-    def test_hermes_agente_falla_cerrado(self):
+    def test_hermes_agente_emite_profile_distribution_nativa(self):
         self.escribir_agente(agente_campos(targets=["claude-code", "hermes"]))
+        codigo, salida, err = self.correr(
+            ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+             "--target", "hermes"])
+        self.assertEqual(codigo, 0, salida or err)
+        perfil = self.raiz / "_emision/hermes/profiles/agente-x"
+        manifest = (perfil / "distribution.yaml").read_text(encoding="utf-8")
+        soul = (perfil / "SOUL.md").read_text(encoding="utf-8")
+        self.assertIn("name: agente-x\n", manifest)
+        self.assertIn("version: 1.0.0\n", manifest)
+        self.assertIn("distribution_owned:\n  - SOUL.md\n", manifest)
+        self.assertIn("# Cuerpo\n\nTexto sintético.", soul)
+        self.assertIn("funtor: T-hermes-pneuma-v2", soul)
+        self.assertFalse(
+            (self.raiz / "_emision/hermes/agents/agente-x.md").exists())
+
+    def test_reemision_perfil_reconcilia_directorio_cerrado(self):
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+        args = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "hermes"]
+        self.assertEqual(self.correr(args)[0], 0)
+        perfil = self.raiz / "_emision/hermes/profiles/agente-x"
+        (perfil / "factor-obsoleto.txt").write_text(
+            "no pertenece a la emisión vigente", encoding="utf-8")
+
+        codigo, salida, err = self.correr(args)
+
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertFalse((perfil / "factor-obsoleto.txt").exists())
+        self.assertEqual(
+            {path.name for path in perfil.iterdir()},
+            {"distribution.yaml", "SOUL.md"})
+
+    def test_sello_fresco_reconoce_producto_profile_distribution(self):
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes"])[0], 0)
+
+        self.assertEqual(self.fallos("sello-fresco", estricto=True), [])
+
+    def test_hermes_subagente_falla_cerrado(self):
+        self.escribir_agente(agente_campos(
+            forma="subagente", arnes="delegado",
+            targets=["claude-code", "hermes"]))
         codigo, _, err = self.correr(
             ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
              "--target", "hermes"])
         self.assertEqual(codigo, 1)
-        self.assertIn("no tiene primitivo nativo en Hermes", err)
+        self.assertIn("forma 'subagente'", err)
+        self.assertIn("perfil Hermes representa un agente completo", err)
+
+    def test_hermes_agente_rechaza_nombre_reservado_de_perfil(self):
+        self.escribir_agente(agente_campos(
+            nombre="hermes", targets=["hermes"]))
+
+        codigo, _, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("nombre de perfil Hermes reservado", err)
         self.assertFalse(
-            (self.raiz / "_emision/hermes/agents/agente-x.md").exists())
+            (self.raiz / "_emision/hermes/profiles/hermes").exists())
 
     def test_mu3_en_fuente_habilidad_rechazado_por_dominio(self):
         # Dos capas separadas: ley/2 `dominio-forma` rechaza mu=3 declarado
@@ -3123,6 +3180,23 @@ class TestHermes(CasoPneuma):
         self.assertEqual(codigo, 1)
         self.assertIn("dominio-forma", err)
         self.assertIn("mu=3", err)
+
+    def test_mu3_agente_difiere_gateway_al_deploy_del_perfil(self):
+        self.escribir_agente(agente_campos(
+            targets=["hermes"], vector=[2, 3, 2, 0, 2]))
+
+        codigo, salida, err = self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes"])
+
+        self.assertEqual(codigo, 0, salida or err)
+        soul = (self.raiz /
+                "_emision/hermes/profiles/agente-x/SOUL.md").read_text(
+                    encoding="utf-8")
+        self.assertIn("realiza: profile-mu3-conforme", soul)
+        self.assertIn(
+            "difiere: conducta-always-on (gateway/systemd/config.yaml)",
+            soul)
 
     def test_aplicar_instala_en_ruta_hermes(self):
         base = self.raiz / "runtime"
@@ -3154,6 +3228,61 @@ class TestHermes(CasoPneuma):
         emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
         self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
 
+    def test_aplicar_agente_instala_solo_factores_del_perfil(self):
+        hermes_root = self.raiz / "hermes-root"
+        perfil = hermes_root / "profiles/agente-x"
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+        args = ["transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "hermes", "--aplicar"]
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, salida, err = self.correr(args)
+            self.assertEqual(codigo, 0, salida or err)
+            (perfil / "config.yaml").write_text(
+                "model: operator-owned\n", encoding="utf-8")
+            memoria = perfil / "memories/MEMORY.md"
+            memoria.parent.mkdir()
+            memoria.write_text("continuidad", encoding="utf-8")
+            codigo, salida, err = self.correr(args)
+
+        self.assertEqual(codigo, 0, salida or err)
+        emitido = self.raiz / "_emision/hermes/profiles/agente-x"
+        self.assertEqual(
+            (perfil / "SOUL.md").read_bytes(),
+            (emitido / "SOUL.md").read_bytes())
+        self.assertEqual(
+            (perfil / "distribution.yaml").read_bytes(),
+            (emitido / "distribution.yaml").read_bytes())
+        self.assertEqual(
+            (perfil / "config.yaml").read_text(encoding="utf-8"),
+            "model: operator-owned\n")
+        self.assertEqual(memoria.read_text(encoding="utf-8"), "continuidad")
+
+    def test_aplicar_agente_no_adquiere_perfil_hermes_ajeno(self):
+        hermes_root = self.raiz / "hermes-root"
+        perfil = hermes_root / "profiles/agente-x"
+        perfil.mkdir(parents=True)
+        soul = perfil / "SOUL.md"
+        soul.write_text("identidad del operador\n", encoding="utf-8")
+        config = perfil / "config.yaml"
+        config.write_text("model: operator-owned\n", encoding="utf-8")
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, _, err = self.correr([
+                "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "hermes", "--aplicar"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("conflicto de propiedad", err)
+        self.assertIn("perfil Hermes", err)
+        self.assertEqual(soul.read_text(encoding="utf-8"),
+                         "identidad del operador\n")
+        self.assertEqual(config.read_text(encoding="utf-8"),
+                         "model: operator-owned\n")
+        self.assertFalse((perfil / "distribution.yaml").exists())
+
     def test_aplicar_instala_hermes_a_nivel_proyecto(self):
         proyecto = self.raiz / "proyecto"
         proyecto.mkdir()
@@ -3167,6 +3296,68 @@ class TestHermes(CasoPneuma):
         self.assertTrue(instalado.is_file())
         emitido = self.raiz / "_emision/hermes/skills/util-x/SKILL.md"
         self.assertEqual(instalado.read_bytes(), emitido.read_bytes())
+
+    def test_aplicar_skill_bloquea_homonimo_anidado_en_hermes(self):
+        hermes_root = self.raiz / "hermes-root"
+        anidada = hermes_root / "skills/software-development/util-x/SKILL.md"
+        anidada.parent.mkdir(parents=True)
+        anidada.write_text(
+            "---\nname: util-x\ndescription: ajena\n---\n\n# Ajena\n",
+            encoding="utf-8")
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, _, err = self.correr([
+                "transmutar", "--urn", "urn:kora:artefacto:util-x",
+                "--target", "hermes", "--aplicar"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("colisión de discovery Hermes", err)
+        self.assertIn(str(anidada), err)
+        self.assertFalse(
+            (hermes_root / "skills/util-x/SKILL.md").exists())
+
+    def test_aplicar_skill_ignora_homonimo_archivado_en_hermes(self):
+        hermes_root = self.raiz / "hermes-root"
+        archivada = hermes_root / "skills/.archive/util-x/SKILL.md"
+        archivada.parent.mkdir(parents=True)
+        archivada.write_text(
+            "---\nname: util-x\ndescription: archivo\n---\n",
+            encoding="utf-8")
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, salida, err = self.correr([
+                "transmutar", "--urn", "urn:kora:artefacto:util-x",
+                "--target", "hermes", "--aplicar"])
+
+        self.assertEqual(codigo, 0, salida or err)
+        self.assertTrue(
+            (hermes_root / "skills/util-x/SKILL.md").is_file())
+        self.assertEqual(
+            archivada.read_text(encoding="utf-8"),
+            "---\nname: util-x\ndescription: archivo\n---\n")
+
+    def test_aplicar_skill_proyecto_bloquea_homonimo_en_agents(self):
+        proyecto = self.raiz / "proyecto"
+        ajena = proyecto / ".agents/skills/category/util-x/SKILL.md"
+        ajena.parent.mkdir(parents=True)
+        ajena.write_text(
+            "---\nname: util-x\ndescription: ajena\n---\n",
+            encoding="utf-8")
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+
+        codigo, _, err = self.correr([
+            "transmutar", "--urn", "urn:kora:artefacto:util-x",
+            "--target", "hermes", "--aplicar", "--proyecto", str(proyecto)])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("colisión de discovery Hermes", err)
+        self.assertIn(str(ajena), err)
+        self.assertFalse(
+            (proyecto / ".hermes/skills/util-x/SKILL.md").exists())
 
     def test_paridad_focal_verifica_unidad_hermes(self):
         base = self.raiz / "runtime"
@@ -3207,6 +3398,56 @@ class TestHermes(CasoPneuma):
         self.assertEqual(codigo, 0, salida or err)
         self.assertIn("paridad: fiel          hermes  util-x", salida)
 
+    def test_paridad_perfil_hermes_gobierna_solo_factores_emitidos(self):
+        hermes_root = self.raiz / "hermes-root"
+        perfil = hermes_root / "profiles/agente-x"
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            self.assertEqual(self.correr([
+                "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+                "--target", "hermes", "--aplicar"])[0], 0)
+            (perfil / "config.yaml").write_text(
+                "model: operator-owned\n", encoding="utf-8")
+            codigo, salida, err = self.correr([
+                "transmutar", "--paridad", "--urn",
+                "urn:dev:artefacto:agente-x", "--target", "hermes"])
+            self.assertEqual(codigo, 0, salida or err)
+            self.assertIn(
+                "paridad: fiel          hermes  agente-x", salida)
+
+            with (perfil / "SOUL.md").open("a", encoding="utf-8") as fh:
+                fh.write("\nderiva local\n")
+            codigo, salida, _ = self.correr([
+                "transmutar", "--paridad", "--urn",
+                "urn:dev:artefacto:agente-x", "--target", "hermes"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("paridad: desviada      hermes  agente-x", salida)
+        self.assertIn("difiere SOUL.md", salida)
+        self.assertNotIn("sobra config.yaml", salida)
+
+    def test_paridad_perfil_hermes_ajeno_es_conflicto(self):
+        hermes_root = self.raiz / "hermes-root"
+        perfil = hermes_root / "profiles/agente-x"
+        perfil.mkdir(parents=True)
+        (perfil / "SOUL.md").write_text(
+            "identidad del operador\n", encoding="utf-8")
+        self.escribir_agente(agente_campos(targets=["hermes"]))
+        self.assertEqual(self.correr([
+            "transmutar", "--urn", "urn:dev:artefacto:agente-x",
+            "--target", "hermes"])[0], 0)
+
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            codigo, salida, _ = self.correr([
+                "transmutar", "--paridad", "--urn",
+                "urn:dev:artefacto:agente-x", "--target", "hermes"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("paridad: desviada      hermes  agente-x", salida)
+        self.assertIn("conflicto de propiedad", salida)
+
     def test_paridad_verifica_hermes_a_nivel_proyecto(self):
         proyecto = self.raiz / "proyecto"
         proyecto.mkdir()
@@ -3220,6 +3461,28 @@ class TestHermes(CasoPneuma):
              "--proyecto", str(proyecto)])
         self.assertEqual(codigo, 0, salida or err)
         self.assertIn("paridad: fiel          hermes  util-x", salida)
+
+    def test_paridad_skill_hermes_detecta_homonimo_activo(self):
+        hermes_root = self.raiz / "hermes-root"
+        self.escribir_skill(skill_campos(targets=["hermes"]))
+        with mock.patch.dict(
+                os.environ, {"HERMES_HOME": str(hermes_root)}, clear=False):
+            self.assertEqual(self.correr([
+                "transmutar", "--urn", "urn:kora:artefacto:util-x",
+                "--target", "hermes", "--aplicar"])[0], 0)
+            anidada = hermes_root / "skills/category/util-x/SKILL.md"
+            anidada.parent.mkdir(parents=True)
+            anidada.write_text(
+                "---\nname: util-x\ndescription: duplicada\n---\n",
+                encoding="utf-8")
+            codigo, salida, _ = self.correr([
+                "transmutar", "--paridad", "--urn",
+                "urn:kora:artefacto:util-x", "--target", "hermes"])
+
+        self.assertEqual(codigo, 1)
+        self.assertIn("paridad: desviada      hermes  util-x", salida)
+        self.assertIn("colisión de discovery Hermes", salida)
+        self.assertIn(str(anidada), salida)
 
 
 if __name__ == "__main__":

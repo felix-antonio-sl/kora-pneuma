@@ -1,4 +1,4 @@
-# KORA/Transmutación — ley pneuma v3.1.0
+# KORA/Transmutación — ley pneuma v4.0.0
 
 Estrato 3 de la ley. Gobierna el gesto `transmutar`: la proyección reticular
 de una firma y la serialización del artefacto para un runtime concreto.
@@ -38,7 +38,8 @@ Reglas:
 
 1. La proyección de la firma la hace `P_T` (matrices §4). En targets
    monolíticos el cuerpo NO se proyecta: se transporta entero al archivo que el
-   target reserva para la operativa (`SKILL.md` o `{nombre}.md`).
+   target reserva para el contrato (`SKILL.md`, `{nombre}.md` o el `SOUL.md`
+   de un perfil Hermes).
 2. Este transporte vale para **todos** los targets, sin campo por-emisión que lo
    declare: es una regla del emisor, no un atributo del artefacto.
 3. Un target cuyo objeto-runtime es un **producto de archivos** PUEDE distribuir
@@ -47,7 +48,9 @@ Reglas:
    recibe ese span. El producto conserva la materia completa sin duplicarla;
    cada componente sale de un **span marcado** (`ley/2 §10 r6`), nunca de una
    segmentación de prosa por el núcleo (forma-no-verdad). Los demás targets
-   conservan el cuerpo completo verbatim.
+   conservan el cuerpo completo verbatim. Una distribución de perfil Hermes
+   también es multiarchivo, pero `distribution.yaml` es metadata derivada y el
+   cuerpo completo viaja monolítico en `SOUL.md`: no se infiere una partición.
 
 ## 2. Targets reconocidos y realizados
 
@@ -57,22 +60,22 @@ Reglas:
 | `codex` | realizado | emite |
 | `opencode` | realizado | emite |
 | `openclaw` | realizado | emite (workspace, §7) |
-| `hermes` | realizado (habilidad, §7.5) | emite; forma agéntica falla cerrada |
+| `hermes` | realizado (habilidad y agente completo, §7.5) | emite; `subagente` falla cerrado |
 
 1. `targets` es opcional. Si se declara, DEBE ser una lista no vacía y
    subconjunto de los cinco reconocidos (check `targets-conocidos`, ley/2).
-2. `hermes` está **realizado** desde v3.0.0 para la forma habilidad: una skill
-   transmuta vía `T-hermes-pneuma-v1` (§7.5). Eso cierra solo el tramo habilidad
-   de la deuda declarada en `GENESIS §4`, sin editar el acta histórica. La forma
-   agéntica sigue siendo un puente manual porque Hermes no tiene primitivo
-   nativo de archivo-agente (los agentes-persona son perfiles gateway con
-   `SOUL.md`). La ley no nombra ese puente como realizado. `openclaw` está
-   **realizado** desde v1.3.0 (misma regla de cierre sin editar GENESIS).
+2. `hermes` está **realizado** desde v3.0.0 para la forma habilidad mediante
+   `T-hermes-pneuma-v1` y desde v4.0.0 para la forma `agente` mediante una
+   distribución nativa de perfil `T-hermes-pneuma-v2` (§7.5). La forma
+   `subagente` sigue fallando cerrada: un perfil es un agente completo, no un
+   delegado invocable dentro de otro. Esto cierra la deuda histórica de
+   `GENESIS §4` sin editar el acta. `openclaw` está realizado desde v1.3.0 por
+   la misma regla de cierre.
 3. El campo histórico `funtor` del sello identifica la versión del contrato de
    emisión; el nombre se conserva para no invalidar productos. Identificadores
    vigentes: `T-claude-code-pneuma-v1`, `T-codex-pneuma-v2`,
    `T-opencode-pneuma-v1`, `T-openclaw-pneuma-v1`,
-   `T-hermes-pneuma-v1`. La v2 de Codex reemplaza
+   `T-hermes-pneuma-v1` (skill) y `T-hermes-pneuma-v2` (perfil). La v2 de Codex reemplaza
    el antiguo colapso agente→skill por custom agents nativos (§7).
 4. Una fuente sin `targets` es agnóstica al runtime. `transmutar --urn U` elige
    **Codex** como target operacional principal; otro target realizado solo se
@@ -211,27 +214,28 @@ en `hermes-agent.nousresearch.com/docs`, verificada en vivo el 2026-08-23.
 
 | Eje | Proyecciones |
 |---|---|
-| `pi` | 0→0, 1→1, 2→2 full · 3→2 partial — delegación jerárquica vía perfiles gateway, sin árbol nativo dentro de una skill |
+| `pi` | 0→0, 1→1, 2→2 full · 3→2 partial — delegación jerárquica acotada por toolset, sin árbol nativo de perfiles |
 | `mu` | 0→0, 1→1, 2→2 full · 3→3 full — always-on vía gateway systemd; techo de RUNTIME: una fuente habilidad sigue limitada por `dominio-forma` (ley/2, mu ∈ {0,1}) |
 | `xi` | 0→0, 1→1, 2→2 full · 3→2 partial (multi-fase se aplana) · 4→2 partial (operad dinámica no soportada) |
 | `lambda` | 0→0, 1→1, 2→1 partial — ecosistema colapsa a organizacional · 3→∅ none — society-in-the-loop no soportado |
-| `phi` | 0→0, 1→1 full · 2→2 partial — colaborativo vía Bot Mode y grupos, sin identidad persistente en la skill · 3→2 partial — cognición híbrida no nativa · 4→∅ none — co-evolutivo no soportado |
+| `phi` | 0→0, 1→1 full · 2→2 partial — colaborativo vía Bot Mode y grupos, con continuidad efectiva dependiente del deploy · 3→2 partial — cognición híbrida no nativa · 4→∅ none — co-evolutivo no soportado |
 | `sigma` | máx soportado `[3,2,2,2,1]` |
 
-Alcance del contrato `T-hermes-pneuma-v1`: **sólo la forma habilidad**. La
-forma agéntica falla cerrada (§7.5 r1): los perfiles con SOUL.md son un puente
-manual gobernado, no una emisión. Por eso `mu:3 full` describe el techo del
-runtime, no una fidelidad alcanzable por este transporte: `dominio-forma`
-limita toda habilidad a `mu ∈ {0,1}`. KORA no recomienda Hermes como destino
-de una fuente `mu=3` mientras no exista un transporte agéntico gobernado.
+El contrato `T-hermes-pneuma-v1` cubre sólo la forma habilidad y, por
+`dominio-forma`, no alcanza `mu=3`. `T-hermes-pneuma-v2` cubre la forma
+`agente`: si la fuente declara `mu=3`, el perfil se emite conforme al techo,
+pero el sello difiere la conducta always-on al gateway y a la configuración
+del deploy (§7.5). Preservar el ordinal prueba compatibilidad de tipo, no un
+daemon vivo. La forma `subagente` no pertenece al dominio de este transporte.
 
 ## 5. El sello
 
 Todo factor doctrinal emitido (`SKILL.md`, agente, `AGENTS.md`, `SOUL.md`) DEBE
 terminar con un sello de procedencia y congruencia: comentario HTML, formato
 EXACTO, **sin timestamp** — el hash identifica los bytes de la fuente, no una
-identidad semántica. Los sidecars de runtime —incluido
-`agents/openai.yaml` de una skill Codex— y el contenido auxiliar
+identidad semántica. Los sidecars de runtime —incluidos
+`agents/openai.yaml` de una skill Codex y `distribution.yaml` de un perfil
+Hermes— y el contenido auxiliar
 `referencias/` no duplican el sello; pertenecen al mismo producto y
 `sello-fresco` prueba sus bytes contra el generador (§9).
 
@@ -352,6 +356,8 @@ real. En paridad, omitir `--target` conserva el barrido global (§9.1).
 | `opencode` | agente | `_emision/opencode/agents/{nombre}.md`; frontmatter `description`, `mode: subagent` (forma `subagente`) o `mode: all` (forma `agente`: persona dual-mode, usable como primario y delegable como subagente; `all` es el default de opencode y preserva ambos modos del sello), y `permission:` con `<tool>: deny` para cada tool de **efecto externo** (`bash`, `webfetch`, `websearch`, `task`) que `herramientas` NO concede — frontera de capacidad en el idiom canónico de opencode (el objeto `tools` está deprecado desde v1.1.1; las read-ish e internas quedan en default). Paridad con el allowlist `tools` de claude-code |
 | `openclaw` | skill | `_emision/openclaw/skills/{nombre}/SKILL.md`; frontmatter `name`, `description` (agentskills.io); copia `referencias/`. Las tools de openclaw son config-level (openclaw.json), no van en el frontmatter |
 | `openclaw` | agente (forma `subagente`/`agente`/`plataforma`) | **workspace** `_emision/openclaw/workspaces/{nombre}/` con DOS archivos (§7.1): `AGENTS.md` = cuerpo sin el span `U_phen` + sello; `SOUL.md` = span de `U_phen` + sello (sólo si el `arnes` porta `U_phen`) |
+| `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter `name`, `description`, `version`; copia `referencias/`; contrato `T-hermes-pneuma-v1` (§7.5) |
+| `hermes` | agente (sólo forma `agente`) | **profile distribution** `_emision/hermes/profiles/{nombre}/`: `SOUL.md` = cuerpo completo + sello y `distribution.yaml` = manifest nativo que declara ambos nombres como `distribution_owned`; contrato `T-hermes-pneuma-v2` (§7.5). `subagente` falla cerrado |
 
 ### 7.1 La emisión de workspace de `openclaw`
 
@@ -428,7 +434,9 @@ opencode → `~/.config/opencode/skills/{nombre}/` y
 `~/.config/opencode/agents/{nombre}.md`; openclaw →
 `~/openclaw-fleet/blueprints/{nombre}/` (escribe `AGENTS.md` [+ `SOUL.md`])
 para el agente, y
-`~/.openclaw/skills/{nombre}/` (managed skills) para la skill. En toda emisión y
+`~/.openclaw/skills/{nombre}/` (managed skills) para la skill; hermes →
+`$HERMES_HOME/skills/{nombre}/` para la skill del perfil efectivo y
+`<raíz-hermes>/profiles/{nombre}/` para el agente completo. En toda emisión y
 aplicación el contenido auxiliar `referencias/` conserva su nombre: el cuerpo emitido cita
 paths `referencias/...` y ningún target exige otro nombre.
 
@@ -453,7 +461,8 @@ factor raíz portador del sello debe atribuir la instalación al mismo `(URN,tar
 ya atribuida a ese par. Si el destino existe pero carece de ese sello —o porta
 otro par— es un homónimo no atribuible: conflicto bloqueante, preservado sin
 mutación. La regla cubre el `SKILL.md` raíz, los agentes de archivo único, el
-TOML Codex y cada `AGENTS.md`/`SOUL.md` emitido para OpenClaw. Todos los
+TOML Codex, cada `AGENTS.md`/`SOUL.md` emitido para OpenClaw y el `SOUL.md`
+portador de un perfil Hermes. Todos los
 factores se validan antes de mutar uno; un directorio incompatible, symlink o
 nodo especial tampoco transfiere propiedad y NUNCA se sigue, aunque aparezca
 en un ancestro de la ruta final. La skill complementaria Codex obedece la misma
@@ -464,14 +473,16 @@ Esa propiedad autoriza reemplazar con `lstat` un leaf incompatible dentro de
 emisión y toda limpieza de derivados se preflightan antes de mutar uno.
 
 Toda unidad bajo `_emision/` es un derivado cerrado. El **blueprint OpenClaw
-aplicado**, en cambio, es una superficie abierta: KORA gobierna por nombre
-únicamente `AGENTS.md` y el `SOUL.md` efectivamente emitido. Si el producto
-vigente deja de emitir `SOUL.md`, solo retira el residual cuando su sello lo
-atribuye al mismo `(URN,target)`. Preserva los demás nombres del blueprint,
-incluidos scaffolding y material ajeno. El workspace runtime privado queda
-fuera: lo materializa el deploy fleet preservando memoria y estado mutable. Los
-agentes de archivo único solo administran su archivo exacto y no tocan hermanos
-del directorio.
+aplicado** y el **perfil Hermes aplicado**, en cambio, son superficies abiertas.
+En OpenClaw, KORA gobierna únicamente `AGENTS.md` y el `SOUL.md` efectivamente
+emitido. Si el producto vigente deja de emitir `SOUL.md`, sólo retira el
+residual cuando su sello lo atribuye al mismo `(URN,target)`; preserva
+scaffolding y material ajeno. El workspace runtime privado queda fuera. En
+Hermes, KORA gobierna exactamente `SOUL.md` y `distribution.yaml`; preserva
+`config.yaml`, `.env`, memoria, sesiones, skills, cron y cualquier otro estado
+del perfil. Un perfil preexistente sólo se reconcilia cuando su `SOUL.md`
+atribuye el mismo `(URN,hermes)`. Los agentes de archivo único administran su
+archivo exacto y no tocan hermanos del directorio.
 
 `--aplicar --proyecto PATH` redirige la instalación al nivel
 **proyecto** — el `.opencode/`/`.claude/` del proyecto, no el home del operador.
@@ -480,8 +491,9 @@ codex → `PATH/.agents/skills/{nombre}/` y `PATH/.codex/agents/{nombre}.toml`;
 opencode → `PATH/.opencode/skills/{nombre}/` y `PATH/.opencode/agents/{nombre}.md`
 (subdirectorios en **plural**, convención canónica de opencode: el `.opencode/` y
 `~/.config/opencode/` usan nombres plurales; singular solo por retrocompat).
-`openclaw` NO soporta nivel proyecto porque sus workspaces son user/fleet-level,
-no de proyecto. La emisión canónica en `_emision/` no cambia; `--proyecto`
+hermes → `PATH/.hermes/skills/{nombre}/`; los perfiles Hermes y `openclaw` NO
+soportan nivel proyecto porque son unidades user/gateway o user/fleet. La
+emisión canónica en `_emision/` no cambia; `--proyecto`
 solo redirige el destino de `--aplicar`.
 
 Codex y OpenClaw comparten la raíz personal Agent Skills
@@ -492,6 +504,17 @@ existe el homónimo en el layout directo que KORA usa para Codex
 efectiva en ningún agente. Este guard NO pretende resolver layouts personales
 agrupados ni precedencias por workspace; el gate de deploy DEBE inspeccionar el
 discovery efectivo por agente.
+
+Hermes descubre recursivamente skills y resuelve por nombre de directorio o
+por `name` del frontmatter. Por eso aplicar o declarar `fiel` una skill Hermes
+exige que no exista otro candidato activo con el mismo nombre dentro de la
+raíz local efectiva; a nivel proyecto se inspeccionan conjuntamente
+`.hermes/skills/` y `.agents/skills/`. Los directorios que el runtime excluye y
+las fibras de soporte de una skill no cuentan. KORA no sigue enlaces durante
+el preflight: un enlace activo no evaluable bloquea en vez de ampliar la
+lectura. `skills.external_dirs`, plugins y el trust efectivo del proyecto
+permanecen como gate de deploy del runtime; este guard no los presenta como
+verificados.
 
 El gesto `--aplicar` **respeta y valida el campo `alcance`** del artefacto (ley/2
 §3; ausente = `ambos`): un artefacto con `alcance: usuario` rechaza `--proyecto`;
@@ -507,40 +530,70 @@ Antes de construir o retirar una ruta, `transmutar` exige el slug canónico
 definido en `ley/2 §2.1`; cualquier otro `nombre` aborta sin mutar el producto.
 `forma-valida` denuncia la misma incoherencia en el corpus.
 
-### 7.5 La emisión de habilidad de `hermes`
+### 7.5 Las emisiones nativas de `hermes`
 
-Hermes Agent (Nous Research) se incorpora como target **realizado** para la
-forma **habilidad** (v3.0.0, 2026-08-23). El primitivo nativo es la skill
-agentskills.io del canon oficial
-(`/docs/user-guide/features/skills#skillmd-format`): toda skill vive en
-`${HERMES_HOME:-~/.hermes}/skills/`, que es fuente de verdad local para el
-perfil efectivo. Cada perfil Hermes es un hogar aislado con la misma forma.
-Hermes también descubre skills de proyecto bajo `.hermes/skills/`, sujeto a
-su gate de confianza del proyecto.
+Hermes Agent (Nous Research) es target realizado para dos formas distintas,
+sin convertir sus primitivos en ontología KORA:
 
-| Target | Forma | Emisión |
-|---|---|---|
-| `hermes` | skill | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version` (campo opcional del canon Hermes); copia `referencias/` conservando su nombre si existe. El frontmatter Hermes NO tiene allowlist de herramientas: si `herramientas` no es vacía, la frontera se registra como pérdida de campo (`herramientas -> sin-allowlist-runtime`) y queda como disciplina del cuerpo, jamás como enforcement fingido |
+- **habilidad** desde v3.0.0: skill agentskills.io, contrato
+  `T-hermes-pneuma-v1`;
+- **agente completo** desde v4.0.0: profile distribution nativa, contrato
+  `T-hermes-pneuma-v2`.
 
-1. **Frontera de forma**: la forma agéntica NO tiene primitivo nativo en
-   Hermes — los agentes-persona viven como perfiles gateway con `SOUL.md`
-   (puente manual documentado, kora-custodia). `transmutar --target hermes`
-   sobre un agente DEBE fallar cerrado nombrando esa frontera; jamás colapsa
-   a otra forma ni emite un archivo-agente ad hoc.
-2. **Matriz** (§4.5): idéntica a claude-code salvo `mu:3 full`, capacidad del
-   gateway siempre-activo. Ese techo pertenece al *runtime* y no al transporte
-   v1: una FUENTE de forma habilidad sigue limitada por `dominio-forma` de
-   ley/2 (`mu ∈ {0,1}`), que manda antes que cualquier matriz.
-3. **Instalación de usuario o perfil**: sin override, `--aplicar` usa
-   `~/.hermes/skills/{nombre}`. Si existe `HERMES_HOME`, usa
-   `$HERMES_HOME/skills/{nombre}`; así el mismo gesto puede dirigirse de forma
-   explícita a un perfil o bot aislado. La paridad resuelve exactamente el
-   mismo hogar efectivo.
-4. **Instalación de proyecto**: `--proyecto PATH` usa
-   `PATH/.hermes/skills/{nombre}`. Materializar no concede confianza: Hermes
-   solo carga esa skill cuando el proyecto cumple su gate runtime de confianza.
-5. **Sello**: `funtor: T-hermes-pneuma-v1`. La paridad compara el directorio
-   cerrado de la skill contra la ruta efectiva definida en r3 o r4.
+El canon oficial consultado el 2026-08-23 establece que una distribución de
+perfil empaqueta un agente completo y puede portar `SOUL.md`, configuración,
+skills, cron y MCP; también distingue los factores propiedad de la distribución
+de los factores propiedad del usuario. KORA usa ese primitivo con una frontera
+mínima: sólo transporta doctrina agéntica y su manifest, no absorbe estado ni
+configuración del operador.
+
+| Forma KORA | Emisión Hermes |
+|---|---|
+| `habilidad` | `_emision/hermes/skills/{nombre}/SKILL.md`; frontmatter oficial `name`, `description`, `version`; copia `referencias/`. El frontmatter no expresa la allowlist KORA: `herramientas` se registra como pérdida de campo y permanece disciplina del cuerpo |
+| `agente` | `_emision/hermes/profiles/{nombre}/SOUL.md` con cuerpo completo y sello, más `distribution.yaml` determinista con `name`, `version`, `description` y `distribution_owned: [SOUL.md, distribution.yaml]` |
+| `subagente` | fuera del dominio: falla cerrado porque un perfil es el agente completo, no una unidad delegable dentro de otro perfil |
+
+Reglas:
+
+1. **Transporte del agente**: `SOUL.md` recibe el cuerpo fuente completo. En
+   Hermes es el primer slot de identidad/instrucciones del agente; el archivo
+   conserva los bytes transportados, pero su inyección efectiva puede truncarse
+   dinámicamente por presupuesto de contexto. No existe un archivo global
+   paralelo que permita separar operativa y `U_phen` sin inventar semántica.
+   `distribution.yaml` es sidecar derivado, no segundo portador doctrinal.
+2. **Frontera del perfil**: la emisión NO incluye `config.yaml`, `.env`, MCP,
+   cron, skills, memoria, sesiones ni credenciales. `componible` declara
+   candidatos y no autoriza autoempaquetarlos. El perfil instalado es superficie
+   abierta: KORA reconcilia únicamente `SOUL.md` y `distribution.yaml` cuando el
+   primero atribuye el mismo `(URN,hermes)`; todo lo demás se preserva.
+3. **Nombre nativo**: la forma `agente` rechaza los nombres reservados por
+   Hermes (`hermes`, `default`, `test`, `tmp`, `root`, `sudo`) y nombres de más
+   de 64 caracteres. Nunca se deriva una ruta nativa inválida desde un slug KORA
+   más permisivo.
+4. **Materia always-on**: `mu:3 full` es capacidad del gateway. Para una skill
+   sigue inalcanzable por `dominio-forma`; para un agente v2 el sello declara
+   `profile-mu3-conforme` y difiere la conducta del gateway/systemd/config al
+   deploy. La emisión ni la paridad prueban que el perfil esté servido.
+5. **Herramientas**: ni `SKILL.md` ni `SOUL.md` implementan una allowlist exacta
+   por artefacto. Si `herramientas` no es vacía, el sello declara
+   `herramientas -> sin-allowlist-runtime`; la configuración efectiva de
+   toolsets permanece fuera del emisor.
+6. **Aplicación de skills**: sin override usa
+   `~/.hermes/skills/{nombre}`; con `HERMES_HOME`,
+   `$HERMES_HOME/skills/{nombre}`. `--proyecto PATH` usa
+   `PATH/.hermes/skills/{nombre}` sin fingir que concede confianza. Aplicación y
+   paridad inspeccionan las colisiones nominales dentro de las raíces explícitas
+   descritas en §7.
+7. **Aplicación de agentes**: usa
+   `<raíz-hermes>/profiles/{nombre}`. Si `HERMES_HOME` ya apunta a
+   `<raíz>/profiles/<perfil-activo>`, la raíz se resuelve como `<raíz>`; un
+   perfil no se anida dentro de otro. No hay instalación project-level de un
+   agente completo.
+8. **Paridad y límite runtime**: una skill se compara como producto cerrado. Un
+   perfil compara sólo los dos factores emitidos y tolera configuración/estado
+   adicional. La igualdad de bytes no prueba que Hermes haya cargado el SOUL:
+   el runtime aplica un límite dinámico según la ventana de contexto y puede
+   truncarlo; esa observación pertenece al canario runtime, no al sello.
 
 ## 8. El gesto inverso (Lift)
 
@@ -608,7 +661,8 @@ Reglas:
    gestionado sobrante, nodo de tipo incompatible, symlink o nodo especial,
    homónimo no atribuible en una ruta que KORA necesitaría adquirir y residuo
    atribuible de una fuente que ya no está activa o cuyo producto vigente ya no
-   contiene esa unidad.
+   contiene esa unidad, y colisión nominal activa en el discovery Hermes que
+   vuelve ambigua la skill efectiva.
    La enumeración tampoco sigue enlaces en `_emision/`: una raíz, colección o
    unidad no regular produce drift. Dos productos emitidos que colapsen al
    mismo `(target,tipo,nombre)` producen un único veredicto `desviada` por
@@ -623,9 +677,11 @@ Reglas:
 3. En una skill, `fiel` exige igualdad exacta del mapa
    `ruta-relativa → bytes`, una vez demostrada la atribución del directorio: un
    factor instalado sobrante también es drift. En un blueprint OpenClaw
-   aplicado solo se comparan los nombres emitidos y un `SOUL.md` residual cuyo
+   aplicado sólo se comparan los nombres emitidos y un `SOUL.md` residual cuyo
    sello lo atribuya al mismo `(URN,target)`; los demás nombres y el workspace
-   runtime privado quedan fuera (§7.1). Una skill complementaria Codex
+   runtime privado quedan fuera (§7.1). En un perfil Hermes sólo se comparan
+   `SOUL.md` y `distribution.yaml`; configuración, memoria y demás estado quedan
+   fuera (§7.5). Una skill complementaria Codex
    histórica que siga atribuida a la misma fuente pero ya no forme parte del
    producto vigente es
    `desviada`; su limpieza no presupone ni legitima una democión de forma
@@ -653,12 +709,15 @@ Reglas:
    Ninguna selección inválida se degrada a un barrido vacío exitoso. Una persona
    Codex promete dos unidades —custom agent y skill explícita—; un subagente
    Codex promete una. Un directorio sin su archivo raíz (`SKILL.md` o
-   `AGENTS.md`) no constituye una unidad emitida. Esta promesa exige **emisión**,
+   `AGENTS.md` o `SOUL.md` de perfil) no constituye una unidad emitida. Esta promesa exige **emisión**,
    no instalación: cada runtime se despliega de forma independiente y una
    unidad ausente puede seguir siendo `no-instalada` sin conflicto.
 7. Si una skill managed OpenClaw existe pero el homónimo del layout personal
    Codex/KORA también existe, la unidad es `desviada`, no `fiel`. Otras fuentes
    de precedencia permanecen fuera de este barrido y pertenecen al deploy.
+   Para Hermes, un homónimo activo en la raíz local efectiva o dentro de las
+   dos raíces project-level explícitas también es `desviada`; external dirs,
+   plugins y confianza efectiva siguen siendo evidencia separada de deploy.
 Rationale (2026-07-06): cinco agentes corrieron días desactualizados en los
 runtimes de escritorio sin que ningún gesto lo viera — la fuente avanzó, la
 emisión se regeneró, la instalación quedó atrás. `velar` verde no lo detecta
@@ -684,6 +743,10 @@ clase de fallos sin fingir que la instalación es corpus.
 | Frontera `herramientas` de OpenClaw declarada; realización config diferenciada | §7.1 | declaración mecanizada (`transmutar`); realización verificada en deploy |
 | Emisión de workspace `openclaw` (AGENTS.md + SOUL.md) | §7.1 | mecanizado (`transmutar`) |
 | Centinela `kora:soul` requerido para `SOUL.md` de `arnes` con `U_phen` | §7.1, ley/2 §10 r6 | mecanizado (`transmutar`) |
+| Emisión Hermes por forma: skill v1, profile distribution v2, subagente fuera de dominio | §7.5 | mecanizado (`transmutar`) |
+| Nombre nativo y propiedad abierta del perfil Hermes | §7.5 r2-r3 | mecanizado (`transmutar --aplicar`, paridad) |
+| Colisión nominal en discovery local/project-level de skills Hermes | §7, §7.5 r6 | mecanizado (`transmutar --aplicar`, paridad); external dirs/plugins/trust quedan en deploy |
+| Calificación `mu=3` de perfil separada de gateway vivo | §4.5, §7.5 r4 | declaración mecanizada en sello; conducta verificada en deploy |
 | Sello con formato exacto al emitir | §5 | mecanizado (`transmutar`) |
 | Congruencia fuente↔generador↔producto (sidecars y `referencias/` incluidos) | §9 | mecanizado (`sello-fresco`) |
 | Sidecar fuente `agents/openai.yaml` de skill Codex conservado en emisión, aplicación y paridad | §7, §9, ley/2 §6 | mecanizado (`transmutar`, `sello-fresco`, `transmutar --paridad`) |
@@ -863,3 +926,15 @@ desvían silenciosamente al perfil default; `--proyecto` materializa en
 v1 de habilidades, y deja de recomendar Hermes para fuentes `mu=3`. Retira del
 texto normativo el recuento de canales y la versión instalada, ambos volátiles.
 No cambia el formato ni los bytes emitidos por `T-hermes-pneuma-v1`.
+
+v4.0.0 (2026-08-23): realiza la forma `agente` de Hermes mediante el primitivo
+nativo **profile distribution** y el contrato `T-hermes-pneuma-v2`:
+`SOUL.md` transporta el cuerpo completo y `distribution.yaml` declara sólo esos
+dos factores como propiedad de la distribución. La forma `subagente` sigue
+fuera del dominio. Aplicación y paridad preservan configuración, memoria,
+skills, cron, secretos y demás estado del perfil, bloquean perfiles homónimos
+no atribuibles y detectan colisiones nominales activas de skills en las raíces
+locales/project-level explícitas. El sello de un agente `mu=3` separa perfil
+conforme de gateway vivo. Es major porque sustituye el fallo cerrado de toda
+forma agéntica por un producto, ruta, propiedad y contrato de paridad nuevos;
+no altera los bytes de skills Hermes v1 ni la identidad agnóstica de KORA.

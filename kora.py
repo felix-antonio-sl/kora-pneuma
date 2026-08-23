@@ -885,6 +885,11 @@ def chk_sello_fresco(arts, raiz):
         if workspaces.is_dir():
             emitidos.extend(sorted(workspaces.glob("*/AGENTS.md")))
             emitidos.extend(sorted(workspaces.glob("*/SOUL.md")))
+        # hermes: SOUL.md es el portador doctrinal de la distribución; el
+        # manifest vecino pertenece al mismo producto cerrado de emisión.
+        profiles = target_dir / "profiles"
+        if profiles.is_dir():
+            emitidos.extend(sorted(profiles.glob("*/SOUL.md")))
 
     # `_emision/` es un espacio derivado cerrado. Un archivo solo pertenece a
     # él si es una raíz de producto reconocible o un factor dentro de esa raíz.
@@ -1011,6 +1016,7 @@ def chk_sello_fresco(arts, raiz):
         for directorio in (
             emision / target / "skills" / nombre,
             emision / target / "workspaces" / nombre,
+            emision / target / "profiles" / nombre,
         ):
             if not directorio.is_dir():
                 continue
@@ -1211,20 +1217,17 @@ MATRICES = {
                    4: (None, "none", "co-evolutivo no modelado")}),
         "sigma-max": [3, 3, 3, 3, 2],
     },
-    # hermes: realizado desde ley/3 v3.0.0 (2026-08-23). Target de HABILIDAD:
-    # el primitivo nativo es la skill agentskills.io (~/.hermes/skills/,
-    # canon oficial /docs/user-guide/features/skills). El frontmatter Hermes
-    # no tiene allowlist de herramientas (a diferencia de claude-code), y los
-    # agentes-persona viven como perfiles con SOUL.md, no como archivos de
-    # agente: forma agéntica sigue siendo puente manual (ley/3 §7.5).
-    # El gateway siempre-activo justifica mu=3 en el modelo del runtime. El
-    # transporte v1 sigue limitado a skills y no vuelve alcanzable ese nivel
-    # para una fuente KORA (ley/2 limita habilidad a mu <= 1).
+    # hermes: realizado para habilidades y agentes completos. Los primitivos
+    # nativos son la skill agentskills.io y la profile distribution con
+    # SOUL.md; la forma subagente no colapsa a perfil (ley/3 §7.5).
+    # El gateway siempre-activo justifica mu=3 en el modelo del runtime; el
+    # perfil v2 transporta una fuente agente que lo declare, pero difiere el
+    # daemon y su configuración al deploy (ley/3 §7.5).
     "hermes": {
         "pi": _m({0: (0, "full", None), 1: (1, "full", None),
                   2: (2, "full", None),
-                  3: (2, "partial", "delegación jerárquica vía perfiles "
-                      "gateway, sin árbol nativo en la skill")}),
+                  3: (2, "partial", "delegación jerárquica acotada por "
+                      "toolset, sin árbol nativo de perfiles")}),
         "mu": _m({0: (0, "full", None), 1: (1, "full", None),
                   2: (2, "full", None),
                   3: (3, "full", None)}),  # gateway systemd always-on
@@ -1239,7 +1242,7 @@ MATRICES = {
                           "society-in-the-loop no soportado")}),
         "phi": _m({0: (0, "full", None), 1: (1, "full", None),
                    2: (2, "partial", "colaborativo vía Bot Mode y grupos, "
-                       "sin identidad persistente en la skill"),
+                       "con continuidad efectiva dependiente del deploy"),
                    3: (2, "partial", "cognición híbrida no nativa"),
                    4: (None, "none", "co-evolutivo no soportado")}),
         "sigma-max": [3, 2, 2, 2, 1],
@@ -1434,7 +1437,8 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
         f"version: {art.campos.get('version')}",
         f"hash-fuente: sha256:{hash_hex}",
         f"target: {target}",
-        f"funtor: T-{target}-pneuma-v{'2' if target == 'codex' else '1'}",
+        f"funtor: T-{target}-pneuma-v"
+        f"{'2' if target == 'codex' or (target == 'hermes' and art.tipo == 'agente') else '1'}",
         f"vector-fuente: {_fmt_vector(art.campos['vector'], art.campos['sigma'])}",
         f"vector-proyectado: {_fmt_vector(proy['vector'], proy['sigma'])}",
         "fidelidad: " + " ".join(
@@ -1460,6 +1464,14 @@ def construir_sello(art: Artefacto, target: str, hash_hex: str,
             "always-on, sin recorte de min)",
             "difiere: conducta-always-on (gateway/systemd/openclaw.json) -> "
             "deploy del fleet",
+        ]
+    if target == "hermes" and art.tipo == "agente" \
+            and art.campos.get("vector", [0, 0])[1] == 3:
+        lineas += [
+            "realiza: profile-mu3-conforme (SOUL.md+distribution.yaml; "
+            "techo always-on, sin recorte de min)",
+            "difiere: conducta-always-on (gateway/systemd/config.yaml) -> "
+            "deploy del perfil",
         ]
     if target == "openclaw":
         herramientas = art.campos.get("herramientas") or []
@@ -1638,6 +1650,75 @@ def _emitir_openclaw(art: Artefacto, proy: dict,
     return archivos, perdidas_extra
 
 
+def _emitir_hermes(art: Artefacto, proy: dict,
+                    hash_hex: str) -> tuple[list[tuple[str, str]], list]:
+    """Hermes v2: skills agentskills.io y agentes como profile distribution.
+
+    Un perfil es un agente completo, no un subagente. El cuerpo gobernado
+    viaja entero a SOUL.md: es el contrato durable de esa instancia y no una
+    regla contingente del proyecto. Configuración, secretos, memoria y skills
+    del perfil permanecen fuera de la emisión.
+    """
+    nombre = art.campos["nombre"]
+    descripcion = art.campos.get("descripcion", "")
+    herramientas = art.campos.get("herramientas") or []
+    perdidas_extra: list = []
+    if art.tipo == "skill":
+        if herramientas:
+            perdidas_extra.append((
+                "herramientas",
+                ",".join(str(h) for h in herramientas),
+                "sin-allowlist-runtime",
+                "el frontmatter Hermes no soporta allowlist de "
+                "herramientas; la frontera es disciplina del cuerpo",
+            ))
+        sello = construir_sello(
+            art, "hermes", hash_hex, proy, perdidas_extra)
+        fm = [
+            f"name: {nombre}",
+            f"description: {_fm_str(descripcion)}",
+            f"version: {art.campos.get('version')}",
+        ]
+        return [(
+            f"hermes/skills/{nombre}/SKILL.md",
+            _componer(fm, art.cuerpo, "", sello),
+        )], perdidas_extra
+    forma = art.campos.get("forma")
+    if forma != "agente":
+        raise ErrorTransmutacion(
+            f"la forma '{forma}' no se proyecta a profile distribution: un "
+            "perfil Hermes representa un agente completo, no un subagente")
+    if nombre in {"hermes", "default", "test", "tmp", "root", "sudo"}:
+        raise ErrorTransmutacion(
+            f"nombre de perfil Hermes reservado: '{nombre}'")
+    if len(nombre) > 64:
+        raise ErrorTransmutacion(
+            f"el nombre de perfil Hermes excede 64 caracteres: '{nombre}'")
+    if herramientas:
+        perdidas_extra.append((
+            "herramientas",
+            ",".join(str(h) for h in herramientas),
+            "sin-allowlist-runtime",
+            "Hermes configura herramientas por perfil y toolset, pero no "
+            "materializa la allowlist KORA en SKILL.md ni SOUL.md",
+        ))
+    sello = construir_sello(art, "hermes", hash_hex, proy, perdidas_extra)
+    manifest = "\n".join([
+        f"name: {nombre}",
+        f"version: {art.campos.get('version')}",
+        f"description: {_fm_str(descripcion)}",
+        "distribution_owned:",
+        "  - SOUL.md",
+        "  - distribution.yaml",
+        "",
+    ])
+    base = f"hermes/profiles/{nombre}"
+    return [
+        (f"{base}/distribution.yaml", manifest),
+        (f"{base}/SOUL.md", _componer_plano(art.cuerpo, sello)),
+    ], perdidas_extra
+
+
 def emitir(art: Artefacto, target: str, proy: dict,
            hash_hex: str) -> tuple[list[tuple[str, str]], list]:
     """Construye la emisión: (lista de (path relativo bajo _emision, contenido),
@@ -1650,14 +1731,8 @@ def emitir(art: Artefacto, target: str, proy: dict,
         return _emitir_openclaw(art, proy, hash_hex)
     if target == "codex":
         return _emitir_codex(art, proy, hash_hex)
-    if target == "hermes" and art.tipo != "skill":
-        # ley/3 §7.5: Hermes no tiene primitivo nativo de archivo-agente; los
-        # agentes-persona viven como perfiles con SOUL.md. Fallar cerrado,
-        # jamás colapsar a otra forma (lección T-openclaw 8ef7c6e).
-        raise ErrorTransmutacion(
-            "la forma agéntica no tiene primitivo nativo en Hermes: los "
-            "agentes-persona viven como perfiles gateway con SOUL.md. Usar "
-            "el puente manual documentado (kora-custodia; ley/3 §7.5).")
+    if target == "hermes":
+        return _emitir_hermes(art, proy, hash_hex)
     nombre = art.campos["nombre"]
     descripcion = art.campos.get("descripcion", "")
     herramientas = art.campos.get("herramientas") or []
@@ -1667,20 +1742,6 @@ def emitir(art: Artefacto, target: str, proy: dict,
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
         if target == "claude-code" and herramientas:
             fm.append("allowed-tools: " + ", ".join(herramientas))
-        if target == "hermes":
-            # Campo oficial opcional del canon Hermes
-            # (/docs/user-guide/features/skills#skillmd-format).
-            fm.append(f"version: {art.campos.get('version')}")
-            if herramientas:
-                # El frontmatter Hermes no tiene allowlist de herramientas;
-                # declararla como comentario sería silencio disfrazado: la
-                # frontera queda registrada en el sello como pérdida.
-                perdidas_extra.append((
-                    "herramientas",
-                    ",".join(str(h) for h in herramientas),
-                    "sin-allowlist-runtime",
-                    "el frontmatter Hermes no soporta allowlist de "
-                    "herramientas; la frontera es disciplina del cuerpo"))
         rel = f"{target}/skills/{nombre}/SKILL.md"
     elif target == "claude-code":
         fm = [f"name: {nombre}", f"description: {_fm_str(descripcion)}"]
@@ -1828,7 +1889,8 @@ def _directorios_emitidos(raiz: Path,
     directorios = set()
     for rel, _ in archivos:
         partes = Path(rel).parts
-        if len(partes) >= 4 and partes[1] in ("skills", "workspaces"):
+        if len(partes) >= 4 and partes[1] in (
+                "skills", "workspaces", "profiles"):
             directorios.add(
                 raiz / "_emision" / partes[0] / partes[1] / partes[2])
     return sorted(directorios)
@@ -1846,8 +1908,10 @@ RUTAS_APLICAR = {
     ("openclaw", "skill"): "~/.openclaw/skills/{nombre}",
     ("openclaw", "agente"): "~/openclaw-fleet/blueprints/{nombre}",
     # hermes: skills del perfil default. Si HERMES_HOME está definido, la ruta
-    # efectiva se resuelve dinámicamente en _ruta_aplicar_usuario.
+    # efectiva se resuelve dinámicamente en _ruta_aplicar_usuario. Los agentes
+    # son perfiles nombrados bajo la raíz Hermes, no dentro del perfil activo.
     ("hermes", "skill"): "~/.hermes/skills/{nombre}",
+    ("hermes", "agente"): "~/.hermes/profiles/{nombre}",
 }
 
 # Instalacion a nivel proyecto (--proyecto): el artefacto vive en el .opencode/
@@ -1866,12 +1930,180 @@ RUTAS_APLICAR_PROYECTO = {
 
 def _ruta_aplicar_usuario(target: str, tipo: str, nombre: str) -> Path:
     """Resuelve el hogar efectivo del runtime para una unidad de usuario."""
-    if target == "hermes" and tipo == "skill":
+    if target == "hermes":
         hermes_home = os.environ.get("HERMES_HOME")
         if hermes_home:
-            return Path(hermes_home).expanduser() / "skills" / nombre
+            hogar = Path(hermes_home).expanduser()
+            if tipo == "skill":
+                return hogar / "skills" / nombre
+            if tipo == "agente":
+                nativo = Path.home() / ".hermes"
+                try:
+                    hogar.resolve().relative_to(nativo.resolve())
+                    raiz_hermes = nativo
+                except ValueError:
+                    raiz_hermes = (hogar.parent.parent
+                                   if hogar.parent.name == "profiles"
+                                   else hogar)
+                return raiz_hermes / "profiles" / nombre
     return Path(RUTAS_APLICAR[(target, tipo)].format(
         nombre=nombre)).expanduser()
+
+
+def _conflicto_propiedad_perfil_hermes(path: Path, urn: str) -> str | None:
+    """Impide adquirir un perfil existente y preserva su superficie abierta."""
+    try:
+        tipo = _tipo_nodo(path)
+    except OSError:
+        tipo = "nodo ilegible"
+    if tipo is None:
+        return None
+    if tipo != "directorio":
+        return (
+            f"conflicto de propiedad en '{path}': el perfil Hermes "
+            f"existente es {tipo}; no se reemplazó")
+    try:
+        tipo_soul = _tipo_nodo(path / "SOUL.md")
+    except OSError:
+        tipo_soul = "nodo ilegible"
+    if tipo_soul != "archivo regular" or not _sello_atribuye(
+            path / "SOUL.md", urn, "hermes"):
+        return (
+            f"conflicto de propiedad en '{path}': el perfil Hermes "
+            f"existente no porta un SOUL.md atribuible a ({urn}, hermes); "
+            "no se adquirió por homonimia")
+    for nombre in ("SOUL.md", "distribution.yaml"):
+        try:
+            tipo_factor = _tipo_nodo(path / nombre)
+        except OSError:
+            tipo_factor = "nodo ilegible"
+        if tipo_factor not in (None, "archivo regular"):
+            return (
+                f"conflicto de propiedad en '{path / nombre}': el factor "
+                f"gestionado es {tipo_factor}; no se siguió ni reemplazó")
+    return None
+
+
+HERMES_SKILL_DIRS_EXCLUIDOS = frozenset((
+    ".git", ".github", ".hub", ".archive", ".venv", "venv",
+    "node_modules", "site-packages", "__pycache__", ".tox", ".nox",
+    ".pytest_cache", ".mypy_cache", ".ruff_cache",
+))
+HERMES_SKILL_DIRS_SOPORTE = frozenset((
+    "references", "templates", "assets", "scripts",
+))
+
+
+def _nombre_frontmatter_skill_hermes(path: Path) -> str | None:
+    """Extrae solo `name` sin asumir que el YAML Hermes tiene shape KORA."""
+    with path.open("r", encoding="utf-8-sig", errors="replace") as archivo:
+        texto = archivo.read(64 * 1024)
+    lineas = texto.splitlines()
+    if not lineas or lineas[0].strip() != "---":
+        return None
+    for linea in lineas[1:]:
+        if linea.strip() == "---":
+            return None
+        if linea.startswith((" ", "\t")) or not linea.startswith("name:"):
+            continue
+        crudo = _quitar_comentario(linea.split(":", 1)[1]).strip()
+        if len(crudo) >= 2 and crudo[0] == crudo[-1] \
+                and crudo[0] in ("'", '"'):
+            crudo = crudo[1:-1]
+        return crudo or None
+    return None
+
+
+def _conflictos_discovery_skill_hermes(
+        nombre: str, raices: list[Path], destino: Path) -> list[str]:
+    """Encuentra candidatos que volverían ambiguo el lookup nominal Hermes.
+
+    Replica la frontera relevante del runtime: búsqueda recursiva por nombre
+    de directorio o frontmatter y soporte de archivos legacy `<name>.md`.
+    No sigue enlaces; un enlace dentro de una raíz activa queda como conflicto
+    no evaluable en vez de ampliar silenciosamente la superficie de lectura.
+    """
+    destino_skill = destino / "SKILL.md"
+    conflictos: list[str] = []
+    vistos: set[str] = set()
+
+    def registrar(path: Path, detalle: str = "") -> None:
+        if path == destino_skill:
+            return
+        etiqueta = str(path) + (f" ({detalle})" if detalle else "")
+        if etiqueta not in vistos:
+            vistos.add(etiqueta)
+            conflictos.append(etiqueta)
+
+    for raiz in dict.fromkeys(raices):
+        try:
+            tipo_raiz = _tipo_nodo(raiz)
+        except OSError:
+            registrar(raiz, "raíz ilegible")
+            continue
+        if tipo_raiz is None:
+            continue
+        if tipo_raiz != "directorio":
+            registrar(raiz, f"raíz es {tipo_raiz}")
+            continue
+        pendientes = [raiz]
+        while pendientes:
+            actual = pendientes.pop()
+            try:
+                with os.scandir(actual) as iterador:
+                    entradas = sorted(
+                        iterador, key=lambda entrada: entrada.name)
+            except OSError:
+                registrar(actual, "directorio ilegible")
+                continue
+            por_nombre = {entrada.name: entrada for entrada in entradas}
+            indice = por_nombre.get("SKILL.md")
+            tiene_indice = indice is not None
+            if indice is not None:
+                indice_path = Path(indice.path)
+                try:
+                    tipo_indice = _tipo_nodo(indice_path)
+                except OSError:
+                    tipo_indice = "nodo ilegible"
+                if tipo_indice == "archivo regular":
+                    coincide = actual.name == nombre
+                    try:
+                        coincide = coincide or (
+                            _nombre_frontmatter_skill_hermes(indice_path)
+                            == nombre)
+                    except OSError:
+                        registrar(indice_path, "índice ilegible")
+                    else:
+                        if coincide:
+                            registrar(indice_path)
+                elif tipo_indice is not None:
+                    registrar(indice_path, f"índice es {tipo_indice}")
+            legacy = por_nombre.get(f"{nombre}.md")
+            if legacy is not None and legacy.name != "SKILL.md":
+                legacy_path = Path(legacy.path)
+                try:
+                    tipo_legacy = _tipo_nodo(legacy_path)
+                except OSError:
+                    tipo_legacy = "nodo ilegible"
+                if tipo_legacy == "archivo regular":
+                    registrar(legacy_path)
+                elif tipo_legacy is not None:
+                    registrar(legacy_path, f"legacy es {tipo_legacy}")
+            for entrada in reversed(entradas):
+                if entrada.name in HERMES_SKILL_DIRS_EXCLUIDOS:
+                    continue
+                if tiene_indice and entrada.name in HERMES_SKILL_DIRS_SOPORTE:
+                    continue
+                path = Path(entrada.path)
+                try:
+                    tipo = _tipo_nodo(path)
+                except OSError:
+                    tipo = "nodo ilegible"
+                if tipo == "directorio":
+                    pendientes.append(path)
+                elif tipo == "enlace simbólico" and entrada.name != "SKILL.md":
+                    registrar(path, "enlace activo no evaluado")
+    return conflictos
 
 
 def _skill_personal_sombrea_openclaw(nombre: str) -> Path | None:
@@ -2120,6 +2352,44 @@ def _aplicar(art: Artefacto, target: str,
                   "propietario del target en el deploy por agente.",
                   file=sys.stderr)
             return 1
+    if target == "hermes" and art.tipo == "skill":
+        raices_discovery = (
+            [base / ".hermes/skills", base / ".agents/skills"]
+            if proyecto else [ruta.parent])
+        conflictos_discovery = _conflictos_discovery_skill_hermes(
+            nombre_art, raices_discovery, ruta)
+        if conflictos_discovery:
+            print("error: colisión de discovery Hermes para la skill "
+                  f"'{nombre_art}': " + "; ".join(conflictos_discovery)
+                  + ". La resolución nominal sería ambigua; no se aplicó.",
+                  file=sys.stderr)
+            return 1
+    if not proyecto and target == "hermes" and art.tipo == "agente":
+        conflicto = _conflicto_propiedad_perfil_hermes(
+            ruta, art.urn or "")
+        if conflicto is not None:
+            print(f"error: {conflicto}.", file=sys.stderr)
+            return 1
+        factores = {}
+        for rel, contenido in archivos:
+            partes = Path(rel).parts
+            if partes[:3] != ("hermes", "profiles", nombre_art) \
+                    or len(partes) != 4 \
+                    or partes[3] not in ("SOUL.md", "distribution.yaml"):
+                print("error: emisión Hermes contiene un factor ajeno a la "
+                      f"frontera del perfil '{nombre_art}': {rel}.",
+                      file=sys.stderr)
+                return 1
+            factores[partes[3]] = contenido
+        if set(factores) != {"SOUL.md", "distribution.yaml"}:
+            print("error: emisión Hermes incompleta para el perfil "
+                  f"'{nombre_art}'.", file=sys.stderr)
+            return 1
+        ruta.mkdir(parents=True, exist_ok=True)
+        for nombre, contenido in factores.items():
+            (ruta / nombre).write_text(contenido, encoding="utf-8")
+        print(f"aplicado: {ruta}")
+        return 0
     if target == "codex" and art.tipo == "agente":
         if proyecto:
             agente = ruta
@@ -2264,7 +2534,8 @@ def _unidades_emision(emision: Path):
         for coleccion, tipo_unidad, raiz_unidad, extensiones in (
                 ("skills", "skill", "SKILL.md", ()),
                 ("agents", "agente", None, (".md", ".toml")),
-                ("workspaces", "agente", "AGENTS.md", ())):
+                ("workspaces", "agente", "AGENTS.md", ()),
+                ("profiles", "agente", "SOUL.md", ())):
             contenedor = target_dir / coleccion
             try:
                 tipo_contenedor = _tipo_nodo(contenedor)
@@ -2373,7 +2644,8 @@ def _campos_sello_unidad(path: Path, tipo: str) -> dict[str, str]:
             return {}
         sello = path / "SKILL.md"
     elif tipo_path == "directorio":
-        sello = path / "AGENTS.md"
+        sello = path / (
+            "SOUL.md" if path.parent.name == "profiles" else "AGENTS.md")
     elif tipo_path == "archivo regular":
         sello = path
     else:
@@ -2491,9 +2763,9 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
     lectura: `fiel` = frontera KORA gestionada byte-idéntica a la emisión;
     `desviada` = instalación presente que difiere (stale o editada);
     `no-instalada` = informativo (el gesto no decide si debe instalarse).
-    Las skills se comparan como directorios cerrados. En blueprints OpenClaw
-    solo gobierna AGENTS.md y el SOUL.md atribuible al mismo par KORA; el
-    scaffolding y la memoria del runtime quedan fuera."""
+    Las skills se comparan como directorios cerrados. En blueprints OpenClaw y
+    perfiles Hermes solo se gobiernan los factores emitidos y atribuibles; el
+    scaffolding, configuración y memoria del runtime quedan fuera."""
     if target is not None and target not in TARGETS_REALIZADOS:
         print(f"error: el target '{target}' es reconocido por la ley pero no "
               f"está realizado en esta encarnación; GENESIS.md declara esa "
@@ -2678,6 +2950,19 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
         if fuente_esperada is None:
             historicas.append(clave)
             continue
+        if tgt == "hermes" and tipo == "skill":
+            raices_discovery = (
+                [base_proyecto / ".hermes/skills",
+                 base_proyecto / ".agents/skills"]
+                if base_proyecto is not None else [destino.parent])
+            conflictos_discovery = _conflictos_discovery_skill_hermes(
+                nombre, raices_discovery, destino)
+            if conflictos_discovery:
+                desviadas += 1
+                print(f"paridad: desviada      {tgt}  {nombre} :: "
+                      "colisión de discovery Hermes: "
+                      + "; ".join(conflictos_discovery))
+                continue
         if tipo_destino is None:
             ausentes += 1
             print(f"paridad: no-instalada  {tgt}  {nombre}")
@@ -2690,16 +2975,23 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
             continue
         es_blueprint = tgt == "openclaw" and tipo == "agente" \
             and tipo_destino == "directorio"
-        if es_blueprint:
+        es_perfil_hermes = tgt == "hermes" and tipo == "agente" \
+            and tipo_destino == "directorio"
+        es_directorio_abierto = es_blueprint or es_perfil_hermes
+        if es_directorio_abierto:
+            nombres_factor = (("SOUL.md", "distribution.yaml")
+                              if es_perfil_hermes
+                              else ("AGENTS.md", "SOUL.md"))
             factores_emitidos = [
-                factor for factor in ("AGENTS.md", "SOUL.md")
+                factor for factor in nombres_factor
                 if _tipo_nodo(origen / factor) is not None
             ]
             hay_factor_emitido = any(
                 _tipo_nodo(destino / factor) is not None
                 for factor in factores_emitidos
             )
-            hay_soul_residual = "SOUL.md" not in factores_emitidos \
+            hay_soul_residual = es_blueprint \
+                and "SOUL.md" not in factores_emitidos \
                 and _sello_atribuye(
                     destino / "SOUL.md",
                     fuente_esperada.urn or "", tgt)
@@ -2712,13 +3004,20 @@ def cmd_paridad(raiz: Path, target: str | None, urn: str | None,
                 origen, destino, fuente_esperada.urn or "", tgt)
             if es_blueprint else []
         )
-        if conflictos_blueprint:
+        conflicto_perfil = (
+            _conflicto_propiedad_perfil_hermes(
+                destino, fuente_esperada.urn or "")
+            if es_perfil_hermes else None)
+        conflictos_propiedad = list(conflictos_blueprint)
+        if conflicto_perfil is not None:
+            conflictos_propiedad.append(conflicto_perfil)
+        if conflictos_propiedad:
             desviadas += 1
             print(f"paridad: desviada      {tgt}  {nombre} :: "
                   "conflicto de propiedad: "
-                  + ", ".join(conflictos_blueprint))
+                  + ", ".join(conflictos_propiedad))
             continue
-        if not es_blueprint and not _sello_atribuye_unidad(
+        if not es_directorio_abierto and not _sello_atribuye_unidad(
                 destino, tipo, fuente_esperada.urn or "", tgt):
             desviadas += 1
             print(f"paridad: desviada      {tgt}  {nombre} :: "
