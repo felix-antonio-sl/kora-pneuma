@@ -92,6 +92,7 @@ observada, no normativa ni protocolos.
 | `urn:salud:kb:hsc-pro-018-acv-isquemico-medicina` | PRO-018 (2012) | ACV isquémico en Medicina: Glasgow/NIHSS + **Barthel y Rankin al ingreso y egreso** con equipo kine-fono-psicología; eje neurológico de dependencia post-aguda |
 | `urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides` | PRO-041 (2011) | ref-contrarref tiroides APS↔CAE; patrón bidireccional para patología crónica que HD debe seguir al alta |
 | `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control` | PRO-058 (2014) | ref-contrarref DM2 insulinorrequiriente APS↔Medicina: ajuste de insulina intramural y retorno a APS; cierre natural del episodio HD diabético |
+| `urn:salud:kb:hsc-hsc44-1-nutricion-parenteral` | HSC 44.1 (2026) | NPT adulto: equipo accesos vasculares, CVC/PICC, técnica estéril, farmacovigilancia; caso límite técnico para HPN y señal de actualización viva del Drive |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
 
