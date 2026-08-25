@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-018-acv-isquemico-medicina
 nombre: hsc-pro-018-acv-isquemico-medicina
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-018, Manejo de Paciente con ACV Isquémico en Servicio Medicina (primera edición marzo 2012, Res. Exenta 0216): estandariza la atención intramural del ACV isquémico agudo con clasificación TIA/RIND/establecido, monitoreo con Glasgow, NIHSS, Índice de Barthel y Rankin al ingreso y egreso, y equipo multidisciplinario (medicina, enfermería, kinesiología, fonoaudiología, psicología); fuente del eje neurológico que mayor dependencia post-aguda genera."
+descripcion: "Protocolo local HSC PRO-018, Manejo de Paciente con ACV Isquémico en Servicio Medicina (primera edición marzo 2012, Res. Exenta 0216): atención intramural del ACV isquémico agudo con clasificación TIA/RIND/establecido, monitoreo con Glasgow, NIHSS, Índice de Barthel y Rankin al ingreso y egreso, y equipo multidisciplinario."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1WQUNOIhgPtNJsDsqY3X1xuthi39uc06T (sha256:a84368418bcd14053962f1540acf9bea5635269c0233431a7cc5ca27bbd3c555), 23 páginas; capa textual nativa (escaneo antiguo de calidad irregular), koraficación del contenido normativo esencial: objetivos, alcance, clasificación y evaluación con escalas; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -47,16 +47,12 @@ El protocolo ordena registrar en ficha clínica/hoja de enfermería:
 
 ## Relevancia HODOM-HSC
 
-El ACV es la primera causa de discapacidad adquirida del adulto y el motor
-clásico de las trayectorias post-aguda: ingreso en Medicina → rehabilitación
-(kine/fono) → alta con dependencia que puede continuar en HD o rehabilitación
-ambulatoria. Esta fuente aporta dos cosas al corpus HODOM: (1) confirma que el
-HSC usa **Barthel y Rankin al ingreso y egreso** en la vía neurológica — las
-mismas métricas que PRO-167 institucionaliza para ≥65 años — lo que da a la
-unidad una línea funcional comparable entre episodios; (2) define el equipo
-multidisciplinario local que un paciente ACV-HD necesita asegurar (fono/kine)
-para su continuidad. Su edad (2012) exige citar siempre con cautela de vigencia
-de contenidos clínicos; su valor de corpus es estructural (escalas + flujo).
+Es contexto clínico intramural para ACV. Aporta el uso documentado de Barthel y
+Rankin y roles de rehabilitación dentro de su alcance; no menciona HODOM, no
+define una trayectoria postaguda hacia la unidad y no demuestra que esas
+escalas o dotación estén incorporadas a su práctica. Solo se aplica a HODOM si
+la cartera, el protocolo de ingreso/egreso y los propietarios clínicos lo
+establecen. Su contenido clínico de 2012 requiere además contraste actual.
 
 ## Fuentes relacionadas
 

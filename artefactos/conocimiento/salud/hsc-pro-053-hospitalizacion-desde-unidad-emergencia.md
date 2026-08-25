@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia
 nombre: hsc-pro-053-hospitalizacion-desde-unidad-emergencia
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-053, Procedimiento de Hospitalización desde Unidad de Emergencia (primera edición octubre 2013, aprobado por Res. Exenta 0378 del 19-02-2014, vigencia impresa hasta octubre 2016): compuerta operativa UE→cama con orden escrita en DAU, formulario de ingreso médico, recetón 24 horas, asignación UGCC en horario hábil y por enfermería fuera de hora, valoración inicial, categorización de riesgo y hoja de ruta con tiempos."
 fuente: "PDF primario Drive institucional HSC, Drive ID 13FoBzTtSYBHlzVyRQrdiT5bMhbEBfTsB (sha256:7de98327dc55a99e3485cce9efa3dfd1669fd1fae6d32dab57e71f6db488039d), 19 páginas con resolución aprobatoria; capa textual nativa, koraficación íntegra de las secciones normativas 1-10; flujograma gráfico y anexos formulario descritos estructuralmente, no transcritos pieza a pieza; oficialidad y vigencia por regla D-025BN (Drive institucional HSC)"
@@ -126,17 +126,12 @@ eventos fuera de hora).
 
 ## Relevancia HODOM-HSC
 
-Este protocolo gobierna la **compuerta de ingreso UE→cama** por la que puede
-originarse cualquier hospitalización, incluida la derivable a HD. Aporta tres
-hechos operativos relevantes para el modelo HODOM-HSC: (1) la asignación de
-camas es centralizada en UGCC en horario hábil y descentralizada en
-enfermería fuera de hora — condición que un flujo HD debe respetar al pedir
-cama virtual; (2) la **hoja de ruta con cuatro tiempos** es el antecedente
-documental histórico de medición de boarding/flujo en HSC; (3) la
-**categorización de riesgo y dependencia** al ingreso conecta con el Índice de
-Barthel (PRO-167) y la carga de cuidado en domicilio. No define criterios HD
-ni menciona la unidad; los criterios de elegibilidad siguen en DS 1/2022, NT
-2024 y PRO 002.
+Gobierna una compuerta intramural UE→cama y aporta antecedentes de asignación y
+medición de tiempos. No menciona HODOM, cama virtual ni una solicitud desde o
+hacia la unidad, y la categorización descrita no equivale a Barthel ni a carga
+domiciliaria. Es material de contraste: UGCC, Emergencia y HODOM deben acordar
+el contrato observable de solicitud, aceptación y transferencia antes de
+referenciarlo como interfaz.
 
 ## Fuentes relacionadas
 

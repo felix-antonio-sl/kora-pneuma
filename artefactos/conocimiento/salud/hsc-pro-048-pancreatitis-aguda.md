@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-048-pancreatitis-aguda
 nombre: hsc-pro-048-pancreatitis-aguda
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-048, Diagnóstico y Manejo de Pacientes con Pancreatitis Aguda (primera edición mayo 2013): estandariza manejo en Urgencia, Medicina y Cirugía del HSC con definiciones (leve/grave, necrosis, pseudoquiste, abceso), estratificación de gravedad Ranson/APACHE y Balthazar tomográfico, criterios de derivación a centro de referencia para pancreatitis grave; patología de egreso frecuente hacia hospitalización domiciliaria."
+descripcion: "Protocolo local HSC PRO-048, Diagnóstico y Manejo de Pacientes con Pancreatitis Aguda (primera edición mayo 2013): manejo en Urgencia, Medicina y Cirugía del HSC, estratificación de gravedad y criterios de derivación para pancreatitis grave; no define elegibilidad ni egreso a HODOM."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1XIReIS22FoAwDh1_ug185Jpz5BJkPqrQ (sha256:c7cd3cc916caf9d2c9738075f6ee9fc6d71458dd011a18091e62d01a7302a0b2), 15 páginas; capa textual nativa, koraficación del contenido normativo esencial: objetivos, alcance, definiciones, diagnóstico y estratificación de gravedad; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -53,16 +53,12 @@ aguda grave.
 
 ## Relevancia HODOM-HSC
 
-La pancreatitis aguda leve-moderada es uno de los diagnósticos típicos de
-hospitalización corta con resolución progresiva — perfil clásico de egreso precoz
-con continuidad en domicilio (control del dolor, rehidratación, realimentación
-progresiva) cuando no hay necrosis ni falla orgánica. Esta fuente define el
-vocabulario y los umbrales locales de gravedad (Ranson/APACHE/Balthazar) que
-separan el candidato a manejo intramural prolongado o derivación del paciente
-estable cuya fase final puede completarse en HD. Cita junto a PRO-053 (compuerta UE)
-y PRO-167 (dependencia) para la trayectoria completa. No autoriza por sí solo
-manejo domiciliario de PA complicada: la atención cerrada en domicilio exige
-estabilidad y ausencia de complicaciones activas.
+Es una fuente clínica intramural de pancreatitis. No contiene datos de
+frecuencia, criterios de ingreso a HODOM ni continuidad domiciliaria; por tanto
+no sostiene que sea un diagnóstico típico o un perfil de egreso precoz. Sus
+escalas y umbrales se consultan por caso y se contrastan con evidencia clínica
+actual. La elegibilidad HODOM depende exclusivamente de la norma nacional, la
+cartera y el protocolo autorizado de la unidad.
 
 ## Fuentes relacionadas
 

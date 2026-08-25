@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos
 nombre: hsc-pro-091-gestion-eliminacion-medicamentos-vencidos
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-091, Gestión y Eliminación de Medicamentos e Insumos Vencidos y/o Deteriorados (quinta edición marzo 2022, Res. Exenta 1365/2022): monitorización del vencimiento (CAF mensual, informe pronto-vencer 6 meses), regla de recepción sin fármacos a menos de 12 meses, baja por ajuste de merma en SIGBO, comisión ministros de fe, acta y resolución exenta semestral, segregación REAS en bolsa clase 6/9 y declaración SIDREP."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-091-gestion-eliminacion-medicamentos-vencidos-2022.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 13BISpOJLFroUczVFRAN2vrbToZun89Aw (sha256:49a5de98d36dc9cd889f24c6c62468b03e52679eefb9bb9be651d3571f00070f); PDF escaneado sin capa textual, 14 páginas; koraficación íntegra del contenido normativo con cautelas sobre portada de resolución y flujograma gráfico; oficialidad y vigencia por regla D-025BN"
@@ -89,14 +89,11 @@ destrucción de la forma farmacéutica) y vencidos u obsoletos.
 
 ## Relevancia HODOM-HSC
 
-Cierra el ciclo farmacológico que HD comparte con la red: define qué pasa con
-el medicamento que **no llegó a usarse** — incluido el devuelto desde botiquines
-y domicilios — con trazabilidad completa (merma SIGBO → resolución → REAS →
-SIDREP). Para HODOM-HSC es la contraparte normativa de la devolución de
-medicamentos al egreso (APF 1.5) y de la gestión de botiquines móviles
-(decisión #11): todo fármaco recuperado en domicilio que no sea reutilizable
-sigue este circuito. Su regla de recepción (≥12 meses de vida útil) también
-protege el stock que viaja al domicilio.
+Define eliminación institucional de medicamentos vencidos y mermas. La fuente
+no menciona devoluciones desde domicilios, botiquines móviles HODOM ni criterios
+de reutilización del stock recuperado; por tanto no cierra ese ciclo. Puede ser
+el destino final después de que Farmacia autorice y documente recepción,
+segregación y baja, pero el tramo domicilio→Farmacia sigue siendo una brecha.
 
 ## Fuentes relacionadas
 

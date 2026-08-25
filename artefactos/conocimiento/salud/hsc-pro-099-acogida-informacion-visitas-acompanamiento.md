@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento
 nombre: hsc-pro-099-acogida-informacion-visitas-acompanamiento
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-099, Acogida, Información, Visitas y Acompañamiento al Usuario/a Hospitalizado/a (cuarta edición enero 2023): define las figuras de Familiar Responsable (tarjeta, canal de información), Acompañante de Hospitalización 12/24 horas con autorización visada y horarios de visita por servicio; base institucional del rol del cuidador que HODOM traslada al domicilio."
+descripcion: "Protocolo local HSC PRO-099, Acogida, Información, Visitas y Acompañamiento al Usuario/a Hospitalizado/a (cuarta edición enero 2023): figuras intramurales de Familiar Responsable y Acompañante de Hospitalización, acreditación, información y horarios; no define el Cuidador Responsable HODOM."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-099-acogida-visitas-acompanamiento-2023.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1JzWzP9RBLUrvSswqFNAE5zSHDiK_QunU (sha256:2f51b66eddad25ff7c494d4814dd8f5e955733ffc36e2ec69115b414290e220e); PDF escaneado sin capa textual, 29 páginas; koraficación íntegra del contenido normativo; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -86,18 +86,12 @@ restricciones por orden de alejamiento judicial vía DAIU.
 
 ## Relevancia HODOM-HSC
 
-Este protocolo es el **anclaje institucional del rol del cuidador**: define las
-figuras (Familiar Responsable, Acompañante) cuya equivalencia domiciliaria son el
-Cuidador Responsable HODOM y su red de apoyo. Tres usos directos para HD:
-(1) el concepto de acompañamiento 12/24 horas con rotación familiar es el
-antecedente intramural del régimen de cuidados continuos que HD exige en casa;
-(2) el circuito de información al Familiar Responsable (acreditación, canales,
-teléfono) es el estándar que la DT debe replicar hacia el domicilio cuando el
-paciente lo requiere; (3) la brecha declarada del índice (contrato del Cuidador
-Responsable HODOM inexistente como fuente única) encuentra aquí los elementos
-institucionales ya aceptados por el hospital para construirlo sin inventar. No
-menciona HD: su aplicación es por analogía contractual, citando siempre esa
-condición.
+Es un antecedente intramural sobre acogida, información, visitas y
+acompañamiento. Sus figuras de Familiar Responsable y Acompañante no son
+equivalentes al Cuidador Responsable HODOM, ni sus horarios o controles definen
+cuidado continuo en el domicilio. Puede aportar vocabulario al análisis, pero
+el contrato HODOM debe derivarse del DS 1/2022, la NT 2024 y una decisión
+institucional explícita sobre voluntariedad, tareas, límites, relevo y retiro.
 
 ## Fuentes relacionadas
 

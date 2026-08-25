@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi
 nombre: hsc-pro-152-rehabilitacion-paciente-critico-vmi
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-152, Rehabilitación del Paciente Crítico Adulto Usuario de VMI (primera edición agosto 2020, Res. Exenta 3715): proceso continuo kine-fonoaudiológico desde UPC hasta alta hospitalaria — evaluación inicial con Barthel/Rankin/APACHE II, pauta diaria de seguridad para movilización con contraindicaciones absolutas y relativas, fases Gossetink, manejo de disfagia post-extubación (GUSS-ICU/FILS) y derivación a rehabilitación ambulatoria del 100% de los usuarios de VMI."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-152-rehabilitacion-critico-vmi-2020.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1Zfr-RqzboVW2maIfFNxnfv8pSJuDm1WC (sha256:0bce1e9f6d17ab1fdb1b27e6e714ba0db7f8bf74a4f8da40571cb4d60974d5cc); PDF escaneado sin capa textual, 45 páginas; koraficación íntegra del contenido normativo; flujograma gráfico no transcrito; oficialidad y vigencia por regla D-025BN"
@@ -75,17 +75,11 @@ VMI en la UPC del HSC**.
 
 ## Relevancia HODOM-HSC
 
-Es la fuente que define qué pasa funcionalmente **después** del episodio crítico:
-el sobreviviente de VMI egresa con debilidad adquirida de UPC, frecuentemente con
-disfagia y deterioro cognitivo, y entra por norma al 100% a rehabilitación
-ambulatoria. Para HD esto acota con precisión los límites: un paciente HD
-traqueostomizado o post-VMI es candidato a continuidad domiciliaria solo dentro
-del marco de este protocolo (kine/fono activos, evaluaciones seriadas,
-derivación garantizada) — y sus escalas de seguimiento son las mismas que la
-unidad debe saber leer. Conecta directamente con PRO-126 (rehabilitación
-pulmonar ambulatoria), PRO-167 (Barthel como línea basal declarada en la propia
-evaluación inicial) y con la decisión #9 del DT sobre portafolio OPM. No autoriza
-por sí solo VMI domiciliaria.
+Define rehabilitación del paciente crítico dentro de su alcance. No establece
+HODOM como destino, no convierte a una persona post-VMI o traqueostomizada en
+candidata y no garantiza una derivación domiciliaria. Sus escalas y cuidados
+pueden consultarse por caso; la elegibilidad, dotación, equipamiento y
+continuidad HODOM dependen de la norma, cartera y acuerdos propietarios.
 
 ## Fuentes relacionadas
 

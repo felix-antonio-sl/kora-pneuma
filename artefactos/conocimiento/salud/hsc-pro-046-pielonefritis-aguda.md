@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-046-pielonefritis-aguda
 nombre: hsc-pro-046-pielonefritis-aguda
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-046, Manejo de pacientes con Pielonefritis Aguda (primera edición mayo 2013): unifica definición, diagnóstico y tratamiento de PNA en Urgencia y Medicina del HSC; define ITU complicada, criterios de ingreso hospitalario (SIRS/sepsis, complicación local, condiciones especiales) y esquemas antibióticos; patología de alta prevalencia en egresos hacia hospitalización domiciliaria."
+descripcion: "Protocolo local HSC PRO-046, Manejo de pacientes con Pielonefritis Aguda (primera edición mayo 2013): unifica definición, diagnóstico y tratamiento de PNA en Urgencia y Medicina del HSC; define ITU complicada, criterios de ingreso hospitalario y esquemas antibióticos; no define elegibilidad ni egreso a HODOM."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1efevnhzTy3yffQ58rxfqXy7AhCiTSnhH (sha256:b7d8a36e8cec228c90eb7fc89df3586b8e5d450abe7ceefa677716133e59c419), 13 páginas; capa textual nativa (escaneo con OCR antiguo de calidad irregular), koraficación del contenido normativo esencial: objetivos, alcance, definiciones y criterios de ingreso hospitalario; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -54,14 +54,11 @@ percutánea como guía ante supuraciones focales.
 
 ## Relevancia HODOM-HSC
 
-La pielonefritis aguda es una de las causas clínicas frecuentes de hospitalización
-corta en Medicina del HSC — y por tanto uno de los diagnósticos típicos del egreso
-precoz a domicilio cuando se resuelve la sepsis y se completa terapia
-intravenosa/oral. Esta fuente fija los umbrales locales de gravedad que separan
-manejo ambulatorio, ingreso convencional y potencial candidato HD tras
-estabilización, además del vocabulario diagnóstico estandarizado del hospital para
-este grupo. Debe citarse junto a PRO-053 (compuerta UE) y PRO-167 (dependencia)
-para evaluar la trayectoria completa ITU→ingreso→HD.
+Es una fuente clínica de PNA para Urgencia/Medicina. No contiene frecuencia
+local, destino HODOM ni criterios de elegibilidad para completar tratamiento en
+domicilio. Sus criterios pueden informar la evaluación de un caso solo tras
+contraste clínico actual y dentro de los criterios DS 1/2022/NT 2024 y de la
+cartera HODOM; no sustenta una trayectoria típica ni el expediente sanitario.
 
 ## Fuentes relacionadas
 

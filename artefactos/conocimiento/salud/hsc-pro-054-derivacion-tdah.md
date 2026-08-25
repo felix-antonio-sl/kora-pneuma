@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-054-derivacion-tdah
 nombre: hsc-pro-054-derivacion-tdah
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-054, Derivación Trastorno por Déficit Atencional (primera edición mayo 2014, Res. Exenta 2263): estandariza la derivación desde APS al HSC para estudio y tratamiento del TDAH; cobertura pediátrica y adulta del eje salud mental ambulatorio."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1ktO2ApeU2FpiBXwySD96Ykk4i1pv98Cm (sha256:40c1df2c07b70094159625ffac867020eaba96ef0fe69455abdc50f11e8f67dd), 11 páginas; capa textual nativa irregular (escaneo antiguo), koraficación del contenido normativo esencial; oficialidad y vigencia por regla D-025BN"
@@ -31,10 +31,11 @@ protocolos de referencia bidireccional.
 
 ## Relevancia HODOM-HSC
 
-Relevancia menor pero real: pacientes HD con comorbilidad psiquiátrica o TDAH
-familiar (cuidador/paciente) requieren canales de derivación estandarizados que
-no interrumpan el episodio domiciliario. Documenta que el hospital tiene flujo
-definido para esta demanda. No toca operación HD.
+No tiene pertinencia programática HODOM demostrada. Es una fuente ambulatoria
+APS→HSC para TDAH y no menciona hospitalización domiciliaria, cuidador HODOM ni
+continuidad de un episodio de atención cerrada. Puede consultarse únicamente
+si un caso concreto necesita esa derivación; no sustenta cartera, protocolo ni
+expediente de autorización HODOM.
 
 ## Fuentes relacionadas
 

@@ -1,10 +1,10 @@
 ---
 urn: urn:salud:kb:hsc-hsc44-1-nutricion-parenteral
 nombre: hsc-hsc44-1-nutricion-parenteral
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Procedimiento HSC 44.1, Manejo y Mantención de Nutriciones Parenterales por Personal de Enfermería (primera edición marzo 2026, vigencia hasta marzo 2031): documento más reciente del árbol documental HSC — NPT adulto con equipo multidisciplinario (médico nutrición, nutricionista, enfermera accesos vasculares, QF), tipos y formas de NPT, criterios de inicio, instalación en CVC (CICC/PICC) con técnica estéril, cuidados por turno y vigilancia de eventos adversos; referencia obligada para cualquier escenario HD de nutrición parenteral domiciliaria."
-fuente: "PDF primario Drive institucional HSC, Drive ID 1jiCZlkY1eOJh-4xg41k1q9h4ZpbCXjBt (sha256:10628136a2331408d913ea88b133708654b23c0aae723ae7db7cfbd1eabae588), 13 páginas; capa textual nativa, koraficación íntegra del contenido normativo 1-8; oficialidad y vigencia por regla D-025BN (Drive institucional HSC); fuente detectada como NUEVA en el recenso vivo 2026-08-23 respecto del censo 2026-07-20 dentro de la carpeta HSC 44 - Accesos Vasculares"
+descripcion: "Procedimiento HSC 44.1, Manejo y Mantención de Nutriciones Parenterales por Personal de Enfermería (primera edición marzo 2026, vigencia impresa hasta marzo 2031): NPT adulta intrahospitalaria con equipo multidisciplinario, acceso CVC/PICC, técnica estéril, cuidados por turno y vigilancia de eventos adversos; fuente de contexto que no autoriza nutrición parenteral domiciliaria."
+fuente: "PDF primario Drive institucional HSC, Drive ID 1jiCZlkY1eOJh-4xg41k1q9h4ZpbCXjBt (sha256:10628136a2331408d913ea88b133708654b23c0aae723ae7db7cfbd1eabae588), 13 páginas; capa textual nativa, koraficación íntegra del contenido normativo 1-8; oficialidad y vigencia por regla D-025BN (Drive institucional HSC); la fuente ya constaba en el censo base 2026-07-20 y fue seleccionada para KORA el 2026-08-23"
 autor: FS
 creado: 2026-08-23
 lang: es
@@ -18,11 +18,11 @@ familia: fuente
 
 Documento **HSC 44.1**, primera edición, **marzo de 2026**, vigencia declarada
 hasta marzo de 2031. Elaborado por el Jefe del Departamento Control de
-Infecciones y Epidemiología (DCIYE). Es el **documento más reciente de todo el
-árbol** y pertenece a la carpeta más nueva (HSC 44 - Accesos Vasculares,
-creada después del corte de julio según su fecha de modificación). Por D-025BN
-la copia del Drive institucional es oficial y vigente. Describe la norma; no
-prueba que existan pacientes con NPT domiciliaria hoy.
+Infecciones y Epidemiología (DCIYE). La fuente ya figuraba en el censo del
+2026-07-20; el 2026-08-23 fue seleccionada por primera vez para KORA, sin que
+ello represente un alta en Drive. Por D-025BN la copia del Drive institucional
+es oficial y vigente. Describe una práctica intrahospitalaria y no prueba que
+existan pacientes con NPT domiciliaria ni una cartera HODOM que la incluya.
 
 ## Objeto, alcance y equipo
 
@@ -59,17 +59,13 @@ farmacovigilancia N°23 sobre NPT (2024).
 
 ## Relevancia HODOM-HSC
 
-Dos valores directos. (1) **Caso límite técnico:** la NPT domiciliaria (HPN) es
-el escenario de mayor complejidad que un programa HD puede llegar a asumir —
-este procedimiento define las prácticas seguras locales (acceso CVC/PICC,
-técnica estéril, farmacovigilancia, roles) que cualquier extensión domiciliaria
-debería respetar y adaptar; su existencia permite evaluar factibilidad con
-fuente local en mano, no por analogía externa. (2) **Señal de actualización del
-corpus:** es evidencia de que el Drive sí recibe documentos nuevos (marzo 2026,
-posterior al corte de julio capturado por el recenso vivo en la metadata de
-carpetas), lo que valida mantener la cadencia trimestral de re-recenso.
-Complementa GCL 1.2 vías venosas (ya koraficada) y el eje IAAS/DCIYE para la
-vigilancia de infección torrente sanguíneo asociada a CVC.
+Es contexto técnico hospitalario. Aporta reglas locales sobre NPT adulta,
+CVC/PICC, técnica estéril y farmacovigilancia que podrían consultarse si una
+decisión futura incorporara nutrición parenteral a la cartera HODOM. La fuente
+no menciona HODOM, nutrición parenteral domiciliaria ni traslado de mezclas; no
+demuestra factibilidad, dotación, equipamiento, cadena de frío, seguimiento ni
+autorización para esa prestación. Cualquier adaptación exige acto de cartera y
+validación conjunta de Nutrición, Farmacia, Accesos Vasculares, IAAS y DT.
 
 ## Fuentes relacionadas
 

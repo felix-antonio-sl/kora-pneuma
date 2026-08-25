@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-185-telegastroenterologia
 nombre: hsc-pro-185-telegastroenterologia
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO 185, Atención Telegastroenterología (primera edición marzo 2024, vigencia hasta marzo 2029): teleconsulta sincrónica/asincrónica UNITEL para pacientes con movilidad limitada — objetivo explícito que cubre al paciente HD —, con gastroenterólogo resolutor, enfermera coordinadora UNITEL, facilitador, modalidades teleprocesos/videoconsulta y cierre con causal de atención por telemedicina."
+descripcion: "Protocolo local HSC PRO 185, Atención Telegastroenterología (primera edición marzo 2024, vigencia hasta marzo 2029): teleconsulta UNITEL para pacientes con movilidad limitada, con gastroenterólogo resolutor, coordinación y facilitador; no incorpora ni habilita atención durante un episodio HODOM."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1Rz49FJYU5xTALWqqElWuCfd3KydK2YB- (sha256:eae5d6a743c41b8deff422436a42f5ca26058194b756befa3c3ec42bab128673), 15 páginas; capa textual nativa, koraficación íntegra; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -54,14 +54,12 @@ corresponde). Registros: ficha clínica, Teleprocesos, ANITA.
 
 ## Relevancia HODOM-HSC
 
-Tercera pieza del portafolio UNITEL koraficado y la más directamente alineada a
-HD: su **objetivo declarado es atender a pacientes con movilidad limitada**, que
-es exactamente la condición del paciente hospitalizado a domicilio (Barthel bajo,
-portador de catéteres o con cuidado continuo). Para HODOM-HSC habilita consulta
-gastroenterológica durante el episodio sin traslado — relevante en patologías
-hepatobiliares/pancreáticas y en pacientes anticoagulados con sangrado digestivo
-— y consolida el precedente institucional del modelo híbrido HD-telesalud junto a
-PRO 186 y PRO 187.
+Es una capacidad UNITEL para su población y circuito declarados. Movilidad
+limitada no equivale a hospitalización domiciliaria y la fuente no habilita una
+consulta durante el episodio HODOM. Su uso requeriría indicación, aceptación del
+servicio, facilitador autorizado, identidad, registro clínico, responsabilidad
+y contingencia acordados. Hasta entonces es contexto de red, no un modelo
+híbrido adoptado.
 
 ## Fuentes relacionadas
 

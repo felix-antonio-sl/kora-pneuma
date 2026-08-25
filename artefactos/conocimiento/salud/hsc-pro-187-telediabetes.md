@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-187-telediabetes
 nombre: hsc-pro-187-telediabetes
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO 187, Atención Telediabetes (primera edición abril 2024, vigencia hasta abril 2029): teleconsulta sincrónica/asincrónica de diabetes tipo 2 vía UNITEL y Teleprocesos para primera consulta o ajuste de esquemas de insulina/fármacos de nueva generación, con requerimientos previos (HbA1c y exámenes 3 meses, fondo de ojo, adherencia a insulina), facilitador en domicilio del paciente y egreso por causal 17 atendido por telemedicina."
 fuente: "PDF primario Drive institucional HSC, Drive ID 11LIisKpqKKyoBb6wXLnHFvEyqUwny6cD (sha256:005f483303d735a963c0072bbc0a04778a41006a0cb2817ed13d734167f61a95), 11 páginas; capa textual nativa, koraficación íntegra de las secciones normativas 1-10; flujograma gráfico descrito estructuralmente; oficialidad y vigencia por regla D-025BN"
@@ -66,15 +66,12 @@ Distribución: Dirección, policlínico diabetes, CAE, UNITEL, Teleprocesos, DCS
 
 ## Relevancia HODOM-HSC
 
-Doble valor para HD: (1) los pacientes HD diabéticos con descompensación son
-justamente quienes requieren ajuste de insulinoterapia durante/tras el episodio —
-esta fuente define la vía remota institucional para sostener ese control sin
-traslados; (2) exige declarar dependencia, red de apoyo y hospitalizaciones
-recientes en la interconsulta, campos que coinciden con la evaluación HODOM
-(Barthel, cuidador, entorno) y facilitan el cruce de información entre unidad y
-telemedicina. Junto a PRO 186 consolida el precedente institucional de atención
-con facilitador **en el domicilio del paciente**: base operativa del modelo
-híbrido HD-telesalud.
+Define telediabetes dentro del circuito UNITEL. Que algunos campos coincidan con
+una evaluación HODOM no crea integración ni autoriza ajuste terapéutico durante
+el episodio. Su posible uso exige acuerdo de derivación, identidad, autoría del
+registro, respuesta a descompensación, recepción del plan y continuidad. Junto
+a PRO 186 muestra una capacidad institucional, no una base operativa HODOM ya
+adoptada.
 
 ## Fuentes relacionadas
 

@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-043-ingreso-de-usuarios
 nombre: hsc-pro-043-ingreso-de-usuarios
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-043, Ingreso de Usuarios/as (tercera edición agosto 2019): proceso institucional de ingreso a atención cerrada y ambulatoria — vías de ingreso (CAE, gestión quirúrgica, teleprocesos, urgencia, re-hospitalización), orden de hospitalización escrita, asignación de camas UGCC hábil/enfermería fuera de hora, registro DGU y egreso con epicrisis y devolución de ficha en 72 horas."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1H5J0AWoiFqiiVJfheStE1NRNVnpkOTNP (sha256:b5fc4f3bfb76929059ee9dfdac2c8ed3d4ec82e99a18000d09f7177fb361a020), 38 páginas; capa textual nativa, koraficación íntegra de las secciones normativas 1-9; anexos formulario descritos estructuralmente; oficialidad y vigencia por regla D-025BN"
@@ -64,15 +64,12 @@ entregar el alta al usuario/familiar.
 
 ## Relevancia HODOM-HSC
 
-Es el proceso administrativo madre de todo ingreso HSC: define quién puede ordenar
-hospitalización, cómo se registra y cómo se cierra el episodio con la ficha.
-Para HD importa en tres puntos: (1) confirma el régimen dual de camas (UGCC
-hábil / enfermería fuera de hora) que un flujo HD debe respetar igual que PRO-053;
-(2) fija el circuito documental del alta (epicrisis → recaudación → estadística →
-archivo 72 horas) que el alta a domicilio debe cumplir idénticamente; (3) sus
-anexos de registro (hospitalización desde urgencia/maternidad) son el formato que
-la unidad usa para reportar sus ingresos. No establece HD como destino de ingreso:
-su creación como cama/vía es decisión institucional posterior (cartera y NT 2024).
+Describe ingreso y cierre intramural HSC. Es un contraste útil para diseñar la
+interfaz HODOM, pero no menciona la unidad, no demuestra que sus anexos sean los
+formatos usados por ella y no fija cama virtual, aceptación ni cambio de
+responsabilidad. UGCC, Estadística/Archivo, Calidad y HODOM deben validar qué
+pasos y registros se reutilizan antes de incorporarlos al protocolo de ingreso
+o egreso domiciliario.
 
 ## Fuentes relacionadas
 

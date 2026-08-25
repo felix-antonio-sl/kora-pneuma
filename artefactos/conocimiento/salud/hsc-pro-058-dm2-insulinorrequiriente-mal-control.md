@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control
 nombre: hsc-pro-058-dm2-insulinorrequiriente-mal-control
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-058, Referencia y Contrarreferencia de pacientes con DM2 insulinorrequiriente en mal control metabólico (primera edición noviembre 2014, Res. Exenta 2815/2014): estandariza el flujo APS↔Medicina HSC para el paciente diabético descompensado — criterios de referencia, manejo intramural del mal control y retorno a APS con plan de insulina; par ambulatorio del eje diabetes que PRO 187 lleva a telemedicina."
+descripcion: "Protocolo local HSC PRO-058, Referencia y Contrarreferencia de pacientes con DM2 insulinorrequiriente en mal control metabólico (primera edición noviembre 2014, Res. Exenta 2815/2014): flujo APS↔Medicina HSC con criterios de referencia, manejo intramural y retorno a APS; no establece integración con HODOM ni PRO 187."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1bRAkAY4b0jGTCedcWrfw0Z9-PYFHoKBs (sha256:016ffc3d305ef1b94303482713689c66f2fae2f087348e7dda2da0ed101e3c1e), 15 páginas; capa textual nativa, koraficación del contenido normativo esencial: objetivos, alcance, circuito de referencia/contrarreferencia; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -31,15 +31,11 @@ el esquema definido.
 
 ## Relevancia HODOM-HSC
 
-La DM2 insulinorrequeriente en mal control es causa frecuente de hospitalización
-corta (descompensaciones hiperglicémicas) — uno de los diagnósticos típicos de
-egreso a HD con esquema de insulina recién ajustado. Esta fuente define el
-circuito institucional de ese paciente: derivación APS→Medicina, ajuste
-intramural, contrarreferencia con plan de insulina a APS. El episodio HD debe
-cerrar dentro de ese mismo flujo (contrarreferencia oportuna + educación al
-cuidador en técnica de insulina), y conecta directo con PRO 187 (telediabetes)
-para los controles remotos posteriores. Con PRO-041 consolida el patrón local de
-referencia bidireccional que toda patología crónica tocada por HD debe seguir.
+Es una fuente específica de DM2 insulinorrequiriente APS↔Medicina. No contiene
+frecuencia de hospitalización, destino HODOM ni educación domiciliaria, y no
+establece una conexión operativa con PRO 187. Puede consultarse para un caso de
+DM2 si los propietarios confirman el circuito vigente; no se generaliza como
+patrón de toda patología crónica ni sustenta el protocolo de egreso HODOM.
 
 ## Fuentes relacionadas
 

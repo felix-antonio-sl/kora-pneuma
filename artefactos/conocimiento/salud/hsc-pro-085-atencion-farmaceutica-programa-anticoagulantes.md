@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes
 nombre: hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-085, Atención Farmacéutica del Programa de Anticoagulantes Orales (segunda edición noviembre 2022, vigencia hasta noviembre 2025): programa de atención farmacéutica sobre el policlínico TACO (~650 pacientes) con seguimiento farmacoterapéutico método Dáder, criterios de inclusión por INR fuera de rango/adherencia/ERC, test Morisky-Green, conciliación farmacéutica, PRM e indicadores semestrales de desempeño."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-085-atencion-farmaceutica-anticoagulantes-2022.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1Ni7k2V54ko_-glMwE9OLD6rG_iUOFRR8 (sha256:15bff99c6fae451807a0f1849b0a36bc225bc7d04874b428019d6d5cd8a3d3b8); PDF escaneado sin capa textual, 22 páginas; koraficación íntegra del contenido normativo con cautelas sobre flujogramas anexos; oficialidad y vigencia por regla D-025BN"
@@ -74,15 +74,12 @@ Ingresan al PAF quienes reúnan uno o más:
 
 ## Relevancia HODOM-HSC
 
-El paciente HD anticoagulado (FA, prótesis valvular, TEP/TVP) concentra
-exactamente los riesgos que este protocolo gestiona: polifarmacia, interacciones,
-adherencia frágil e INR lábil durante el episodio agudo. Esta fuente define el
-circuito institucional de **conciliación farmacéutica tras hospitalización o
-urgencia** — punto de contacto obligado del egreso HD — y los criterios por los
-que un paciente domiciliario descompensado entra a seguimiento farmacéutico
-cercano. Complementa a PRO 186 (vía telemedicina del mismo programa) y a PRO-091
-(destino del medicamento no usado): entre las tres queda cubierto el ciclo
-farmacológico completo del paciente HD anticoagulado.
+Es una fuente del programa institucional de anticoagulación. Puede ser una
+interfaz para un paciente HODOM anticoagulado, pero no menciona la unidad ni
+define derivación desde ella, conciliación al egreso HODOM o transporte de
+medicamentos. La relación con PRO 186 y PRO-091 no cubre el ciclo farmacológico
+domiciliario: Farmacia y el programa TACO deben acordar receptor, tiempos,
+registro, devolución y recuperación ante fallas.
 
 ## Fuentes relacionadas
 

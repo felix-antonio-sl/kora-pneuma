@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-005-alimentacion-asistida
 nombre: hsc-pro-005-alimentacion-asistida
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-005, Alimentación Asistida (tercera edición agosto 2019): incorpora al familiar/cuidador responsable a la asistencia de la alimentación del paciente dependiente —vía oral, SNG/nasoyeyunal, gastrostomía— con técnica paso a paso y educación formal, declarando como objetivo explícito el entrenamiento para la continuidad de los cuidados de alimentación posteriores al alta."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1nnh8ZgoYM0h8FmSwSfrcOQNVXE38Vd4R (sha256:3cc897d09f494cb109a547a1384e2e50910545d281cf2e1f9f2c384f04aa7f96), 10 páginas; capa textual nativa, koraficación íntegra del desarrollo técnico; oficialidad y vigencia por regla D-025BN"
@@ -55,15 +55,13 @@ sobre la técnica según complejidad del usuario.
 
 ## Relevancia HODOM-HSC
 
-Es la fuente local que **ya contiene el currículo del cuidado alimentario
-domiciliario**: qué debe saber hacer el cuidador de un paciente HD con SNG o
-gastrostomía, cómo se le entrena y qué se registra. Para el contrato del Cuidador
-Responsable (brecha §15) aporta el estándar de competencia alimentaria; para la
-visita HD diaria aporta los puntos de control (posición, tolerancia, lavado de
-sonda, semisentado post-ingesta) que el profesional verifica en casa. No
-autoriza por sí solo indicar nutrición enteral domiciliaria: eso corresponde a
-la prescripción médica y nutricionista referente (ver HSC 44.1 para el paralelo
-parenteral).
+Es un antecedente institucional de alimentación asistida y educación para la
+continuidad postalta. La fuente no identifica HODOM ni define el contrato de su
+Cuidador Responsable, una visita domiciliaria o una prestación de nutrición
+enteral en casa. Sus técnicas pueden citarse únicamente si la cartera HODOM las
+incluye y Alimentación/Nutrición, Enfermería e IAAS validan su adaptación,
+insumos, registros y escalamiento. No constituye por sí sola un currículo ni
+una autorización domiciliaria.
 
 ## Fuentes relacionadas
 

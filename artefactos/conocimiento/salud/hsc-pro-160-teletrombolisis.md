@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-160-teletrombolisis
 nombre: hsc-pro-160-teletrombolisis
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-160, Tele Trombolisis en pacientes mayores de 18 años con ACV isquémico (primera edición mayo 2021): acceso precoz al diagnóstico y trombolisis endovenosa guiada por videoconferencia con residente de Neurología del HCHM para pacientes en ventana <4,5 hrs que ingresan a Emergencia HSC; reduce brecha geográfica de Ñuble y coordina red para trombectomía mecánica (HCRGB) y UCI según complejidad."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1ZDA3jzPM0nfCj76xWwpEdhRo0aweWeps (sha256:fe81bc96578a31e80eb7c5b488151f3a7065925fd711503f65ab2f74f4fce739), 22 páginas; capa textual nativa, koraficación del contenido normativo esencial: objetivos, alcance, criterios de inclusión/exclusión rt-PA y administración; oficialidad y vigencia por regla D-025BN"
@@ -36,13 +36,11 @@ según complejidad.
 
 ## Relevancia HODOM-HSC
 
-Complementa el eje neurológico (PRO-018) resolviendo la fase hiperaguda: el
-paciente ACV del territorio entra por Emergencia HSC, se tele-evalúa con
-Neurología HCHM y se define trombólisis/traslado. Para HD importa como frontera
-de entrada: el sobreviviente de ACV tratado bajo este protocolo es después el
-candidato clásico de las trayectorias post-aguda (rehabilitación PRO-126/152,
-Barthel seriado PRO-167, eventual HD en fases tardías). No autoriza manejo
-domiciliario de la fase aguda: la trombólisis es intramural por definición.
+Es contexto intramural de la fase hiperaguda del ACV. No menciona HODOM ni
+define una interfaz de ingreso, egreso o rehabilitación domiciliaria; que una
+persona tratada pueda más tarde ser evaluada para HODOM es una posibilidad
+clínica, no una relación sostenida por esta fuente. No debe usarse para el
+expediente de autorización ni para inferir cartera postaguda.
 
 ## Fuentes relacionadas
 

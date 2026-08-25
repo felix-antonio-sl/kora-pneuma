@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-170-plan-anual-prevencion-control-infecciones
 nombre: hsc-pro-170-plan-anual-prevencion-control-infecciones
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-170, Plan Anual de Prevención y Control de Infecciones año 2023 (tercera edición marzo 2023): programa obligatorio institucional del Equipo Control de Infecciones con 9 actividades verificables — vigilancia cuatrimestral IAAS en SICARS, estudio de prevalencia, análisis de brotes y resistencia antimicrobiana (ARAISP), planes de mejora para IAAS sobre tasa nacional, auditoría EPP, capacitación de supervisores y funcionarios — con indicadores y umbral 100% (capacitación 90%/80%)."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-170-plan-anual-infecciones-2023.md (derivado de trabajo, no autoritativo; tablas de actividades en doble pasada directa+rotada 90°) del PDF primario Drive ID 1lt_KK_vTJ3_sedPPE_eK_fRxCl-_lqZL (sha256:a70517ef897f17f56cc71852c46cb220ec76276a02bae3494b0feb10db25d811); PDF escaneado sin capa textual, 14 páginas; oficialidad por regla D-025BN"
@@ -68,16 +68,14 @@ Epidemiología, UCSP, Control de Gestión.
 
 ## Relevancia HODOM-HSC
 
-Es el documento rector bajo el cual se rige la prevención de IAAS en HODOM-HSC:
-la vigilancia mensual, la declaración SICARS y los umbrales de este programa
-incluyen a los pacientes hospitalizados a domicilio. Sus actividades fijan las
-obligaciones verificables que la unidad debe sostener (notificación de sus
-eventos al ECI, participación en estudios de prevalencia, precauciones
-adicionales en domicilio, capacitación de su personal en precauciones
-estándares). Se articula con PRO-023 (manejo de brotes), `hodom-operacional-iaas`
-(práctica observada en la unidad) y GCL 3.3 (precauciones estándar). Para el
-expediente de autorización sanitaria y las auditorías, es la fuente que demuestra
-que la unidad opera dentro de un programa institucional medible.
+Es evidencia histórica del diseño institucional IAAS para el año 2023. Su
+alcance general permite usarlo como antecedente al coordinar HODOM con DCIYE,
+pero la fuente no identifica a HODOM, no demuestra que sus pacientes hayan sido
+incluidos en SICARS o prevalencia y no acredita ejecución de ninguna actividad.
+Al ser un plan anual terminado, tampoco prueba el programa vigente en 2026. El
+expediente requiere el plan actual, la definición expresa de la interfaz HODOM
+y evidencias de capacitación/implementación; PRO-023 y GCL 3.3 se consultan por
+separado y no son sustituidos por este plan.
 
 ## Fuentes relacionadas
 

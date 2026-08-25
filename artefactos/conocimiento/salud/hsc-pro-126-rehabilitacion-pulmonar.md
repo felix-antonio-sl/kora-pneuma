@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar
 nombre: hsc-pro-126-rehabilitacion-pulmonar
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-126, Rehabilitación Pulmonar (primera edición agosto 2019, vigencia impresa hasta agosto 2024): programa de kinesioterapia respiratoria para patología pulmonar crónica y aguda con criterios de inclusión/exclusión, circuito de derivación e interconsulta, evaluación TM6M/calidad de vida/pimometría, 24 sesiones de entrenamiento al 70% de carga máxima y alta kinésica; base de la rehabilitación respiratoria del paciente hospitalizado y su continuidad."
+descripcion: "Protocolo local HSC PRO-126, Rehabilitación Pulmonar (primera edición agosto 2019, vigencia impresa hasta agosto 2024): programa ambulatorio de kinesioterapia respiratoria con criterios de inclusión/exclusión, interconsulta, evaluación, 24 sesiones y alta kinésica; no establece prestaciones HODOM."
 fuente: "PDF primario Drive institucional HSC, Drive ID 172MfWoaDv10GSgceFgi8vjc_HNRlFov2 (sha256:ab1c6109e3e91288b3f682a1d6fe9f7679c2b9b4162f9da5984c30f3a509f6aa), 14 páginas (portada + índice); capa textual nativa, koraficación íntegra de las secciones normativas 1-10 y anexos; oficialidad y vigencia por regla D-025BN (Drive institucional HSC)"
 autor: FS
 creado: 2026-08-23
@@ -96,17 +96,12 @@ inspiratorio y educación. Registro: ficha clínica y estadística diaria
 
 ## Relevancia HODOM-HSC
 
-La rehabilitación pulmonar es la contraparte funcional de la hospitalización
-domiciliaria en la enfermedad respiratoria crónica: el documento declara como
-objetivo propio **reducir ingresos hospitalarios múltiples y estancias
-prolongadas**, exactamente la demanda que HD resuelve en el episodio agudo.
-Para HODOM-HSC esta fuente define qué rehabilitación respiratoria existe en la
-red propia (acceso vía interconsulta desde atención cerrada), sus umbrales de
-seguridad (exclusiones cardiorespiratorias, signos vitales por sesión,
-oxigenoterapia) y su métrica de resultado funcional — insumo directo para el
-escalamiento del paciente HD con EPOC/ERA, el egreso con kinesioterapia y la
-prevención de reingreso. No establece prestaciones domiciliarias: el programa
-se ejecuta en CAE/Servicio de Rehabilitación.
+Describe un programa ambulatorio de rehabilitación pulmonar en CAE/Servicio de
+Rehabilitación. Compartir objetivos de reducción de hospitalización no lo hace
+parte de HODOM. Sus criterios, métricas y vía de interconsulta pueden usarse
+solo si un caso requiere esa prestación y Rehabilitación acepta la interfaz;
+no definen escalamiento, kinesioterapia domiciliaria ni prevención de reingreso
+de la unidad.
 
 ## Fuentes relacionadas
 

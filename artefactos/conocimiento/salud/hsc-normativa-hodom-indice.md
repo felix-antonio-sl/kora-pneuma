@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-normativa-hodom-indice
 nombre: hsc-normativa-hodom-indice
-version: 1.0.0
+version: 1.1.0
 estado: publicado
-descripcion: "Normativa y protocolos HSC de relevancia para HODOM: indice del corpus koraficado, resuelto por URN"
+descripcion: "Indice auditado de fuentes HSC para HODOM: separa autoridad directa, interfaces condicionadas y contexto hospitalario sin convertir pertinencia plausible en aplicabilidad"
 fuente: "Corpus KORA pneuma artefactos/conocimiento/salud (hsc-*, minsal-*, hodom-*) censado con kora.py censo al 2026-08-05; curaduria hd-dt 01-normativo/hsc/INDICE.md y subarbol-candidatos-koraficacion-hodom-2026-07-20.md; regla de autoridad D-025BN (fuentes primarias en Drive institucional HSC = oficiales y vigentes)"
 autor: FS
 creado: 2026-08-05
@@ -65,40 +65,41 @@ El corpus operacional de la unidad (`urn:salud:kb:hodom-operacional-indice`,
 queda **fuera del alcance** de este índice: describe la operación real
 observada, no normativa ni protocolos.
 
-## 2. Núcleo situado HSC — H0
+## 2. Núcleo situado HSC — H0 directo
 
 | URN | Documento | Uso |
 |---|---|---|
 | `urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria` | PRO 002 (2022) | dispositivo local HODOM: campaña de invierno, horarios y escalamiento |
 | `urn:salud:kb:hsc-pro-110-hodom-historico-2019` | HSC 34.1 PRO-110 (2019) | versión anterior; relación controladora con PRO 002 abierta |
 | `urn:salud:kb:hsc-cartera-servicios-2024` | Res. Exenta 1206/2024 | cartera de servicios HSC 2024, prestaciones HODOM por estamento |
-| `urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel` | PRO-167 (2022, vigencia nov 2027) | Índice de Barthel ≥65 años al ingreso (Enfermería) y egreso (Médico): métrica de dependencia para egreso a domicilio y traspaso APS vía CAE |
-| `urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia` | PRO-053 (2013, Res. Ex. 0378/2014) | compuerta UE→cama: orden en DAU, recetón 24 h, cama vía UGCC hábil/enfermería fuera de hora, categorización de riesgo y hoja de ruta con 4 tiempos |
-| `urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias` | PRO-076 (2016, Res. Ex. 4292/2016) | flota SAMU/traslado: registro de kilometraje y combustible por móvil, tarjeta en convenio y circuito Mantención→Abastecimiento→Finanzas; línea base decisión #10 |
-| `urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar` | PRO-126 (2019) | programa de rehabilitación pulmonar (EPOC/ERA): inclusión/exclusión, TM6M, 24 sesiones al 70% de carga; escalamiento y egreso kinésico del paciente HD respiratorio |
-| `urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos` | PRO-091 (2022, Res. Ex. 1365) | ciclo de mermas: CAF mensual, ajuste SIGBO, comisión ministros de fe, resolución semestral, segregación REAS y SIDREP; destino del fármaco devuelto desde domicilio |
-| `urn:salud:kb:hsc-pro-023-manejo-brotes-iaas` | PRO-023 (2022, 4ª ed.) | brotes IAAS: definiciones y umbrales, notificación SICARS/SEREMI, estudio en 10 pasos; régimen aplicable a conglomerados infecciosos en pacientes HD |
-| `urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral` | PRO 186 (2024) | teleanticoagulación UNITEL: TEP/TVP, FA, prótesis valvulares; INR + CHA₂DS₂-VASc/HAS-BLED; facilitador en CESFAM o domicilio; continuidad INR del paciente HD |
-| `urn:salud:kb:hsc-pro-187-telediabetes` | PRO 187 (2024) | telediabetes UNITEL: ajuste de insulina/fármacos vía teleconsulta; exige declarar dependencia, red de apoyo y hospitalizaciones recientes; precedente de atención con facilitador a domicilio |
-| `urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes` | PRO-085 (2022) | atención farmacéutica TACO (~650 px): inclusión por INR fuera de rango/adherencia/ERC, Morisky-Green, conciliación farmacéutica post-hospitalización y PRM; cierre del ciclo farmacológico del paciente HD anticoagulado |
-| `urn:salud:kb:hsc-pro-170-plan-anual-prevencion-control-infecciones` | PRO-170 (2023, 3ª ed.) | programa anual IAAS obligatorio institucional: 9 actividades con umbrales (SICARS cuatrimestral, prevalencia, brotes/ARAISP, EPP, capacitación); rector de la prevención en HD |
-| `urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento` | PRO-099 (2023, 4ª ed.) | figuras de Familiar Responsable y Acompañante 12/24 h, circuito de información acreditado y horarios por servicio; anclaje institucional del rol del cuidador que HD traslada al domicilio |
-| `urn:salud:kb:hsc-pro-043-ingreso-de-usuarios` | PRO-043 (2019, 3ª ed.) | proceso madre de ingreso HSC: vías, orden escrita, camas UGCC hábil/enfermería fuera de hora y egreso con epicrisis + devolución de ficha en 72 h |
-| `urn:salud:kb:hsc-pro-046-pielonefritis-aguda` | PRO-046 (2013) | PNA en Urgencia/Medicina: ITU complicada y criterios de ingreso (SIRS/sepsis, complicación local, condiciones especiales); diagnóstico frecuente de egreso a HD |
-| `urn:salud:kb:hsc-pro-048-pancreatitis-aguda` | PRO-048 (2013) | PA en UE/Medicina/Cirugía: definiciones, Ranson/APACHE/Balthazar y derivación a centro de referencia; perfil típico de egreso precoz con continuidad domiciliaria |
-| `urn:salud:kb:hsc-pro-185-telegastroenterologia` | PRO 185 (2024) | telegastroenterología UNITEL: objetivo explícito de atención a pacientes con movilidad limitada; consulta gastro sin traslado durante el episodio HD; cierra el trío UNITEL koraficado |
-| `urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi` | PRO-152 (2020) | rehabilitación kine-fono del crítico VMI: contraindicaciones de movilización, fases Gosselink, disfagia GUSS/FILS y derivación ambulatoria al 100% post-VMI; marco del paciente HD complejo |
-| `urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd` | PRO-156 (2021) | atención preferente Ley 21.168: acreditación PM/PCD, prioridad ESI, ventanillas y 5% mínimo de oferta; derecho aplicable a toda la población HODOM |
-| `urn:salud:kb:hsc-pro-018-acv-isquemico-medicina` | PRO-018 (2012) | ACV isquémico en Medicina: Glasgow/NIHSS + **Barthel y Rankin al ingreso y egreso** con equipo kine-fono-psicología; eje neurológico de dependencia post-aguda |
-| `urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides` | PRO-041 (2011) | ref-contrarref tiroides APS↔CAE; patrón bidireccional para patología crónica que HD debe seguir al alta |
-| `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control` | PRO-058 (2014) | ref-contrarref DM2 insulinorrequiriente APS↔Medicina: ajuste de insulina intramural y retorno a APS; cierre natural del episodio HD diabético |
-| `urn:salud:kb:hsc-hsc44-1-nutricion-parenteral` | HSC 44.1 (2026) | NPT adulto: equipo accesos vasculares, CVC/PICC, técnica estéril, farmacovigilancia; caso límite técnico para HPN y señal de actualización viva del Drive |
-| `urn:salud:kb:hsc-pro-160-teletrombolisis` | PRO-160 (2021) | teletrombólisis UE-HSC con Neurología HCHM en ventana <4,5 h; frontera hiperaguda del eje ACV que después alimenta trayectorias post-aguda/HD |
-| `urn:salud:kb:hsc-pro-054-derivacion-tdah` | PRO-054 (2014) | derivación TDAH APS→HSC; cobertura ambulatoria de salud mental |
-| `urn:salud:kb:hsc-pro-005-alimentacion-asistida` | PRO-005 (2019) | alimentación asistida oral/SNG/gastrostomía con entrenamiento del cuidador «para la continuidad post-alta»: currículo local del cuidado alimentario domiciliario |
-| `urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive` | PRO-103 (2024) | acompañamiento psicosocial Ley 21.030: eje salud mental/continuidad con la red; capacidad local de S.A. Psicosocial derivable desde HD |
 | `urn:salud:kb:hsc-arsenal-farmacoterapeutico-2026` | Arsenal Farmacoterapéutico HSC 2026 | repertorio; no es stock, guía terapéutica ni autorización HODOM |
 | `urn:salud:kb:minsal-decreto-exento-74-2024-mcc` | Decreto Exento 74/2024 | marco modificatorio del modelo de cuidado (MCC) |
+
+### 2.1 Resultado de la auditoría semántica de la ampliación 2026-08-23
+
+La jornada del 23 de agosto añadió 25 representaciones de fuentes HSC. Su
+forma KORA y sus referencias resolvieron, pero eso no prueba pertinencia
+HODOM. La revisión posterior no encontró mención directa a HODOM en ninguna de
+esas 25 fuentes. Por ello dejan de clasificarse como H0 directo y se conservan
+en dos clases que no deben usarse como evidencia de autorización sanitaria.
+
+| Clase | URN | Uso permitido y gate |
+|---|---|---|
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-005-alimentacion-asistida` | contenido institucional de alimentación y educación; usar solo si la cartera HODOM incluye la técnica y el propietario valida la adaptación domiciliaria |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-023-manejo-brotes-iaas` | procedimiento institucional de brotes; requiere pronunciamiento DCIYE/IAAS sobre alcance y operación territorial HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-043-ingreso-de-usuarios`, `urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia` | contraste de ingreso intramural; no definen cama, aceptación ni cambio de responsabilidad HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias` | precedente administrativo de flota; no gobierna vehículos ni kilometraje HODOM sin acto del propietario |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes`, `urn:salud:kb:hsc-pro-091-gestion-eliminacion-medicamentos-vencidos` | contrastes farmacéuticos; el circuito HODOM depende de validación y acto de Farmacia |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento` | antecedente intramural de información y acompañamiento; no define al Cuidador Responsable HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-126-rehabilitacion-pulmonar`, `urn:salud:kb:hsc-pro-152-rehabilitacion-paciente-critico-vmi`, `urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel` | apoyos de rehabilitación o medición solo para prestaciones/casos incluidos y coordinados; no son criterios normativos de elegibilidad HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd` | derecho transversal cuando el paciente pertenece al grupo protegido; no equipara población objetivo con HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-170-plan-anual-prevencion-control-infecciones` | plan histórico 2023; no acredita programa vigente ni inclusión operativa HODOM |
+| Interfaz condicionada | `urn:salud:kb:hsc-pro-185-telegastroenterologia`, `urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral`, `urn:salud:kb:hsc-pro-187-telediabetes` | capacidad UNITEL; no habilita uso durante una hospitalización domiciliaria sin integración, indicación, responsabilidad y adopción formal |
+| Contexto hospitalario | `urn:salud:kb:hsc-pro-018-acv-isquemico-medicina`, `urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides`, `urn:salud:kb:hsc-pro-046-pielonefritis-aguda`, `urn:salud:kb:hsc-pro-048-pancreatitis-aguda`, `urn:salud:kb:hsc-pro-054-derivacion-tdah`, `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control`, `urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive`, `urn:salud:kb:hsc-pro-160-teletrombolisis`, `urn:salud:kb:hsc-hsc44-1-nutricion-parenteral` | consultar por caso o trayectoria clínica; no usar para afirmar frecuencia, cartera, capacidad HODOM ni cumplimiento de la pauta SEREMI |
+
+Esta reclasificación no retira las fuentes ni niega su valor hospitalario. Solo
+cierra la inferencia indebida `documento HSC pertinente por plausibilidad →
+norma aplicable o capacidad disponible en HODOM`.
 
 ## 3. Ingreso, traslado y responsabilidad — H0
 
@@ -294,14 +295,19 @@ inferencia documental**:
   procedencia.
 - Software: contratos vivos de dominio, requisito, prueba, release y operación.
 
-### Brechas de koraficación PRO en unidades de interfaz HODOM (recenso vivo 2026-08-23)
+### Recenso y auditoría de la ampliación PRO (2026-08-23)
 
-Re-recenso completo de la biblioteca Drive (906 carpetas, 1396 archivos,
-comparación por Drive ID contra el censo 2026-07-20): **cero altas, cero
-bajas** — la fuente viva no cambió desde el corte de julio. La brecha no es de
-drift sino de cobertura: la familia **PRO** (protocolos de unidad) tiene ~9%
-de cobertura en el ámbito HD. Candidatura curada Tier A (interfaz operativa
-directa), pendiente de gates de lectura íntegra por fuente:
+El recenso comparó los 1.396 archivos por Drive ID contra el corte del
+2026-07-20: **cero altas, cero bajas y una diferencia de metadata de fecha**.
+El conteo de carpetas de la corrida viva no es comparable con el publicado
+porque incluyó un nodo raíz adicional; no se usa como señal de cambio. En
+particular, HSC 44.1 ya estaba en el censo base: fue una selección nueva para
+KORA, no un archivo nuevo del Drive.
+
+La cifra de cobertura aproximada y la etiqueta `Tier A` se retiran: contar
+archivos o encontrarlos por título no prueba cobertura semántica de HODOM. La
+campaña produjo las siguientes 25 representaciones, cuya clasificación
+corregida vive en §2.1:
 
 - Medicina: ~~PRO-046/PRO-048~~ **koraficadas 2026-08-23** (`urn:salud:kb:hsc-pro-046-pielonefritis-aguda`, `urn:salud:kb:hsc-pro-048-pancreatitis-aguda`); ~~PRO-018 ACV~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-018-acv-isquemico-medicina`); ~~PRO-041 tiroides~~ y ~~PRO-058 DM2~~ (ref-contrarref) **koraficadas 2026-08-23** (`urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides`, `urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control`). ~~PRO-053~~ **koraficada 2026-08-23** (`urn:salud:kb:hsc-pro-053-hospitalizacion-desde-unidad-emergencia`).
 - Farmacia: ~~PRO-085 anticoagulantes~~ **koraficada 2026-08-23**
@@ -335,29 +341,27 @@ directa), pendiente de gates de lectura íntegra por fuente:
   (`urn:salud:kb:hsc-pro-160-teletrombolisis`), ~~PRO-054 TDAH~~
   (`urn:salud:kb:hsc-pro-054-derivacion-tdah`) — **koraficadas 2026-08-23**.
 
-### Cierre de la candidatura y exclusiones razonadas (2026-08-23)
+### Candidatura abierta y reglas de exclusión corregidas
 
-La candidatura Tier A queda **cerrada**: toda fuente con pertinencia HODOM
-sostenible explícitamente fue koraficada (25 fuentes nuevas en la jornada). Las
-siguientes fuentes del árbol se **excluyen** de koraficación por ausencia de
-pertinencia HD demostrable; su inclusión futura exige un hecho nuevo (pilotaje,
-decisión DT o cambio de cartera), no mera pertenencia al corpus:
+La candidatura no queda cerrada por esta campaña. Para autorización sanitaria
+siguen siendo prioritarias las fuentes que sostienen expresamente forma
+documental, ficha clínica, consentimiento, derechos, IAAS, procedimientos
+técnicos, medicamentos, muestras, residuos, entrega de turno, mantenimiento,
+instalaciones y reclamos. Algunas ya están koraficadas en §§4–13; otras deben
+adquirirse o validarse con su propietario.
 
-| Fuente(s) | Razón de exclusión |
-|---|---|
-| GCL 1.5 UCI/UTI ×20 | Normas intramurales de unidades críticas cerradas; HSC 44.1 + GCL 1.2 ya cubren lo transferible (CVC/PICC). Sin paciente HD crítico en cartera actual |
-| DP 4.1 convenios docencia | Relación docente-asistencial sin efecto sobre operación HD |
-| Familias API/APE/APA/APK (imagenología, esterilización, anatomía, kine instrumental) | Servicios de apoyo intramural; el paciente HD consume sus prestaciones vía interconsulta ya cubierta por PRO-043/PRO-053 |
-| Modelos de Gestión (carpetas transversales) | Documentos marco gerenciales sin reglas operativas HD adicionales a las ya koraficadas |
-| HSC 14.2 préstamo de catres clínicos, HSC 36.x ropa/ascensores/ropería, HSC 35 leche materna/fórmulas | Logística intramural específica; el equipamiento domiciliario se rige por la NT 2024 y el manual de alta complejidad ya koraficados |
-| HSC 7.x restantes (hanta, procuramiento, constatación de lesiones, endocraneano) | Flujos de urgencia/agudos no aplicables al episodio HD estable; PRO-045 contingencia UE excede el ámbito micro-asistencial |
-| HSC 45 test VPH | Tamizaje ambulatorio ginecológico sin gancho HD |
-| PRO-079 lavado de manos / HSC 35.2 aspectos del personal SAN | Precauciones estándar ya cubiertas por PRO-170/PRO-023 en su aplicación HD |
+No se excluyen familias completas por ser intramurales. La pauta HODOM exige
+interfaces con Farmacia, Laboratorio, Esterilización, IAAS, equipamiento y
+otros apoyos según cartera. Tampoco se excluyen `HSC 14.2` —que ya está en §4—
+ni lavado de manos/precauciones estándar: PRO-170 y PRO-023 no sustituyen GCL
+3.3 ni el procedimiento técnico aplicable. Una exclusión solo es válida por
+requisito concreto, alcance declarado y ausencia de consumo actual; no por el
+nombre de una carpeta.
 
-Nota de límite: estas exclusiones son una decisión curatorial del DT con la
-evidencia disponible hoy; no implican que las fuentes carezcan de valor
-institucional, solo que su representación KORA no cambia decisiones HODOM.
-Cualquier re-inclusión pasa por el mismo gate de lectura íntegra que el resto.
+El resultado de una fuente individual se expresa como `PASS`, `FAIL`, `ABSENT`
+o `NOT_RUN` para cobertura, sustento y preservación. `velar --estricto` prueba
+forma KORA; no prueba fidelidad semántica, pertinencia HODOM, vigencia material,
+adopción ni cumplimiento institucional.
 
 
 ## 16. Límites del índice

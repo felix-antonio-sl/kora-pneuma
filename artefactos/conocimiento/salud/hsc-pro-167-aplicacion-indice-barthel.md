@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel
 nombre: hsc-pro-167-aplicacion-indice-barthel
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-167, Aplicación del Índice de Barthel (primera edición, noviembre 2022, vigencia declarada hasta noviembre 2027): instrumento institucional de medición de dependencia en ABVD para personas mayores de 65 años al ingreso y egreso hospitalario, con responsables por estamento, circuito de registro en ficha clínica, traspaso a APS vía CAE e indicador trimestral de cumplimiento."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-167-indice-barthel-2022.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1sAQAUkCBJ8r8h9SF-QbKN-FswUp8TI21 (sha256:3c2f2e24ce99a3827a1676bec542422e0bbe7840379b82b15744a5c3167b26af); PDF escaneado sin capa textual, 20 páginas; oficialidad y vigencia por regla D-025BN (Drive institucional HSC); koraficación íntegra del contenido normativo, con cautelas sobre tablas rotadas y casillas de formulario"
@@ -127,14 +127,12 @@ responsables.
 
 ## Relevancia HODOM-HSC
 
-El IB es la métrica de dependencia funcional que condiciona la viabilidad del
-domicilio como configuración asistencial: categorización al ingreso, carga de
-cuidado, elegibilidad y planificación del egreso hacia domicilio, y traspaso
-informativo a APS vía CAE. Su variación ingreso-egreso es evidencia de
-resultado funcional de la hospitalización (incluida HD). Para HODOM-HSC esta
-fuente sustenta criterios de ingreso/egreso centrados en dependencia y el
-interfaz con APS/ELEAM de la microred; no sustituye los criterios normativos
-de DS 1/2022 y NT 2024 ni prueba práctica institucional.
+El Índice de Barthel aporta una medición institucional de dependencia dentro
+del alcance declarado por PRO-167. La fuente no lo establece como criterio de
+elegibilidad HODOM, no define carga de cuidado domiciliaria y no demuestra su
+captura en la unidad. Puede integrarse a categorización o plan de cuidados solo
+tras decisión clínica/documental y validación de población, momento, autor y
+receptor; nunca sustituye los criterios DS 1/2022/NT 2024.
 
 ## Fuentes relacionadas
 

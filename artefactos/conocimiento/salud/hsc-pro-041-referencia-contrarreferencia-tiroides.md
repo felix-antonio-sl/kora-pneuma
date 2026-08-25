@@ -1,9 +1,9 @@
 ---
 urn: urn:salud:kb:hsc-pro-041-referencia-contrarreferencia-tiroides
 nombre: hsc-pro-041-referencia-contrarreferencia-tiroides
-version: 1.0.0
+version: 1.0.1
 estado: publicado
-descripcion: "Protocolo local HSC PRO-041, Referencia y Contrarreferencia de pacientes con patología tiroidea desde APS al CAE HSC (primera edición abril 2011, Res. Exenta 0827): estandariza el flujo bidireccional de patología tiroidea entre atención primaria y especialidad en el CAE; antecedente del circuito APS-especialidad que la continuidad post-HODOM replica."
+descripcion: "Protocolo local HSC PRO-041, Referencia y Contrarreferencia de pacientes con patología tiroidea desde APS al CAE HSC (primera edición abril 2011, Res. Exenta 0827): estandariza el flujo bidireccional específico de patología tiroidea entre atención primaria y especialidad en el CAE."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1t5B5IypbHVtyER53yLexltfURxt3nF0i (sha256:03613b9adbd9a45e9322da3c10116bb4076185d5aa88c3d66210987506820840), 10 páginas; capa textual nativa irregular, koraficación del contenido normativo esencial; oficialidad y vigencia por regla D-025BN"
 autor: FS
 creado: 2026-08-23
@@ -30,13 +30,11 @@ control al establecimiento de origen tras el episodio de especialidad.
 
 ## Relevancia HODOM-HSC
 
-Patología tiroidea descompensada (hipertiroidismo, hipotiroidismo mixedematoso)
-es causa de hospitalización corta en Medicina; su control posterior es ambulatorio.
-Esta fuente documenta que el flujo estándar del hospital para estas patologías es
-**APS ↔ CAE**: el egreso HD de un paciente tiroidéo debe engancharse a ese mismo
-circuito (interconsulta CAE + contrarreferencia a APS), no inventar uno paralelo.
-Valor estructural de corpus: patrón de referencia bidireccional aplicable a toda
-patología crónica que HD toca.
+Es una fuente específica de referencia/contrarreferencia tiroidea APS↔CAE. No
+menciona HODOM ni establece un patrón generalizable a otras patologías. Si un
+paciente HODOM requiere continuidad por patología tiroidea, el propietario debe
+confirmar la vigencia y el punto exacto de enlace; fuera de ese caso es contexto
+hospitalario y no sustenta el protocolo general de egreso.
 
 ## Fuentes relacionadas
 

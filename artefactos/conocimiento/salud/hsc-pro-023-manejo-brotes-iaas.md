@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-023-manejo-brotes-iaas
 nombre: hsc-pro-023-manejo-brotes-iaas
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-023, Manejo de Brotes IAAS (cuarta edición agosto 2022): estandariza detección, notificación (PCI, SICARS, SEREMI), estudio en 10 pasos y cierre de brotes de infecciones asociadas a la atención de salud en servicios clínicos y unidades de apoyo del HSC; define brote prolongado (>28 días), reaparición (<3 meses) y repetición (>3 meses) con umbrales específicos para C. difficile, gastrointestinales pediátricos y COVID-19."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-023-manejo-brotes-iaas-2022.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 13Z_by2W8LUapIWPkuMw1kjcw95yza06i (sha256:b9b047edade2e12f9c55ec804710c0e85b8cbbcd9c4afb4db1e6be68c660c984); PDF escaneado sin capa textual, 16 páginas; número de resolución aprobatoria con lectura dudosa; koraficación íntegra del contenido normativo; oficialidad y vigencia por regla D-025BN"
@@ -87,16 +87,12 @@ Imagenología, Central de Alimentación.
 
 ## Relevancia HODOM-HSC
 
-El paciente HD es hospitalizado: un evento IAAS en domicilio entra al régimen
-de este protocolo vía el equipo PCI, con la particularidad operativa de que la
-«unidad» involucrada está distribuida territorialmente (cohortes y corte de
-cadena de transmisión deben ejecutarse casa a casa). Esta fuente fija las
-definiciones (umbral, brote prolongado, reaparición), los plazos de
-notificación SICARS/SEREMI y el estándar de investigación que cualquier
-protocolo HD debe respetar ante un conglomerado de infecciones en sus pacientes
-— incluida la coordinación con `hodom-operacional-iaas` (operación real de la
-unidad). No menciona HD explícitamente: su aplicación a la unidad deriva de su
-alcance de servicios clínicos y del carácter cerrado de la atención domiciliaria.
+Es un procedimiento institucional relevante para definir la interfaz con
+DCIYE/IAAS. Sin embargo, la fuente no menciona HODOM ni resuelve cómo detectar,
+agrupar, notificar o controlar territorialmente un brote distribuido en
+domicilios. El carácter de hospitalización del episodio no basta para inventar
+esa adaptación. DCIYE/IAAS debe confirmar el alcance y aprobar el procedimiento
+HODOM que preserve definiciones, plazos y autoridad de notificación.
 
 ## Fuentes relacionadas
 

@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive
 nombre: hsc-pro-103-acompanamiento-psicosocial-ive
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-103, Programa de Acompañamiento Psicosocial Ley 21.030/IVE (tercera edición mayo 2024, vigencia hasta mayo 2029): lineamientos del equipo psicosocial para acoger, informar, contener y acompañar a adolescentes y mujeres en las tres causales de interrupción voluntaria del embarazo, con apoyo psicoterapéutico, detección de vulnerabilidad y articulación intersectorial; alcance UE obstetricia, servicio Obstetricia, Policlínico SAIO y S.A. Psicosocial."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-103-acompanamiento-psicosocial-ive-2024.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1gpOXcXyRWAq44D_BkRWhIq0jMwnP-NCv (sha256:f495bff5755dccc6e5b4bba81c07201e7787fc723a6b30008c585d758265474e), 21 páginas; PDF escaneado sin capa textual; koraficación del contenido normativo esencial: objetivos, alcance y responsables; oficialidad y vigencia por regla D-025BN"
@@ -39,14 +39,12 @@ obstetra/matrón ofrecen el acompañamiento; trabajadora social ejecuta el progr
 
 ## Relevancia HODOM-HSC
 
-Relevancia indirecta pero sostenible: (1) es parte del eje de **salud mental y
-acompañamiento psicosocial** del corpus — el mismo eje que HD exige cubrir para
-paciente y cuidador durante el episodio domiciliario; (2) su principio rector —
-continuidad del cuidado integrada con la red ante vulnerabilidad psicosocial —
-es exactamente el estándar que un paciente HD con crisis psicosocial debe recibir;
-(3) documenta la capacidad local de la S.A. Psicosocial a la que un episodio HD
-puede derivar. No toca operación HD ni regula cuidado domiciliario: se incluye
-por pertinencia de red y continuidad, no por aplicación directa.
+Es contexto hospitalario especializado en IVE. La fuente no menciona HODOM, no
+define apoyo psicosocial general para sus pacientes o cuidadores y no demuestra
+que la S.A. Psicosocial reciba derivaciones desde esa unidad. Sus principios de
+acogida y continuidad no pueden generalizarse fuera del alcance declarado. Solo
+se consulta ante un caso dentro de la Ley 21.030 o después de un acuerdo formal
+con el propietario; no sustenta el expediente HODOM.
 
 ## Fuentes relacionadas
 

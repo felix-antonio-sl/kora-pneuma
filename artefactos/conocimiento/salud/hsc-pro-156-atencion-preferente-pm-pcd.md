@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-156-atencion-preferente-pm-pcd
 nombre: hsc-pro-156-atencion-preferente-pm-pcd
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-156, Atención Preferente de Personas Mayores y Personas con Discapacidad (primera edición febrero 2021): operativiza en HSC la Ley 21.168/Ley 20.584 — acreditación (cédula ≥60 años, credencial/certificado RND o COMPIN ≤60 días), prioridad en Emergencia dentro de categorización ESI, ventanillas preferentes DGU/Farmacia, bloques 08:00-10:00 para exámenes y mínimo 5% de oferta de consultas y procedimientos para PM/PCD."
 fuente: "Transcripción OCR /home/felix/projects/hd-dt/01-normativo/hsc/ocr/transcripcion-ocr-pro-156-atencion-preferente-pm-pcd-2021.md (derivado de trabajo, no autoritativo) del PDF primario Drive ID 1gVZdd5XfsA7sW-ZSNChWE6284Jk2OEx6 (sha256:15fe1beabc6856c327eecbbfe0935edbc39c5f1f214408d61e5cd3bfc6578647); PDF escaneado sin capa textual, 10 páginas; koraficación íntegra del contenido normativo; oficialidad y vigencia por regla D-025BN"
@@ -50,18 +50,12 @@ el criterio clínico**.
 
 ## Relevancia HODOM-HSC
 
-La población objetivo de este protocolo **es la población HODOM**: adultos
-mayores con dependencia (Barthel) y personas con discapacidad — el protocolo lo
-dice con cifras (~35% de derechohabientes). Para HD-HSC importa en tres planos:
-(1) los pacientes HD son sujetos de atención preferente en toda consulta,
-examen, interconsulta y retiro de medicamentos que el episodio genera — derecho
-que la unidad debe activar y registrar; (2) el mínimo del 5% de oferta para
-PM/PCD es un argumento de cartera al dimensionar consultas de especialidad que
-los pacientes HD consumen post-alta; (3) la accesibilidad comunicacional
-(facilitadores) es el estándar que el cuidado domiciliario debe replicar hacia
-pacientes con deterioro cognitivo o sordera. No regula el acto domiciliario: su
-aplicación a HD es como derecho del paciente que permanece hospitalizado en su
-casa.
+Es una norma transversal para personas mayores y personas con discapacidad;
+esa población no equivale a la población HODOM. Se aplica a un paciente de la
+unidad únicamente cuando cumple sus criterios y utiliza una superficie cubierta
+por el protocolo. No demuestra demanda, cupos, 5% de oferta para derivaciones
+HODOM ni obliga a trasladar literalmente un mecanismo intramural al domicilio.
+La unidad debe preservar el derecho y coordinar la interfaz correspondiente.
 
 ## Fuentes relacionadas
 

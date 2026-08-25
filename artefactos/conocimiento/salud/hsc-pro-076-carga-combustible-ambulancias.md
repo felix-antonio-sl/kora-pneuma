@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-076-carga-combustible-ambulancias
 nombre: hsc-pro-076-carga-combustible-ambulancias
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO-076, Procedimiento Carga de Combustible de Ambulancias (primera edición enero 2016, aprobado por Res. Exenta 4292/2016): operación de abastecimiento de la flota SAMU y de traslado del HSC con dotación de 6 ambulancias tipificadas, registro de kilometraje y combustible en hoja de ruta, pago con tarjeta en convenio y circuito quincenal de facturación Mantención→Abastecimiento→Finanzas."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1Efo1sR6HVQWWTPCJPcuPEJZXvdWZh6iP (sha256:2a496a2e3755750d033fbd7106e84c8e66c9b82564d141ca35abe234ea8201d2), 12 páginas con resolución aprobatoria; capa textual nativa, koraficación íntegra de las secciones normativas 1-9 y anexo 1; fecha exacta de la resolución con lectura dudosa en capa textual (octubre 2016); flujograma gráfico y anexo 2 descritos estructuralmente, no transcritos; oficialidad y vigencia por regla D-025BN"
@@ -107,16 +107,11 @@ Mantención del HSC.
 
 ## Relevancia HODOM-HSC
 
-Fuente de la **línea base institucional de control de flota y combustible**
-que sustenta la decisión #10 del DT (continuidad logística HODOM — kilometraje
-base, conciliación y control de flota): establece el patrón de registro de
-kilometraje por móvil, el circuito de pago en convenio y la gobernanza
-Mantención/Abastecimiento/Finanzas con la que cualquier esquema HODOM debe
-conciliar. Las funciones M0 (traslados programados intraprovinciales) y R1
-(fuera de provincia) son las más afines al transporte programado tipo HODOM,
-aunque el documento pertenece a la operación SAMU/UE y no menciona la unidad;
-la flota efectivamente disponible para HODOM se rige además por la
-organización UGDP/Movilización (MO U.G.D.P. y Mov. 002).
+Es un antecedente administrativo de control de combustible para móviles
+SAMU/UE. Puede compararse con la decisión #10 del DT, pero no constituye su
+línea base, no gobierna kilometraje HODOM y no prueba que las funciones o la
+flota descritas estén disponibles para la unidad. Todo uso requiere confirmar
+propietario, vehículos, contrato, registro y conciliación aplicables a HODOM.
 
 ## Fuentes relacionadas
 

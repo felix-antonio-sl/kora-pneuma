@@ -1,7 +1,7 @@
 ---
 urn: urn:salud:kb:hsc-pro-186-teletaco-anticoagulante-oral
 nombre: hsc-pro-186-teletaco-anticoagulante-oral
-version: 1.0.0
+version: 1.0.1
 estado: publicado
 descripcion: "Protocolo local HSC PRO 186, Atención Teletratamiento Anticoagulante Oral TACO (primera edición marzo 2024, vigencia hasta marzo 2029): teleconsulta sincrónica/asincrónica de anticoagulación vía UNITEL y plataforma de Teleprocesos para TEP/TVP, FA, prótesis valvulares y post-IAM, con requisitos previos (laboratorio INR, CHA2DS2-VASc, HAS-BLED), facilitador en CESFAM o domicilio del paciente y traspaso al policlínico TACO."
 fuente: "PDF primario Drive institucional HSC, Drive ID 1uhfKs4WhCS2Vdj0ByZCTE00PVw5_CpSN (sha256:4ed14a531852e77a36de7e3c5031496bfa001675ea96954ed8760833a8e0e67f), 11 páginas; capa textual nativa, koraficación íntegra de las secciones normativas 1-10; flujograma gráfico descrito estructuralmente; oficialidad y vigencia por regla D-025BN"
@@ -73,15 +73,12 @@ evaluación riesgo/beneficio con **CHA₂DS₂-VASc** (ACV en FA) y **HAS-BLED**
 
 ## Relevancia HODOM-HSC
 
-Doble relevancia directa: (1) **continuidad farmacológica del paciente HD**
-anticoagulado — el control INR periódico es una de las principales prestaciones
-externas que un episodio domiciliario debe garantizar sin ruptura, y este
-protocolo define la vía remota institucional para sostenerlo; (2) **precedente
-institucional de atención médica con facilitador en el domicilio del paciente**
-— el documento reconoce explícitamente el domicilio como lugar de ejecución del
-facilitador, lo que habilita por analogía operativa el modelo híbrido HD-telesalud
-que la unidad necesita para especialidades durante el episodio. Complementa a
-PRO-085 (atención farmacéutica del programa anticoagulantes).
+Define una vía remota del programa TACO que puede realizarse con facilitador en
+los lugares autorizados por esa fuente. No incorpora HODOM ni habilita por
+analogía teleatención durante un episodio de hospitalización. Para un paciente
+HODOM anticoagulado se requiere acuerdo expreso sobre indicación, muestra/INR,
+facilitador, registro, respuesta a resultados críticos y responsabilidad entre
+la unidad y el programa TACO.
 
 ## Fuentes relacionadas
 
