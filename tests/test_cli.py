@@ -235,6 +235,104 @@ class CliProfileMaintenanceTests(unittest.TestCase):
         self.assertIn("Secondary updated", (self.home / ".agents/skills/secondary/SKILL.md").read_text())
         self.assertEqual(self.cli("status")["changes"], [])
 
+    def test_removed_dependency_reconciles_previous_owners_in_each_requested_location(self):
+        shared = self.product("skill", "shared")
+        consumer = self.product("skill", "consumer", [shared.id])
+        for target in ("codex", "hermes"):
+            self.cli("install", target, consumer.id)
+        self.cli("install", "hermes", consumer.id, "--profile", "dev")
+        metadata_path = consumer.directory / "object.yaml"
+        metadata = yaml.safe_load(metadata_path.read_text())
+        metadata["requires"] = []
+        metadata_path.write_text(yaml.safe_dump(metadata))
+        shared.content_path.write_text("Shared version two.\n")
+
+        for target, prefix in (("codex", ".agents"), ("hermes", ".hermes")):
+            with self.subTest(target=target):
+                self.cli("install", target, shared.id)
+                self.assertIn("Shared version two", (self.home / prefix / "skills/shared/SKILL.md").read_text())
+                state = json.loads((self.home / ".local/state/kora/installed.json").read_text())
+                self.assertNotIn(f"{prefix}/skills/shared/SKILL.md", state[f"{target}:{consumer.id}"])
+                self.assertNotIn(shared.id, (self.home / prefix / "skills/consumer/SKILL.md").read_text())
+        profile = self.home / ".hermes/profiles/dev/skills"
+        self.assertFalse((profile / "shared/SKILL.md").exists())
+        self.assertNotIn(shared.id, (profile / "consumer/SKILL.md").read_text())
+        self.assertEqual(self.cli("status")["changes"], [])
+        self.cli("rollback")
+        self.assertIn("version one", (profile / "shared/SKILL.md").read_text())
+        self.assertIn(shared.id, (profile / "consumer/SKILL.md").read_text())
+
+    def test_unrelated_archived_or_missing_source_does_not_block_focal_update(self):
+        selected = self.product("skill", "selected")
+        archived = self.product("skill", "archived")
+        missing = self.product("skill", "missing")
+        for target in ("codex", "hermes"):
+            self.cli("install", target, selected.id, archived.id, missing.id)
+        destination = self.root / "archive/products/example/archived"
+        destination.parent.mkdir(parents=True)
+        shutil.move(archived.directory, destination)
+        shutil.rmtree(missing.directory)
+        state_path = self.home / ".local/state/kora/installed.json"
+        previous = json.loads(state_path.read_text())
+        preserved = {relative: (self.home / relative).read_bytes()
+                     for key, files in previous.items() if not key.endswith(selected.id)
+                     for relative in files}
+        selected.content_path.write_text("Selected version two.\n")
+
+        for target in ("codex", "hermes"):
+            with self.subTest(target=target):
+                self.cli("install", target, selected.id)
+        current = json.loads(state_path.read_text())
+        for key, files in previous.items():
+            if not key.endswith(selected.id):
+                self.assertEqual(current[key], files)
+        for relative, data in preserved.items():
+            self.assertEqual((self.home / relative).read_bytes(), data)
+        self.assertEqual(self.cli("status")["changes"], [])
+
+    def test_removed_dependency_still_protects_a_local_edit_before_reconciliation(self):
+        shared = self.product("skill", "shared")
+        consumer = self.product("skill", "consumer", [shared.id])
+        self.cli("install", "hermes", consumer.id, "--profile", "dev")
+        native = self.home / ".hermes/profiles/dev/skills/shared/SKILL.md"
+        native.write_text("Local work that must survive.\n")
+        metadata_path = consumer.directory / "object.yaml"
+        metadata = yaml.safe_load(metadata_path.read_text())
+        metadata["requires"] = []
+        metadata_path.write_text(yaml.safe_dump(metadata))
+        state_path = self.home / ".local/state/kora/installed.json"
+        previous = state_path.read_bytes()
+
+        result = self.cli("install", "hermes", shared.id, "--profile", "dev", ok=False)
+        self.assertIn("cambio local", result.stderr)
+        self.assertEqual(native.read_text(), "Local work that must survive.\n")
+        self.assertEqual(state_path.read_bytes(), previous)
+        self.assertFalse((self.home / ".hermes/skills/shared/SKILL.md").exists())
+
+    def test_reused_skill_name_does_not_reconcile_an_unrelated_profile(self):
+        previous = self.product("skill", "same-name")
+        self.cli("install", "hermes", previous.id, "--profile", "urgencia")
+        metadata_path = previous.directory / "object.yaml"
+        metadata = yaml.safe_load(metadata_path.read_text())
+        metadata["name"] = "renamed-other"
+        metadata_path.write_text(yaml.safe_dump(metadata))
+        body = self.base / "independent.md"
+        body.write_text("An independent procedure.\n")
+        independent = create(self.root, "skill", "another", "same-name", "urn:another:skill:new",
+                             "Independent", body, targets=["hermes"])
+        state_path = self.home / ".local/state/kora/installed.json"
+        state = json.loads(state_path.read_text())
+        profile_file = self.home / ".hermes/profiles/urgencia/skills/same-name/SKILL.md"
+        original = profile_file.read_bytes()
+
+        self.cli("install", "hermes", independent.id)
+        self.assertEqual(profile_file.read_bytes(), original)
+        self.assertFalse((profile_file.parent.parent / "renamed-other").exists())
+        current = json.loads(state_path.read_text())
+        for key, files in state.items():
+            self.assertEqual(current[key], files)
+        self.assertIn("An independent procedure", (self.home / ".hermes/skills/same-name/SKILL.md").read_text())
+
     def test_profile_render_filters_skills_and_rejects_other_targets_types_and_unsafe_names(self):
         knowledge = self.product("knowledge", "reference")
         skill = self.product("skill", "procedure", [knowledge.id])

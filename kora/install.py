@@ -85,6 +85,10 @@ class Installer:
         self.state_file = self.state / "installed.json"
         self.journal_file = self.state / "journal.json"
 
+    def receipts(self):
+        """Read existing ownership for selection; apply still checks the live files."""
+        return _read_json(self.state_file, {})
+
     def _path(self, relative, *, captured=False):
         path = self.home / safe_relative(relative)
         for component in (path, *path.parents):
@@ -167,7 +171,7 @@ class Installer:
         """Adoption requires the exact reviewed current digest, never a force flag."""
         with self._lock():
             self._recover_locked()
-            before_state = _read_json(self.state_file, {})
+            before_state = self.receipts()
             remove = set(remove)
             after_state = {key: value for key, value in before_state.items() if key not in remove}
             payloads = {}
@@ -336,7 +340,7 @@ class Installer:
             return {"rolled_back": journal["transaction"]}
 
     def status(self):
-        state = _read_json(self.state_file, {})
+        state = self.receipts()
         changes = []
         for relative, expected in self._union(state).items():
             try:

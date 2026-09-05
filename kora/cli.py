@@ -88,10 +88,23 @@ def build(catalog: Catalog, target: str, identifiers=(), *, profile=None) -> dic
 def _installation_bundles(catalog: Catalog, target: str, identifiers, installed, profile=None):
     instances = _selection(catalog, target, identifiers, profile)
 
-    def closure(product):
-        return {item.id for item in [product, *catalog.dependencies(product, target)]}
+    def references(identifier):
+        # Establish relevance first. Only selected sources must be realizable;
+        # an archived or absent unrelated source does not block a focal update.
+        found, pending = set(), [identifier]
+        while pending:
+            identifier = pending.pop()
+            if identifier in found:
+                continue
+            found.add(identifier)
+            try:
+                product = catalog.get(identifier)
+            except KoraError:
+                continue
+            found.add(product.id)
+            pending.extend(product.requires)
+        return found
 
-    affected = set().union(*(closure(product) for product, _ in instances))
     selected = {_bundle_key(target, product.id, place) for product, place in instances}
     candidates = []
     for bundle in installed:
@@ -107,26 +120,25 @@ def _installation_bundles(catalog: Catalog, target: str, identifiers, installed,
             continue
         if profile is not None and place != profile:
             continue
-        product = catalog.get(identifier)
-        required = closure(product)  # Fail before writing if a managed source is unavailable.
-        if place is not None and product.kind != "skill":
-            raise KoraError(f"El recibo de perfil ya no corresponde a una skill: {bundle}")
         if bundle not in selected:
-            candidates.append((product, place, required))
-    # Re-emitting a consumer also refreshes its other dependencies. Include their
-    # registered consumers until shared files can carry one consistent version.
-    while candidates:
+            candidates.append((identifier, place, references(identifier), set(installed[bundle])))
+
+    while True:
+        bundles = _build_instances(catalog, target, instances)
+        affected = set().union(*(references(product.id) for product, _ in instances))
+        affected_paths = set().union(*(set(files) | set(installed.get(key, {}))
+                                      for key, files in bundles.items()))
+        # Previous ownership is physical. Equal skill names in different Hermes
+        # profiles do not establish identity; current references connect copies.
         remaining = []
-        for product, place, required in candidates:
-            if not identifiers or affected & required:
-                instances.append((product, place))
-                affected.update(required)
+        for identifier, place, required, previous_paths in candidates:
+            if not identifiers or affected & required or affected_paths & previous_paths:
+                instances.append((catalog.get(identifier), place))
             else:
-                remaining.append((product, place, required))
+                remaining.append((identifier, place, required, previous_paths))
         if len(remaining) == len(candidates):
-            break
+            return bundles
         candidates = remaining
-    return _build_instances(catalog, target, instances)
 
 
 def emit(bundles, output: Path):
@@ -263,7 +275,7 @@ def execute(args):
     if args.command == "install":
         installer = Installer(args.home)
         bundles = _installation_bundles(catalog, args.target, args.ids,
-                                        installer.status()["bundles"], profile)
+                                        installer.receipts(), profile)
         adoption = json.loads(args.adopt.read_text()) if args.adopt else None
         return installer.apply(bundles, adopt=adoption)
     raise KoraError(f"Comando desconocido: {args.command}")
