@@ -13,6 +13,6 @@ requires:
 provenance:
   previous: archive/previous/dev/agent-architect
   date: '2026-09-05'
-  authority: MANDATO.md
+  authority: archive/reconstruction/MANDATO.md
   change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
     completo recuperable en previous.

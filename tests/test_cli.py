@@ -47,7 +47,7 @@ class CliJourneyTests(unittest.TestCase):
             self.assertFalse(report["ok"])
             self.assertIn("same-name/SKILL.md", report["issues"][0]["error"])
 
-    def test_independent_source_to_two_native_targets_update_and_rollback(self):
+    def test_relocated_source_to_two_native_targets_update_and_rollback(self):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)
             source = base / "source.txt"
@@ -58,10 +58,13 @@ class CliJourneyTests(unittest.TestCase):
             home = base / "home"
             root.mkdir()
             home.mkdir()
-            executable = Path(__file__).resolve().parents[1] / "kora_cli.py"
+            implementation = Path(__file__).resolve().parents[1]
+            shutil.copytree(implementation / "kora", root / "kora",
+                            ignore=shutil.ignore_patterns("__pycache__"))
+            shutil.copy2(implementation / "kora_cli.py", root / "kora_cli.py")
 
             def run(*args):
-                result = subprocess.run([sys.executable, str(executable), "--root", str(root), *args],
+                result = subprocess.run([sys.executable, str(root / "kora_cli.py"), *args],
                                         cwd=base, capture_output=True, text=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 return json.loads(result.stdout)
@@ -76,6 +79,26 @@ class CliJourneyTests(unittest.TestCase):
                 "--requires", "urn:example:skill:read")
             for runtime in ("codex", "hermes"):
                 run("install", runtime, "--home", str(home))
+            previous = root
+            root = base / "relocated"
+            shutil.move(previous, root)
+            source.unlink()
+            body.unlink()
+            self.assertFalse(previous.exists())
+            resolved = run("resolve", "urn:example:kb:permission")
+            self.assertTrue(Path(resolved["path"]).is_relative_to(root))
+            originals = list((root / "products/example/permission/sources").iterdir())
+            self.assertEqual(len(originals), 1)
+            self.assertIn("salvo revocación", originals[0].read_text())
+            for runtime in ("codex", "hermes"):
+                run("install", runtime, "--home", str(home))
+            for relative in (".codex/agents/permission-reader.toml",
+                             ".agents/skills/read-permission/SKILL.md",
+                             ".hermes/profiles/permission-reader/SOUL.md",
+                             ".hermes/profiles/permission-reader/skills/read-permission/SKILL.md"):
+                native_text = (home / relative).read_text()
+                self.assertIn(str(root / "products"), native_text)
+                self.assertNotIn(str(previous), native_text)
             self.assertTrue((home / ".codex/agents/permission-reader.toml").is_file())
             self.assertTrue((home / ".hermes/profiles/permission-reader/SOUL.md").is_file())
             personal = home / ".hermes/profiles/permission-reader/MEMORY.md"

@@ -4,23 +4,45 @@ La maquinaria relaciona fuentes autoradas con archivos utilizables en Codex y
 Hermes. El [modelo de fuente](../products/kora/cat-kora-kernel/content.md)
 define productos, identidad y dependencias; la
 [guía operativa](../products/kora/guia-rapida-pneuma/content.md) explica su uso.
-La construcción y sus comprobaciones del 2026-09-05 se conservan en
-[migración](migracion.md).
 
 ## Archivos y responsabilidades
 
 Archivos legibles y Git permiten revisar, recuperar y utilizar el corpus
 directamente. El catálogo se deriva al operar: una base de datos o un registro
 manual agregarían estado mutable sin una necesidad actual. Los recursos técnicos
-conservan su formato. La importación interpreta formas anteriores en su límite
-de entrada, sin trasladarlas al contrato operativo.
+conservan su formato. `create --source` incorpora los originales necesarios al
+producto; la lectura y la realización posteriores usan esos archivos locales.
 
 `catalog.py` representa y resuelve; `authoring.py` conserva y publica fuentes;
 `render_codex.py` y `render_hermes.py` producen mapas de archivos nativos;
 `install.py` reconoce cambios y recupera operaciones; `cli.py` conecta esos
-recorridos. `migrate.py` y su auditoría sirven para importar y estudiar originales.
-Los realizadores no modifican el home y el núcleo operativo no importa código
-de la maquinaria anterior.
+recorridos. Los realizadores no modifican el home.
+
+## Autocontención
+
+La raíz se deriva del programa invocado; un corpus independiente se selecciona
+con `--root`. Núcleo, métodos, recursos y comprobaciones vigentes están dentro del
+repositorio. Las realizaciones nativas señalan la fuente de esa raíz: al moverla
+se reinstalan los productos para actualizar sus rutas. El diario del instalador
+pertenece al home del operador y permanece allí durante ese traslado.
+
+Los instrumentos, instrucciones y resultados de la construcción concluida se
+conservan en `archive/reconstruction`, fuera del núcleo y de la suite vigente.
+Los originales reemplazados conservan su procedencia en `archive/previous`.
+Los enlaces de `artefactos/conocimiento` resuelven hacia productos de esta misma
+raíz y mantienen lecturas de consumidores existentes.
+
+`scripts/probe_independence.py --offline` copia el árbol operativo completo,
+incluido el corpus, y lo ejecuta en un montaje sin red, home personal, Git ni
+archivo de reconstrucción. Comprueba catálogo, instalación en ambos destinos,
+actualización tras un traslado y recuperación. Requiere `bubblewrap` solo para
+ese ensayo. La variante con inferencia permite observar también el trabajo de
+KORA con un proveedor disponible.
+
+Una cita externa de un producto de dominio conserva su propia dependencia de
+fuente. No se absorben bibliotecas, repositorios o archivos personales por estar
+citados. Eso limita la comprobación de aquel producto cuando el original no está
+disponible; la operación de la maquinaria no depende de leerlo.
 
 ## Actualización y recuperación
 

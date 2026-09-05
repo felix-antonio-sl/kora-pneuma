@@ -40,4 +40,3 @@ tampoco acredita conducta del agente ni equivalencia entre modelos.
 
 Implementación: [instalación y recuperación](../../../kora/install.py) y
 [decisiones de filesystem](../../../docs/diseno.md).
-[Semántica anterior](../../../archive/previous/kora/cat-kora-semantica-operacional/content.md).

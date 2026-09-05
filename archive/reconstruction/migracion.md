@@ -1,4 +1,12 @@
-# Migración del corpus KORA
+# Historia de la reconstrucción KORA del 2026-09-05
+
+Este registro conserva decisiones y comprobaciones de una etapa concluida.
+El [mandato original](MANDATO.md) y los instrumentos usados se conservan aquí,
+en `kora/`, `scripts/` y `tests/`, como antecedentes de lectura. Los comandos
+y rutas descritos corresponden al árbol de aquel corte; estos instrumentos
+quedaron fuera de la interfaz y de las pruebas de mantenimiento vigentes.
+La operación actual se explica en el [README](../../README.md).
+
 
 Inspección y migración del filesystem vivo realizadas el 2026-09-05. Este
 documento registra decisiones del importador y la auditoría independiente de

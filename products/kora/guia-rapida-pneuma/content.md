@@ -10,6 +10,33 @@ dependencia Python está en [requirements.txt](../../../requirements.txt).
 Los comandos entregan JSON y un código distinto de cero ante un conflicto.
 `python3 kora_cli.py COMANDO --help` muestra los argumentos disponibles.
 
+## Empezar o trasladar la raíz
+
+El [README](../../../README.md) contiene la preparación desde una copia limpia.
+Con las dependencias Python disponibles, la CLI opera localmente sin modelo ni
+red. Codex y Hermes se necesitan para ejecutar los agentes, con su configuración
+y acceso al proveedor mantenidos por Félix.
+
+Para instalar la propia KORA con sus skills necesarias:
+
+```sh
+python3 kora_cli.py install codex urn:kora:artefacto:kora
+python3 kora_cli.py install hermes urn:kora:artefacto:kora
+```
+
+Usa los destinos que necesites. Al trasladar la raíz, ejecuta desde la nueva
+ubicación `install TARGET URN` para actualizar las rutas nativas de los productos
+que usas. Si necesitas renovar todos los conjuntos ya administrados, incluidos
+los de perfiles Hermes, selecciónalos por las identidades que entrega `status`.
+Conserva `.local/state/kora` del home para reconocer propiedad, ediciones locales
+y recuperación. En otro host, instala en su home nuevo y configura el runtime
+allí; copiar el repositorio no copia credenciales ni memoria personal.
+
+La maquinaria contiene sus métodos y recursos: no requiere archivos privados,
+otra raíz KORA ni instrucciones de una conversación anterior. Los originales
+externos citados por productos de dominio mantienen el alcance declarado en esos
+productos; esa procedencia no es una dependencia del núcleo.
+
 ## Encontrar y mantener fuentes
 
 ```sh
@@ -138,12 +165,18 @@ Selecciona las pruebas pertinentes al cambiar maquinaria; la suite completa
 sirve para cambios transversales. Usa un corpus temporal con `--root` y
 `--home DIRECTORIO_TEMPORAL` en instalación, estado, retiro y recuperación para
 ensayar fuera del home real. Una operación ordinaria no requiere repetir toda
-la suite ni la auditoría histórica de migración.
+la suite.
+
+Para comprobar independencia del host de construcción, `python3
+scripts/probe_independence.py --offline` ejecuta una copia operativa en un montaje
+aislado, sin red ni autenticación. Usa `bubblewrap` y comprueba el corpus, ambos
+destinos y la suite, incluido traslado y recuperación. Es un ensayo de la
+maquinaria, no un paso de cada instalación. La variante `--output
+DIRECTORIO_PRIVADO_NUEVO`, sin `--offline`, usa inferencia real de Codex para
+observar autoría y mantenimiento; requiere runtime y autenticación disponibles.
 
 Los contratos de [Codex](../../../docs/codex.md) y
 [Hermes](../../../docs/hermes.md) contienen sus comprobaciones nativas y fuentes
 oficiales. Un archivo válido, una instalación coherente y una conducta observada
 acreditan propiedades distintas; el [contrato de autoría](../cat-contrato-ingenieria-agentica/content.md)
 ayuda a elegir la evidencia necesaria.
-
-[Guía anterior conservada](../../../archive/previous/kora/guia-rapida-pneuma/content.md).

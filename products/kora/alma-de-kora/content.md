@@ -27,4 +27,3 @@ estén almacenados como productos. Examina su costo operativo con el mismo crite
 
 La [autoridad del encargo](../regimen-de-ley/content.md) delimita la actuación.
 La [guía de operación](../guia-rapida-pneuma/content.md) explica cómo realizarla.
-[Versión fundacional anterior](../../../archive/previous/kora/alma-de-kora/content.md).

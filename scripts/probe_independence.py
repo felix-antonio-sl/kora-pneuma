@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Prueba material aislada de la maquinaria nueva; usa inferencia real autorizada.
+"""Prueba KORA sin sus antepasados ni el estado privado del host.
 
-El montaje oculta /home y /tmp, salvo el binario Codex, su autenticación de solo
-lectura y el directorio sintético. No modifica el namespace del host.
+--offline prueba el árbol operativo completo sin red, modelo ni autenticación.
+--output prueba autoría y mantenimiento con inferencia real autorizada de Codex.
+Los montajes ocultan /home y /tmp. No modifican el namespace del host.
 https://github.com/containers/bubblewrap#usage
 """
 
@@ -45,25 +46,28 @@ def emit(value):
     print(json.dumps(value, ensure_ascii=False), flush=True)
 
 
+def copy_operating_tree(work):
+    work.mkdir()
+    for name in ("kora", "products", "archive/products", "artefactos", "docs", "tests", "scripts"):
+        shutil.copytree(ROOT / name, work / name, symlinks=True,
+                        ignore=shutil.ignore_patterns("__pycache__"))
+    for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt", "aliases.yaml"):
+        shutil.copy2(ROOT / name, work / name)
+    links = [path for path in work.rglob("*") if path.is_symlink()]
+    assert all(path.exists() and path.resolve().is_relative_to(work) for path in links)
+    return len(links)
+
+
 def prepare(output):
     temporary = Path(tempfile.mkdtemp(prefix="kora-independence-"))
     temporary.chmod(0o700)
     work = temporary / "work"
-    work.mkdir()
-    shutil.copytree(ROOT / "kora", work / "kora", ignore=shutil.ignore_patterns("__pycache__", "migrate.py"))
-    shutil.copy2(ROOT / "kora_cli.py", work / "kora_cli.py")
-    shutil.copy2(ROOT / "README.md", work / "README.md")
-    shutil.copytree(ROOT / "docs", work / "docs")
-    catalog = Catalog(ROOT)
+    copy_operating_tree(work)
+    catalog = Catalog(work)
     agent = catalog.get("urn:kora:artefacto:kora")
-    for item in [agent, *catalog.dependencies(agent, "codex")]:
-        relative = item.directory.relative_to(ROOT)
-        shutil.copytree(item.directory, work / relative)
     (work / "inputs").mkdir()
     (work / "inputs/manual-envios-v1.txt").write_text(SOURCE, encoding="utf-8")
     (work / "reports").mkdir()
-    (work / "tests").mkdir()
-    shutil.copy2(ROOT / "tests/test_install.py", work / "tests/test_install.py")
     Installer(work).apply(build(Catalog(work), "codex", [agent.id]))
     subprocess.run(["git", "init", "-q", str(work)], check=True)
     config = temporary / "codex"
@@ -74,9 +78,10 @@ def prepare(output):
     output.chmod(0o700)
     (output / "location.json").write_text(json.dumps({"temporary": str(temporary), "work": str(work)}))
     immutable = {path.relative_to(work): hashlib.sha256(path.read_bytes()).hexdigest()
-                 for directory in (work / "kora", work / "products")
+                 for directory in (work / "kora", work / "products", work / "docs", work / "scripts", work / "tests")
                  for path in directory.rglob("*") if path.is_file() and "__pycache__" not in path.parts}
-    immutable[Path("kora_cli.py")] = hashlib.sha256((work / "kora_cli.py").read_bytes()).hexdigest()
+    for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):
+        immutable[Path(name)] = hashlib.sha256((work / name).read_bytes()).hexdigest()
     return temporary, work, config, immutable
 
 
@@ -129,17 +134,75 @@ def evaluate(prefix, executable, work, config, name):
     return json.loads(text.strip().removeprefix("```json").removesuffix("```").strip())
 
 
+def offline():
+    # Copy current sources, not a Git revision, a private backup or an installed
+    # realization. The root is relocated and no construction tools are included.
+    with tempfile.TemporaryDirectory(prefix="kora-offline-") as folder:
+        temporary = Path(folder)
+        work, home = temporary / "repo", temporary / "operator"
+        internal_links = copy_operating_tree(work)
+        home.mkdir()
+        prefix = ["bwrap", "--ro-bind", "/", "/", "--tmpfs", "/home", "--tmpfs", "/tmp",
+                  "--bind", str(temporary), str(temporary), "--unshare-net", "--unshare-pid",
+                  "--new-session", "--proc", "/proc", "--dev", "/dev"]
+        interpreter = sys.executable
+        if sys.prefix != sys.base_prefix:
+            # Keep the explicitly installed Python dependencies available even
+            # when the invoking venv is inside the hidden original checkout.
+            python_environment = temporary / "python"
+            python_environment.mkdir()
+            prefix += ["--ro-bind", sys.prefix, str(python_environment)]
+            interpreter = str(python_environment / "bin" / Path(sys.executable).name)
+        prefix.append("--")
+        environment = {"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8", "PYTHONNOUSERSITE": "1"}
+
+        def run(arguments):
+            result = subprocess.run([*prefix, interpreter, *arguments], cwd=work,
+                                    env=environment, capture_output=True, text=True, timeout=180)
+            if result.returncode:
+                raise RuntimeError(f"Falló la comprobación {arguments[0]}:\n{result.stdout}{result.stderr}")
+            return result
+
+        run(["-c", "from pathlib import Path; "
+             f"assert not Path({str(ROOT)!r}).exists(); "
+             "assert not list(Path('/home').iterdir()); "
+             "assert not Path('.git').exists(); "
+             "assert not Path('archive/reconstruction').exists(); "
+             "assert not Path('archive/previous').exists(); "
+             "assert not Path('._local').exists()"])
+        report = json.loads(run(["kora_cli.py", "check"]).stdout)
+        assert report["ok"], report
+        emit({"phase": "isolated_catalog", "active": report["active"], "archived": report["archived"],
+              "internal_links": internal_links, "ok": True})
+        installations = {}
+        for target in ("codex", "hermes"):
+            receipt = json.loads(run(["kora_cli.py", "install", target, "--home", str(home)]).stdout)
+            installations[target] = {"changed_files": len(receipt["changed"])}
+        state = json.loads(run(["kora_cli.py", "status", "--home", str(home)]).stdout)
+        assert not state["changes"] and not state["recovery_pending"] and not state["preserved_changes"]
+        result = run(["-m", "unittest", "discover", "-s", "tests", "-v"])
+        emit({"phase": "offline", "ok": True, "network": False, "personal_home": False,
+              "construction_archive": False, "git_required": False, "model_called": False,
+              "installations": installations, "tests": result.stderr.strip().splitlines()[-3:],
+              "skipped": [line for line in result.stderr.splitlines() if "... skipped " in line]})
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, required=True, help="Directorio privado nuevo para recibo y localizador")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--offline", action="store_true", help="Probar el árbol operativo sin red ni modelo")
+    mode.add_argument("--output", type=Path, help="Usar inferencia real; directorio privado nuevo para recibo y localizador")
     args = parser.parse_args()
+    if args.offline:
+        return offline()
     temporary, work, config, immutable = prepare(args.output.resolve())
     prefix, executable = namespace(temporary, config)
     proof = subprocess.run([*prefix, "python3", "-c",
         "from pathlib import Path; "
-        "assert not Path('/home/felix/kora-pneuma/kora.py').exists(); "
-        "assert not Path('/home/felix/kora-pneuma/ley').exists(); "
-        "assert not Path('/home/felix/kora-rebuild/kora').exists(); "
+        f"assert not Path({str(ROOT)!r}).exists(); "
+        "assert not Path('archive/reconstruction').exists(); "
+        "assert not Path('archive/previous').exists(); "
         "print('source_and_previous_kernel_unavailable')"], capture_output=True, text=True, check=True)
     emit({"phase": "isolation", "ok": "unavailable" in proof.stdout, "previous_core_access": False})
     prompt = (

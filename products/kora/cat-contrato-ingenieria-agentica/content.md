@@ -41,5 +41,3 @@ límites suficientes para entender el resultado, sin secretos ni datos personale
 Un recorrido observado no demuestra conducta universal, equivalencia entre
 runtimes o aceptación del usuario. Una pérdida de capacidad se resuelve o se
 declara con su efecto concreto.
-
-[Contrato anterior conservado](../../../archive/previous/kora/cat-contrato-ingenieria-agentica/content.md).

@@ -82,6 +82,6 @@ provenance:
   previous: archive/previous/kora/consenso-deliberativo
   adaptation:
     date: '2026-09-05'
-    authority: MANDATO.md
+    authority: archive/reconstruction/MANDATO.md
     change: Actualiza únicamente referencias operativas a maquinaria y modos de invocación;
       conserva el método y contenido de dominio.

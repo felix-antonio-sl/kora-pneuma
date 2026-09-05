@@ -57,5 +57,3 @@ Los recursos empaquetados de una skill siguen la estructura soportada por
 contrato efectivo de copia y acceso está en [Codex](../../../docs/codex.md) y
 [Hermes](../../../docs/hermes.md). Las fuentes técnicas no se convierten en
 skills por tener archivos auxiliares.
-
-[Decisión anterior conservada](../../../archive/previous/kora/frontera-fuentes-tecnicas/content.md).

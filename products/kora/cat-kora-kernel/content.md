@@ -46,4 +46,3 @@ decisiones de implementación y la [guía](../guia-rapida-pneuma/content.md) su 
 
 Implementación: [catálogo](../../../kora/catalog.py) y realizadores de
 [Codex](../../../kora/render_codex.py) y [Hermes](../../../kora/render_hermes.py).
-[Modelo anterior conservado](../../../archive/previous/kora/cat-kora-kernel/content.md).

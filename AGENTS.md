@@ -2,13 +2,13 @@
 
 KORA es la maquinaria personal de Félix Korvo para transformar fuentes en
 conocimiento útil, autorar agentes y skills y realizarlos en Codex y Hermes.
-La única raíz de uso es `/home/felix/kora-pneuma`. El repositorio
-`kora-rebuild` conserva la historia de construcción y no es otra fuente activa.
+Esta raíz contiene su implementación, métodos, fuentes y pruebas. En el host de
+Félix se mantiene en `/home/felix/kora-pneuma`; puede operar desde otra ubicación.
 
 Lee el `README.md` actual y solo la documentación necesaria para el encargo.
-`MANDATO.md` conserva la autorización y los criterios de la reconstrucción del
-2026-09-05. Mientras su Goal nativo siga activo, completa esos criterios; después
-no lo recrees ni conviertas cada tarea nueva en otra reconstrucción.
+El encargo vigente delimita la autoridad y el resultado. La historia archivada
+sirve para investigar una decisión cuando haga falta; no agrega obligaciones
+de reconstrucción ni requiere consultar otros repositorios o conversaciones.
 
 ## Fuente e interfaz
 
@@ -22,8 +22,8 @@ necesarios para consumidores existentes; edita la fuente a la que resuelven.
 La interfaz es `python3 kora_cli.py --help`. `catalog.py` representa y resuelve;
 `authoring.py` conserva y publica fuentes; `render_codex.py` y `render_hermes.py`
 producen archivos nativos; `install.py` reconoce cambios y recupera operaciones;
-`cli.py` conecta esos recorridos. El importador y su auditoría leen formatos
-anteriores únicamente para preservar y comprobar originales.
+`cli.py` conecta esos recorridos. Los instrumentos de la reconstrucción concluida
+se conservan en `archive/reconstruction`, fuera del núcleo y de sus pruebas.
 
 Consulta las capacidades contrastadas y sus fuentes oficiales en `docs/codex.md`
 y `docs/hermes.md`. Verifica la versión instalada cuando una decisión dependa de
