@@ -1,17 +1,18 @@
 id: urn:dev:artefacto:hermes-agent-specialist
 kind: skill
 name: hermes-agent-specialist
-description: Especialista en agentes Hermes (Nous Research) para crear, configurar,
-  desplegar, operar y auditar agentes contra la documentacion oficial viva en hermes-agent.nousresearch.com/docs/.
-  Usar cuando el operador mencione Hermes Agent, SOUL.md, hermes CLI, agentskills,
-  terminal.backend, perfiles o bots, mensajeria sobre Hermes, MCP en Hermes, migracion
-  desde OpenClaw, o cualquier tarea del ciclo de vida de un agente Hermes — aunque
-  no nombre la skill.
+description: >-
+  Crea, configura, mantiene y diagnostica Hermes Agent de Nous Research:
+  perfiles, SOUL.md, skills, contexto, memoria, herramientas e integraciones. Contrasta
+  la documentación oficial vigente con la versión y configuración efectivas y
+  mantiene los productos KORA desde su fuente.
 content: content.md
 targets:
 - codex
 - hermes
-requires: []
+requires:
+- urn:kora:kb:guia-rapida-pneuma
+- urn:kora:artefacto:instalacion-kora
 relations:
   componible:
   - urn:kora:artefacto:mente-omega

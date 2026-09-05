@@ -1,63 +1,37 @@
-# Separacion de estratos — humano vs agente
+# Responsabilidades del operador y del agente
 
-Que se delega a agentes ejecutores y que se reserva al humano.
+El encargo determina qué decisiones puede concretar el agente. Diseñar
+arquitectura o elegir una dependencia puede formar parte de esa responsabilidad;
+el nombre de la tarea no crea por sí mismo una consulta pendiente.
 
-## Tabla canonica
+| Responsabilidad | Criterio |
+|---|---|
+| Propósito, prioridades y alcance | Los fija el operador; el agente ayuda a aclararlos cuando faltan. |
+| Diseño e implementación autorizados | El agente decide, ejecuta, comprueba e integra dentro del encargo. |
+| Cambio material de alcance o efectos no concedidos | El agente presenta la decisión necesaria al operador. |
+| Aceptación personal, gusto y experiencia de uso | El operador conserva su juicio; el agente ofrece resultados y evidencia sin atribuirle aceptación. |
 
-| Estrato | Responsable | Razon |
-|---|---|---|
-| Decidir **que construir**, como encaja, que dependencia usar, que schema aguanta el futuro, que se siente bien | **Humano** | Taste, product judgement, arquitectura — irreducibles |
-| Escribir, transformar, mover, refactorizar, generar, probar, repetir hasta verde | **Agente** | Trabajo mecanico de alta velocidad |
-| Evaluar si el resultado **cumple la intencion** | **Humano** (con soporte de evals automatizados) | Juicio de valor |
-| Recalibrar autonomia, memoria, topologia, limites | **Celula completa** | Co-agencia |
-
-## Lo irreducible humano
-
-El agente **NO** sustituye estas funciones. Las **escala** y **consulta**:
-
-- **Taste**: la frontera entre "suficiente" y "mal hecho"; entre
-  "elegante" y "ostentoso"; entre "directo" y "ceremonial".
-- **Product judgement**: que merece existir, que debe morir, en que
-  invertir tiempo.
-- **Architecture**: que dependencia usar, que schema aguanta el futuro,
-  donde poner el boundary.
-- **Dependency choice**: que biblioteca traer al proyecto, que evitar.
-- **Schema evolution**: como evolucionar un schema sin romper consumidores.
-- **Software feel**: el software debe sentirse correcto, no solo funcionar.
-
-## Lo delegable
-
-| Tarea | Delegable | Notas |
-|---|---|---|
-| Escribir codigo de implementacion guiado por spec | Si | Spec puede ser informal; intent claro |
-| Refactorizar mecanicamente | Si | Si el refactor preserva semantica |
-| Renombrar / mover archivos | Si | Si la regla es clara |
-| Generar tests | Si | Especialmente unit y golden file |
-| Generar codigo boilerplate | Si | CRUD, configs, scaffolding |
-| Buscar informacion en docs / web | Si | Investigacion acotada |
-| Ejecutar build / test / lint | Si | Loop closure mecanico |
-| Triage de bugs | Parcial | Diagnostico si; decision de fix puede requerir humano |
-| Diseno de arquitectura | No | Humano lidera; agente complementa |
-| Eleccion de stack | No | Humano decide |
+La arquitectura, los schemas, las dependencias, los nombres y la interfaz se
+resuelven con requisitos, contexto y consecuencias. Consulta cuando una
+preferencia desconocida cambie materialmente el resultado; los vacíos menores
+admiten un supuesto explícito y revisable.
 
 ## Reglas de delegacion
 
-1. **Delegar accion no es delegar criterio**. El agente ejecuta; el
-   humano sostiene el sentido.
-2. **Toda delegacion tiene rollback**. Si no se puede revertir, no es
-   delegacion responsable.
-3. **Visibilidad >= autonomia**. Cuanto mas autonomo el agente, mas
-   visible debe ser su accion.
-4. **Limite humano declarado**: cuando el cuello de botella es de
-   autoridad, relacion, cuidado o presencia, **salir** del impulso de
-   automatizar.
+1. Delega un resultado y el alcance necesario para producirlo; conserva quién
+   integra y comprueba el conjunto cuando intervienen varios agentes.
+2. Preserva cambios ajenos y prepara recuperación según las consecuencias de
+   equivocarse. Un efecto irreversible requiere autoridad que lo incluya.
+3. Mantén visibles las decisiones y resultados que permitan examinar o continuar
+   el trabajo; evita informes rutinarios que no cambien ninguna decisión.
+4. Respeta los límites de autoridad, relación, cuidado o presencia humana del
+   encargo; la automatización no los sustituye por declararlos resueltos.
 
 ## Antipatrones
 
 | Antipatron | Falla | Correccion |
 |---|---|---|
-| Delegar arquitectura | Agente decide schema sin humano | Humano lidera; agente propone |
-| Delegar taste | Agente declara "esta bien" | Humano valida feel |
-| Humano teclea implementacion | Subutilizacion de agentes | Delegar implementacion guiada |
-| Humano lee todo el codigo generado | Desperdicio de atencion senior | Mirar puntos de leverage |
-| Agente propone deps sin contexto | Mala eleccion estrategica | Humano decide deps; agente las usa |
+| Renovar permisos por cada decisión técnica | Interrumpir trabajo ya autorizado | Resolver dentro del encargo vigente |
+| Elegir dependencias sin contexto | Costos o incompatibilidades inadvertidos | Contrastar requisitos, consumidores y mantenimiento |
+| Declarar aceptación humana desde una prueba | Confundir evidencia técnica con experiencia personal | Informar lo observado y dejar visible ese límite |
+| Delegar partes sin integración | Resultados locales que no funcionan juntos | Conservar una responsabilidad de cierre del conjunto |

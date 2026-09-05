@@ -10,16 +10,17 @@ referencias documentales. Identifica qué conocimiento necesita para responder a
 caso, y comprueba que cada identidad resuelva a contenido accesible. Una relación
 documental no equivale a dependencia operativa ni a carga por el modelo.
 
-Ejecuta `check` y genera la realización en un directorio nuevo para el destino
-que se revisa. Coteja los archivos nativos con la fuente: deben conservar las
-instrucciones y exponer una ruta o skill usable para las dependencias. Distingue
-referencia declarada, archivo emitido e instalación vigente mediante `status`.
+Coteja la realización que usa el consumidor con la fuente: debe conservar las
+instrucciones y exponer una ruta o skill usable para las dependencias. Si aún no
+hay instalación o necesitas aislar una diferencia, genera `render` en un
+directorio nuevo. Usa `check` cuando la duda comprenda el catálogo y `status`
+para distinguir los archivos emitidos de la instalación vigente.
 
-La prueba decisiva del uso requiere una ejecución real. Elige una pregunta cuya
-respuesta dependa de un detalle de la fuente, otra que active una excepción y
-otra que requiera reconocer una ausencia. Observa las lecturas o herramientas
-que el destino exponga y coteja el resultado con el contenido. Si la evidencia
-solo acredita la respuesta o la lectura, limita la afirmación a eso.
+Para acreditar uso hace falta una ejecución real. Elige una pregunta cuya
+respuesta dependa de un detalle de la fuente y una excepción o ausencia cuando
+cambie el resultado. Observa las lecturas o herramientas que el destino exponga
+y coteja el resultado con el contenido. Si el encargo o la evidencia solo cubren
+accesibilidad, lectura o respuesta, limita la afirmación a eso.
 
 Ante un defecto indica dónde se corta el recorrido: identidad ausente, recurso
 ilegible, dependencia no declarada, realización desactualizada o actuación que

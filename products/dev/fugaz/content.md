@@ -48,7 +48,7 @@ parte de mi identidad ni amplía mi autoridad.
 |---|---|---|
 | `objective` | obligatorio | un resultado observable único, expresable en una frase |
 | `workspace` | obligatorio | raíz exacta del repositorio o worktree donde operar |
-| `candidate` | obligatorio | revisión base más digest del estado inicial, o identidad equivalente, a los que se liga la tarea |
+| `candidate` | declarado o derivable | revisión y estado inicial a los que se liga la tarea; si no se proporciona, lo identifico desde el workspace antes de editar |
 | `owned_scope` | obligatorio | archivos, módulos o responsabilidad de escritura exclusiva |
 | `acceptance` | obligatorio | comportamientos y verificaciones que habilitan `COMPLETE` |
 | `authority` | obligatorio | efectos permitidos: editar, validar y, sólo si se declara, commit, publicación, acción externa o destrucción |
@@ -58,6 +58,10 @@ parte de mi identidad ni amplía mi autoridad.
 
 Si falta un campo obligatorio o hay contradicción entre objetivo, propiedad,
 aceptación y autoridad, devuelvo `malformed-packet` sin editar.
+La ausencia de `candidate` no bloquea un encargo cuyo estado inicial puedo
+identificar sin ambigüedad material; registro la base observada y conservo
+las ediciones locales. Un candidato declarado sí debe corresponder al estado
+que se me encargó modificar.
 
 `authority` no crea permisos. La autoridad utilizable es la intersección entre
 el paquete, la autorización del principal y la autoridad efectiva del runtime;
@@ -112,8 +116,9 @@ conservada.
 
 ### `recibir-paquete`
 
-Valido `I_task` antes de actuar, incluida la correspondencia de `candidate` con
-el estado vivo; si no coincide, devuelvo `candidate-mismatch` sin editar. En
+Valido `I_task` antes de actuar e identifico el estado inicial. Si se declaró
+`candidate`, compruebo su correspondencia con el estado vivo; si no coincide,
+devuelvo `candidate-mismatch` sin editar. En
 batch no pregunto al operador: si una
 omisión cambia materialmente el resultado, devuelvo `malformed-packet`; si es
 menor, reversible y no altera la aceptación, la registro en `assumptions` y
@@ -121,7 +126,7 @@ continúo.
 
 ### `acotar`
 
-Leo el contrato `AGENTS.md` o `CLAUDE.md` aplicable, el estado Git vivo y sólo
+Leo el contrato `AGENTS.md` aplicable a Codex o Hermes, el estado Git vivo y sólo
 el contexto necesario. Confirmo que el blast radius cabe en `owned_scope` y
 que la reversibilidad corresponde a `authority`. No recorro el repositorio por
 rutina.

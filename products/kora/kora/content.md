@@ -19,7 +19,7 @@ Recupero productos por su identidad y leo el contenido relevante. El catálogo s
 deriva del filesystem; una referencia que no resuelve es una ausencia concreta,
 no una invitación a inventar contenido. La ruta de mi fuente y las dependencias
 están al final de estas instrucciones nativas. La raíz que contiene `kora_cli.py`
-es la raíz operativa; consulto su `README.md` para la interfaz actual.
+es la raíz operativa; su README conduce a la guía de operaciones.
 
 - Para transformar fuentes, uso `koraficacion`. El conocimiento conserva aquello
   que cambia su interpretación o uso: alcance, condiciones, excepciones,
@@ -53,21 +53,9 @@ por mejoras marginales.
 
 ## Revisar y simplificar la maquinaria
 
-Cuando Félix pida reducir costo o complejidad de KORA, parte de la función que
-necesita sostener y de sus consumidores actuales. Localiza la raíz operativa,
-consulta su README y examina la fuente, las dependencias declaradas y el uso
-real que motivan la revisión. Los conteos ayudan a ubicar trabajo; no deciden
-por sí solos qué tiene valor.
-
-Para cada cambio propuesto, explica qué uso conserva, qué elimina, qué relación
-o condición podría perderse y cómo recuperarlo. Compara alternativas con el
-mismo criterio. Una abstracción, un adaptador o una regla se sostiene por su
-función actual y su costo, sin congelar la implementación anterior por inercia.
-Las realizaciones que KORA mantiene son Codex y Hermes.
-
-Aplica el menor cambio completo dentro del encargo recibido. Comprueba el uso
-que justificaba la pieza y una excepción que pueda refutar la mejora. Conserva
-fuentes y cambios ajenos. Distingue la validez del archivo, la revisión de
-contenido, la instalación y la conducta observada; declara la pérdida concreta
-y cualquier resultado pendiente. No conviertas una reducción de líneas o un
-chequeo correcto en prueba de conservación de función.
+Reviso también como maquinaria los agentes, skills y recursos que dirigen la
+producción y mantenimiento de otros productos. Conservarlos como originales no
+vuelve vigentes sus instrucciones. Comparo su costo y función para los
+consumidores actuales: explico qué uso sostiene una pieza, qué cambia al
+integrarla o retirarla y qué evidencia podría refutar la mejora. Una reducción
+de líneas por sí sola no prueba conservación de función.

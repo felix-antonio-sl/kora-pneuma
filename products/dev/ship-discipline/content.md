@@ -22,7 +22,8 @@ correccion.
   loop con evidencia proporcional al riesgo y a la aceptacion.
 - se va a estructurar un repositorio para que sea agent-friendly o se
   detecta que un repo existente penaliza a los agentes.
-- hay que distinguir lo que delegar a agentes vs lo irreducible humano.
+- hay que distinguir lo que puede resolver el agente de lo que requiere una
+  decisión del operador.
 - se va a producir CLI, MCP o tooling reusable: sube el rigor.
 - el contexto del modelo se esta ensuciando y hay que podar.
 
@@ -31,9 +32,8 @@ correccion.
 - razonamiento estructural-discursivo abstracto → usar
   `urn:kora:artefacto:mente-omega`.
 - enmarque categorial puro → usar `urn:kora:artefacto:cat-thinking`.
-- ciclo de vida meta-KORA → se rige por el regimen de doctrina de pneuma
-  (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley, no se
-  reconstruye desde la bestia.
+- autoría o instalación de productos KORA → usar `autoria-kora` o
+  `instalacion-kora`, con la guía operativa de la fuente vigente.
 - diseno de celulas humano-agente organizacionales → usar
   `urn:fxsl:artefacto:cell-design`.
 
@@ -49,27 +49,28 @@ Tres preguntas guia:
 
 ### `estimar-blast-radius`
 
-Antes de ejecutar cualquier cambio no trivial:
+Identificar qué conducta, datos, consumidores e interfaces puede afectar el
+cambio y cómo recuperar el estado anterior. El número de archivos orienta la
+inspección, pero no determina riesgo ni crea una aprobación pendiente.
 
-1. Identificar archivos directos e indirectos tocados.
-2. Clasificar:
+Ejecutar directamente cuando el alcance y la reversión sean claros. Si hay
+acoplamientos o incertidumbre material, ordenar el cambio y comprobar primero
+la condición que pueda invalidarlo. Ampliar las pruebas según las consecuencias
+de un fallo. Un cambio de schema o dependencia puede necesitar ensayo de
+compatibilidad; un cambio documental puede alterar una instrucción decisiva.
 
-| Nivel | Criterio | Ruta |
-|---|---|---|
-| **Bajo** | 1-3 archivos, reversible, sin deps cruzadas | Ejecutar directo |
-| **Medio** | 4-10 archivos, reversible, algunas deps | Tests + patch listo; commit si esta autorizado |
-| **Alto** | 10+ archivos, potencialmente irreversible, multiples deps | Plan antes de ejecutar + validacion humana |
-
-3. Documentar la estimacion en una linea antes de actuar.
-
-**Defaults**:
-- Ante duda, estimar hacia arriba.
-- Schema, dependencias, boundaries → siempre alto.
-- Estilo, formatting, docs → siempre bajo.
+Conservar la autorización ya concedida. Consultar al operador cuando una
+decisión exceda el encargo o falte una preferencia que cambie materialmente el
+resultado; mientras tanto, completar lo independiente que siga siendo útil.
+Explicar el riesgo relevante cuando ayude a revisar o continuar el trabajo.
 
 Detalle en `referencias/blast-radius-checklist.md`.
 
 ### `decidir-topologia`
+
+Estas opciones orientan cuando repartir el trabajo aporta valor. Una sesión
+puede cerrar el encargo completo; el paralelismo depende de tareas independientes
+y de la autoridad vigente.
 
 | Tipo de trabajo | Topologia |
 |---|---|
@@ -80,12 +81,15 @@ Detalle en `referencias/blast-radius-checklist.md`.
 
 ### `ejecutar-o-delegar`
 
-**Lo irreducible humano** (no delegar a agentes ejecutores):
+**Decisiones que conserva el operador**:
 
-- system design, distributed systems, dependencias, boundaries
-- DB schema, server/client split
-- UX feel, naming, seleccion de plataforma
-- product judgement, taste, frontera "suficiente vs mal hecho"
+- propósito, prioridades y aceptación personal del resultado;
+- cambios de alcance, costo o efectos que el encargo no autoriza;
+- preferencias de producto que no pueden resolverse con el contexto disponible.
+
+El agente puede concretar arquitectura, dependencias, schemas, nombres y diseño
+dentro de un encargo que le otorgue esa responsabilidad. Presenta sus decisiones
+y evidencia sin atribuir al operador una aceptación que no observó.
 
 **Lo delegable** (a agentes ejecutores via exec/codigo):
 
@@ -128,11 +132,13 @@ Reportar:
 2. **Loop closure obligatorio**: aceptacion + checks proporcionales +
    integracion + patch listo; commit solo con autorizacion explicita.
 3. **Ship beats perfect**: util hoy > ideal hipotetico.
-4. **Architecture over implementation**: humano en deps/schema/boundaries.
+4. **Architecture over implementation**: resolver las decisiones que gobiernan
+   el cambio antes de multiplicar implementación.
 5. **Less is more**: cada capa justifica existencia.
 6. **Just talk to it**: prompts cortos, lenguaje natural.
 7. **Context cost**: poda lo que no aporta.
-8. **Lo irreducible humano no se delega**.
+8. **Autoridad del encargo**: ejecutar lo autorizado y devolver al operador las
+   decisiones materiales que excedan ese alcance.
 9. **Sube rigor cuando produces tooling reusable** (CLI, MCP, lib).
 10. **No invadir dominio**: la skill da disciplina, no semantica del campo.
 
@@ -155,20 +161,21 @@ Reportar:
 |---|---|
 | `urn:kora:artefacto:mente-omega` | la decision de arquitectura requiere razonamiento estructural-discursivo previo |
 | `urn:kora:artefacto:cat-thinking` | la composicion del repo o la integracion entre subsistemas tensiona y se necesita lectura categorial |
-| `urn:kora:kb:regimen-de-ley` | se va a producir o reemplazar una pieza meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
+| `urn:kora:artefacto:autoria-kora` | se va a producir o actualizar la fuente de un agente o skill KORA |
+| `urn:kora:artefacto:instalacion-kora` | se van a mantener realizaciones de KORA en Codex o Hermes |
 
 ## Recursos
 
 ### Referencias
 
 - `referencias/blast-radius-checklist.md` — checklist de estimacion +
-  defaults + criterios.
+  consecuencias + recuperación.
 - `referencias/loop-closure-checklist.md` — pasos del loop, gotchas y
   reglas.
 - `referencias/repo-shaping-checklist.md` — checklist agent-friendly:
   estructura, naming, docs, CLI, ejemplos.
-- `referencias/separacion-estratos.md` — humano-vs-agente: que delegar
-  y que no, con criterios.
+- `referencias/separacion-estratos.md` — decisiones y responsabilidades según
+  el encargo del operador.
 
 ## Salida Esperada
 

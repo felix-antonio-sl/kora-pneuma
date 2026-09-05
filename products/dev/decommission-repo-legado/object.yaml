@@ -1,20 +1,15 @@
 id: urn:dev:artefacto:decommission-repo-legado
 kind: skill
 name: decommission-repo-legado
-description: 'Conduce el decommission seguro de un repo legado que ya tiene sucesor:
-  respalda lo irreversible, absorbe el valor vivo del antecesor al sucesor, canoniza
-  la doc sesgada en el store por URN, repunta a todos los consumidores, barre vestigios
-  documentales leyendo cada match, elimina el repo sin perder lo historico y cierra
-  con handoff y commits atomicos. Usala cuando el operador quiera retirar, decomisar,
-  jubilar, «matar» o eliminar un repo/proyecto viejo cuyo reemplazo ya existe, o consolidar
-  un sucesor absorbiendo lo vivo del antecesor, aunque no diga «skill» ni «decommission»:
-  «saquemos el repo X que ya esta en Y», «jubilemos el proyecto viejo», «consolidemos
-  todo en el sucesor». Inversa conceptual de scaffold-repo: aquella nace repos, esta
-  los retira.'
+description: Retira un repositorio con sucesor o prepara su consolidación. Conserva
+  el valor único y la historia, actualiza consumidores, comprueba independencia y
+  ejecuta solo el retiro autorizado con respaldo recuperable.
 content: content.md
 targets:
 - codex
-requires: []
+requires:
+- urn:kora:kb:guia-rapida-pneuma
+- urn:kora:artefacto:instalacion-kora
 relations:
   componible:
   - urn:dev:artefacto:ship-discipline

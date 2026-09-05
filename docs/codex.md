@@ -311,5 +311,5 @@ intactos. No quedó un turno vivo.
 
 Esta evidencia corresponde a la KORA realmente instalada y al uso descrito.
 Las pruebas de autoría, actualización, inferencia de ambos destinos y recuperación
-están en [independencia](diseno.md#independencia-comprobada); los agentes de dominio
+están en [independencia](migracion.md#independencia-comprobada); los agentes de dominio
 no reciben por extensión una validación conductual individual.

@@ -1,404 +1,135 @@
 # hermes-agent-specialist
 
-## Proposito
+Especialista operativo en **Hermes Agent** de Nous Research para Félix: crear,
+configurar, mantener y diagnosticar perfiles, skills, contexto, memoria e
+integraciones nativas. Úsalo cuando el resultado dependa del funcionamiento de
+Hermes. Si el encargo se refiere a los modelos Hermes LLM, identifica esa
+frontera antes de aplicar instrucciones de la plataforma.
 
-Especialista operativo en **Hermes Agent** (Nous Research): plataforma open-source
-(MIT; el core no recopila analítica propia, sin atribuir esa garantía a los
-proveedores) de agente autonomo persistente que "se vuelve mas capaz
-cuanto mas corre" — learning loop con memoria curada, creacion autonoma de skills
-y auto-mejora, vive donde lo pongas (VPS, cluster GPU, serverless).
+Para autorar o mantener productos KORA, usa la guía
+`urn:kora:kb:guia-rapida-pneuma` y `instalacion-kora`. Esta skill aporta el
+contraste con Hermes. KORA conserva la fuente agnóstica y realiza sus productos
+en Codex y Hermes; un archivo nativo, una carga correcta y una conducta
+observada acreditan hechos distintos.
 
-**Contrato duro**: antes de afirmar, generar o modificar cualquier artefacto Hermes
-(`SOUL.md`, `config.yaml`, memoria, context files, skills, integraciones, MCP,
-backend de despliegue, comandos CLI), **consulta la doc oficial viva** en
-`https://hermes-agent.nousresearch.com/docs/`. El canon evoluciona rapido:
-proveedores, comandos y capacidades cambian; la memoria de entrenamiento no califica
-como fuente. Esta skill no es un mirror ni un mantenedor con autoridad propia: es la
-disciplina que mantiene a un agente anfitrion alineado al canon vigente, sin deriva
-ni comandos inventados.
+## Resolver el caso y su evidencia
 
-**Distincion canonica**: **Hermes Agent** (plataforma CLI) != **modelos Hermes LLM**
-de Nous Research. Si el intent es ambiguo, pedir aclaracion antes de seguir.
+Identifica el resultado buscado, el perfil y `HERMES_HOME` efectivos y la
+superficie afectada. Distingue instalar o actualizar un perfil, alojar el
+proceso Hermes y elegir dónde ejecutan sus herramientas mediante
+`terminal.backend`. Si se menciona Docker, resuelve cuál de esas operaciones
+se necesita a partir del contexto; pregunta solo si la diferencia sigue
+abierta y cambia la actuación.
 
-**Frontera KORA v3.1.0**: KORA como sistema de autoría —ley, ontología y forma
-fuente— sigue siendo genérico y agnóstico. Cada artefacto puede declarar una
-allowlist `targets` de compatibilidad mantenida; eso sitúa sus despliegues sin
-convertir un runtime en su identidad. El adaptador Hermes realiza dos productos
-distintos: una skill mediante
-`T-hermes-pneuma-v1` y un agente completo mediante una profile distribution
-`T-hermes-pneuma-v2`. Fuente y derivado no son el mismo objeto: igualdad de
-bytes o paridad material no demuestran equivalencia semántica ni conducta
-runtime. La forma subagente no se proyecta a perfil. El skill incorporado
-`hermes-agent` pertenece al runtime y sigue siendo fuente externa, nunca una
-emisión KORA.
+Cuando una decisión dependa de una capacidad o formato vigente, consulta la
+página oficial pertinente y contrástala con la instalación: `hermes --version`,
+la ayuda del comando y, si hace falta, el código o una prueba acotada. Reutiliza
+la evidencia ya obtenida si corresponde a la misma versión y condición. Una
+corrección editorial no necesita repetir un inventario completo de Hermes.
+Si la documentación y el comportamiento observado difieren, informa ambos y
+resuelve la operación con evidencia; no declares inexistente algo solo porque
+falta en una página.
 
-## Cuando Usar
+Parte de la documentación necesaria, sin cargar el sitio completo:
 
-- crear un agente Hermes desde cero (instalacion, `hermes setup`, proveedor, primer `SOUL.md`).
-- configurar despliegue via `terminal.backend` (resolver sus valores vigentes en el canon).
-- conectar canales de mensajeria sobre el gateway de Hermes.
-- integrar MCP servers (stdio/HTTP) o exponer Hermes como server MCP.
-- ciclo de vida de skills (agentskills.io, `skill_manage`, hub, curator, bundles).
-- operar memoria/personalidad (`SOUL.md`, `MEMORY.md`, `USER.md`, context files).
-- cron, webhooks, delegation, checkpoints/rollback, kanban, profiles, proxy, ACP/LSP.
-- crear, instalar, actualizar o auditar una profile distribution, incluida la
-  transmutación de un agente KORA mediante el adaptador Hermes.
-- migrar desde OpenClaw (`hermes claw migrate`) o desde modelos retirados (`hermes migrate`).
-- auditar un agente Hermes existente contra el canon.
+| Necesidad | Fuente oficial |
+|---|---|
+| Instalar o actualizar Hermes | [Instalación](https://hermes-agent.nousresearch.com/docs/getting-started/installation) |
+| Perfil, configuración y backend | [Perfiles](https://hermes-agent.nousresearch.com/docs/user-guide/profiles), [configuración](https://hermes-agent.nousresearch.com/docs/user-guide/configuration) |
+| Identidad y contexto de proyecto | [SOUL.md](https://hermes-agent.nousresearch.com/docs/user-guide/features/personality), [context files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files) |
+| Skills y recursos | [Skills](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) |
+| Distribuir o actualizar un perfil | [Distribuciones](https://hermes-agent.nousresearch.com/docs/user-guide/profile-distributions), [comandos de perfiles](https://hermes-agent.nousresearch.com/docs/reference/profile-commands) |
+| Memoria | [Memoria](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory) |
+| Proveedor, MCP, canales u otra integración | [Índice oficial](https://hermes-agent.nousresearch.com/docs/llms.txt), luego la página de la integración |
 
-## Cuando NO Usar
+`referencias/llms-index.txt` conserva una copia del índice recibida como recurso
+original. Puede ayudar a localizar temas; sus descripciones, ejemplos y enlaces
+pueden haber cambiado. Confirma la información utilizada en el sitio vigente.
+No requiere mantener un segundo inventario manual de comandos o capacidades.
 
-- agentes que **no** son Hermes (OpenClaw, kora-agents, subagentes Claude Code) salvo puente declarado.
-- los **modelos Hermes LLM** como tema (otra cosa: declinar o redirigir).
-- ciclo de vida meta-KORA o de skills KORA: usar el canon de KORA (`ley/`).
-- diseno organizacional de celulas humano-agente: usar `urn:fxsl:artefacto:cell-design`.
+## Identidad, contexto y memoria
 
-## Workflow
+`SOUL.md` se carga desde el `HERMES_HOME` efectivo; no es una entrada de proyecto.
+El contexto del repositorio puede usar `AGENTS.md`. Comprueba la precedencia de
+los archivos presentes y el directorio de arranque cuando una instrucción no
+llegue al agente. No crees copias de la misma instrucción en varias superficies
+para intentar forzar su carga.
 
-### `triaje`
+La carga de contexto puede aplicar escaneo y recorte según la configuración y
+el modelo. Usa `prompt-size` cuando necesites inspeccionar el ensamblaje local;
+no acredita por sí solo una llamada al proveedor ni la conducta del agente.
+Comprueba el contenido requerido, no solo la existencia o el tamaño del archivo.
 
-1. **Es Hermes Agent (plataforma) y no los modelos Hermes LLM?** Ambiguo -> aclarar.
-2. **Agente existente o nuevo?**
-3. **Qué significa desplegar aquí?** Separar: distribución/actualización del
-   perfil, hosting de Hermes o backend de herramientas. Si se dice «Docker»,
-   preguntar si Hermes completo corre dentro del contenedor o si Hermes corre
-   en el host y sólo `terminal.backend` usa Docker; actualizar el perfil es una
-   tercera operación independiente.
-4. **Qué perfil y `HERMES_HOME` efectivos?** No inferirlos del nombre visible.
+La memoria personal vive bajo `HERMES_HOME/memories/`. Su snapshot inicial y los
+cambios persistidos durante una sesión no son el mismo estado. Si el encargo
+afecta memoria, revisa el mecanismo nativo y los límites efectivos, preservando
+el contenido ajeno al cambio. Instalar un agente no autoriza a reemplazar la
+memoria de Félix.
 
-### `clasificar-modo`
+## Perfiles, configuración y ejecución
 
-| Modo | Disparador | URL primaria de canon |
-|------|------------|------------------------|
-| **Crear** | "instala / arma / dame un SOUL.md" | `/docs/getting-started/quickstart`, `/docs/getting-started/installation` |
-| **Configurar y desplegar** | "deploy a X / conecta canal Y" | `/docs/user-guide/configuration`, `/docs/user-guide/messaging/` |
-| **Operar y mantener** | troubleshoot, upgrade, recovery | `/docs/reference/cli-commands` |
-| **Gestionar skills** | crear/portar/auditar skills | `/docs/user-guide/features/skills` |
-| **Distribuir perfil** | empaquetar/instalar/actualizar un agente completo | `/docs/user-guide/profile-distributions`, `/docs/reference/profile-commands` |
-| **Auditar existente** | "revisa este Hermes" | combinacion segun inventario |
+El perfil delimita el estado Hermes; por sí solo no aisla el filesystem del
+host. `terminal.backend`, directorio de trabajo y política de home de las
+herramientas determinan dónde se ejecutan comandos y qué datos alcanzan.
+Comprueba mounts o credenciales reenviadas cuando esa frontera afecte el
+encargo. En el host personal, conserva la configuración adecuada que ya usa
+Félix sin imponer una arquitectura de aislamiento nueva.
 
-### `consultar-canon-vivo`
+Resuelve la configuración efectiva de las claves que vas a cambiar, incluidas
+opciones de invocación y claves administradas si existen. Los secretos usan el
+mecanismo nativo correspondiente: `.env`, `auth.json` o una fuente de secretos.
+No imprimas valores ni los incorpores en productos, ejemplos o evidencia. Una
+selección de perfil no demuestra que herede la configuración del perfil raíz.
 
-Hacer **fetch vivo** (WebFetch) de la URL primaria antes de producir nada; fetch en
-paralelo de las subpaginas que apliquen. Atajo para LLMs: `/docs/llms.txt`
-(indice) y `/docs/llms-full.txt` (completo). Esta fuente custodia el índice
-cacheado en `referencias/llms-index.txt`; toda transmutación de la skill copia
-esa referencia conservando su nombre. Es un atajo de navegación offline, no
-reemplaza el fetch vivo. Mapa de canon:
+Para proveedores, canales y MCP, consulta solo la integración necesaria y
+comprueba su disponibilidad y configuración efectiva. Evita fijar catálogos de
+modelos, plataformas o límites numéricos en esta skill. Un comando documentado
+puede depender de versión, herramientas habilitadas o credenciales disponibles.
 
-| Pagina | Cubre |
-|--------|-------|
-| `/docs/getting-started/quickstart` | flujo end-to-end; regla **>=64k tokens** |
-| `/docs/getting-started/installation` | instaladores reales por SO |
-| `/docs/getting-started/learning-path` | ruta de aprendizaje |
-| `/docs/integrations/providers` | proveedores, IDs, requisitos (confirma >=64k) |
-| `/docs/user-guide/configuration` | `config.yaml`, `.env`, `terminal.backend`, precedencia |
-| `/docs/user-guide/managed-scope` | claves administradas, precedencia efectiva y límites de enforcement |
-| `/docs/user-guide/secrets` | `.env`, secret sources y precedencia de credenciales |
-| `/docs/user-guide/profiles` | aislamiento por `HERMES_HOME`, estado y límites del perfil |
-| `/docs/user-guide/docker` | Hermes dentro de Docker vs Docker como backend de herramientas |
-| `/docs/user-guide/security` | modelo de seguridad vigente |
-| `/docs/user-guide/features/overview` | catalogo de capacidades |
-| `/docs/user-guide/features/tools` | catalogo vivo de tools y toolsets |
-| `/docs/user-guide/features/personality` | `SOUL.md` (canonico) |
-| `/docs/user-guide/profile-distributions` | distribución completa, ownership y actualización de perfiles |
-| `/docs/reference/profile-commands` | CLI nativa de perfiles y distribuciones |
-| `/docs/user-guide/features/memory` | `MEMORY.md`, `USER.md`, tool `memory` |
-| `/docs/user-guide/features/context-files` | `.hermes.md`/`HERMES.md`/`AGENTS.md`/`CLAUDE.md`/`.cursorrules` |
-| `/docs/user-guide/features/skills` | agentskills.io, progressive disclosure |
-| `/docs/user-guide/features/mcp` | MCP servers, `hermes mcp` |
-| `/docs/user-guide/features/voice-mode` | voz, TTS |
-| `/docs/user-guide/messaging/` | canales, allowlists, DM pairing |
-| `/docs/reference/cli-commands` | catalogo CLI completo |
-| `/docs/reference/faq` | preguntas frecuentes |
+## Skills y distribuciones
 
-### `producir-artefacto`
+Las skills se descubren desde las raíces de proyecto, perfil y directorios
+externos configurados. Su visibilidad y precedencia dependen de la confianza
+y configuración efectivas. Ante un nombre duplicado, identifica sus archivos y
+comprueba la carga de la skill elegida; aparecer en el listado no garantiza
+que `skill_view` la resuelva. `skill_view(name, path)` recupera recursos del
+bundle, no archivos arbitrarios del host.
 
-Generar el artefacto pedido (config, `SOUL.md`, skill, distribución, comando, diagnostico) apoyado
-en lo consultado, no en memoria. Disciplina:
+Mantén instrucciones y recursos en la fuente que realmente los administra.
+Hermes puede modificar skills mediante `skill_manage`; una skill realizada por
+KORA necesita reconciliar esos cambios en su fuente antes de actualizarla.
+El nombre igual no prueba procedencia ni permite sobrescribir una instalación
+ajena. La skill incorporada `hermes-agent` y este producto
+`hermes-agent-specialist` conservan identidades y mantenimiento distintos.
 
-- archivos completos, no fragmentos.
-- nunca secretos literales en `config.yaml`; usar `.env`, `auth.json` o secret
-  sources oficiales según el mecanismo, sin exponer valores.
-- modelo con **>=64000 tokens** de contexto (regla dura del canon).
-- comandos/flags exactos verificados; nunca inventados.
+Una distribución declara qué archivos reemplaza. Antes de un update nativo,
+comprueba la procedencia registrada y el efecto de `distribution_owned` sobre
+ediciones existentes; la propiedad de un directorio puede incluir archivos que
+el usuario agregó. Para productos administrados por KORA, sigue
+`instalacion-kora`: su estado y recuperación deciden qué archivos actualizar.
+El detalle contrastado del adaptador está en `docs/hermes.md`, dentro de la raíz
+que contiene `kora_cli.py`; no mantengas aquí otra especificación del instalador.
 
-### `citar-y-etiquetar`
+La presencia de `distribution.yaml` no acredita que `hermes profile update`
+tenga una fuente registrada. Tampoco uses `hermes profile delete` para retirar
+solo un producto: ese comando elimina el perfil y su estado. Resuelve el
+alcance y la autoridad de la operación antes de actuar, aprovechando la
+instrucción ya otorgada para ese destino.
 
-- citar la(s) ruta(s) `/docs/...` consultada(s) en la sesion.
-- etiquetar como inferencia todo lo que el canon no resuelva.
-- declarar puentes con KORA u OpenClaw cuando aplique.
+## Comprobar y entregar
 
-### `cierre`
+Realiza el menor cambio que resuelva el caso y comprueba su efecto pertinente:
+formato y lectura para una entrada nativa; configuración efectiva para una
+opción; operación representativa y límite decisivo cuando se cambie conducta.
+Una prueba de red o un mensaje a un canal necesita la autoridad correspondiente;
+no envíes mensajes de prueba por rutina. Usa entornos temporales cuando basten
+para observar el mecanismo sin afectar el estado personal.
 
-Reportar: modo aplicado, artefacto/diagnostico, URLs citadas, inferencias y deuda
-residual, siguiente paso si la tarea es multi-incremento.
+En una auditoría, inspecciona las piezas que expliquen la necesidad o el fallo.
+No conviertas cada consulta en un censo de memoria, credenciales, canales y
+servicios. Reporta el problema, la evidencia y la corrección suficiente.
 
-## Conceptos canonicos clave
-
-### Identidad: `SOUL.md`
-
-- Vive **SOLO** en `HERMES_HOME` (`~/.hermes/SOUL.md` por defecto, o `$HERMES_HOME/SOUL.md`).
-  Hermes **NO** lo busca en el cwd. Distinto de los context files.
-- Ocupa el **slot #1** del system prompt, reemplazando la identidad por defecto.
-- Hermes intenta inyectar el contenido completo, pero puede truncarlo
-  dinámicamente según el presupuesto de contexto. La paridad sólo prueba
-  materia instalada. `prompt-size` prueba ensamblaje local y presupuesto del
-  prompt —corre offline, sin llamada API—; un canary vivo en sesión nueva sólo
-  prueba la conducta observada en esa ejecución. Ninguna de esas evidencias
-  demuestra por sí sola atención completa ni equivalencia semántica.
-- El transporte API es otro plano: sólo una traza segura del request saliente o
-  evidencia equivalente del cliente/proveedor puede demostrar que el payload
-  fue enviado. Debe redactar secretos y datos sensibles; si no existe esa
-  observación, declarar `NOT_RUN`. Una respuesta o canary no reconstruye por sí
-  sola el payload recibido.
-- El starter automático no sobrescribe un `SOUL.md` existente. Una instalación
-  o actualización de distribución sí puede reemplazar los factores que su
-  manifest declara propios. En el puente KORA, sólo se reconcilia un perfil
-  cuyo último sello atribuye el mismo `(URN,hermes)`; un homónimo ajeno bloquea.
-  Si el SOUL está vacío/ilegible/ausente, Hermes revierte a la identidad por
-  defecto (no falla).
-
-### Memoria: `MEMORY.md` y `USER.md`
-
-- Ambos en `$HERMES_HOME/memories/` (`~/.hermes/memories/` sólo en el perfil
-  default). Los defaults son `MEMORY.md` 2200 chars (~800 tokens) y `USER.md`
-  1375 chars (~500 tokens); los límites efectivos los resuelven
-  `memory.memory_char_limit` y `memory.user_char_limit`, incluida cualquier
-  clave fijada por managed scope.
-- Inyectados al system prompt como **snapshot congelado** al inicio de sesion (preserva
-  el prefix cache): un cambio en sesion no aparece hasta la siguiente.
-- Tool `memory`: acciones `add` / `replace` / `remove` (match por substring). **No hay
-  `read`** — el contenido ya esta inyectado.
-
-### Context files (de proyecto, distintos de `SOUL.md` y memoria)
-
-- Precedencia **first-match-wins**, un solo tipo por sesion:
-  `.hermes.md`/`HERMES.md` -> `AGENTS.override.md` -> `AGENTS.md` ->
-  `CLAUDE.md` -> `.cursorrules`
-  (las reglas `.cursor/rules/*.mdc` se resuelven bajo `.cursorrules`, no como slot aparte).
-- Descubrimiento: `.hermes.md`/`HERMES.md` caminan a la git-root;
-  `AGENTS.override.md`/`AGENTS.md`/`CLAUDE.md` desde cwd + subdirectorios;
-  `.cursorrules`/`.cursor/rules` sólo cwd.
-- `SOUL.md` se carga **independiente** de esta cadena.
-
-### Configuracion y despliegue
-
-- Resolver la configuración efectiva, no recitar una precedencia universal.
-  Managed scope gana, para las claves que fija, sobre `config.yaml`, `.env` y
-  el entorno del usuario; `hermes config` y `hermes doctor` muestran su origen.
-  Para claves no administradas, aplicar la precedencia vigente de
-  `/docs/user-guide/configuration`.
-- `HERMES_HOME` delimita estado Hermes: config, sesiones, memoria, skills, logs
-  y gateway. No redefine necesariamente el `HOME` de herramientas externas:
-  en host comparten por defecto el home real y sus credenciales; revisar
-  `terminal.home_mode: profile` y las reglas específicas del backend.
-- **Credenciales**: `.env` guarda claves/tokens locales; `auth.json` guarda
-  autenticación OAuth administrada por Hermes; secret sources oficiales pueden
-  inyectar valores desde vaults. Nunca mover unas a otras por rutina, imprimir
-  valores ni escribir secretos literales en `config.yaml`.
-- Hay tres planos de despliegue que no deben colapsarse: una profile
-  distribution empaqueta/actualiza el agente; el hosting decide dónde corre
-  Hermes; `terminal.backend` decide dónde ejecutan sus herramientas. Resolver
-  cada plano aplicable en su subpágina canónica antes de mutar runtime.
-  El runtime puede omitir chequeos de comando peligroso en backends
-  containerizados porque el contenedor es la frontera prevista. Antes de
-  confiar en ella, revisar mounts, credenciales reenviadas, red y argumentos
-  extra: un bind mount escribible entrega acceso directo a esos datos del host.
-
-### Proveedores
-
-- Cualquier modelo agentico requiere **>=64000 tokens** de contexto (literal en quickstart
-  y providers). IDs canonicos: `nous` (Nous Portal), `openrouter`, `anthropic`, `openai-api`,
-  `gemini`, `copilot`/`copilot-acp`, `xai`/`xai-oauth`, `bedrock`, `azure-foundry`,
-  `alibaba`, `qwen-oauth`, `kimi-coding`, `zai`, `deepseek`, `minimax`, `novita`, `nvidia`,
-  `huggingface`, `ollama-cloud`, y self-hosted `ollama`, `vllm`, `sglang`, `llama-cpp`,
-  `lmstudio`, `custom` (la lista crece; verificar viva).
-- Self-hosted crítico: **Ollama** debe exponer al menos 64k. Su default depende
-  de VRAM (puede ser 4096, 32768 o 256000); verificar el valor efectivo con
-  `ollama ps` y ajustar server-side o por Modelfile sólo si queda bajo el piso.
-  **vLLM** necesita `--enable-auto-tool-choice --tool-call-parser hermes`.
-- **Nous Portal**: verificar en el canon vivo el catalogo disponible y las
-  herramientas Tool Gateway antes de configurar.
-
-### Skills (agentskills.io)
-
-- Hermes descubre skills de proyecto (`.hermes/skills/` y `.agents/skills/`,
-  sujetos a confianza), locales bajo `HERMES_HOME/skills/` y directorios
-  externos configurados. La precedencia es proyecto > local > externo; una
-  ambigüedad dentro del nivel ganador debe resolverse, no elegirse por azar.
-- El descubrimiento local es recursivo y reconoce bundles por nombre de
-  directorio o frontmatter, además del archivo plano legado. Antes de instalar,
-  censar todas las definiciones activas del mismo nombre; archivos archivados o
-  fuera de las raíces configuradas no constituyen una colisión runtime.
-- **Progressive disclosure de 3 niveles**: `skills_list()` ->
-  `skill_view(name)` (contenido) -> `skill_view(name, path)`.
-- Precedencia y formato no prueban identidad semántica. Si se afirma que el
-  ganador realiza un URN KORA, verificar sello/procedencia y contenido; de lo
-  contrario, reportarlo como override externo y no presentar `componible` como
-  wiring ni equivalencia.
-- `SKILL.md` con frontmatter `name`/`description`/`version` + `metadata.hermes`
-  (`tags`, `category`, `platforms`, `config`, y activacion condicional via
-  `requires_toolsets`/`fallback_for_toolsets`).
-- Tool `skill_manage`: el agente crea/parchea/edita/borra skills. Con
-  `skills.write_approval: true`, los writes hacen staging en `~/.hermes/pending/skills/`.
-- Hub multi-fuente (official, skills-sh, well-known, github, clawhub, lobehub, browse-sh,
-  url; verificar tabla viva) + `curator` para mantenimiento en background.
-
-### MCP
-
-- `mcp_servers` en `config.yaml`: stdio (`command`/`args`/`env`) o HTTP (`url`/`headers`/`auth`).
-- Auth oauth/header/mTLS; tokens en `~/.hermes/mcp-tokens/`; naming `mcp_<server>_<tool>`;
-  filtrado include/exclude. `hermes mcp serve` expone Hermes como server MCP.
-
-### Mensajeria
-
-- Gateway unico, con plataformas documentadas en el indice vivo (Telegram, Discord,
-  Slack, WhatsApp, Signal, SMS, Email, Matrix, Teams, Mattermost, Home Assistant,
-  BlueBubbles/iMessage, LINE, ntfy, Google Chat, Raft, y asiaticas: DingTalk,
-  Feishu/Lark, WeCom, Weixin, QQ, Yuanbao).
-- Autorizacion **deny-by-default**: allowlists (`TELEGRAM_ALLOWED_USERS`, ...) o **DM pairing**
-  (codigos de 8 chars, expiran 1h, rate-limited; aprobar via `hermes pairing approve`).
-
-### Seguridad — 8 capas de defense-in-depth
-
-1. Autorizacion de usuario (allowlists + DM pairing). 2. Aprobacion de comandos peligrosos
-(`approvals.mode`: `manual`/`smart`/`off`). 3. Seguridad de escritura de archivos (denylist
-y sandbox opcional para `write_file`/`patch`). 4. Aislamiento por contenedor (docker/singularity/
-modal con hardening). 5. Filtrado de credenciales MCP. 6. Escaneo de prompt-injection en
-context files. 7. Aislamiento cross-session. 8. Sanitizacion de entrada/working-dir.
-Además, cuando aplica el guard stack, la **blocklist hardline** no se evade con
-YOLO ni `approvals.mode: off` (wipes irreversibles, fork bombs, escritura a
-block-device), y Tirith escanea antes de ejecutar. Los backends aislados pueden
-omitir todo ese stack; no prometer la blocklist allí y revisar si mounts,
-credenciales o red hacen que el contenedor alcance recursos reales del host.
-YOLO se activa vía `--yolo`, `/yolo` o `HERMES_YOLO_MODE=1`.
-
-## CLI (catalogo vivo en `/docs/reference/cli-commands`)
-
-No persistir ni memorizar el recuento: verificar el catalogo vivo. Familias frecuentes:
-`setup`, `model`, `chat`, `gateway`, `doctor`, `status`, `logs`, `config`, `update`,
-`uninstall`; `cron`, `kanban`, `webhook`, `checkpoints`, `curator`, `bundles`, `profile`,
-`proxy`, `acp`, `lsp`, `plugins`, `memory`, `secrets` (Bitwarden), `fallback`, `auth`,
-`insights`, `dashboard`, `computer-use`, `pairing`, `send`, `backup`, `import`, `hooks`,
-`sessions`, `mcp`, `skills`, `tools`, `prompt-size`, `security audit`, `portal`;
-`claw` (migracion desde OpenClaw, ej. `hermes claw migrate`) y `migrate` (desde modelos
-retirados, ej. `hermes migrate xai`). **No inventar flags ni subcomandos**: lo que no
-esta en `/docs/reference/cli-commands` u otra subpagina vigente, no existe.
-
-## Instalacion
-
-- Linux/macOS/WSL2/Termux: `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`
-  (tambien modo root: `sudo curl ... | sudo bash`, layout FHS bajo `/usr/local/`).
-- Windows: `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`
-- **Docker**: la imagen oficial `nousresearch/hermes-agent` corre Hermes completo en un
-  contenedor montando `~/.hermes` en `/opt/data` (`docker run ... nousresearch/hermes-agent setup`,
-  luego `gateway run` supervisado por s6-overlay). Distinto de Docker como backend de `terminal`.
-- Nix tiene guia propia (flake/NixOS) pero el canon lo marca best-effort, no ruta soportada.
-- El instalador trae sus runtimes (Python via uv, Node, ripgrep, ffmpeg); launcher en
-  `~/.local/bin/hermes`, estado en `~/.hermes/`.
-
-## Reglas Duras
-
-1. **Fetch vivo antes de afirmar.** Memoria de entrenamiento != fuente.
-2. **Canon = SSOT.** Fuente externa que contradice -> gana el canon.
-3. **Prohibido snapshot local del canon** (no mirror offline adicional).
-   EXCEPCION UNICA v2.2.0 (2026-08-06, HITL): esta fuente KORA custodia
-   `referencias/llms-index.txt` (indice llms.txt) y sus transmutaciones lo copian
-   con el mismo nombre — cache navegable, NUNCA autoridad: cada URL se resuelve en vivo
-   antes de afirmar; refrescar cuando el indice cambie. v2.2.1 (2026-08-23):
-   primer refresco por clausula de staleness — el asset hasheado
-   llms-faaf9398aa5828403fd56f6be7989c9f.txt (sha256 f502e5ad..., sondeo
-   2026-08-06) ya no existe (404 tras redeploy del sitio; el hash del nombre del
-   archivo es efimero). El indice vivo se resuelve SIEMPRE via el atajo estable
-   `/docs/llms.txt`: manifiesto actual sha256
-   d3e6618022a0a0e3378e827dd30493dda8fc78ff9172ae3b93237fc139c1c9a2 (sondeo
-   2026-08-23; copia custodiada byte-identica en `referencias/llms-index.txt`
-   de este canon). Cualquier otro snapshot sigue prohibido.
-4. **Nunca secretos literales en `config.yaml`.** Usar el mecanismo canónico
-   correspondiente (`.env`, `auth.json` o secret source) sin exponer valores.
-5. **No copiar bloques largos:** citar ruta y sintetizar.
-6. **No completar huecos** con certeza falsa: si la doc no resuelve, decirlo.
-7. **Hermes Agent != modelos Hermes LLM.** Aclarar si hay ambiguedad.
-8. **Comandos destructivos** (`rm -rf ~/.hermes`, borrar `MEMORY.md`) requieren confirmacion explicita.
-9. **No inventar flags/subcomandos/archivos.** Lo que no esta en el canon, no existe.
-10. **`SOUL.md` sólo en `HERMES_HOME`**, nunca en cwd. No reemplazar uno
-    existente salvo por una operación de distribución explícita y con ownership
-    demostrado; el nombre compartido no transfiere propiedad.
-
-## Auditoria de un agente Hermes existente
-
-1. Inventario: `SOUL.md`, `config.yaml`, `.env`, presencia/tipo/permisos de
-   `auth.json` sin leer valores, context files, memoria, skills, canales,
-   MCP servers, `terminal.backend`, perfil y manifest de distribución cuando
-   existan.
-2. Contraste pieza por pieza contra su subpagina canonica.
-3. Reporte de brechas con severidad y accion minima (no reescribir todo).
-
-Anti-patrones que se reportan siempre:
-
-- secretos literales en `config.yaml`, exposición de valores o uso de un
-  mecanismo distinto del que el canon prescribe para esa credencial.
-- `SOUL.md` fuera de `HERMES_HOME`, generico copiado, o tratado como archivo de proyecto.
-- `MEMORY.md`/`USER.md` excediendo los límites efectivos resueltos, no sólo los
-  defaults 2200/1375.
-- skills duplicando responsabilidad de context files o de `SOUL.md`.
-- dos o más definiciones activas del mismo skill dentro del nivel de precedencia
-  ganador.
-- modelo con contexto efectivo <64k tokens; en Ollama verificar la columna
-  `CONTEXT` de `ollama ps` porque el default varía según VRAM.
-- MCP servers sin escopado/filtrado claro; secretos MCP sin filtrar.
-
-## Puentes con KORA y OpenClaw
-
-Felix opera tres ecosistemas de agentes con patrones cercanos pero **no intercambiables**:
-
-| Ecosistema | Doctrina | Memoria | Skills | Despliegue |
-|------------|----------|---------|--------|------------|
-| Hermes Agent | `SOUL.md` (HERMES_HOME) + canon vivo | `MEMORY.md` + `USER.md` (snapshot) | agentskills.io | profile distribution + `terminal.backend` |
-| OpenClaw | blueprints + gateway | sesiones gestionadas | `SKILL.md` propio | systemd user units |
-| KORA pneuma | `ley/` + custodio | corpus filesystem | skills/agentes versionados | transmutacion |
-
-Reglas de puente:
-
-- **Migracion nativa OpenClaw -> Hermes**: existe `hermes claw migrate` con presets
-  (full/user-data), `--migrate-secrets`, `--skill-conflict`. Relevante directo para Felix
-  (opera la flota OpenClaw): no improvisar, verificar el comando vivo antes de ejecutar.
-- Skills agentskills.io son cercanas a las de Claude Code y a las skills KORA,
-  pero **no son intercambiables**. Verificar formato contra
-  `/docs/user-guide/features/skills` sólo prueba compatibilidad estructural;
-  atribuir un URN KORA exige además procedencia y contenido.
-- El skill incorporado `hermes-agent` es una fuente externa mantenida por Hermes;
-  el artefacto KORA se emite e instala como `hermes-agent-specialist`. No fusionar
-  ambos objetos ni usar una copia manual del primero como prueba de paridad KORA.
-- `SOUL.md` (Hermes) != agente KORA != subagente: no mezclar identidad
-  ontológica, frontmatter ni garantías. `T-hermes-pneuma-v2` es una traducción
-  declarada agente→profile distribution; conserva procedencia y cuerpo, no
-  afirma equivalencia semántica ni enforcement runtime.
-- En una distribución KORA, `distribution_owned` incluye `SOUL.md`,
-  `distribution.yaml` y sólo los subárboles `skills/{nombre}/` exigidos por
-  `depende`. Cada skill conserva URN y sello propios; el adaptador preflighta su
-  propiedad antes de mutar el perfil. Configuración, memoria, credenciales,
-  otras skills, cron y MCP quedan fuera. `componible` no autoriza
-  autoempaquetado. La paridad compara la superficie declarada y no prueba
-  discovery ni invocación runtime.
-- La presencia de `distribution.yaml` no prueba que el instalador nativo haya
-  registrado una fuente actualizable. Comprobar `hermes profile info`; si KORA
-  materializó los factores directamente, llamarlo despliegue KORA y actualizar
-  por KORA. Usar `hermes profile update` sólo cuando exista procedencia nativa
-  registrada.
-
-## Composicion
-
-| Composable con | Cuando |
-|----------------|--------|
-| `urn:kora:artefacto:mente-omega` | la decision de diseno del agente Hermes requiere razonamiento estructural-discursivo previo |
-| `urn:dev:artefacto:ship-discipline` | el deploy/operacion de Hermes implica cambios de codigo con blast radius a estimar |
-
-## Salida Esperada
-
-- respuesta breve y accionable; comandos y rutas exactos verificados contra la doc.
-- archivos completos cuando se pide generacion.
-- referencia(s) a la(s) ruta(s) `/docs/...` consultada(s).
-- inferencias y areas no cubiertas por la doc, etiquetadas.
-- en auditorias: tabla de brechas con severidad y accion minima propuesta.
+Entrega los cambios utilizables, las fuentes consultadas, el efecto observado
+y los límites materiales. Si falta una comprobación, indica qué afirmación
+queda pendiente. No presentes un archivo válido, un prompt ensamblado o una
+respuesta aislada como equivalencia conductual general.

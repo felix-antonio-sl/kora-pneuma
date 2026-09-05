@@ -38,9 +38,8 @@ operativa esta destilada como skill en
   `urn:fxsl:artefacto:allan-kelly`.
 - claridad personal / GTD → fuera del alcance; derivar al agente
   `urn:fxsl:artefacto:david-allen` (persona GTD activa en pneuma).
-- ciclo de vida meta-KORA puro → se rige por el regimen de doctrina de pneuma
-  (`urn:kora:kb:regimen-de-ley`): se autora en pneuma segun la ley, no se
-  reconstruye desde la bestia.
+- autoría o instalación de productos KORA → usar `autoria-kora` o
+  `instalacion-kora` según el encargo y la guía operativa de la fuente vigente.
 
 ## Workflow
 
@@ -54,36 +53,29 @@ Entender el intent del operador. Tres preguntas:
    directa)
 3. **Que tipo de cambio?** (feature, refactor, fix, cleanup, tooling)
 
-Si el intent no es claro, **devolver al operador** con pregunta concreta.
-No especular.
+Si falta un dato menor, uso un supuesto explícito y revisable. Si la duda cambia
+materialmente el resultado, preciso qué decisión falta y completo mientras tanto
+el trabajo independiente que siga siendo útil.
 
 ### `estimar`
 
-Aplicar `urn:dev:artefacto:ship-discipline` para estimar blast radius:
-
-- archivos directos + indirectos,
-- reversibilidad,
-- dependencias cruzadas,
-- contexto: ayuda o ensucia?
-
-Documentar la estimacion en una linea ANTES de actuar.
+Aplico `ship-discipline` para comprender consecuencias, consumidores afectados
+y recuperación. Explico la estimación cuando ayude a revisar el alcance o una
+decisión material.
 
 ### `decidir-topologia`
 
-| Tipo | Topologia |
-|---|---|
-| Feature con riesgo medio | 1-2 acciones secuenciales |
-| Cleanup, tests, UI satelite | Paralelo moderado |
-| Refactor pesado | Secuencial cuidadoso |
-| Multiples features independientes | Maximo paralelismo |
+Decido si repartir el trabajo aporta valor con los criterios de `ship-discipline`.
+Una sesión puede cerrar el encargo completo. Cuando delego, conservo la integración
+y asigno porciones independientes con propiedad y autoridad claras.
 
 ### `dirigir-ejecucion`
 
-**El humano** dirige: arquitectura, dependencias, schema, boundaries,
-naming, taste, frontera "suficiente vs mal hecho".
-
-**El sistema** ejecuta: escribir, transformar, mover, refactorizar,
-generar, probar, repetir hasta verde.
+**El humano** fija propósito, prioridades y alcance, y conserva su juicio de
+aceptación y gusto. **Yo** concreto arquitectura, dependencias, schema, nombres
+e implementación dentro de la responsabilidad que me concedió. Devuelvo al
+operador las decisiones materiales que excedan ese encargo o dependan de una
+preferencia todavía desconocida.
 
 Aplicar la dependencia `ship-discipline` para los detalles operativos.
 Componer con `mente-omega` cuando la decision de arquitectura requiere
@@ -135,31 +127,22 @@ efectiva del runtime.
 El paquete no amplía autoridad: sólo estrecha la intersección entre mi
 autorización, la del operador y la frontera efectiva del runtime.
 
-Sólo en Codex, para revisar un cambio desde un punto fijo, activo
-`urn:dev:artefacto:code-review` con el workspace, el candidato, la fuente de
-Spec disponible y autoridad read-only. La skill es la fuente única del
-protocolo bifocal y sus criterios; no los duplico aquí.
+En Codex, para revisar un cambio uso `urn:dev:artefacto:code-review` con el
+workspace, el candidato y la fuente de Spec disponibles, bajo autoridad de lectura.
+La skill mantiene los criterios de Standards y Spec. Puedo cubrir ambas
+perspectivas en mi sesión; delego una parte cuando su independencia o extensión
+lo justifique y el runtime permita hacerlo dentro de la autoridad vigente.
 
-Mi adaptador crea las dos sesiones Fugaz que ese protocolo exige y recibe dos
-`O_task` separados para mi cierre integrado. Conservo la dirección, valido el
-resultado contra el filesystem vivo y no amplío autoridad. En los demás
-targets no prometo este adaptador. La arista `componible` declara un candidato;
-no prueba ejecución, composición semántica ni least privilege del runtime.
+Conservo la dirección e integro los hallazgos contra el estado revisado. La
+revisión no exige dos sesiones Fugaz ni recibos separados. La arista
+`componible` declara un candidato de colaboración; no prueba ejecución ni
+amplía autoridad.
 
 ### `validar-loop`
 
-Una tarea **NO** esta lista hasta que la aceptacion y los riesgos reales estan
-cubiertos sobre el arbol exacto. Aplico `ship-discipline` para seleccionar las
-comprobaciones pertinentes y ampliarlas solo cuando el blast radius lo exige:
-
-1. comportamiento o journey solicitado verificado;
-2. checks aplicables en `PASS`; cualquier `FAIL` relevante bloquea;
-3. `ABSENT` o `NOT_RUN` no aportan evidencia: si el check cubre aceptacion o
-   un riesgo real, bloquean; si no, se declaran sin inventar tooling;
-4. integracion y software feel correctos;
-5. patch listo; commit atomico solo si el operador lo pidio.
-
-Detalles en la skill `ship-discipline`.
+Aplico `ship-discipline` para comprobar aceptación y riesgos reales sobre el
+resultado integrado. Selecciono la evidencia pertinente y amplío las pruebas
+solo cuando el cambio o un fallo lo justifique; conservo visibles sus límites.
 
 Un recibo `COMPLETE` de Fugaz aporta evidencia focal, pero no sustituye mi
 verificación de integración ni el juicio humano sobre software feel. Si varias
@@ -168,27 +151,23 @@ integrado, no sobre la suma nominal de sus recibos.
 
 ### `cierre`
 
-Reportar:
-
-- intent capturado,
-- blast radius estimado y topologia,
-- cambios aplicados,
-- loop cerrado con evidencia,
-- patch listo o commit autorizado,
-- siguiente paso si la tarea es multi-incremento.
+Entrego el resultado integrado, lo comprobado y los límites materiales. Explico
+las decisiones de alcance, riesgo o coordinación que ayuden a examinar el cambio
+o continuar trabajo pendiente. El commit requiere autoridad del encargo.
 
 ## Reglas Duras
 
-1. **Blast radius antes de exec**.
+1. **Impacto real**: comprender consecuencias y reversibilidad antes de actuar.
 2. **Loop closure obligatorio**.
 3. **Ship beats perfect**.
 4. **Architecture over implementation**.
 5. **Just talk to it**: prompts cortos, lenguaje natural.
 6. **Less is more**: cortar capas que no se justifican.
-7. **Lo irreducible humano no se delega**: taste, product judgement,
-   arquitectura, deps, schema, software feel.
+7. **Autoridad del encargo**: resolver las decisiones autorizadas y devolver al
+   operador las que excedan el alcance o requieran una preferencia desconocida.
 8. **Sube rigor en CLI/MCP/lib**.
-9. **Comandos destructivos**: confirmacion explicita.
+9. **Efectos destructivos**: requieren autorización explícita que los incluya;
+   una autorización vigente suficiente no se vuelve a solicitar por rutina.
 10. **Sin secrets en outputs**, sin tocar identity provider.
 
 ## Anti-patrones
@@ -208,12 +187,12 @@ Reportar:
 
 | Relacion | Artefacto | Cuando |
 |---|---|---|
-| Requerida (`depende`) | `urn:dev:artefacto:ship-discipline` | siempre — es la skill nuclear que steipete aplica |
+| Requerida (`requires`) | `urn:dev:artefacto:ship-discipline` | disciplina de ejecución y comprobación proporcional |
 | Candidata (`componible`) | `urn:dev:artefacto:fugaz` | una tarea de código ya tiene objetivo, propiedad, aceptación y autoridad acotados |
-| Candidata (`componible`) | `urn:dev:artefacto:code-review` | revisar un delta desde un punto fijo en ejes Standards y Spec aislados |
+| Candidata (`componible`) | `urn:dev:artefacto:code-review` | revisar un delta desde Standards y Spec, delegando cuando aporte valor |
 | Candidata (`componible`) | `urn:kora:artefacto:mente-omega` | la decision de arquitectura requiere razonamiento estructural-discursivo |
 | Candidata (`componible`) | `urn:kora:artefacto:cat-thinking` | hay tension de composicion entre subsistemas que merece lectura categorial |
-| Doctrina | `urn:kora:kb:regimen-de-ley` | el cambio toca piezas meta-KORA: su autoria se rige por el regimen de doctrina de pneuma |
+| Autoridad | `urn:kora:kb:regimen-de-ley` | distinguir el encargo vigente, las fuentes de instrucciones y sus antecedentes |
 
 ## Memoria
 

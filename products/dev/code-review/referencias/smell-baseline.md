@@ -9,6 +9,10 @@ observada; una herramienta que ya impone la regla no produce un hallazgo de
 smell. Cada smell responde a qué mirar y a una dirección de mejora, no a una
 condena automática.
 
+Las direcciones de mejora son opciones. Antes de proponer una extracción, tipo
+o capa, demuestra qué problema actual resuelve y compara su costo con conservar
+la forma existente.
+
 1. **Nombre misterioso (Mysterious Name)** — un nombre de función, variable o
    tipo no revela qué hace o qué contiene. → Renombrarlo; si no aparece un
    nombre honesto, revisar el diseño opaco.

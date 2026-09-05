@@ -1,14 +1,10 @@
 id: urn:dev:artefacto:scaffold-repo
 kind: skill
 name: scaffold-repo
-description: 'Andamia repositorios nuevos con una entrada humana durable en README.md,
-  un contrato operativo nativo y especifico para Codex en AGENTS.md, y CLAUDE.md como
-  import exacto de AGENTS.md salvo una necesidad Claude-especifica real. Usala cuando
-  el operador quiera crear, iniciar o scaffoldear un repositorio, proyecto, corpus,
-  cuaderno de rol o modelo OPM. Distingue cuatro arquetipos: desarrollo, conocimiento,
-  cuaderno de rol y modelamiento. HANDOFF.md es unico, estable y condicional al trabajo
-  material inconcluso; no crea MEMORY.md, continuidades fechadas, bitacoras de sesion
-  ni archivos de sesion.'
+description: Crea la entrada suficiente de un repositorio nuevo con README.md,
+  instrucciones locales AGENTS.md para Codex y Hermes y exclusiones pertinentes.
+  Adapta desarrollo, conocimiento, cuaderno de rol o modelamiento, conserva archivos
+  existentes y usa HANDOFF.md solo para trabajo material que deba continuar.
 content: content.md
 targets:
 - codex

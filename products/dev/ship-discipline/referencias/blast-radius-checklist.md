@@ -1,49 +1,42 @@
 # Blast radius checklist
 
-Estimacion del impacto de un cambio antes de ejecutarlo.
+Estimar consecuencias y reversibilidad para elegir el trabajo y las pruebas.
 
 ## Criterios de estimacion
 
-Antes de actuar, responder:
+Considera lo que pueda cambiar la decisión:
 
-1. Cuantos archivos toca (directos + indirectos)?
-2. Si sale mal, cuanto cuesta revertir?
-3. Necesito explorar primero o ya se por donde va?
-4. Puedo cerrar el loop solo (sin esperar a humano)?
-5. El cuello de botella es implementacion o diseno?
-6. Esto merece tooling nuevo o solo una instruccion mejor?
-7. El contexto actual ayuda o ensucia?
+- conducta, datos y consumidores afectados directa o indirectamente;
+- compatibilidad de interfaces y dependencias;
+- costo de equivocarse y forma de conservar o recuperar el estado anterior;
+- incertidumbre que convenga resolver antes de escribir;
+- autoridad disponible para los efectos concretos.
 
-## Tabla de niveles
+La cantidad de archivos ayuda a localizar el alcance; no determina el riesgo.
+Una migración puede requerir ensayar lectura y recuperación de datos, mientras
+que un cambio de instrucciones puede alterar conducta sin tocar código.
 
-| Nivel | Criterio | Topologia | Cuidados |
-|---|---|---|---|
-| **Bajo** | 1-3 archivos, reversible, sin deps cruzadas | Accion directa | Commit corto basta |
-| **Medio** | 4-10 archivos, reversible, algunas deps | Secuencial con checkpoints | Tests relevantes + commit atomico |
-| **Alto** | 10+ archivos, potencialmente irreversible, multiples deps | Plan antes de ejecutar | Validacion humana antes de actuar |
+## Elegir la intervención
 
-## Defaults
-
-- Ante duda, estimar **hacia arriba**.
-- **Schema** (DB, API, types) → siempre alto.
-- **Dependencias** (add/remove/upgrade) → siempre alto.
-- **Boundaries** (server/client, modulo/modulo) → siempre alto.
-- **Estilo, formatting, docs** → siempre bajo.
-- **Renombrado masivo** → medio o alto segun cobertura.
+Ejecuta directamente si el efecto y la reversión son claros. Ordena los pasos
+cuando existan dependencias entre ellos y ensaya las condiciones cuyo fallo
+tendría consecuencias materiales. Crea tooling solo si resuelve una necesidad
+concreta que las herramientas existentes no cubren.
 
 ## Reglas
 
-- Documentar la estimacion en una linea **antes** de actuar.
-- Si la estimacion sube despues de empezar, **detener** y replanear.
-- Comandos destructivos (rm -rf, drop table, force push) requieren
-  confirmacion explicita, sin importar el blast radius nominal.
-- Migraciones de DB siempre se tratan como blast radius alto.
+- Explica el riesgo relevante cuando cambie el plan o ayude a revisar el trabajo.
+- Si aparece un efecto nuevo, revisa su alcance antes de ejecutarlo y conserva
+  el trabajo independiente que siga siendo seguro y útil.
+- Los efectos destructivos o externos deben estar cubiertos por la autorización
+  vigente. Su aparición exige resolver el alcance cuando no esté concedido;
+  no exige renovar una autorización explícita que ya los incluye.
 
 ## Antipatrones
 
 | Antipatron | Falla | Correccion |
 |---|---|---|
-| "Cambio chico" sin estimar | Subestimar acoplamiento | Estimar siempre, aunque parezca trivial |
-| Estimacion optimista | Sesgo del autor | Estimar hacia arriba en duda |
-| Plan elaborado para cambio bajo | Ceremonia ridicula | Estimar bajo, ejecutar directo |
-| Cambio alto sin plan | Riesgo no gestionado | Plan + validacion humana antes de exec |
+| Contar archivos como riesgo | Omitir consecuencias de un cambio pequeño | Examinar comportamiento y consumidores |
+| Dar por supuesta la reversión | Perder datos o trabajo ajeno | Comprobar cómo se conserva el estado previo |
+| Plan elaborado sin incertidumbre material | Costo sin efecto útil | Ejecutar el menor cambio completo |
+| Actuar con efectos todavía desconocidos | Exceder alcance o dañar consumidores | Resolver la incertidumbre decisiva |

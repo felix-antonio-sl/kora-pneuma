@@ -1,58 +1,43 @@
-# Efectos y fallos de las operaciones KORA
+# Efectos y límites de las operaciones KORA
 
-Esta explicación usa el [modelo operativo actual](../cat-kora-kernel/content.md)
-y la interfaz `kora_cli.py`. Describe qué cambia y qué puede concluirse de cada
-resultado; los estados y operaciones anteriores permanecen como antecedentes.
+Esta explicación complementa el [modelo de fuente](../cat-kora-kernel/content.md).
+Los comandos y su uso están en la [guía operativa](../guia-rapida-pneuma/content.md).
 
-## Consultar, autorar y realizar
+## Fuente, realización e instalación
 
-| Operación | Efecto observable | Límite relevante |
-|---|---|---|
-| `list` | Deriva objetos desde las fichas; `--archived` selecciona los inactivos conservados. | Presencia no prueba consumo. |
-| `resolve ID` | Devuelve identidad, archivo y actividad, siguiendo alias. | Resolver un archivado no permite realizarlo. |
-| `create` | Publica un producto nuevo con el cuerpo y originales proporcionados. | No sintetiza conocimiento ni acredita fidelidad semántica; rechaza identidad y ubicación ocupadas. |
-| `check` | Comprueba referencias declaradas y realiza en memoria los consumibles del destino seleccionado. | No instala ni observa conducta. |
-| `render TARGET ID --output DIR` | Produce archivos nativos y dependencias en una salida nueva. | Todavía requiere descubrimiento, carga y ejecución en el runtime. |
+Publicar un cuerpo y conservar sus originales hace recuperable lo autorado;
+no acredita su fidelidad. Resolver una identidad permite encontrar ese contenido,
+incluidos antecedentes archivados, sin demostrar consumo ni habilitarlos para
+realización.
 
-La realización compara huellas de fuente antes y después de construir archivos
-y comprueba colisiones de paths. Un cambio observado detiene ese plan. No impide
-una edición posterior de la fuente; cada actualización vuelve a derivar su plan.
+La realización comprueba dependencias, colisiones de paths y huellas de fuente
+antes y después de generar archivos. Un cambio observado detiene el plan; una
+edición posterior requiere otra realización. Los archivos producidos todavía
+necesitan ser descubiertos, cargados y utilizados por el runtime.
 
-## Instalar, retirar y recuperar
+La instalación relaciona el plan actual, la propiedad registrada y los archivos
+efectivos. Una edición local o un archivo ajeno sin adopción detiene la operación.
+La propiedad compartida se conserva: retirar un producto no elimina archivos
+que otro conjunto instalado necesita.
 
-El instalador toma un lock local y compara bytes y modos de los archivos que
-administra con el estado anterior. Una edición local o un archivo ajeno no
-adoptado detiene la operación. Adoptar archivos existentes requiere un mapa de
-hashes revisado; su nombre no demuestra propiedad.
+## Transacción y recuperación
 
-Antes de modificar archivos prepara reemplazos, copias previas y un diario.
-Recomprueba cada entrada antes de cambiarla. Conserva la propiedad compartida:
-retirar un producto no elimina archivos que otro conjunto instalado necesita.
+El instalador serializa sus operaciones y prepara reemplazos antes de modificar
+archivos. Registra un diario y conserva cada archivo desplazado, incluidas las
+escrituras que otro proceso haga por un descriptor que ya tenía abierto.
 
-`status` informa diferencias respecto del estado instalado registrado y si hay
-recuperación pendiente. `recover` atiende el diario pendiente: si el estado
-confirmado y los archivos corresponden al resultado, reconoce la confirmación;
-en otro caso intenta restaurar el estado anterior. `rollback` actúa sobre la
-última transacción confirmada cuando el estado no avanzó. La recuperación se
-detiene ante una edición posterior ajena a la transacción. Preserva ese cambio
-y reconcilia la diferencia antes de insistir.
+El reemplazo es atómico por archivo; un lector concurrente puede observar un
+estado intermedio del conjunto. Ante una interrupción, la recuperación reconoce
+una confirmación cuyo estado y archivos corresponden al resultado; de otro modo
+intenta restaurar el estado anterior. El rollback actúa sobre la última
+transacción confirmada mientras el estado no haya avanzado. Una edición posterior
+se conserva y puede impedir esa restauración hasta reconciliarla.
 
-El diario y sus copias viven bajo `.local/state/kora` del home seleccionado,
-fuera de la fuente Git. El retiro conserva directorios y estado personal ajenos.
-La instalación usa reemplazos por archivo y recuperación del conjunto; no
-promete atomicidad de todo el runtime. La atomicidad documentada por
-[Python para os.replace](https://docs.python.org/3.12/library/os.html#os.replace)
-corresponde al renombre individual cuando tiene éxito.
+El diario y los archivos desplazados permanecen en el estado privado del home,
+fuera de Git. La recuperación ensayada cubre interrupciones de procesos; no
+acredita resistencia a fallas físicas de almacenamiento. Una instalación coherente
+tampoco acredita conducta del agente ni equivalencia entre modelos.
 
-## Comprobar la consecuencia necesaria
-
-Revisa lo que necesitaba el encargo: fuente conservada, referencias utilizables,
-carga del producto, conducta ante condición y excepción, y recuperación cuando
-corresponda. Un comando sin error, un archivo idéntico y una respuesta del modelo
-contestan preguntas distintas. Usa el path y la causa reportados para corregir
-un fallo; no alteres el registro privado para ocultar una diferencia.
-
-Implementación: [CLI](../../../kora/cli.py) e
-[instalación y recuperación](../../../kora/install.py). El
-[README](../../../README.md) indica las comprobaciones ejecutables.
+Implementación: [instalación y recuperación](../../../kora/install.py) y
+[decisiones de filesystem](../../../docs/diseno.md).
 [Semántica anterior](../../../archive/previous/kora/cat-kora-semantica-operacional/content.md).

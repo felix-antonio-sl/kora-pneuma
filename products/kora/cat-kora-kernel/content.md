@@ -1,15 +1,8 @@
-# Modelo operativo del núcleo KORA
+# Modelo de fuente y realización KORA
 
-El núcleo relaciona productos autorados con archivos utilizables en Codex y
-Hermes. Su representación actual es un catálogo derivado de directorios, un
-recorrido de dependencias y realizadores que producen archivos. Se conserva la
-identidad histórica de este conocimiento; las formulaciones anteriores permanecen
-en su [fuente previa](../../../archive/previous/kora/cat-kora-kernel/content.md).
-
-## Objeto fuente
-
-Cada producto tiene una ficha `object.yaml`, un archivo de contenido y los
-recursos necesarios. Esta es una ficha mínima de conocimiento:
+El catálogo relaciona identidades estables con productos conservados en archivos.
+Se deriva al operar; cada producto tiene una ficha `object.yaml`, un contenido
+legible y los recursos necesarios. Ficha mínima de conocimiento:
 
 ```yaml
 id: urn:kora:kb:cat-kora-kernel
@@ -19,45 +12,38 @@ description: Modelo de productos, dependencias y realizaciones de KORA.
 content: content.md
 ```
 
-`id` conserva identidad aunque cambie la ubicación. `kind` distingue conocimiento,
-skill y agente. `name` determina el nombre nativo cuando hay realización. El
-archivo de `content` pertenece al directorio del producto; los recursos conservan
-rutas relativas y modos. Dos identidades pueden compartir nombre documental,
-pero no ocupar el mismo archivo nativo con contenido diferente.
+`id` conserva identidad aunque cambie la ubicación. `kind` distingue `knowledge`,
+`skill` y `agent`; `name` determina el nombre nativo al realizar. `content` apunta
+a un archivo del producto. Los recursos conservan rutas relativas y modos.
+Agentes y skills declaran en `targets` sus destinos, Codex y/o Hermes.
+`provenance` conserva procedencia y fuentes recuperables.
 
-Los activos viven bajo `products`. `archive/products` permite resolver objetos
-conservados sin habilitar su realización. `archive/previous` conserva versiones
-reemplazadas fuera de ambos catálogos. Un alias de `aliases.yaml` lleva a una
-identidad sin modificar su actividad.
+## Actividad e identidad
 
-## Dependencias y relaciones
+Los productos activos viven bajo `products`. `archive/products` conserva objetos
+resolubles sin habilitar su realización; `archive/previous` guarda versiones
+reemplazadas fuera de ambos catálogos. Un alias de `aliases.yaml` conduce a una
+identidad sin modificar su actividad. Nombres documentales iguales solo son un
+conflicto cuando ocupan el mismo destino físico con contenido distinto.
 
-`requires` expresa acceso necesario. Al realizar un producto se recorre su
-cierre de dependencias, comprobando identidad, actividad y destino admitido.
-El conocimiento permanece en la fuente y se expone mediante una ruta comprobada.
-Las skills requeridas se realizan en la superficie correspondiente. El recorrido
-evita repetir identidades; la lista no describe por sí misma una secuencia de
-ejecución.
+## Dependencias y realización
 
-`relations` conserva vínculos tipados que no provocan instalación. Una cita,
-un reemplazo histórico o una colaboración mencionada no equivale a llamar un
-agente. En Hermes, requerir un agente como dependencia de realización produce
-un error: el perfil no realiza esa llamada por declararla.
+`requires` expresa acceso necesario. La realización recorre su cierre y comprueba
+identidad, actividad y destino. El conocimiento se expone mediante rutas resueltas;
+las skills se realizan en la superficie correspondiente. El recorrido evita
+repetir identidades y no declara una secuencia de ejecución.
 
-## De la fuente al uso
+`relations` conserva otros vínculos tipados sin provocar instalación. Citar,
+reemplazar o mencionar colaboración no implementa una llamada a otro agente.
+En Hermes, requerir un agente como dependencia de realización produce un error:
+el perfil no puede realizar esa llamada por declararla.
 
-El realizador transforma el producto y sus dependencias en un mapa de rutas,
-bytes y modos. La CLI comprueba colisiones y cambios de fuente antes de entregar
-el plan. El instalador reconcilia ese plan con lo que administra en el home del
-operador y conserva un estado de recuperación privado.
+El realizador deriva un mapa de rutas, bytes y modos. El instalador lo reconcilia
+con los archivos que administra y el estado real del home. La
+[semántica operacional](../cat-kora-semantica-operacional/content.md) explica qué
+puede concluirse de esos cambios; el [diseño](../../../docs/diseno.md) explica las
+decisiones de implementación y la [guía](../guia-rapida-pneuma/content.md) su uso.
 
-Identidades, rutas y huellas de contenido relacionan la fuente, su realización
-y lo instalado. Permiten detectar diferencias materiales; no demuestran
-equivalencia conductual entre modelos ni que se leyó cada recurso. Atribuye cada
-propiedad al componente que la implementa y al alcance de su evidencia.
-
-Fuentes locales: [catalog.py](../../../kora/catalog.py),
-[cli.py](../../../kora/cli.py), [realizador Codex](../../../kora/render_codex.py)
-y [realizador Hermes](../../../kora/render_hermes.py). La
-[semántica operacional](../cat-kora-semantica-operacional/content.md) explica
-efectos y fallos de los comandos.
+Implementación: [catálogo](../../../kora/catalog.py) y realizadores de
+[Codex](../../../kora/render_codex.py) y [Hermes](../../../kora/render_hermes.py).
+[Modelo anterior conservado](../../../archive/previous/kora/cat-kora-kernel/content.md).

@@ -45,18 +45,10 @@ lo que la salida afirma sin sustento y las condiciones que cambian el uso.
 
 ## Guardar una fuente útil
 
-Localiza la raíz operativa desde la ruta de esta fuente y lee su `README.md`.
+Consulta la [guía operativa](../guia-rapida-pneuma/content.md) para guardar o
+actualizar el producto desde la raíz de su fuente.
 `create` publica una fuente nueva y conserva cada `--source` como bytes originales
 con su hash y origen. El comando no sintetiza ni acredita fidelidad por sí solo.
-Ejemplo con archivos autorados y revisados previamente:
-
-```bash
-python3 kora_cli.py create knowledge ejemplo criterios-entrega \
-  --id urn:ejemplo:kb:criterios-entrega \
-  --description 'Criterios de entrega y sus excepciones, derivados de la fuente indicada.' \
-  --body /ruta/cuerpo.md --source /ruta/fuente.txt
-python3 kora_cli.py resolve urn:ejemplo:kb:criterios-entrega
-```
 
 Para actualizar, resuelve primero la identidad existente y edita esa fuente.
 Conserva la versión anterior mediante Git o un original recuperable según el
@@ -66,12 +58,13 @@ en `requires` y vínculos documentales en `relations`, sin confundir ambos usos.
 
 ## Comprobar el resultado
 
-Coteja el cuerpo con los originales, especialmente condiciones y excepciones.
-Responde desde el producto una pregunta de uso normal, otra que active una
-excepción y otra cuyo dato no exista. Compara esas respuestas con la fuente:
-una respuesta fluida no acredita fidelidad. Verifica que cada recurso técnico
-necesario se pueda abrir y que las referencias declaradas resuelvan mediante
-`python3 kora_cli.py check`.
+Coteja el contenido nuevo o modificado con los originales, especialmente las
+condiciones y excepciones que cambian su uso. Para comprobar utilidad, responde
+desde el producto una pregunta que dependa de ese contenido y contrasta la
+respuesta con la fuente; incluye una excepción o un dato ausente cuando sean
+materiales. Una respuesta fluida no acredita fidelidad. Abre los recursos
+técnicos necesarios y resuelve las referencias cambiadas. La guía distingue
+estas comprobaciones del diagnóstico del catálogo completo.
 
 Entrega el producto recuperable, su procedencia y cualquier pérdida o
 incompatibilidad concreta. Distingue la revisión semántica hecha de la validez

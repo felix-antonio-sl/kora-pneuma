@@ -8,38 +8,26 @@ renovar esa aprobación en cada paso.
 
 ## Preparar y aplicar
 
-Resuelve las identidades solicitadas desde la raíz de fuente que contiene
-`kora_cli.py`. Comprueba referencias y archivos con `check`. Genera `render` en
-un directorio nuevo cuando necesites revisar la realización antes de instalar.
-El resultado se deriva de la fuente; no se edita como una segunda autoridad.
+Resuelve las identidades solicitadas y el destino autorizado. Aplica `install`
+sobre ellas: el comando comprueba dependencias, realiza archivos nativos y
+reconoce cambios locales antes de escribir. La [guía operativa](../guia-rapida-pneuma/content.md)
+contiene la sintaxis, el alcance de perfiles Hermes y la prueba con home temporal.
+Sin identidades se actualiza el conjunto del destino; úsalo cuando ese sea el
+alcance del encargo.
 
-```bash
-python3 kora_cli.py check --target codex
-python3 kora_cli.py render codex ID --output /ruta/salida-nueva
-python3 kora_cli.py status
-python3 kora_cli.py install codex ID
-```
-
-Sustituye `ID` por una identidad resoluble y usa `hermes` para ese destino.
-`--home DIRECTORIO` permite operar una instalación aislada. Sin identidades,
-`install` selecciona todos los productos del destino; úsalo solo cuando el
-alcance comprende ese conjunto. Consulta el `README.md` actual antes de una
-operación que no conoces.
-
-Una actualización también vuelve a realizar los consumidores ya administrados
-del mismo destino que comparten dependencias afectadas. Así las copias dentro
-de perfiles y agentes conservan una versión coherente. Para una skill instalada
-en un perfil Hermes existente usa `install hermes ID --profile NOMBRE`; su retiro
-con `remove hermes ID --profile NOMBRE` afecta solo esa instancia. El flag no
-renombra agentes ni administra el SOUL, la configuración o el estado del perfil.
-La raíz Hermes se opera sin `--profile`.
+Usa `render` si necesitas inspeccionar una salida sin instalarla y `check` para
+diagnosticar el catálogo completo. No son pasos previos obligatorios de cada
+actualización. Los consumidores afectados se seleccionan por sus dependencias
+actuales y los archivos que siguen bajo su gestión, incluso si retiraron una
+dependencia de la fuente. Un producto ajeno al cambio puede seguir instalado
+aunque su fuente esté archivada; si comparte archivos afectados, el conflicto
+se debe resolver antes de actualizarlos.
 
 El instalador reconoce archivos por recibos y hashes. Si un archivo existente
-no está bajo su gestión, no asumas propiedad por su nombre: compara contenido,
-procedencia y consumidores. Para adoptar una instalación KORA anterior usa
+no está bajo su gestión, compara contenido, procedencia y consumidores antes de
+atribuirle propiedad. Para adoptar una instalación KORA anterior usa
 `--adopt ARCHIVO_JSON` con el mapa revisado de rutas relativas al home y sus
-SHA-256 actuales. Un hash acredita los bytes revisados, no acredita por sí solo
-que sean propios. Conserva una base recuperable y excluye estado personal.
+SHA-256 actuales. El hash acredita bytes; la procedencia acredita propiedad.
 
 Si hay una edición local, examínala e intégrala en la fuente o consérvala como
 trabajo pendiente de forma explícita antes de actualizar. No fuerces una
@@ -47,13 +35,6 @@ sobrescritura. Mantén archivos ajenos, memoria, credenciales, configuración y
 sesiones fuera del conjunto administrado.
 
 ## Recuperar y retirar
-
-```bash
-python3 kora_cli.py recover
-python3 kora_cli.py rollback
-python3 kora_cli.py remove codex ID
-python3 kora_cli.py status
-```
 
 `recover` atiende una transacción interrumpida; `rollback` deshace la última
 aplicación preservando cambios posteriores. `remove` retira los archivos propios
@@ -64,9 +45,10 @@ No uses el borrado completo de un perfil o directorio como retiro de archivos.
 
 ## Comprobar en su destino
 
-Revisa `status` y carga los productos con la superficie nativa efectiva.
-Comprueba en una ejecución real la acción que motivó el cambio y un fallo
-relevante. Un recibo limpio acredita archivos administrados; no acredita que el
-modelo haya seguido las instrucciones. Registra versión, recorrido, resultado
-observado y límites, sin secretos ni datos personales. Cierra con el estado
-utilizable y una ruta de recuperación comprobada.
+Comprueba el resultado de la operación y usa `status` para reconocer desvíos o
+recuperación pendiente. Si el cambio afecta la carga nativa, comprueba esa carga;
+si pretende cambiar conducta, observa la acción y el límite relevante en una
+ejecución real. Una corrección editorial no requiere por sí sola inferencia.
+Un cambio al instalador requiere probar su operación y recuperación afectadas
+en un home temporal. Informa lo observado y los límites concretos: un recibo
+limpio acredita archivos administrados, sin acreditar que el modelo los siga.

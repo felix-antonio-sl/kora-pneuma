@@ -7,8 +7,6 @@
 ## Entrada y autoridad
 
 - Usa `README.md` para orientación humana y el estado vivo del repositorio para decidir.
-- Este archivo añade solo reglas locales; hereda los contratos globales y de host
-  aplicables, y la regla más cercana manda dentro de este repositorio.
 - Si existe `HANDOFF.md`, léelo solo al retomar trabajo material inconcluso y
   revalídalo contra Git, código, pruebas y runtime.
 - {{fuentes canónicas, autoridad externa y derivados; elimina si no aplica}}
@@ -22,18 +20,11 @@
 
 ## Desarrollo y verificación
 
-{{comandos reales de instalación, build, test, lint, typecheck o ejecución. Si aún no
-existen, escribe `Verificación automatizada: ABSENT`.}}
+{{comandos reales que permiten trabajar y comprobar el resultado; si todavía no
+existen, describe cómo se revisa el cambio sin atribuir comprobaciones ausentes}}
 
 - Ejecuta primero la comprobación focal y amplía según el riesgo.
 - Revisa el diff completo y no presentes como validado lo no ejecutado u observado.
-
-## Continuidad
-
-- `HANDOFF.md` es único, estable y solo existe mientras haya trabajo material
-  inconcluso; actualízalo in-place y elimínalo al cerrar.
-- No crees `MEMORY.md`, handoffs o continuidades fechadas, bitácoras ni archivos de
-  sesión. Git conserva la narrativa cerrada.
 
 ## Seguridad y entrega
 

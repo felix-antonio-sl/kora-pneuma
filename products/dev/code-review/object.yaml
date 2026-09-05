@@ -1,9 +1,9 @@
 id: urn:dev:artefacto:code-review
 kind: skill
 name: code-review
-description: 'Revisa de forma read-only un cambio desde un punto fijo en dos ejes
-  independientes: Standards, contra los estandares locales y un baseline auxiliar
-  de smells, y Spec, contra la especificacion de origen.'
+description: Revisa un cambio sin modificarlo, contrastando reglas locales y calidad
+  de diseño con los requisitos del encargo. Deriva el alcance con evidencia y entrega
+  hallazgos accionables, con delegación y comprobaciones proporcionales.
 content: content.md
 targets:
 - codex

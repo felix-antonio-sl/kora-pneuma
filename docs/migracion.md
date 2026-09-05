@@ -440,3 +440,73 @@ recorridos de inferencia tienen comprobaciones separadas. La revisión de
 consumidores sanitarios no equivale a validar práctica clínica ni conducta de
 cada agente de dominio. El estado actual se consulta con `kora_cli.py status`;
 los cortes de este documento explican el relevo y no se mantienen como inventario.
+
+## Construcción independiente y comprobación del 2026-09-05
+
+La reconstrucción siguió esta secuencia, conservada como antecedente de su
+realización:
+
+1. Preservar el repositorio vivo, incluidos Git, archivos sin seguimiento y
+   cambios locales. El respaldo privado se coteja por bytes y enlaces; el relevo
+   vuelve a comprobar que la base no se haya movido.
+2. Construir catálogo, autoría y resolución; probar procedencia, conservación de
+   recursos, identidad y referencias faltantes en raíces temporales.
+3. Realizar skill y agente en ambos destinos; probar lectura por parsers nativos,
+   nombres en destinos disjuntos, recursos y descubrimiento efectivo.
+4. Instalar, actualizar, detectar divergencia, retirar y recuperar ante fallos
+   de escritura e interrupción; comprobar el contenido observable y el estado
+   ajeno después de cada recorrido.
+5. Importar todo el corpus conservable y reconstruir productos de maquinaria;
+   cotejar contenido, vínculos y procedencia contra la base. Las excepciones
+   concretas quedan documentadas en este informe, con fuente recuperable.
+6. Ejecutar koraficación y autoría desde fuentes nuevas sin acceso al núcleo
+   anterior, y observar canarios reales de los dos runtimes.
+7. Efectuar el relevo local preservando la historia, actualizar consumidores,
+   verificar instalaciones y recuperación, y cerrar commits semánticos. Solo
+   entonces la raíz de construcción deja de ser autoridad activa.
+
+### Independencia comprobada
+
+El 2026-09-05 `scripts/probe_independence.py` ejecutó la KORA reconstruida en
+Codex `gpt-6-astra`, esfuerzo `max`, dentro de un namespace de montajes que
+ocultó `/home` y `/tmp`. Solo quedaron disponibles la copia nueva, el binario
+nativo y la autenticación montada en lectura. El núcleo anterior, su ley y el
+repositorio de construcción no fueron accesibles. Se utilizó
+[bubblewrap](https://github.com/containers/bubblewrap#usage), versión instalada
+0.9.0; el aislamiento corresponde a ese proceso, sin cambiar los montajes del host.
+
+La KORA invocada mediante su skill nativa creó conocimiento desde un manual
+ficticio, conservó su original, autoró un skill y un agente agnósticos y los
+instaló en ambos destinos. Una sesión nueva resolvió cinco casos. Después se
+cambió el umbral de masa del manual de 12 a 15 kg: la KORA conservó las dos
+versiones, actualizó los productos y sus instalaciones, y otra sesión cambió
+solo la decisión correspondiente a la pieza de 13 kg. Se conservaron la
+prioridad del permiso revocado, la excepción de lluvia y `UNKNOWN` para los
+datos ausentes. Los archivos instalados coincidieron con ambas realizaciones
+y el estado del instalador quedó limpio.
+
+Hermes ejecutó el mismo agente y corpus actualizado en otro montaje aislado,
+con runtime y autenticación en lectura. Su loop nativo realizó seis llamadas
+API con `openai-codex/gpt-6-astra`, esfuerzo `max`, cargó el skill y leyó el
+conocimiento completo. El JSON de los cinco casos coincidió con el oracle
+separado del prompt. La prueba ofreció solo herramientas de lectura; utilizó
+la ruta resuelta del mapa nativo y no ejecutó la alternativa CLI `resolve`.
+
+Las pruebas de instalación y recuperación por interrupción también pasaron en
+el entorno sin núcleo anterior. Esta evidencia cubre el recorrido descrito;
+no acredita por extensión la conducta de todos los productos de dominio.
+Los recibos y logs sintéticos se conservan en el respaldo privado, sin material
+de autenticación.
+
+### Comprobaciones al cierre del relevo
+
+Desde la raíz relevada pasaron las 76 pruebas del núcleo. Codex descubrió sus
+72 skills y abrió los 29 TOML nativos; una sesión nueva de `$kora` utilizó la CLI
+y el conocimiento actuales. Hermes cargó los seis perfiles completos y sus
+skills requeridas. `status` no informó cambios locales ni recuperación pendiente
+en ese corte. Los contratos de [Codex](codex.md) y [Hermes](hermes.md) precisan
+los límites de sus comprobaciones.
+
+El relevo se integró en la rama local `fxai/relevo-kora-2026-09-05`.
+`kora-rebuild` conserva la historia de origen y sus respaldos privados, sin otra
+implementación activa. No se publicó Git remotamente.

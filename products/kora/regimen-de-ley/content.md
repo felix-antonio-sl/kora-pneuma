@@ -1,46 +1,27 @@
 # Autoridad y fuentes de instrucciones
 
-El operador define el encargo de KORA. Las instrucciones aplicables de la sesión,
-el workspace y el runtime delimitan cómo ejecutarlo. El
-[mandato de reconstrucción](../../../MANDATO.md) autoriza la construcción y el
-relevo local y fija lo que debe estar completo. Este documento no agrega
-aprobaciones intermedias a actos ya autorizados.
+El encargo de Félix y las instrucciones aplicables de la sesión, el workspace y
+el runtime delimitan la actuación. Este conocimiento no amplía permisos ni agrega
+aprobaciones intermedias a actos ya autorizados. El
+[mandato del 2026-09-05](../../../MANDATO.md) documenta la reconstrucción; una tarea
+posterior toma su alcance de su propio encargo.
 
-## Qué decide cada fuente
-
-| Fuente | Uso actual |
+| Fuente | Qué permite establecer |
 |---|---|
-| Encargo e instrucciones del operador | Propósito, alcance autorizado y resultado suficiente. |
-| `MANDATO.md` y `AGENTS.md` del repositorio | Condiciones del trabajo y de su continuidad. |
-| Ficha, cuerpo y recursos del producto | Intención autorada, contenido y dependencias declaradas. |
-| Implementación, pruebas y documentación de destino | Capacidad realizada y límites comprobados. |
-| Configuración y estado efectivos del runtime | Herramientas, permisos, modelo, credenciales y ejecución disponibles. |
-| Archivo previo y fuentes externas | Procedencia o antecedentes, con su alcance explícito. |
+| Encargo e instrucciones aplicables | Propósito, autoridad, condiciones y resultado suficiente. |
+| Ficha, cuerpo y recursos del producto | Contenido e intención autorados. |
+| Implementación y comprobaciones | Capacidad realizada dentro de lo efectivamente observado. |
+| Configuración y estado del runtime | Herramientas, permisos y opciones disponibles en esa ejecución. |
+| Originales y antecedentes archivados | Procedencia y decisiones anteriores, con su alcance histórico. |
 
-Ante una contradicción, identifica qué afirmación o instrucción está en juego y
-qué fuente tiene autoridad para ella. No uses un resultado técnico para ampliar
-un permiso del operador ni un texto de intención para afirmar que el runtime
-aplicó un control.
+Ante una contradicción, identifica qué afirmación está en juego y qué fuente
+puede sostenerla. Un resultado técnico no amplía un permiso; una instrucción del
+producto no demuestra que el runtime imponga el control descrito. Resolver una
+identidad histórica o conservar una fuente tampoco vuelve vigentes sus reglas.
 
-## Mantener una sola fuente activa
+La ley y los formatos operacionales anteriores se interpretan al importar o
+investigar antecedentes. Las instrucciones vigentes de trabajo están en
+[AGENTS.md](../../../AGENTS.md). Mantén las decisiones actuales en su fuente y
+su evolución en Git.
 
-El catálogo deriva de `products` y permite recuperar objetos conservados en
-`archive/products`. Una versión reemplazada permanece en `archive/previous`,
-fuera de ambas superficies de selección. Las relaciones y alias conservan acceso
-a identidades; no ratifican contenido ni vuelven activo un antecedente.
-
-La autoría normal usa el formato y los comandos nuevos. La ley, el núcleo y los
-formatos operacionales anteriores se interpretan al importar o estudiar un
-antecedente. No son una precondición del funcionamiento actual. Esta identidad
-histórica sigue resolviendo para que sus consumidores encuentren la explicación
-vigente de autoridad.
-
-Cambia las reglas internas cuando mejore una función necesaria y puedas
-comprobar la consecuencia. Registra la decisión en su fuente y conserva su
-evolución en Git. Publicación remota, autorización de un acto e instalación son
-acciones distintas cuyo alcance se determina por el encargo.
-
-Fuentes: [mandato](../../../MANDATO.md),
-[instrucciones del workspace](../../../AGENTS.md) y
-[catálogo efectivo](../../../kora/catalog.py).
 [Texto anterior íntegro](../../../archive/previous/kora/regimen-de-ley/content.md).

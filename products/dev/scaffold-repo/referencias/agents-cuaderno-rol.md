@@ -7,8 +7,6 @@ Cuaderno operativo de **{{rol}}** en {{contexto}}: {{resultado que decide, produ
 ## Entrada y autoridad
 
 - Usa `README.md` como entrada humana y las fuentes oficiales del dominio como autoridad.
-- Este archivo añade solo reglas locales; hereda los contratos globales y de host
-  aplicables, y la regla más cercana manda dentro de este repositorio.
 - Si existe `HANDOFF.md`, léelo solo al retomar trabajo material inconcluso y
   revalídalo contra sistemas y fuentes actuales.
 - {{sistemas vecinos, autoridades institucionales y límites de decisión}}
@@ -22,17 +20,10 @@ Cuaderno operativo de **{{rol}}** en {{contexto}}: {{resultado que decide, produ
 
 ## Verificación
 
-Verificación automatizada: ABSENT
+{{forma concreta de comprobar el resultado que entrega este cuaderno}}
 
 - Verifica fechas, versiones, atribución y estado vivo en la fuente correspondiente.
 - Separa evidencia técnica de autorización humana, clínica, institucional o productiva.
-
-## Continuidad
-
-- `HANDOFF.md` es único, estable y solo existe mientras haya trabajo material
-  inconcluso; actualízalo in-place y elimínalo al cerrar.
-- No crees `MEMORY.md`, handoffs o continuidades fechadas, bitácoras ni archivos de
-  sesión. Git conserva la narrativa cerrada.
 
 ## Seguridad y entrega
 

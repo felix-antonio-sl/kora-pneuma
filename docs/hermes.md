@@ -3,9 +3,14 @@
 Decisiones contrastadas el **2026-09-05** con documentación oficial web y la
 instalación local. Hermes declara **0.21.0**, fecha de release **2026.8.31**;
 el checkout efectivo está limpio en
-`79445a496c86a19332ad786494b8384d2167e2d0`, commit del **2026-09-04**. La fecha
-de release y la del commit identifican cosas distintas. La revisión de esta
-superficie no modifica perfiles, sesiones, credenciales ni el checkout de Hermes.
+`9dd6634c5635321cf38840cc30e9b51226689128`, commit del **2026-09-05**. La fecha
+de release y la del commit identifican cosas distintas.
+
+Los enlaces permanentes siguientes conservan el corte `79445a49` usado durante
+la reconstrucción. Al destilar la maquinaria, `python3 scripts/probe_hermes.py`
+repitió en `9dd6634c` las diez observaciones offline de contexto, descubrimiento
+y actualización, todas conformes. Esas pruebas no actualizan Hermes ni acreditan
+por sí solas una nueva inferencia.
 
 ## Traducción que opera en este host
 
@@ -338,7 +343,7 @@ permanecieron intactos y no se persistió material de credenciales. La prueba
 dispuso solo de herramientas de lectura: leyó el conocimiento por el mapa de
 rutas nativo, sin ejecutar el comando `resolve` que la skill también ofrece.
 Los pasos de autoría, actualización e instalación de ese mismo corpus, y su
-alcance probatorio, están en [diseño](diseno.md#independencia-comprobada).
+alcance probatorio, están en [independencia](migracion.md#independencia-comprobada).
 
 ## Instalación comprobada después del relevo
 

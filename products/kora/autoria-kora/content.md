@@ -1,9 +1,8 @@
 # Autoría de agentes y skills
 
-Escribe una fuente reutilizable desde la función que necesita Félix. Un agente
-aporta una perspectiva y conducta sostenidas; una skill aporta un procedimiento
-que se activa dentro de una sesión. Ambos pueden requerir conocimiento y skills
-existentes. Elige por el uso real y conserva una sola fuente de cada producto.
+Escribe o corrige una fuente desde la función que necesita Félix. Busca primero
+un producto que ya la cumpla. El [contrato de ingeniería agéntica](../cat-contrato-ingenieria-agentica/content.md)
+orienta la elección entre agente y skill y la evidencia necesaria para el cambio.
 
 ## Escribir el contrato suficiente
 
@@ -20,39 +19,30 @@ compruébala; no agregues destinos hipotéticos.
 
 Mantén recursos junto al cuerpo cuando sean necesarios. Usa `requires` para
 conocimiento o skills que deban llegar a la realización; usa `relations` para
-vínculos documentales que no impliquen instalación. Lee cada dependencia y
-comprueba que realmente sirve al procedimiento. Un enlace a otro agente no
+vínculos documentales que no impliquen instalación. Lee las dependencias que
+cambias y comprueba que sirven al procedimiento. Un enlace a otro agente no
 ejecuta una delegación por sí solo.
 
 ## Crear o actualizar
 
-Localiza la raíz que contiene `kora_cli.py` desde la ruta de esta fuente. Consulta
-su `README.md` si necesitas la sintaxis completa. Crea desde un cuerpo preparado:
-
-```bash
-python3 kora_cli.py create skill ejemplo revisar-entrega \
-  --id urn:ejemplo:artefacto:revisar-entrega \
-  --description 'Revisa una entrega aplicando condiciones, excepciones y datos desconocidos.' \
-  --body /ruta/procedimiento.md --target codex --target hermes \
-  --requires urn:ejemplo:kb:criterios-entrega
-```
-
-Para un agente usa `create agent` con su cuerpo y dependencias. Para actualizar,
-resuelve la identidad existente y cambia `content.md`, `object.yaml` o sus
-recursos en esa fuente. Conserva cambios concurrentes y la versión anterior
-mediante Git. El catálogo no necesita regenerar un índice manual.
+Usa `create skill` o `create agent` con el cuerpo preparado; la sintaxis y los
+campos están en la [guía operativa](../guia-rapida-pneuma/content.md). Para
+actualizar, resuelve la identidad existente y edita su cuerpo, metadata o
+recursos. Revisa también descripciones, ejemplos y plantillas que puedan
+reintroducir instrucciones corregidas. Conserva cambios concurrentes y la
+versión anterior mediante Git.
 
 ## Realizar y probar
 
-Ejecuta `check` y `render codex ID --output DIRECTORIO_NUEVO` o la variante
-`hermes`. Revisa el cuerpo y los recursos nativos, incluidos los conocimientos
-requeridos. Codex produce skills y roles de agente, con una activación directa
-derivada para cada agente. Hermes produce skills y perfiles de agente. Las
-capacidades actuales se documentan con fuentes en `docs/codex.md` y
-`docs/hermes.md`; verifica cambios cuando dependas de ellas.
+Cuando el encargo comprende instalación, usa `instalacion-kora`: la operación
+ya comprueba las dependencias y realiza los archivos afectados. Genera `render`
+por separado si necesitas inspeccionar la salida sin instalarla. Usa `check`
+cuando el diagnóstico requiera revisar el conjunto del catálogo.
 
-Con un encargo que autorice instalación, usa `instalacion-kora`. Prueba un caso
-normal y una excepción decisiva en el destino real. Distingue carga del archivo,
-conservación de contenido, disponibilidad de herramientas y conducta observada.
-Entrega la fuente que se puede continuar, los comandos usados y los límites
-concretos de comprobación.
+Comprueba aquello que el cambio pretende conseguir. Una corrección editorial
+requiere revisar el contenido y su conservación donde se realiza. Si cambias
+conducta, observa un caso representativo y la excepción o ausencia que pueda
+refutar la mejora. Si cambias una capacidad de destino, contrasta su contrato
+en `docs/codex.md` o `docs/hermes.md`, versión instalada y fuente oficial vigente.
+Entrega la fuente utilizable, lo comprobado y sus límites; la validez de los
+archivos por sí sola no acredita conducta.
