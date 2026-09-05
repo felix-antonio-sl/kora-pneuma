@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-convenios
+kind: knowledge
+name: ssot-convenios
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-convenios.md
+  source_sha256: affdea922555565cf693db548f736fa89eef62dcf6c6e7548f85ab5789c65580
+  legacy_state: borrador

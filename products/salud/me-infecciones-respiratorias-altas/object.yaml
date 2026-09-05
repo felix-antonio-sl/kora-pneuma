@@ -1,0 +1,17 @@
+id: urn:salud:kb:me-infecciones-respiratorias-altas
+kind: knowledge
+name: me-infecciones-respiratorias-altas
+description: 'Unidad ''Infecciones Respiratorias Altas y afecciones otorrinolaringológicas'':
+  En esta unidad revisaremos las siguientes temáticas:'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-infecciones-respiratorias-altas-p02
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-infecciones-respiratorias-altas.md
+  source_sha256: 37f293378b7b5326d3ef8c81b4e86a766d0f250614459a4add135c7c8547eff8
+  legacy_state: publicado

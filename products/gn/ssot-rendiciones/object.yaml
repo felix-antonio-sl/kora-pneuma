@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-rendiciones
+kind: knowledge
+name: ssot-rendiciones
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-rendiciones.md
+  source_sha256: 13b202a2e56c6d97fd0e52164474b60ca7daa31ad6117e03ad010d4ea162a50e
+  legacy_state: borrador

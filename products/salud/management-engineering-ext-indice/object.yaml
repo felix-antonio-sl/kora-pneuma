@@ -1,0 +1,16 @@
+id: urn:salud:kb:management-engineering-ext-indice
+kind: knowledge
+name: management-engineering-ext-indice
+description: 'Healthcare Management Engineering — Indice: Fuente: Healthcare Management
+  Engineering: What Does This Fancy Term Really Mean?'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-fuente-management-engineering
+  - urn:salud:kb:gestion-redes-general
+provenance:
+  source_path: artefactos/conocimiento/salud/management-engineering-ext-indice.md
+  source_sha256: 6681493973462742f8e788ef2e40b2b53482966cc7ca617829203eb625d13ece
+  legacy_state: publicado

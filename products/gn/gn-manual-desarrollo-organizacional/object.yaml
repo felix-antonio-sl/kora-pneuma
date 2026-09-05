@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-desarrollo-organizacional
+kind: knowledge
+name: gn-manual-desarrollo-organizacional
+description: Conocimiento GN heredado de KODA sobre gn-manual-desarrollo-organizacional;
+  migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-desarrollo-organizacional.md
+  source_sha256: 9ed2729a6a9f7332f60d9075fc0f417e67904636d29145f80ff7c47a125fa6fb
+  legacy_state: borrador

@@ -1,0 +1,13 @@
+id: urn:fxsl:kb:icas-composicion
+kind: knowledge
+name: icas-composicion
+description: 'Pieza 01 del ICAS-BoK: categorías, morfismos, leyes de asociatividad
+  e identidad, y dualidad — el vocabulario base para diagnosticar fallas de encadenamiento
+  y composición.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-composicion.md
+  source_sha256: 535d4f93748b6b8e4c78cc7fc8d7638a1466a57a56586a15b84dd75c6b02fda4
+  legacy_state: publicado

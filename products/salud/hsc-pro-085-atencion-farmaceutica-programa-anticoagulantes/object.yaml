@@ -1,0 +1,16 @@
+id: urn:salud:kb:hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes
+kind: knowledge
+name: hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes
+description: 'Protocolo local HSC PRO-085, Atención Farmacéutica del Programa de Anticoagulantes
+  Orales (segunda edición noviembre 2022, vigencia hasta noviembre 2025): programa
+  de atención farmacéutica sobre el policlínico TACO (~650 pacientes) con seguimiento
+  farmacoterapéutico método Dáder, criterios de inclusión por INR fuera de rango/adherencia/ERC,
+  test Morisky-Green, conciliación farmacéutica, PRM e indicadores semestrales de
+  desempeño.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes.md
+  source_sha256: f5e36a797affd21e6a6142234c7f9a15129e7c5917169a2c83cff02e12224a89
+  legacy_state: publicado

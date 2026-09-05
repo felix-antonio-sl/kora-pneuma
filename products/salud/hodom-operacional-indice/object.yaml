@@ -1,0 +1,17 @@
+id: urn:salud:kb:hodom-operacional-indice
+kind: knowledge
+name: hodom-operacional-indice
+description: 'HODOM Operacional — Hospital San Carlos: Conocimiento derivado de la
+  operacion real de la Unidad de Hospitalizacion'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-direccion-tecnica
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:hsc-normativa-hodom-indice
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-operacional-indice.md
+  source_sha256: a53077d125f6db215214c5f5e00a764d661a9b7f484f9a96231c2558e496c320
+  legacy_state: publicado

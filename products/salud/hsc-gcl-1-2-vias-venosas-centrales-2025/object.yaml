@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-gcl-1-2-vias-venosas-centrales-2025
+kind: knowledge
+name: hsc-gcl-1-2-vias-venosas-centrales-2025
+description: Procedimiento HSC GCL 1.2 de 2025 para indicación, instalación, manejo
+  y retiro de catéteres venosos centrales, PICC y sondas de marcapasos transitorias.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-gcl-1-2-vias-venosas-centrales-2025.md
+  source_sha256: 5352159454cbb82b7c65381254e5e88a710af103a422794046ebca76b90e3f87
+  legacy_state: publicado

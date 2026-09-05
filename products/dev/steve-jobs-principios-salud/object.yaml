@@ -1,0 +1,22 @@
+id: urn:dev:kb:steve-jobs-principios-salud
+kind: knowledge
+name: steve-jobs-principios-salud
+description: 'Extension del canon de diseno de Steve Jobs a la superficie de los sistemas
+  institucionales de salud (EHR/HIS/LIS, flujos clinicos, alertas, portales de paciente):
+  el residente agotado de las 2 AM como benchmark, la estetica como herramienta cognitiva
+  en alto riesgo, offline como caso base, y los principios INTEGROS de seguridad del
+  paciente (ganar el derecho a interrumpir, el error silencioso, dignidad en cada
+  pixel, la clinica gana sobre el diseno). Especializa el canon; aqui solo el delta
+  de superficie.'
+content: content.md
+requires:
+- urn:dev:kb:steve-jobs-canon-diseno
+relations:
+  depende:
+  - urn:dev:kb:steve-jobs-canon-diseno
+  refina:
+  - urn:dev:kb:steve-jobs-canon-diseno
+provenance:
+  source_path: artefactos/conocimiento/dev/steve-jobs-principios-salud.md
+  source_sha256: 8f9d63dc9b6c0fbe360663b37c2d0a87afed31ce8fa764d001b30b50b132e323
+  legacy_state: publicado

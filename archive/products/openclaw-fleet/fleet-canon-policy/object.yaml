@@ -1,0 +1,15 @@
+id: urn:openclaw-fleet:kb:fleet-canon-policy
+kind: knowledge
+name: fleet-canon-policy
+description: Política de propiedad, precedencia y frontera entre KORA, la documentación
+  oficial de OpenClaw, los blueprints y el runtime de la flota.
+content: content.md
+requires:
+- urn:kora:kb:regimen-de-ley
+relations:
+  depende:
+  - urn:kora:kb:regimen-de-ley
+provenance:
+  source_path: artefactos/conocimiento/openclaw-fleet/fleet-canon-policy.md
+  source_sha256: 989e17883df0ad8a50a6c2f76b455da24f254a88b5c9565fa32f8221a76d1dd4
+  legacy_state: publicado

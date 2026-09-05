@@ -1,0 +1,14 @@
+id: urn:salud:kb:fesp-ops-renovadas
+kind: knowledge
+name: fesp-ops-renovadas
+description: Marco OPS de once Funciones Esenciales de Salud Pública como ciclo integrado
+  de capacidades, evaluación y fortalecimiento.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:salubrista-atlas-integrado
+provenance:
+  source_path: artefactos/conocimiento/salud/fesp-ops-renovadas.md
+  source_sha256: 351a5da54e94dbd53418d219b0cfb570fb838651eaaeda8765097f14e86040a3
+  legacy_state: publicado

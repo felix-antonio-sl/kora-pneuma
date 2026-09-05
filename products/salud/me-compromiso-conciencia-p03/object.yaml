@@ -1,0 +1,14 @@
+id: urn:salud:kb:me-compromiso-conciencia-p03
+kind: knowledge
+name: me-compromiso-conciencia-p03
+description: Compromiso de Conciencia - Parte 03
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-compromiso-conciencia-p03.md
+  source_sha256: 2443ea6ad4078fc7f84995cf1436afa5a4384eaf6c849de04395bd0dbc85f6a1
+  legacy_state: publicado

@@ -1,0 +1,12 @@
+id: urn:gn:kb:manual-compras
+kind: knowledge
+name: manual-compras
+description: Documento GN heredado de KODA sobre manual compras; migrado como borrador
+  y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/manual-compras.md
+  source_sha256: ef7ee04f1adc3cc93415ca6391296d6e9ebc5261ac7c4c6bb5ef7de107cd4b04
+  legacy_state: borrador

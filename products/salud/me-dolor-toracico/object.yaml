@@ -1,0 +1,17 @@
+id: urn:salud:kb:me-dolor-toracico
+kind: knowledge
+name: me-dolor-toracico
+description: 'Dolor Torácico No Traumático: <!-- kora-canario-marker: 2026-04-22-dolor-toracico-baseline-v1
+  -->'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-dolor-toracico-p02
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-dolor-toracico.md
+  source_sha256: 8829dbc9b191c2d3bc8ab4bebd2f8f09c3d708ee293e6e19fd3c20f301336391
+  legacy_state: publicado

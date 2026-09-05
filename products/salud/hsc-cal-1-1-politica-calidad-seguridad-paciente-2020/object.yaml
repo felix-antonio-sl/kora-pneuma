@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-cal-1-1-politica-calidad-seguridad-paciente-2020
+kind: knowledge
+name: hsc-cal-1-1-politica-calidad-seguridad-paciente-2020
+description: 'Política HSC de Calidad y Seguridad del Paciente actualizada en 2020:
+  siete compromisos institucionales y acto aprobatorio.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-cal-1-1-politica-calidad-seguridad-paciente-2020.md
+  source_sha256: 6ba5c60056bc38377c51259c75a388454081117f6624fac0ad4e179d3fc2f935
+  legacy_state: publicado

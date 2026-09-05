@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:ifml-extensiones-mobile
+kind: knowledge
+name: ifml-extensiones-mobile
+description: 'Extensiones IFML para apps mobile y multiscreen: dimensiones contextuales
+  (Device/Network/Position), containers «system», sensors/camera/NFC, MapView/Marker/Path,
+  gestures como events y adaptacion dinamica multiscreen.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:ifml-corpus-index
+  - urn:fxsl:kb:ifml-view-containers
+  - urn:fxsl:kb:ifml-extensiones-web
+provenance:
+  source_path: artefactos/conocimiento/fxsl/ifml-extensiones-mobile.md
+  source_sha256: 9025c11d02721b4ea166dbc0693b295417fcd36a484e3976112289c6e318e85d
+  legacy_state: publicado

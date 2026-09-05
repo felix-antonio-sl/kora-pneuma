@@ -1,0 +1,18 @@
+id: urn:fxsl:kb:langacker-cg-indice
+kind: knowledge
+name: langacker-cg-indice
+description: 'Índice del corpus korificado de Cognitive Grammar (Langacker 2008):
+  mapa de los 4 artefactos bok que cubren la totalidad de la obra, con resumen del
+  contenido de cada uno y las dependencias entre ellos.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:langacker-cg-fundamentos
+  - urn:fxsl:kb:langacker-cg-clases-y-construcciones
+  - urn:fxsl:kb:langacker-cg-estructuras
+  - urn:fxsl:kb:langacker-cg-fronteras
+provenance:
+  source_path: artefactos/conocimiento/fxsl/langacker-cg-indice.md
+  source_sha256: f95c2f292a329d5dc30277410b28ce08098721f0e00902da7ca93688fe24f367
+  legacy_state: publicado

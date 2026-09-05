@@ -1,0 +1,82 @@
+id: urn:dev:artefacto:decommission-repo-legado
+kind: skill
+name: decommission-repo-legado
+description: 'Conduce el decommission seguro de un repo legado que ya tiene sucesor:
+  respalda lo irreversible, absorbe el valor vivo del antecesor al sucesor, canoniza
+  la doc sesgada en el store por URN, repunta a todos los consumidores, barre vestigios
+  documentales leyendo cada match, elimina el repo sin perder lo historico y cierra
+  con handoff y commits atomicos. Usala cuando el operador quiera retirar, decomisar,
+  jubilar, «matar» o eliminar un repo/proyecto viejo cuyo reemplazo ya existe, o consolidar
+  un sucesor absorbiendo lo vivo del antecesor, aunque no diga «skill» ni «decommission»:
+  «saquemos el repo X que ya esta en Y», «jubilemos el proyecto viejo», «consolidemos
+  todo en el sucesor». Inversa conceptual de scaffold-repo: aquella nace repos, esta
+  los retira.'
+content: content.md
+targets:
+- codex
+requires: []
+relations:
+  componible:
+  - urn:dev:artefacto:ship-discipline
+provenance:
+  source_path: artefactos/skills/dev/decommission-repo-legado/SKILL.md
+  source_sha256: d2437e5c1bc238537429f0b99041b2d05b53a72a6ecb22bd076d3a15e4be43ad
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:dev:artefacto:decommission-repo-legado
+
+    nombre: decommission-repo-legado
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Conduce el decommission seguro de un repo legado que ya tiene sucesor:
+    respalda lo irreversible, absorbe el valor vivo del antecesor al sucesor, canoniza
+    la doc sesgada en el store por URN, repunta a todos los consumidores, barre vestigios
+    documentales leyendo cada match, elimina el repo sin perder lo historico y cierra
+    con handoff y commits atomicos. Usala cuando el operador quiera retirar, decomisar,
+    jubilar, «matar» o eliminar un repo/proyecto viejo cuyo reemplazo ya existe, o
+    consolidar un sucesor absorbiendo lo vivo del antecesor, aunque no diga «skill»
+    ni «decommission»: «saquemos el repo X que ya esta en Y», «jubilemos el proyecto
+    viejo», «consolidemos todo en el sucesor». Inversa conceptual de scaffold-repo:
+    aquella nace repos, esta los retira."
+
+    fuente: "Autorada runtime-first destilando una operacion real ejecutada el 2026-06-22:
+    retiro de ~/projects/hsc y ~/projects/hsc-cli, absorcion de su valor al sucesor
+    ~/projects/hsc-agent-cli (docs/reference/), manual de agentes de novo canonico
+    (urn:salud:kb:manual-agente-hsc-agent-cli), propagacion a consumidores y eliminacion
+    sin vestigios documentales preservando lo historico. No proviene de la bestia.
+    Abstrae la operacion por roles (L=legado, S=sucesor, K=store canonico, C=consumidores)
+    para que la disciplina sea reusable mas alla del caso hsc."
+
+    autor: FS
+
+    creado: 2026-06-22
+
+    lang: es
+
+    tags: [decommission, repo-legado, sucesor, backup, canon, vestigios, historico-vs-documental,
+    ff-only]
+
+    vector: [2, 1, 2, 0, 1]
+
+    sigma: [3, 1, 2, 3, 2]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Edit, Glob, Grep, Bash]
+
+    targets: [claude-code, codex, opencode]
+
+    componible: [urn:dev:artefacto:ship-discipline]
+
+    estados: [descubrir, respaldar, absorber, canonizar, propagar, verificar-vestigios,
+    eliminar, documentar-commit-push]
+
+    ---
+
+    '

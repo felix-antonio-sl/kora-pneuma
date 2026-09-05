@@ -1,0 +1,34 @@
+id: urn:salud:kb:salubrista-atlas-integrado
+kind: knowledge
+name: salubrista-atlas-integrado
+description: 'Atlas integrado Salubrista: Este atlas une el corpus salubrista como
+  un solo cuerpo de conocimiento para'
+content: content.md
+requires:
+- urn:salud:kb:salubrista
+relations:
+  cita:
+  - urn:salud:kb:salubrista-body-of-knowledge
+  - urn:salud:kb:salubrista-fuentes-base-curadas
+  - urn:salud:kb:salubrista-fuente-salud-publica-global
+  - urn:salud:kb:salubrista-fuente-management-engineering
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:gestion-redes-indice
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-unidades
+  - urn:salud:kb:gestion-redes-urgencias
+  - urn:salud:kb:gestion-redes-salud-mental
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-decreto-exento-31-2024
+  - urn:salud:kb:hodom-norma-tecnica-2024
+  - urn:salud:kb:hodom-direccion-tecnica
+  - urn:salud:kb:hodom-manual-alta-complejidad
+  - urn:salud:kb:hodom-situacion-chile-2026
+  - urn:salud:kb:hsc-normativa-hodom-indice
+  depende:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/salubrista-atlas-integrado.md
+  source_sha256: 41eb5a10659cf2288b4d84b52e8039a0755d4f50f0d7eeaf5de1819f9f0d805a
+  legacy_state: publicado

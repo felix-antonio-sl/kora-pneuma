@@ -1,0 +1,14 @@
+id: urn:tde:kb:guia-voz-y-tono
+kind: knowledge
+name: guia-voz-y-tono
+description: Guía de Voz y Tono — Wiki de Plataformas
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/knowledge/tde/plataformas-manuales/guia-voz-y-tono.md
+  source_sha256: 671dedda1779eb24fb1a6d7223338ca7f332fa73e92d285cb27ddcef739df4b9
+  legacy_state: published
+  migration: legacy-codex-consumers-2026-09-05
+  handling: Documento de dominio preservado íntegro, sin reformateo ni adopción de la maquinaria anterior.

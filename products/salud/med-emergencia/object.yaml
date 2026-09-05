@@ -1,0 +1,34 @@
+id: urn:salud:kb:med-emergencia
+kind: knowledge
+name: med-emergencia
+description: 'Corpus de Medicina de Emergencia: Indice canonico del corpus `salud/med-emergencia`'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:me-body-of-knowledge-diferencial
+  - urn:salud:kb:me-atlas-integrado
+  - urn:salud:kb:me-toc-body-of-knowledge
+  - urn:salud:kb:me-perfil-urgenciologo
+  - urn:salud:kb:me-razonamiento-clinico
+  - urn:salud:kb:me-evaluacion-primaria
+  - urn:salud:kb:me-sincope
+  - urn:salud:kb:me-dolor-toracico
+  - urn:salud:kb:me-disnea
+  - urn:salud:kb:me-tec-leve
+  - urn:salud:kb:me-compromiso-conciencia
+  - urn:salud:kb:me-mareo-vertigo
+  - urn:salud:kb:me-deficit-neurologico
+  - urn:salud:kb:me-cefalea-convulsiones
+  - urn:salud:kb:me-dolor-abdominal
+  - urn:salud:kb:me-fiebre-sin-foco
+  - urn:salud:kb:me-hemorragia-digestiva
+  - urn:salud:kb:me-infecciones-gastrointestinales
+  - urn:salud:kb:me-infecciones-respiratorias-altas
+  - urn:salud:kb:me-infecciones-respiratorias-bajas
+  - urn:salud:kb:me-sintomas-urinarios
+  - urn:salud:kb:me-traumatismos-frecuentes
+provenance:
+  source_path: artefactos/conocimiento/salud/med-emergencia.md
+  source_sha256: 5a42a6a9861b9ea09f73f74b29b69aced0216a1053f088e2db3181287bbd8bee
+  legacy_state: publicado

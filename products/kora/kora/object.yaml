@@ -1,0 +1,21 @@
+id: urn:kora:artefacto:kora
+kind: agent
+name: kora
+description: 'Agente KORA de Félix Korvo: recupera conocimiento, produce fuentes útiles
+  y mantiene sus realizaciones en Codex y Hermes.'
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:kb:alma-de-kora
+- urn:kora:artefacto:koraficacion
+- urn:kora:artefacto:autoria-kora
+- urn:kora:artefacto:instalacion-kora
+- urn:kora:artefacto:autoria-de-persona
+provenance:
+  previous: archive/previous/kora/kora
+  date: '2026-09-05'
+  authority: MANDATO.md
+  change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
+    completo recuperable en previous.

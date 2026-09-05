@@ -1,0 +1,96 @@
+id: urn:salud:artefacto:auditor-calidad-hospitalizacion
+kind: skill
+name: auditor-calidad-hospitalizacion
+description: Evalua desempeno, calidad y mejora continua de sistemas de hospitalizacion
+  integrados. Auditoria normativa, KPIs, brechas, plan de mejora.
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:hodom-operacional-indice
+- urn:salud:kb:hodom-operacional-indicadores
+- urn:salud:kb:hodom-reglamento-ds1-2022
+- urn:salud:kb:hodom-norma-tecnica-2024
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:gestion-redes-herramientas
+- urn:salud:kb:salubrista-body-of-knowledge
+relations:
+  conocimiento:
+  - urn:salud:kb:hodom-operacional-indice
+  - urn:salud:kb:hodom-operacional-indicadores
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-norma-tecnica-2024
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:salubrista-body-of-knowledge
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:hospitalista
+  - urn:salud:artefacto:hospitalizacion-domiciliaria
+provenance:
+  source_path: artefactos/skills/salud/auditor-calidad-hospitalizacion/SKILL.md
+  source_sha256: 7f72b91e06f7f22de29849a9fc7c99f317e76183a0bc9c7a30f2e38a225a9f8f
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:auditor-calidad-hospitalizacion
+
+    nombre: auditor-calidad-hospitalizacion
+
+    version: 1.3.0
+
+    estado: activo
+
+    descripcion: "Evalua desempeno, calidad y mejora continua de sistemas de hospitalizacion
+    integrados. Auditoria normativa, KPIs, brechas, plan de mejora."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/auditor-calidad-hospitalizacion/SKILL.md
+    v1.0.1 (sha256:25dca15f7b8389f226de40d5a330c646570c4303463cdae67f5deb631fd64311);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido
+    con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22):
+    inyeccion de umbrales/criterios operables (evaluacion funcional) — catalogo concreto
+    de KPIs con umbrales de referencia (ocupacion, estancia, reingreso 30d, escalamiento
+    HaH, mortalidad evitable, oportunidad de ingreso, IAAS); fundado en urn:salud:kb:gestion-redes-herramientas
+    (Anexo A), urn:salud:kb:gestion-redes-general, urn:salud:kb:management-engineering-ext-capacidad
+    y el benchmark real urn:salud:kb:hodom-operacional-indicadores; indicadores sin
+    umbral cerrado marcados {{verificar}}. v1.3.0 (2026-06-22): cierra los 3 {{verificar}}
+    restantes reformulandolos como decisiones-locales-grounded (mismo patron que urn:salud:kb:notificacion-eno-iaas
+    con las definiciones de caso por evento) — reingreso HODOM (meta local; ref Federman
+    2018 <=8.6%), estancia HODOM (no auditar PDE chilena vs benchmark internacional
+    sin ajustar case-mix), mortalidad HODOM (definir cruda vs ajustada por riesgo).
+    No requieren KB nuevo: las referencias (Federman 2018, Shepperd 2021, urn:salud:kb:hodom-operacional-indicadores)
+    ya estan ancladas en las tablas; lo que faltaba no era un numero sino una decision
+    de politica local."
+
+    autor: FS
+
+    creado: 2026-05-07
+
+    lang: es
+
+    tags: [salud, auditoria, calidad, hospitalizacion, kpi, mejora-continua]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [encuadrar, auditar, emitir-informe]
+
+    conocimiento: [urn:salud:kb:hodom-operacional-indice, urn:salud:kb:hodom-operacional-indicadores,
+    urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-norma-tecnica-2024,
+    urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-herramientas, urn:salud:kb:salubrista-body-of-knowledge]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:hospitalista,
+    urn:salud:artefacto:hospitalizacion-domiciliaria]
+
+    ---
+
+    '

@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:opm-opl-es
+kind: knowledge
+name: opm-opl-es
+description: Especificacion de OPL en espanol para realizacion textual bimodal de
+  OPM
+content: content.md
+requires:
+- urn:fxsl:kb:opm-iso-19450
+relations:
+  cita:
+  - urn:fxsl:kb:opl-es
+  depende:
+  - urn:fxsl:kb:opm-iso-19450
+provenance:
+  source_path: artefactos/conocimiento/fxsl/opm-opl-es.md
+  source_sha256: bdec5c0e84a1eb09e56ad3da827744968e7ae7fa5e8a266c35f8196469a2c4e4
+  legacy_state: publicado

@@ -1,0 +1,71 @@
+id: urn:kora:artefacto:pensamiento-modelador
+kind: skill
+name: pensamiento-modelador
+description: 'Skill de pensamiento modelador: lente horizontal que lee cualquier acto
+  de modelado como navegacion explicita de las 52 tensiones (sustantivas, praxis,
+  contexto), nombrando la tension, sus polos y el criterio antes de elegir. Anclada
+  al kb tensiones-modelamiento.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:fxsl:kb:tensiones-modelamiento
+relations:
+  conocimiento:
+  - urn:fxsl:kb:tensiones-modelamiento
+  componible:
+  - urn:kora:artefacto:cat-thinking
+provenance:
+  source_path: artefactos/skills/kora/pensamiento-modelador/SKILL.md
+  source_sha256: b84a3632edde975a638bca0cfed7eca85c53443585bfe18b7c9bbeced3f846f0
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:pensamiento-modelador
+
+    nombre: pensamiento-modelador
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Skill de pensamiento modelador: lente horizontal que lee cualquier
+    acto de modelado como navegacion explicita de las 52 tensiones (sustantivas, praxis,
+    contexto), nombrando la tension, sus polos y el criterio antes de elegir. Anclada
+    al kb tensiones-modelamiento."
+
+    fuente: "Construida 2026-06-19 en pneuma como lente horizontal del marco de tensiones
+    (urn:fxsl:kb:tensiones-modelamiento, koraficado del doc del operador ''Tensiones
+    del Modelamiento de Sistemas'' v2.2). Shape molde: cat-thinking."
+
+    autor: FS
+
+    creado: 2026-06-19
+
+    lang: es
+
+    tags: [pensamiento-modelador, tensiones-modelamiento, modelado-conceptual, praxis-de-modelado,
+    metamodelado, decision-de-modelado, eleccion-de-formalismo]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [1, 1, 3, 1, 0]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [triaje, ubicar-capa, nombrar-tension, situar-resolucion, declarar-criterio-elegir,
+    entregar]
+
+    conocimiento: [urn:fxsl:kb:tensiones-modelamiento]
+
+    componible: [urn:kora:artefacto:cat-thinking]
+
+    ---
+
+    '

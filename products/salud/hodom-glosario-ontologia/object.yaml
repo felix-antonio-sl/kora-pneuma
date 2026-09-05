@@ -1,0 +1,19 @@
+id: urn:salud:kb:hodom-glosario-ontologia
+kind: knowledge
+name: hodom-glosario-ontologia
+description: 'Glosario y ontologia canonica de dominio de la Hospitalizacion Domiciliaria
+  (HODOM): objetos-frontera, ciclo de vida del episodio, compuertas de admision, modalidades
+  y capacidad, prestaciones, roles clinicos normativos e interfaces de red, con sinonimos
+  prohibidos y anclas normativas (DS 1/2022, NT 2024, RPE).'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-norma-tecnica-2024
+  - urn:salud:kb:hodom-invariante-no-equivale-cerrada
+  - urn:salud:kb:hodom-direccion-tecnica
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-glosario-ontologia.md
+  source_sha256: 7f63a5ef522732a3b8520d1e602cb982faacca4c56d57b4ae1ac8927a623c28c
+  legacy_state: publicado

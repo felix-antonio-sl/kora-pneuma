@@ -1,0 +1,12 @@
+id: urn:fxsl:kb:icas-lifecycle
+kind: knowledge
+name: icas-lifecycle
+description: 'Pieza 16 del ICAS-BoK: lifecycle — V-model, DevOps, drift, versionado
+  y deuda técnica con vocabulario categorial; gobierno del ciclo de vida del software.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-lifecycle.md
+  source_sha256: ff2436038c1d4d3cda65a53fe2a059106345741fe0f00100311e938463edb517
+  legacy_state: publicado

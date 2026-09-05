@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-pro-018-acv-isquemico-medicina
+kind: knowledge
+name: hsc-pro-018-acv-isquemico-medicina
+description: 'Protocolo local HSC PRO-018, Manejo de Paciente con ACV Isquémico en
+  Servicio Medicina (primera edición marzo 2012, Res. Exenta 0216): atención intramural
+  del ACV isquémico agudo con clasificación TIA/RIND/establecido, monitoreo con Glasgow,
+  NIHSS, Índice de Barthel y Rankin al ingreso y egreso, y equipo multidisciplinario.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-018-acv-isquemico-medicina.md
+  source_sha256: 7d6f80da90889079a7edb529b2d3a2cadc3a92ef5f4f784e5e9f545cb871de8a
+  legacy_state: publicado

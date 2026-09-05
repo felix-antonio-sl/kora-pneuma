@@ -1,0 +1,90 @@
+id: urn:salud:artefacto:conducir-decisiones-hodom
+kind: skill
+name: conducir-decisiones-hodom
+description: Usar cuando una pregunta de dirección técnica, producto, protocolo u
+  operación HODOM sea ambigua, burocrática o difícil de adoptar; transforma hechos
+  y fuentes disponibles en una decisión clara, actor-completa, recuperable y lista
+  para ratificar, sin inventar práctica clínica, permisos institucionales ni operación
+  productiva. No usar para diagnóstico o tratamiento de un paciente individual.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:salud:kb:hodom-glosario-ontologia
+- urn:salud:kb:hsc-normativa-hodom-indice
+- urn:salud:kb:hodom-direccion-tecnica
+relations:
+  reemplaza:
+  - urn:kora:artefacto:decision-operable
+  conocimiento:
+  - urn:salud:kb:hodom-glosario-ontologia
+  - urn:salud:kb:hsc-normativa-hodom-indice
+  - urn:salud:kb:hodom-direccion-tecnica
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:hospitalizacion-domiciliaria
+provenance:
+  source_path: artefactos/skills/salud/conducir-decisiones-hodom/SKILL.md
+  source_sha256: 7e91072c3393044d79d83f25f817af007cf8a0de1f83eb4a9b55a194a1ed6916
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:conducir-decisiones-hodom
+
+    nombre: conducir-decisiones-hodom
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Usar cuando una pregunta de dirección técnica, producto, protocolo
+    u operación HODOM sea ambigua, burocrática o difícil de adoptar; transforma hechos
+    y fuentes disponibles en una decisión clara, actor-completa, recuperable y lista
+    para ratificar, sin inventar práctica clínica, permisos institucionales ni operación
+    productiva. No usar para diagnóstico o tratamiento de un paciente individual."
+
+    fuente: "Autoría de novo KORA del 2026-08-25 desde el dictamen de cristalización
+    cognitiva HODOM entregado por el operador (snapshot sha256:2b8c69ddbc8ec755c030330e2c7ad302339fe58301af5546b2861d89e4a390d7).
+    Alcance: método decisional HODOM, planos de autoridad, gramática operacional,
+    ontología práctica, temporalidad, recuperación, antiburocracia, salida y evaluación.
+    Excluye decisiones locales concretas, copia de Esmeralda o del cuestionario y
+    autoría del agente futuro Faro."
+
+    autor: FS
+
+    creado: 2026-08-25
+
+    lang: es
+
+    tags: [salud, hodom, direccion-tecnica, decision, autoridad, pre-respuesta, continuidad,
+    antiburocracia]
+
+    vector: [2, 1, 2, 0, 1]
+
+    sigma: [3, 3, 3, 3, 2]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [codex, hermes]
+
+    alcance: usuario
+
+    estados: [identificar-objeto, fijar-plano-autoridad, recuperar-realidad, separar-estados,
+    reconstruir-cadena, buscar-fracturas, modelar-tiempo, elegir-estado, redactar,
+    validar-antiburocracia, validar-recuperacion]
+
+    conocimiento: [urn:salud:kb:hodom-glosario-ontologia, urn:salud:kb:hsc-normativa-hodom-indice,
+    urn:salud:kb:hodom-direccion-tecnica]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:hospitalizacion-domiciliaria]
+
+    reemplaza: [urn:kora:artefacto:decision-operable]
+
+    ---
+
+    '

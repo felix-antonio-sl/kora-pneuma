@@ -1,0 +1,13 @@
+id: urn:salud:kb:gestion-redes-herramientas-p02
+kind: knowledge
+name: gestion-redes-herramientas-p02
+description: Gestión de Redes Asistenciales — Herramientas y Anexos - Parte 02
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-herramientas
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-herramientas-p02.md
+  source_sha256: 468b8f50d15ce8d92e3c96a401b3094d6e4d6e06c17e08d08f9db6819ea90f3e
+  legacy_state: publicado

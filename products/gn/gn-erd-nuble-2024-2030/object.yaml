@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-erd-nuble-2024-2030
+kind: knowledge
+name: gn-erd-nuble-2024-2030
+description: Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – Estrategia
+  Regional de Desarrollo Ñuble 2024 - 2030; migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-erd-nuble-2024-2030.md
+  source_sha256: 4f1d0a6958104bdfa2b0efcb62126dda0c4561134f99c9e05029c513bbf0bb88
+  legacy_state: borrador

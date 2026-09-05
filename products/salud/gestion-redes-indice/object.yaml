@@ -1,0 +1,19 @@
+id: urn:salud:kb:gestion-redes-indice
+kind: knowledge
+name: gestion-redes-indice
+description: 'Gestión de Redes Asistenciales — Índice General: **Qué ES este corpus**:
+  blueprint operativo para diseño, operación y mejora continua de redes y unidades
+  asistenciales'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:gestion-redes-salud-mental
+  - urn:salud:kb:gestion-redes-unidades
+  - urn:salud:kb:gestion-redes-urgencias
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-indice.md
+  source_sha256: 3fab3e35fdad0c0b22d18d0cf1f401e149471c5c98ae593dfcdc061a4f6f7a8a
+  legacy_state: publicado

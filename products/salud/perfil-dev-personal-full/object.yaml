@@ -1,0 +1,13 @@
+id: urn:salud:kb:perfil-dev-personal-full
+kind: knowledge
+name: perfil-dev-personal-full
+description: 'Perfil operativo para desarrollo y preparación HODOM en host privado
+  mono-usuario: habilita PII/PHI y fuentes crudas sin trasladar esa excepción a Git,
+  producción o publicación externa.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/perfil-dev-personal-full.md
+  source_sha256: 5e10f8d6813e0b980763df225a5eda492dd2b044c494e976417a683bda735ade
+  legacy_state: publicado

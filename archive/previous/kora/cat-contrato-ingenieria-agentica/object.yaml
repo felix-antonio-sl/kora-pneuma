@@ -1,0 +1,24 @@
+id: urn:kora:kb:cat-contrato-ingenieria-agentica
+kind: knowledge
+name: cat-contrato-ingenieria-agentica
+description: 'Contrato de rigor para ingeniería agéntica en KORA: testigos mínimos
+  para interfaces, coálgebras con efectos, equivalencia conductual, composición por
+  cableado, capacidades, safety y preservación en runtime.'
+content: content.md
+requires:
+- urn:kora:kb:cat-agent-coalgebra
+- urn:kora:kb:cat-agent-modulo
+- urn:kora:kb:cat-kora-semantica-operacional
+- urn:fxsl:kb:icas-escala
+relations:
+  cita:
+  - urn:kora:kb:cat-programacion-agentica-autonoma
+  depende:
+  - urn:kora:kb:cat-agent-coalgebra
+  - urn:kora:kb:cat-agent-modulo
+  - urn:kora:kb:cat-kora-semantica-operacional
+  - urn:fxsl:kb:icas-escala
+provenance:
+  source_path: artefactos/conocimiento/kora/cat-contrato-ingenieria-agentica.md
+  source_sha256: 5e911c9a48e9f030263e92ecaaa16dcc30d22f6c7cac0f22a7c99c0ac231b725
+  legacy_state: publicado

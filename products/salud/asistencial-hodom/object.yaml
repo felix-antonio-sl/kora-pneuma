@@ -1,0 +1,98 @@
+id: urn:salud:artefacto:asistencial-hodom
+kind: skill
+name: asistencial-hodom
+description: Skill para visita medica domiciliaria en HODOM/HaH. Evaluacion clinica
+  en domicilio, ajuste terapeutico con recursos limitados, criterios de escalamiento
+  a hospital, comunicacion con cuidador y equipo.
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:hodom-reglamento-ds1-2022
+- urn:salud:kb:hodom-norma-tecnica-2024
+- urn:salud:kb:hodom-direccion-tecnica
+- urn:salud:kb:hodom-manual-alta-complejidad
+- urn:salud:kb:hodom-situacion-chile-2026
+- urn:salud:kb:hodom-operacional-indice
+- urn:salud:kb:hodom-operacional-indicadores
+- urn:salud:kb:post-agudo-ltss-indice
+- urn:salud:kb:post-agudo-ltss-transiciones
+- urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+- urn:salud:kb:salubrista
+- urn:salud:kb:hodom-operacional-iaas
+relations:
+  conocimiento:
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-norma-tecnica-2024
+  - urn:salud:kb:hodom-direccion-tecnica
+  - urn:salud:kb:hodom-manual-alta-complejidad
+  - urn:salud:kb:hodom-situacion-chile-2026
+  - urn:salud:kb:hodom-operacional-indice
+  - urn:salud:kb:hodom-operacional-indicadores
+  - urn:salud:kb:post-agudo-ltss-indice
+  - urn:salud:kb:post-agudo-ltss-transiciones
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:hodom-operacional-iaas
+  componible:
+  - urn:salud:artefacto:medico-hospitalista
+  - urn:salud:artefacto:firs-razonamiento-sanitario
+provenance:
+  source_path: artefactos/skills/salud/asistencial-hodom/SKILL.md
+  source_sha256: 667c330035f476365531c57dc2172369a568063ddee0e8316bd750bd6c14d42d
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:asistencial-hodom
+
+    nombre: asistencial-hodom
+
+    version: 1.1.0
+
+    estado: activo
+
+    descripcion: "Skill para visita medica domiciliaria en HODOM/HaH. Evaluacion clinica
+    en domicilio, ajuste terapeutico con recursos limitados, criterios de escalamiento
+    a hospital, comunicacion con cuidador y equipo."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/asistencial-hodom/SKILL.md
+    v1.0.1 (sha256:6c872490ee0888f04d8d2ebbb7561cf9a0189317f1c0cf6fb018db81765577f4);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): modo
+    asistencial domiciliario del agente medico-hospitalista, frontera micro-asistencial
+    declarada. Omitido con razon: target openclaw (GENESIS seccion 4)."
+
+    autor: FS
+
+    creado: 2026-05-07
+
+    lang: es
+
+    tags: [salud, asistencial, hodom, hah, visita-domiciliaria, cuidador, escalamiento]
+
+    vector: [2, 1, 1, 0, 1]
+
+    sigma: [3, 2, 3, 3, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob, WebSearch, WebFetch]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [evaluar, ajustar-tratamiento, decidir-disposicion, instruir-cuidador,
+    documentar]
+
+    conocimiento: [urn:salud:kb:hodom-reglamento-ds1-2022, urn:salud:kb:hodom-norma-tecnica-2024,
+    urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-manual-alta-complejidad,
+    urn:salud:kb:hodom-situacion-chile-2026, urn:salud:kb:hodom-operacional-indice,
+    urn:salud:kb:hodom-operacional-indicadores, urn:salud:kb:post-agudo-ltss-indice,
+    urn:salud:kb:post-agudo-ltss-transiciones, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss,
+    urn:salud:kb:salubrista, urn:salud:kb:hodom-operacional-iaas]
+
+    componible: [urn:salud:artefacto:medico-hospitalista, urn:salud:artefacto:firs-razonamiento-sanitario]
+
+    ---
+
+    '

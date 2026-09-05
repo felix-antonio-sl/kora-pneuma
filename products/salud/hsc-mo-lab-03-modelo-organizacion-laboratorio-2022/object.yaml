@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-mo-lab-03-modelo-organizacion-laboratorio-2022
+kind: knowledge
+name: hsc-mo-lab-03-modelo-organizacion-laboratorio-2022
+description: 'Modelo organizacional declarado para el Servicio de Apoyo Laboratorio
+  del HSC: cartera diagnóstica, procesos, calidad, estructura, roles e interfaces
+  de red.'
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-lab-03-modelo-organizacion-laboratorio-2022.md
+  source_sha256: 80f1c6147a3f16182517d88d500ec8979f2bdebfd975d5c39aebc9a2286fec68
+  legacy_state: publicado

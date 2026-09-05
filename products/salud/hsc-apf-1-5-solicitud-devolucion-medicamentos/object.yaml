@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-apf-1-5-solicitud-devolucion-medicamentos
+kind: knowledge
+name: hsc-apf-1-5-solicitud-devolucion-medicamentos
+description: Procedimiento HSC APF 1.5 observado para solicitud, distribución y devolución
+  de medicamentos desde servicios clínicos
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-apf-1-5-solicitud-devolucion-medicamentos.md
+  source_sha256: fb28885f8a324f4359341b9777102a06811395c022bbba7d57f44fda5e9eae26
+  legacy_state: publicado

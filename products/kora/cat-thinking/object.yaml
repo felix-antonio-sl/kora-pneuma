@@ -1,0 +1,140 @@
+id: urn:kora:artefacto:cat-thinking
+kind: skill
+name: cat-thinking
+description: Skill de pensamiento categorial para arquitectura, integración, refactor,
+  efectos y sistemas agénticos. Usar cuando el problema exige distinguir composición,
+  preservación, wiring, delegación, autonomía, evals, lifecycle o evidencia Spec/Model/Runtime
+  mediante teoría de categorías aplicada y el corpus ICAS-BoK.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:fxsl:kb:icas-sintesis
+- urn:fxsl:kb:icas-composicion
+- urn:fxsl:kb:icas-preservacion
+- urn:fxsl:kb:icas-comparacion
+- urn:fxsl:kb:icas-identidad-relacion
+- urn:fxsl:kb:icas-universales
+- urn:fxsl:kb:icas-adjunciones
+- urn:fxsl:kb:icas-composicion-estructura
+- urn:fxsl:kb:icas-enriquecimiento
+- urn:fxsl:kb:icas-higher-categories
+- urn:fxsl:kb:icas-efectos
+- urn:fxsl:kb:icas-extension
+- urn:fxsl:kb:icas-interaccion
+- urn:fxsl:kb:icas-topoi
+- urn:fxsl:kb:icas-safety-alignment
+- urn:fxsl:kb:icas-escala
+- urn:fxsl:kb:icas-agencia
+- urn:fxsl:kb:icas-protocolos
+- urn:fxsl:kb:icas-tiempo
+- urn:fxsl:kb:icas-lifecycle
+- urn:fxsl:kb:icas-procesos
+- urn:fxsl:kb:icas-calidad-riesgo
+- urn:fxsl:kb:icas-patrones
+- urn:fxsl:kb:icas-infraestructura
+- urn:kora:kb:cat-kora-kernel
+- urn:kora:kb:cat-kora-semantica-operacional
+- urn:kora:kb:cat-contrato-ingenieria-agentica
+- urn:kora:kb:cat-programacion-agentica-autonoma
+relations:
+  conocimiento:
+  - urn:fxsl:kb:icas-sintesis
+  - urn:fxsl:kb:icas-composicion
+  - urn:fxsl:kb:icas-preservacion
+  - urn:fxsl:kb:icas-comparacion
+  - urn:fxsl:kb:icas-identidad-relacion
+  - urn:fxsl:kb:icas-universales
+  - urn:fxsl:kb:icas-adjunciones
+  - urn:fxsl:kb:icas-composicion-estructura
+  - urn:fxsl:kb:icas-enriquecimiento
+  - urn:fxsl:kb:icas-higher-categories
+  - urn:fxsl:kb:icas-efectos
+  - urn:fxsl:kb:icas-extension
+  - urn:fxsl:kb:icas-interaccion
+  - urn:fxsl:kb:icas-topoi
+  - urn:fxsl:kb:icas-safety-alignment
+  - urn:fxsl:kb:icas-escala
+  - urn:fxsl:kb:icas-agencia
+  - urn:fxsl:kb:icas-protocolos
+  - urn:fxsl:kb:icas-tiempo
+  - urn:fxsl:kb:icas-lifecycle
+  - urn:fxsl:kb:icas-procesos
+  - urn:fxsl:kb:icas-calidad-riesgo
+  - urn:fxsl:kb:icas-patrones
+  - urn:fxsl:kb:icas-infraestructura
+  - urn:kora:kb:cat-kora-kernel
+  - urn:kora:kb:cat-kora-semantica-operacional
+  - urn:kora:kb:cat-contrato-ingenieria-agentica
+  - urn:kora:kb:cat-programacion-agentica-autonoma
+  componible:
+  - urn:kora:artefacto:modelamiento-opm
+provenance:
+  source_path: artefactos/skills/kora/cat-thinking/SKILL.md
+  source_sha256: fcfc044949ada940e717fd6c36f78b9302b18e29ea5a31fe4acc67f6ec62dea5
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:cat-thinking
+
+    nombre: cat-thinking
+
+    version: 2.2.0
+
+    estado: activo
+
+    descripcion: "Skill de pensamiento categorial para arquitectura, integración,
+    refactor, efectos y sistemas agénticos. Usar cuando el problema exige distinguir
+    composición, preservación, wiring, delegación, autonomía, evals, lifecycle o evidencia
+    Spec/Model/Runtime mediante teoría de categorías aplicada y el corpus ICAS-BoK."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/kora/cat-thinking/SKILL.md
+    (sha256:06c3f3f59dc05ee148b24c1e756379d1c9964d7df321035a50a9a329f1d24288). v2.0.0
+    (2026-07-18): revisión adversarial completa. v2.1.0 (2026-07-18): incorpora la
+    semántica operacional integral y el contrato de testigos para ingeniería agéntica.
+    v2.1.1 (2026-07-18): corrige falsos positivos sobre iteradores, bisimulación y
+    DSLs libres. v2.2.0 (2026-08-03): integra la monografía de programación agéntica
+    autónoma como ruta transversal, adopta F/E/M/H/X y bloquea la promoción de la
+    delegación dinámica basada en arXiv 2410.08373 retirado."
+
+    autor: FS
+
+    creado: 2026-04-27
+
+    lang: es
+
+    tags: [pensamiento-categorial, ICAS-BoK, teoria-categorias, arquitectura, diseno-de-sistemas,
+    composicionalidad, adjunciones, monadas, yoneda, sistemas-agenticos]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [1, 1, 3, 1, 0]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [triaje, reformular-categorialmente, localizar-corpus, aplicar-patron,
+    validar-coherencia, entregar]
+
+    conocimiento: [urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion,
+    urn:fxsl:kb:icas-comparacion, urn:fxsl:kb:icas-identidad-relacion, urn:fxsl:kb:icas-universales,
+    urn:fxsl:kb:icas-adjunciones, urn:fxsl:kb:icas-composicion-estructura, urn:fxsl:kb:icas-enriquecimiento,
+    urn:fxsl:kb:icas-higher-categories, urn:fxsl:kb:icas-efectos, urn:fxsl:kb:icas-extension,
+    urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-topoi, urn:fxsl:kb:icas-safety-alignment,
+    urn:fxsl:kb:icas-escala, urn:fxsl:kb:icas-agencia, urn:fxsl:kb:icas-protocolos,
+    urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-procesos,
+    urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:icas-patrones, urn:fxsl:kb:icas-infraestructura,
+    urn:kora:kb:cat-kora-kernel, urn:kora:kb:cat-kora-semantica-operacional, urn:kora:kb:cat-contrato-ingenieria-agentica,
+    urn:kora:kb:cat-programacion-agentica-autonoma]
+
+    componible: [urn:kora:artefacto:modelamiento-opm]
+
+    ---
+
+    '

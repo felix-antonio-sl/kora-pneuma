@@ -1,0 +1,12 @@
+id: urn:kora:kb:cat-kora-kernel
+kind: knowledge
+name: cat-kora-kernel
+description: Modelo operativo actual de productos en archivos, identidades, dependencias,
+  relaciones, realizaciones y límites de su evidencia.
+content: content.md
+requires: []
+provenance:
+  origin: MANDATO.md
+  date: '2026-09-05'
+  previous: archive/previous/kora/cat-kora-kernel/object.yaml
+  previous_content_sha256: 65d71bf644eb123bac2be2a318b68cbb168c4f59b879873ea96aa451591d3a77

@@ -1,0 +1,76 @@
+id: urn:kora:artefacto:auditoria-artefactos-kora
+kind: skill
+name: auditoria-artefactos-kora
+description: 'Evalua, decide y actua sobre el DESTINO de agentes y skills frente a
+  kora-pneuma: tres pilares (formalidad kora, calidad funcional, valor en uso real),
+  cuatro veredictos (migrar/descartar/reubicar/conservar-externo), verificacion adversarial
+  y ejecucion con gate. Usar al auditar el ecosistema agentico, decidir que conservar/descartar,
+  o reconciliar artefactos no-controlados con el corpus.'
+content: content.md
+targets:
+- codex
+requires: []
+relations:
+  componible:
+  - urn:kora:artefacto:consenso-deliberativo
+  - urn:kora:artefacto:cat-thinking
+provenance:
+  source_path: artefactos/skills/kora/auditoria-artefactos-kora/SKILL.md
+  source_sha256: 6f81cbba745eafad5336a18285e4345cb60af678af66d1bc07fa528314299c26
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:auditoria-artefactos-kora
+
+    nombre: auditoria-artefactos-kora
+
+    version: 1.2.1
+
+    estado: activo
+
+    descripcion: "Evalua, decide y actua sobre el DESTINO de agentes y skills frente
+    a kora-pneuma: tres pilares (formalidad kora, calidad funcional, valor en uso
+    real), cuatro veredictos (migrar/descartar/reubicar/conservar-externo), verificacion
+    adversarial y ejecucion con gate. Usar al auditar el ecosistema agentico, decidir
+    que conservar/descartar, o reconciliar artefactos no-controlados con el corpus."
+
+    fuente: "Autorada nueva en KORA pneuma el 2026-06-22. Destila el metodo ejecutado
+    en la auditoria del ecosistema ~/.claude: 3 pilares + 4 veredictos + verificacion
+    adversarial + convergencia con velar. v1.1.0 (2026-07-12): generaliza el censo
+    y REUBICAR a Codex/OpenCode. v1.2.0 (2026-07-18): corrige el alcance del sello;
+    certifica procedencia, integridad y congruencia, no teoremas semanticos. v1.2.1
+    (2026-08-14): alinea el método con borrador in-place, Codex como target principal,
+    compatibilidad bajo demanda, delegación solo autorizada y checks resueltos en
+    vivo."
+
+    autor: FS
+
+    creado: 2026-06-22
+
+    lang: es
+
+    tags: [kora, auditoria, artefactos, agentes, skills, migrar-o-omitir, evaluacion,
+    gobernanza, lifecycle, veredicto]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob, Write, Edit, Bash]
+
+    targets: [claude-code, codex, opencode]
+
+    alcance: ambos
+
+    estados: [encuadrar, evaluar-pilares, detectar-redundancia, verificar-adversarial,
+    dictaminar, ejecutar-con-gate]
+
+    componible: [urn:kora:artefacto:consenso-deliberativo, urn:kora:artefacto:cat-thinking]
+
+    ---
+
+    '

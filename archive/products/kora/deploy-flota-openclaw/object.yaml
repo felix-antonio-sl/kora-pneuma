@@ -1,0 +1,15 @@
+id: urn:kora:kb:deploy-flota-openclaw
+kind: knowledge
+name: deploy-flota-openclaw
+description: 'Runbook del deploy pneuma→flota OpenClaw viva: documentación oficial
+  como canon del runtime, diff anti-despotenciación, cambios por superficies soportadas,
+  HITL clínico, canarios frescos, rollback trazable y paridad de cierre.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:kora:kb:regimen-de-ley
+provenance:
+  source_path: artefactos/conocimiento/kora/deploy-flota-openclaw.md
+  source_sha256: 30b3de51a9fc90657de88250b371c8cc957630ce021a846b4e58d48ad7d6f1b2
+  legacy_state: publicado

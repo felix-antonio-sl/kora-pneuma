@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-gcl-2-3-vigilancia-eventos-adversos
+kind: knowledge
+name: hsc-gcl-2-3-vigilancia-eventos-adversos
+description: Norma HSC GCL 2.3 para detectar, notificar, analizar y prevenir incidentes,
+  eventos adversos y eventos centinela.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-gcl-2-3-vigilancia-eventos-adversos.md
+  source_sha256: 4f5258504e04216f77efb537cfed0fde29619d04a7f8297d12edee1daaf0233a
+  legacy_state: publicado

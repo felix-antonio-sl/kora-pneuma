@@ -1,0 +1,14 @@
+id: urn:salud:kb:estandares-it-snomed-ct
+kind: knowledge
+name: estandares-it-snomed-ct
+description: 'SNOMED CT Chile — Servicios Terminologicos MINSAL: SNOMED CT (Systematized
+  Nomenclature of Medicine — Clinical Terms) es el'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:estandares-it-indice
+provenance:
+  source_path: artefactos/conocimiento/salud/estandares-it-snomed-ct.md
+  source_sha256: 8474c10543eb45bdf46a8812c67efb773ed7216fb8c8099bd74c9552bbf119ee
+  legacy_state: publicado

@@ -1,0 +1,17 @@
+id: urn:salud:kb:minsal-decreto-exento-74-2024-mcc
+kind: knowledge
+name: minsal-decreto-exento-74-2024-mcc
+description: Decreto 74 EXENTO (2024) que aprueba la Norma Técnica N° 238 para implementar
+  la Modalidad de Cobertura Complementaria (MCC) de Fonasa, incluyendo la regla de
+  cobertura de hospitalización domiciliaria de baja complejidad.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-decreto-exento-31-2024
+  - urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-decreto-exento-74-2024-mcc.md
+  source_sha256: 788c4ff83adfea6ac4a365eb3b51d8275760cdf7af2e70a40812b32c81005dd6
+  legacy_state: publicado

@@ -1,0 +1,15 @@
+id: urn:salud:kb:sistemas-salud-cus
+kind: knowledge
+name: sistemas-salud-cus
+description: Marco funcional para comparar sistemas de salud y evaluar su avance hacia
+  cobertura universal, APS e integración.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:health-systems-science-fundamentos
+provenance:
+  source_path: artefactos/conocimiento/salud/sistemas-salud-cus.md
+  source_sha256: d203c25ed83fac4ca95c609a61cb1de5167d7150714b7ef5f7d5bbd43b7ff87e
+  legacy_state: publicado

@@ -1,0 +1,20 @@
+id: urn:dev:kb:steve-jobs-principios-web-ai
+kind: knowledge
+name: steve-jobs-principios-web-ai
+description: 'Extension del canon de diseno de Steve Jobs a la superficie de apps
+  web con AI features integradas (copilots, chat, autocomplete, generacion): velocidad
+  percibida, latency budget honesto, copilot como co-piloto no co-conductor, generacion
+  trazable/reversible/atribuible, estado del sistema siempre visible, y los anti-patrones
+  de la era agentica. Especializa el canon; aqui solo el delta de superficie.'
+content: content.md
+requires:
+- urn:dev:kb:steve-jobs-canon-diseno
+relations:
+  depende:
+  - urn:dev:kb:steve-jobs-canon-diseno
+  refina:
+  - urn:dev:kb:steve-jobs-canon-diseno
+provenance:
+  source_path: artefactos/conocimiento/dev/steve-jobs-principios-web-ai.md
+  source_sha256: 796d612a024e84b1987a47f4c7da365a08ec2d8a7cf3607df81582ef415e1750
+  legacy_state: publicado

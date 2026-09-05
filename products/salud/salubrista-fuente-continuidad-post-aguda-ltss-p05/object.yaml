@@ -1,0 +1,16 @@
+id: urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss-p05
+kind: knowledge
+name: salubrista-fuente-continuidad-post-aguda-ltss-p05
+description: Crónicas del Crepúsculo Geriátrico - Parte 05
+content: content.md
+requires:
+- urn:salud:kb:salubrista
+relations:
+  cita:
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  depende:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/salubrista-fuente-continuidad-post-aguda-ltss-p05.md
+  source_sha256: 74f6d92a2c43969d63672fa4da2a9cce87e746720b22dcfafa8cd858f550ea01
+  legacy_state: publicado

@@ -1,0 +1,16 @@
+id: urn:salud:kb:hsc-cartera-servicios-2024
+kind: knowledge
+name: hsc-cartera-servicios-2024
+description: 'Cartera de Servicios del Hospital de San Carlos 2024: corpus tabular
+  institucional de 13 hojas y 13 campos, con prestaciones asistenciales, códigos,
+  estado declarado, área de influencia, compra de servicios y observaciones.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria
+  - urn:salud:kb:hodom-decreto-exento-31-2024
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-cartera-servicios-2024.md
+  source_sha256: e6b585893ae098cc30765e79f96fdb3bc4cfb3a388761b8a45e71c917a2abaa5
+  legacy_state: publicado

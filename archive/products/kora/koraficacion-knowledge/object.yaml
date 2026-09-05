@@ -1,0 +1,86 @@
+id: urn:kora:artefacto:koraficacion-knowledge
+kind: skill
+name: koraficacion-knowledge
+description: Transforma, audita e itera documentos humanos hacia artefactos de conocimiento KORA/MD con
+  alta fidelidad, compresion semantica, deduplicacion y control FS/IDC.
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/kora/koraficacion-knowledge/SKILL.md
+  source_sha256: 74a866cf9a120be27b460d68dad1a3fc389a3a174a7f6e3fbed36a3ae5e25d9f
+  original_path: archive/previous/legacy-codex/koraficacion-knowledge/original.md
+  legacy_header: "---\n_manifest:\n  urn: \"urn:kora:artefacto:koraficacion-knowledge\"\n  type: artefacto\n\
+    \  provenance:\n    created_by: \"OpenAI Codex\"\n    created_at: \"2026-06-04\"\n    source: \"Construccion\
+    \ fresca KORA/MD para recuperar la capacidad legacy KODA de curacion y deshidratacion documental.\
+    \ La autoridad normativa es md-spec + knowledge-spec; las specs legacy KODA y agent_koda_transformer\
+    \ solo aportan patrones operativos verificados: skeleton/meat/fat, telegrafizacion, deduplicacion,\
+    \ FS/CR contextualizado e iteracion auditada. v1.0.1 reemplaza el umbral rigido CR>1.5 por IDC: Indice\
+    \ de Deshidratacion Contextual.\"\nversion: \"1.0.1\"\nstatus: activo\nnombre: koraficacion-knowledge\n\
+    descripcion: \"Transforma, audita e itera documentos humanos hacia artefactos de conocimiento KORA/MD\
+    \ con alta fidelidad, compresion semantica, deduplicacion y control FS/IDC.\"\ntags: [kora, knowledge,\
+    \ koraficacion, curacion, deshidratacion, fidelidad, compresion, markdown]\nlang: es\nextensions:\n\
+    \  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 0\n      xi: 2\n      lambda: 0\n      phi:\
+    \ 1\n      sigma: [2, 1, 3, 3, 1]\n    presentacion: accion-primaria\n    atlas:\n      arnes_categorico:\
+    \ disciplina\n      forma_material: habilidad\n      metafora_relacional: supertool\n    entornos_objetivo:\
+    \ [claude-code, codex, opencode, openclaw]\n    nivel_prescripcion: alto\n    conocimiento_permitido:\n\
+    \      - \"urn:kora:kb:gobernanza\"\n      - \"urn:kora:kb:md-spec\"\n      - \"urn:kora:kb:knowledge-spec\"\
+    \n      - \"urn:kora:kb:autoria-spec\"\n      - \"urn:fxsl:kb:icas-preservacion\"\n      - \"urn:fxsl:kb:icas-adjunciones\"\
+    \n      - \"urn:fxsl:kb:icas-calidad-riesgo\"\n    componible_con:\n      - \"urn:kora:artefacto:custodio-kora\"\
+    \n      - \"urn:kora:artefacto:cat-thinking\"\n      - \"urn:dev:artefacto:ship-discipline\"\nartefacto:\n\
+    \  perfil:\n    dominio:\n      - kora\n      - knowledge\n      - KORA/MD\n      - curacion-documental\n\
+    \      - deshidratacion-semantica\n      - auditoria-fidelidad\n    disparadores:\n      - \"transformar\
+    \ un documento fuente a artefacto de conocimiento KORA/MD\"\n      - \"curar, deshidratar, koraficar\
+    \ o reducir tokens preservando informacion\"\n      - \"auditar original vs artefacto KORA/MD por\
+    \ perdida de informacion\"\n      - \"iterar una transformacion hasta FS=100% e IDC coherente con\
+    \ el perfil documental\"\n      - \"recuperar calidad legacy KODA sin volver a YAML KODA\"\n    salidas:\n\
+    \      - \"borrador KORA/MD en artifacts/knowledge/_SCRIPTORIUM/REVIEW/{ns}/\"\n      - \"reporte\
+    \ de fidelidad con hechos preservados, comprimidos, omitidos y agregados\"\n      - \"metricas FS/IDC\
+    \ y hallazgos de auditoria mecanica\"\n      - \"plan de iteracion o rechazo si la transformacion\
+    \ perdio meat\"\n  plan:\n    estado_inicial: triaje-fuente\n    estado_terminal: draft-auditado-o-rechazado\n\
+    \    estados:\n      - triaje-fuente\n      - inventariar-skeleton-meat-fat\n      - segmentar-si-corresponde\n\
+    \      - comprimir-semantica\n      - deduplicar-ssot\n      - realizar-superficie\n      - inyectar-frontmatter\n\
+    \      - auditar-fidelidad\n      - iterar-o-emitir\n  interfaz:\n    herramientas: [Read, Grep, Glob,\
+    \ Bash, Write]\n    permisos: \"Lectura del documento fuente y specs KORA; escritura acotada a artifacts/knowledge/_SCRIPTORIUM/REVIEW/,\
+    \ reportes de auditoria, tests o docs de soporte cuando el operador pide curacion. No promueve ni\
+    \ publica sin instruccion explicita.\"\n    protocolos:\n      entrada: \"path o contenido fuente,\
+    \ namespace/id destino opcional, familia documental, criterio de cierre y permiso de escritura\"\n\
+    \      salida: \"artefacto KORA/MD borrador, reporte FS/CR, evidencia de auditoria y deuda residual\"\
+    \n  invariantes:\n    reglas_duras:\n      - \"La salida es Markdown KORA/MD; no emitir YAML KODA\
+    \ ni familia atomic retirada.\"\n      - \"La fuente normativa es md-spec + knowledge-spec; legacy\
+    \ KODA es solo antecedente operacional.\"\n      - \"Preservar skeleton y meat; eliminar fat. Estructura,\
+    \ tablas, listas, cifras, fechas, condiciones, excepciones y referencias son meat.\"\n      - \"FS=100%\
+    \ es obligatorio. Si hay hechos omitidos o agregados no justificados, la transformacion falla.\"\n\
+    \      - \"El CR crudo no es gate rigido. Medir eficiencia con IDC: CR observado calibrado contra\
+    \ expectativa del perfil documental.\"\n      - \"No resumir hechos distinguibles para comprimir.\
+    \ Deduplicar solo por equivalencia semantica real.\"\n      - \"No cortar documentos grandes dentro\
+    \ de tablas, listas o parrafos; segmentar por fronteras naturales.\"\n      - \"La realizacion superficial\
+    \ debe sonar a conocimiento curado, no a dump de campos ni labelese.\"\n      - \"Todo borrador con\
+    \ URN debe entrar en _SCRIPTORIUM/REVIEW/{ns}/ con status=borrador hasta promote.\"\n      - \"Antes\
+    \ de cerrar, ejecutar auditoria mecanica disponible y una auditoria semantica original vs salida.\"\
+    \n    compromisos_eticos:\n      transparency: \"Alta; separar hecho preservado, compresion editorial,\
+    \ inferencia y deuda residual.\"\n      accountability: \"Alta; no publicar conocimiento curado sin\
+    \ declarar fuente, metricas y limitaciones de fidelidad.\"\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:kora:kb:gobernanza
+    - urn:kora:kb:md-spec
+    - urn:kora:kb:knowledge-spec
+    - urn:kora:kb:autoria-spec
+    - urn:fxsl:kb:icas-preservacion
+    - urn:fxsl:kb:icas-adjunciones
+    - urn:fxsl:kb:icas-calidad-riesgo
+    componible_con:
+    - urn:kora:artefacto:custodio-kora
+    - urn:kora:artefacto:cat-thinking
+    - urn:dev:artefacto:ship-discipline
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/koraficacion-knowledge/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

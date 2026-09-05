@@ -1,0 +1,15 @@
+id: urn:kora:artefacto:instalacion-kora
+kind: skill
+name: instalacion-kora
+description: Instala, actualiza, diagnostica, retira y recupera productos KORA en
+  Codex y Hermes conservando ediciones y estado ajeno.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:kb:guia-rapida-pneuma
+provenance:
+  date: '2026-09-05'
+  authority: MANDATO.md
+  origin: Autoría nueva para operar la reconstrucción independiente.

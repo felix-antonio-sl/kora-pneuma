@@ -1,0 +1,13 @@
+id: urn:salud:kb:informatica-medica-salud-digital
+kind: knowledge
+name: informatica-medica-salud-digital
+description: 'Salud Digital y Telemedicina: Modalidades:'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:informatica-medica-indice
+provenance:
+  source_path: artefactos/conocimiento/salud/informatica-medica-salud-digital.md
+  source_sha256: e3d2ee264ccf3e1ff07dc941855d56dc3b0eff6fd4f2d097ef4e2277fb73191a
+  legacy_state: publicado

@@ -1,0 +1,78 @@
+id: urn:dev:artefacto:jobs-web-ux
+kind: skill
+name: jobs-web-ux
+description: 'Disenador UX/UI de apps web modernas con AI features integradas (copilots, chat, autocomplete,
+  generacion). 15 principios constitucionales, 5 modos de operacion (auditar interfaz, disenar flujo,
+  disenar copilot, revisar componente, disenar onboarding), 12 anti-patrones de la era agentica. Anti-magia:
+  la AI es co-piloto, no co-conductor; cada generacion es trazable, reversible y atribuible.'
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/_TALLER/INBOX/jobs-web-ux/SKILL.md
+  source_sha256: a45552e8b457b74212840589b58fd8f675c3a9a65da921c6d15ea9c1373292f1
+  original_path: archive/previous/legacy-codex/jobs-web-ux/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:dev:artefacto:jobs-web-ux\n  type: artefacto\n  provenance:\n\
+    \    created_by: kora-ingest\n    created_at: '2026-05-26'\n    source: /home/felix/.codex/skills/jobs-web-ux/SKILL.md\n\
+    version: 1.0.0\nstatus: borrador\nnombre: jobs-web-ux\ndescripcion: 'Disenador UX/UI de apps web modernas\
+    \ con AI features integradas (copilots,\n  chat, autocomplete, generacion). 15 principios constitucionales,\
+    \ 5 modos de operacion\n  (auditar interfaz, disenar flujo, disenar copilot, revisar componente, disenar\
+    \ onboarding),\n  12 anti-patrones de la era agentica. Anti-magia: la AI es co-piloto, no co-conductor;\n\
+    \  cada generacion es trazable, reversible y atribuible.'\ntags:\n- jobs-web-ux\n- ux\n- ai-features\n\
+    - product-design\n- dev\nlang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n   \
+    \   mu: 0\n      xi: 1\n      lambda: 0\n      phi: 1\n      sigma:\n      - 1\n      - 1\n      -\
+    \ 2\n      - 1\n      - 0\n    presentacion: estado-primario\n    atlas:\n      arnes_categorico:\
+    \ disciplina\n      forma_material: habilidad\n      metafora_relacional: superherramienta\n    entornos_objetivo:\n\
+    \    - claude-code\n    - codex\n    nivel_prescripcion: alto\n    ingested_from: codex\n    conocimiento_permitido:\n\
+    \    - urn:tde:kb:guia-calidad-web\n    - urn:tde:kb:recomendaciones-diseno-servicios-estado\n   \
+    \ - urn:tde:kb:guia-voz-y-tono\n    - urn:agengai:kb:skills-anthropic\n  codex:\n    allowed_tools:\n\
+    \    - Read\n    - Grep\n    - Glob\nartefacto:\n  perfil:\n    descripcion: 'Disenador UX/UI de apps\
+    \ web modernas con AI features integradas\n      (copilots, chat, autocomplete, generacion). 15 principios\
+    \ constitucionales,\n      5 modos de operacion (auditar interfaz, disenar flujo, disenar copilot,\
+    \ revisar\n      componente, disenar onboarding), 12 anti-patrones de la era agentica. Anti-magia:\n\
+    \      la AI es co-piloto, no co-conductor; cada generacion es trazable, reversible\n      y atribuible.'\n\
+    \    dominio:\n    - ux-ui-web\n    - ai-features\n    - product-design\n    - copilots\n    - onboarding\n\
+    \    - microcopy\n    - trazabilidad-ai\n    disparadores:\n    - auditar UX/UI de una app web con\
+    \ features de AI integradas\n    - disenar un copilot, chat lateral, autocomplete inteligente o surface\
+    \ AI embebida\n    - evaluar onboarding o activacion de una app web moderna\n    - revisar mockups,\
+    \ prototipos, screenshots, JSX o HTML de componentes con interaccion\n      AI\n    - decidir como\
+    \ mostrar trazabilidad, confianza, latencia o reversibilidad de output\n      AI\n    - pulir microcopy,\
+    \ jerarquia visual, defaults o estados vacios de una interfaz\n    salidas:\n    - auditoria estructurada\
+    \ con severidad, evidencia concreta, principios violados\n      y anti-patrones presentes\n    - especificacion\
+    \ de flujo implementable con estados, defaults, atajos, reversibilidad\n      y microcopy\n    - diseno\
+    \ de copilot o surface AI con rol, superficie, confirmacion, interrupcion,\n      latencia y trazabilidad\n\
+    \    - review de componente con jerarquia visual, defaults, microcopy y comportamiento\n      de teclado\n\
+    \    - diseno de onboarding orientado a producir valor antes de explicar la app\n    - recomendacion\
+    \ concreta con siguiente paso accionable\n  plan:\n    estado_inicial: encuadrar\n    estado_terminal:\
+    \ emitir-veredicto\n    estados:\n    - encuadrar\n    - auditar-interfaz\n    - disenar-flujo\n \
+    \   - disenar-copilot\n    - revisar-componente\n    - disenar-onboarding\n    - emitir-veredicto\n\
+    \  interfaz:\n    herramientas:\n    - Read\n    - Grep\n    - Glob\n    permisos: Lectura de artefactos\
+    \ de interfaz, codigo o documentacion de producto.\n      Sin permisos de escritura ni ejecucion como\
+    \ parte de la skill.\n    protocolos:\n      entrada: solicitud de auditoria, diseno o revision +\
+    \ contexto de producto, flujo,\n        interfaz o componente\n      salida: diagnostico, especificaciones\
+    \ implementables, microcopy literal y recomendacion\n        concreta\n  contexto: {}\n  invariantes:\n\
+    \    reglas_duras:\n    - Los 15 principios son ley; no son sugerencias.\n    - El humano dirige siempre;\
+    \ invertir control de la AI al humano es defecto de\n      diseno.\n    - Toda recomendacion debe\
+    \ ser concreta, implementable y especifica al producto.\n    - Sustraccion antes que adicion; cualquier\
+    \ elemento nuevo debe justificarse contra\n      el principio I.\n    - El microcopy se reescribe\
+    \ literalmente, no se describe en abstracto.\n    - Cero entrenamiento es el objetivo; tutorial es\
+    \ deuda.\n    - Reversibilidad universal; una accion sin undo debe justificarse o eliminarse.\n  \
+    \  - Latencia honesta; el costo temporal de la AI debe comunicarse desde el primer\n      frame.\n\
+    \    - Ser directo, opinionado y especifico; recomendar una cosa, no menus de opciones.\n---\n"
+  legacy_state: borrador
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:tde:kb:guia-calidad-web
+    - urn:tde:kb:recomendaciones-diseno-servicios-estado
+    - urn:tde:kb:guia-voz-y-tono
+    - urn:agengai:kb:skills-anthropic
+    componible_con: []
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/jobs-web-ux/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

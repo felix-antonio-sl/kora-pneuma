@@ -1,0 +1,12 @@
+id: urn:salud:kb:minsal-rpe-33-unidades-laboratorio
+kind: knowledge
+name: minsal-rpe-33-unidades-laboratorio
+description: 'RPE N°33 MINSAL: criterios y rangos de rendimiento para programar profesionales
+  de laboratorio clínico ambulatorio'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-rpe-33-unidades-laboratorio.md
+  source_sha256: cc32b35645bf291a99eab6bb3279a2531c7413c3d5cce585e9b84c68ad3902d7
+  legacy_state: publicado

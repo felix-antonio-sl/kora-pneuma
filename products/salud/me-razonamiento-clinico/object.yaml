@@ -1,0 +1,16 @@
+id: urn:salud:kb:me-razonamiento-clinico
+kind: knowledge
+name: me-razonamiento-clinico
+description: me-razonamiento-clinico
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+- urn:salud:kb:me-perfil-urgenciologo
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+  - urn:salud:kb:me-perfil-urgenciologo
+provenance:
+  source_path: artefactos/conocimiento/salud/me-razonamiento-clinico.md
+  source_sha256: 1ab98d3501bab580e8c84ce401d70f880ceff0e8a26db1301c9d981931f5a8f4
+  legacy_state: publicado

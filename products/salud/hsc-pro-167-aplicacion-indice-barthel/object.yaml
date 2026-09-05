@@ -1,0 +1,15 @@
+id: urn:salud:kb:hsc-pro-167-aplicacion-indice-barthel
+kind: knowledge
+name: hsc-pro-167-aplicacion-indice-barthel
+description: 'Protocolo local HSC PRO-167, Aplicación del Índice de Barthel (primera
+  edición, noviembre 2022, vigencia declarada hasta noviembre 2027): instrumento institucional
+  de medición de dependencia en ABVD para personas mayores de 65 años al ingreso y
+  egreso hospitalario, con responsables por estamento, circuito de registro en ficha
+  clínica, traspaso a APS vía CAE e indicador trimestral de cumplimiento.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-167-aplicacion-indice-barthel.md
+  source_sha256: b3bbfe9441352a203881b234f6d1e451afd5b8fc5d3cbb26faf897ffda4c621d
+  legacy_state: publicado

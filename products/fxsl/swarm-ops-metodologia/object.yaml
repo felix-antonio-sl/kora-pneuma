@@ -1,0 +1,14 @@
+id: urn:fxsl:kb:swarm-ops-metodologia
+kind: knowledge
+name: swarm-ops-metodologia
+description: SWARM::OPS v1.0
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/knowledge/fxsl/xanpan/swarm-ops-metodologia.md
+  source_sha256: 71eb046b9d72e5363c88af3f3bdcab1a69a76db4bf7d29a1dd7421b94998860b
+  legacy_state: published
+  migration: legacy-codex-consumers-2026-09-05
+  handling: Documento de dominio preservado íntegro, sin reformateo ni adopción de la maquinaria anterior.

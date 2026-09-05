@@ -1,0 +1,67 @@
+id: urn:kora:artefacto:auditoria-exposicion-kora
+kind: skill
+name: auditoria-exposicion-kora
+description: 'Audita read-only la ultima milla de un corpus KORA: URNs del cuerpo
+  que resuelven, cobertura textual de un indice, alcance semantico, cableado declarado
+  en consumidores y materializacion por target. Usar cuando se pregunta si conocimiento
+  o artefactos KORA estan disponibles, localizables, expuestos o realmente alcanzables,
+  incluso con velar verde.'
+content: content.md
+targets:
+- codex
+- hermes
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/skills/kora/auditoria-exposicion-kora/SKILL.md
+  source_sha256: 5b584fb57c6d157f604b5cffadf7b4e2526fddb302663a84d96badb01444ca75
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:auditoria-exposicion-kora
+
+    nombre: auditoria-exposicion-kora
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Audita read-only la ultima milla de un corpus KORA: URNs del cuerpo
+    que resuelven, cobertura textual de un indice, alcance semantico, cableado declarado
+    en consumidores y materializacion por target. Usar cuando se pregunta si conocimiento
+    o artefactos KORA estan disponibles, localizables, expuestos o realmente alcanzables,
+    incluso con velar verde."
+
+    fuente: "Sublimacion del metodo y script conservados en el archivo reversible
+    hermes-kora-custodia-2026-08-23: auditoria-exposicion-ultima-milla.md sha256:eab4591561b22fc12265c603715c7bab91ac2e645c557fa38e2abd000b436507
+    y verify-index-urns.py sha256:2a05395601e7f5f8396c6461273429f864282574357c1314d90cf713af724bf2.
+    Reautorada en KORA el 2026-08-24: censo JSON, prefijos explicitos, cobertura corporal
+    solo textual, cableado y runtime como planos separados."
+
+    autor: FS
+
+    creado: 2026-08-24
+
+    lang: es
+
+    tags: [kora, auditoria, exposicion, ultima-milla, urn, indices, consumidores,
+    paridad]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Glob, Grep, Bash]
+
+    alcance: ambos
+
+    estados: [encuadrar, resolver-urns, medir-exposicion-textual, trazar-consumidores,
+    verificar-runtime, cerrar]
+
+    ---
+
+    '

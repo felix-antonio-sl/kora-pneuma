@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-dp-5-1-presentacion-casos-comite-etica-asistencial-2024
+kind: knowledge
+name: hsc-dp-5-1-presentacion-casos-comite-etica-asistencial-2024
+description: Procedimiento HSC DP 5.1 para presentar, deliberar y responder consultas
+  de casos ético-clínicos ante el Comité de Ética Asistencial.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-dp-5-1-presentacion-casos-comite-etica-asistencial-2024.md
+  source_sha256: 4daa573cab51e672817f4787b039cda7d5f7496198a9cdb82ebbdad04007cd5a
+  legacy_state: publicado

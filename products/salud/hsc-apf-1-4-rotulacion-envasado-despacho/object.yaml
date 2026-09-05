@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-apf-1-4-rotulacion-envasado-despacho
+kind: knowledge
+name: hsc-apf-1-4-rotulacion-envasado-despacho
+description: Procedimiento HSC APF 1.4 para rotular, envasar, dispensar y reponer
+  medicamentos e insumos desde Farmacia.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-apf-1-4-rotulacion-envasado-despacho.md
+  source_sha256: 7a9f743e53f792147445dfaa68ba4ab6482f8f3220fd775a2c35365de63f1c8a
+  legacy_state: publicado

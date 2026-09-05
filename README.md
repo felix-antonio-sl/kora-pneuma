@@ -1,96 +1,128 @@
-# KORA pneuma
+# KORA
 
-KORA pneuma es un canon gobernado de **conocimiento y especificaciones
-agénticas** con una herramienta de soporte. Mantiene una fuente canónica por
-objeto, identifica cada artefacto mediante URN y proyecta agentes y skills a
-distintos runtimes declarando toda pérdida de fidelidad.
+Maquinaria personal de Félix Korvo para convertir fuentes en conocimiento útil,
+autorar agentes y skills agnósticos, y realizarlos en **Codex y Hermes**.
 
-El problema que resuelve es la deriva: que una capacidad tenga versiones
-aparentemente equivalentes, pero semánticamente distintas, repartidas entre
-documentos, prompts, instalaciones y runtimes. KORA conserva el significado en
-la fuente y hace que las demás representaciones sean derivables y auditables.
+Esta es la única raíz de uso de KORA. Contiene el núcleo independiente y el
+corpus migrado bajo el [mandato autorizado](MANDATO.md). La historia Git anterior
+y el trabajo local previo se conservan. `/home/felix/kora-rebuild` registra la
+construcción de origen; las actualizaciones se realizan aquí.
 
-No es una aplicación ni un runtime. `kora.py` y `tests/` sostienen el corpus;
-no cambian su arquetipo principal.
+## Operación
 
-El canon agéntico es agnóstico al runtime. Codex es la realización operacional
-principal; Claude Code, OpenCode y OpenClaw permanecen como compatibilidad
-mantenida cuando el operador los selecciona explícitamente.
+Requiere Linux con `renameat2`, Python 3.12 y PyYAML 6.0.1, presentes en este host.
+La dependencia Python está en `requirements.txt`. Desde cualquier directorio:
 
-## Orientación en cinco minutos
-
-1. Lee este archivo para ubicarte.
-2. Lee [ALMA.md](ALMA.md) y el estrato pertinente de `ley/` si la decisión es
-   estructural o normativa.
-3. Lee [AGENTS.md](AGENTS.md) antes de modificar fuentes. `CLAUDE.md` importa
-   ese contrato sin duplicarlo.
-4. Usa `python3 kora.py nombre <urn>` para resolver un objeto y sigue las URN
-   que declare su frontmatter.
-
-## Mapa de autoridad y vigencia
-
-| Superficie | Función | Vigencia |
-|---|---|---|
-| `README.md` | Introducción y navegación humana | vigente, no normativa |
-| `ALMA.md` | Finalidad y criterio de interpretación | fundacional |
-| `ley/0..4` | Especificaciones y decisiones normativas | vigentes; prevalecen por estrato |
-| `artefactos/` | Fuentes canónicas de conocimiento, agentes y skills | manda el `estado` de cada frontmatter |
-| [Guía rápida](artefactos/conocimiento/kora/guia-rapida-pneuma.md) | Operación detallada | vigente, subordinada a la ley |
-| `AGENTS.md` y `CLAUDE.md` | Contrato operativo para agentes de desarrollo | vigente, no normativo para KORA |
-| Notas exploratorias fuera del canon | Hipótesis y trabajo en curso aún no clasificado | no autoritativas |
-| `GENESIS.md` | Decisiones de fundación y pérdidas de la sublimación | histórico e inmutable |
-| Git y `_archivo/` | Trazabilidad histórica | no describen por sí solos el estado actual |
-
-Un artefacto `publicado` o `activo` está vigente. `borrador` es material en
-elaboración y no equivale a conocimiento publicado. `deprecado` y `retirado`
-son obsoletos para uso nuevo, pero sus URN siguen resolviendo por diseño.
-
-## Organización
-
-- `ley/`: constitución, ontología, forma, transmutación y koraficación.
-- `artefactos/conocimiento/`: corpus que consumen sistemas LLM.
-- `artefactos/agentes/`: especificaciones gobernadas de actores.
-- `artefactos/skills/`: capacidades proyectables y sus referencias.
-- `_archivo/`: versiones operativas históricas, fuera del árbol Git activo.
-- `kora.py`: censo, resolución, validación, lifecycle y transmutación.
-- `tests/`: pruebas del núcleo y de contratos focales.
-
-`censo.json` y `_emision/` son derivados regenerables. Los conteos, reportes,
-instalaciones runtime y notas locales ignoradas tampoco son autoridad.
-
-## Operación básica
-
-Requiere Python 3.11 o superior y no instala dependencias externas.
-
-El recorrido cotidiano tiene tres gestos:
-
-```bash
-python3 kora.py velar
-python3 kora.py transmutar --urn <urn>
-python3 kora.py transmutar --paridad --urn <urn> --target codex [--proyecto <path>]
+```sh
+python3 /home/felix/kora-pneuma/kora_cli.py --help
+python3 /home/felix/kora-pneuma/kora_cli.py list
+python3 /home/felix/kora-pneuma/kora_cli.py check
 ```
 
-`censo` y `nombre` ayudan a descubrir o resolver. `velar --estricto`, la
-paridad sin filtros y la suite completa son auditorías proporcionales para
-cambios de ley, emisor o varias superficies; no son ceremonia rutinaria.
+Los comandos entregan JSON y retornan código distinto de cero ante un conflicto.
+`--root` permite trabajar un corpus independiente. `resolve URN` devuelve el
+archivo que debe leerse y señala si la identidad está activa o archivada.
 
-`transmutar` elige Codex si se omite `--target`; cualquier otro runtime exige
-selección explícita. Sin `--aplicar` solo materializa una emisión local derivada.
-Instalación, lifecycle, publicación Git, despliegue y aceptación humana son
-acciones distintas y requieren su autoridad correspondiente. Forma válida,
-paridad o tests verdes no prueban conducta, safety ni autorización runtime.
+Cada producto vive en `products/<namespace>/<name>/object.yaml` y mantiene su
+cuerpo en el archivo indicado por `content`. Los campos necesarios son `id`,
+`kind`, `name`, `description` y `content`; agentes y skills declaran `targets`.
+`requires` contiene dependencias necesarias que deben existir y realizarse en el
+destino elegido. `relations` conserva otros vínculos sin instalarlos.
 
-## Dónde vive cada decisión
+`create` recibe un cuerpo ya autorado y conserva originales indicados con
+`--source`. No inventa una síntesis ni acredita su fidelidad por copiarla. Ejemplo
+con rutas de entrada que el autor debe proporcionar:
 
-- Una regla normativa durable vive en `ley/`.
-- El significado de una capacidad o cuerpo de conocimiento vive en su fuente
-  bajo `artefactos/`.
-- Un mecanismo vive en `kora.py` y queda respaldado por pruebas.
-- Una exploración no es autoridad hasta incorporarse en una de esas
-  superficies.
-- Git conserva la historia cerrada. Un `HANDOFF.md` raíz solo existe mientras
-  una interrupción deja trabajo material inconcluso y se elimina al cerrar.
+```sh
+python3 kora_cli.py create knowledge personal tema --id urn:personal:kb:tema \
+  --description 'Alcance y condiciones de la fuente' \
+  --body /ruta/al/conocimiento.md --source /ruta/a/la/fuente.pdf
+```
 
-La documentación y las explicaciones se escriben en español de Chile. Código,
-comandos e identificadores permanecen en inglés. Las fechas se expresan como
-`AAAA-MM-DD`.
+El mismo comando con `skill` o `agent` crea una fuente agnóstica. Por defecto se
+realiza en Codex y Hermes; `--target codex` o `--target hermes` restringe esa
+decisión. `--requires URN` puede repetirse. Los cuerpos de skills y agentes no
+llevan un segundo frontmatter.
+
+## Realización, instalación y recuperación
+
+`render` produce archivos nativos en un directorio nuevo y comprueba dependencias
+antes de escribir. Sus paths son relativos al home del operador. `install`
+instala o actualiza los identificadores solicitados; sin identificadores procesa
+todos los productos activos del destino. También actualiza los consumidores ya
+administrados que comparten dependencias afectadas, incluidas las instancias de
+skills en perfiles Hermes. No modifica el otro destino implícitamente.
+
+```sh
+python3 kora_cli.py render codex --output /ruta/nueva/realizacion
+python3 kora_cli.py install codex
+python3 kora_cli.py install hermes
+python3 kora_cli.py status
+python3 kora_cli.py recover
+python3 kora_cli.py rollback
+```
+
+`--home /ruta/temporal` permite probar instalación y recuperación sin tocar el
+home real. Codex recibe skills en `.agents/skills` y agentes TOML en
+`.codex/agents`. Hermes recibe skills en `.hermes/skills` y perfiles en
+`.hermes/profiles`. El conocimiento se lee desde rutas resueltas del catálogo.
+
+Para mantener una skill en un perfil Hermes existente, usa su identidad y el
+nombre del perfil. Esa instancia se registra por separado y conserva el SOUL,
+la configuración y el estado del perfil:
+
+```sh
+python3 kora_cli.py install hermes urn:kora:artefacto:instalacion-kora --profile dev
+python3 kora_cli.py remove hermes urn:kora:artefacto:instalacion-kora --profile dev
+```
+
+`--profile` admite solo skills de Hermes; la raíz usa el comando sin ese flag.
+Un agente Hermes recibe su propio perfil. Los perfiles nuevos se pueden abrir
+con opciones nativas explícitas, por ejemplo
+`hermes --profile kora chat --provider openai-codex --model gpt-6-astra --reasoning max`.
+Hermes puede utilizar el auth raíz compartido; no hereda la configuración raíz.
+
+La actualización compara bytes y permisos con lo previamente instalado. Un
+cambio local detiene la operación para conservarlo y reconciliarlo en la fuente.
+`--adopt archivo.json` sirve para relevar archivos existentes cuya propiedad y
+SHA-256 se hayan revisado; no es un modo de forzar el borrado.
+
+`remove codex URN` o `remove hermes URN` retira archivos propios intactos y
+conserva dependencias aún compartidas. Los directorios, memoria, credenciales,
+sesiones y archivos ajenos permanecen. `recover` resuelve una transacción
+interrumpida; `rollback` deshace la última instalación confirmada, conservando
+cualquier edición local posterior.
+
+El estado y las copias de recuperación viven en `~/.local/state/kora`, fuera de
+Git y en el mismo filesystem que los archivos administrados. El instalador
+rechaza otro filesystem antes de cambiar archivos vivos. El diario permite
+recuperar el conjunto; un lector concurrente puede observar un estado intermedio
+entre renombres de archivos.
+
+Los intercambios conservan el archivo efectivamente desplazado, incluso si otro
+proceso continúa escribiéndolo por un descriptor abierto. `status` muestra esas
+variaciones como `preserved_changes`, con la ruta recuperable. Los objetos
+desplazados se retienen; no hay eliminación automática de respaldos. La
+recuperación ensayada cubre interrupciones de procesos, sin afirmar resistencia
+a fallas físicas de almacenamiento.
+
+## Comprobación y continuidad
+
+```sh
+python3 -m unittest discover -s tests -v
+git diff --check
+```
+
+Las pruebas incluyen el recorrido CLI desde fuente nueva hasta ambos destinos,
+actualización y rollback, además de fallo de escritura y término abrupto de un
+proceso. Se complementan con parsers, descubrimiento e inferencia de los runtimes;
+ninguno de esos planos por sí solo prueba el mandato completo.
+
+- [Instrucciones de ejecución](AGENTS.md).
+- [Decisiones de diseño y orden de realización](docs/diseno.md).
+- [Contrato efectivo de Codex](docs/codex.md).
+- [Contrato efectivo de Hermes](docs/hermes.md).
+- [Migración, referencias y excepciones concretas](docs/migracion.md).
+
+El relevo final conserva la historia Git del repositorio anterior y deja una
+sola fuente activa por objeto. No requiere publicación remota.

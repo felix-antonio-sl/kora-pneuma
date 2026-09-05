@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:ifml-view-components
+kind: knowledge
+name: ifml-view-components
+description: Corpus IFML — ViewComponents, bindings al domain model, ParameterBinding/DataFlow,
+  subclases (List/Details/Form/MultiChoiceList) y patrones CN/DE/CS.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:ifml-corpus-index
+  - urn:fxsl:kb:ifml-view-containers
+  - urn:fxsl:kb:ifml-actions-events
+  - urn:fxsl:kb:ifml-patrones
+provenance:
+  source_path: artefactos/conocimiento/fxsl/ifml-view-components.md
+  source_sha256: bfe2b3e8414218485d5e9d67cc82631c76ad38a204ee138ee5da51093fb1af84
+  legacy_state: publicado

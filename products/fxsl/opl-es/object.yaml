@@ -1,0 +1,19 @@
+id: urn:fxsl:kb:opl-es
+kind: knowledge
+name: opl-es
+description: 'Gramática canónica del OPL en español: capa textual de la SSOT OPM-ES
+  — léxico, plantillas de oraciones y localización es de la bimodalidad OPD↔OPL.'
+content: content.md
+requires:
+- urn:fxsl:kb:opm-es
+relations:
+  cita:
+  - urn:fxsl:kb:manual-metodologico-opm-es
+  - urn:fxsl:kb:opd-es
+  - urn:fxsl:kb:opm-es
+  depende:
+  - urn:fxsl:kb:opm-es
+provenance:
+  source_path: artefactos/conocimiento/fxsl/opl-es.md
+  source_sha256: b6b884b6e930a1e13858690607191761a2cf5436086f32ff268821f5e9d02321
+  legacy_state: publicado

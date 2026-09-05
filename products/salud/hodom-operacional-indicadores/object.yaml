@@ -1,0 +1,15 @@
+id: urn:salud:kb:hodom-operacional-indicadores
+kind: knowledge
+name: hodom-operacional-indicadores
+description: 'Indicadores de produccion HODOM — Benchmark operativo real: Datos reales
+  de 14 meses (dic 2024 - ene 2026) de la UHD del Hospital San Carlos'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-operacional-indice
+  - urn:salud:kb:hodom-direccion-tecnica
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-operacional-indicadores.md
+  source_sha256: 8e9732aaf4b387f63a4dc0f45ebebad6d1bd0de6d0554511cb2402ce0b060089
+  legacy_state: publicado

@@ -1,0 +1,37 @@
+id: urn:salud:kb:me-atlas-integrado
+kind: knowledge
+name: me-atlas-integrado
+description: 'Atlas integrado de Medicina de Emergencia: Este atlas une el corpus
+  `salud/med-emergencia` como un solo cuerpo clinico'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-body-of-knowledge-diferencial
+  - urn:salud:kb:me-toc-body-of-knowledge
+  - urn:salud:kb:me-perfil-urgenciologo
+  - urn:salud:kb:me-razonamiento-clinico
+  - urn:salud:kb:me-evaluacion-primaria
+  - urn:salud:kb:me-sincope
+  - urn:salud:kb:me-dolor-toracico
+  - urn:salud:kb:me-disnea
+  - urn:salud:kb:me-tec-leve
+  - urn:salud:kb:me-compromiso-conciencia
+  - urn:salud:kb:me-mareo-vertigo
+  - urn:salud:kb:me-deficit-neurologico
+  - urn:salud:kb:me-cefalea-convulsiones
+  - urn:salud:kb:me-dolor-abdominal
+  - urn:salud:kb:me-fiebre-sin-foco
+  - urn:salud:kb:me-hemorragia-digestiva
+  - urn:salud:kb:me-infecciones-gastrointestinales
+  - urn:salud:kb:me-infecciones-respiratorias-altas
+  - urn:salud:kb:me-infecciones-respiratorias-bajas
+  - urn:salud:kb:me-sintomas-urinarios
+  - urn:salud:kb:me-traumatismos-frecuentes
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-atlas-integrado.md
+  source_sha256: 4dfb213b40996dd77a03230d74e02945a98f20b87d966c254fd2c8f35d5d6d7e
+  legacy_state: publicado

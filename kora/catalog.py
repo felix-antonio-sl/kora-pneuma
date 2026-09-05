@@ -1,0 +1,230 @@
+"""Read authored products and resolve the dependencies their consumers need."""
+
+from dataclasses import dataclass
+import hashlib
+from pathlib import Path, PurePosixPath
+import re
+import stat
+
+import yaml
+
+
+class KoraError(Exception):
+    """An actionable source or installation conflict."""
+
+
+class UniqueLoader(yaml.SafeLoader):
+    """YAML mappings must not silently replace an earlier value."""
+
+
+def _mapping(loader, node, deep=False):
+    result = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if not isinstance(key, str):
+            raise KoraError("Las claves YAML deben ser texto")
+        if key in result:
+            raise KoraError(f"Clave YAML duplicada: {key}")
+        result[key] = loader.construct_object(value_node, deep=deep)
+    return result
+
+
+UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _mapping)
+
+
+def read_yaml(path: Path):
+    try:
+        return yaml.load(path.read_text(encoding="utf-8"), Loader=UniqueLoader)
+    except (OSError, UnicodeError, yaml.YAMLError) as error:
+        raise KoraError(f"No se pudo leer YAML: {path}: {error}") from error
+
+
+def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def safe_relative(value: str) -> Path:
+    if not isinstance(value, str) or not value or "\\" in value:
+        raise KoraError(f"Ruta relativa inválida: {value!r}")
+    path = PurePosixPath(value)
+    if path.is_absolute() or any(p in ("..", ".", "") for p in value.split("/")):
+        raise KoraError(f"Ruta fuera del producto o instalación: {value}")
+    return Path(*path.parts)
+
+
+def contained_file(directory: Path, relative: str) -> Path:
+    path = directory / safe_relative(relative)
+    for node in (path, *path.parents):
+        if node == directory:
+            break
+        if node.is_symlink():
+            raise KoraError(f"El recurso debe ser un archivo propio, no enlace: {path}")
+    if not path.is_file():
+        raise KoraError(f"Recurso ausente: {path}")
+    return path
+
+
+@dataclass(frozen=True)
+class File:
+    data: bytes
+    mode: int = 0o644
+
+
+@dataclass(frozen=True)
+class Product:
+    directory: Path
+    metadata: dict
+
+    @property
+    def id(self):
+        return self.metadata["id"]
+
+    @property
+    def kind(self):
+        return self.metadata["kind"]
+
+    @property
+    def name(self):
+        return self.metadata["name"]
+
+    @property
+    def description(self):
+        return self.metadata["description"]
+
+    @property
+    def targets(self):
+        return tuple(self.metadata.get("targets", []))
+
+    @property
+    def requires(self):
+        return tuple(self.metadata.get("requires", []))
+
+    @property
+    def content_path(self):
+        return contained_file(self.directory, self.metadata["content"])
+
+    @property
+    def body(self):
+        try:
+            return self.content_path.read_bytes().decode("utf-8")
+        except UnicodeError as error:
+            raise KoraError(f"Contenido binario; usar el recurso original: {self.id}") from error
+
+    def resources(self) -> dict[str, File]:
+        resources = {}
+        for path in sorted(self.directory.rglob("*")):
+            if path.is_symlink():
+                raise KoraError(f"Recurso enlazado requiere importación explícita: {path}")
+            if not path.is_file() or path in (self.directory / "object.yaml", self.content_path):
+                continue
+            resources[path.relative_to(self.directory).as_posix()] = File(
+                path.read_bytes(), stat.S_IMODE(path.stat().st_mode))
+        return resources
+
+    def fingerprint(self) -> str:
+        if read_yaml(self.directory / "object.yaml") != self.metadata:
+            raise KoraError(f"La ficha cambió durante la operación: {self.id}")
+        h = hashlib.sha256()
+        for path in sorted(self.directory.rglob("*")):
+            if path.is_symlink():
+                raise KoraError(f"Recurso enlazado: {path}")
+            if path.is_file():
+                h.update(path.relative_to(self.directory).as_posix().encode() + b"\0")
+                h.update(str(stat.S_IMODE(path.stat().st_mode)).encode() + b"\0")
+                h.update(path.read_bytes())
+        return h.hexdigest()
+
+
+class Catalog:
+    def __init__(self, root: Path):
+        self.root = Path(root).resolve()
+        self.products: dict[str, Product] = {}
+        self.archived: dict[str, Product] = {}
+        self.aliases = read_yaml(self.root / "aliases.yaml") if (self.root / "aliases.yaml").exists() else {}
+        if not isinstance(self.aliases, dict):
+            raise KoraError("aliases.yaml debe mapear identidad anterior a identidad conservada")
+        paths = sorted((self.root / "products").rglob("object.yaml"))
+        paths += sorted((self.root / "archive" / "products").rglob("object.yaml"))
+        for path in paths:
+            active = path.is_relative_to(self.root / "products")
+            container = self.root / "products" if active else self.root / "archive" / "products"
+            if path.is_symlink() or not path.resolve().is_relative_to(container):
+                raise KoraError(f"Ficha fuera de products: {path}")
+            metadata = read_yaml(path)
+            if not isinstance(metadata, dict):
+                raise KoraError(f"La ficha debe ser un mapa: {path}")
+            for field in ("id", "kind", "name", "description", "content"):
+                if not isinstance(metadata.get(field), str) or not metadata[field].strip():
+                    raise KoraError(f"{path}: falta texto en {field}")
+            if metadata["kind"] not in ("knowledge", "skill", "agent"):
+                raise KoraError(f"Tipo desconocido: {metadata['kind']}")
+            if metadata["kind"] != "knowledge" and (
+                not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", metadata["name"]) or len(metadata["name"]) > 64
+            ):
+                raise KoraError(f"Nombre nativo inválido: {metadata['name']}")
+            for key in ("targets", "requires"):
+                value = metadata.get(key, [])
+                if not isinstance(value, list) or any(not isinstance(x, str) or not x for x in value):
+                    raise KoraError(f"{path}: {key} debe ser una lista de textos")
+            if set(metadata.get("targets", [])) - {"codex", "hermes"}:
+                raise KoraError(f"{path}: destinos admitidos: codex, hermes")
+            relations = metadata.get("relations", {})
+            if not isinstance(relations, dict) or any(
+                not isinstance(v, list) or any(not isinstance(x, str) for x in v) for v in relations.values()
+            ):
+                raise KoraError(f"{path}: relaciones debe mapear tipo a lista de identidades")
+            product = Product(path.parent, metadata)
+            product.content_path
+            if product.id in self.products or product.id in self.archived or product.id in self.aliases:
+                raise KoraError(f"Identidad duplicada: {product.id}")
+            (self.products if active else self.archived)[product.id] = product
+        for alias in self.aliases:
+            self.get(alias)
+
+    def get(self, identifier: str) -> Product:
+        seen = set()
+        while identifier in self.aliases:
+            if identifier in seen:
+                raise KoraError(f"Ciclo de alias: {identifier}")
+            seen.add(identifier)
+            identifier = self.aliases[identifier]
+            if not isinstance(identifier, str):
+                raise KoraError("El destino de un alias debe ser una identidad")
+        try:
+            return self.products[identifier] if identifier in self.products else self.archived[identifier]
+        except KeyError as error:
+            raise KoraError(f"Referencia ausente: {identifier}") from error
+
+    def dependencies(self, product: Product, target: str) -> list[Product]:
+        if target not in ("codex", "hermes"):
+            raise KoraError(f"Destino desconocido: {target}")
+        result = []
+        seen = {product.id}
+
+        def visit(item):
+            if item.id not in self.products:
+                raise KoraError(f"Dependencia archivada sin realización activa: {item.id}")
+            if item.kind != "knowledge" and target not in item.targets:
+                raise KoraError(f"{item.id} no tiene realización para {target}")
+            for identifier in item.requires:
+                dependency = self.get(identifier)
+                if dependency.id not in seen:
+                    seen.add(dependency.id)
+                    visit(dependency)
+                    result.append(dependency)
+
+        visit(product)
+        return result
+
+    def reference_issues(self) -> list[dict]:
+        issues = []
+        for product in self.products.values():
+            relations = {**product.metadata.get("relations", {}), "requires": list(product.requires)}
+            for relation, identifiers in relations.items():
+                for identifier in identifiers:
+                    try:
+                        self.get(identifier)
+                    except KoraError as error:
+                        issues.append({"source": product.id, "relation": relation,
+                                       "target": identifier, "error": str(error)})
+        return issues

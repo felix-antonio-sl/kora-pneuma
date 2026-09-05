@@ -1,0 +1,13 @@
+id: urn:gn:kb:gn-guia-circular-33-sts
+kind: knowledge
+name: gn-guia-circular-33-sts
+description: Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – Guía Operativa
+  para Formulación y Evaluación de Iniciativas Circular 33 (GORE Ñuble); migrado como
+  borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-guia-circular-33-sts.md
+  source_sha256: 6a18836e89f361567e640c7288020593dd2645a12932975698dd66a51b40a9ea
+  legacy_state: borrador

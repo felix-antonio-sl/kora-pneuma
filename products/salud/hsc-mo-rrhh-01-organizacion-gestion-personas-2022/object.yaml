@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-mo-rrhh-01-organizacion-gestion-personas-2022
+kind: knowledge
+name: hsc-mo-rrhh-01-organizacion-gestion-personas-2022
+description: 'Modelo organizacional observado del Departamento de Gestión de las Personas
+  HSC en 2022, conservado como referencia institucional de vigencia operativa provisional
+  hasta actualización: autoridad, ciclo de vida laboral, servicios, estructura, perfiles,
+  registros e interfaces.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-rrhh-01-organizacion-gestion-personas-2022.md
+  source_sha256: 016d299de395c62b1fdeb8cc13302b8f5d7da85559fcfa22f1420214c9c4d545
+  legacy_state: publicado

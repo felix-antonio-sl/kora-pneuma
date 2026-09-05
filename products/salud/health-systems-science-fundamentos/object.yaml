@@ -1,0 +1,14 @@
+id: urn:salud:kb:health-systems-science-fundamentos
+kind: knowledge
+name: health-systems-science-fundamentos
+description: 'Fundamentos de Health Systems Science: El gasto en salud crece mas rapido
+  que el PIB en todos los paises desarrollados'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:health-systems-science-indice
+provenance:
+  source_path: artefactos/conocimiento/salud/health-systems-science-fundamentos.md
+  source_sha256: d57906856c61e3263da7189df12cb36f18cd96756a7509fab0d568547bd61b4b
+  legacy_state: publicado

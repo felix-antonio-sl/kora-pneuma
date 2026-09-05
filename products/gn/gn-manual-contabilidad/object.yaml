@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-contabilidad
+kind: knowledge
+name: gn-manual-contabilidad
+description: Conocimiento GN heredado de KODA sobre gn-manual-contabilidad; migrado
+  como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-contabilidad.md
+  source_sha256: cbaf3bb769ecc5fb47e26cc529a9902adc1778907ce7d22641fcaeb794c63233
+  legacy_state: borrador

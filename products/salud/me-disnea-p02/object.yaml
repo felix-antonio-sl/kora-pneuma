@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-disnea-p02
+kind: knowledge
+name: me-disnea-p02
+description: 'Disnea Aguda - Parte 02: Son dos scores útiles en la evaluación del
+  paciente con disnea aguda'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-disnea-p02.md
+  source_sha256: 5a2d7d11a18e783f66e2bfa9aaa2cb8b15270362a1ca4567325c86893247021a
+  legacy_state: publicado

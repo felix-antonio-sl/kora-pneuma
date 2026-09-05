@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-imag-014-modelo-organizacion-imagenologia-2023
+kind: knowledge
+name: hsc-mo-imag-014-modelo-organizacion-imagenologia-2023
+description: 'Modelo organizacional declarado para el Servicio de Apoyo Imagenología
+  del HSC: modalidades, operación, tiempos, equipos, roles, dotación y sistemas RIS-PACS.'
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-imag-014-modelo-organizacion-imagenologia-2023.md
+  source_sha256: 10a725fbba46a97ccf638c04d332b832a6edb10e08e1242217c4854d897b8310
+  legacy_state: publicado

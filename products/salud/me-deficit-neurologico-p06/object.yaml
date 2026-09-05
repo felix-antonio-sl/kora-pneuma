@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-deficit-neurologico-p06
+kind: knowledge
+name: me-deficit-neurologico-p06
+description: 'Déficit Neurológico - Parte 06: La escala NIHSS se utiliza para evaluar
+  la gravedad del accidente cerebrovascular:'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-deficit-neurologico-p06.md
+  source_sha256: 808aeee42bef7cdda1b22257fbd71f3e98cc4fe085d34cce90899306065900b4
+  legacy_state: publicado

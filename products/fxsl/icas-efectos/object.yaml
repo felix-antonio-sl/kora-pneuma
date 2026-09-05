@@ -1,0 +1,13 @@
+id: urn:fxsl:kb:icas-efectos
+kind: knowledge
+name: icas-efectos
+description: 'Pieza 09 del ICAS-BoK: efectos — mónadas, Kleisli, Eilenberg-Moore,
+  comónadas, coálgebras, bisimulación y leyes distributivas; componer computación
+  con efectos y observar comportamiento.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-efectos.md
+  source_sha256: fa3adb62fe82ac41e7cf5f8d7eb907494920bab25a52ed9c9cef9d3a3899e56c
+  legacy_state: publicado

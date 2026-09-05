@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-aoc-2-2-entrega-turno-enfermeria-urgencia
+kind: knowledge
+name: hsc-aoc-2-2-entrega-turno-enfermeria-urgencia
+description: Protocolo AOC 2.2 de entrega administrativa y clínico-asistencial de
+  Enfermería en Emergencia HSC
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-aoc-2-2-entrega-turno-enfermeria-urgencia.md
+  source_sha256: 5617eb432e643aefee00a044dfa687b21cb294317aaa391bf5867d0ebc169a87
+  legacy_state: publicado

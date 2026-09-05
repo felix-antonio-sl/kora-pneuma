@@ -1,0 +1,14 @@
+id: urn:salud:kb:informatica-medica-indice
+kind: knowledge
+name: informatica-medica-indice
+description: 'Informatica Medica y Salud Digital — Indice: Corpus de informatica medica,
+  salud digital e inteligencia artificial en salud'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/informatica-medica-indice.md
+  source_sha256: 4ad7ccb7cd8ae1c2f90de75f7560e5a6dadd7cebe0551938b364d1d64924fa14
+  legacy_state: publicado

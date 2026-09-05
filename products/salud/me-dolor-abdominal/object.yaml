@@ -1,0 +1,16 @@
+id: urn:salud:kb:me-dolor-abdominal
+kind: knowledge
+name: me-dolor-abdominal
+description: 'Dolor Abdominal en Urgencia: Enfoque Especial en C y U:'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-dolor-abdominal-p02
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-dolor-abdominal.md
+  source_sha256: a56dc753013ab08d6f53ebb8408b98979e59be5609fd6deeb5d8191c6f4c3170
+  legacy_state: publicado

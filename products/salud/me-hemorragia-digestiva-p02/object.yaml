@@ -1,0 +1,16 @@
+id: urn:salud:kb:me-hemorragia-digestiva-p02
+kind: knowledge
+name: me-hemorragia-digestiva-p02
+description: 'Hemorragia digestiva - Parte 02: El manejo de la hemorragia digestiva
+  se enfoca en la estabilización del paciente, el control del sangrado y la prevención
+  de rehemorragias'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-hemorragia-digestiva-p02.md
+  source_sha256: f5339bd8d17afb0bf36c64a948cb53e2de930bf660d654bf638b01f1ba3910ec
+  legacy_state: publicado

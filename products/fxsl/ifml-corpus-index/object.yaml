@@ -1,0 +1,22 @@
+id: urn:fxsl:kb:ifml-corpus-index
+kind: knowledge
+name: ifml-corpus-index
+description: 'Indice del corpus IFML koraficado: mapa de los ocho capitulos (fundamentos,
+  composicion, contenido, acciones/eventos, extensiones desktop/web/mobile, patrones)
+  del estandar OMG IFML.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:ifml-fundamentos
+  - urn:fxsl:kb:ifml-view-containers
+  - urn:fxsl:kb:ifml-view-components
+  - urn:fxsl:kb:ifml-actions-events
+  - urn:fxsl:kb:ifml-extensiones-desktop
+  - urn:fxsl:kb:ifml-extensiones-web
+  - urn:fxsl:kb:ifml-extensiones-mobile
+  - urn:fxsl:kb:ifml-patrones
+provenance:
+  source_path: artefactos/conocimiento/fxsl/ifml-corpus-index.md
+  source_sha256: f838d2cc8de0df0b0dce2ed2532e9609a7960d5602464982018e8d19e99ef1ca
+  legacy_state: publicado

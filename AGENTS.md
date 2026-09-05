@@ -1,105 +1,56 @@
 # AGENTS.md
 
-## Encarnación de la sesión
+KORA es la maquinaria personal de Félix Korvo para transformar fuentes en
+conocimiento útil, autorar agentes y skills y realizarlos en Codex y Hermes.
+La única raíz de uso es `/home/felix/kora-pneuma`. El repositorio
+`kora-rebuild` conserva la historia de construcción y no es otra fuente activa.
 
-En este workspace actúa como custodio operativo de KORA pneuma: preserva una fuente de verdad por objeto, clasifica antes de producir, resuelve por URN, declara toda pérdida y distingue rigurosamente ley, fuente, derivado y runtime. Tu trabajo termina en coherencia verificable, no en proliferación de artefactos.
+Lee el `README.md` actual y solo la documentación necesaria para el encargo.
+`MANDATO.md` conserva la autorización y los criterios de la reconstrucción del
+2026-09-05. Mientras su Goal nativo siga activo, completa esos criterios; después
+no lo recrees ni conviertas cada tarea nueva en otra reconstrucción.
 
-Esta es una postura nativa de la sesión Codex. No constituye por sí misma un artefacto KORA, no porta URN ni sello y no prueba conducta, safety, composición o autoridad efectiva. Un agente KORA portable debe autorarse en `artefactos/agentes/`, pasar la ley y transmutarse al runtime.
+## Fuente e interfaz
 
-## Entrada efectiva
+Los productos se mantienen en `products/<namespace>/<name>/object.yaml` y su
+archivo de contenido. El catálogo se deriva al operar. `requires` declara
+necesidades de realización; `relations` conserva otros vínculos. Los originales
+archivados y la historia sirven para investigar procedencia, sin gobernar la
+operación actual. `artefactos/conocimiento` contiene solo enlaces de lectura
+necesarios para consumidores existentes; edita la fuente a la que resuelven.
 
-Lee solo lo que la tarea exija:
+La interfaz es `python3 kora_cli.py --help`. `catalog.py` representa y resuelve;
+`authoring.py` conserva y publica fuentes; `render_codex.py` y `render_hermes.py`
+producen archivos nativos; `install.py` reconoce cambios y recupera operaciones;
+`cli.py` conecta esos recorridos. El importador y su auditoría leen formatos
+anteriores únicamente para preservar y comprobar originales.
 
-1. `ALMA.md` para finalidad y naturaleza cuando la decisión sea estructural.
-2. El estrato pertinente de `ley/0-constitucion.md` a
-   `ley/4-koraficacion.md` para autoridad normativa.
-3. `HANDOFF.md` en la raíz solo si retomas trabajo material inconcluso.
-4. El artefacto fuente y las referencias que declare por URN.
+Consulta las capacidades contrastadas y sus fuentes oficiales en `docs/codex.md`
+y `docs/hermes.md`. Verifica la versión instalada cuando una decisión dependa de
+ella. Los únicos adaptadores y operaciones de runtime son Codex y Hermes.
+No agregues soporte a destinos hipotéticos ni cambies instalaciones ajenas.
 
-`GENESIS.md` es acta histórica inmutable. `README.md`, `CLAUDE.md`, handoffs y guías orientan; no legislan.
+## Cambiar y comprobar
 
-La documentación y las explicaciones se escriben en español de Chile. Código,
-comandos e identificadores permanecen en inglés. Las fechas usan siempre el
-formato absoluto `AAAA-MM-DD`.
+Actúa dentro de la autoridad del encargo y completa el menor cambio útil.
+Preserva ediciones locales, recursos, identidades y relaciones necesarias.
+Una reparación de maquinaria no autoriza a reescribir conocimiento de dominio.
+Mantén secretos, datos sensibles, credenciales, memoria y estado personal fuera
+de Git y de evidencia compartida. Los respaldos privados no son fuente activa.
 
-## Ontología del repositorio
+Comprueba con `python3 kora_cli.py check`, las pruebas pertinentes de
+`python3 -m unittest discover -s tests -v` y `git diff --check`.
+Usa `--root` para corpus independientes y `--home` para pruebas de instalación.
+Distingue forma válida, comparación semántica, estado de instalación y conducta
+observada. Los cambios nativos se realizan desde su fuente; el estado y la
+recuperación se consultan con `status`, `recover` y `rollback`.
 
-- Solo hay tres tipos de artefacto: conocimiento, agentes y skills. La ley no es un artefacto.
-- Fuente canónica: filesystem validado bajo `artefactos/` y `ley/`.
-- Derivados: `censo.json`, `_emision/`, conteos, reportes e instalaciones runtime. Nunca los edites como autoridad.
-- No trabajes sobre fuentes con el `cwd` bajo `_emision/`: sus `AGENTS.md` son
-  contratos del runtime y, por precedencia de Codex, prevalecen ante conflictos.
-  Vuelve a la raíz y cambia la fuente.
-- Un artefacto agéntico es una especificación gobernada. Vector, arnés, forma, herramientas, sello y paridad no demuestran modelo conductual ni enforcement del runtime.
-- El canon agéntico es agnóstico al runtime. Codex es el target operacional principal; otros adaptadores se invocan y verifican solo bajo demanda explícita. `targets` es una allowlist opcional, no identidad.
-- La bestia `../kora` está congelada: para lo no migrado, migrar-o-omitir; toda doctrina futura nace aquí.
+Puedes delegar subtareas acotadas con propiedad explícita de archivos y una sola
+autoridad de integración. Conserva el trabajo ajeno. Usa ramas con prefijo
+`fxai`, commits autocontenidos por intención y staging de paths exactos.
+Publicar Git remotamente requiere autoridad específica del usuario.
 
-## Modo de trabajo KORA
-
-1. Nombra la finalidad y clasifica el objeto antes de crear archivos.
-2. Busca por URN y censa el filesystem vivo; no confíes en inventarios memorizados.
-3. Decide la fuente única y su zona correcta.
-4. Edita fuente o ley con el cambio mínimo; nunca una emisión.
-5. Valida forma, verdad semántica y efecto runtime como evidencias distintas.
-6. Regenera o transmuta solo cuando el cambio lo exige y la solicitud autoriza sus efectos.
-
-### Frontera de fuentes técnicas
-
-La regla operativa canónica vive en `urn:kora:kb:frontera-fuentes-tecnicas`:
-
-- El conocimiento curado tiene una sola fuente canónica en KORA. Fuentes OWL/SKOS, catálogos XML, esquemas y datos raw permanecen externos cuando su semántica técnica no puede representarse fielmente como conocimiento KORA.
-- Una fuente externa sin consumidor físico se archiva de forma reversible solo después de comprobar referencias, symlinks, destino e inventario, respaldarla y verificar su manifiesto SHA-256. No se elimina por defecto.
-- `DESCARTAR` exige redundancia u obsolescencia completa verificada y autoridad explícita; en caso contrario, se conserva o se archiva.
-- Un symlink solo se crea cuando existe un consumidor físico real en otro workspace; el consumidor nunca se convierte en fuente de verdad.
-
-Para autoría agéntica, usa el agente KORA `agent-architect` solo cuando el operador lo solicite o una instrucción aplicable autorice subagentes; no improvises una persona dentro de este archivo. Para evaluar el destino de un artefacto existente, usa el método de auditoría KORA. Ninguno reemplaza `velar`.
-
-## Gestos canónicos
-
-```bash
-python3 kora.py censo
-python3 kora.py nombre <urn>
-python3 kora.py velar
-python3 kora.py transmutar --urn <urn> [--target <target>] [--stdout|--aplicar]
-python3 kora.py transmutar --paridad [--urn <urn>] [--target <target>]
-python3 kora.py ciclo <urn> <estado>
-python3 kora.py ley
-```
-
-Sin `--aplicar`, transmutar solo reemite un derivado local. `--aplicar`, cambios de lifecycle y operaciones sobre runtimes requieren alcance y autoridad explícitos; las gates son precondición externa, no parte automática del gesto.
-
-## Reglas de autoría
-
-- Conserva el shape plano y cerrado de `ley/2`; no agregues campos ad hoc.
-- Un URN no lleva versión y sigue resolviendo tras deprecación o retiro.
-- No demuevas formas; promociona solo hacia arriba con major y gate, o depreca y reemplaza.
-- `conocimiento` y `componible` declaran referencias/candidatos, no composición probada.
-- Koraficación exige cobertura, sustento y preservación relacional respecto de fuente y alcance; reporta `PASS|FAIL|ABSENT|NOT_RUN`. `velar` no la mecaniza.
-- `familia` es metadata documental heredada y opcional; no la reemplaces por otro enum.
-- No persistas cifras volátiles ni rutas derivadas de un id; resuelve en vivo.
-
-## Verificación y cierre
-
-```bash
-python3 kora.py velar
-python3 -m unittest discover -s tests
-```
-
-Si cambia un artefacto agéntico, verifica paridad por URN y target. Usa
-`velar --estricto` o paridad global solo cuando cambie la frontera que esos
-diagnósticos observan. Ejecuta la suite completa para cambios del núcleo; una
-edición focal usa primero pruebas focales. `desviada` y `sin-emision` bloquean;
-`no-instalada` informa. Cierra con `git diff --check`, diff revisado y límites
-de evidencia explícitos.
-
-## Continuidad
-
-- Las decisiones durables viven en ley, artefactos, código o pruebas; Git
-  conserva la historia.
-- Si una interrupción deja trabajo material inconcluso, usa un único
-  `HANDOFF.md` breve en la raíz y elimínalo al retomar y cerrar. No mantengas
-  rotaciones fechadas, informes de sesión ni recibos de cierre.
-- `_archivo/` y `*.tar.gz` permanecen en `.gitignore`: conservan historia
-  local reversible, pero no son autoridad ni parte del árbol Git activo.
-- No acumules cierres, sesiones ni inventarios volátiles en superficies
-  activas.
+Escribe documentación y explicaciones en español de Chile, fechas `AAAA-MM-DD`
+y código e identificadores en inglés. Documenta solo lo necesario para operar,
+comprobar o continuar. Usa un único `HANDOFF.md` temporal si se interrumpe trabajo
+material; no mantengas registros paralelos del catálogo ni del estado instalado.

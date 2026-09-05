@@ -1,0 +1,13 @@
+id: urn:fxsl:kb:icas-adjunciones
+kind: knowledge
+name: icas-adjunciones
+description: 'Pieza 06 del ICAS-BoK: adjunciones — unit/counit, free/forgetful, Sigma-Delta-Pi
+  y conexiones de Galois; tradeoffs relajación/formalización y migración con preservación
+  de constraints.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-adjunciones.md
+  source_sha256: fe4648d3d9a92bd6b08996a028d7c171698dc3f608143e8063b6c299406264f6
+  legacy_state: publicado

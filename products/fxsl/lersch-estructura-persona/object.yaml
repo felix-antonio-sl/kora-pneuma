@@ -1,0 +1,32 @@
+id: urn:fxsl:kb:lersch-estructura-persona
+kind: knowledge
+name: lersch-estructura-persona
+description: 'Índice de la familia y Einleitung de Aufbau der Person de Lersch: psicología
+  comprensiva y estratificada, definición de la obra, sus fundamentos fenomenológicos
+  y el mapa de los diez artefactos que la korafican.'
+content: content.md
+requires:
+- urn:fxsl:kb:lersch-estratificacion
+- urn:fxsl:kb:lersch-lebensgrund
+- urn:fxsl:kb:lersch-endothymer-grund-antriebserlebnisse
+- urn:fxsl:kb:lersch-endothymer-grund-gefuehlsregungen
+- urn:fxsl:kb:lersch-endothymer-grund-gestimmtheiten
+- urn:fxsl:kb:lersch-aussenbereich
+- urn:fxsl:kb:lersch-personaler-oberbau
+- urn:fxsl:kb:lersch-tektonik-der-person
+- urn:fxsl:kb:lersch-unbewusstes
+relations:
+  depende:
+  - urn:fxsl:kb:lersch-estratificacion
+  - urn:fxsl:kb:lersch-lebensgrund
+  - urn:fxsl:kb:lersch-endothymer-grund-antriebserlebnisse
+  - urn:fxsl:kb:lersch-endothymer-grund-gefuehlsregungen
+  - urn:fxsl:kb:lersch-endothymer-grund-gestimmtheiten
+  - urn:fxsl:kb:lersch-aussenbereich
+  - urn:fxsl:kb:lersch-personaler-oberbau
+  - urn:fxsl:kb:lersch-tektonik-der-person
+  - urn:fxsl:kb:lersch-unbewusstes
+provenance:
+  source_path: artefactos/conocimiento/fxsl/lersch-estructura-persona.md
+  source_sha256: 2fd6330340428f9d8f0e912ee047a728b0340a4067f859ba9001a9a317f6476c
+  legacy_state: publicado

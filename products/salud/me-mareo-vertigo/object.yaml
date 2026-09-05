@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-mareo-vertigo
+kind: knowledge
+name: me-mareo-vertigo
+description: 'Mareo y Vértigo: El mareo y el vértigo son consultas comunes en urgencias,
+  representando un 3,5% en EE.UU'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-mareo-vertigo.md
+  source_sha256: d4247375d7aaf39d6d39430062bcfc0a6a769c73a7486807bb0dbb61fd3d1217
+  legacy_state: publicado

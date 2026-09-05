@@ -1,0 +1,14 @@
+id: urn:salud:kb:gestion-redes-urgencias-p02
+kind: knowledge
+name: gestion-redes-urgencias-p02
+description: Gestión de Redes Asistenciales — Red de Urgencias - Parte 02
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-urgencias
+  - urn:salud:kb:gestion-redes-unidades
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-urgencias-p02.md
+  source_sha256: 788a29c4a2cbb47e803f867ddafbe8191ebd7e92b489bb57da964a6315a60afd
+  legacy_state: publicado

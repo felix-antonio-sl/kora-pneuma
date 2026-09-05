@@ -1,0 +1,108 @@
+id: urn:salud:artefacto:hospitalista
+kind: skill
+name: hospitalista
+description: 'Skill para activar modo hospitalista de red: hospitalizacion intrahospitalaria,
+  camas, flujo, altas, boarding, continuidad, capacidad, seguridad, indicadores y
+  gobernanza operacional.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:salubrista
+- urn:salud:kb:salubrista-atlas-integrado
+- urn:salud:kb:salubrista-body-of-knowledge
+- urn:salud:kb:salubrista-fuentes-base-curadas
+- urn:salud:kb:salubrista-fuente-management-engineering
+- urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+- urn:salud:kb:gestion-redes-indice
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:gestion-redes-unidades
+- urn:salud:kb:gestion-redes-urgencias
+- urn:salud:kb:gestion-redes-herramientas
+- urn:salud:kb:management-engineering-ext-indice
+- urn:salud:kb:management-engineering-ext-capacidad
+- urn:salud:kb:health-systems-science-operativa
+relations:
+  conocimiento:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-atlas-integrado
+  - urn:salud:kb:salubrista-body-of-knowledge
+  - urn:salud:kb:salubrista-fuentes-base-curadas
+  - urn:salud:kb:salubrista-fuente-management-engineering
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:gestion-redes-indice
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-unidades
+  - urn:salud:kb:gestion-redes-urgencias
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:management-engineering-ext-indice
+  - urn:salud:kb:management-engineering-ext-capacidad
+  - urn:salud:kb:health-systems-science-operativa
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:firs-razonamiento-sanitario
+  - urn:salud:artefacto:hospitalizacion-domiciliaria
+provenance:
+  source_path: artefactos/skills/salud/hospitalista/SKILL.md
+  source_sha256: 628a591024a3cfd340a90992158da616a8bccb236a383921b6cf037a6cc7dec0
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:hospitalista
+
+    nombre: hospitalista
+
+    version: 1.1.0
+
+    estado: activo
+
+    descripcion: "Skill para activar modo hospitalista de red: hospitalizacion intrahospitalaria,
+    camas, flujo, altas, boarding, continuidad, capacidad, seguridad, indicadores
+    y gobernanza operacional."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/hospitalista/SKILL.md
+    v1.0.1 (sha256:583e9d68d6a2679a1127aa11ae8fb47c3345a987f282222900aa9e9aba7b4ec2);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): skill
+    de gestion meso componible del agente salubrista, frontera meso-gestion declarada.
+    Herramientas OpenClaw (kb_route, knowledge_retrieval, web_search) mapeadas al
+    idiom estandar: el KB-first se ejerce con Read/Grep sobre el corpus local. Omitido
+    con razon: target openclaw (GENESIS seccion 4)."
+
+    autor: FS
+
+    creado: 2026-04-27
+
+    lang: es
+
+    tags: [salud, hospitalista, camas, flujo, boarding, capacidad, gobernanza-operacional]
+
+    vector: [2, 1, 2, 0, 1]
+
+    sigma: [3, 3, 3, 3, 2]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob, WebSearch]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [clasificar-consulta-hospitalista, fijar-escala-y-unidad-de-decision,
+    recuperar-corpus-operacional, mapear-flujo-y-capacidad, evaluar-seguridad-continuidad-y-equidad,
+    coordinar-hodom-si-corresponde, salida-hospitalista-trazable]
+
+    conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-atlas-integrado,
+    urn:salud:kb:salubrista-body-of-knowledge, urn:salud:kb:salubrista-fuentes-base-curadas,
+    urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss,
+    urn:salud:kb:gestion-redes-indice, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades,
+    urn:salud:kb:gestion-redes-urgencias, urn:salud:kb:gestion-redes-herramientas,
+    urn:salud:kb:management-engineering-ext-indice, urn:salud:kb:management-engineering-ext-capacidad,
+    urn:salud:kb:health-systems-science-operativa]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:firs-razonamiento-sanitario,
+    urn:salud:artefacto:hospitalizacion-domiciliaria]
+
+    ---
+
+    '

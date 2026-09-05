@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-14-3-riesgo-biopsicosocial
+kind: knowledge
+name: hsc-14-3-riesgo-biopsicosocial
+description: Procedimiento HSC 14.3 para pesquisa, clasificación e intervención de
+  riesgo biopsicosocial y sociosanitario en hospitalizados
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-14-3-riesgo-biopsicosocial.md
+  source_sha256: 52ae7fbecd2843c00ce1cb5fbed7d8fd651c67790d2e0a3570b621deb0b0b3d5
+  legacy_state: publicado

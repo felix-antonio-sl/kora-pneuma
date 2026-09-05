@@ -1,0 +1,16 @@
+id: urn:kora:kb:cat-kora-kernel
+kind: knowledge
+name: cat-kora-kernel
+description: 'Núcleo categorial mínimo y demostrado de KORA: retículo de firmas, proyección
+  por target como coreflector, fidelidad contravariante, alcance del sello y relaciones
+  como grafos generadores.'
+content: content.md
+requires:
+- urn:kora:kb:cat-foundations
+relations:
+  depende:
+  - urn:kora:kb:cat-foundations
+provenance:
+  source_path: artefactos/conocimiento/kora/cat-kora-kernel.md
+  source_sha256: 65d71bf644eb123bac2be2a318b68cbb168c4f59b879873ea96aa451591d3a77
+  legacy_state: publicado

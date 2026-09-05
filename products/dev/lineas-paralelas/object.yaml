@@ -1,0 +1,90 @@
+id: urn:dev:artefacto:lineas-paralelas
+kind: skill
+name: lineas-paralelas
+description: 'Skill local para deep-opm-pro: estructura el trabajo pendiente del repo en N lineas de desarrollo
+  paralelas, generando README maestro, un brief por linea y prompt generico de asignacion en docs/instrucciones-lineas-dev/<ronda>/,
+  con minimo overlap por archivo y revision profunda obligatoria de opm-extracted antes de crear soluciones
+  nuevas.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:fxsl:kb:swarm-ops-metodologia
+- urn:fxsl:kb:xanpan-agents-metodologia
+- urn:fxsl:kb:opm-es
+relations:
+  componible:
+  - urn:dev:artefacto:steipete
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/dev/lineas-paralelas/SKILL.md
+  source_sha256: 5e90a7b20f38eb28d3de265773319927c0bcaeea8994ac7613ca0f082183d1cf
+  original_path: products/dev/lineas-paralelas/sources/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:dev:artefacto:lineas-paralelas\n  type: artefacto\n  provenance:\n\
+    \    created_by: FS\n    created_at: '2026-05-05'\n    source: Cristalizacion del patron observable\
+    \ en deep-opm-pro/docs/instrucciones-lineas-dev/\n      (rondas 1, 2 y 3) que estructura trabajo pendiente\
+    \ en N lineas paralelas con\n      README maestro, briefs disjuntos por linea y prompt generico de\
+    \ asignacion.\nversion: 1.0.1\nstatus: activo\nnombre: lineas-paralelas\ndescripcion: 'Skill local\
+    \ para deep-opm-pro: estructura el trabajo pendiente del repo\n  en N lineas de desarrollo paralelas,\
+    \ generando README maestro, un brief por linea\n  y prompt generico de asignacion en docs/instrucciones-lineas-dev/<ronda>/,\
+    \ con minimo\n  overlap por archivo y revision profunda obligatoria de opm-extracted antes de crear\n\
+    \  soluciones nuevas.'\ntags:\n- lineas-paralelas\n- ronda\n- briefs\n- paralelismo\n- deep-opm-pro\n\
+    - local\n- scaffolding-docs\nlang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n\
+    \      mu: 0\n      xi: 1\n      lambda: 0\n      phi: 1\n      sigma:\n      - 1\n      - 1\n   \
+    \   - 1\n      - 1\n      - 0\n    presentacion: accion-primaria\n    atlas:\n      arnes_categorico:\
+    \ disciplina\n      forma_material: habilidad\n      metafora_relacional: supertool\n    entornos_objetivo:\n\
+    \    - claude-code\n    - codex\n    - opencode\n    - openclaw\n    nivel_prescripcion: alto\n  \
+    \  alcance_despliegue: /home/felix/projects/deep-opm-pro\n    conocimiento_permitido:\n    - urn:fxsl:kb:swarm-ops-metodologia\n\
+    \    - urn:fxsl:kb:xanpan-agents-metodologia\n    - urn:kora:kb:procesos-spec\n    componible_con:\
+    \ []\nartefacto:\n  perfil:\n    dominio:\n    - planning\n    - paralelismo\n    - briefs-de-desarrollo\n\
+    \    - scaffolding-docs\n    - deep-opm-pro\n    disparadores:\n    - estructura el trabajo pendiente\
+    \ en N lineas paralelas\n    - genera ronda nueva de lineas de desarrollo\n    - /lineas-paralelas\n\
+    \    - asigna lineas paralelas a agentes independientes\n    - genera briefs paralelos a partir del\
+    \ HANDOFF\n    salidas:\n    - <repo>/docs/instrucciones-lineas-dev/<ronda>/README.md\n    - <repo>/docs/instrucciones-lineas-dev/<ronda>/linea-<i>-<slug>.md\
+    \ (uno por linea)\n    - <repo>/docs/instrucciones-lineas-dev/<ronda>/prompt-asignacion.md\n  plan:\n\
+    \    estado_inicial: capturar-intent\n    estado_terminal: ronda-emitida\n    estados:\n    - capturar-intent\n\
+    \    - leer-handoff-y-backlog\n    - mapear-corpus-reusable\n    - particionar-en-N-lineas\n    -\
+    \ generar-readme-maestro\n    - generar-briefs-por-linea\n    - generar-prompt-asignacion\n    - ronda-emitida\n\
+    \  interfaz:\n    herramientas:\n    - Read\n    - Glob\n    - Grep\n    - Write\n    - Bash\n   \
+    \ permisos: Lectura libre del repo. Escritura limitada a docs/instrucciones-lineas-dev/<ronda>/.\n\
+    \      No tocar codigo fuente, HANDOFF.md ni backlog HU desde la skill.\n    protocolos:\n      entrada:\
+    \ intent del operador con (a) numero N de lineas, (b) nombre o numero\n        de ronda destino, (c)\
+    \ opcionalmente HU/pendientes a cubrir; si falta dato,\n        leer HANDOFF y proponer particion\n\
+    \      salida: directorio docs/instrucciones-lineas-dev/<ronda>/ con README + N briefs\n        +\
+    \ prompt; reporte breve al operador con tabla de lineas y orden de merge sugerido\n  invariantes:\n\
+    \    reglas_duras:\n    - Cada linea ancla HU especificas del backlog vivo del repo. No inventar HU.\n\
+    \    - Cambios solo aditivos como filosofia operativa de la ronda. Renombrar, eliminar\n      APIs\
+    \ y romper round-trip de persistencia estan prohibidos en briefs.\n    - Antes de crear soluciones\
+    \ nuevas, revisar en profundidad /home/felix/projects/deep-opm-pro/opm-extracted\n      como fuente\
+    \ primaria de codigo, patrones y assets de una app estado del arte;\n      reciclar todo lo posible\
+    \ y citar evidencia concreta. La revision superficial\n      no basta.\n    - Tabla de colisiones\
+    \ por archivo es obligatoria en el README. Cada celda declara\n      aditivo, lectura o vacio.\n \
+    \   - Cada decision semantica en un brief cita SSOT explicita o documento canonico\n      interno\
+    \ con id de seccion.\n    - 'Modularidad por dominio: cada linea con dominio nuevo crea archivo disjunto\n\
+    \      en lugar de expandir archivos monoliticos compartidos.'\n    - 'El brief es contrato: secciones\
+    \ obligatorias en orden Mision, HU base, Anclaje\n      a evidencia, Archivos permitidos, Restricciones\
+    \ de no-colision, Slice minimo,\n      Tests obligatorios, Verificacion, Decisiones bloqueadas, Decisiones\
+    \ libres,\n      Forma del entregable.'\n    - No tocar HANDOFF.md ni docs/historias-usuario-v2/ desde\
+    \ la skill. La consolidacion\n      final reescribe HANDOFF, no las lineas individuales.\n    - 'Idiomas:\
+    \ documentos en es-CL; identificadores y comandos en su forma original.'\n    - 'Loop verde obligatorio\
+    \ declarado en cada brief: comandos del repo que el agente\n      debe ejecutar antes de cerrar.'\n\
+    \    - Despliegue exclusivo en /home/felix/projects/deep-opm-pro. No instalar globalmente\n      en\
+    \ ~/.claude/skills, ~/.codex/skills ni ~/.opencode/skills.\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:fxsl:kb:swarm-ops-metodologia
+    - urn:fxsl:kb:xanpan-agents-metodologia
+    - urn:kora:kb:procesos-spec
+    componible_con: []
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: true
+    path: .codex/skills/lineas-paralelas/SKILL.md
+  inactive_machinery_references:
+  - urn:kora:kb:procesos-spec
+  adaptations:
+  - Se sustituye la ruta a la SSOT OPM anterior por su identidad actual.
+  - Se sustituye únicamente la sección de despliegue y el toolchain anterior, conservando el alcance funcional
+    del proyecto.

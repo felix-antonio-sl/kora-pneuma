@@ -1,0 +1,12 @@
+id: urn:gn:kb:bpmn-d08-rendiciones
+kind: knowledge
+name: bpmn-d08-rendiciones
+description: Documento GN heredado de KODA sobre bpmn d08 rendiciones; migrado como
+  borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/bpmn-d08-rendiciones.md
+  source_sha256: 4374c24096f7d0bb98e2384cc74f29c611c881becf9c37a453eb219292370a3a
+  legacy_state: borrador

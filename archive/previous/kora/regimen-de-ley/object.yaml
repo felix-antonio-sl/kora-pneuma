@@ -1,0 +1,15 @@
+id: urn:kora:kb:regimen-de-ley
+kind: knowledge
+name: regimen-de-ley
+description: 'Régimen de ley de KORA: pneuma (ley/0..4) es la fuente única, genérica
+  y agnóstica de doctrina futura; la bestia queda congelada salvo correcciones de
+  verdad; los runtimes son adaptadores derivados, no identidades de KORA.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:kora:kb:alma-de-kora
+provenance:
+  source_path: artefactos/conocimiento/kora/regimen-de-ley.md
+  source_sha256: e341f9e1f2a634fb052d53ffc343c0acc783753434d3c460d5fc8e3f7d72d332
+  legacy_state: publicado

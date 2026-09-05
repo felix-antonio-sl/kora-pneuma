@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-presupuesto
+kind: knowledge
+name: ssot-presupuesto
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-presupuesto.md
+  source_sha256: fed990205bcdcbab98d666dbfe455642b10e2436419ec1968a053962070c0e6c
+  legacy_state: borrador

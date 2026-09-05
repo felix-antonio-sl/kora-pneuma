@@ -1,0 +1,79 @@
+id: urn:dev:artefacto:scaffold-repo
+kind: skill
+name: scaffold-repo
+description: 'Andamia repositorios nuevos con una entrada humana durable en README.md,
+  un contrato operativo nativo y especifico para Codex en AGENTS.md, y CLAUDE.md como
+  import exacto de AGENTS.md salvo una necesidad Claude-especifica real. Usala cuando
+  el operador quiera crear, iniciar o scaffoldear un repositorio, proyecto, corpus,
+  cuaderno de rol o modelo OPM. Distingue cuatro arquetipos: desarrollo, conocimiento,
+  cuaderno de rol y modelamiento. HANDOFF.md es unico, estable y condicional al trabajo
+  material inconcluso; no crea MEMORY.md, continuidades fechadas, bitacoras de sesion
+  ni archivos de sesion.'
+content: content.md
+targets:
+- codex
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/skills/dev/scaffold-repo/SKILL.md
+  source_sha256: 9f96baade10c27de842a2ba365fce4b6e7a19f24de15719392cf4bc5dce7a175
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:dev:artefacto:scaffold-repo
+
+    nombre: scaffold-repo
+
+    version: 2.0.0
+
+    estado: activo
+
+    descripcion: "Andamia repositorios nuevos con una entrada humana durable en README.md,
+    un contrato operativo nativo y especifico para Codex en AGENTS.md, y CLAUDE.md
+    como import exacto de AGENTS.md salvo una necesidad Claude-especifica real. Usala
+    cuando el operador quiera crear, iniciar o scaffoldear un repositorio, proyecto,
+    corpus, cuaderno de rol o modelo OPM. Distingue cuatro arquetipos: desarrollo,
+    conocimiento, cuaderno de rol y modelamiento. HANDOFF.md es unico, estable y condicional
+    al trabajo material inconcluso; no crea MEMORY.md, continuidades fechadas, bitacoras
+    de sesion ni archivos de sesion."
+
+    fuente: "Autorada runtime-first en ~/.claude/skills/scaffold-repo/ el 2026-06-21
+    (SKILL.md sha256:8d91319442a4232185ece0b28505b8c2d62a47d5b5306b0939bae15bdd12dd2d;
+    assets/ preservados verbatim) y absorbida como fuente canónica en KORA pneuma
+    ese día; no proviene de la bestia. Normalización inicial: assets/ -> referencias/
+    y frontmatter KORA cerrado. La evolución 1.x incorporó arquetipos, Codex y AGENTS.md
+    autónomo; Git conserva su detalle histórico. v2.0.0 (2026-08-03): adopta la arquitectura
+    documental README humano -> AGENTS Codex repo-specific -> CLAUDE import exacto;
+    reemplaza handoffs fechados por un único HANDOFF.md estable y eliminable; retira
+    MEMORY.md, continuidades fechadas, BITACORA/CHANGELOG obligatorios, archivos de
+    sesión y _archivo/ del scaffold; mueve las variantes por arquetipo a plantillas
+    de AGENTS.md."
+
+    autor: FS
+
+    creado: 2026-06-21
+
+    lang: es
+
+    tags: [scaffold, repo, agents-md, claude-md, readme, codex, claude-code, bootstrap,
+    handoff]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [1, 1, 2, 1, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Bash]
+
+    targets: [claude-code, codex]
+
+    alcance: usuario
+
+    estados: [resolver-parametros, clasificar-destino, escribir-entradas, verificar]
+
+    ---
+
+    '

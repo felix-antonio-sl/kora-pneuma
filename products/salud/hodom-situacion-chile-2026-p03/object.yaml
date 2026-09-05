@@ -1,0 +1,14 @@
+id: urn:salud:kb:hodom-situacion-chile-2026-p03
+kind: knowledge
+name: hodom-situacion-chile-2026-p03
+description: Situacion de la Hospitalizacion Domiciliaria en Chile 2024-2026 - Parte
+  03
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-situacion-chile-2026
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-situacion-chile-2026-p03.md
+  source_sha256: 80090f93e8ad4ac408fc98d4eca43d533761a5c47c10271bcea1f2d9c16095fe
+  legacy_state: publicado

@@ -1,0 +1,50 @@
+id: urn:kora:artefacto:graphic-design
+kind: skill
+name: graphic-design
+description: Disena identidades visuales como sistemas coherentes y transformables. Define operadores
+  visuales (color, tipografia, grilla, forma, espaciado, iconografia, marca) y reglas de composicion que
+  garantizan consistencia y escalabilidad. Produce brand specs, design tokens ejecutables (JSON + CSS
+  + Tailwind) y assets SVG.
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/kora/graphic-design/SKILL.md
+  source_sha256: fe261c35387ab98652f19d2e32b599921a930ac3583425eee973dea72c01cbd5
+  original_path: archive/previous/legacy-codex/graphic-design/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:kora:artefacto:graphic-design\n  type: artefacto\n  provenance:\n\
+    \    created_by: FS\n    created_at: '2026-04-23'\n    source: Migracion desde artifacts/skills/_TALLER/INBOX/graphic-design/SKILL.md\n\
+    \      (legacy overlay v1, 353 lineas) a shape unified v1.2\nversion: 1.0.1\nstatus: activo\nnombre:\
+    \ graphic-design\ndescripcion: Disena identidades visuales como sistemas coherentes y transformables.\n\
+    \  Define operadores visuales (color, tipografia, grilla, forma, espaciado, iconografia,\n  marca)\
+    \ y reglas de composicion que garantizan consistencia y escalabilidad. Produce\n  brand specs, design\
+    \ tokens ejecutables (JSON + CSS + Tailwind) y assets SVG.\ntags:\n- graphic-design\n- identidad-visual\n\
+    - design-tokens\n- disciplina\n- marca\nlang: es\nextensions:\n  kora:\n    vector_ontologico:\n \
+    \     pi: 2\n      mu: 0\n      xi: 1\n      lambda: 0\n      phi: 1\n      sigma:\n      - 1\n  \
+    \    - 1\n      - 2\n      - 1\n      - 0\n    presentacion: estado-primario\n    atlas:\n      arnes_categorico:\
+    \ disciplina\n      forma_material: habilidad\n      metafora_relacional: supertool\n    entornos_objetivo:\n\
+    \    - claude-code\n    - codex\n    - opencode\n    - openclaw\n    nivel_prescripcion: medio\n \
+    \   conocimiento_permitido:\n    - urn:tde:kb:guia-voz-y-tono\n    - urn:tde:kb:recomendaciones-diseno-servicios-estado\n\
+    \    - urn:kora:kb:catalogo-patrones-skills\n    componible_con:\n    - urn:kora:artefacto:ux-design\n\
+    artefacto:\n  perfil:\n    descripcion: Habilidad de diseno grafico para construir identidades visuales\
+    \ sistemicas,\n      design tokens y guias de marca coherentes.\n    dominio:\n    - identidad visual\n\
+    \    - sistemas de marca\n    - design tokens\n    salidas:\n    - brand specs\n    - design tokens\n\
+    \    - assets SVG\n  interfaz:\n    herramientas: []\n    permisos:\n      allow: []\n      deny:\
+    \ []\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:tde:kb:guia-voz-y-tono
+    - urn:tde:kb:recomendaciones-diseno-servicios-estado
+    - urn:kora:kb:catalogo-patrones-skills
+    componible_con:
+    - urn:kora:artefacto:ux-design
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/graphic-design/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

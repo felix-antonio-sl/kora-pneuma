@@ -1,0 +1,66 @@
+id: urn:kora:artefacto:decision-operable
+kind: skill
+name: decision-operable
+description: Usar cuando una pregunta de decisión sea ambigua, abstracta, burocrática
+  o difícil de responder; cuando mezcle autoridad, evidencia y ejecución; o cuando
+  se necesite convertir contexto disperso en una recomendación y una pre-respuesta
+  breve, comprensible, adoptable y recuperable sin inventar hechos ni permisos.
+content: content.md
+targets:
+- codex
+- hermes
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/skills/kora/decision-operable/SKILL.md
+  source_sha256: 1ebae2d4d241bcfeed56756bafd20d3a6f8b01234bd5b9c74844c540f6c9e702
+  legacy_state: deprecado
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:decision-operable
+
+    nombre: decision-operable
+
+    version: 1.0.0
+
+    estado: deprecado
+
+    descripcion: "Usar cuando una pregunta de decisión sea ambigua, abstracta, burocrática
+    o difícil de responder; cuando mezcle autoridad, evidencia y ejecución; o cuando
+    se necesite convertir contexto disperso en una recomendación y una pre-respuesta
+    breve, comprensible, adoptable y recuperable sin inventar hechos ni permisos."
+
+    fuente: "Autoría de novo KORA del 2026-08-25. Destila un patrón recurrente de
+    conducción decisional observado en preguntas complejas de producto, operación
+    y organización; conserva el método genérico y excluye las decisiones y fuentes
+    particulares de los casos que permitieron descubrirlo."
+
+    autor: FS
+
+    creado: 2026-08-25
+
+    lang: es
+
+    tags: [decision, elicitacion, autoridad, evidencia, recomendacion, pre-respuesta,
+    antiburocracia]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [codex, hermes]
+
+    alcance: usuario
+
+    estados: [encuadrar, resolver-autoridad, reconstruir-acto, decidir-estado, redactar,
+    comprobar]
+
+    ---
+
+    '

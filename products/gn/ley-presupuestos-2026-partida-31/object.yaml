@@ -1,0 +1,12 @@
+id: urn:gn:kb:ley-presupuestos-2026-partida-31
+kind: knowledge
+name: ley-presupuestos-2026-partida-31
+description: Documento GN heredado de KODA sobre ley presupuestos 2026 partida 31;
+  migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ley-presupuestos-2026-partida-31.md
+  source_sha256: 0edaf346b96d37d0b8d627c6c84585a9c98e66b2ee6de44367ee5b9851e64076
+  legacy_state: borrador

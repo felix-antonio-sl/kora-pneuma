@@ -1,0 +1,14 @@
+id: urn:salud:kb:estandares-it-receta-electronica
+kind: knowledge
+name: estandares-it-receta-electronica
+description: 'Receta Electronica — SNRE v0.9.6: Sistema Nacional de Receta Electronica'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:estandares-it-indice
+  - urn:salud:kb:informatica-medica-normativa-chilena
+provenance:
+  source_path: artefactos/conocimiento/salud/estandares-it-receta-electronica.md
+  source_sha256: c46af5789625feb1714a8ec9cf9c90327cd9dcaa8190ab72728a00fda2989200
+  legacy_state: publicado

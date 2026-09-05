@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-evaluacion-primaria
+kind: knowledge
+name: me-evaluacion-primaria
+description: 'INTRODUCCIÓN: En nuestro país, muchas consultas médicas se realizan
+  en servicios de urgencia públicos y privados'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-evaluacion-primaria.md
+  source_sha256: 232f67d8205acf4cc537c32e0bfac79f2ad1dfb8995db3d1e447ad4dffac9bea
+  legacy_state: publicado

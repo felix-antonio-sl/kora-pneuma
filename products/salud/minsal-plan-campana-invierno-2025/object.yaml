@@ -1,0 +1,13 @@
+id: urn:salud:kb:minsal-plan-campana-invierno-2025
+kind: knowledge
+name: minsal-plan-campana-invierno-2025
+description: 'Respuesta ministerial estacional de Invierno 2025: gobierno, vigilancia,
+  inmunización y refuerzos APS-hospitalarios.'
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-plan-campana-invierno-2025.md
+  source_sha256: 371db4a0873fb27cd7edd98f3fabd2489a22bea62497f2857db0cc45c2ee4b5f
+  legacy_state: publicado

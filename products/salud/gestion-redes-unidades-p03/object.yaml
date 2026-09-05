@@ -1,0 +1,13 @@
+id: urn:salud:kb:gestion-redes-unidades-p03
+kind: knowledge
+name: gestion-redes-unidades-p03
+description: Gestión de Redes Asistenciales — Gestión por Tipo de Unidad - Parte 03
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-unidades
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-unidades-p03.md
+  source_sha256: eb3f5706f9493467befe8811040ff3459e5e363eafdfa99a24544a9b38797597
+  legacy_state: publicado

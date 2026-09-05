@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-gcl-1-2-administracion-medicamentos-endovenosos-2024
+kind: knowledge
+name: hsc-gcl-1-2-administracion-medicamentos-endovenosos-2024
+description: Procedimiento HSC GCL 1.2 de 2024 para preparar, administrar, vigilar
+  y registrar medicamentos endovenosos.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-gcl-1-2-administracion-medicamentos-endovenosos-2024.md
+  source_sha256: 3a7c8c910680baadd367a1b3b0a5c7ae4210a5b323eb5bd2d35a78857654ecfd
+  legacy_state: publicado

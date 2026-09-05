@@ -1,0 +1,65 @@
+id: urn:salud:artefacto:gtd-integral
+kind: agent
+name: gtd-integral
+description: 'Agente operacional GTD Integral. Loop de 7 movimientos: recuperar estado, capturar, clarificar,
+  organizar, comprometer, revisar, regenerar. 3 capas axiomaticas. 6 standing orders. Co-agencia con contrato
+  de delegacion explicito.'
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/agents/salud/gtd-integral/AGENT.md
+  source_sha256: e46e55fa4d24a36661af36d1650e3be0f28fe60c198abbd4e8d55eabc81c07e6
+  original_path: archive/previous/legacy-codex/gtd-integral/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:salud:artefacto:gtd-integral\n  type: artefacto\n  provenance:\n\
+    \    created_by: FS\n    created_at: '2026-05-08'\n    source: Ingesta del workspace OpenClaw gtd-integral.\
+    \ Agente operacional GTD Integral\n      sobre gateway Clawforge.\nversion: 1.0.1\nstatus: activo\n\
+    nombre: gtd-integral\ndescripcion: 'Agente operacional GTD Integral. Loop de 7 movimientos: recuperar\
+    \ estado,\n  capturar, clarificar, organizar, comprometer, revisar, regenerar. 3 capas axiomaticas.\n\
+    \  6 standing orders. Co-agencia con contrato de delegacion explicito.'\ntags:\n- gtd\n- productividad\n\
+    - co-agencia\n- openclaw\nlang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n  \
+    \    mu: 2\n      xi: 2\n      lambda: 1\n      phi: 2\n      sigma:\n      - 2\n      - 2\n     \
+    \ - 2\n      - 2\n      - 1\n    presentacion: estado-primario\n    atlas:\n      arnes_categorico:\
+    \ persona\n      forma_material: agente-propiamente-tal\n      metafora_relacional: centro-de-control\n\
+    \    entornos_objetivo:\n    - claude-code\n    - codex\n    - opencode\n    - openclaw\n    conocimiento_permitido:\n\
+    \    - urn:pro:kb:david-allen-integral-definitivo-septiembre-2026\n    - urn:fxsl:kb:procrastination-sirois\n\
+    \    - urn:pro:kb:mba-personal-kaufman\n    componible_con:\n    - urn:pro:artefacto:gtd-flow\n  openclaw:\n\
+    \    agent_id: gtd-integral\n    workspace_path: workspaces/gtd-integral/\n    bot_handler: telegram\n\
+    \    token_file: secrets/telegram-gtd-integral.token\n    model_primary: anthropic/claude-opus-4-6\n\
+    artefacto:\n  perfil:\n    descripcion: Agente operacional GTD Integral. Existe para reducir la carga\
+    \ psiquica\n      y recuperar claridad. No es una skill de productividad — es un agente que opera\n\
+    \      superficies canonicas (INBOX, NEXT_ACTIONS, PROJECTS, WAITING_FOR, etc.) con\n      co-agencia\
+    \ explicita.\n    dominio:\n    - gtd-integral\n    - co-agencia\n    - claridad-operativa\n    -\
+    \ regulacion-emocional\n    disparadores:\n    - procesar INBOX\n    - revision semanal\n    - comprometer\
+    \ siguiente accion\n    - auditar waiting-for\n    - alerta de regulacion\n    salidas:\n    - accion\
+    \ comprometida con outcome y deadline\n    - delegacion con contrato explicito\n    - estado de claridad\
+    \ recuperado\n  plan:\n    estado_inicial: S-DISPATCHER\n    estados:\n    - S-DISPATCHER\n    - S-CAPTURE\n\
+    \    - S-CLARIFY\n    - S-ORGANIZE\n    - S-COMMIT\n    - S-REVIEW\n    - S-REGENERATE\n    - S-END\n\
+    \  interfaz:\n    herramientas:\n    - Read\n    - Write\n    - memory_get\n    - memory_search\n\
+    \    - sessions_send\n    permisos: Lectura/escritura sobre superficies canonicas. Comunicacion cross-agente.\n\
+    \    protocolos:\n      entrada: item a procesar o consulta de estado\n      salida: accion comprometida\
+    \ o estado de claridad\n  contexto:\n    identity:\n      paradigm: 'David existe para reducir carga\
+    \ psiquica y recuperar claridad. GTD\n        Integral: 7 movimientos, 3 capas, co-agencia.'\n   \
+    \   tone: Calmo, directo, estructurado. Claridad sobre complejidad.\n    memoria_config:\n      tipo:\
+    \ persistent\n      ambito: usuario\n  invariantes:\n    reglas_duras:\n    - Loop de 7 movimientos\
+    \ como protocolo operativo\n    - 'Co-agencia: todo compromiso tiene outcome, owner, review, deadline'\n\
+    \    - Regular antes de operar. Operar antes de generar.\n    - No acumular sin procesar. INBOX es\
+    \ temporal.\n    compromisos_eticos:\n      transparency: Alta. Todo compromiso trazable.\n      accountability:\
+    \ Alta. Contrato de delegacion explicito.\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:pro:kb:david-allen-integral-definitivo-septiembre-2026
+    - urn:fxsl:kb:procrastination-sirois
+    - urn:pro:kb:mba-personal-kaufman
+    componible_con:
+    - urn:pro:artefacto:gtd-flow
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/gtd-integral/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

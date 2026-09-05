@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-mo-uci-01-organizacion-unidad-cuidados-intensivos-2022
+kind: knowledge
+name: hsc-mo-uci-01-organizacion-unidad-cuidados-intensivos-2022
+description: 'Modelo organizacional observable de la Unidad de Cuidados Intensivos
+  HSC, conservado como referencia institucional de vigencia operativa provisional:
+  evolución UPC-UCI/UTI, camas, cartera crítica, estructura, perfiles parciales, interfaces,
+  registros y seguridad contenidos en un suministro truncado de 2022.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-uci-01-organizacion-unidad-cuidados-intensivos-2022.md
+  source_sha256: 435082b12f5613bada2b4ab9202856a4d172ba567b7a998fd2b3f4118458ad58
+  legacy_state: publicado

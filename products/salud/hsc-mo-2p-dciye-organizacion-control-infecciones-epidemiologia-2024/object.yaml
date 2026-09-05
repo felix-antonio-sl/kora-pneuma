@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024
+kind: knowledge
+name: hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024
+description: 'Modelo organizacional aprobado del Departamento de Control de Infecciones
+  y Epidemiología del HSC en 2024: vigilancia, prevención IAAS, brotes, notificación,
+  antimicrobianos, interfaces, perfiles, registros y dotación declarados.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024.md
+  source_sha256: 024cadfd8954e7c3354cb3a38cafde5dc133b376e2bd80114bfdb2eb55e34f0c
+  legacy_state: publicado

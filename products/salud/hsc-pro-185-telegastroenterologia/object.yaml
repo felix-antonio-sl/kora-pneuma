@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-pro-185-telegastroenterologia
+kind: knowledge
+name: hsc-pro-185-telegastroenterologia
+description: 'Protocolo local HSC PRO 185, Atención Telegastroenterología (primera
+  edición marzo 2024, vigencia hasta marzo 2029): teleconsulta UNITEL para pacientes
+  con movilidad limitada, con gastroenterólogo resolutor, coordinación y facilitador;
+  no incorpora ni habilita atención durante un episodio HODOM.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-185-telegastroenterologia.md
+  source_sha256: 1ad4a64d17ab2915f1f77d71a0b6fef98f404253881d7241d70b2ba18d10958b
+  legacy_state: publicado

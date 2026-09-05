@@ -1,0 +1,13 @@
+id: urn:fxsl:kb:icas-agencia
+kind: knowledge
+name: icas-agencia
+description: 'Pieza 14 del ICAS-BoK: agencia categorial — free monad como plan, cofree
+  comonad como sustrato, emparejamiento plan-sustrato y el patrón Percepción-Decisión-Acción
+  para sistemas agénticos.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-agencia.md
+  source_sha256: f217a268b298df72cd663bd911d7d90f3f63a83156e86f08f6b20cdf6ce10c14
+  legacy_state: publicado

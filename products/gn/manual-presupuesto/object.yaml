@@ -1,0 +1,12 @@
+id: urn:gn:kb:manual-presupuesto
+kind: knowledge
+name: manual-presupuesto
+description: Documento GN heredado de KODA sobre manual presupuesto; migrado como
+  borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/manual-presupuesto.md
+  source_sha256: ff7aea35fd7d8f0859931799cec3565bb46165536577569139d11d5c82ccc80b
+  legacy_state: borrador

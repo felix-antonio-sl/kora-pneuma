@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:ifml-fundamentos
+kind: knowledge
+name: ifml-fundamentos
+description: 'Fundamentos de IFML (Interaction Flow Modeling Language, OMG/MDA): aspectos
+  del front-end que cubre, artefactos del estandar, principios de diseno, rol en MVC,
+  constructos centrales, anidamiento conjuntivo/disyuntivo, ejemplo Bookstore y rol
+  en el ciclo de desarrollo.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:ifml-corpus-index
+  - urn:fxsl:kb:ifml-view-containers
+provenance:
+  source_path: artefactos/conocimiento/fxsl/ifml-fundamentos.md
+  source_sha256: 3dd9ccec55aaf79e6c03461102e561d9df87511e66789ad823e03b9db3892d77
+  legacy_state: publicado

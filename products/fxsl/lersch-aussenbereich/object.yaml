@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:lersch-aussenbereich
+kind: knowledge
+name: lersch-aussenbereich
+description: 'El ámbito exterior del vivenciar (Aussenbereich): el advenir al mundo
+  y la orientación en el (notar sensorial, hacer-presente representativo, aprehensión
+  pensante) y la conducta actuante (el obrar: instinto, experiencia, inteligencia,
+  voluntad).'
+content: content.md
+requires:
+- urn:fxsl:kb:lersch-estratificacion
+relations:
+  depende:
+  - urn:fxsl:kb:lersch-estratificacion
+provenance:
+  source_path: artefactos/conocimiento/fxsl/lersch-aussenbereich.md
+  source_sha256: 9b4ac0697309d007fdb8a046f07754f0bb0670f4a18064b627419a0395ff518e
+  legacy_state: publicado

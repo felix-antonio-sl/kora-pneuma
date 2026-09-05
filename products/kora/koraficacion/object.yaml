@@ -1,0 +1,16 @@
+id: urn:kora:artefacto:koraficacion
+kind: skill
+name: koraficacion
+description: Transforma fuentes en conocimiento útil y recuperable preservando alcance,
+  excepciones, incertidumbre, relaciones y originales técnicos.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:kb:frontera-fuentes-tecnicas
+- urn:kora:kb:guia-rapida-pneuma
+provenance:
+  date: '2026-09-05'
+  authority: MANDATO.md
+  origin: Autoría nueva para operar la reconstrucción independiente.

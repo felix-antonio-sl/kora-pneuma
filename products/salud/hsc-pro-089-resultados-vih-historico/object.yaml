@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-pro-089-resultados-vih-historico
+kind: knowledge
+name: hsc-pro-089-resultados-vih-historico
+description: Procedimiento histórico HSC PRO 89 para notificar resultados confidenciales
+  de VIH
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-089-resultados-vih-historico.md
+  source_sha256: 41f282f21d1bbebfd9af8949e36ff993ff3cd70cd37db8805ddb12811ad58350
+  legacy_state: publicado

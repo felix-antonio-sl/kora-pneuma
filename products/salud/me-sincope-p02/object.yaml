@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-sincope-p02
+kind: knowledge
+name: me-sincope-p02
+description: 'Síncope - Parte 02: El ECG de 12 derivaciones es la prueba más solicitada
+  en la evaluación del síncope en urgencias'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-sincope-p02.md
+  source_sha256: 04ecd48aa4e6038a06a80a362e8a3948c88fe03fd2afc7b6f2f813e40944562e
+  legacy_state: publicado

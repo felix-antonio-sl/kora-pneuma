@@ -1,0 +1,13 @@
+id: urn:fxsl:kb:icas-higher-categories
+kind: knowledge
+name: icas-higher-categories
+description: 'Pieza 08b del ICAS-BoK: categorías superiores — 2-categorías, (∞,1)-categorías,
+  conjuntos simpliciales y HoTT; relaciones entre relaciones e igualdad debilitada
+  a homotopía.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-higher-categories.md
+  source_sha256: cbb2f2217b9856d10713a37eebeca52c5faa1d3c13d333b922002848d41dc505
+  legacy_state: publicado

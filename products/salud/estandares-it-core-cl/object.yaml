@@ -1,0 +1,15 @@
+id: urn:salud:kb:estandares-it-core-cl
+kind: knowledge
+name: estandares-it-core-cl
+description: 'Core CL — Perfil FHIR Chileno v1.9.4: Guia de Implementacion del perfil
+  base FHIR R4 para Chile'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:estandares-it-indice
+  - urn:salud:kb:informatica-medica-normativa-chilena
+provenance:
+  source_path: artefactos/conocimiento/salud/estandares-it-core-cl.md
+  source_sha256: a332cd0c1f29ac9e7e6a4e2bbc8b5c4695d399b85b6cc1ed72c7d437bfd5d179
+  legacy_state: publicado

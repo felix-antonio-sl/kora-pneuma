@@ -1,0 +1,14 @@
+id: urn:salud:kb:gestion-redes-salud-mental-p04
+kind: knowledge
+name: gestion-redes-salud-mental-p04
+description: Gestión de Redes — Salud Mental y Adicciones - Parte 04
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-salud-mental
+  - urn:salud:kb:gestion-redes-general
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-salud-mental-p04.md
+  source_sha256: 0b93f64291ecb5be39537883bb875972766f573bf26d31fd14d4e21880297549
+  legacy_state: publicado

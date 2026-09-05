@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-pro-054-derivacion-tdah
+kind: knowledge
+name: hsc-pro-054-derivacion-tdah
+description: 'Protocolo local HSC PRO-054, Derivación Trastorno por Déficit Atencional
+  (primera edición mayo 2014, Res. Exenta 2263): estandariza la derivación desde APS
+  al HSC para estudio y tratamiento del TDAH; cobertura pediátrica y adulta del eje
+  salud mental ambulatorio.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-054-derivacion-tdah.md
+  source_sha256: e7a2e692e9fbf8bd0e93d3af78d3b010305fd56e1c4e515569044c0645977f25
+  legacy_state: publicado

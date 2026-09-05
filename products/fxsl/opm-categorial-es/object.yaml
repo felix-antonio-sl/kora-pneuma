@@ -1,0 +1,52 @@
+id: urn:fxsl:kb:opm-categorial-es
+kind: knowledge
+name: opm-categorial-es
+description: 'Puente formal OPM ↔ teoría de categorías: lectura categorial del corpus OPM-ES anclada a
+  las piezas del ICAS-BoK.'
+content: content.md
+requires:
+- urn:fxsl:kb:opm-es
+- urn:fxsl:kb:opd-es
+- urn:fxsl:kb:opl-es
+- urn:fxsl:kb:spec-forja-opd-es
+- urn:fxsl:kb:spec-forja-opl-es
+- urn:fxsl:kb:metodologia-forja-opm-es
+- urn:fxsl:kb:reglas-opm-estrictas-es
+relations:
+  cita:
+  - urn:fxsl:kb:icas-sintesis
+  - urn:fxsl:kb:icas-composicion
+  - urn:fxsl:kb:icas-preservacion
+  - urn:fxsl:kb:icas-comparacion
+  - urn:fxsl:kb:icas-efectos
+  - urn:fxsl:kb:icas-universales
+  - urn:fxsl:kb:icas-composicion-estructura
+  - urn:fxsl:kb:icas-higher-categories
+  - urn:fxsl:kb:icas-topoi
+  - urn:fxsl:kb:icas-adjunciones
+  - urn:fxsl:kb:icas-extension
+  - urn:fxsl:kb:icas-enriquecimiento
+  depende:
+  - urn:fxsl:kb:opm-es
+  - urn:fxsl:kb:opd-es
+  - urn:fxsl:kb:opl-es
+  - urn:fxsl:kb:spec-forja-opd-es
+  - urn:fxsl:kb:spec-forja-opl-es
+  - urn:fxsl:kb:metodologia-forja-opm-es
+  - urn:fxsl:kb:reglas-opm-estrictas-es
+provenance:
+  source_path: artefactos/conocimiento/fxsl/opm-categorial-es.md
+  source_sha256: 35611464ef1511c5e3fb9b30b480d3421d1d1b4f24f80782d4d90c81755f11ff
+  legacy_state: publicado
+  sources:
+  - path: sources/capa-categorial.md
+    sha256: 05aca5e796663980123f35e4ade6cf7b1d8df594dfcd754b82fa613bbf66dce9
+    role: Antecedente retirado; última versión conservada en Git antes de su eliminación. No sustituye
+      el contenido vigente del KB.
+    origin:
+      repository: deep-opm-pro
+      path: docs/capa-categorial.md
+      commit: ffb98f3057db266151948a68429a77bb92655b17
+      blob: e53d5e90916a5bf3a7881818682b4b873c24fa8c
+      removed_by: 2a83c1c59167ee24b7f7c972659c3a0528829c5a
+    recovered: '2026-09-05'

@@ -1,0 +1,22 @@
+id: urn:salud:kb:gestion-redes-general
+kind: knowledge
+name: gestion-redes-general
+description: 'Gestión de Redes Asistenciales — Marco General: Estructura organizacional
+  que articula establecimientos de distintos niveles de complejidad para garantizar
+  continuidad asistencial longitudinal, relacional e informacional'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-general-p02
+  - urn:salud:kb:gestion-redes-general-p03
+  - urn:salud:kb:gestion-redes-general-p04
+  - urn:salud:kb:gestion-redes-general-p05
+  - urn:salud:kb:gestion-redes-general-p06
+  - urn:salud:kb:gestion-redes-general-p07
+  - urn:salud:kb:gestion-redes-general-p08
+  - urn:salud:kb:gestion-redes-general-p09
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-general.md
+  source_sha256: 088463e602a0948701a18ace9e99a9f1e4499738a35914d7a5938f4084e0370a
+  legacy_state: publicado

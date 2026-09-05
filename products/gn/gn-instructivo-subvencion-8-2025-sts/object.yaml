@@ -1,0 +1,13 @@
+id: urn:gn:kb:gn-instructivo-subvencion-8-2025-sts
+kind: knowledge
+name: gn-instructivo-subvencion-8-2025-sts
+description: Conocimiento GN heredado de KODA sobre Artefacto KODA/Spec – Instructivo
+  Concurso Vinculación con la Comunidad 8% 2025 GORE Ñuble; migrado como borrador
+  y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-instructivo-subvencion-8-2025-sts.md
+  source_sha256: 3a853e5cb0a47ceb8cd179e5c75d86f9cc15a6c0be291461cf8c107dbc51544e
+  legacy_state: borrador

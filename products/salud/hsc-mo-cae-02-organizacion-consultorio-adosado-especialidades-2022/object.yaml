@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-mo-cae-02-organizacion-consultorio-adosado-especialidades-2022
+kind: knowledge
+name: hsc-mo-cae-02-organizacion-consultorio-adosado-especialidades-2022
+description: 'Modelo organizacional observado del Consultorio Adosado de Especialidades
+  HSC en 2022, conservado como referencia institucional de vigencia operativa provisional
+  hasta actualización: cartera ambulatoria, telemedicina, roles, dotación, procesos
+  e interfaces de red.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-cae-02-organizacion-consultorio-adosado-especialidades-2022.md
+  source_sha256: abac26561257f7925ca43685d2db3217f3bdb08bb5a2052f16e57b1cbac78f2a
+  legacy_state: publicado

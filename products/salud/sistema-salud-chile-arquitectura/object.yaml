@@ -1,0 +1,15 @@
+id: urn:salud:kb:sistema-salud-chile-arquitectura
+kind: knowledge
+name: sistema-salud-chile-arquitectura
+description: Mapa estable de arquitectura, funciones y fuentes normativas del sistema
+  de salud chileno para orientar análisis sin congelar cifras.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-indice
+provenance:
+  source_path: artefactos/conocimiento/salud/sistema-salud-chile-arquitectura.md
+  source_sha256: d1cbd74a80dd83e4f73d1ae3d575f36c7024f488415e2b81fa2b376a7102167a
+  legacy_state: publicado

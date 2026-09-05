@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-ciclo-vida-funcionario
+kind: knowledge
+name: gn-manual-ciclo-vida-funcionario
+description: Conocimiento GN heredado de KODA sobre gn-manual-ciclo-vida-funcionario;
+  migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-ciclo-vida-funcionario.md
+  source_sha256: 79e880a1031cde8402853aef8135f758f6bc3d385e29ef6a0717e7316ccb6e9b
+  legacy_state: borrador

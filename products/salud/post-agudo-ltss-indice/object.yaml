@@ -1,0 +1,16 @@
+id: urn:salud:kb:post-agudo-ltss-indice
+kind: knowledge
+name: post-agudo-ltss-indice
+description: 'Post-Acute and Long-Term Care Medicine — Indice: Fuente: Post-Acute
+  and Long-Term Care Medicine: A Guide for Practitioners,'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:hodom-direccion-tecnica
+provenance:
+  source_path: artefactos/conocimiento/salud/post-agudo-ltss-indice.md
+  source_sha256: 00ba2aeb891f803112059587f5a2466afb38c8a8d2e94dff30387df42fe4c57f
+  legacy_state: publicado

@@ -1,0 +1,13 @@
+id: urn:salud:kb:hodom-direccion-tecnica-p03
+kind: knowledge
+name: hodom-direccion-tecnica-p03
+description: Direccion Tecnica en Hospitalizacion Domiciliaria - Parte 03
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-direccion-tecnica
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-direccion-tecnica-p03.md
+  source_sha256: 4195b1398bd81f59bd29726e7141800c3c57e554dd6a5a5579daa6385b612497
+  legacy_state: publicado

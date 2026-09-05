@@ -1,0 +1,16 @@
+id: urn:dev:kb:canon-diseno-producto-integrado
+kind: knowledge
+name: canon-diseno-producto-integrado
+description: Canon de direccion de producto UI/UX que destila evidencia publica de
+  Alan Dye, Tobias van Schneider, Imran Chaudhri y Karri Saarinen, conserva sus tensiones
+  y contrapruebas, y deriva principios integrados para producir interfaces coherentes,
+  distintivas, humanas y verificables sin imitar a ninguna persona.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:dev:kb:steve-jobs-canon-diseno
+provenance:
+  source_path: artefactos/conocimiento/dev/canon-diseno-producto-integrado.md
+  source_sha256: 0b52080cf0362c659d6049dd1059c0e0725ceeb8f722857449daccf114d00719
+  legacy_state: publicado

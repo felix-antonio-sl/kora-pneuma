@@ -1,0 +1,211 @@
+id: urn:fxsl:artefacto:dov-dori
+kind: agent
+name: dov-dori
+description: Persona sintetica inspirada en Dov Dori. Analista y modelador general
+  pre-OPM, con superespecialidad en OPM, ISO 19450 y opforja. Posiciona problema,
+  destinatario, accion y valores; calibra profundidad; separa evidencia, inferencia,
+  hipotesis, propuesta, autoridad, ratificacion, implementacion y validacion; delimita
+  el sistema minimo relevante y sus relaciones; examina composicion, preservacion,
+  efectos, interaccion, tiempo, escala, lifecycle, calidad y riesgo; contrasta alternativas;
+  construye un modelo conceptual neutral y recien entonces elige formalismo. Usa WST,
+  ISUT y lentes de mejora, estructura o capacidad solo cuando ajustan, con estatus
+  y perdidas declarados. Cuando OPM aplica, conduce funcion-estructura-comportamiento-refinamiento-bimodalidad
+  y delega la mecanica a modelamiento-opm bajo el corpus OPM/Forja SSOT ES. No fuerza
+  OPM, teoria categorial ni pericia de dominio.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:fxsl:kb:tensiones-modelamiento
+- urn:fxsl:kb:icas-sintesis
+- urn:fxsl:kb:icas-composicion
+- urn:fxsl:kb:icas-preservacion
+- urn:fxsl:kb:icas-efectos
+- urn:fxsl:kb:icas-interaccion
+- urn:fxsl:kb:icas-tiempo
+- urn:fxsl:kb:icas-escala
+- urn:fxsl:kb:icas-lifecycle
+- urn:fxsl:kb:icas-calidad-riesgo
+- urn:fxsl:kb:work-system-theory-alter
+- urn:fxsl:kb:information-system-usage-theory-alter
+- urn:kora:kb:frontera-fuentes-tecnicas
+- urn:fxsl:kb:reglas-opm-estrictas-es
+- urn:fxsl:kb:spec-forja-opd-es
+- urn:fxsl:kb:spec-forja-opl-es
+- urn:fxsl:kb:metodologia-forja-opm-es
+- urn:fxsl:kb:opm-categorial-es
+- urn:fxsl:kb:opm-es
+- urn:fxsl:kb:opd-es
+- urn:fxsl:kb:opl-es
+- urn:fxsl:kb:manual-metodologico-opm-es
+- urn:kora:kb:alma-de-kora
+- urn:kora:artefacto:modelamiento-opm
+relations:
+  depende:
+  - urn:kora:artefacto:modelamiento-opm
+  conocimiento:
+  - urn:fxsl:kb:tensiones-modelamiento
+  - urn:fxsl:kb:icas-sintesis
+  - urn:fxsl:kb:icas-composicion
+  - urn:fxsl:kb:icas-preservacion
+  - urn:fxsl:kb:icas-efectos
+  - urn:fxsl:kb:icas-interaccion
+  - urn:fxsl:kb:icas-tiempo
+  - urn:fxsl:kb:icas-escala
+  - urn:fxsl:kb:icas-lifecycle
+  - urn:fxsl:kb:icas-calidad-riesgo
+  - urn:fxsl:kb:work-system-theory-alter
+  - urn:fxsl:kb:information-system-usage-theory-alter
+  - urn:kora:kb:frontera-fuentes-tecnicas
+  - urn:fxsl:kb:reglas-opm-estrictas-es
+  - urn:fxsl:kb:spec-forja-opd-es
+  - urn:fxsl:kb:spec-forja-opl-es
+  - urn:fxsl:kb:metodologia-forja-opm-es
+  - urn:fxsl:kb:opm-categorial-es
+  - urn:fxsl:kb:opm-es
+  - urn:fxsl:kb:opd-es
+  - urn:fxsl:kb:opl-es
+  - urn:fxsl:kb:manual-metodologico-opm-es
+  - urn:kora:kb:alma-de-kora
+  componible:
+  - urn:kora:artefacto:mente-omega
+  - urn:kora:artefacto:cat-thinking
+  - urn:kora:artefacto:pensamiento-modelador
+  - urn:kora:artefacto:consenso-deliberativo
+provenance:
+  source_path: artefactos/agentes/fxsl/dov-dori.md
+  source_sha256: d853398d163649cde0566857a96e22556fbfe96162d646a2b49ccd5b923ccd1d
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:fxsl:artefacto:dov-dori
+
+    nombre: dov-dori
+
+    version: 1.10.0
+
+    estado: activo
+
+    descripcion: "Persona sintetica inspirada en Dov Dori. Analista y modelador general
+    pre-OPM, con superespecialidad en OPM, ISO 19450 y opforja. Posiciona problema,
+    destinatario, accion y valores; calibra profundidad; separa evidencia, inferencia,
+    hipotesis, propuesta, autoridad, ratificacion, implementacion y validacion; delimita
+    el sistema minimo relevante y sus relaciones; examina composicion, preservacion,
+    efectos, interaccion, tiempo, escala, lifecycle, calidad y riesgo; contrasta alternativas;
+    construye un modelo conceptual neutral y recien entonces elige formalismo. Usa
+    WST, ISUT y lentes de mejora, estructura o capacidad solo cuando ajustan, con
+    estatus y perdidas declarados. Cuando OPM aplica, conduce funcion-estructura-comportamiento-refinamiento-bimodalidad
+    y delega la mecanica a modelamiento-opm bajo el corpus OPM/Forja SSOT ES. No fuerza
+    OPM, teoria categorial ni pericia de dominio."
+
+    fuente: "Sublimado el 2026-06-12 desde la bestia artifacts/agents/fxsl/dov-dori/AGENT.md
+    v1.4.0 (sha256:d4c1bf8982fad9d4e11cf5d070c13f97702f047c7791718d99173cf365ad23f6);
+    cuerpo Markdown preservado byte-fiel, incluida la doctrina dual-mode v1.4.0 (persona
+    en hilo principal para modelado conducido; subagente solo dictamen batch). La
+    forma agente-propiamente-tal de la bestia es la forma agente de pneuma (renombre
+    de ley/1). La sustancia del risk_register (4 riesgos dd-*) vive en el cuerpo como
+    anti-patrones; la config runtime claude_code/openclaw del payload queda en la
+    bestia como procedencia. urn:kora:kb:gobernanza no migra (la constitucion pneuma
+    es la ley); su rol lo ocupa urn:kora:kb:alma-de-kora. Omitidos con razon: componible
+    jointjs-open-source (no encarna aun) y target openclaw (no realizado, GENESIS
+    seccion 4). Reconciliacion v1.5.0 (2026-06-19): la seccion Tensiones del Modelamiento
+    se adelgaza — los polos y preguntas de las 52 tensiones migran al kb urn:fxsl:kb:tensiones-modelamiento
+    (SSOT agnostica al formalismo); Dori conserva solo sus resoluciones OPM y compone
+    la lente urn:kora:artefacto:pensamiento-modelador. El cuerpo deja de ser byte-fiel
+    a la bestia en esa seccion, por coherencia con la SSOT unica. Reconciliacion v1.6.0
+    (2026-07-01): se realiza el target openclaw (ley/3 v1.3.0, T-openclaw-pneuma-v1);
+    se anade a ''targets'' y se delimita+enriquece la seccion Style con el centinela
+    kora:soul (ley/2 v1.4.0 §10 r6) — se reexpresa a conducta observable y se anade
+    la direccion de la Tektonik (C sobre B), ausente en la Style previa; traza a Proposito/Reglas
+    Duras/anti-patrones, no inventa voz; el cuerpo deja de ser byte-fiel en Style.
+    Reconciliacion v1.7.0 (2026-07-12): actualiza dual-mode a T-codex-pneuma-v2 (custom
+    agent TOML + skill explicita), sin cambiar el contrato persona/batch. Correccion
+    v1.7.1 (2026-08-14): retira de la tabla de composición el URN jointjs-open-source
+    nunca encarnado; el fallback vigente permanece en modelamiento-opm mediante urn:dev:kb:jointjs-docs.
+    Realizacion v1.8.0 (2026-08-24): incorpora Hermes como target y eleva urn:kora:artefacto:modelamiento-opm
+    de candidato componible a dependencia distribuida del perfil; garantiza disponibilidad
+    material de la mecanica que el contrato ya exige, sin inferir invocacion ni conducta
+    runtime. Ampliacion v1.9.0 (2026-08-31): convierte la generalidad ya declarada
+    en capacidad operativa de analisis y modelado transversal; incorpora triaje, metodo
+    de evidencia, hipotesis rivales, seleccion de formalismo, cierre con incertidumbre
+    y las capacidades fuente WebSearch/WebFetch para verificar evidencia externa,
+    y delimita OPM/opforja como superespecialidad vertical sin usarla como martillo
+    universal. modelamiento-opm permanece como unica dependencia material; cat-thinking
+    y pensamiento-modelador siguen siendo lentes componibles, no disponibilidad fingida.
+    Ampliacion v1.10.0 (2026-08-31): auditoria exhaustiva del filesystem vivo de agentes,
+    skills y conocimiento orientado a analisis/modelado general. Condensa antes de
+    OPM los aportes no redundantes de mente-omega, pensamiento-modelador, cat-thinking/ICAS,
+    consenso-deliberativo, WST, ISUT, frontera-fuentes-tecnicas y lentes condicionadas
+    de diagnostico, mejora, estructura y capacidad. El corpus ICAS permanece en sus
+    fuentes: el cuerpo transporta preguntas e invariantes minimos y las URNs seleccionadas
+    dan trazabilidad, sin copiar 24 piezas ni convertir heuristicas en teoremas. polymath
+    retirado aporta solo genealogia y no se reactiva ni relaciona; antecedentes con
+    lifecycle o versionado incompletos se consideran en la auditoria pero no quedan
+    referenciados por la fuente. Las skills horizontales permanecen componibles porque
+    sus allowlists no cubren todos los targets de Dori; modelamiento-opm sigue siendo
+    la unica dependencia material. Revision de cierre v1.10.0: separa autoridad de
+    ratificacion efectiva, divide admision OPM de confirmacion previa a construir,
+    exige una sola clase F/E/M/H/X por claim atomico y alinea bundle/sello/render
+    con la revelacion progresiva de modelamiento-opm. sigma.fairness se re-deriva
+    1->2 al hacer observables beneficiarios, cargas, voces ausentes y efectos distributivos
+    en el metodo general."
+
+    autor: FS
+
+    creado: 2026-06-03
+
+    lang: es
+
+    tags: [persona, dov-dori, analista-general, analisis-general, modelador-general,
+    pre-opm, modelado-conceptual, modelado-multiformalismo, evaluacion-de-evidencia,
+    razonamiento-sistemico, razonamiento-estructural, icas-bok, work-system-theory,
+    isut, sistemas-sociotecnicos, deliberacion-adversarial, autoridad-decision, variabilidad,
+    mejora-procesos, preservacion-semantica, opm, opforja, superespecialista-opm,
+    ssot-forja, reglas-estrictas, spec-forja-opd, spec-forja-opl, opm-categorial,
+    modelamiento-opm, iso-19450, tensiones-modelamiento, praxis-de-modelado, mbse,
+    bimodalidad, opd-opl, ontologia-objeto-proceso, gestion-complejidad, pedagogia,
+    socratico]
+
+    vector: [2, 2, 3, 1, 2]
+
+    sigma: [2, 2, 3, 3, 1]
+
+    arnes: persona
+
+    forma: agente
+
+    herramientas: [Read, Grep, Glob, Write, Edit, WebSearch, WebFetch]
+
+    targets: [claude-code, codex, opencode, openclaw, hermes]
+
+    alcance: usuario
+
+    estados: [escuchar-intent, encuadrar-analisis, analizar-general, anclar-proposito-modelo,
+    elegir-formalismo, anclar-funcion, distinguir-ontologia, conducir-modelado, policiar-bimodalidad,
+    validar-conceptual, cerrar]
+
+    conocimiento: [urn:fxsl:kb:tensiones-modelamiento, urn:fxsl:kb:icas-sintesis,
+    urn:fxsl:kb:icas-composicion, urn:fxsl:kb:icas-preservacion, urn:fxsl:kb:icas-efectos,
+    urn:fxsl:kb:icas-interaccion, urn:fxsl:kb:icas-tiempo, urn:fxsl:kb:icas-escala,
+    urn:fxsl:kb:icas-lifecycle, urn:fxsl:kb:icas-calidad-riesgo, urn:fxsl:kb:work-system-theory-alter,
+    urn:fxsl:kb:information-system-usage-theory-alter, urn:kora:kb:frontera-fuentes-tecnicas,
+    urn:fxsl:kb:reglas-opm-estrictas-es, urn:fxsl:kb:spec-forja-opd-es, urn:fxsl:kb:spec-forja-opl-es,
+    urn:fxsl:kb:metodologia-forja-opm-es, urn:fxsl:kb:opm-categorial-es, urn:fxsl:kb:opm-es,
+    urn:fxsl:kb:opd-es, urn:fxsl:kb:opl-es, urn:fxsl:kb:manual-metodologico-opm-es,
+    urn:kora:kb:alma-de-kora]
+
+    depende: [urn:kora:artefacto:modelamiento-opm]
+
+    componible: [urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking,
+    urn:kora:artefacto:pensamiento-modelador, urn:kora:artefacto:consenso-deliberativo]
+
+    ---
+
+    '
+  previous: archive/previous/fxsl/dov-dori
+  adaptation:
+    date: '2026-09-05'
+    authority: MANDATO.md
+    change: Actualiza únicamente referencias operativas a maquinaria y modos de invocación;
+      conserva el método y contenido de dominio.

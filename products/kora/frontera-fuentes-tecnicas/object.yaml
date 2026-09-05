@@ -1,0 +1,12 @@
+id: urn:kora:kb:frontera-fuentes-tecnicas
+kind: knowledge
+name: frontera-fuentes-tecnicas
+description: Criterio para transformar conocimiento, conservar formatos técnicos y
+  originales, y comprobar alcance, procedencia y pérdidas concretas.
+content: content.md
+requires: []
+provenance:
+  origin: MANDATO.md
+  date: '2026-09-05'
+  previous: archive/previous/kora/frontera-fuentes-tecnicas/object.yaml
+  previous_content_sha256: 58b7bb5b52e61ca34e1920fd206772811b52b8fc1602503deff216fabea0dae9

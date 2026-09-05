@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-17-4-solicitud-medicamentos-uso-restringido
+kind: knowledge
+name: hsc-17-4-solicitud-medicamentos-uso-restringido
+description: Manual HSC 17.4 para solicitar, validar, dispensar, registrar y supervisar
+  medicamentos y antimicrobianos de uso restringido.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-17-4-solicitud-medicamentos-uso-restringido.md
+  source_sha256: 273513b68dcf9c6a5edd466a9bdc7b1be7497c7ed25aafb74d0bcd0c63c91b5e
+  legacy_state: publicado

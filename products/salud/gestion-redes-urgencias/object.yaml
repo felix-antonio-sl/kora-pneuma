@@ -1,0 +1,20 @@
+id: urn:salud:kb:gestion-redes-urgencias
+kind: knowledge
+name: gestion-redes-urgencias
+description: 'Gestión de Redes Asistenciales — Red de Urgencias: Red escalonada de
+  dispositivos de urgencia articulados por nivel de complejidad, cobertura territorial
+  y capacidad resolutiva'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:gestion-redes-urgencias-p02
+  - urn:salud:kb:gestion-redes-urgencias-p03
+  - urn:salud:kb:gestion-redes-urgencias-p04
+  - urn:salud:kb:gestion-redes-urgencias-p05
+  - urn:salud:kb:gestion-redes-urgencias-p06
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-urgencias.md
+  source_sha256: 26def081b2e020cf5bcdf4a4200415541a9e5eb6fd6aefa24f45617d454a299e
+  legacy_state: publicado

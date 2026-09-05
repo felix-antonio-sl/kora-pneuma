@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-activo-fijo
+kind: knowledge
+name: gn-manual-activo-fijo
+description: Conocimiento GN heredado de KODA sobre gn-manual-activo-fijo; migrado
+  como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-activo-fijo.md
+  source_sha256: c682d998cd0f8258aa423fb431662e6cc90d9ffd7c011f231202284fd0b23f3e
+  legacy_state: borrador

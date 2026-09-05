@@ -1,0 +1,21 @@
+id: urn:fxsl:kb:metodologia-modelamiento-opm
+kind: knowledge
+name: metodologia-modelamiento-opm
+description: Protocolo operativo de modelamiento OPM para SD, refinamiento, simulacion
+  y validacion
+content: content.md
+requires:
+- urn:fxsl:kb:opm-iso-19450
+- urn:fxsl:kb:opm-opl-es
+relations:
+  cita:
+  - urn:fxsl:kb:manual-metodologico-opm-es
+  - urn:fxsl:kb:metodologia-forja-opm-es
+  - urn:fxsl:kb:opcloud-tutorial-videos
+  depende:
+  - urn:fxsl:kb:opm-iso-19450
+  - urn:fxsl:kb:opm-opl-es
+provenance:
+  source_path: artefactos/conocimiento/fxsl/metodologia-modelamiento-opm.md
+  source_sha256: c5e75ef74690c696e1892a9bd7083417885cdcf8fec8ff22f9b4af00029ffcd2
+  legacy_state: publicado

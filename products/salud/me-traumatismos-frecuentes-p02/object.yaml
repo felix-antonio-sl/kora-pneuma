@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-traumatismos-frecuentes-p02
+kind: knowledge
+name: me-traumatismos-frecuentes-p02
+description: 'Unidad 8 ''Traumatismos frecuentes'' - Parte 02: Corresponde a una inflamación
+  articular por microorganismos productores de pus'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-traumatismos-frecuentes-p02.md
+  source_sha256: 463d2a79d74ef8d953513da2e63f6547c3ea4f3747846f79e5fc843ab72aada9
+  legacy_state: publicado

@@ -1,0 +1,16 @@
+id: urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss-p16
+kind: knowledge
+name: salubrista-fuente-continuidad-post-aguda-ltss-p16
+description: Crónicas del Crepúsculo Geriátrico - Parte 16
+content: content.md
+requires:
+- urn:salud:kb:salubrista
+relations:
+  cita:
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  depende:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/salubrista-fuente-continuidad-post-aguda-ltss-p16.md
+  source_sha256: 30c9ada2b974b2fcd5d987e956611b7f6b923bb480646e5528c107a0408ef7b6
+  legacy_state: publicado

@@ -1,0 +1,16 @@
+id: urn:fxsl:kb:work-system-theory-alter
+kind: knowledge
+name: work-system-theory-alter
+description: 'Work System Theory (WST) de Steven Alter: el work system como unidad
+  natural de análisis de los sistemas en organizaciones. Cubre la definición de work
+  system, el information system como caso especial (IS↔WS), el work system framework
+  (9 elementos), el work system life cycle (WSLC), el work system method (WSM), las
+  11 funciones que un IS presta a un work system, las formas de overlap IS↔WS, y las
+  extensiones (principles, design spaces, metamodel, facets, axioms).'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/work-system-theory-alter.md
+  source_sha256: c2eed1d7678755409af6e29173cbac3f4fbfa31cc9afe9c34fd90bb7b7074592
+  legacy_state: publicado

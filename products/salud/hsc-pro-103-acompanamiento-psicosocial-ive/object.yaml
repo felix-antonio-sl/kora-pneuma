@@ -1,0 +1,16 @@
+id: urn:salud:kb:hsc-pro-103-acompanamiento-psicosocial-ive
+kind: knowledge
+name: hsc-pro-103-acompanamiento-psicosocial-ive
+description: 'Protocolo local HSC PRO-103, Programa de Acompañamiento Psicosocial
+  Ley 21.030/IVE (tercera edición mayo 2024, vigencia hasta mayo 2029): lineamientos
+  del equipo psicosocial para acoger, informar, contener y acompañar a adolescentes
+  y mujeres en las tres causales de interrupción voluntaria del embarazo, con apoyo
+  psicoterapéutico, detección de vulnerabilidad y articulación intersectorial; alcance
+  UE obstetricia, servicio Obstetricia, Policlínico SAIO y S.A. Psicosocial.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-103-acompanamiento-psicosocial-ive.md
+  source_sha256: a447ecb06a1916d93f9890a63b49991dfaac392ac2e5cd1390405e534d73089e
+  legacy_state: publicado

@@ -1,0 +1,13 @@
+id: urn:salud:kb:minsal-orientaciones-tecnicas-comges-2026
+kind: knowledge
+name: minsal-orientaciones-tecnicas-comges-2026
+description: 'Orientaciones Técnicas MINSAL para los nueve Compromisos de Gestión
+  2026: marco RISS, evaluación, 66 indicadores, requisitos, metas, cortes y anexos
+  doctrinales.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-orientaciones-tecnicas-comges-2026.md
+  source_sha256: 3ba74d98abfa4c69a5db2cb25366d6ddc83bb3131eadb958ec882e3f5f6eee1e
+  legacy_state: publicado

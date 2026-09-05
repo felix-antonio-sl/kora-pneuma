@@ -1,0 +1,12 @@
+id: urn:fxsl:kb:icas-patrones
+kind: knowledge
+name: icas-patrones
+description: 'Pieza 19 del ICAS-BoK: patrones — patrones arquitectónicos y agénticos,
+  anti-patrones y wrapper functors; reconocer y nombrar estructura recurrente.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/icas-patrones.md
+  source_sha256: 2f6be78d59d34b60fff8dd34c4e30d414249ed3c4a9a9f34de9022ca8d92d709
+  legacy_state: publicado

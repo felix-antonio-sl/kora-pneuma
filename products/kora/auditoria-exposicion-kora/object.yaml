@@ -1,0 +1,17 @@
+id: urn:kora:artefacto:auditoria-exposicion-kora
+kind: skill
+name: auditoria-exposicion-kora
+description: Audita si el conocimiento requerido por un consumidor resuelve, llega
+  a su realización y se usa en un recorrido real.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:artefacto:instalacion-kora
+provenance:
+  previous: archive/previous/kora/auditoria-exposicion-kora
+  date: '2026-09-05'
+  authority: MANDATO.md
+  change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
+    completo recuperable en previous.

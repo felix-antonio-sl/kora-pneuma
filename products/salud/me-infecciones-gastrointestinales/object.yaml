@@ -1,0 +1,16 @@
+id: urn:salud:kb:me-infecciones-gastrointestinales
+kind: knowledge
+name: me-infecciones-gastrointestinales
+description: 'Unidad 4 ''Infecciones gastrointestinales'': Más de dos millones de
+  personas, sobre todo niños, mueren anualmente en países subdesarrollados debido
+  a cuadros de diarrea'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-infecciones-gastrointestinales.md
+  source_sha256: b43cd7ca2e518395dabf15820ee0b9b328be9526d48e09a5a0c976f54c59aa06
+  legacy_state: publicado

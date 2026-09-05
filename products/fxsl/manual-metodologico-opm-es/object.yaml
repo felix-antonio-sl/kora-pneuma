@@ -1,0 +1,24 @@
+id: urn:fxsl:kb:manual-metodologico-opm-es
+kind: knowledge
+name: manual-metodologico-opm-es
+description: 'Manual metodológico canónico de OPM: capa procedimental de la SSOT OPM-ES
+  — construcción del SD, refinamiento, gestión de complejidad, patrones y anti-patrones
+  de modelado.'
+content: content.md
+requires:
+- urn:fxsl:kb:opm-es
+- urn:fxsl:kb:opl-es
+- urn:fxsl:kb:opd-es
+relations:
+  cita:
+  - urn:fxsl:kb:opd-es
+  - urn:fxsl:kb:opl-es
+  - urn:fxsl:kb:opm-es
+  depende:
+  - urn:fxsl:kb:opm-es
+  - urn:fxsl:kb:opl-es
+  - urn:fxsl:kb:opd-es
+provenance:
+  source_path: artefactos/conocimiento/fxsl/manual-metodologico-opm-es.md
+  source_sha256: 7fb7cfc8193330f355abfab5d6567e512257bc3b8ad87647549d04c63a355372
+  legacy_state: publicado

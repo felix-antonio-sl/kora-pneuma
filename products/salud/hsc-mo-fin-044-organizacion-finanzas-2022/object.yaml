@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-fin-044-organizacion-finanzas-2022
+kind: knowledge
+name: hsc-mo-fin-044-organizacion-finanzas-2022
+description: 'Modelo organizacional aprobado del Departamento de Finanzas del HSC
+  en 2022: autoridad financiera, presupuesto, contabilidad, recaudación, inventarios,
+  controles, interfaces, registros y dotación declarados.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-fin-044-organizacion-finanzas-2022.md
+  source_sha256: 505d27d4709e52617fa563a293dcd02568b4f5fee878d0f9807eff25c3d90bbf
+  legacy_state: publicado

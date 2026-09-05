@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-compromiso-conciencia-p02
+kind: knowledge
+name: me-compromiso-conciencia-p02
+description: 'Compromiso de Conciencia - Parte 02: Tras evaluación inicial, examinar
+  de cabeza a pies buscando lesiones en cabeza, cuello, tórax, abdomen, pelvis y extremidades'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-compromiso-conciencia-p02.md
+  source_sha256: 0177a39785c1eca91c3d8fc226c31f73d6973abbe02d8a6d9bd9720a4af7883f
+  legacy_state: publicado

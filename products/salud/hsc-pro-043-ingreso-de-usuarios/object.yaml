@@ -1,0 +1,15 @@
+id: urn:salud:kb:hsc-pro-043-ingreso-de-usuarios
+kind: knowledge
+name: hsc-pro-043-ingreso-de-usuarios
+description: 'Protocolo local HSC PRO-043, Ingreso de Usuarios/as (tercera edición
+  agosto 2019): proceso institucional de ingreso a atención cerrada y ambulatoria
+  — vías de ingreso (CAE, gestión quirúrgica, teleprocesos, urgencia, re-hospitalización),
+  orden de hospitalización escrita, asignación de camas UGCC hábil/enfermería fuera
+  de hora, registro DGU y egreso con epicrisis y devolución de ficha en 72 horas.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-043-ingreso-de-usuarios.md
+  source_sha256: d19f69d73cc8491122975a4444f49387d6825c83320cac7921520f8d54db7aa7
+  legacy_state: publicado

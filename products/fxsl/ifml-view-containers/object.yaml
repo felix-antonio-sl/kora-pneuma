@@ -1,0 +1,17 @@
+id: urn:fxsl:kb:ifml-view-containers
+kind: knowledge
+name: ifml-view-containers
+description: 'Composicion de la interfaz en IFML: ViewContainer (anidamiento conjuntivo/disyuntivo,
+  navegacion content-independent, Default/Landmark, Window/Modal/Modeless), adaptacion
+  contextual (Context/ViewPoint) y patrones de organizacion OD/OW/OM.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:ifml-corpus-index
+  - urn:fxsl:kb:ifml-fundamentos
+  - urn:fxsl:kb:ifml-patrones
+provenance:
+  source_path: artefactos/conocimiento/fxsl/ifml-view-containers.md
+  source_sha256: dd5851c3a875894690f14aa9c140de78e3a2ecd07916986814d3b90c36666074
+  legacy_state: publicado

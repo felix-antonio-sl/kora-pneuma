@@ -1,0 +1,15 @@
+id: urn:tde:kb:guia-calidad-web
+kind: knowledge
+name: guia-calidad-web
+description: 'Guía de uso: Instrumento de evaluación de calidad en sitios web y servicios digitales del
+  Estado'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/knowledge/tde/lineamientos-guias/guia-calidad-web.md
+  source_sha256: dc81fd1192fc1662273c412c1183ba6fc42928e7b919f4edc84c4115ae9c9976
+  legacy_state: published
+  migration: legacy-codex-consumers-2026-09-05
+  handling: Documento de dominio preservado íntegro, sin reformateo ni adopción de la maquinaria anterior.

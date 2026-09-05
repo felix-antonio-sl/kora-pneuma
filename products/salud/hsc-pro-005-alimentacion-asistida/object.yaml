@@ -1,0 +1,15 @@
+id: urn:salud:kb:hsc-pro-005-alimentacion-asistida
+kind: knowledge
+name: hsc-pro-005-alimentacion-asistida
+description: 'Protocolo local HSC PRO-005, Alimentación Asistida (tercera edición
+  agosto 2019): incorpora al familiar/cuidador responsable a la asistencia de la alimentación
+  del paciente dependiente —vía oral, SNG/nasoyeyunal, gastrostomía— con técnica paso
+  a paso y educación formal, declarando como objetivo explícito el entrenamiento para
+  la continuidad de los cuidados de alimentación posteriores al alta.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-005-alimentacion-asistida.md
+  source_sha256: ed40aa9a6426c84fef544899363acef1d774f9a3a7bab92ffd426443a3e8e87c
+  legacy_state: publicado

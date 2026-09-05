@@ -1,0 +1,14 @@
+id: urn:salud:kb:hodom-reglamento-ds1-2022
+kind: knowledge
+name: hodom-reglamento-ds1-2022
+description: 'Reglamento de Establecimientos que Otorgan Prestaciones de Hospitalización
+  Domiciliaria: Fuente oficial: [LeyChile - Norma 1181901](https://www.leychile.cl/Navegar?idNorma=1181901)'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-reglamento-ds1-2022.md
+  source_sha256: cf8fee495c0751982ab0cce48db386aa14ce18ad5c92815470b5cbaf656b4e12
+  legacy_state: publicado

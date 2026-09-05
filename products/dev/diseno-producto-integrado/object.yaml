@@ -1,0 +1,83 @@
+id: urn:dev:artefacto:diseno-producto-integrado
+kind: skill
+name: diseno-producto-integrado
+description: 'Disciplina de direccion UI/UX que transforma contexto y tensiones en
+  un bucle de producto completo: diverge con criterio, selecciona por fit, materializa
+  mediante design, valida mediante ux-design y entrega una decision trazable con prueba
+  de realidad.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:dev:kb:canon-diseno-producto-integrado
+relations:
+  conocimiento:
+  - urn:dev:kb:canon-diseno-producto-integrado
+  componible:
+  - urn:dev:artefacto:design
+  - urn:kora:artefacto:ux-design
+provenance:
+  source_path: artefactos/skills/dev/diseno-producto-integrado/SKILL.md
+  source_sha256: 4bfe409b8da1a26d61a1a9db51e8652a08cfbf2c36c5ee13d4646c0ed388b186
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:dev:artefacto:diseno-producto-integrado
+
+    nombre: diseno-producto-integrado
+
+    version: 1.2.0
+
+    estado: activo
+
+    descripcion: "Disciplina de direccion UI/UX que transforma contexto y tensiones
+    en un bucle de producto completo: diverge con criterio, selecciona por fit, materializa
+    mediante design, valida mediante ux-design y entrega una decision trazable con
+    prueba de realidad."
+
+    fuente: "Sintesis nueva creada el 2026-07-26 para operacionalizar urn:dev:kb:canon-diseno-producto-integrado.
+    Reutiliza proceduralmente design y ux-design mediante adaptadores explicitos;
+    componible solo declara candidatos y no prueba composicion semantica ni ejecucion
+    runtime. v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y
+    OpenCode despues de verificar que design y ux-design ya declaran y mantienen paridad
+    fiel en los tres runtimes; OpenClaw queda fuera por dependencia no realizada y
+    colision de precedencia con la skill personal Codex, y Hermes por target reconocido
+    no realizado. v1.2.0 (2026-07-26): endurece la disciplina epistemica y concentra
+    el target en Codex por instruccion final del operador; retira OpenCode despues
+    de canarios que fabricaron evidencia y retira Claude Code porque su autenticacion
+    no permitio ejecutar el canario. Cualquier reincorporacion requiere alcance explicito
+    y un canario conductual verde."
+
+    autor: FS
+
+    creado: 2026-07-26
+
+    lang: es
+
+    tags: [diseno-producto, ui, ux, direccion-diseno, prototipado, sistemas-diseno,
+    accesibilidad, validacion, inteligencia-artificial]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [2, 2, 3, 2, 2]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Edit, Glob, Grep, Bash]
+
+    targets: [codex]
+
+    conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
+
+    componible: [urn:dev:artefacto:design, urn:kora:artefacto:ux-design]
+
+    alcance: usuario
+
+    estados: [encuadrar, resolver-tensiones, divergir, decidir, prototipar, probar,
+    integrar, entregar]
+
+    ---
+
+    '

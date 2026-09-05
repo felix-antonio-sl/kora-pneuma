@@ -1,0 +1,18 @@
+id: urn:salud:kb:me-hemorragia-digestiva
+kind: knowledge
+name: me-hemorragia-digestiva
+description: 'Hemorragia digestiva: La hemorragia digestiva es una condición clínica
+  crítica que representa una de las emergencias más frecuentes en los servicios de
+  urgencias hospitalarias'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-hemorragia-digestiva-p02
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-hemorragia-digestiva.md
+  source_sha256: 248ee4a74124a4f173108b4a4db3f132aa217affb6ff0b2a45c4eb38c242d4cd
+  legacy_state: publicado

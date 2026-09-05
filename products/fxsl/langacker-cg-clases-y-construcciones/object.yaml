@@ -1,0 +1,20 @@
+id: urn:fxsl:kb:langacker-cg-clases-y-construcciones
+kind: knowledge
+name: langacker-cg-clases-y-construcciones
+description: 'Clases gramaticales y construcciones en Cognitive Grammar (Parte II,
+  caps. 4-8): caracterización semántica de nombre, verbo, y clases de expresiones
+  relacionales (preposición, adjetivo, adverbio, participio); subclases mayores (count/mass,
+  perfective/imperfective); la teoría construccional — assemblies simbólicos, esquemas
+  construccionales, correspondencias, profile determinance, elaboración, constituencia—;
+  redes, convencionalidad y regularidad (generalidad, productividad, composicionalidad
+  parcial, generalizaciones de orden superior).'
+content: content.md
+requires:
+- urn:fxsl:kb:langacker-cg-fundamentos
+relations:
+  depende:
+  - urn:fxsl:kb:langacker-cg-fundamentos
+provenance:
+  source_path: artefactos/conocimiento/fxsl/langacker-cg-clases-y-construcciones.md
+  source_sha256: 27088f42a59e9375ae42a72e5969a37e32631ca713a7a68fa9a7d7c9f316dbde
+  legacy_state: publicado

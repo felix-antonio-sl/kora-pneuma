@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-farm-001-modelo-organizacion-farmacia-2023
+kind: knowledge
+name: hsc-mo-farm-001-modelo-organizacion-farmacia-2023
+description: 'Modelo organizacional declarado para el Servicio de Apoyo Farmacia del
+  HSC: cartera, procesos, estructura, roles, dotación, registros e interfaces.'
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-farm-001-modelo-organizacion-farmacia-2023.md
+  source_sha256: d743786b28800e69767b49e4f48c9703ed7b7e1d1c348f7e2bfb33498f0c5e07
+  legacy_state: publicado

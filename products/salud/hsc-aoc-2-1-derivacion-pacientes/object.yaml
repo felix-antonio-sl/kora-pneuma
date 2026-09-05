@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-aoc-2-1-derivacion-pacientes
+kind: knowledge
+name: hsc-aoc-2-1-derivacion-pacientes
+description: Protocolo HSC AOC 2.1 para derivar pacientes cuya urgencia médico-quirúrgica
+  supera la capacidad resolutiva local
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-aoc-2-1-derivacion-pacientes.md
+  source_sha256: 83e318f77e3be32c9274e3e9c2311882bda71ea17b35a5c396ec23c5d67259e1
+  legacy_state: publicado

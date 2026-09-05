@@ -1,0 +1,78 @@
+id: urn:kora:artefacto:autoria-de-persona
+kind: skill
+name: autoria-de-persona
+description: 'Skill de autoria de la personalidad de un agente: deriva U_phen como
+  triada conductual fin x estilo x registro + direccion de Tektonik, la pasa por el
+  test anti-adjetivo y el filtro N2-N3, corta cosmovision/operativo, censa la vecindad
+  de vector y provee el insumo del mapa de transmutacion. Porta los procedimientos;
+  no decide el contrato del agente (eso es agent-architect).'
+content: content.md
+targets:
+- codex
+requires:
+- urn:kora:kb:aufbau-persona-agente
+- urn:kora:kb:cat-agent-modulo
+relations:
+  conocimiento:
+  - urn:kora:kb:aufbau-persona-agente
+  - urn:kora:kb:cat-agent-modulo
+provenance:
+  source_path: artefactos/skills/kora/autoria-de-persona/SKILL.md
+  source_sha256: 7d461b23564e04e1d548b834b2b672d20ccf979b6cfb19af47eb789ba801ec99
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:autoria-de-persona
+
+    nombre: autoria-de-persona
+
+    version: 1.2.1
+
+    estado: activo
+
+    descripcion: "Skill de autoria de la personalidad de un agente: deriva U_phen
+    como triada conductual fin x estilo x registro + direccion de Tektonik, la pasa
+    por el test anti-adjetivo y el filtro N2-N3, corta cosmovision/operativo, censa
+    la vecindad de vector y provee el insumo del mapa de transmutacion. Porta los
+    procedimientos; no decide el contrato del agente (eso es agent-architect)."
+
+    fuente: "Doctrina propia pneuma (namespace kora). Destila los procedimientos de
+    autoria de U_phen fundados en urn:kora:kb:aufbau-persona-agente y urn:kora:kb:cat-agent-modulo.
+    Procedencia: spec docs/superpowers/specs/2026-06-30-sistema-componible-agente-design,
+    Pieza 3. v1.1.0 (2026-07-12): sincroniza OpenClaw y Codex v2. v1.2.0 (2026-07-18):
+    corrige identidad y estatus categorial; el vector clasifica firma, no tipo ni
+    bisimulacion, y Para/naturalidad/slice quedan como modelos candidatos. v1.2.1
+    (2026-07-23): elimina el vestigio contradictorio vector=tipo de la regla 6 y lo
+    reancla a ley/1 §2: firma clasificatoria e identidad nominal por URN."
+
+    autor: FS
+
+    creado: 2026-06-30
+
+    lang: es
+
+    tags: [autoria-persona, u-phen, personalidad-agente, triada-conductual, tektonik,
+    alineamiento, anti-adjetivo, kora]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [2, 1, 3, 1, 0]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode, openclaw]
+
+    conocimiento: [urn:kora:kb:aufbau-persona-agente, urn:kora:kb:cat-agent-modulo]
+
+    alcance: ambos
+
+    estados: [derivar-u-phen, test-anti-adjetivo, test-corte-cosmovision, censar-vecindad-vector,
+    insumo-transmutacion]
+
+    ---
+
+    '

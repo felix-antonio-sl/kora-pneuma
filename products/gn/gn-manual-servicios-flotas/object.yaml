@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-servicios-flotas
+kind: knowledge
+name: gn-manual-servicios-flotas
+description: Conocimiento GN heredado de KODA sobre gn-manual-servicios-flotas; migrado
+  como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-servicios-flotas.md
+  source_sha256: 5a9265c95977a9aec758f8408a4ba23a9608f93781f601a1960c64e2a50204d7
+  legacy_state: borrador

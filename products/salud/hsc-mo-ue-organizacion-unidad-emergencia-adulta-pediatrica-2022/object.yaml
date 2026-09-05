@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-mo-ue-organizacion-unidad-emergencia-adulta-pediatrica-2022
+kind: knowledge
+name: hsc-mo-ue-organizacion-unidad-emergencia-adulta-pediatrica-2022
+description: 'Modelo organizacional observable de la Unidad de Emergencia Adulta-Pediátrica
+  HSC, conservado como referencia institucional de vigencia operativa provisional:
+  historia, objetivos disponibles, espacios, cartera, proceso, perfiles parciales,
+  interfaces y registros contenidos en un suministro documental truncado de 2022.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-ue-organizacion-unidad-emergencia-adulta-pediatrica-2022.md
+  source_sha256: 0f95ce7d59db642f79c016994a68261cf795f55824adc6665259e5c055d5bd9d
+  legacy_state: publicado

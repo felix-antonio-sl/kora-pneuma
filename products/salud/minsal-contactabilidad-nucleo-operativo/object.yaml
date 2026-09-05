@@ -1,0 +1,12 @@
+id: urn:salud:kb:minsal-contactabilidad-nucleo-operativo
+kind: knowledge
+name: minsal-contactabilidad-nucleo-operativo
+description: 'Núcleo operativo de la Orientación Técnica MINSAL para contactabilidad:
+  ciclo, vinculación, canales, registros y escalamiento clínico'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-contactabilidad-nucleo-operativo.md
+  source_sha256: 3ad0d7c010f46bd79c8da65efc06680e57c94e957fc0375d83c4d8a25ecb94e8
+  legacy_state: publicado

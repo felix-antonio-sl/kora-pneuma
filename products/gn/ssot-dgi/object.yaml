@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-dgi
+kind: knowledge
+name: ssot-dgi
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-dgi.md
+  source_sha256: f6b513ce119f15ff556f9716b81d417a74275a872b5c23ecd5c8400c13f7458c
+  legacy_state: borrador

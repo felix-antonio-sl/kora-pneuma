@@ -1,0 +1,12 @@
+id: urn:fxsl:kb:opcloud-tutorial-videos
+kind: knowledge
+name: opcloud-tutorial-videos
+description: Guia tutorial de OPCloud en una serie de 50 videos; evidencia pedagogica,
+  no canon OPM
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/fxsl/opcloud-tutorial-videos.md
+  source_sha256: 013afe2f2b2fa313969c15a39482be6d2c173ce3c85755537847526d9cc85e1d
+  legacy_state: borrador

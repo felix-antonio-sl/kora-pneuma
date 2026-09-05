@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-17-2-estupefacientes-psicotropicos
+kind: knowledge
+name: hsc-17-2-estupefacientes-psicotropicos
+description: Procedimientos HSC 17.2 para adquisición, recepción, custodia, prescripción,
+  dispensación, saldo y eliminación de estupefacientes y psicotrópicos.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-17-2-estupefacientes-psicotropicos.md
+  source_sha256: fae97195c304120266a0742369a219c347abaaf6373cb73d19fffa9d84c3bcba
+  legacy_state: publicado

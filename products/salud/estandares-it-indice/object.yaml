@@ -1,0 +1,15 @@
+id: urn:salud:kb:estandares-it-indice
+kind: knowledge
+name: estandares-it-indice
+description: 'Estandares IT en Salud — Chile: Catalogo de estandares tecnicos vigentes
+  para interoperabilidad en salud en Chile'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:informatica-medica-indice
+  - urn:salud:kb:informatica-medica-normativa-chilena
+provenance:
+  source_path: artefactos/conocimiento/salud/estandares-it-indice.md
+  source_sha256: 85582e18be547c7d3f8d4b4d4c3fa0231835050668f967f0495e6e8b5d04b9fd
+  legacy_state: publicado

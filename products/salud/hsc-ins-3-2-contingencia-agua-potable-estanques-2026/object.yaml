@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-ins-3-2-contingencia-agua-potable-estanques-2026
+kind: knowledge
+name: hsc-ins-3-2-contingencia-agua-potable-estanques-2026
+description: Plan HSC ante interrupción o contaminación de agua potable, con respaldo,
+  comisión, monitoreo sanitario y mantenimiento de estanques.
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-ins-3-2-contingencia-agua-potable-estanques-2026.md
+  source_sha256: e8e8c4f961e34d66a89667b9d9b5237414ad2f9ba9d6181f4858d95977c1317b
+  legacy_state: publicado

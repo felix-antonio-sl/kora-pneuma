@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-daiu-003-organizacion-atencion-integral-usuario-2022
+kind: knowledge
+name: hsc-mo-daiu-003-organizacion-atencion-integral-usuario-2022
+description: 'Modelo organizacional declarado del Departamento de Atención Integral
+  del Usuario del HSC en 2022: OIRS, participación, satisfacción, derechos, Hospital
+  Amigo, voluntariado, roles, interfaces, registros y plazos.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-daiu-003-organizacion-atencion-integral-usuario-2022.md
+  source_sha256: 6875cff75a3a0fff4ac42e3dfdc579933e71dccf68ce12f30a1e7d4a1c799b00
+  legacy_state: publicado

@@ -1,0 +1,27 @@
+id: urn:salud:kb:salubrista-body-of-knowledge
+kind: knowledge
+name: salubrista-body-of-knowledge
+description: 'Body of Knowledge Salubrista: El salubrista opera sobre sistemas sanitarios,
+  no sobre encuentros clinicos'
+content: content.md
+requires:
+- urn:salud:kb:salubrista
+- urn:salud:kb:salubrista-atlas-integrado
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-indice
+  - urn:salud:kb:salubrista-fuentes-base-curadas
+  - urn:salud:kb:salubrista-fuente-salud-publica-global
+  - urn:salud:kb:salubrista-fuente-management-engineering
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-direccion-tecnica
+  - urn:salud:kb:hodom-manual-alta-complejidad
+  - urn:salud:kb:hodom-situacion-chile-2026
+  depende:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-atlas-integrado
+provenance:
+  source_path: artefactos/conocimiento/salud/salubrista-body-of-knowledge.md
+  source_sha256: 14d4a137787e4934f8e8c6d176440bb1186c141e0c558ea5ca854b5ad6951fd7
+  legacy_state: publicado

@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-pro-058-dm2-insulinorrequiriente-mal-control
+kind: knowledge
+name: hsc-pro-058-dm2-insulinorrequiriente-mal-control
+description: 'Protocolo local HSC PRO-058, Referencia y Contrarreferencia de pacientes
+  con DM2 insulinorrequiriente en mal control metabólico (primera edición noviembre
+  2014, Res. Exenta 2815/2014): flujo APS↔Medicina HSC con criterios de referencia,
+  manejo intramural y retorno a APS; no establece integración con HODOM ni PRO 187.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-058-dm2-insulinorrequiriente-mal-control.md
+  source_sha256: b6207718044e7991fcbe3483c603c5fd2ac2740b33d41e88517d41d4c61fa3e1
+  legacy_state: publicado

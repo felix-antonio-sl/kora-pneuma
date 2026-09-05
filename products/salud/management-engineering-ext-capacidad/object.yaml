@@ -1,0 +1,16 @@
+id: urn:salud:kb:management-engineering-ext-capacidad
+kind: knowledge
+name: management-engineering-ext-capacidad
+description: 'Capacidad, colas y flujo de pacientes: El problema central de la gestion
+  hospitalaria es dinamico: la demanda fluctua'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:management-engineering-ext-indice
+  - urn:salud:kb:gestion-redes-urgencias
+  - urn:salud:kb:gestion-redes-unidades
+provenance:
+  source_path: artefactos/conocimiento/salud/management-engineering-ext-capacidad.md
+  source_sha256: c9143d0eafae8dea04a36328de930bcc7c66fd90d44109423424cecd09225981
+  legacy_state: publicado

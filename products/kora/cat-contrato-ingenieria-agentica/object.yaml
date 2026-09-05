@@ -1,0 +1,13 @@
+id: urn:kora:kb:cat-contrato-ingenieria-agentica
+kind: knowledge
+name: cat-contrato-ingenieria-agentica
+description: 'Contrato práctico de autoría de agentes y skills: intención y conducta,
+  diferencias de Codex y Hermes y evidencia pertinente.'
+content: content.md
+requires:
+- urn:kora:kb:cat-kora-kernel
+provenance:
+  origin: MANDATO.md
+  date: '2026-09-05'
+  previous: archive/previous/kora/cat-contrato-ingenieria-agentica/object.yaml
+  previous_content_sha256: 5e911c9a48e9f030263e92ecaaa16dcc30d22f6c7cac0f22a7c99c0ac231b725

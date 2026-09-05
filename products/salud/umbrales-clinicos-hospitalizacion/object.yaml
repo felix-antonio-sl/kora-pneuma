@@ -1,0 +1,19 @@
+id: urn:salud:kb:umbrales-clinicos-hospitalizacion
+kind: knowledge
+name: umbrales-clinicos-hospitalizacion
+description: 'Umbrales clinicos operables para hospitalizacion de adultos: criterios
+  de estabilidad para alta (IDSA/ATS, Halm), metas de saturacion de oxigeno (BTS 2017),
+  tiempo a antibiotico y tamizaje de sepsis (Surviving Sepsis Campaign 2021, qSOFA
+  vs NEWS2/SIRS/MEWS). Funda los cortes que las skills asistencial-hospital y asistencial-hodom
+  aplican al pie de cama.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:me-infecciones-respiratorias-bajas
+  - urn:salud:kb:me-fiebre-sin-foco
+  - urn:salud:kb:management-engineering-ext-capacidad
+provenance:
+  source_path: artefactos/conocimiento/salud/umbrales-clinicos-hospitalizacion.md
+  source_sha256: d886de3fd1027afe9fe0d150809483198476ea86f88456f70f9520dbd6953823
+  legacy_state: publicado

@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-pro-002-hospitalizacion-domiciliaria
+kind: knowledge
+name: hsc-pro-002-hospitalizacion-domiciliaria
+description: 'Protocolo local PRO 002 de Hospitalización Domiciliaria del Hospital
+  de San Carlos: alcance, ingreso, atención, egreso, responsabilidades y recursos'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-002-hospitalizacion-domiciliaria.md
+  source_sha256: 89e2f664bd59e12fdbcf701bad406ee721654f32be89ae4d5adc4c44ce19d717
+  legacy_state: publicado

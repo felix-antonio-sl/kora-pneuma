@@ -1,0 +1,100 @@
+id: urn:salud:artefacto:firs-razonamiento-sanitario
+kind: skill
+name: firs-razonamiento-sanitario
+description: 'Skill para aplicar el Framework Integrado de Razonamiento en Salud como
+  metodo operativo: separar escala micro/meso/macro, evitar falacia ecologica, distinguir
+  evidencia clinica, poblacional y de gestion, y estructurar decisiones sanitarias.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:salubrista
+- urn:salud:kb:salubrista-body-of-knowledge
+- urn:salud:kb:salubrista-fuentes-base-curadas
+- urn:salud:kb:salubrista-fuente-salud-publica-global
+- urn:salud:kb:salubrista-fuente-management-engineering
+- urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+- urn:salud:kb:health-systems-science-fundamentos
+- urn:salud:kb:health-systems-science-operativa
+- urn:salud:kb:health-systems-science-indice
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:gestion-redes-herramientas
+relations:
+  conocimiento:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-body-of-knowledge
+  - urn:salud:kb:salubrista-fuentes-base-curadas
+  - urn:salud:kb:salubrista-fuente-salud-publica-global
+  - urn:salud:kb:salubrista-fuente-management-engineering
+  - urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss
+  - urn:salud:kb:health-systems-science-fundamentos
+  - urn:salud:kb:health-systems-science-operativa
+  - urn:salud:kb:health-systems-science-indice
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-herramientas
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:hospitalista
+  - urn:salud:artefacto:hospitalizacion-domiciliaria
+provenance:
+  source_path: artefactos/skills/salud/firs-razonamiento-sanitario/SKILL.md
+  source_sha256: 773da5ed1816feb279a124e02d69d3c4571f39b593ff7ac79425878c9db585a7
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:firs-razonamiento-sanitario
+
+    nombre: firs-razonamiento-sanitario
+
+    version: 1.1.0
+
+    estado: activo
+
+    descripcion: "Skill para aplicar el Framework Integrado de Razonamiento en Salud
+    como metodo operativo: separar escala micro/meso/macro, evitar falacia ecologica,
+    distinguir evidencia clinica, poblacional y de gestion, y estructurar decisiones
+    sanitarias."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/firs-razonamiento-sanitario/SKILL.md
+    v1.0.1 (sha256:2c80bff69df0ef69cee182107f0186a4a04463b0a95c8b9da75a6310c2815e37);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): metodo
+    de razonamiento transversal citado por salubrista y los modos asistenciales; fibra
+    referencias/ copiada byte-identica. Herramientas OpenClaw mapeadas al idiom estandar.
+    Omitido con razon: target openclaw (GENESIS seccion 4)."
+
+    autor: FS
+
+    creado: 2026-04-27
+
+    lang: es
+
+    tags: [salud, razonamiento-sanitario, firs, escalas, falacia-ecologica, evidencia]
+
+    vector: [2, 1, 2, 0, 1]
+
+    sigma: [3, 3, 3, 2, 3]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [fijar-escala, separar-niveles, identificar-evidencia, detectar-saltos-indebidos,
+    proponer-puentes, decision-con-inferencia-controlada]
+
+    conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-body-of-knowledge,
+    urn:salud:kb:salubrista-fuentes-base-curadas, urn:salud:kb:salubrista-fuente-salud-publica-global,
+    urn:salud:kb:salubrista-fuente-management-engineering, urn:salud:kb:salubrista-fuente-continuidad-post-aguda-ltss,
+    urn:salud:kb:health-systems-science-fundamentos, urn:salud:kb:health-systems-science-operativa,
+    urn:salud:kb:health-systems-science-indice, urn:salud:kb:gestion-redes-general,
+    urn:salud:kb:gestion-redes-herramientas]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:hospitalista,
+    urn:salud:artefacto:hospitalizacion-domiciliaria]
+
+    ---
+
+    '

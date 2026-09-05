@@ -1,0 +1,15 @@
+id: urn:salud:kb:manual-agente-hsc-agent-cli
+kind: knowledge
+name: manual-agente-hsc-agent-cli
+description: 'Manual operativo para agentes AI que consumen hsc-agent-cli, la vitrina
+  clinica del Hospital de San Carlos: comandos cerrados, contrato JSON beta-4, handles
+  identity-safe, integridad factual, recetas por contexto y limites doctrinales.'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-direccion-tecnica
+provenance:
+  source_path: artefactos/conocimiento/salud/manual-agente-hsc-agent-cli.md
+  source_sha256: a5188b51c9911fd1bc9604c994269781300514253245cecf1ed6567743a70fbe
+  legacy_state: publicado

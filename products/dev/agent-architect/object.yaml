@@ -1,0 +1,18 @@
+id: urn:dev:artefacto:agent-architect
+kind: agent
+name: agent-architect
+description: Diseña y escribe agentes y skills desde su propósito, contrato observable
+  y capacidades efectivas de Codex y Hermes.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:artefacto:autoria-kora
+- urn:kora:artefacto:autoria-de-persona
+provenance:
+  previous: archive/previous/dev/agent-architect
+  date: '2026-09-05'
+  authority: MANDATO.md
+  change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
+    completo recuperable en previous.

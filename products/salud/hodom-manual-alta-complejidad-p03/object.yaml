@@ -1,0 +1,13 @@
+id: urn:salud:kb:hodom-manual-alta-complejidad-p03
+kind: knowledge
+name: hodom-manual-alta-complejidad-p03
+description: Manual de Hospitalizacion Domiciliaria de Alta Complejidad - Parte 03
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hodom-manual-alta-complejidad
+provenance:
+  source_path: artefactos/conocimiento/salud/hodom-manual-alta-complejidad-p03.md
+  source_sha256: 4a00da67f16e93fbe14cea7842c34b09abfa042f717841bad152937439a7fe4e
+  legacy_state: publicado

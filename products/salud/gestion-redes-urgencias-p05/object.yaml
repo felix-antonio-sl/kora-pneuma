@@ -1,0 +1,13 @@
+id: urn:salud:kb:gestion-redes-urgencias-p05
+kind: knowledge
+name: gestion-redes-urgencias-p05
+description: Gestión de Redes Asistenciales — Red de Urgencias - Parte 05
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-urgencias
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-urgencias-p05.md
+  source_sha256: 32ea05fa5247fab733b59bc0c011c5eefa46bc36b567566dba349ec8e66b4df0
+  legacy_state: publicado

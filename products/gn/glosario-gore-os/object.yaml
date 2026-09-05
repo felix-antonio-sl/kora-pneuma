@@ -1,0 +1,12 @@
+id: urn:gn:kb:glosario-gore-os
+kind: knowledge
+name: glosario-gore-os
+description: Documento GN heredado de KODA sobre glosario gore os; migrado como borrador
+  y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/glosario-gore-os.md
+  source_sha256: 491d1115570138093fd052a2ab79574e4a644b449f2a752516693e2b08ae1082
+  legacy_state: borrador

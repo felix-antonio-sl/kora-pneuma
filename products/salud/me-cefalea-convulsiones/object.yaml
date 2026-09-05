@@ -1,0 +1,15 @@
+id: urn:salud:kb:me-cefalea-convulsiones
+kind: knowledge
+name: me-cefalea-convulsiones
+description: 'Cefalea y Convulsiones: La cefalea es el cuarto motivo de consulta en
+  urgencias'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-cefalea-convulsiones.md
+  source_sha256: 7bfc8d82a96290355a87d57da5180ebf5266bad5d6d3399c64c9b4ab548d2a90
+  legacy_state: publicado

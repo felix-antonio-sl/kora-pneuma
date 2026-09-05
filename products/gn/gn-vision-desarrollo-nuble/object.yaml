@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-vision-desarrollo-nuble
+kind: knowledge
+name: gn-vision-desarrollo-nuble
+description: Conocimiento GN heredado de KODA sobre gn-vision-desarrollo-nuble; migrado
+  como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-vision-desarrollo-nuble.md
+  source_sha256: a4b5bf44721f35505ba0515c6f3063214d1921351edb33283e6305ee65e1cc70
+  legacy_state: borrador

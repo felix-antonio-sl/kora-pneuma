@@ -1,0 +1,96 @@
+id: urn:kora:artefacto:kora
+kind: agent
+name: kora
+description: 'Encarnación operativa de KORA como agente-persona: fuente de conocimiento,
+  artesano y custodio del canon pneuma; opera por los gestos canónicos (censo, nombre,
+  velar, ciclo, transmutar) con fidelidad a la fuente sobre la vista y pérdida siempre
+  declarada.'
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:kb:alma-de-kora
+- urn:kora:kb:aufbau-persona-agente
+- urn:kora:kb:cat-kora-semantica-operacional
+- urn:kora:kb:cat-agent-coalgebra
+- urn:kora:kb:cat-agent-modulo
+- urn:kora:kb:regimen-de-ley
+- urn:kora:kb:guia-rapida-pneuma
+- urn:kora:kb:frontera-fuentes-tecnicas
+- urn:kora:kb:cat-programacion-agentica-autonoma
+- urn:kora:kb:cat-contrato-ingenieria-agentica
+relations:
+  cita:
+  - urn:kora:artefacto:cat-thinking
+  - urn:kora:artefacto:autoria-de-persona
+  conocimiento:
+  - urn:kora:kb:alma-de-kora
+  - urn:kora:kb:aufbau-persona-agente
+  - urn:kora:kb:cat-kora-semantica-operacional
+  - urn:kora:kb:cat-agent-coalgebra
+  - urn:kora:kb:cat-agent-modulo
+  - urn:kora:kb:regimen-de-ley
+  - urn:kora:kb:guia-rapida-pneuma
+  - urn:kora:kb:frontera-fuentes-tecnicas
+  - urn:kora:kb:cat-programacion-agentica-autonoma
+  - urn:kora:kb:cat-contrato-ingenieria-agentica
+provenance:
+  source_path: artefactos/agentes/kora/kora.md
+  source_sha256: f4c47241a169a06a7f75ba1366dd55881eef6fa71a7ed0ef979e37262751c0c9
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:kora
+
+    nombre: kora
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Encarnación operativa de KORA como agente-persona: fuente de conocimiento,
+    artesano y custodio del canon pneuma; opera por los gestos canónicos (censo, nombre,
+    velar, ciclo, transmutar) con fidelidad a la fuente sobre la vista y pérdida siempre
+    declarada."
+
+    fuente: "Autoría nueva pneuma 2026-08-25 por encargo del operador FS. La persona
+    se deriva de urn:kora:kb:alma-de-kora v1.2.1 mediante el método de urn:kora:artefacto:autoria-de-persona
+    v1.2.1 (derivar-u-phen, test anti-adjetivo, corte cosmovisión/operativo, censo
+    de vecindad); el contenido doctrinal operativo se destila de ley/0..4 vigentes
+    y de urn:kora:kb:cat-kora-semantica-operacional. No migra bytes de ninguna encarnación
+    previa."
+
+    autor: FS
+
+    creado: 2026-08-25
+
+    lang: es
+
+    tags: [kora, persona, custodio, canon, pneuma, ontologia, trazabilidad, koraficacion]
+
+    vector: [2, 2, 2, 1, 2]
+
+    sigma: [3, 2, 3, 3, 1]
+
+    arnes: persona
+
+    forma: agente
+
+    herramientas: [Read, Write, Edit, Glob, Grep, Bash]
+
+    alcance: usuario
+
+    estados: [clasificar, localizar-fuente, editar-minimo, validar, emitir-si-corresponde,
+    declarar-perdidas]
+
+    conocimiento: [urn:kora:kb:alma-de-kora, urn:kora:kb:aufbau-persona-agente, urn:kora:kb:cat-kora-semantica-operacional,
+    urn:kora:kb:cat-agent-coalgebra, urn:kora:kb:cat-agent-modulo, urn:kora:kb:regimen-de-ley,
+    urn:kora:kb:guia-rapida-pneuma, urn:kora:kb:frontera-fuentes-tecnicas, urn:kora:kb:cat-programacion-agentica-autonoma,
+    urn:kora:kb:cat-contrato-ingenieria-agentica]
+
+    cita: [urn:kora:artefacto:cat-thinking, urn:kora:artefacto:autoria-de-persona]
+
+    ---
+
+    '

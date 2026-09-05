@@ -1,0 +1,16 @@
+id: urn:salud:kb:salubrista-fuente-salud-publica-global-p03
+kind: knowledge
+name: salubrista-fuente-salud-publica-global-p03
+description: Oxford Textbook of Global Public Health - Parte 03
+content: content.md
+requires:
+- urn:salud:kb:salubrista
+relations:
+  cita:
+  - urn:salud:kb:salubrista-fuente-salud-publica-global
+  depende:
+  - urn:salud:kb:salubrista
+provenance:
+  source_path: artefactos/conocimiento/salud/salubrista-fuente-salud-publica-global-p03.md
+  source_sha256: bddbf35efea1815414188c82c32e2081afe28084437b0344cf386253ac38bd40
+  legacy_state: publicado

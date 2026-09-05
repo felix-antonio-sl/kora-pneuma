@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-ipr-lifecycle
+kind: knowledge
+name: ssot-ipr-lifecycle
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-ipr-lifecycle.md
+  source_sha256: c5d9ae6050b367fa017e9a2242e277bbbe0e480a4f0dabb1978b128577c7f22d
+  legacy_state: borrador

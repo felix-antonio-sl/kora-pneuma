@@ -1,0 +1,20 @@
+id: urn:salud:kb:me-toc-body-of-knowledge
+kind: knowledge
+name: me-toc-body-of-knowledge
+description: me-toc-body-of-knowledge
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-body-of-knowledge-diferencial
+  - urn:salud:kb:me-perfil-urgenciologo
+  - urn:salud:kb:me-razonamiento-clinico
+  - urn:salud:kb:me-evaluacion-primaria
+  - urn:salud:kb:me-dolor-toracico
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-toc-body-of-knowledge.md
+  source_sha256: 5d79f8625b7ecac45aa756410004ea22ee37f42412d686b791c04d48dc81e340
+  legacy_state: publicado

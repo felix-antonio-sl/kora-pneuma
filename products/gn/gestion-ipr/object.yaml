@@ -1,0 +1,12 @@
+id: urn:gn:kb:gestion-ipr
+kind: knowledge
+name: gestion-ipr
+description: Documento GN heredado de KODA sobre gestion ipr; migrado como borrador
+  y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gestion-ipr.md
+  source_sha256: 0a59c53248640ecc90f1f906c8824266edb970cf0064dc558786920df60d521e
+  legacy_state: borrador

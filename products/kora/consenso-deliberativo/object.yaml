@@ -1,0 +1,87 @@
+id: urn:kora:artefacto:consenso-deliberativo
+kind: skill
+name: consenso-deliberativo
+description: 'Skill horizontal para resolver un problema mediante consenso critico
+  entre N expertos (recomendado 3), donde cada experto es una identidad encarnable
+  (agente, persona, skill de razonamiento) mas sus capacidades. Protocolo: propuestas
+  iniciales independientes, criticas cruzadas sustantivas, sintesis comun, refutacion
+  adversarial, ciclos de correccion hasta convergencia o disenso estructurado. Anti-degeneracion:
+  prohibido el consenso de cortesia, el disenso irreductible es salida valida, la
+  confianza se declara por experto sin promediar.'
+content: content.md
+targets:
+- codex
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/skills/kora/consenso-deliberativo/SKILL.md
+  source_sha256: 0b4f043d03101fdf85016653bac3d5d6b0ad2c27a76f845a832d310c0058fcdb
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:consenso-deliberativo
+
+    nombre: consenso-deliberativo
+
+    version: 1.2.0
+
+    estado: activo
+
+    descripcion: "Skill horizontal para resolver un problema mediante consenso critico
+    entre N expertos (recomendado 3), donde cada experto es una identidad encarnable
+    (agente, persona, skill de razonamiento) mas sus capacidades. Protocolo: propuestas
+    iniciales independientes, criticas cruzadas sustantivas, sintesis comun, refutacion
+    adversarial, ciclos de correccion hasta convergencia o disenso estructurado. Anti-degeneracion:
+    prohibido el consenso de cortesia, el disenso irreductible es salida valida, la
+    confianza se declara por experto sin promediar."
+
+    fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/consenso-deliberativo/SKILL.md
+    v1.0.1 (sha256:bfe841fa4cdfdff1ec4ef8a861f7b98fba3b21f872998aafb56bb4888c5aa8a9)
+    el 2026-06-22 bajo regimen migrar-o-omitir; protocolo y cuerpo preservados. Normalizacion
+    pneuma: frontmatter _manifest/extensions.kora/artefacto anidado -> shape ley/2
+    plano; vector_ontologico [2,0,1,0,1] verificado legal para forma=habilidad (ley/2
+    §7); sigma [1,1,3,1,0] verificado contra leyes inter-eje (ley/1 §4). Reanclaje
+    de specs sublimadas: la ley del modo orquestacion (antes urn:kora:kb:multiagente-spec)
+    se reancla a ley/1 §3.3 (eje Ξ, interaccion coreografiada/composicional); la ley
+    del HITL (antes urn:kora:kb:gobernanza) se reancla a ley/0 (gobernanza). Ambas
+    URNs bestia omitidas de conocimiento por migrar-o-omitir (no resuelven en el indice
+    pneuma). v1.1.0 (2026-07-12): restaura las dos fibras referencias/ perdidas en
+    la migracion y actualiza orquestacion para custom agents/subagentes Codex. v1.2.0
+    (2026-07-16): auditoria adversarial de paridad detecta que la restauracion v1.1.0
+    comprimio en exceso las fibras conservadas en runtime/bestia; migra por reescritura
+    agnostica el procedimiento original, su mapeo frase-estado, tablas completas y
+    criterios de calidad, retirando rutas y mecanismos exclusivos de Claude Code."
+
+    autor: FS
+
+    creado: 2026-06-03
+
+    lang: es
+
+    tags: [deliberacion, consenso, panel-expertos, critica-adversarial, multiagente,
+    sintesis, dialectico, anti-complaciente]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [1, 1, 3, 1, 0]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Glob, Grep]
+
+    targets: [claude-code, codex, opencode, openclaw]
+
+    estados: [convocar, proponer, criticar, sintetizar, refutar, corregir, declarar,
+    entregar]
+
+    ---
+
+    '
+  previous: archive/previous/kora/consenso-deliberativo
+  adaptation:
+    date: '2026-09-05'
+    authority: MANDATO.md
+    change: Actualiza únicamente referencias operativas a maquinaria y modos de invocación;
+      conserva el método y contenido de dominio.

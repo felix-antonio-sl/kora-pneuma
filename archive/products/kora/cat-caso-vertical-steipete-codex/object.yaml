@@ -1,0 +1,21 @@
+id: urn:kora:kb:cat-caso-vertical-steipete-codex
+kind: knowledge
+name: cat-caso-vertical-steipete-codex
+description: 'Antecedente deprecado del caso Steipete sobre Codex CLI: conserva las
+  conclusiones válidas de una observación runtime finita sin mantener monitores ni
+  gates versionados en la suite general.'
+content: content.md
+requires:
+- urn:dev:artefacto:ship-discipline
+- urn:kora:kb:cat-contrato-ingenieria-agentica
+- urn:kora:kb:cat-agent-coalgebra
+relations:
+  depende:
+  - urn:dev:artefacto:steipete
+  - urn:dev:artefacto:ship-discipline
+  - urn:kora:kb:cat-contrato-ingenieria-agentica
+  - urn:kora:kb:cat-agent-coalgebra
+provenance:
+  source_path: artefactos/conocimiento/kora/cat-caso-vertical-steipete-codex.md
+  source_sha256: 9f6c0778362a861ba087ad768fe78f9a1ce46ae03362de0da07288b2f5ad8dd7
+  legacy_state: deprecado

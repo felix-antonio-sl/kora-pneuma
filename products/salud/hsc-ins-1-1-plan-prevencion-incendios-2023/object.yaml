@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-ins-1-1-plan-prevencion-incendios-2023
+kind: knowledge
+name: hsc-ins-1-1-plan-prevencion-incendios-2023
+description: Plan HSC de prevención, detección, respuesta, evacuación y recuperación
+  ante incendios, con controles e interfaces de emergencia.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:hsc-ins-2-1-plan-evacuacion-2023
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-ins-1-1-plan-prevencion-incendios-2023.md
+  source_sha256: 39cd89d70400896f08ec7a6d796326a7a138e35de57d519e4ce9a8e88f30cf78
+  legacy_state: publicado

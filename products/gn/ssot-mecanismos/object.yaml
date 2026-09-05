@@ -1,0 +1,12 @@
+id: urn:gn:kb:ssot-mecanismos
+kind: knowledge
+name: ssot-mecanismos
+description: Documento SSOT GORE Ñuble migrado como conocimiento borrador; su estado
+  no implica validación institucional.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/ssot-mecanismos.md
+  source_sha256: 593800119a9b9334a70aa6671ccc144b94987aa1b11e5d7f3721f768f5f21704
+  legacy_state: borrador

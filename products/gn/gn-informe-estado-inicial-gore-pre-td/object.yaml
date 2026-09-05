@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-informe-estado-inicial-gore-pre-td
+kind: knowledge
+name: gn-informe-estado-inicial-gore-pre-td
+description: Conocimiento GN heredado de KODA sobre gn-informe-estado-inicial-gore-pre-td;
+  migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-informe-estado-inicial-gore-pre-td.md
+  source_sha256: 3fccb2d8643c87971c0da115149f26c501e94d214bd3086b9e211e28eb5041ed
+  legacy_state: borrador

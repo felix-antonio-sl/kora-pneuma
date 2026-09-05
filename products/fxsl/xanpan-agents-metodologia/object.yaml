@@ -1,0 +1,14 @@
+id: urn:fxsl:kb:xanpan-agents-metodologia
+kind: knowledge
+name: xanpan-agents-metodologia
+description: XANPAN::AGENTS v2.1
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/knowledge/fxsl/xanpan/xanpan-agents-metodologia.md
+  source_sha256: 481708cee12e9d044dbea3ea572e3f3aa254e69a25eeb062de0dce78f0416ddd
+  legacy_state: published
+  migration: legacy-codex-consumers-2026-09-05
+  handling: Documento de dominio preservado íntegro, sin reformateo ni adopción de la maquinaria anterior.

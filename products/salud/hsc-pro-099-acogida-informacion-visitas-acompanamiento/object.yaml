@@ -1,0 +1,14 @@
+id: urn:salud:kb:hsc-pro-099-acogida-informacion-visitas-acompanamiento
+kind: knowledge
+name: hsc-pro-099-acogida-informacion-visitas-acompanamiento
+description: 'Protocolo local HSC PRO-099, Acogida, Información, Visitas y Acompañamiento
+  al Usuario/a Hospitalizado/a (cuarta edición enero 2023): figuras intramurales de
+  Familiar Responsable y Acompañante de Hospitalización, acreditación, información
+  y horarios; no define el Cuidador Responsable HODOM.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-pro-099-acogida-informacion-visitas-acompanamiento.md
+  source_sha256: db23c7b2295b0766718a34dc09d5f073bc5437855741201def9ec9c2bd5ea3fb
+  legacy_state: publicado

@@ -1,0 +1,17 @@
+id: urn:salud:kb:me-infecciones-respiratorias-bajas
+kind: knowledge
+name: me-infecciones-respiratorias-bajas
+description: 'Unidad 5 '' Infecciones respiratorias bajas'': Dentro de los cuadros
+  respiratorios bajos que suelen llegar a los servicios de urgencia, los más frecuentes
+  y/o de manejo más complejo son la Enfermedad Pulmonar Obstructiva Crónica o EPOC,
+  la neumonía y el hanta virus'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-infecciones-respiratorias-bajas.md
+  source_sha256: 537e7fa58e1464d1189f56df1860078f1c70eddbbf26af49a33a908c155c8aa7
+  legacy_state: publicado

@@ -1,0 +1,14 @@
+id: urn:kora:kb:frontera-fuentes-tecnicas
+kind: knowledge
+name: frontera-fuentes-tecnicas
+description: Criterio para decidir qué conocimiento se korafica y qué fuentes técnicas
+  se conserva, archiva o descarta fuera de KORA.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:kora:kb:guia-rapida-pneuma
+provenance:
+  source_path: artefactos/conocimiento/kora/frontera-fuentes-tecnicas.md
+  source_sha256: 58b7bb5b52e61ca34e1920fd206772811b52b8fc1602503deff216fabea0dae9
+  legacy_state: publicado

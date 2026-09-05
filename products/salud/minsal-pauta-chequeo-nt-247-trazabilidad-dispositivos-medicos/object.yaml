@@ -1,0 +1,12 @@
+id: urn:salud:kb:minsal-pauta-chequeo-nt-247-trazabilidad-dispositivos-medicos
+kind: knowledge
+name: minsal-pauta-chequeo-nt-247-trazabilidad-dispositivos-medicos
+description: Pauta MINSAL para comprobar documentación, registro y simulación de trazabilidad
+  de dispositivos médicos en prestadores institucionales.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-pauta-chequeo-nt-247-trazabilidad-dispositivos-medicos.md
+  source_sha256: db06ffd5248bccdf7acf20939b9720122f808d0f24737ec04a138df335f37fb5
+  legacy_state: publicado

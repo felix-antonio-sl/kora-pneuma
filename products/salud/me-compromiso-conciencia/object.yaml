@@ -1,0 +1,18 @@
+id: urn:salud:kb:me-compromiso-conciencia
+kind: knowledge
+name: me-compromiso-conciencia
+description: 'Compromiso de Conciencia: Recibe una llamada sobre un paciente masculino
+  de 40 años, encontrado inconsciente en la vía pública'
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  cita:
+  - urn:salud:kb:me-compromiso-conciencia-p02
+  - urn:salud:kb:me-compromiso-conciencia-p03
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-compromiso-conciencia.md
+  source_sha256: 545ef6df675d3adf7f39b9510cbdf0afda4247acab6a1bee05a270a0b4e23825
+  legacy_state: publicado

@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-apf-1-5-almacenamiento-conservacion-2023
+kind: knowledge
+name: hsc-apf-1-5-almacenamiento-conservacion-2023
+description: Procedimiento HSC APF 1.5 de 2023 para almacenar y conservar medicamentos,
+  incluidos fotosensibles y termolábiles.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-apf-1-5-almacenamiento-conservacion-2023.md
+  source_sha256: 18fb5d057ab4ce1b14d9ab75893706522d408158a1981224306ce1255030bb79
+  legacy_state: publicado

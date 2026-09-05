@@ -1,0 +1,14 @@
+id: urn:salud:kb:notificacion-eno-iaas
+kind: knowledge
+name: notificacion-eno-iaas
+description: 'Marco operativo de notificacion epidemiologica obligatoria en Chile:
+  ENO (Decreto 7/2019, plataforma EPIVIGILA) e IAAS (Decreto Exento 60/2022 = Norma
+  Tecnica 225, plataforma SICARS) — modalidades, plazos, lista, definiciones de caso,
+  criterios de brote y campos de notificacion.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/notificacion-eno-iaas.md
+  source_sha256: 6c1b7caaa5167d98bd98c09609e3ae354e08cf4482e262baab983077780c917d
+  legacy_state: publicado

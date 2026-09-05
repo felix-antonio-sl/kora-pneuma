@@ -1,0 +1,12 @@
+id: urn:salud:kb:hsc-gcl-3-3-prevencion-itu-cup-2024
+kind: knowledge
+name: hsc-gcl-3-3-prevencion-itu-cup-2024
+description: Procedimiento HSC GCL 3.3 de 2024 para prevenir y controlar infecciones
+  urinarias asociadas a catéter urinario permanente.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-gcl-3-3-prevencion-itu-cup-2024.md
+  source_sha256: 217078f1b8b9dda99a97a86600f94a1257230c89cd3c52028e757572d32b1f6b
+  legacy_state: publicado

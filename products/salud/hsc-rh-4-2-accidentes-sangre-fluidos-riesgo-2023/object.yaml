@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-rh-4-2-accidentes-sangre-fluidos-riesgo-2023
+kind: knowledge
+name: hsc-rh-4-2-accidentes-sangre-fluidos-riesgo-2023
+description: Procedimiento HSC para prevenir, notificar, derivar y seguir accidentes
+  laborales con sangre o fluidos corporales de riesgo.
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-rh-4-2-accidentes-sangre-fluidos-riesgo-2023.md
+  source_sha256: a285f075c6e30f9d1368b58066dadbe0c8157572519e0645da59bd057cd93f2e
+  legacy_state: publicado

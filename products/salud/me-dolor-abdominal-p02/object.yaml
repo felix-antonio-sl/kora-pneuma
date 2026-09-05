@@ -1,0 +1,14 @@
+id: urn:salud:kb:me-dolor-abdominal-p02
+kind: knowledge
+name: me-dolor-abdominal-p02
+description: Dolor Abdominal en Urgencia - Parte 02
+content: content.md
+requires:
+- urn:salud:kb:med-emergencia
+relations:
+  depende:
+  - urn:salud:kb:med-emergencia
+provenance:
+  source_path: artefactos/conocimiento/salud/me-dolor-abdominal-p02.md
+  source_sha256: 79927dd063c4e2eaaa92927ad0b5e01c0342b0fdaff1a167b4d699434b2d1d67
+  legacy_state: publicado

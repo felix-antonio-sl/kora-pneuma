@@ -1,0 +1,12 @@
+id: urn:salud:kb:minsal-rpe-9-telemedicina
+kind: knowledge
+name: minsal-rpe-9-telemedicina
+description: 'RPE N°9 MINSAL: actividades, definiciones y rendimientos de telemedicina
+  en atención primaria, secundaria y terciaria'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/minsal-rpe-9-telemedicina.md
+  source_sha256: 91bf5f214f90fea0fe10461035880b1562ff2494bc905970758e0b05417b20d1
+  legacy_state: publicado

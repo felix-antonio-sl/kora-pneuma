@@ -1,0 +1,18 @@
+id: urn:salud:kb:gestion-redes-salud-mental
+kind: knowledge
+name: gestion-redes-salud-mental
+description: 'Gestión de Redes — Salud Mental y Adicciones: Marco axiológico que orienta
+  el diseño, operación y evaluación de la red de salud mental'
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-salud-mental-p02
+  - urn:salud:kb:gestion-redes-salud-mental-p03
+  - urn:salud:kb:gestion-redes-salud-mental-p04
+  - urn:salud:kb:gestion-redes-salud-mental-p05
+  - urn:salud:kb:gestion-redes-salud-mental-p06
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-salud-mental.md
+  source_sha256: 36732eb85f2fa2a5cbfed02fe254f6f0951d030265329dca057d9215c191ece1
+  legacy_state: publicado

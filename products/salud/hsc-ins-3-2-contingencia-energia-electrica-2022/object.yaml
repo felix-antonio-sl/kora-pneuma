@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-ins-3-2-contingencia-energia-electrica-2022
+kind: knowledge
+name: hsc-ins-3-2-contingencia-energia-electrica-2022
+description: Plan HSC frente a cortes eléctricos internos o externos, con UPS, grupos
+  electrógenos, verificación de cargas críticas y pruebas periódicas.
+content: content.md
+requires: []
+relations:
+  cita: []
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-ins-3-2-contingencia-energia-electrica-2022.md
+  source_sha256: 4326ed843f3f6735f3c0b8d1d3f96c67cd69f69f72e5898c9647bd824287c13d
+  legacy_state: publicado

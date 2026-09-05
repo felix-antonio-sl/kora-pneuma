@@ -1,0 +1,12 @@
+id: urn:gn:kb:gn-manual-inventarios-bodegas
+kind: knowledge
+name: gn-manual-inventarios-bodegas
+description: Conocimiento GN heredado de KODA sobre gn-manual-inventarios-bodegas;
+  migrado como borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gn-manual-inventarios-bodegas.md
+  source_sha256: b80f9b984c3b33327f0b07ce5856466949ccd21e0f58849c263e57cac614d6e4
+  legacy_state: borrador

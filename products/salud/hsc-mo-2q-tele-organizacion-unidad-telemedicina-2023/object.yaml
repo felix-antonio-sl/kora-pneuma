@@ -1,0 +1,13 @@
+id: urn:salud:kb:hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+kind: knowledge
+name: hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+description: 'Manual organizacional observado de la Unidad de Telemedicina HSC: misión,
+  cartera resolutora y consultora, circuito asistencial, registros, interfaces, cargos
+  y dotación declarados en la segunda edición de 2023.'
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/salud/hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023.md
+  source_sha256: 978d4b1f741534433e0d20f20326bb8225a257f7e1b7ae9f871fe2cf01a8b158
+  legacy_state: publicado

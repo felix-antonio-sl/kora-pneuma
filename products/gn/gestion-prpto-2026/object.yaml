@@ -1,0 +1,12 @@
+id: urn:gn:kb:gestion-prpto-2026
+kind: knowledge
+name: gestion-prpto-2026
+description: Documento GN heredado de KODA sobre gestion prpto 2026; migrado como
+  borrador y no publicado.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/gn/gestion-prpto-2026.md
+  source_sha256: 4ef30b8532caff13d2911b49fb595e8bc3cad50be18fb76b0366a602ab2e519f
+  legacy_state: borrador

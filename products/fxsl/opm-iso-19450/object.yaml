@@ -1,0 +1,15 @@
+id: urn:fxsl:kb:opm-iso-19450
+kind: knowledge
+name: opm-iso-19450
+description: Referencia compacta en ingles de OPM ISO/PAS 19450 para modelado conceptual
+  y herramientas
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:fxsl:kb:opm-es
+  - urn:fxsl:kb:opcloud-tutorial-videos
+provenance:
+  source_path: artefactos/conocimiento/fxsl/opm-iso-19450.md
+  source_sha256: 91715e602689765a0abed6c3f84b69bdbe3b0e6e50b111979fdce898fb9cd1a1
+  legacy_state: publicado

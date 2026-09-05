@@ -1,0 +1,13 @@
+id: urn:salud:kb:gestion-redes-general-p03
+kind: knowledge
+name: gestion-redes-general-p03
+description: Gestión de Redes Asistenciales — Marco General - Parte 03
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:salud:kb:gestion-redes-general
+provenance:
+  source_path: artefactos/conocimiento/salud/gestion-redes-general-p03.md
+  source_sha256: 7467af8833d03de5e6040b66c73d512fd16a4218812e1aaf5e1d6889a0613778
+  legacy_state: publicado
