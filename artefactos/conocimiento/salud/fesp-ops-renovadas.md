@@ -1,1 +1,1 @@
-../../../products/salud/fesp-ops-renovadas/content.md
+../../../knowledge/references/salud/fesp-ops-renovadas/content.md

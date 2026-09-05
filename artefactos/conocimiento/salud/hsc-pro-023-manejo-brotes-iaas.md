@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-023-manejo-brotes-iaas/content.md
+../../../knowledge/references/salud/hsc-pro-023-manejo-brotes-iaas/content.md

@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-identidad-relacion/content.md
+../../../knowledge/references/fxsl/icas-identidad-relacion/content.md

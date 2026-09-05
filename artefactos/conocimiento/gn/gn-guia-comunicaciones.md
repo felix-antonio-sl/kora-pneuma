@@ -1,1 +1,1 @@
-../../../products/gn/gn-guia-comunicaciones/content.md
+../../../knowledge/references/gn/gn-guia-comunicaciones/content.md

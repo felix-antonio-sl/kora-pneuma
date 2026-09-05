@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-unbewusstes/content.md
+../../../knowledge/references/fxsl/lersch-unbewusstes/content.md

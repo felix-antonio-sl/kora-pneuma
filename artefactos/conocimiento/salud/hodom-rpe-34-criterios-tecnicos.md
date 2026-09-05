@@ -1,1 +1,1 @@
-../../../products/salud/hodom-rpe-34-criterios-tecnicos/content.md
+../../../knowledge/references/salud/hodom-rpe-34-criterios-tecnicos/content.md

@@ -1,1 +1,1 @@
-../../../products/fxsl/langacker-cg-clases-y-construcciones/content.md
+../../../knowledge/references/fxsl/langacker-cg-clases-y-construcciones/content.md

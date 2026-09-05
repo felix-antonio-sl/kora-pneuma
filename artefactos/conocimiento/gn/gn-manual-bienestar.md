@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-bienestar/content.md
+../../../knowledge/references/gn/gn-manual-bienestar/content.md

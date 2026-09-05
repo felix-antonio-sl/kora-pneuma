@@ -1,1 +1,1 @@
-../../../products/gn/gn-flujos-aprobacion-documentos/content.md
+../../../knowledge/references/gn/gn-flujos-aprobacion-documentos/content.md

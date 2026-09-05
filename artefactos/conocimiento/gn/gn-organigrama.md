@@ -1,1 +1,1 @@
-../../../products/gn/gn-organigrama/content.md
+../../../knowledge/references/gn/gn-organigrama/content.md

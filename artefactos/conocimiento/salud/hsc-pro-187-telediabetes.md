@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-187-telediabetes/content.md
+../../../knowledge/references/salud/hsc-pro-187-telediabetes/content.md

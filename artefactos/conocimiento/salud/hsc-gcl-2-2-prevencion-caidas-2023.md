@@ -1,1 +1,1 @@
-../../../products/salud/hsc-gcl-2-2-prevencion-caidas-2023/content.md
+../../../knowledge/references/salud/hsc-gcl-2-2-prevencion-caidas-2023/content.md

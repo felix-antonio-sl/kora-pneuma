@@ -1,1 +1,1 @@
-../../../products/salud/minsal-orientaciones-tecnicas-comges-2026/content.md
+../../../knowledge/references/salud/minsal-orientaciones-tecnicas-comges-2026/content.md

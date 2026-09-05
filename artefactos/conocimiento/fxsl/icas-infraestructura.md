@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-infraestructura/content.md
+../../../knowledge/references/fxsl/icas-infraestructura/content.md

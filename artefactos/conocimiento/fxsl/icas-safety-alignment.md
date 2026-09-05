@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-safety-alignment/content.md
+../../../knowledge/references/fxsl/icas-safety-alignment/content.md

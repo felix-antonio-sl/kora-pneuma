@@ -1,1 +1,1 @@
-../../../products/dev/steve-jobs-principios-agentico/content.md
+../../../knowledge/references/dev/steve-jobs-principios-agentico/content.md

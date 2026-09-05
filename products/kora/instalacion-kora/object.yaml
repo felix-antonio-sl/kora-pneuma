@@ -7,8 +7,6 @@ content: content.md
 targets:
 - codex
 - hermes
-requires:
-- urn:kora:kb:guia-rapida-pneuma
 provenance:
   date: '2026-09-05'
   authority: archive/reconstruction/MANDATO.md

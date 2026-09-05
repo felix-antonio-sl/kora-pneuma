@@ -1,1 +1,1 @@
-../../../products/fxsl/opm-es/content.md
+../../../knowledge/references/fxsl/opm-es/content.md

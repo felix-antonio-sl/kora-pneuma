@@ -1,1 +1,1 @@
-../../../products/gn/gn-gore-ideal/content.md
+../../../knowledge/references/gn/gn-gore-ideal/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-126-rehabilitacion-pulmonar/content.md
+../../../knowledge/references/salud/hsc-pro-126-rehabilitacion-pulmonar/content.md

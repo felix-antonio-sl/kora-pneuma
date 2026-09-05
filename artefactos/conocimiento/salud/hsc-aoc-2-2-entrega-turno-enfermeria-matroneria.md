@@ -1,1 +1,1 @@
-../../../products/salud/hsc-aoc-2-2-entrega-turno-enfermeria-matroneria/content.md
+../../../knowledge/references/salud/hsc-aoc-2-2-entrega-turno-enfermeria-matroneria/content.md

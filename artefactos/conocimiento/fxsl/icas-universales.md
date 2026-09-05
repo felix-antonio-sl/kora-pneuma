@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-universales/content.md
+../../../knowledge/references/fxsl/icas-universales/content.md

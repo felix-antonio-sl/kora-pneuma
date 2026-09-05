@@ -1,1 +1,1 @@
-../../../archive/products/openclaw-fleet/handoff-policy/content.md
+../../../knowledge/archive/references/openclaw-fleet/handoff-policy/content.md

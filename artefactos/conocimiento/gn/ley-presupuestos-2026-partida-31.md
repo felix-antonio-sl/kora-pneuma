@@ -1,1 +1,1 @@
-../../../products/gn/ley-presupuestos-2026-partida-31/content.md
+../../../knowledge/references/gn/ley-presupuestos-2026-partida-31/content.md

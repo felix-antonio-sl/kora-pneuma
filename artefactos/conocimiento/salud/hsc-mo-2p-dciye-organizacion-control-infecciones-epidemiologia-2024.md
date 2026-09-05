@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024/content.md
+../../../knowledge/references/salud/hsc-mo-2p-dciye-organizacion-control-infecciones-epidemiologia-2024/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-076-carga-combustible-ambulancias/content.md
+../../../knowledge/references/salud/hsc-pro-076-carga-combustible-ambulancias/content.md

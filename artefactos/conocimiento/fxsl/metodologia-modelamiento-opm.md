@@ -1,1 +1,1 @@
-../../../products/fxsl/metodologia-modelamiento-opm/content.md
+../../../knowledge/references/fxsl/metodologia-modelamiento-opm/content.md

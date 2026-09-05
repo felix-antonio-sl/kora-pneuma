@@ -1,1 +1,1 @@
-../../../products/gn/ssot-territorio/content.md
+../../../knowledge/references/gn/ssot-territorio/content.md

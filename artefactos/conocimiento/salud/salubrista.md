@@ -1,1 +1,1 @@
-../../../products/salud/salubrista-knowledge/content.md
+../../../knowledge/references/salud/salubrista-knowledge/content.md

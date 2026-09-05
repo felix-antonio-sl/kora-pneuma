@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-156-atencion-preferente-pm-pcd/content.md
+../../../knowledge/references/salud/hsc-pro-156-atencion-preferente-pm-pcd/content.md

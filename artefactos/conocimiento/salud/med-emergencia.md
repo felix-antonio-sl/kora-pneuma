@@ -1,1 +1,1 @@
-../../../products/salud/med-emergencia/content.md
+../../../knowledge/references/salud/med-emergencia/content.md

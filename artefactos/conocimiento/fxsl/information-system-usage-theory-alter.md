@@ -1,1 +1,1 @@
-../../../products/fxsl/information-system-usage-theory-alter/content.md
+../../../knowledge/references/fxsl/information-system-usage-theory-alter/content.md

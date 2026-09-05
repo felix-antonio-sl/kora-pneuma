@@ -1,1 +1,1 @@
-../../../products/kora/frontera-fuentes-tecnicas/content.md
+../../../knowledge/references/kora/frontera-fuentes-tecnicas/content.md

@@ -1,1 +1,1 @@
-../../../products/kora/cat-programacion-agentica-autonoma/content.md
+../../../knowledge/references/kora/cat-programacion-agentica-autonoma/content.md

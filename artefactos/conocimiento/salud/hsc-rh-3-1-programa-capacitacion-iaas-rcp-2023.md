@@ -1,1 +1,1 @@
-../../../products/salud/hsc-rh-3-1-programa-capacitacion-iaas-rcp-2023/content.md
+../../../knowledge/references/salud/hsc-rh-3-1-programa-capacitacion-iaas-rcp-2023/content.md

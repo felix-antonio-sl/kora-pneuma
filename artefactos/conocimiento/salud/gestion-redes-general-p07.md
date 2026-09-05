@@ -1,1 +1,1 @@
-../../../products/salud/gestion-redes-general-p07/content.md
+../../../knowledge/references/salud/gestion-redes-general-p07/content.md

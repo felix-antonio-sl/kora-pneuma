@@ -1,1 +1,1 @@
-../../../products/salud/estandares-it-core-cl/content.md
+../../../knowledge/references/salud/estandares-it-core-cl/content.md

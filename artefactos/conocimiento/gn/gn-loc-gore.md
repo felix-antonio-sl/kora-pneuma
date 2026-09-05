@@ -1,1 +1,1 @@
-../../../products/gn/gn-loc-gore/content.md
+../../../knowledge/references/gn/gn-loc-gore/content.md

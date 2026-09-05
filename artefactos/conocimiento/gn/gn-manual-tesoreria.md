@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-tesoreria/content.md
+../../../knowledge/references/gn/gn-manual-tesoreria/content.md

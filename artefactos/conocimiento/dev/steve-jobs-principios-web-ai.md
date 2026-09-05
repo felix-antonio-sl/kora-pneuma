@@ -1,1 +1,1 @@
-../../../products/dev/steve-jobs-principios-web-ai/content.md
+../../../knowledge/references/dev/steve-jobs-principios-web-ai/content.md

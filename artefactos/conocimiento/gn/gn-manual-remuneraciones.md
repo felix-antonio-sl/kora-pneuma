@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-remuneraciones/content.md
+../../../knowledge/references/gn/gn-manual-remuneraciones/content.md

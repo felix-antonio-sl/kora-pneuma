@@ -53,9 +53,10 @@ No crees un índice paralelo si esa información ya está en la fuente.
 Si una guía mantiene supuestos retirados, corrige las partes afectadas contra
 el funcionamiento del sucesor. Un traslado no obliga a reescribir el documento
 completo ni a ingresarlo a KORA. Cuando el conocimiento pertenezca a KORA, usa
-`urn:kora:kb:guia-rapida-pneuma`: resuelve su identidad con
-`python3 kora_cli.py resolve URN` desde la raíz KORA y actualiza su fuente en
-`products/`. Conserva la identidad cuando sigue siendo el mismo conocimiento.
+la [guía vigente](../../../docs/operacion.md): resuelve la referencia con
+`python3 kora_cli.py resolve URN` y prepara su edición con `revise URN`.
+El borrador se conserva en la biblioteca central y se publica cuando su contenido
+está aprobado. Conserva la identidad cuando sigue siendo el mismo conocimiento.
 `python3 kora_cli.py check` comprueba referencias y realizaciones; la fidelidad
 del contenido se comprueba contra las fuentes y el sucesor.
 

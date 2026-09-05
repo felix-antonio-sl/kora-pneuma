@@ -1,1 +1,1 @@
-../../../products/salud/hsc-rh-2-1-programa-induccion-2024/content.md
+../../../knowledge/references/salud/hsc-rh-2-1-programa-induccion-2024/content.md

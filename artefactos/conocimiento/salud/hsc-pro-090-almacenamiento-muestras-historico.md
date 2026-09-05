@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-090-almacenamiento-muestras-historico/content.md
+../../../knowledge/references/salud/hsc-pro-090-almacenamiento-muestras-historico/content.md

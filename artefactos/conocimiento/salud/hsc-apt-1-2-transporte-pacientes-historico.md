@@ -1,1 +1,1 @@
-../../../products/salud/hsc-apt-1-2-transporte-pacientes-historico/content.md
+../../../knowledge/references/salud/hsc-apt-1-2-transporte-pacientes-historico/content.md

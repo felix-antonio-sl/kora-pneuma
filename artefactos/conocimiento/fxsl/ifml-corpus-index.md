@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-corpus-index/content.md
+../../../knowledge/references/fxsl/ifml-corpus-index/content.md

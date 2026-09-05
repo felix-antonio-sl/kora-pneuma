@@ -6,8 +6,8 @@ integraciones nativas. Úsalo cuando el resultado dependa del funcionamiento de
 Hermes. Si el encargo se refiere a los modelos Hermes LLM, identifica esa
 frontera antes de aplicar instrucciones de la plataforma.
 
-Para autorar o mantener productos KORA, usa la guía
-`urn:kora:kb:guia-rapida-pneuma` y `instalacion-kora`. Esta skill aporta el
+Para autorar o mantener productos KORA, usa la
+[guía vigente](../../../docs/operacion.md) e `instalacion-kora`. Esta skill aporta el
 contraste con Hermes. KORA conserva la fuente agnóstica y realiza sus productos
 en Codex y Hermes; un archivo nativo, una carga correcta y una conducta
 observada acreditan hechos distintos.

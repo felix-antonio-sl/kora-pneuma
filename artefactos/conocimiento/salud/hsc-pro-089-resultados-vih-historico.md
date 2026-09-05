@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-089-resultados-vih-historico/content.md
+../../../knowledge/references/salud/hsc-pro-089-resultados-vih-historico/content.md

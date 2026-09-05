@@ -1,1 +1,1 @@
-../../../products/salud/salubrista-atlas-integrado/content.md
+../../../knowledge/references/salud/salubrista-atlas-integrado/content.md

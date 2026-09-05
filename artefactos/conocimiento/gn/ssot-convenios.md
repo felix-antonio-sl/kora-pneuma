@@ -1,1 +1,1 @@
-../../../products/gn/ssot-convenios/content.md
+../../../knowledge/references/gn/ssot-convenios/content.md

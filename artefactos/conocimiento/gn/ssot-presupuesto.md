@@ -1,1 +1,1 @@
-../../../products/gn/ssot-presupuesto/content.md
+../../../knowledge/references/gn/ssot-presupuesto/content.md

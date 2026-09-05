@@ -1,1 +1,1 @@
-../../../products/gn/gn-intro-gores-nuble/content.md
+../../../knowledge/references/gn/gn-intro-gores-nuble/content.md

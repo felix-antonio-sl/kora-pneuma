@@ -1,1 +1,1 @@
-../../../products/dev/jointjs-docs/content.md
+../../../knowledge/references/dev/jointjs-docs/content.md

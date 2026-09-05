@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-composicion/content.md
+../../../knowledge/references/fxsl/icas-composicion/content.md

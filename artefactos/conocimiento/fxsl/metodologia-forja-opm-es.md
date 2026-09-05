@@ -1,1 +1,1 @@
-../../../products/fxsl/metodologia-forja-opm-es/content.md
+../../../knowledge/references/fxsl/metodologia-forja-opm-es/content.md

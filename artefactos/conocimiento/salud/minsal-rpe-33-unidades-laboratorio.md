@@ -1,1 +1,1 @@
-../../../products/salud/minsal-rpe-33-unidades-laboratorio/content.md
+../../../knowledge/references/salud/minsal-rpe-33-unidades-laboratorio/content.md

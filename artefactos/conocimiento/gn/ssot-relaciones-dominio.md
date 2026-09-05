@@ -1,1 +1,1 @@
-../../../products/gn/ssot-relaciones-dominio/content.md
+../../../knowledge/references/gn/ssot-relaciones-dominio/content.md

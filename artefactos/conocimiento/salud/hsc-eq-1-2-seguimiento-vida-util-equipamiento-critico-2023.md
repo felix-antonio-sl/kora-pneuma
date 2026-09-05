@@ -1,1 +1,1 @@
-../../../products/salud/hsc-eq-1-2-seguimiento-vida-util-equipamiento-critico-2023/content.md
+../../../knowledge/references/salud/hsc-eq-1-2-seguimiento-vida-util-equipamiento-critico-2023/content.md

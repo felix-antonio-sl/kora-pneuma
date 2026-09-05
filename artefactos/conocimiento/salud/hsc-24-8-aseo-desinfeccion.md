@@ -1,1 +1,1 @@
-../../../products/salud/hsc-24-8-aseo-desinfeccion/content.md
+../../../knowledge/references/salud/hsc-24-8-aseo-desinfeccion/content.md

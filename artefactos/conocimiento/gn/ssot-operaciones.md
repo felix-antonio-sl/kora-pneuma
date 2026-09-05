@@ -1,1 +1,1 @@
-../../../products/gn/ssot-operaciones/content.md
+../../../knowledge/references/gn/ssot-operaciones/content.md

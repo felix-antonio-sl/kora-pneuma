@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-048-pancreatitis-aguda/content.md
+../../../knowledge/references/salud/hsc-pro-048-pancreatitis-aguda/content.md

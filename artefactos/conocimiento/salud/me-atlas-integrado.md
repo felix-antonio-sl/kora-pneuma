@@ -1,1 +1,1 @@
-../../../products/salud/me-atlas-integrado/content.md
+../../../knowledge/references/salud/me-atlas-integrado/content.md

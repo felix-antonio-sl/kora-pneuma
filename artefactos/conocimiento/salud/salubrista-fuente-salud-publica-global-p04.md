@@ -1,1 +1,1 @@
-../../../products/salud/salubrista-fuente-salud-publica-global-p04/content.md
+../../../knowledge/references/salud/salubrista-fuente-salud-publica-global-p04/content.md

@@ -1,1 +1,1 @@
-../../../products/gn/ssot-tde/content.md
+../../../knowledge/references/gn/ssot-tde/content.md

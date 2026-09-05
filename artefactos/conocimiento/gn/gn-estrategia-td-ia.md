@@ -1,1 +1,1 @@
-../../../products/gn/gn-estrategia-td-ia/content.md
+../../../knowledge/references/gn/gn-estrategia-td-ia/content.md

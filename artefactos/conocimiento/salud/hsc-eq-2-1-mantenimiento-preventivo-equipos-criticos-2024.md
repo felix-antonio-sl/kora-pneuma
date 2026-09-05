@@ -1,1 +1,1 @@
-../../../products/salud/hsc-eq-2-1-mantenimiento-preventivo-equipos-criticos-2024/content.md
+../../../knowledge/references/salud/hsc-eq-2-1-mantenimiento-preventivo-equipos-criticos-2024/content.md

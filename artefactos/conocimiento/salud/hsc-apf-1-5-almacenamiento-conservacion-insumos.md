@@ -1,1 +1,1 @@
-../../../products/salud/hsc-apf-1-5-almacenamiento-conservacion-insumos/content.md
+../../../knowledge/references/salud/hsc-apf-1-5-almacenamiento-conservacion-insumos/content.md

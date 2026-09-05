@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-enriquecimiento/content.md
+../../../knowledge/references/fxsl/icas-enriquecimiento/content.md

@@ -1,1 +1,1 @@
-../../../products/gn/gn-informe-estado-inicial-gore-pre-td/content.md
+../../../knowledge/references/gn/gn-informe-estado-inicial-gore-pre-td/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/manual-agente-hsc-agent-cli/content.md
+../../../knowledge/references/salud/manual-agente-hsc-agent-cli/content.md

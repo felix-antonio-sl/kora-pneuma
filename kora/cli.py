@@ -10,7 +10,7 @@ import tempfile
 
 from .atomic import rename_new
 from .authoring import create
-from .catalog import Catalog, File, KoraError, digest, safe_relative
+from .catalog import Catalog, File, KoraError, digest, safe_relative, knowledge_root
 from .install import Installer
 
 
@@ -173,7 +173,8 @@ def emit(bundles, output: Path):
 
 def parser():
     result = argparse.ArgumentParser(description="KORA: fuentes, productos nativos y recuperación")
-    result.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1], help="Raíz de la única fuente KORA activa")
+    result.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1], help="Raíz de la maquinaria o de un corpus independiente")
+    result.add_argument("--knowledge-root", type=Path, help="Biblioteca de referencia; por defecto el enlace knowledge de la raíz")
     commands = result.add_subparsers(dest="command", required=True)
     listing = commands.add_parser("list", help="Derivar catálogo desde los archivos")
     listing.add_argument("--kind", choices=["knowledge", "skill", "agent"])
@@ -181,6 +182,17 @@ def parser():
     listing.add_argument("--archived", action="store_true")
     resolve = commands.add_parser("resolve", help="Resolver identidad a archivo de contenido")
     resolve.add_argument("id")
+    resolve.add_argument("--revision", help="Consultar una versión exacta de conocimiento")
+    intake = commands.add_parser("intake", help="Conservar recursos de entrada sin publicarlos")
+    intake.add_argument("name")
+    intake.add_argument("--source", type=Path, required=True, action="append")
+    for name, help_text in (("revise", "Preparar un borrador conservando la referencia vigente"),
+                            ("review", "Mostrar el borrador y el hash de los archivos a revisar"),
+                            ("approve", "Publicar el contenido cuya aprobación fue autorizada")):
+        command = commands.add_parser(name, help=help_text)
+        command.add_argument("id")
+        if name == "approve":
+            command.add_argument("--reviewed", required=True, help="SHA-256 de la revisión concreta aprobada")
     author = commands.add_parser("create", help="Crear una fuente con cuerpo autorado y originales recuperables")
     author.add_argument("kind", choices=["knowledge", "skill", "agent"])
     author.add_argument("namespace")
@@ -232,7 +244,7 @@ def execute(args):
             if bundle not in installed:
                 # A recorded canonical ID remains removable even without its
                 # source. Historical aliases resolve just as they do on install.
-                catalog = catalog or Catalog(args.root)
+                catalog = catalog or Catalog(args.root, knowledge=args.knowledge_root)
                 product = catalog.get(identifier)
                 if profile is not None and product.kind != "skill":
                     raise KoraError("--profile solo admite productos skill")
@@ -240,16 +252,37 @@ def execute(args):
             bundles.append(bundle)
         return installer.apply({}, remove=bundles)
     if args.command == "create":
+        if args.kind == "knowledge":
+            from .knowledge import create_draft
+            if args.target:
+                raise KoraError("El conocimiento de referencia no tiene runtime de destino")
+            item = create_draft(knowledge_root(args.root, args.knowledge_root), args.namespace, args.name,
+                                args.id, args.description, args.body, sources=args.source, requires=args.requires)
+            return {"id": item.id, "path": str(item.content_path), "publication": "draft"}
         item = create(args.root, args.kind, args.namespace, args.name, args.id, args.description, args.body,
-                      sources=args.source, targets=args.target, requires=args.requires)
+                      sources=args.source, targets=args.target, requires=args.requires, knowledge=args.knowledge_root)
         return {"id": item.id, "path": str(item.content_path)}
-    catalog = Catalog(args.root)
+    if args.command in ("intake", "revise", "review", "approve"):
+        from . import knowledge
+        root = knowledge_root(args.root, args.knowledge_root)
+        if args.command == "intake":
+            return knowledge.intake(root, args.name, args.source)
+        if args.command == "review":
+            return knowledge.review(root, args.id)
+        item = (knowledge.revise(root, args.id) if args.command == "revise" else
+                knowledge.approve(root, args.id, args.reviewed))
+        return {"id": item.id, "path": str(item.content_path), "revision": item.revision,
+                "publication": item.metadata.get("publication", {}).get("status", "draft")}
+    catalog = Catalog(args.root, knowledge=args.knowledge_root)
     if args.command == "resolve":
-        product = catalog.get(args.id)
-        return {"id": product.id, "path": str(product.content_path), "active": product.id in catalog.products}
+        product = catalog.at_revision(args.id, args.revision) if args.revision else catalog.get(args.id)
+        return {"id": product.id, "path": str(product.content_path), "active": product.id in catalog.products,
+                "revision": product.revision,
+                "publication": product.metadata.get("publication", {}).get("status")}
     if args.command == "list":
         products = catalog.archived if args.archived else catalog.products
-        return [{"id": p.id, "kind": p.kind, "name": p.name, "targets": p.targets, "path": str(p.content_path)}
+        return [{"id": p.id, "kind": p.kind, "name": p.name, "targets": p.targets, "path": str(p.content_path),
+                 "publication": p.metadata.get("publication", {}).get("status")}
                 for p in products.values() if (not args.kind or p.kind == args.kind) and
                 (not args.target or args.target in p.targets)]
     if args.command == "check":

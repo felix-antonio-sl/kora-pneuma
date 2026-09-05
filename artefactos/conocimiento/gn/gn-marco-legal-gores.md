@@ -1,1 +1,1 @@
-../../../products/gn/gn-marco-legal-gores/content.md
+../../../knowledge/references/gn/gn-marco-legal-gores/content.md

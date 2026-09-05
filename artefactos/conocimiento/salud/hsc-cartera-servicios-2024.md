@@ -1,1 +1,1 @@
-../../../products/salud/hsc-cartera-servicios-2024/content.md
+../../../knowledge/references/salud/hsc-cartera-servicios-2024/content.md

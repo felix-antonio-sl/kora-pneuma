@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-estructura-persona/content.md
+../../../knowledge/references/fxsl/lersch-estructura-persona/content.md

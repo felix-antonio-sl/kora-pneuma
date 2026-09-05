@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-sintesis/content.md
+../../../knowledge/references/fxsl/icas-sintesis/content.md

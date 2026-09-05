@@ -1,1 +1,1 @@
-../../../products/gn/ssot-ecosistema/content.md
+../../../knowledge/references/gn/ssot-ecosistema/content.md

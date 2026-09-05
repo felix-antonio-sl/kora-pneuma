@@ -9,7 +9,6 @@ targets:
 - hermes
 requires:
 - urn:kora:kb:cat-contrato-ingenieria-agentica
-- urn:kora:kb:guia-rapida-pneuma
 - urn:kora:artefacto:instalacion-kora
 provenance:
   date: '2026-09-05'

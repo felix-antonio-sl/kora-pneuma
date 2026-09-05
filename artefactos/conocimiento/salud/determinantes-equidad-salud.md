@@ -1,1 +1,1 @@
-../../../products/salud/determinantes-equidad-salud/content.md
+../../../knowledge/references/salud/determinantes-equidad-salud/content.md

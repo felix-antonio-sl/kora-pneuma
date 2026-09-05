@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-endothymer-grund-antriebserlebnisse/content.md
+../../../knowledge/references/fxsl/lersch-endothymer-grund-antriebserlebnisse/content.md

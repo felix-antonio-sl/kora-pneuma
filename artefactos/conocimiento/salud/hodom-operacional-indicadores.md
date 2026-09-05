@@ -1,1 +1,1 @@
-../../../products/salud/hodom-operacional-indicadores/content.md
+../../../knowledge/references/salud/hodom-operacional-indicadores/content.md

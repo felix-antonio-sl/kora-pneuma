@@ -1,1 +1,1 @@
-../../../products/salud/me-cefalea-convulsiones/content.md
+../../../knowledge/references/salud/me-cefalea-convulsiones/content.md

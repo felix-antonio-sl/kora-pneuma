@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-054-derivacion-tdah/content.md
+../../../knowledge/references/salud/hsc-pro-054-derivacion-tdah/content.md

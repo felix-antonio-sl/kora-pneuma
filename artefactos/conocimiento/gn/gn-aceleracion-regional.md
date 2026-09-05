@@ -1,1 +1,1 @@
-../../../products/gn/gn-aceleracion-regional/content.md
+../../../knowledge/references/gn/gn-aceleracion-regional/content.md

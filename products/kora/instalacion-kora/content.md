@@ -10,10 +10,18 @@ renovar esa aprobación en cada paso.
 
 Resuelve las identidades solicitadas y el destino autorizado. Aplica `install`
 sobre ellas: el comando comprueba dependencias, realiza archivos nativos y
-reconoce cambios locales antes de escribir. La [guía operativa](../guia-rapida-pneuma/content.md)
+reconoce cambios locales antes de escribir. La [guía operativa](../../../docs/operacion.md)
 contiene la sintaxis, el alcance de perfiles Hermes y la prueba con home temporal.
 Sin identidades se actualiza el conjunto del destino; úsalo cuando ese sea el
 alcance del encargo.
+
+El conocimiento permanece en la biblioteca seleccionada por `knowledge` o
+`--knowledge-root`. Los archivos nativos contienen referencias estables de
+lectura, sin incorporar una copia del conocimiento. Una publicación aprobada
+queda disponible en esa referencia sin reinstalar sus consumidores. Si cambia
+la ubicación de la biblioteca, actualiza las rutas mediante la instalación de
+los consumidores afectados. Instalar un agente o skill no aprueba borradores ni
+cambia el estado de una referencia.
 
 Usa `render` si necesitas inspeccionar una salida sin instalarla y `check` para
 diagnosticar el catálogo completo. No son pasos previos obligatorios de cada
@@ -42,6 +50,9 @@ intactos que ya no requiere otro producto instalado. Examina el resultado y las
 rutas conservadas cuando aparezca un conflicto. Los respaldos y recibos viven
 en el estado privado del instalador; no los copies a Git ni a evidencia pública.
 No uses el borrado completo de un perfil o directorio como retiro de archivos.
+Estas operaciones atienden la instalación; no revierten ni retiran publicaciones
+de conocimiento. La corrección de una referencia usa un nuevo borrador y su
+aprobación en la biblioteca.
 
 ## Comprobar en su destino
 

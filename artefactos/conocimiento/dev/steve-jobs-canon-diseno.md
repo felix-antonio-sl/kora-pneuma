@@ -1,1 +1,1 @@
-../../../products/dev/steve-jobs-canon-diseno/content.md
+../../../knowledge/references/dev/steve-jobs-canon-diseno/content.md

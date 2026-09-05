@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Prueba KORA sin sus antepasados ni el estado privado del host.
 
---offline prueba el árbol operativo completo sin red, modelo ni autenticación.
+--offline prueba maquinaria y biblioteca sin red, modelo ni autenticación.
 --output prueba autoría y mantenimiento con inferencia real autorizada de Codex.
 Los montajes ocultan /home y /tmp. No modifican el namespace del host.
 https://github.com/containers/bubblewrap#usage
@@ -21,7 +21,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from kora.catalog import Catalog
+from kora.catalog import Catalog, knowledge_root
 from kora.cli import build
 from kora.install import Installer
 
@@ -47,15 +47,48 @@ def emit(value):
 
 
 def copy_operating_tree(work):
+    library = knowledge_root(ROOT)
+    if library == ROOT:
+        raise RuntimeError("El ensayo requiere una biblioteca separada mediante el enlace knowledge")
     work.mkdir()
     for name in ("kora", "products", "archive/products", "artefactos", "docs", "tests", "scripts"):
         shutil.copytree(ROOT / name, work / name, symlinks=True,
                         ignore=shutil.ignore_patterns("__pycache__"))
-    for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt", "aliases.yaml"):
+    for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):
         shutil.copy2(ROOT / name, work / name)
+    copied_library = work / "knowledge"
+    copied_library.mkdir()
+    # Only published reference data enters the isolated fixture. In particular,
+    # Git, incoming resources, drafts and publication temporaries remain outside.
+    for name in ("references", "versions", "archive/references"):
+        if (library / name).exists():
+            shutil.copytree(library / name, copied_library / name, symlinks=True)
+    if (library / "aliases.yaml").exists():
+        shutil.copy2(library / "aliases.yaml", copied_library / "aliases.yaml")
     links = [path for path in work.rglob("*") if path.is_symlink()]
+    for path in links:
+        if path.exists() and path.resolve().is_relative_to(work):
+            continue
+        original = (library / path.relative_to(copied_library) if path.is_relative_to(copied_library)
+                    else ROOT / path.relative_to(work))
+        # Map the link's lexical target, retaining a stable reference instead of
+        # resolving it prematurely to the currently published version.
+        target = Path(os.path.abspath(original.parent / os.readlink(original)))
+        if target.is_relative_to(library):
+            destination = copied_library / target.relative_to(library)
+        elif target.is_relative_to(ROOT):
+            destination = work / target.relative_to(ROOT)
+        else:
+            raise RuntimeError(f"Enlace operativo fuera de maquinaria y biblioteca: {original}")
+        path.unlink()
+        path.symlink_to(os.path.relpath(destination, path.parent))
     assert all(path.exists() and path.resolve().is_relative_to(work) for path in links)
     return len(links)
+
+
+def fingerprint(path):
+    return ("link:" + os.readlink(path) if path.is_symlink()
+            else "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest())
 
 
 def prepare(output):
@@ -77,11 +110,13 @@ def prepare(output):
     output.mkdir(parents=True, exist_ok=False)
     output.chmod(0o700)
     (output / "location.json").write_text(json.dumps({"temporary": str(temporary), "work": str(work)}))
-    immutable = {path.relative_to(work): hashlib.sha256(path.read_bytes()).hexdigest()
-                 for directory in (work / "kora", work / "products", work / "docs", work / "scripts", work / "tests")
-                 for path in directory.rglob("*") if path.is_file() and "__pycache__" not in path.parts}
+    immutable = {path.relative_to(work): fingerprint(path)
+                 for directory in (work / "kora", work / "products", work / "archive/products",
+                                   work / "docs", work / "scripts", work / "tests", work / "knowledge")
+                 for path in directory.rglob("*")
+                 if (path.is_file() or path.is_symlink()) and "__pycache__" not in path.parts}
     for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):
-        immutable[Path(name)] = hashlib.sha256((work / name).read_bytes()).hexdigest()
+        immutable[Path(name)] = fingerprint(work / name)
     return temporary, work, config, immutable
 
 
@@ -136,7 +171,8 @@ def evaluate(prefix, executable, work, config, name):
 
 def offline():
     # Copy current sources, not a Git revision, a private backup or an installed
-    # realization. The root is relocated and no construction tools are included.
+    # realization. Machinery and library are copied explicitly, without private
+    # work in progress or construction tools.
     with tempfile.TemporaryDirectory(prefix="kora-offline-") as folder:
         temporary = Path(folder)
         work, home = temporary / "repo", temporary / "operator"
@@ -165,15 +201,20 @@ def offline():
 
         run(["-c", "from pathlib import Path; "
              f"assert not Path({str(ROOT)!r}).exists(); "
+             f"assert not Path({str(knowledge_root(ROOT))!r}).exists(); "
              "assert not list(Path('/home').iterdir()); "
              "assert not Path('.git').exists(); "
              "assert not Path('archive/reconstruction').exists(); "
              "assert not Path('archive/previous').exists(); "
-             "assert not Path('._local').exists()"])
+             "assert not Path('._local').exists(); "
+             "assert Path('knowledge').is_dir() and not Path('knowledge').is_symlink(); "
+             "assert not Path('knowledge/.git').exists(); "
+             "assert not Path('knowledge/inbox').exists(); "
+             "assert not Path('knowledge/drafts').exists()"])
         report = json.loads(run(["kora_cli.py", "check"]).stdout)
         assert report["ok"], report
         emit({"phase": "isolated_catalog", "active": report["active"], "archived": report["archived"],
-              "internal_links": internal_links, "ok": True})
+              "internal_links": internal_links, "separate_library": True, "ok": True})
         installations = {}
         for target in ("codex", "hermes"):
             receipt = json.loads(run(["kora_cli.py", "install", target, "--home", str(home)]).stdout)
@@ -201,21 +242,26 @@ def main():
     proof = subprocess.run([*prefix, "python3", "-c",
         "from pathlib import Path; "
         f"assert not Path({str(ROOT)!r}).exists(); "
+        f"assert not Path({str(knowledge_root(ROOT))!r}).exists(); "
         "assert not Path('archive/reconstruction').exists(); "
         "assert not Path('archive/previous').exists(); "
         "print('source_and_previous_kernel_unavailable')"], capture_output=True, text=True, check=True)
     emit({"phase": "isolation", "ok": "unavailable" in proof.stdout, "previous_core_access": False})
     prompt = (
         "Usa $kora para completar este encargo sintético dentro de este directorio. "
-        "La maquinaria y sus fuentes nuevas están aquí; el host de construcción y sus repositorios anteriores son inaccesibles. "
+        "La maquinaria y una copia separada de su biblioteca están aquí; el host de construcción y sus repositorios anteriores son inaccesibles. "
         "Lee inputs/manual-envios-v1.txt. Korafica esa fuente como conocimiento con identidad " + KNOWLEDGE + ". "
         "Conserva original, alcance, prioridades, condiciones, excepción, incertidumbre y clave de versión. "
+        "Está delegada explícitamente la aprobación SOLO de este conocimiento sintético de prueba, " + KNOWLEDGE + ", "
+        "y únicamente desde la fuente ficticia indicada. Usa intake, create knowledge, review y approve --reviewed "
+        "para conservar el recurso, preparar el borrador y publicar la revisión que hayas comparado con la fuente. "
+        "Esto no autoriza aprobar, revisar ni editar conocimiento real o heredado de la biblioteca. "
         "Crea después una skill llamada evaluar-envios con identidad " + SKILL + " que requiera ese conocimiento, "
         "y un agente llamado inspector-envios con identidad " + AGENT + " que requiera esa skill. "
         "La función de ambos es evaluar casos del manual; el agente devuelve JSON con cases (objeto id→estado), "
         "distance y source_version (la clave de versión de la fuente), leyendo el conocimiento vigente. "
-        "Autoriza ambos destinos Codex y Hermes. Usa kora_cli.py para crear, comprobar e instalar los tres "
-        "productos en este directorio como --home, conservando los archivos que ya existen. "
+        "Autoriza ambos destinos Codex y Hermes. Usa kora_cli.py para comprobar e instalar la skill y el agente "
+        "en este directorio como --home, conservando los archivos que ya existen. El conocimiento se consulta por referencia. "
         "Elige namespace probe. No construyas otro núcleo ni cambies kora/, kora_cli.py, los productos de "
         "maquinaria ni el original. Puedes preparar cuerpos en inputs/. No lances otros modelos, no delegues, "
         "no publiques Git y no crees Goals. Completa la realización efectiva y devuelve qué comprobaste."
@@ -224,7 +270,12 @@ def main():
     catalog = Catalog(work)
     knowledge, skill, agent = [catalog.get(identifier) for identifier in (KNOWLEDGE, SKILL, AGENT)]
     assert knowledge.kind == "knowledge" and skill.kind == "skill" and agent.kind == "agent"
+    assert knowledge.reference_root == work / "knowledge"
+    assert knowledge.metadata["publication"]["status"] == "approved"
     assert KNOWLEDGE in skill.requires and SKILL in agent.requires
+    first_revision = knowledge.revision
+    first_content = knowledge.content_path.read_bytes()
+    reference_path = knowledge.content_path
     originals = knowledge.metadata.get("provenance", {}).get("sources", [])
     assert any((knowledge.directory / item["path"]).read_bytes() == SOURCE.encode()
                and item["sha256"] == hashlib.sha256(SOURCE.encode()).hexdigest() for item in originals)
@@ -232,25 +283,38 @@ def main():
     assert not state["changes"]
     assert (work / ".codex/agents/inspector-envios.toml").is_file()
     assert (work / ".hermes/profiles/inspector-envios/SOUL.md").is_file()
+    native_before = {relative: fingerprint(work / relative)
+                     for target in ("codex", "hermes")
+                     for files in build(catalog, target, [SKILL, AGENT]).values()
+                     for relative in files}
     before = evaluate(prefix, executable, work, config, "read_v1")
     expected = {"A": "AUTORIZADA", "B": "DIFERIDA", "C": "UNKNOWN", "D": "DENEGADA", "E": "DENEGADA"}
     assert before["cases"] == expected and before["distance"] == "UNKNOWN" and before["source_version"] == "PZ_6139_V1", before
     update = SOURCE.replace("versión 1", "versión 2").replace("PZ_6139_V1", "PZ_6139_V2").replace("12 kg", "15 kg")
     (work / "inputs/manual-envios-v2.txt").write_text(update, encoding="utf-8")
     run_codex(prefix, executable, work, config, "update", (
-        "Usa $kora. Actualiza únicamente los tres productos probe existentes desde inputs/manual-envios-v2.txt. "
+        "Usa $kora. Actualiza únicamente el conocimiento sintético " + KNOWLEDGE + " desde inputs/manual-envios-v2.txt. "
         "Preserva el original v1 y añade la nueva procedencia recuperable. Mantén las identidades y dependencias. "
-        "Añade a la skill la nota de cambio de umbral con la clave vigente, para que su instalación cambie también. "
-        "Comprueba e instala skill y agente en Codex y Hermes usando este directorio como --home. "
-        "Conserva el estado ajeno. No modifiques maquinaria, no delegues, no lances inferencia adicional ni crees Goals."
+        "Está delegada explícitamente la aprobación SOLO de la revisión de ese conocimiento sintético desde la fuente v2 indicada. "
+        "Usa revise para preparar el borrador; compara su contenido, ejecuta review y publica mediante approve --reviewed. "
+        "No edites directamente references ni versions. La referencia v1 debe permanecer consultable hasta publicar v2. "
+        "No cambies ni reinstales skill o agente: deben leer la nueva versión por la misma referencia estable. "
+        "No apruebes ni edites otros conocimientos. Conserva el estado ajeno; no modifiques maquinaria, "
+        "no delegues, no lances inferencia adicional ni crees Goals."
     ))
     after = evaluate(prefix, executable, work, config, "read_v2")
     expected["D"] = "AUTORIZADA"
     assert after["cases"] == expected and after["distance"] == "UNKNOWN" and after["source_version"] == "PZ_6139_V2", after
     for relative, expected_hash in immutable.items():
-        assert hashlib.sha256((work / relative).read_bytes()).hexdigest() == expected_hash, relative
+        assert fingerprint(work / relative) == expected_hash, relative
+    for relative, expected_hash in native_before.items():
+        assert fingerprint(work / relative) == expected_hash, relative
     catalog = Catalog(work)
     knowledge = catalog.get(KNOWLEDGE)
+    assert knowledge.reference_root == work / "knowledge"
+    assert knowledge.metadata["publication"]["status"] == "approved"
+    assert knowledge.content_path == reference_path and knowledge.revision != first_revision
+    assert catalog.at_revision(KNOWLEDGE, first_revision).content_path.read_bytes() == first_content
     sources = knowledge.metadata["provenance"]["sources"]
     for original in (SOURCE, update):
         assert any((knowledge.directory / item["path"]).read_bytes() == original.encode()
@@ -269,6 +333,8 @@ def main():
     assert test_result.returncode == 0, "Pruebas de recuperación independientes fallaron"
     report = {"ok": True, "old_core_access": False, "authoring": "actual KORA native direct activation",
               "targets_installed": ["codex", "hermes"], "native_behavior_observed": ["codex"],
+              "separate_library": True, "knowledge_approval": "delegated only for synthetic probe knowledge",
+              "updated_without_reinstall": True, "exact_prior_revision_readable": True,
               "before": before, "after": after, "recovery_process_tests": "PASS",
               "hermes_behavior": "pending on this authored corpus", "temporary_preserved": True}
     (args.output / "result.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))

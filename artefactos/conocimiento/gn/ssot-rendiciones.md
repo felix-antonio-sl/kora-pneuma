@@ -1,1 +1,1 @@
-../../../products/gn/ssot-rendiciones/content.md
+../../../knowledge/references/gn/ssot-rendiciones/content.md

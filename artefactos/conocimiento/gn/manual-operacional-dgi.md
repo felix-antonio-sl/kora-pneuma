@@ -1,1 +1,1 @@
-../../../products/gn/manual-operacional-dgi/content.md
+../../../knowledge/references/gn/manual-operacional-dgi/content.md

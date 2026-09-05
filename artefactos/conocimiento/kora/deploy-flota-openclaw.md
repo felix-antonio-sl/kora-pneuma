@@ -1,1 +1,1 @@
-../../../archive/products/kora/deploy-flota-openclaw/content.md
+../../../knowledge/archive/references/kora/deploy-flota-openclaw/content.md

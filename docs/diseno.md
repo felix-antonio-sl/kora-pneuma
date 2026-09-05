@@ -1,43 +1,80 @@
 # Diseño de la maquinaria KORA
 
-La maquinaria relaciona fuentes autoradas con archivos utilizables en Codex y
-Hermes. El [modelo de fuente](../products/kora/cat-kora-kernel/content.md)
-define productos, identidad y dependencias; la
-[guía operativa](../products/kora/guia-rapida-pneuma/content.md) explica su uso.
+La maquinaria transforma recursos en conocimiento de referencia y realiza
+agentes y skills en Codex y Hermes. La [guía operativa](operacion.md) contiene el
+recorrido vigente. El conocimiento se conserva en una biblioteca independiente;
+los agentes y skills declaran qué referencias necesitan leer.
 
 ## Archivos y responsabilidades
 
-Archivos legibles y Git permiten revisar, recuperar y utilizar el corpus
-directamente. El catálogo se deriva al operar: una base de datos o un registro
-manual agregarían estado mutable sin una necesidad actual. Los recursos técnicos
-conservan su formato. `create --source` incorpora los originales necesarios al
-producto; la lectura y la realización posteriores usan esos archivos locales.
+Archivos legibles y Git permiten revisar, recuperar y utilizar las fuentes
+directamente. El catálogo se deriva al operar. No requiere un servicio, una base
+de datos ni un registro manual. Los recursos técnicos conservan su formato.
+`intake` guarda recursos de entrada y `create --source` conserva los originales
+necesarios para reconstruir el fundamento de un producto.
 
-`catalog.py` representa y resuelve; `authoring.py` conserva y publica fuentes;
+`catalog.py` representa y resuelve; `authoring.py` conserva y crea fuentes;
+`knowledge.py` recibe recursos, prepara borradores y publica referencias;
 `render_codex.py` y `render_hermes.py` producen mapas de archivos nativos;
 `install.py` reconoce cambios y recupera operaciones; `cli.py` conecta esos
 recorridos. Los realizadores no modifican el home.
 
-## Autocontención
+## Biblioteca de referencia
 
-La raíz se deriva del programa invocado; un corpus independiente se selecciona
-con `--root`. Núcleo, métodos, recursos y comprobaciones vigentes están dentro del
-repositorio. Las realizaciones nativas señalan la fuente de esa raíz: al moverla
-se reinstalan los productos para actualizar sus rutas. El diario del instalador
-pertenece al home del operador y permanece allí durante ese traslado.
+En h289, `/home/felix/kora-knowledge` contiene solo conocimiento y sus fuentes,
+sin agentes, skills ni adaptadores. `inbox` recibe originales; `drafts` contiene
+trabajo en preparación. `versions/<namespace>/<name>/<revision>` conserva cada
+publicación y `references/<namespace>/<name>` apunta a la última disponible.
+`archive/references` conserva referencias retiradas. Los alias preservan
+identidades de consulta anteriores.
+
+La koraficación requiere lectura, composición y comparación con las fuentes.
+La CLI conserva archivos y verifica la publicación de la revisión examinada;
+no hace aquella revisión semántica ni acredita por sí sola la aprobación de
+Félix. `review` devuelve un hash del borrador y su revisión base. `approve` exige
+ese hash para evitar publicar contenido distinto de lo revisado. El cambio de
+referencia ocurre después de conservar la versión nueva: un borrador en curso
+no reemplaza la referencia publicada.
+
+`list` y `resolve` excluyen borradores. Una URN identifica el conocimiento; una
+revisión identifica una versión exacta. Los consumidores nativos reciben rutas
+estables de lectura: una publicación posterior queda disponible sin reinstalar
+el agente o skill. Una consulta que necesite reproducir una respuesta puede
+resolver la revisión exacta. Los conocimientos heredados permanecen disponibles
+con estado `legacy`; su traslado no equivale a una aprobación nueva.
+
+Las dependencias de conocimiento se resuelven dentro de la biblioteca. Los
+vínculos documentales hacia un agente o skill conservan su sentido sin hacer
+que la biblioteca dependa de su instalación. Git conserva historia de los
+archivos; un commit no aprueba su contenido.
+
+## Raíces y traslado
+
+La raíz de maquinaria se deriva del programa invocado y se reemplaza con
+`--root`. El enlace `knowledge -> ../kora-knowledge` selecciona la biblioteca;
+`--knowledge-root` permite elegir otra. Núcleo, métodos de operación, agentes,
+skills y comprobaciones se mantienen en la maquinaria. La biblioteca es una
+dependencia explícita de los consumidores que requieren conocimiento, y puede
+consultarse sin el repositorio de agentes y skills.
+
+Las realizaciones nativas señalan fuentes y referencias de esas raíces. Si
+cambia su ubicación absoluta, se reinstalan los consumidores para actualizar las
+rutas. El diario del instalador pertenece al home del operador y permanece allí
+durante ese traslado. La guía explica cómo probar con raíces y home temporales.
 
 Los instrumentos, instrucciones y resultados de la construcción concluida se
 conservan en `archive/reconstruction`, fuera del núcleo y de la suite vigente.
 Los originales reemplazados conservan su procedencia en `archive/previous`.
-Los enlaces de `artefactos/conocimiento` resuelven hacia productos de esta misma
-raíz y mantienen lecturas de consumidores existentes.
+Los enlaces de `artefactos/conocimiento` resuelven hacia referencias de la
+biblioteca y mantienen lecturas de consumidores existentes. Las guías antiguas
+del corpus se conservan como antecedentes; esta documentación y los métodos
+vigentes describen la operación actual.
 
-`scripts/probe_independence.py --offline` copia el árbol operativo completo,
-incluido el corpus, y lo ejecuta en un montaje sin red, home personal, Git ni
-archivo de reconstrucción. Comprueba catálogo, instalación en ambos destinos,
-actualización tras un traslado y recuperación. Requiere `bubblewrap` solo para
-ese ensayo. La variante con inferencia permite observar también el trabajo de
-KORA con un proveedor disponible.
+El ensayo de independencia usa una copia de la maquinaria y una biblioteca
+explícita en un montaje sin red, home personal ni archivo de reconstrucción.
+Comprueba catálogo, instalación en ambos destinos, traslado y recuperación.
+Requiere `bubblewrap` solo para ese ensayo. La variante con inferencia permite
+observar también el trabajo de KORA con un proveedor disponible.
 
 Una cita externa de un producto de dominio conserva su propia dependencia de
 fuente. No se absorben bibliotecas, repositorios o archivos personales por estar
@@ -69,8 +106,8 @@ serializa identidad y publicación por raíz mediante `flock`, sin otro registro
 
 Estas garantías protegen el trabajo local ante errores, interrupciones y agentes
 concurrentes en el host de Félix. El retiro conserva memoria, credenciales,
-sesiones y archivos ajenos. Los límites de lo comprobable están en la
-[semántica de operaciones](../products/kora/cat-kora-semantica-operacional/content.md).
+sesiones y archivos ajenos. Recuperar una instalación no revierte una referencia
+de conocimiento; para corregirla se prepara y publica una nueva revisión.
 
 ## Dependencias y contratos nativos
 

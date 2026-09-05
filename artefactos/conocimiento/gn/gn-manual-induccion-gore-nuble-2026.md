@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-induccion-gore-nuble-2026/content.md
+../../../knowledge/references/gn/gn-manual-induccion-gore-nuble-2026/content.md

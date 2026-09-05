@@ -1,1 +1,1 @@
-../../../products/salud/hsc-eq-1-1-adquisicion-equipamiento-2024/content.md
+../../../knowledge/references/salud/hsc-eq-1-1-adquisicion-equipamiento-2024/content.md

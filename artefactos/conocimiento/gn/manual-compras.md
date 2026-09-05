@@ -1,1 +1,1 @@
-../../../products/gn/manual-compras/content.md
+../../../knowledge/references/gn/manual-compras/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/gestion-redes-herramientas/content.md
+../../../knowledge/references/salud/gestion-redes-herramientas/content.md

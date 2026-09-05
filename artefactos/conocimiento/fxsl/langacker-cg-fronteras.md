@@ -1,1 +1,1 @@
-../../../products/fxsl/langacker-cg-fronteras/content.md
+../../../knowledge/references/fxsl/langacker-cg-fronteras/content.md

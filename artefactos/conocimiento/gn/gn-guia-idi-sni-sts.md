@@ -1,1 +1,1 @@
-../../../products/gn/gn-guia-idi-sni-sts/content.md
+../../../knowledge/references/gn/gn-guia-idi-sni-sts/content.md

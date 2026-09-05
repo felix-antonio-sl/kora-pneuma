@@ -1,1 +1,1 @@
-../../../products/gn/gestion-rendiciones/content.md
+../../../knowledge/references/gn/gestion-rendiciones/content.md

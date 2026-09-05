@@ -1,1 +1,1 @@
-../../../products/gn/manual-presupuesto/content.md
+../../../knowledge/references/gn/manual-presupuesto/content.md

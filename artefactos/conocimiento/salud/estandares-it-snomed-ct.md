@@ -1,1 +1,1 @@
-../../../products/salud/estandares-it-snomed-ct/content.md
+../../../knowledge/references/salud/estandares-it-snomed-ct/content.md

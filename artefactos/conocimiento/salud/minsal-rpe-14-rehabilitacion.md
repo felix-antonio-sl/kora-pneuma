@@ -1,1 +1,1 @@
-../../../products/salud/minsal-rpe-14-rehabilitacion/content.md
+../../../knowledge/references/salud/minsal-rpe-14-rehabilitacion/content.md

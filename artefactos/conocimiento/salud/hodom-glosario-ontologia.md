@@ -1,1 +1,1 @@
-../../../products/salud/hodom-glosario-ontologia/content.md
+../../../knowledge/references/salud/hodom-glosario-ontologia/content.md

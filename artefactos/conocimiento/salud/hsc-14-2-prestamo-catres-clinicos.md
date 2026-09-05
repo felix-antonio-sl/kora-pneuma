@@ -1,1 +1,1 @@
-../../../products/salud/hsc-14-2-prestamo-catres-clinicos/content.md
+../../../knowledge/references/salud/hsc-14-2-prestamo-catres-clinicos/content.md

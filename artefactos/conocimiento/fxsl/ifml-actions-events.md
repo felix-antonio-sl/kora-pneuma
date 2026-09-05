@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-actions-events/content.md
+../../../knowledge/references/fxsl/ifml-actions-events/content.md

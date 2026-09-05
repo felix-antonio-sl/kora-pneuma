@@ -1,1 +1,1 @@
-../../../products/salud/me-dolor-toracico/content.md
+../../../knowledge/references/salud/me-dolor-toracico/content.md

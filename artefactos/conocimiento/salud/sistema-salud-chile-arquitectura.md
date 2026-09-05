@@ -1,1 +1,1 @@
-../../../products/salud/sistema-salud-chile-arquitectura/content.md
+../../../knowledge/references/salud/sistema-salud-chile-arquitectura/content.md

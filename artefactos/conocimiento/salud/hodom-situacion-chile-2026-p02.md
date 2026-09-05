@@ -1,1 +1,1 @@
-../../../products/salud/hodom-situacion-chile-2026-p02/content.md
+../../../knowledge/references/salud/hodom-situacion-chile-2026-p02/content.md

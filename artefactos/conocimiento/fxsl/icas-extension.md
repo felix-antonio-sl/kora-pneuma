@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-extension/content.md
+../../../knowledge/references/fxsl/icas-extension/content.md

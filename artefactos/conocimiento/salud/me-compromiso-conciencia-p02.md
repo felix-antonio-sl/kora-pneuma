@@ -1,1 +1,1 @@
-../../../products/salud/me-compromiso-conciencia-p02/content.md
+../../../knowledge/references/salud/me-compromiso-conciencia-p02/content.md

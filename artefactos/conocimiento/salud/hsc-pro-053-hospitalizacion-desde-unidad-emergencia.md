@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-053-hospitalizacion-desde-unidad-emergencia/content.md
+../../../knowledge/references/salud/hsc-pro-053-hospitalizacion-desde-unidad-emergencia/content.md

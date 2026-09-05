@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-110-hodom-historico-2019/content.md
+../../../knowledge/references/salud/hsc-pro-110-hodom-historico-2019/content.md

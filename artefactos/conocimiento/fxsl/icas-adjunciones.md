@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-adjunciones/content.md
+../../../knowledge/references/fxsl/icas-adjunciones/content.md

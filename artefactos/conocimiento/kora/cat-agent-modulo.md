@@ -1,1 +1,1 @@
-../../../products/kora/cat-agent-modulo/content.md
+../../../knowledge/references/kora/cat-agent-modulo/content.md

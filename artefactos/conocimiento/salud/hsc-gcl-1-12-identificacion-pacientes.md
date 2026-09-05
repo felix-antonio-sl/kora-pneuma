@@ -1,1 +1,1 @@
-../../../products/salud/hsc-gcl-1-12-identificacion-pacientes/content.md
+../../../knowledge/references/salud/hsc-gcl-1-12-identificacion-pacientes/content.md

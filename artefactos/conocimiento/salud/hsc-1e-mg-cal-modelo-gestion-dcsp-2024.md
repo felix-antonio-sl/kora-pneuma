@@ -1,1 +1,1 @@
-../../../products/salud/hsc-1e-mg-cal-modelo-gestion-dcsp-2024/content.md
+../../../knowledge/references/salud/hsc-1e-mg-cal-modelo-gestion-dcsp-2024/content.md

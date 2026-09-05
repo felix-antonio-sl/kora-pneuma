@@ -265,3 +265,17 @@ herramientas nativas, comprobó que la pregunta llegara sin alteración y rechaz
 una respuesta que omitía una clave; la frontera de inferencia fue sustituida
 solo en ese ensayo. La ejecución con un catálogo externo requiere `--live`
 explícito; esta ampliación y su ensayo offline no acreditan otra inferencia.
+
+## Biblioteca central de referencia — 2026-09-06
+
+El conocimiento requerido se consulta mediante `read_file` desde la ruta estable
+de la biblioteca, separada del bundle. `skill_view` carga las instrucciones de la
+skill; su mapa proporciona la referencia y el comando KORA para resolver otras
+identidades. Actualizar una referencia no exige copiar conocimiento a cada perfil.
+
+Se volvió a contrastar el 2026-09-06 la
+[carga por necesidad de Hermes](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills)
+y su herramienta instalada `read_file_tool`, en el checkout
+`9dd6634c5635321cf38840cc30e9b51226689128`. El estado de publicación pertenece a
+KORA. Los ensayos del pipeline leen v2 a través de la misma ruta del bundle ya
+instalado, sin modificar el perfil, y recuperan v1 por su versión exacta.

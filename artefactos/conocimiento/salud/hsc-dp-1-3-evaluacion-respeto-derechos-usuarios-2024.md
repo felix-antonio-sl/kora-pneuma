@@ -1,1 +1,1 @@
-../../../products/salud/hsc-dp-1-3-evaluacion-respeto-derechos-usuarios-2024/content.md
+../../../knowledge/references/salud/hsc-dp-1-3-evaluacion-respeto-derechos-usuarios-2024/content.md

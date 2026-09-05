@@ -1,1 +1,1 @@
-../../../products/dev/canon-diseno-producto-integrado/content.md
+../../../knowledge/references/dev/canon-diseno-producto-integrado/content.md

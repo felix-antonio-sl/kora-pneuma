@@ -188,3 +188,19 @@ terminaron con código cero y sus directorios temporales se eliminaron.
 Los canarios deben correrse sobre la realización que se quiera acreditar.
 La prueba conductual aquí corresponde a productos sintéticos independientes;
 la inspección inicial de instalaciones KORA existentes fue de solo lectura.
+
+## Biblioteca central de referencia — 2026-09-06
+
+KORA conserva el conocimiento requerido fuera de los bundles. El mapa nativo
+dirige a `references` en la biblioteca seleccionada, sin fijar el enlace a una
+versión interna. Una nueva consulta puede leer la última publicación aprobada;
+la cita exacta usa `resolve --revision`. Las instrucciones incluyen cómo resolver
+otras identidades y distinguen referencias de consulta de fuentes editables.
+
+La carga por necesidad sigue el contrato oficial de
+[skills de Codex](https://learn.chatgpt.com/docs/build-skills), contrastado
+nuevamente el 2026-09-06 con Codex CLI 0.153.4. La biblioteca, sus estados de
+publicación y el intercambio de referencias son decisiones de KORA; no se
+atribuyen como funciones nativas de Codex. Las pruebas del pipeline comprueban
+que publicar v2 conserva los bytes del bundle ya instalado y cambia lo leído
+por su referencia, manteniendo v1 consultable por versión.

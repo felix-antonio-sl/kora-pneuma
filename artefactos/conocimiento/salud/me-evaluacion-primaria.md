@@ -1,1 +1,1 @@
-../../../products/salud/me-evaluacion-primaria/content.md
+../../../knowledge/references/salud/me-evaluacion-primaria/content.md

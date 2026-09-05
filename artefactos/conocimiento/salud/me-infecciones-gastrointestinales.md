@@ -1,1 +1,1 @@
-../../../products/salud/me-infecciones-gastrointestinales/content.md
+../../../knowledge/references/salud/me-infecciones-gastrointestinales/content.md

@@ -1,1 +1,1 @@
-../../../products/gn/ssot-organica/content.md
+../../../knowledge/references/gn/ssot-organica/content.md

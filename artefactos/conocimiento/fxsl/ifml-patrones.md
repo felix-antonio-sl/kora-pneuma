@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-patrones/content.md
+../../../knowledge/references/fxsl/ifml-patrones/content.md

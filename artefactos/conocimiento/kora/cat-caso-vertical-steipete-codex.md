@@ -1,1 +1,1 @@
-../../../archive/products/kora/cat-caso-vertical-steipete-codex/content.md
+../../../knowledge/archive/references/kora/cat-caso-vertical-steipete-codex/content.md

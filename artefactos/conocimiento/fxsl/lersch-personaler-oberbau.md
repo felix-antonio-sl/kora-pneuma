@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-personaler-oberbau/content.md
+../../../knowledge/references/fxsl/lersch-personaler-oberbau/content.md

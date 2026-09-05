@@ -1,1 +1,1 @@
-../../../products/dev/steve-jobs-principios-salud/content.md
+../../../knowledge/references/dev/steve-jobs-principios-salud/content.md

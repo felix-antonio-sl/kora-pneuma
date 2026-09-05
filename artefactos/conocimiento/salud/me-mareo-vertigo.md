@@ -1,1 +1,1 @@
-../../../products/salud/me-mareo-vertigo/content.md
+../../../knowledge/references/salud/me-mareo-vertigo/content.md

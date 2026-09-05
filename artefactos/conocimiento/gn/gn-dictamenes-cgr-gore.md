@@ -1,1 +1,1 @@
-../../../products/gn/gn-dictamenes-cgr-gore/content.md
+../../../knowledge/references/gn/gn-dictamenes-cgr-gore/content.md

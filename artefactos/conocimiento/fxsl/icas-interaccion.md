@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-interaccion/content.md
+../../../knowledge/references/fxsl/icas-interaccion/content.md

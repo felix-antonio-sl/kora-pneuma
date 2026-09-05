@@ -1,1 +1,1 @@
-../../../products/kora/cat-kora-kernel/content.md
+../../../knowledge/references/kora/cat-kora-kernel/content.md

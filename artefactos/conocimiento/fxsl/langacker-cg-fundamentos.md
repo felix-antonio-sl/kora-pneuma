@@ -1,1 +1,1 @@
-../../../products/fxsl/langacker-cg-fundamentos/content.md
+../../../knowledge/references/fxsl/langacker-cg-fundamentos/content.md

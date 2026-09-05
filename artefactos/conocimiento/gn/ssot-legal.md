@@ -1,1 +1,1 @@
-../../../products/gn/ssot-legal/content.md
+../../../knowledge/references/gn/ssot-legal/content.md

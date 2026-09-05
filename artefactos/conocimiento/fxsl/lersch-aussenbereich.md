@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-aussenbereich/content.md
+../../../knowledge/references/fxsl/lersch-aussenbereich/content.md

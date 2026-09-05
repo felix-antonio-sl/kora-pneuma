@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-patrones/content.md
+../../../knowledge/references/fxsl/icas-patrones/content.md

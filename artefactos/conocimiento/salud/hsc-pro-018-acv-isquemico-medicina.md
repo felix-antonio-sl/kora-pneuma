@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-018-acv-isquemico-medicina/content.md
+../../../knowledge/references/salud/hsc-pro-018-acv-isquemico-medicina/content.md

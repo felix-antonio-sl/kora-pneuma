@@ -1,1 +1,1 @@
-../../../products/salud/salubrista-fuentes-base-curadas/content.md
+../../../knowledge/references/salud/salubrista-fuentes-base-curadas/content.md

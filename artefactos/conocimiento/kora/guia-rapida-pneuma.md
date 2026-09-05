@@ -1,1 +1,1 @@
-../../../products/kora/guia-rapida-pneuma/content.md
+../../../knowledge/references/kora/guia-rapida-pneuma/content.md

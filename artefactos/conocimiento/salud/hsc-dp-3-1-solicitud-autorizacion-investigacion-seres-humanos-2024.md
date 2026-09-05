@@ -1,1 +1,1 @@
-../../../products/salud/hsc-dp-3-1-solicitud-autorizacion-investigacion-seres-humanos-2024/content.md
+../../../knowledge/references/salud/hsc-dp-3-1-solicitud-autorizacion-investigacion-seres-humanos-2024/content.md

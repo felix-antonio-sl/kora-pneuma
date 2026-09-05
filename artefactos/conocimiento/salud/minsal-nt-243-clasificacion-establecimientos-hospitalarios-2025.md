@@ -1,1 +1,1 @@
-../../../products/salud/minsal-nt-243-clasificacion-establecimientos-hospitalarios-2025/content.md
+../../../knowledge/references/salud/minsal-nt-243-clasificacion-establecimientos-hospitalarios-2025/content.md

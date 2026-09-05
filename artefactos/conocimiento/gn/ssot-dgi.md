@@ -1,1 +1,1 @@
-../../../products/gn/ssot-dgi/content.md
+../../../knowledge/references/gn/ssot-dgi/content.md

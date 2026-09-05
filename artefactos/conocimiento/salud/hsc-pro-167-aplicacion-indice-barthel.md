@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-167-aplicacion-indice-barthel/content.md
+../../../knowledge/references/salud/hsc-pro-167-aplicacion-indice-barthel/content.md

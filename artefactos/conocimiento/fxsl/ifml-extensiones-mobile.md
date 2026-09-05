@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-extensiones-mobile/content.md
+../../../knowledge/references/fxsl/ifml-extensiones-mobile/content.md

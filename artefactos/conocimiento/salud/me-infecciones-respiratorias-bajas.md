@@ -1,1 +1,1 @@
-../../../products/salud/me-infecciones-respiratorias-bajas/content.md
+../../../knowledge/references/salud/me-infecciones-respiratorias-bajas/content.md

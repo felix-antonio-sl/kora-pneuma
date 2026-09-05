@@ -1,1 +1,1 @@
-../../../products/salud/me-disnea-p02/content.md
+../../../knowledge/references/salud/me-disnea-p02/content.md

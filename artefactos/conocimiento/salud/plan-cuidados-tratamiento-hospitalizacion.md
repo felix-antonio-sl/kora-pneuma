@@ -1,1 +1,1 @@
-../../../products/salud/plan-cuidados-tratamiento-hospitalizacion/content.md
+../../../knowledge/references/salud/plan-cuidados-tratamiento-hospitalizacion/content.md

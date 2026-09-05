@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-desarrollo-organizacional/content.md
+../../../knowledge/references/gn/gn-manual-desarrollo-organizacional/content.md

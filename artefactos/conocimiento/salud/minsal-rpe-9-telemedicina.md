@@ -1,1 +1,1 @@
-../../../products/salud/minsal-rpe-9-telemedicina/content.md
+../../../knowledge/references/salud/minsal-rpe-9-telemedicina/content.md

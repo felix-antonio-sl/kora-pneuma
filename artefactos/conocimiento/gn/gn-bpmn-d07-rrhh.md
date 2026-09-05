@@ -1,1 +1,1 @@
-../../../products/gn/gn-bpmn-d07-rrhh/content.md
+../../../knowledge/references/gn/gn-bpmn-d07-rrhh/content.md

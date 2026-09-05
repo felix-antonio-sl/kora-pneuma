@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-lab-03-modelo-organizacion-laboratorio-2022/content.md
+../../../knowledge/references/salud/hsc-mo-lab-03-modelo-organizacion-laboratorio-2022/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/gestion-redes-indice/content.md
+../../../knowledge/references/salud/gestion-redes-indice/content.md

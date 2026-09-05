@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-uti-3-organizacion-unidad-tratamiento-intermedio-2022/content.md
+../../../knowledge/references/salud/hsc-mo-uti-3-organizacion-unidad-tratamiento-intermedio-2022/content.md

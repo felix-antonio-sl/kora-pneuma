@@ -1,1 +1,1 @@
-../../../products/salud/hsc-14-3-riesgo-biopsicosocial/content.md
+../../../knowledge/references/salud/hsc-14-3-riesgo-biopsicosocial/content.md

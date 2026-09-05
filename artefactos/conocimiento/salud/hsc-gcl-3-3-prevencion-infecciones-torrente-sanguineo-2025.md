@@ -1,1 +1,1 @@
-../../../products/salud/hsc-gcl-3-3-prevencion-infecciones-torrente-sanguineo-2025/content.md
+../../../knowledge/references/salud/hsc-gcl-3-3-prevencion-infecciones-torrente-sanguineo-2025/content.md

@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-extensiones-web/content.md
+../../../knowledge/references/fxsl/ifml-extensiones-web/content.md

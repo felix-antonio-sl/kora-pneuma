@@ -1,1 +1,1 @@
-../../../products/fxsl/work-system-theory-alter/content.md
+../../../knowledge/references/fxsl/work-system-theory-alter/content.md

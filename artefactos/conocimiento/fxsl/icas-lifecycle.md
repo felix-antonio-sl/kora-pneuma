@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-lifecycle/content.md
+../../../knowledge/references/fxsl/icas-lifecycle/content.md

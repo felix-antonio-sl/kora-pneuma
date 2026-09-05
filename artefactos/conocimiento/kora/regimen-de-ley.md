@@ -1,1 +1,1 @@
-../../../products/kora/regimen-de-ley/content.md
+../../../knowledge/references/kora/regimen-de-ley/content.md

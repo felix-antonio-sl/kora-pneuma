@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes/content.md
+../../../knowledge/references/salud/hsc-pro-085-atencion-farmaceutica-programa-anticoagulantes/content.md

@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-efectos/content.md
+../../../knowledge/references/fxsl/icas-efectos/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/me-tec-leve/content.md
+../../../knowledge/references/salud/me-tec-leve/content.md

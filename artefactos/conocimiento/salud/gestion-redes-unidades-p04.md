@@ -1,1 +1,1 @@
-../../../products/salud/gestion-redes-unidades-p04/content.md
+../../../knowledge/references/salud/gestion-redes-unidades-p04/content.md

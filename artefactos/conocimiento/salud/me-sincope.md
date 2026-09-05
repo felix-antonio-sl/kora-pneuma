@@ -1,1 +1,1 @@
-../../../products/salud/me-sincope/content.md
+../../../knowledge/references/salud/me-sincope/content.md

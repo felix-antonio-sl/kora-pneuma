@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-comparacion/content.md
+../../../knowledge/references/fxsl/icas-comparacion/content.md

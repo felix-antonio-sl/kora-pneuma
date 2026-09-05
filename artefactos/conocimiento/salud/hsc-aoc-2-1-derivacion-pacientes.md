@@ -1,1 +1,1 @@
-../../../products/salud/hsc-aoc-2-1-derivacion-pacientes/content.md
+../../../knowledge/references/salud/hsc-aoc-2-1-derivacion-pacientes/content.md

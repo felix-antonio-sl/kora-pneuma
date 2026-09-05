@@ -1,1 +1,1 @@
-../../../products/dev/cierre-operativo/content.md
+../../../knowledge/references/dev/cierre-operativo/content.md

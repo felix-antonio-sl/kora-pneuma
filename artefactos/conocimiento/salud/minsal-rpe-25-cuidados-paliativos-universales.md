@@ -1,1 +1,1 @@
-../../../products/salud/minsal-rpe-25-cuidados-paliativos-universales/content.md
+../../../knowledge/references/salud/minsal-rpe-25-cuidados-paliativos-universales/content.md

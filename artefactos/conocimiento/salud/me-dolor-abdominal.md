@@ -1,1 +1,1 @@
-../../../products/salud/me-dolor-abdominal/content.md
+../../../knowledge/references/salud/me-dolor-abdominal/content.md

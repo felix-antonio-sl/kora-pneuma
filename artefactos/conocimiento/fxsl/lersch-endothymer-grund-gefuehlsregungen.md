@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-endothymer-grund-gefuehlsregungen/content.md
+../../../knowledge/references/fxsl/lersch-endothymer-grund-gefuehlsregungen/content.md

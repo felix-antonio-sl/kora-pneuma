@@ -1,1 +1,1 @@
-../../../products/salud/hsc-normativa-hodom-indice/content.md
+../../../knowledge/references/salud/hsc-normativa-hodom-indice/content.md

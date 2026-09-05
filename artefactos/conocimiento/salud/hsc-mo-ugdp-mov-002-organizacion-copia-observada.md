@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-ugdp-mov-002-organizacion-copia-observada/content.md
+../../../knowledge/references/salud/hsc-mo-ugdp-mov-002-organizacion-copia-observada/content.md

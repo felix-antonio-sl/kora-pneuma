@@ -1,1 +1,1 @@
-../../../products/salud/minsal-instructivo-pauta-autorizacion-sanitaria-hodom-2024/content.md
+../../../knowledge/references/salud/minsal-instructivo-pauta-autorizacion-sanitaria-hodom-2024/content.md

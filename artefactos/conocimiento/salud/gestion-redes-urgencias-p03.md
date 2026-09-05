@@ -1,1 +1,1 @@
-../../../products/salud/gestion-redes-urgencias-p03/content.md
+../../../knowledge/references/salud/gestion-redes-urgencias-p03/content.md

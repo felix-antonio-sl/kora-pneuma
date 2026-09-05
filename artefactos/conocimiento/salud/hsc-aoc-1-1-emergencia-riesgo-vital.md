@@ -1,1 +1,1 @@
-../../../products/salud/hsc-aoc-1-1-emergencia-riesgo-vital/content.md
+../../../knowledge/references/salud/hsc-aoc-1-1-emergencia-riesgo-vital/content.md

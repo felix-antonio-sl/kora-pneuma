@@ -1,1 +1,1 @@
-../../../products/gn/gn-problemas-sociales-cl/content.md
+../../../knowledge/references/gn/gn-problemas-sociales-cl/content.md

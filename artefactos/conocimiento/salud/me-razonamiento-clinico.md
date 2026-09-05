@@ -1,1 +1,1 @@
-../../../products/salud/me-razonamiento-clinico/content.md
+../../../knowledge/references/salud/me-razonamiento-clinico/content.md

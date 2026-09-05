@@ -1,1 +1,1 @@
-../../../archive/products/openclaw-fleet/fleet-canon-policy/content.md
+../../../knowledge/archive/references/openclaw-fleet/fleet-canon-policy/content.md

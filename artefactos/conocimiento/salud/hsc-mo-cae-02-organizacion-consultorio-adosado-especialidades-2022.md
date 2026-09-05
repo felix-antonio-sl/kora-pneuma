@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-cae-02-organizacion-consultorio-adosado-especialidades-2022/content.md
+../../../knowledge/references/salud/hsc-mo-cae-02-organizacion-consultorio-adosado-especialidades-2022/content.md

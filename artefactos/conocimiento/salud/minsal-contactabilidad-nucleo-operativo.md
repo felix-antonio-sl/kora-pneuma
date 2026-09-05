@@ -1,1 +1,1 @@
-../../../products/salud/minsal-contactabilidad-nucleo-operativo/content.md
+../../../knowledge/references/salud/minsal-contactabilidad-nucleo-operativo/content.md

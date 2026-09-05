@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-endothymer-grund-gestimmtheiten/content.md
+../../../knowledge/references/fxsl/lersch-endothymer-grund-gestimmtheiten/content.md

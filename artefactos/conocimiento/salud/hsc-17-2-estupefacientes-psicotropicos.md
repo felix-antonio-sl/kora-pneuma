@@ -1,1 +1,1 @@
-../../../products/salud/hsc-17-2-estupefacientes-psicotropicos/content.md
+../../../knowledge/references/salud/hsc-17-2-estupefacientes-psicotropicos/content.md

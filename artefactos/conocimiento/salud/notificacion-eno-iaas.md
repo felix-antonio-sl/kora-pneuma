@@ -1,1 +1,1 @@
-../../../products/salud/notificacion-eno-iaas/content.md
+../../../knowledge/references/salud/notificacion-eno-iaas/content.md

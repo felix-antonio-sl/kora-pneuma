@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-protocolos/content.md
+../../../knowledge/references/fxsl/icas-protocolos/content.md

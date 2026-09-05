@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-activo-fijo/content.md
+../../../knowledge/references/gn/gn-manual-activo-fijo/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/me-sintomas-urinarios/content.md
+../../../knowledge/references/salud/me-sintomas-urinarios/content.md

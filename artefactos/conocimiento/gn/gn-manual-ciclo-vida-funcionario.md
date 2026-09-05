@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-ciclo-vida-funcionario/content.md
+../../../knowledge/references/gn/gn-manual-ciclo-vida-funcionario/content.md

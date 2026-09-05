@@ -1,1 +1,1 @@
-../../../products/gn/ssot-actos-admin/content.md
+../../../knowledge/references/gn/ssot-actos-admin/content.md

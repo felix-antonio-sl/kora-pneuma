@@ -1,1 +1,1 @@
-../../../products/fxsl/opcloud-tutorial-videos/content.md
+../../../knowledge/references/fxsl/opcloud-tutorial-videos/content.md

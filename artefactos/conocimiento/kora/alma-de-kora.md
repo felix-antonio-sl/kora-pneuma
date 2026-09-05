@@ -1,1 +1,1 @@
-../../../products/kora/alma-de-kora/content.md
+../../../knowledge/references/kora/alma-de-kora/content.md

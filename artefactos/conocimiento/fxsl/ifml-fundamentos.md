@@ -1,1 +1,1 @@
-../../../products/fxsl/ifml-fundamentos/content.md
+../../../knowledge/references/fxsl/ifml-fundamentos/content.md

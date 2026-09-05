@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-estratificacion/content.md
+../../../knowledge/references/fxsl/lersch-estratificacion/content.md

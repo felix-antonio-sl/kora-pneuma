@@ -1,1 +1,1 @@
-../../../products/fxsl/langacker-cg-estructuras/content.md
+../../../knowledge/references/fxsl/langacker-cg-estructuras/content.md

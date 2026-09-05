@@ -1,1 +1,1 @@
-../../../products/gn/omega-gore-nuble-mermaid/content.md
+../../../knowledge/references/gn/omega-gore-nuble-mermaid/content.md

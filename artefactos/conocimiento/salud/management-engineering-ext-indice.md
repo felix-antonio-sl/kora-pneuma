@@ -1,1 +1,1 @@
-../../../products/salud/management-engineering-ext-indice/content.md
+../../../knowledge/references/salud/management-engineering-ext-indice/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/hsc-dp-2-1-consentimiento-informado/content.md
+../../../knowledge/references/salud/hsc-dp-2-1-consentimiento-informado/content.md

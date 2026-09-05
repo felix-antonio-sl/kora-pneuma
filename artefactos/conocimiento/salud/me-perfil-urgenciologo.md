@@ -1,1 +1,1 @@
-../../../products/salud/me-perfil-urgenciologo/content.md
+../../../knowledge/references/salud/me-perfil-urgenciologo/content.md

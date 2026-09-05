@@ -3,7 +3,8 @@
 Transforma una o varias fuentes en conocimiento que ayude a comprender o actuar.
 Parte del uso esperado y de la fuente completa dentro de ese alcance. La salida
 debe poder leerse, comprobarse, recuperarse y actualizarse sin depender de la
-memoria de quien la escribió.
+memoria de quien la escribió. El artefacto resultante es una referencia de la
+biblioteca de conocimiento, separada de agentes y skills.
 
 ## Leer y componer
 
@@ -26,7 +27,7 @@ Un esquema, dataset, imagen, binario o script conserva su formato cuando
 convertirlo en prosa destruiría su función; el cuerpo explica cómo usarlo.
 
 Antes de crear un objeto, busca por su identidad y por términos distintivos en
-los productos existentes. Si el conocimiento ya está representado, decide si
+las referencias existentes. Si el conocimiento ya está representado, decide si
 corresponde ampliarlo o relacionarlo. Cuando la entrada sea texto recibido en
 la conversación, conserva una copia literal del texto disponible y registra
 su origen y alcance; no afirmes haber recuperado un archivo original ausente.
@@ -43,18 +44,22 @@ contenido. No acredita cobertura total, equivalencia semántica ni conservación
 de relaciones, y no es un requisito para toda koraficación. Revisa por separado
 lo que la salida afirma sin sustento y las condiciones que cambian el uso.
 
-## Guardar una fuente útil
+## Preparar y publicar una referencia
 
-Consulta la [guía operativa](../guia-rapida-pneuma/content.md) para guardar o
-actualizar el producto desde la raíz de su fuente.
-`create` publica una fuente nueva y conserva cada `--source` como bytes originales
-con su hash y origen. El comando no sintetiza ni acredita fidelidad por sí solo.
+Consulta la [guía operativa](../../../docs/operacion.md) desde la raíz de la
+maquinaria. La biblioteca se selecciona mediante `knowledge` o
+`--knowledge-root`. `intake` conserva recursos de entrada en `inbox`; úsalo al
+recibir originales que aún no tienen un lugar recuperable dentro del flujo.
+`create knowledge` guarda un borrador y conserva cada `--source` como bytes
+originales con su hash y origen. Ninguno de esos comandos sintetiza, aprueba ni
+deja el borrador disponible como referencia publicada.
 
-Para actualizar, resuelve primero la identidad existente y edita esa fuente.
-Conserva la versión anterior mediante Git o un original recuperable según el
-alcance. Registra la nueva procedencia en `object.yaml`; preserva identidades y
-relaciones que sus consumidores aún necesitan. Declara dependencias operativas
-en `requires` y vínculos documentales en `relations`, sin confundir ambos usos.
+Para actualizar, resuelve la identidad existente y usa `revise` para preparar su
+borrador. Edita ese contenido, sus recursos y `object.yaml`; registra la nueva
+procedencia y preserva identidades y relaciones que sus consumidores necesitan.
+Declara conocimientos necesarios en `requires` y vínculos documentales en
+`relations`. La versión anterior sigue consultable mientras trabajas. No edites
+directamente versiones publicadas ni enlaces de referencia.
 
 ## Comprobar el resultado
 
@@ -66,7 +71,18 @@ materiales. Una respuesta fluida no acredita fidelidad. Abre los recursos
 técnicos necesarios y resuelve las referencias cambiadas. La guía distingue
 estas comprobaciones del diagnóstico del catálogo completo.
 
-Entrega el producto recuperable, su procedencia y cualquier pérdida o
-incompatibilidad concreta. Distingue la revisión semántica hecha de la validez
-de archivos. Si falta una parte material de la fuente, conserva y explica esa
-ausencia; no presentes la transformación como completa.
+Usa `review` para identificar el borrador concreto por su hash. Presenta el
+contenido revisado, su procedencia y cualquier pérdida o incompatibilidad
+material. Cuando Félix haya aprobado ese contenido, o delegado explícitamente
+esa decisión, ejecuta `approve URN --reviewed SHA` con el hash revisado. Si cambió
+el borrador o su revisión base, revisa el cambio antes de publicarlo. La autoridad
+para reparar maquinaria no aprueba contenido de conocimiento.
+
+La publicación conserva la versión y actualiza una referencia estable; una
+consulta por revisión permite recuperar la versión exacta. Comprueba que la
+identidad resuelve al resultado publicado y entrega esa referencia. Si todavía
+falta aprobación, entrega el borrador revisable como tal. Distingue la revisión
+semántica hecha de la validez de archivos y de la aprobación. Los conocimientos
+heredados con estado `legacy` conservan su disponibilidad sin acreditar una
+aprobación nueva. Si falta una parte material de la fuente, conserva y explica
+esa ausencia; no presentes la transformación como completa.

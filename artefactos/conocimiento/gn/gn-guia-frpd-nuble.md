@@ -1,1 +1,1 @@
-../../../products/gn/gn-guia-frpd-nuble/content.md
+../../../knowledge/references/gn/gn-guia-frpd-nuble/content.md

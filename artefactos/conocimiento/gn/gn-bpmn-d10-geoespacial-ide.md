@@ -1,1 +1,1 @@
-../../../products/gn/gn-bpmn-d10-geoespacial-ide/content.md
+../../../knowledge/references/gn/gn-bpmn-d10-geoespacial-ide/content.md

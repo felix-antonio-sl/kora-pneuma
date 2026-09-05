@@ -1,1 +1,1 @@
-../../../products/salud/informatica-medica-ia/content.md
+../../../knowledge/references/salud/informatica-medica-ia/content.md

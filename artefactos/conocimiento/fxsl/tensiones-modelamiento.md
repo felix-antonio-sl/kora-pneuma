@@ -1,1 +1,1 @@
-../../../products/fxsl/tensiones-modelamiento/content.md
+../../../knowledge/references/fxsl/tensiones-modelamiento/content.md

@@ -1,1 +1,1 @@
-../../../products/salud/estandares-it-indice/content.md
+../../../knowledge/references/salud/estandares-it-indice/content.md

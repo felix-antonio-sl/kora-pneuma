@@ -1,1 +1,1 @@
-../../../products/salud/hsc-hsc44-1-nutricion-parenteral/content.md
+../../../knowledge/references/salud/hsc-hsc44-1-nutricion-parenteral/content.md

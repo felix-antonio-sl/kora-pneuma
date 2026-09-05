@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-185-telegastroenterologia/content.md
+../../../knowledge/references/salud/hsc-pro-185-telegastroenterologia/content.md

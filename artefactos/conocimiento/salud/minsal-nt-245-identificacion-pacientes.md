@@ -1,1 +1,1 @@
-../../../products/salud/minsal-nt-245-identificacion-pacientes/content.md
+../../../knowledge/references/salud/minsal-nt-245-identificacion-pacientes/content.md

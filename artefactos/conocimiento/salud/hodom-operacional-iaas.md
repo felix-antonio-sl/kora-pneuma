@@ -1,1 +1,1 @@
-../../../products/salud/hodom-operacional-iaas/content.md
+../../../knowledge/references/salud/hodom-operacional-iaas/content.md

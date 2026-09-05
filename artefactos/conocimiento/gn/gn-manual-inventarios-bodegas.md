@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-inventarios-bodegas/content.md
+../../../knowledge/references/gn/gn-manual-inventarios-bodegas/content.md

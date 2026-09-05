@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-lebensgrund/content.md
+../../../knowledge/references/fxsl/lersch-lebensgrund/content.md

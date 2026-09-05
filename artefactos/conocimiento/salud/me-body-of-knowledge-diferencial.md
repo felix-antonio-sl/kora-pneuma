@@ -1,1 +1,1 @@
-../../../products/salud/me-body-of-knowledge-diferencial/content.md
+../../../knowledge/references/salud/me-body-of-knowledge-diferencial/content.md

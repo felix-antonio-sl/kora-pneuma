@@ -1,1 +1,1 @@
-../../../products/salud/management-engineering-ext-capacidad/content.md
+../../../knowledge/references/salud/management-engineering-ext-capacidad/content.md

@@ -1,1 +1,1 @@
-../../../products/kora/cat-agent-coalgebra/content.md
+../../../knowledge/references/kora/cat-agent-coalgebra/content.md

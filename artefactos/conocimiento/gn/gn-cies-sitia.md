@@ -1,1 +1,1 @@
-../../../products/gn/gn-cies-sitia/content.md
+../../../knowledge/references/gn/gn-cies-sitia/content.md

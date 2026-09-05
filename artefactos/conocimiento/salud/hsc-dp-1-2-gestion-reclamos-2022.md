@@ -1,1 +1,1 @@
-../../../products/salud/hsc-dp-1-2-gestion-reclamos-2022/content.md
+../../../knowledge/references/salud/hsc-dp-1-2-gestion-reclamos-2022/content.md

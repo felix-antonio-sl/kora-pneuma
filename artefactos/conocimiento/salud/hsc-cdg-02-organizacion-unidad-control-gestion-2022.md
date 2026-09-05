@@ -1,1 +1,1 @@
-../../../products/salud/hsc-cdg-02-organizacion-unidad-control-gestion-2022/content.md
+../../../knowledge/references/salud/hsc-cdg-02-organizacion-unidad-control-gestion-2022/content.md

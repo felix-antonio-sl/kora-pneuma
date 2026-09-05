@@ -1,1 +1,1 @@
-../../../products/gn/kb-gestion-meyer-org-structure/content.md
+../../../knowledge/references/gn/kb-gestion-meyer-org-structure/content.md

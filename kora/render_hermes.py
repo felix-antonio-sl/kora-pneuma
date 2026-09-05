@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 import re
+import shlex
 
 import yaml
 
@@ -28,7 +29,7 @@ def _dependencies(catalog: Catalog, product: Product) -> list[Product]:
     return dependencies
 
 
-def _source_note(product: Product, dependencies: list[Product]) -> str:
+def _source_note(catalog: Catalog, product: Product, dependencies: list[Product]) -> str:
     lines = [
         "", "", "## Fuente KORA", "",
         f"Identidad: `{product.id}`.",
@@ -50,12 +51,23 @@ def _source_note(product: Product, dependencies: list[Product]) -> str:
             )
         elif dependency.kind == "knowledge":
             lines.append(
-                f"- `{dependency.id}`: lee `{dependency.content_path.resolve()}` "
+                f"- `{dependency.id}`: lee `{dependency.content_path.absolute()}` "
                 "cuando necesites ese conocimiento; sus recursos relativos se resuelven "
                 "desde el directorio del archivo."
             )
         else:
             raise KoraError(f"Tipo de dependencia no realizable en Hermes: {dependency.kind}")
+    if any(p.reference_root is not None for p in dependencies):
+        library = next(p.reference_root for p in dependencies if p.reference_root is not None)
+        entrypoint = catalog.root / "kora_cli.py"
+        if not entrypoint.is_file():
+            entrypoint = Path(__file__).resolve().parents[1] / "kora_cli.py"
+        resolver = shlex.join(["python3", str(entrypoint),
+                               "--root", str(library), "resolve", "URN"])
+        lines += ["", "El conocimiento publicado es de consulta. Su `object.yaml` indica "
+                  "el estado de publicación; `legacy` conserva disponibilidad sin una nueva aprobación. "
+                  "Para editarlo prepara un borrador con KORA; conserva la referencia vigente hasta aprobar la revisión.",
+                  f"Resuelve otras identidades y las referencias que añada el conocimiento con `{resolver}`."]
     return "\n".join(lines) + "\n"
 
 
@@ -73,7 +85,7 @@ def _skill_files(catalog: Catalog, product: Product) -> dict[str, File]:
         },
     }
     header = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False)
-    body = product.body + _source_note(product, _dependencies(catalog, product))
+    body = product.body + _source_note(catalog, product, _dependencies(catalog, product))
     files = {"SKILL.md": File(("---\n" + header + "---\n\n" + body).encode("utf-8"))}
     for relative, resource in product.resources().items():
         path = PurePosixPath(relative)
@@ -105,7 +117,7 @@ def render(catalog: Catalog, product: Product) -> dict[str, File]:
     else:
         _skill_name(product)
         base = PurePosixPath(".hermes/profiles") / product.name
-        soul = product.body + _source_note(product, dependencies)
+        soul = product.body + _source_note(catalog, product, dependencies)
         files = {str(base / "SOUL.md"): File(soul.encode("utf-8"))}
         for relative, resource in product.resources().items():
             files[str(base / "resources" / relative)] = resource

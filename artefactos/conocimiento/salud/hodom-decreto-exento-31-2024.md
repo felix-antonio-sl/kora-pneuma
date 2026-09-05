@@ -1,1 +1,1 @@
-../../../products/salud/hodom-decreto-exento-31-2024/content.md
+../../../knowledge/references/salud/hodom-decreto-exento-31-2024/content.md

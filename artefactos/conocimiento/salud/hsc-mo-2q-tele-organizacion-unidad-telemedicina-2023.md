@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023/content.md
+../../../knowledge/references/salud/hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023/content.md

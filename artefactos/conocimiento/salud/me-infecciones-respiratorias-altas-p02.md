@@ -1,1 +1,1 @@
-../../../products/salud/me-infecciones-respiratorias-altas-p02/content.md
+../../../knowledge/references/salud/me-infecciones-respiratorias-altas-p02/content.md

@@ -1,1 +1,1 @@
-../../../products/gn/kb-gestion-mw-waissbluth/content.md
+../../../knowledge/references/gn/kb-gestion-mw-waissbluth/content.md

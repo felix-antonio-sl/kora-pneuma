@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-med-02-organizacion-servicio-clinico-medicina-2022/content.md
+../../../knowledge/references/salud/hsc-mo-med-02-organizacion-servicio-clinico-medicina-2022/content.md

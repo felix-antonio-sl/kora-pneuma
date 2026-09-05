@@ -1,1 +1,1 @@
-../../../products/salud/health-systems-science-operativa/content.md
+../../../knowledge/references/salud/health-systems-science-operativa/content.md

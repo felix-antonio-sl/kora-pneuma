@@ -1,1 +1,1 @@
-../../../products/salud/hsc-pro-024-elaboracion-documentacion-gestion-documental-2023/content.md
+../../../knowledge/references/salud/hsc-pro-024-elaboracion-documentacion-gestion-documental-2023/content.md

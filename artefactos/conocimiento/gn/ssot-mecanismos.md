@@ -1,1 +1,1 @@
-../../../products/gn/ssot-mecanismos/content.md
+../../../knowledge/references/gn/ssot-mecanismos/content.md

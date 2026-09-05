@@ -1,1 +1,1 @@
-../../../products/gn/kb-gestion-lean6/content.md
+../../../knowledge/references/gn/kb-gestion-lean6/content.md

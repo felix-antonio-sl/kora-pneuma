@@ -1,1 +1,1 @@
-../../../products/kora/aufbau-persona-agente/content.md
+../../../knowledge/references/kora/aufbau-persona-agente/content.md

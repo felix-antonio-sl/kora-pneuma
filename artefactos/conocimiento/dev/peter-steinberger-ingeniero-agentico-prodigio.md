@@ -1,1 +1,1 @@
-../../../products/dev/peter-steinberger-ingeniero-agentico-prodigio/content.md
+../../../knowledge/references/dev/peter-steinberger-ingeniero-agentico-prodigio/content.md

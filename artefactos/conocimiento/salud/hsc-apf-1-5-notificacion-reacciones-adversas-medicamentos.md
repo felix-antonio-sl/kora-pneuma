@@ -1,1 +1,1 @@
-../../../products/salud/hsc-apf-1-5-notificacion-reacciones-adversas-medicamentos/content.md
+../../../knowledge/references/salud/hsc-apf-1-5-notificacion-reacciones-adversas-medicamentos/content.md

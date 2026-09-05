@@ -1,1 +1,1 @@
-../../../products/gn/ssot-master/content.md
+../../../knowledge/references/gn/ssot-master/content.md

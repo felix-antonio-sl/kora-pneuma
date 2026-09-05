@@ -1,1 +1,1 @@
-../../../products/gn/gestion-prpto/content.md
+../../../knowledge/references/gn/gestion-prpto/content.md

@@ -38,21 +38,21 @@ def _check_publication_path(root, destination):
 
 
 def create(root: Path, kind: str, namespace: str, name: str, identifier: str,
-           description: str, body: Path, *, sources=(), targets=(), requires=()) -> Product:
+           description: str, body: Path, *, sources=(), targets=(), requires=(), knowledge=None) -> Product:
     root = Path(root).resolve()
     with _author_lock(root):
         return _create(root, kind, namespace, name, identifier, description, body,
-                       sources=sources, targets=targets, requires=requires)
+                       sources=sources, targets=targets, requires=requires, knowledge=knowledge)
 
 
-def _create(root, kind, namespace, name, identifier, description, body, *, sources, targets, requires):
+def _create(root, kind, namespace, name, identifier, description, body, *, sources, targets, requires, knowledge=None):
     if kind not in ("knowledge", "skill", "agent"):
         raise KoraError(f"Tipo desconocido: {kind}")
     if len(safe_relative(namespace).parts) != 1 or len(safe_relative(name).parts) != 1:
         raise KoraError("Namespace y nombre deben ser componentes únicos")
     destination = root / "products" / namespace / name
     _check_publication_path(root, destination)
-    catalog = Catalog(root)
+    catalog = Catalog(root, knowledge=knowledge)
     if identifier in catalog.products or identifier in catalog.archived or identifier in catalog.aliases:
         raise KoraError(f"La identidad ya existe: {identifier}")
     for identifier_needed in requires:

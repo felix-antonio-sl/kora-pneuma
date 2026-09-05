@@ -1,1 +1,1 @@
-../../../products/fxsl/langacker-cg-indice/content.md
+../../../knowledge/references/fxsl/langacker-cg-indice/content.md

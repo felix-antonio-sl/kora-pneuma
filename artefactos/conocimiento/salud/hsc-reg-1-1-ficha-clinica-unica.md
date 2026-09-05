@@ -1,1 +1,1 @@
-../../../products/salud/hsc-reg-1-1-ficha-clinica-unica/content.md
+../../../knowledge/references/salud/hsc-reg-1-1-ficha-clinica-unica/content.md

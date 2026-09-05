@@ -48,15 +48,23 @@ class CliJourneyTests(unittest.TestCase):
             self.assertIn("same-name/SKILL.md", report["issues"][0]["error"])
 
     def test_relocated_source_to_two_native_targets_update_and_rollback(self):
+        import hashlib
+
+        # Approval is explicitly delegated for this synthetic fixture only.
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)
             source = base / "source.txt"
-            source.write_text("La actividad puede continuar con permiso vigente, salvo revocación.\n")
+            original = "La actividad puede continuar con permiso vigente, salvo revocación.\n"
+            source.write_text(original)
             body = base / "body.md"
-            body.write_text("Conservar permiso, condición y excepción; consultar fuente antes de afirmar.\n")
-            root = base / "corpus"
+            first_content = "Conservar permiso, condición y excepción; consultar fuente antes de afirmar.\n"
+            body.write_text(first_content)
+            root = base / "initial/machinery"
+            library = base / "initial/library"
             home = base / "home"
-            root.mkdir()
+            root.mkdir(parents=True)
+            library.mkdir()
+            (root / "knowledge").symlink_to("../library", target_is_directory=True)
             home.mkdir()
             implementation = Path(__file__).resolve().parents[1]
             shutil.copytree(implementation / "kora", root / "kora",
@@ -69,8 +77,16 @@ class CliJourneyTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 return json.loads(result.stdout)
 
-            run("create", "knowledge", "example", "permission", "--id", "urn:example:kb:permission",
-                "--description", "Permiso y excepción", "--body", str(body), "--source", str(source))
+            intake = run("intake", "permission", "--source", str(source))
+            received = Path(intake["path"]) / intake["sources"][0]["path"]
+            self.assertEqual(received.read_bytes(), source.read_bytes())
+            draft = run("create", "knowledge", "example", "permission", "--id", "urn:example:kb:permission",
+                        "--description", "Permiso y excepción", "--body", str(body), "--source", str(received))
+            self.assertEqual(draft["publication"], "draft")
+            self.assertEqual(run("list", "--kind", "knowledge"), [])
+            review = run("review", "urn:example:kb:permission")
+            first = run("approve", "urn:example:kb:permission", "--reviewed", review["reviewed_sha256"])
+            self.assertEqual(first["publication"], "approved")
             run("create", "skill", "example", "read-permission", "--id", "urn:example:skill:read",
                 "--description", r"Interpretar permiso y patrón \d+", "--body", str(body),
                 "--requires", "urn:example:kb:permission")
@@ -79,38 +95,84 @@ class CliJourneyTests(unittest.TestCase):
                 "--requires", "urn:example:skill:read")
             for runtime in ("codex", "hermes"):
                 run("install", runtime, "--home", str(home))
-            previous = root
-            root = base / "relocated"
+            previous, previous_library = root, library
+            root, library = base / "relocated/machinery", base / "relocated/library"
+            root.parent.mkdir()
             shutil.move(previous, root)
+            shutil.move(previous_library, library)
             source.unlink()
             body.unlink()
+            shutil.rmtree(library / "inbox")
             self.assertFalse(previous.exists())
+            self.assertFalse(previous_library.exists())
             resolved = run("resolve", "urn:example:kb:permission")
-            self.assertTrue(Path(resolved["path"]).is_relative_to(root))
-            originals = list((root / "products/example/permission/sources").iterdir())
+            self.assertTrue(Path(resolved["path"]).is_relative_to(library / "references"))
+            self.assertFalse((root / "products/example/permission").exists())
+            originals = list((Path(resolved["path"]).parent / "sources").iterdir())
             self.assertEqual(len(originals), 1)
-            self.assertIn("salvo revocación", originals[0].read_text())
+            self.assertEqual(originals[0].read_text(), original)
             for runtime in ("codex", "hermes"):
                 run("install", runtime, "--home", str(home))
-            for relative in (".codex/agents/permission-reader.toml",
-                             ".agents/skills/read-permission/SKILL.md",
-                             ".hermes/profiles/permission-reader/SOUL.md",
-                             ".hermes/profiles/permission-reader/skills/read-permission/SKILL.md"):
+            native_paths = (".codex/agents/permission-reader.toml",
+                            ".agents/skills/read-permission/SKILL.md",
+                            ".hermes/profiles/permission-reader/SOUL.md",
+                            ".hermes/profiles/permission-reader/skills/read-permission/SKILL.md")
+            for relative in native_paths:
                 native_text = (home / relative).read_text()
                 self.assertIn(str(root / "products"), native_text)
+                self.assertIn(str(library / "references"), native_text)
                 self.assertNotIn(str(previous), native_text)
+                self.assertNotIn(str(previous_library), native_text)
             self.assertTrue((home / ".codex/agents/permission-reader.toml").is_file())
             self.assertTrue((home / ".hermes/profiles/permission-reader/SOUL.md").is_file())
+
+            native_before = {relative: (home / relative).read_bytes() for relative in native_paths}
+            pending = run("revise", "urn:example:kb:permission")
+            pending_path = Path(pending["path"])
+            second_content = first_content + "Registrar la revocación antes de continuar.\n"
+            pending_path.write_text(second_content)
+            next_source = base / "source-v2.txt"
+            next_original = original + "La revocación debe registrarse antes de continuar.\n"
+            next_source.write_text(next_original)
+            copied_source = pending_path.parent / "sources/2-source-v2.txt"
+            shutil.copy2(next_source, copied_source)
+            metadata_path = pending_path.parent / "object.yaml"
+            metadata = yaml.safe_load(metadata_path.read_text())
+            metadata["provenance"]["sources"].append({
+                "path": "sources/2-source-v2.txt", "origin": str(next_source),
+                "sha256": hashlib.sha256(next_source.read_bytes()).hexdigest()})
+            metadata_path.write_text(yaml.safe_dump(metadata, allow_unicode=True, sort_keys=False))
+            self.assertEqual(Path(resolved["path"]).read_text(), first_content)
+            self.assertEqual(run("resolve", "urn:example:kb:permission")["revision"], first["revision"])
+            review = run("review", "urn:example:kb:permission")
+            self.assertEqual(review["base_revision"], first["revision"])
+            second = run("approve", "urn:example:kb:permission", "--reviewed", review["reviewed_sha256"])
+            next_source.unlink()
+            self.assertNotEqual(second["revision"], first["revision"])
+            self.assertEqual(second["path"], resolved["path"])
+            self.assertEqual(Path(second["path"]).read_text(), second_content)
+            old = run("resolve", "urn:example:kb:permission", "--revision", first["revision"])
+            self.assertEqual(Path(old["path"]).read_text(), first_content)
+            self.assertEqual((Path(second["path"]).parent / "sources/2-source-v2.txt").read_text(), next_original)
+            for relative, before in native_before.items():
+                self.assertEqual((home / relative).read_bytes(), before)
+
             personal = home / ".hermes/profiles/permission-reader/MEMORY.md"
             personal.write_bytes(b"personal memory")
             (root / "products/example/read-permission/content.md").write_text("Updated, with permission and revocation preserved.\n")
-            run("install", "hermes", "--home", str(home))
-            native = home / ".hermes/profiles/permission-reader/skills/read-permission/SKILL.md"
-            self.assertIn("Updated", native.read_text())
-            run("rollback", "--home", str(home))
-            self.assertNotIn("Updated", native.read_text())
+            for runtime, relative in (("codex", ".agents/skills/read-permission/SKILL.md"),
+                                      ("hermes", ".hermes/profiles/permission-reader/skills/read-permission/SKILL.md")):
+                run("install", runtime, "--home", str(home))
+                native = home / relative
+                self.assertIn("Updated", native.read_text())
+                run("rollback", "--home", str(home))
+                self.assertNotIn("Updated", native.read_text())
+                self.assertEqual(run("resolve", "urn:example:kb:permission")["revision"], second["revision"])
             self.assertEqual(personal.read_bytes(), b"personal memory")
-            self.assertEqual(run("status", "--home", str(home))["changes"], [])
+            run("recover", "--home", str(home))
+            state = run("status", "--home", str(home))
+            self.assertEqual(state["changes"], [])
+            self.assertFalse(state["recovery_pending"])
 
 
 class CliProfileMaintenanceTests(unittest.TestCase):

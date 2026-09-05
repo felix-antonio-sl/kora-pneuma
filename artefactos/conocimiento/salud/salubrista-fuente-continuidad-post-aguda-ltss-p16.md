@@ -1,1 +1,1 @@
-../../../products/salud/salubrista-fuente-continuidad-post-aguda-ltss-p16/content.md
+../../../knowledge/references/salud/salubrista-fuente-continuidad-post-aguda-ltss-p16/content.md

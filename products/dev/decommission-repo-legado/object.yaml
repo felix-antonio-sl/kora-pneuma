@@ -8,7 +8,6 @@ content: content.md
 targets:
 - codex
 requires:
-- urn:kora:kb:guia-rapida-pneuma
 - urn:kora:artefacto:instalacion-kora
 relations:
   componible:

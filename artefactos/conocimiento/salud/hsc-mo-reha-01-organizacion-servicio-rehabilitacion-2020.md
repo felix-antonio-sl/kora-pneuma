@@ -1,1 +1,1 @@
-../../../products/salud/hsc-mo-reha-01-organizacion-servicio-rehabilitacion-2020/content.md
+../../../knowledge/references/salud/hsc-mo-reha-01-organizacion-servicio-rehabilitacion-2020/content.md

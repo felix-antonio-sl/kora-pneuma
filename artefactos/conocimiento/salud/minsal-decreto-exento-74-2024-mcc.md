@@ -1,1 +1,1 @@
-../../../products/salud/minsal-decreto-exento-74-2024-mcc/content.md
+../../../knowledge/references/salud/minsal-decreto-exento-74-2024-mcc/content.md

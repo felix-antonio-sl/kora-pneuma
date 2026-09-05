@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import re
+import shlex
 import tomllib
 
 import yaml
@@ -11,7 +13,7 @@ import yaml
 from .catalog import Catalog, File, Product
 
 
-def _resource_instructions(product: Product, dependencies: list[Product]) -> str:
+def _resource_instructions(catalog: Catalog, product: Product, dependencies: list[Product]) -> str:
     lines = [
         "## Recursos locales KORA",
         "",
@@ -29,14 +31,25 @@ def _resource_instructions(product: Product, dependencies: list[Product]) -> str
                 else ""
             )
             lines.append(
-                f"- `{dependency.id}` → `{dependency.content_path.resolve()}`{suffix}."
+                f"- `{dependency.id}` → `{dependency.content_path.absolute()}`{suffix}."
             )
+    if any(p.reference_root is not None for p in dependencies):
+        library = next(p.reference_root for p in dependencies if p.reference_root is not None)
+        entrypoint = catalog.root / "kora_cli.py"
+        if not entrypoint.is_file():
+            entrypoint = Path(__file__).resolve().parents[1] / "kora_cli.py"
+        resolver = shlex.join(["python3", str(entrypoint),
+                               "--root", str(library), "resolve", "URN"])
+        lines += ["", "El conocimiento publicado es de consulta. Su `object.yaml` indica "
+                  "el estado de publicación; `legacy` conserva disponibilidad sin una nueva aprobación. "
+                  "Para editarlo prepara un borrador con KORA; conserva la referencia vigente hasta aprobar la revisión.",
+                  f"Resuelve otras identidades y las referencias que añada el conocimiento con `{resolver}`."]
     return "\n".join(lines) + "\n"
 
 
-def _instructions(product: Product, dependencies: list[Product]) -> str:
+def _instructions(catalog: Catalog, product: Product, dependencies: list[Product]) -> str:
     # The source body remains an exact prefix, including its trailing whitespace.
-    return product.body + "\n\n" + _resource_instructions(product, dependencies)
+    return product.body + "\n\n" + _resource_instructions(catalog, product, dependencies)
 
 
 def _skill_files(product: Product, instructions: str, description: str) -> dict[str, File]:
@@ -69,7 +82,7 @@ def _render_product(catalog: Catalog, product: Product) -> dict[str, File]:
     ):
         raise ValueError(f"{product.id}: nombre nativo inseguro: {product.name!r}")
 
-    instructions = _instructions(product, dependencies)
+    instructions = _instructions(catalog, product, dependencies)
     if product.kind == "skill":
         return _skill_files(product, instructions, product.description)
 

@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-tiempo-ausentismo/content.md
+../../../knowledge/references/gn/gn-manual-tiempo-ausentismo/content.md

@@ -1,1 +1,1 @@
-../../../products/gn/kb-estructura-estado-chile/content.md
+../../../knowledge/references/gn/kb-estructura-estado-chile/content.md

@@ -1,1 +1,1 @@
-../../../products/kora/cat-contrato-ingenieria-agentica/content.md
+../../../knowledge/references/kora/cat-contrato-ingenieria-agentica/content.md

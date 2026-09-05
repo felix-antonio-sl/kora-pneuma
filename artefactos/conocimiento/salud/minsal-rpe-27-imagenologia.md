@@ -1,1 +1,1 @@
-../../../products/salud/minsal-rpe-27-imagenologia/content.md
+../../../knowledge/references/salud/minsal-rpe-27-imagenologia/content.md

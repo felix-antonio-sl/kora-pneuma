@@ -1,1 +1,1 @@
-../../../products/fxsl/lersch-tektonik-der-person/content.md
+../../../knowledge/references/fxsl/lersch-tektonik-der-person/content.md

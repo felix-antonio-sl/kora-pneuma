@@ -1,1 +1,1 @@
-../../../products/gn/gn-manual-servicios-flotas/content.md
+../../../knowledge/references/gn/gn-manual-servicios-flotas/content.md

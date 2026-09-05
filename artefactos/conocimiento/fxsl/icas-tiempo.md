@@ -1,1 +1,1 @@
-../../../products/fxsl/icas-tiempo/content.md
+../../../knowledge/references/fxsl/icas-tiempo/content.md

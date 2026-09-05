@@ -1,1 +1,1 @@
-../../../products/gn/gn-transferencia-ppr/content.md
+../../../knowledge/references/gn/gn-transferencia-ppr/content.md

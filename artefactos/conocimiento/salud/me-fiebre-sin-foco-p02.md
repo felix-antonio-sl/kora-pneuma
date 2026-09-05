@@ -1,1 +1,1 @@
-../../../products/salud/me-fiebre-sin-foco-p02/content.md
+../../../knowledge/references/salud/me-fiebre-sin-foco-p02/content.md
