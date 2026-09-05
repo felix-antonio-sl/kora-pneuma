@@ -187,7 +187,7 @@ terminaron con código cero y sus directorios temporales se eliminaron.
 
 Los canarios deben correrse sobre la realización que se quiera acreditar.
 La prueba conductual aquí corresponde a productos sintéticos independientes;
-la inspección de instalaciones KORA existentes fue de solo lectura.
+la inspección inicial de instalaciones KORA existentes fue de solo lectura.
 
 ## Preparación de la adopción
 
@@ -277,3 +277,39 @@ planificador verifica que un auxiliar sin origen se conserva, que un enlace
 no se sigue, que una preferencia disabled permanece y que la configuración
 ajena no se filtra al plan. Estas comprobaciones no sustituyen la revisión de
 la adopción real ni acreditan conducta de todo el corpus.
+
+## Instalación y conducta después del relevo
+
+El 2026-09-05 se verificaron los 170 archivos administrados de Codex contra
+el renderer de la raíz activa y sus recibos: bytes y modos coincidieron.
+App Server descubrió las 72 skills administradas, sin errores; conservó las
+doce preferencias de desactivación y mantuvo habilitada la entrada `$kora`.
+La configuración existente permaneció intacta.
+
+La apertura nativa de los 29 TOML instalados se observó mediante
+[`strace`](https://strace.io/), versión instalada 6.8, restringida a los
+syscalls de apertura y a esos 29 paths. El binario utiliza `open`, además
+de las variantes que puede emplear su plataforma. No se capturaron buffers
+ni paths de autenticación. Esta observación demuestra lectura por el proceso
+nativo y ausencia de rechazo de formato; no invocación conductual de cada rol.
+
+Una sesión nueva de App Server confirmó `gpt-6-astra` y esfuerzo `max`,
+activó directamente `$kora` y ejecutó seis comandos de lectura exitosos.
+Leyó la skill instalada, el README activo, resolvió las URNs de la guía y la
+semántica operacional mediante `kora_cli.py` y leyó ambos conocimientos.
+La respuesta conservó el criterio de originales recuperables y distinguió
+`recover` de `rollback`, incluido el bloqueo ante ediciones posteriores.
+No afirmó haber ejecutado una recuperación durante esa lectura.
+
+El proceso utilizó un montaje externo de solo lectura para instalación, fuente
+y autenticación, con estado efímero separado. Se omitió el sandbox interno
+redundante de Codex porque este kernel rechazó crear otro namespace dentro del
+montaje aislado. La protección observada corresponde al montaje externo.
+No hubo escrituras en la fuente ni en la instalación, ni delegación; los 170
+archivos, la configuración y la metadata de autenticación permanecieron
+intactos. No quedó un turno vivo.
+
+Esta evidencia corresponde a la KORA realmente instalada y al uso descrito.
+Las pruebas de autoría, actualización, inferencia de ambos destinos y recuperación
+están en [independencia](diseno.md#independencia-comprobada); los agentes de dominio
+no reciben por extensión una validación conductual individual.

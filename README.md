@@ -10,6 +10,11 @@ construcción de origen; las actualizaciones se realizan aquí.
 
 ## Operación
 
+En Codex, `$kora` activa KORA en la conversación actual. Los agentes también
+disponen de su rol nativo para delegación explícita. En Hermes, abre el perfil
+`kora` con el comando indicado más abajo. La CLI permite las mismas operaciones
+de archivos y mantenimiento sin depender de una conversación.
+
 Requiere Linux con `renameat2`, Python 3.12 y PyYAML 6.0.1, presentes en este host.
 La dependencia Python está en `requirements.txt`. Desde cualquier directorio:
 
@@ -124,5 +129,21 @@ ninguno de esos planos por sí solo prueba el mandato completo.
 - [Contrato efectivo de Hermes](docs/hermes.md).
 - [Migración, referencias y excepciones concretas](docs/migracion.md).
 
-El relevo final conserva la historia Git del repositorio anterior y deja una
-sola fuente activa por objeto. No requiere publicación remota.
+El relevo local se completó el 2026-09-05. El catálogo contiene 533 objetos
+activos y 21 archivados; la auditoría reconstruyó los 530 originales de pneuma
+y verificó por separado el complemento de 21 objetos recuperados. Las 76 pruebas
+del núcleo pasaron desde esta raíz. El recorrido independiente creó conocimiento,
+skill y agente, los instaló y actualizó en ambos destinos, observó inferencia
+real y comprobó recuperación sin acceso al núcleo anterior.
+
+Las instalaciones quedaron con 106 bundles y 300 archivos administrados.
+Codex descubrió sus 72 skills, abrió los 29 TOML nativos y una sesión nueva de
+`$kora` utilizó la CLI y el conocimiento actuales. Hermes cargó los seis
+perfiles completos y sus skills requeridas. `status` no informó cambios locales
+ni recuperación pendiente al cierre. Los límites de cada comprobación y las
+tres excepciones de referencias históricas están en los documentos enlazados.
+
+La historia anterior y los doce cambios previos de Félix están conservados;
+el relevo se integró en la rama local `fxai/relevo-kora-2026-09-05`.
+`kora-rebuild` conserva la historia de origen y sus respaldos privados, sin
+otra implementación activa. No se publicó Git remotamente.

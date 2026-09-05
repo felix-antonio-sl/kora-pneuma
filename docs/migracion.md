@@ -393,6 +393,14 @@ No encontró diferencias ni dependencias declaradas sin destino. Las tres
 referencias históricas incompatibles conservan el tratamiento explícito descrito
 arriba; no se presentan como referencias actuales resueltas.
 
+El cierre cotejó los 1.034 archivos capturados y los 618 blobs del commit de
+preservación. Los 70 archivos privados conservaron hash, modo e inode; los
+cuatro worktrees ajenos conservaron su registro, HEAD, rama y estado. Los seis
+enlaces externos siguen resolviendo: tres a conocimiento activo, dos a políticas
+archivadas y uno al directorio de enlaces de salud. El complemento mantuvo sus
+21 originales y 67 archivos exactos. No se detectaron cambios concurrentes
+en los insumos de esa auditoría.
+
 El relevo nativo dejó 106 bundles y 300 archivos administrados entre Codex y
 Hermes. Retiró 67 archivos anteriores con propiedad acreditada y comprobó 6.405
 archivos protegidos. La misma operación completa pasó un ensayo de instalación,
