@@ -401,7 +401,7 @@ archivadas y uno al directorio de enlaces de salud. El complemento mantuvo sus
 21 originales y 67 archivos exactos. No se detectaron cambios concurrentes
 en los insumos de esa auditoría.
 
-El relevo nativo dejó 106 bundles y 300 archivos administrados entre Codex y
+La adopción inicial dejó 106 bundles y 300 archivos administrados entre Codex y
 Hermes. Retiró 67 archivos anteriores con propiedad acreditada y comprobó 6.405
 archivos protegidos. La misma operación completa pasó un ensayo de instalación,
 rollback y reaplicación antes de ejecutarse en el home real. Los archivos
@@ -415,6 +415,20 @@ recursos; las sustituciones inversas reproducen cada archivo original completo.
 Los originales efectivamente desplazados quedan en
 `._local/clinical-consumer-update`. Estos wrappers continúan como fuentes nativas
 editables; no se creó una segunda copia canónica de su contenido sanitario.
+
+El recorrido publicado de búsqueda reveló un efecto de la migración física:
+`grep -rli` omitía los enlaces de conocimiento y devolvía cero coincidencias.
+Se cambió solo esa opción a `grep -Rli` en las tres copias vigentes del recurso
+de auditoría de coherencia HSC34. Cada comando publicado pasó a devolver las
+28 coincidencias existentes y resolubles. Los originales quedaron capturados
+en `._local/clinical-symlink-search-update`; la sustitución inversa reconstruye
+cada archivo. Los otros 58 recursos conservaron sus bytes y modos.
+
+Al ejecutar `install hermes` sin IDs, el mantenimiento completó la raíz general
+con las tres skills declaradas que aún no estaban allí: `autoria-de-persona`,
+`auditoria-artefactos-kora` y `mente-omega`, incluidos sus seis recursos.
+El total final pasó a 109 bundles y 309 archivos. La repetición de `install`
+para ambos destinos no cambió archivos, recibos ni el diario del último rollback.
 
 El antecedente del panel R01–R14 de `hd-hsc-os` no acreditaba una instalación
 vigente: su directorio `.codex/agents` estaba vacío. Se corrigió la receta del

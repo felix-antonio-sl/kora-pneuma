@@ -343,7 +343,7 @@ alcance probatorio, están en [diseño](diseno.md#independencia-comprobada).
 ## Instalación comprobada después del relevo
 
 El 2026-09-05 se actualizaron las realizaciones desde la raíz activa
-`/home/felix/kora-pneuma`. Hermes quedó con 34 bundles administrados, incluidas
+`/home/felix/kora-pneuma`. Hermes quedó con 37 bundles administrados, incluidas
 las instancias de skills en perfiles mixtos. La adopción y el retiro se hicieron
 por archivos de propiedad acreditada, conservando los originales desplazados.
 Las seis ubicaciones manuales de maquinaria se sustituyeron por sus funciones
@@ -361,3 +361,12 @@ El comprobador registró cero intentos de leer autenticación, memoria o sesione
 personales. Esta revisión no inició conversación; la inferencia real corresponde
 al recorrido independiente descrito arriba. Sus recibos privados permanecen bajo
 `._local`; no forman un inventario manual de mantenimiento.
+
+El mantenimiento general instaló después las tres skills declaradas que aún
+faltaban en la raíz: `auditoria-artefactos-kora`, `autoria-de-persona` y
+`mente-omega`. Se comprobaron sus nueve archivos, incluidos los seis recursos
+de mente omega, contra fuente y recibos. Las tres pasaron el parser, discovery
+y `skill_view` nativos en una vista de solo lectura, sin autenticación personal
+ni conversación. El registro final contiene 19 bundles Hermes de raíz y agentes,
+más 18 instancias en perfiles mixtos. Repetir la instalación conserva tanto
+los archivos como el diario del último rollback.

@@ -136,7 +136,7 @@ del núcleo pasaron desde esta raíz. El recorrido independiente creó conocimie
 skill y agente, los instaló y actualizó en ambos destinos, observó inferencia
 real y comprobó recuperación sin acceso al núcleo anterior.
 
-Las instalaciones quedaron con 106 bundles y 300 archivos administrados.
+Las instalaciones quedaron con 109 bundles y 309 archivos administrados.
 Codex descubrió sus 72 skills, abrió los 29 TOML nativos y una sesión nueva de
 `$kora` utilizó la CLI y el conocimiento actuales. Hermes cargó los seis
 perfiles completos y sus skills requeridas. `status` no informó cambios locales
