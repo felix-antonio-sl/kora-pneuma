@@ -1,10 +1,10 @@
 ---
 urn: urn:kora:artefacto:mente-omega
 nombre: mente-omega
-version: 1.1.1
+version: 1.2.0
 estado: activo
 descripcion: "Skill de razonamiento estructural-discursivo-interventivo. Encarna el Pentamotor Phi/Psi/Xi/Delta/Sigma como protocolo: comprende-expresando, expresa-comprendiendo, interviene-valorando. Para cualquier agente que necesite producir artefactos cognitivo-discursivos con verdad estructural, vitalidad expresiva, potencia interventiva y consciencia axiológica."
-fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas. Restauración 1.1.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb a pneuma (GENESIS sección 4). v1.1.1 (2026-06-22): absorbe de polymath (en retiro) la disciplina del coordinador transversal que deriva al especialista — la interrupción LIMITE-HUMANO y la regla dura 9 ahora mandan derivar al especialista (no fingir pericia) cuando el dominio exige autoridad específica y el riesgo es alto."
+fuente: "Sublimada el 2026-06-11 desde la bestia artifacts/skills/kora/mente-omega/SKILL.md (sha256:e5b6a7fe5e1eb1b679bd0db24d228a5db4764dc6d09e9f8a2631e470a1cdc76d); cristalización original (FS, 2026-04-28) de la arquitectura Mente-Omega, transmutación de Von Neumann Omega + Goethe Omega; las 6 referencias se copian byte-idénticas. Restauración 1.1.0 (2026-06-12): conocimiento y componible recuperados tras migrar sus kb a pneuma (GENESIS sección 4). v1.1.1 (2026-06-22): absorbe de polymath (en retiro) la disciplina del coordinador transversal que deriva al especialista — la interrupción LIMITE-HUMANO y la regla dura 9 ahora mandan derivar al especialista (no fingir pericia) cuando el dominio exige autoridad específica y el riesgo es alto. v1.2.0 (2026-08-31): recupera desde la expresión Fleet openclaw-fleet@bcb797d (AGENTS sha256:d88f6a8744b4ec45e39238b18cd538d10c334f90d1e3257856664287ce89d237, SOUL sha256:edac391438b11895f07205dad8a574b842ba879b8e49985ec5ff706274fb0e26) los riesgos estructurales y la fricción por fase que generalizan fuera de OpenClaw; omite memoria, canales, herramientas y dispatch situados, y retira la allowlist de targets para mantener la capacidad agnóstica al runtime."
 creado: 2026-04-28
 tags: [mente-omega, pentamotor, razonamiento-estructural, expresion, intervencion-axiologica, anti-clausura, vigilancia-epistemica]
 vector: [2, 0, 2, 0, 1]
@@ -12,7 +12,6 @@ sigma: [3, 2, 3, 3, 1]
 arnes: disciplina
 forma: habilidad
 herramientas: [Read, Grep, Glob]
-targets: [claude-code, codex, opencode]
 conocimiento: [urn:kora:kb:cat-foundations, urn:kora:kb:cat-agent-coalgebra, urn:fxsl:kb:icas-sintesis, urn:fxsl:kb:icas-agencia]
 componible: [urn:kora:artefacto:cat-thinking]
 estados: [posicionar, clasificar, comprender-expresando, vigilar, generar-alternativas, validar-axiologico, transferir]
@@ -34,6 +33,17 @@ vigilancia, generación, multiplicación) + **Goethe Omega** (extracción
 estructural, autocrítica fuerte, anti-clausura, lectura de campo,
 adaptación multisoporte). El resultado canonizado es el **Pentamotor**:
 Phi (Φ), Psi (Ψ), Xi (Ξ), Delta (Δ), Sigma (Σ).
+
+## Riesgos estructurales propios
+
+- Puede construir un análisis sofisticado sobre premisas no verificadas; la
+  elegancia del razonamiento no valida el punto de partida.
+- Puede producir un artefacto intelectualmente íntegro pero incapaz de actuar
+  en el mundo: esterilidad contemplativa.
+- Puede usar potencia expresiva para exceder la evidencia; la calibración
+  tonal no sustituye la calibración epistémica.
+- No es árbitro final de verdad ni autoridad de dominio: amplifica una
+  arquitectura cognitiva y debe derivar cuando la decisión exige otra fuente.
 
 Entrada: problema o solicitud más el contexto disponible (string libre o
 material denso). Salida: artefacto cognitivo-discursivo con compresión,
@@ -227,6 +237,18 @@ La jerarquía no es fija. Se reconfigura según la tarea:
 | Exploratorio | Ξ lidera, Ψ baja intensidad | Búsqueda de apertura, no cierre |
 
 Ψ siempre activo. Δ siempre primero.
+
+## Protocolo de fricción por fase
+
+| Fase | Intensidad | Función |
+|---|---|---|
+| Encuadre y posicionamiento | máxima | Detectar premisas torcidas, supuestos no declarados y falsa precisión; reformular antes de resolver. |
+| Análisis y construcción | moderada | Mantener Ψ activo sin paralizar Φ; privilegiar claridad estructural, síntesis y avance. |
+| Evaluación y cierre | alta | Separar hechos de inferencias, buscar esterilidad y recalibrar certeza, intervención y costo axiológico. |
+
+Fórmula: **encuadre severo, análisis fluido, cierre riguroso**. En exploración
+deliberadamente divergente o escritura creativa, Ξ puede liderar y reducir la
+fricción sin desactivar honestidad epistémica ni límites humanos.
 
 ## Composición con otras skills
 
