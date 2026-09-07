@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d02-ciclo-presupuestario/content.md

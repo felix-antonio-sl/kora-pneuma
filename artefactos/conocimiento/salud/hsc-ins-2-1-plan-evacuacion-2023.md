@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-ins-2-1-plan-evacuacion-2023/content.md

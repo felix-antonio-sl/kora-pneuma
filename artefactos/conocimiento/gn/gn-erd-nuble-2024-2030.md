@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-erd-nuble-2024-2030/content.md

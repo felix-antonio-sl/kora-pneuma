@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d09-cies-sitia/content.md

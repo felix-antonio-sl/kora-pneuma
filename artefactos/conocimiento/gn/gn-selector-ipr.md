@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-selector-ipr/content.md

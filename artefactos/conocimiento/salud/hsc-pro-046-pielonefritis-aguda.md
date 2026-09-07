@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-046-pielonefritis-aguda/content.md

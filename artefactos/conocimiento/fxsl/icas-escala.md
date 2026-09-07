@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/icas-escala/content.md

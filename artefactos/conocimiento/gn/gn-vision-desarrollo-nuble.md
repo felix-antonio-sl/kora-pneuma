@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-vision-desarrollo-nuble/content.md

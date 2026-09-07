@@ -1,1 +1,0 @@
-../../../knowledge/archive/references/kora/cat-caso-vertical-steipete-codex/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-apf-1-5-formato-recetas-prescripcion/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-170-plan-anual-prevencion-control-infecciones/content.md

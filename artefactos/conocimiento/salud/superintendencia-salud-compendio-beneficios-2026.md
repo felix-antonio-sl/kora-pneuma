@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/superintendencia-salud-compendio-beneficios-2026/content.md

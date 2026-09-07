@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-manual-contabilidad/content.md

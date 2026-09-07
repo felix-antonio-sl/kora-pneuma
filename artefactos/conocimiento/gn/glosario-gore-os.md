@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/glosario-gore-os/content.md

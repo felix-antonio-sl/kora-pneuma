@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-guia-programas-directos-gore/content.md

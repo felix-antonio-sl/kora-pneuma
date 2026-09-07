@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-psic-03-organizacion-seccion-psicosocial-2022/content.md

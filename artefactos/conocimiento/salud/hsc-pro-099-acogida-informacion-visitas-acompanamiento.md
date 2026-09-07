@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-099-acogida-informacion-visitas-acompanamiento/content.md

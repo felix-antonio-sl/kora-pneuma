@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/manual-metodologico-opm-es/content.md

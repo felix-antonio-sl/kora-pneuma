@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/gestion-redes-salud-mental-p03/content.md

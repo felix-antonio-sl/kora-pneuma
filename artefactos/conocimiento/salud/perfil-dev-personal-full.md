@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/perfil-dev-personal-full/content.md

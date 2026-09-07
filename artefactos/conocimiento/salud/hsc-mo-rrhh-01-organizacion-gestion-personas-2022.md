@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-rrhh-01-organizacion-gestion-personas-2022/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-daiu-003-organizacion-atencion-integral-usuario-2022/content.md

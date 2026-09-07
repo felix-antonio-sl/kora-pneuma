@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-103-acompanamiento-psicosocial-ive/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/allan-kelly-gemelo-digital-intelectual/content.md

@@ -51,7 +51,7 @@ def copy_operating_tree(work):
     if library == ROOT:
         raise RuntimeError("El ensayo requiere una biblioteca separada mediante el enlace knowledge")
     work.mkdir()
-    for name in ("kora", "products", "archive/products", "artefactos", "docs", "tests", "scripts"):
+    for name in ("kora", "products", "archive/products", "docs", "tests", "scripts"):
         shutil.copytree(ROOT / name, work / name, symlinks=True,
                         ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):

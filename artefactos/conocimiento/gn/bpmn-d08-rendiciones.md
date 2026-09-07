@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/bpmn-d08-rendiciones/content.md

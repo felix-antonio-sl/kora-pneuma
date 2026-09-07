@@ -1,1 +1,0 @@
-../../../knowledge/references/kora/frontera-fuentes-tecnicas/content.md

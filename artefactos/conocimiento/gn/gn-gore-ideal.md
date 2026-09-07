@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-gore-ideal/content.md

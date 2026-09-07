@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-gcl-3-3-precauciones-estandar/content.md

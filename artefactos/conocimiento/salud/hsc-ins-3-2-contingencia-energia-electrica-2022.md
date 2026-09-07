@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-ins-3-2-contingencia-energia-electrica-2022/content.md

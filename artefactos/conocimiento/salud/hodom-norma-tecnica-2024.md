@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hodom-norma-tecnica-2024/content.md

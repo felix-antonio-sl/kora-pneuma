@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-guia-comunicaciones/content.md

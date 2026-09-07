@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-eq-3-1-perfil-operador-equipamiento-relevante-2024/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-gcl-3-3-prevencion-itu-cup-2024/content.md

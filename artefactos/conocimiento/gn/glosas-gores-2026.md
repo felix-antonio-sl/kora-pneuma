@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/glosas-gores-2026/content.md

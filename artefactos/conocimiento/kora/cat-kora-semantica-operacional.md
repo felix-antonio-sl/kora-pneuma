@@ -1,1 +1,0 @@
-../../../knowledge/references/kora/cat-kora-semantica-operacional/content.md

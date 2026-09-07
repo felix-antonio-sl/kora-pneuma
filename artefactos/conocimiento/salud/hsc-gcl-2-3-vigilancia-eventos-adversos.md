@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-gcl-2-3-vigilancia-eventos-adversos/content.md

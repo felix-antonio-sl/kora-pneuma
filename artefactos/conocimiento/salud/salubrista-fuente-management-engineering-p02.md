@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/salubrista-fuente-management-engineering-p02/content.md

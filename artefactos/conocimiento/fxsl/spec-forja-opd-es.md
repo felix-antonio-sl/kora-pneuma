@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/spec-forja-opd-es/content.md

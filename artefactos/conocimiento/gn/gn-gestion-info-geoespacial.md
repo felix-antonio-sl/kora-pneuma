@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-gestion-info-geoespacial/content.md

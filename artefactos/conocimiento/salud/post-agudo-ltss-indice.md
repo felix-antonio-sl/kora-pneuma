@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/post-agudo-ltss-indice/content.md

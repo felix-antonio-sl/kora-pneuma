@@ -31,8 +31,9 @@ conservan como `legacy`, sin inventarles una aprobación nueva.
 
 `docs/operacion.md` es la guía vigente. Los originales archivados y las guías
 anteriores sirven para investigar procedencia, sin gobernar la operación actual.
-`artefactos/conocimiento` mantiene solo los enlaces de lectura necesarios para
-consumidores existentes, dirigidos a las referencias de la biblioteca.
+Los consumidores leen directamente `knowledge/references` o la biblioteca
+indicada con `--knowledge-root`. La capa histórica de enlaces
+`artefactos/conocimiento` está retirada y no forma parte de la operación.
 
 La interfaz es `python3 kora_cli.py --help`. `catalog.py` representa y resuelve;
 `authoring.py` conserva y crea fuentes; `knowledge.py` conduce entrada, borrador

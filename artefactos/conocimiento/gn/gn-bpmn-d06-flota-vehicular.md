@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d06-flota-vehicular/content.md

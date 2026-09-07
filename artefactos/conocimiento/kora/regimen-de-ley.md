@@ -1,1 +1,0 @@
-../../../knowledge/references/kora/regimen-de-ley/content.md

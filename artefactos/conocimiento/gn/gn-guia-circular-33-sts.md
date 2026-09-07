@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-guia-circular-33-sts/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-fiebre-sin-foco/content.md

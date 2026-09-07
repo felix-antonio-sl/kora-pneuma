@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-045-contingencia-unidad-emergencia-2013/content.md

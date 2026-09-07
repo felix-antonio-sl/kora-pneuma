@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/david-allen-gemelo-digital-intelectual/content.md

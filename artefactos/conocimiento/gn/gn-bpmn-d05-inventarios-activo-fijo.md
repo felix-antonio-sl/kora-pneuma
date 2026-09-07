@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d05-inventarios-activo-fijo/content.md

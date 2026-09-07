@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-instructivo-subvencion-8-2025-sts/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-arsenal-farmacoterapeutico-2026/content.md

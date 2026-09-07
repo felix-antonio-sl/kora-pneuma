@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d03-gestion-ipr/content.md

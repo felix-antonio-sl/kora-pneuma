@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hodom-situacion-chile-2026-p04/content.md

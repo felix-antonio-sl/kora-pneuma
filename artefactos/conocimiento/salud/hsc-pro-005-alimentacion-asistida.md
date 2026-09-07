@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-005-alimentacion-asistida/content.md

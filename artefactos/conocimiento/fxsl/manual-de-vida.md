@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/manual-de-vida/content.md

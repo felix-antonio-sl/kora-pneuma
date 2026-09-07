@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-abast-01-organizacion-abastecimiento-2022/content.md

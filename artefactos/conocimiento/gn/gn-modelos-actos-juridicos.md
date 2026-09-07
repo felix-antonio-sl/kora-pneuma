@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-modelos-actos-juridicos/content.md

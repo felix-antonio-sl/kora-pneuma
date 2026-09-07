@@ -1,1 +1,0 @@
-../../../knowledge/references/dev/cierre-operativo/content.md

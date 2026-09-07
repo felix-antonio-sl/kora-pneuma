@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/estandares-it-receta-electronica/content.md

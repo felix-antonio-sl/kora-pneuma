@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-17-4-solicitud-medicamentos-uso-restringido/content.md

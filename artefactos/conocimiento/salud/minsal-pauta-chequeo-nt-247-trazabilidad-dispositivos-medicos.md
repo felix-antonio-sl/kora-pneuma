@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/minsal-pauta-chequeo-nt-247-trazabilidad-dispositivos-medicos/content.md

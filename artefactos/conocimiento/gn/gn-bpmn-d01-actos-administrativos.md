@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d01-actos-administrativos/content.md

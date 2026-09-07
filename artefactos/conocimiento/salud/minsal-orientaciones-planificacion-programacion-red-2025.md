@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/minsal-orientaciones-planificacion-programacion-red-2025/content.md

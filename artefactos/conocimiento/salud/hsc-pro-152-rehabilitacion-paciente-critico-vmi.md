@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-152-rehabilitacion-paciente-critico-vmi/content.md

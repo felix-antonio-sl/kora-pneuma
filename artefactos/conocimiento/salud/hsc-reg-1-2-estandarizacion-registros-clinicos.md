@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-reg-1-2-estandarizacion-registros-clinicos/content.md

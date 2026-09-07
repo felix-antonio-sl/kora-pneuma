@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/minsal-plan-campana-invierno-2025/content.md

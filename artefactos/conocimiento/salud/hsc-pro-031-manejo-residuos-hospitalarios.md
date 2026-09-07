@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-031-manejo-residuos-hospitalarios/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-054-derivacion-tdah/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-cal-1-1-politica-calidad-seguridad-paciente-2020/content.md

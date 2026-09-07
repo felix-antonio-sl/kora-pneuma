@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/tensiones-modelamiento/content.md

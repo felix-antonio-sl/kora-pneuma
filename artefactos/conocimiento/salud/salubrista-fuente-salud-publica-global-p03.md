@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/salubrista-fuente-salud-publica-global-p03/content.md

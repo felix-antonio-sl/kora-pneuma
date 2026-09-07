@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-apl-1-2-toma-traslado-muestras-2025/content.md

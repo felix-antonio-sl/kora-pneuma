@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-infecciones-respiratorias-bajas/content.md

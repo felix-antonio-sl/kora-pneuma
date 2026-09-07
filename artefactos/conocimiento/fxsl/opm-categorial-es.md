@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/opm-categorial-es/content.md

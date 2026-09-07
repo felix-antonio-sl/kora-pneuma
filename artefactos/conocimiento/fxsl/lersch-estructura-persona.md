@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/lersch-estructura-persona/content.md

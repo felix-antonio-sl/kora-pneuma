@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d07-rrhh/content.md

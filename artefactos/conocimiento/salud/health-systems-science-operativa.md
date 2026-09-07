@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/health-systems-science-operativa/content.md

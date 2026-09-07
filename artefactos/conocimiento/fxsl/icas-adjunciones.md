@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/icas-adjunciones/content.md

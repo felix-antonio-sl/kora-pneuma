@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-hemorragia-digestiva-p02/content.md

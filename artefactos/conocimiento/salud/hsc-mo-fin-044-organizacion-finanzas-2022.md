@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-fin-044-organizacion-finanzas-2022/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-apf-1-4-rotulacion-envasado-despacho/content.md

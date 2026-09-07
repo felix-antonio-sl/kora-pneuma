@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hodom-manual-alta-complejidad-p02/content.md

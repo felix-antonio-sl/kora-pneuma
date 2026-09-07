@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-dig-005-modelo-organizacion-dig-2023/content.md

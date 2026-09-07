@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/icas-higher-categories/content.md

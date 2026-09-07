@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-ugdp-mov-002-organizacion-copia-observada/content.md

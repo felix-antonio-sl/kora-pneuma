@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/minsal-rpe-27-imagenologia/content.md

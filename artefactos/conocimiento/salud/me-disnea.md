@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-disnea/content.md

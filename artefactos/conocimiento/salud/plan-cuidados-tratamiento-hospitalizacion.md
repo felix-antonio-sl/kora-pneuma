@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/plan-cuidados-tratamiento-hospitalizacion/content.md

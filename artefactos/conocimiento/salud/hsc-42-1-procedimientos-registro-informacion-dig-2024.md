@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-42-1-procedimientos-registro-informacion-dig-2024/content.md

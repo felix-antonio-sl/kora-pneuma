@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-ins-3-1-mantenimiento-preventivo-instalaciones-2025/content.md

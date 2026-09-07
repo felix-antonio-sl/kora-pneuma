@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-uci-01-organizacion-unidad-cuidados-intensivos-2022/content.md

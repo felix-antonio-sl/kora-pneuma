@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/epidemiologia-aplicada-decision/content.md

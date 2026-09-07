@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-bpmn-d04-compras-contrataciones/content.md

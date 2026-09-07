@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hodom-direccion-tecnica-p02/content.md

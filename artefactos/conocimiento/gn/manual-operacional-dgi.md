@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/manual-operacional-dgi/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/plan-potenciamiento-dgi/content.md

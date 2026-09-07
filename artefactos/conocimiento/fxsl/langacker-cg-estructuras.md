@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/langacker-cg-estructuras/content.md

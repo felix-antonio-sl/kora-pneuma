@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-sa-est-002-modelo-organizacion-esterilizacion-2022/content.md

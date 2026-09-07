@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-186-teletaco-anticoagulante-oral/content.md

@@ -51,11 +51,11 @@ archivos; un commit no aprueba su contenido.
 ## Raíces y traslado
 
 La raíz de maquinaria se deriva del programa invocado y se reemplaza con
-`--root`. El enlace `knowledge -> ../kora-knowledge` selecciona la biblioteca;
-`--knowledge-root` permite elegir otra. Núcleo, métodos de operación, agentes,
-skills y comprobaciones se mantienen en la maquinaria. La biblioteca es una
-dependencia explícita de los consumidores que requieren conocimiento, y puede
-consultarse sin el repositorio de agentes y skills.
+`--root`. El enlace `knowledge -> ../kora-knowledge` da acceso directo a la
+biblioteca; `--knowledge-root` permite elegir otra. Núcleo, métodos de operación,
+agentes, skills y comprobaciones se mantienen en la maquinaria. La biblioteca es
+una dependencia explícita de los consumidores que requieren conocimiento, y
+puede consultarse sin el repositorio de agentes y skills.
 
 Las realizaciones nativas señalan fuentes y referencias de esas raíces. Si
 cambia su ubicación absoluta, se reinstalan los consumidores para actualizar las
@@ -65,10 +65,11 @@ durante ese traslado. La guía explica cómo probar con raíces y home temporale
 Los instrumentos, instrucciones y resultados de la construcción concluida se
 conservan en `archive/reconstruction`, fuera del núcleo y de la suite vigente.
 Los originales reemplazados conservan su procedencia en `archive/previous`.
-Los enlaces de `artefactos/conocimiento` resuelven hacia referencias de la
-biblioteca y mantienen lecturas de consumidores existentes. Las guías antiguas
-del corpus se conservan como antecedentes; esta documentación y los métodos
-vigentes describen la operación actual.
+Los consumidores leen directamente `references/<namespace>/<name>` en la
+biblioteca seleccionada. La capa histórica de enlaces de
+`artefactos/conocimiento` fue retirada y no participa en la resolución ni en las
+realizaciones. Las guías antiguas del corpus se conservan como antecedentes;
+esta documentación y los métodos vigentes describen la operación actual.
 
 El ensayo de independencia usa una copia de la maquinaria y una biblioteca
 explícita en un montaje sin red, home personal ni archivo de reconstrucción.

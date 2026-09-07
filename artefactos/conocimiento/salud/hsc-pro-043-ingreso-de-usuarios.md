@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-043-ingreso-de-usuarios/content.md

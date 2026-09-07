@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-134-gestion-pacientes-recorte-hodom/content.md

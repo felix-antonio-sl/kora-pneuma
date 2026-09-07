@@ -1,1 +1,0 @@
-../../../knowledge/references/dev/jointjs-docs/content.md

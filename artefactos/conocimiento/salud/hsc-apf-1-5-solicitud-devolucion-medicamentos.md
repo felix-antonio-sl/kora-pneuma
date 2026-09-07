@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-apf-1-5-solicitud-devolucion-medicamentos/content.md

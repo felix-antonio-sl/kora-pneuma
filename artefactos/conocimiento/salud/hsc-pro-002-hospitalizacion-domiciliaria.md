@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-002-hospitalizacion-domiciliaria/content.md

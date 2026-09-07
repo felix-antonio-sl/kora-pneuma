@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-dp-5-1-presentacion-casos-comite-etica-asistencial-2024/content.md

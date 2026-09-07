@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-041-referencia-contrarreferencia-tiroides/content.md

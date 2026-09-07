@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-058-dm2-insulinorrequiriente-mal-control/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/umbrales-clinicos-hospitalizacion/content.md

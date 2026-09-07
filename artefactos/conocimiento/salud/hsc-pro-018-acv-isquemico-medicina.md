@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-018-acv-isquemico-medicina/content.md

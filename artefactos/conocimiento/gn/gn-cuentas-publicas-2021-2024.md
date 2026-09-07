@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-cuentas-publicas-2021-2024/content.md

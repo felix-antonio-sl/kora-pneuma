@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-cap-02-organizacion-capacitacion-desarrollo-2022/content.md

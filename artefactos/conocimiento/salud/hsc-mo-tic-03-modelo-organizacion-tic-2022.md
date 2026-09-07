@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-tic-03-modelo-organizacion-tic-2022/content.md

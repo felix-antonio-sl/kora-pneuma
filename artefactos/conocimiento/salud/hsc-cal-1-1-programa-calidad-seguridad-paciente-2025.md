@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-cal-1-1-programa-calidad-seguridad-paciente-2025/content.md

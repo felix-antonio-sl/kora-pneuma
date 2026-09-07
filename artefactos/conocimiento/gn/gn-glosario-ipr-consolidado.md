@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-glosario-ipr-consolidado/content.md

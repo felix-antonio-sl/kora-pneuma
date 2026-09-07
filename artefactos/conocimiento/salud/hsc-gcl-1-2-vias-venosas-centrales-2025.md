@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-gcl-1-2-vias-venosas-centrales-2025/content.md

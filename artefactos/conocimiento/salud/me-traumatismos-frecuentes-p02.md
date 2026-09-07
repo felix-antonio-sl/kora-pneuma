@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-traumatismos-frecuentes-p02/content.md

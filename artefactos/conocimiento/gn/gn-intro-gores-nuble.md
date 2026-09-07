@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-intro-gores-nuble/content.md

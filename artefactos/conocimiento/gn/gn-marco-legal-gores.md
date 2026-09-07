@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-marco-legal-gores/content.md

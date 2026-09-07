@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-rh-4-2-accidentes-sangre-fluidos-riesgo-2023/content.md

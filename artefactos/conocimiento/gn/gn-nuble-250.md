@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-nuble-250/content.md

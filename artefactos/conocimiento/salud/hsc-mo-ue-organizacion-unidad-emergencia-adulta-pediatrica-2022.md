@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-ue-organizacion-unidad-emergencia-adulta-pediatrica-2022/content.md

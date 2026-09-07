@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/ssot-ipr-lifecycle/content.md

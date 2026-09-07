@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-indicadores-nuble/content.md

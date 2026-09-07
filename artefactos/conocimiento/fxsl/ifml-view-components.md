@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/ifml-view-components/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/minsal-contactabilidad-nucleo-operativo/content.md

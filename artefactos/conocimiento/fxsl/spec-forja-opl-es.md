@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/spec-forja-opl-es/content.md

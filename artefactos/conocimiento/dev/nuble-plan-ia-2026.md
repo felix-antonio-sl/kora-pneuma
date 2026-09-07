@@ -1,1 +1,0 @@
-../../../knowledge/references/dev/nuble-plan-ia-2026/content.md

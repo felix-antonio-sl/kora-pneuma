@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-deficit-neurologico-p02/content.md

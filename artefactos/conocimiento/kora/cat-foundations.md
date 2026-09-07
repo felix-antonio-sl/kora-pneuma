@@ -1,1 +1,0 @@
-../../../knowledge/references/kora/cat-foundations/content.md

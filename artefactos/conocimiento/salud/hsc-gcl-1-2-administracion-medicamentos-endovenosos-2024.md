@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-gcl-1-2-administracion-medicamentos-endovenosos-2024/content.md

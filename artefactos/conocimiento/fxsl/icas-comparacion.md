@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/icas-comparacion/content.md

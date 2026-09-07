@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-ins-3-2-contingencia-agua-potable-estanques-2026/content.md

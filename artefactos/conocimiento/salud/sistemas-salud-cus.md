@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/sistemas-salud-cus/content.md

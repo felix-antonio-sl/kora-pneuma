@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gestion-prpto-2026/content.md

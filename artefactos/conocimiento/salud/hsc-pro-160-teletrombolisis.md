@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-160-teletrombolisis/content.md

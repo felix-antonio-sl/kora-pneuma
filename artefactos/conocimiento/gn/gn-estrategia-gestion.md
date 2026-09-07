@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-estrategia-gestion/content.md

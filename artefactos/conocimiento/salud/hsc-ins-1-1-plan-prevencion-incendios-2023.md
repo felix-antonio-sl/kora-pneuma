@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-ins-1-1-plan-prevencion-incendios-2023/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/post-agudo-ltss-transiciones/content.md

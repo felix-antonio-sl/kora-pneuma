@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/me-dolor-toracico/content.md

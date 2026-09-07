@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-farm-001-modelo-organizacion-farmacia-2023/content.md

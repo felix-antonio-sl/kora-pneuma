@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-aoc-2-2-entrega-turno-medico-urgencia/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-guia-fril-2025-sts/content.md

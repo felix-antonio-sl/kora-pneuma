@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/reglas-opm-estrictas-es/content.md

@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gestion-ipr/content.md

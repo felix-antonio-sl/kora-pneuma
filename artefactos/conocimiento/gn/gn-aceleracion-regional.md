@@ -1,1 +1,0 @@
-../../../knowledge/references/gn/gn-aceleracion-regional/content.md

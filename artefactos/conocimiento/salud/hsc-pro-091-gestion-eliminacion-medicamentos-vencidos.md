@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-pro-091-gestion-eliminacion-medicamentos-vencidos/content.md

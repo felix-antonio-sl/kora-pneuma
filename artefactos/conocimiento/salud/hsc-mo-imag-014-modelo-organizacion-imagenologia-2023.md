@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hsc-mo-imag-014-modelo-organizacion-imagenologia-2023/content.md

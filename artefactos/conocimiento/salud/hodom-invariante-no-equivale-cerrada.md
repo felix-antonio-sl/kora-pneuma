@@ -1,1 +1,0 @@
-../../../knowledge/references/salud/hodom-invariante-no-equivale-cerrada/content.md

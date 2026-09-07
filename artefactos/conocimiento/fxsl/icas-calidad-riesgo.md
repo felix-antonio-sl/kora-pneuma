@@ -1,1 +1,0 @@
-../../../knowledge/references/fxsl/icas-calidad-riesgo/content.md
