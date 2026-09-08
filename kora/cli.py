@@ -55,7 +55,7 @@ def _build_instances(catalog: Catalog, target: str, instances) -> dict[str, dict
         if profile is not None and product.kind != "skill":
             raise KoraError(f"La instancia del perfil {profile} requiere una skill activa: {product.id}")
         for member in [product, *catalog.dependencies(product, target)]:
-            snapshots[member.id] = member.fingerprint()
+            snapshots[member.id] = member.fingerprint(portable=False)
     bundles = {}
     for product, profile in instances:
         files = render(catalog, product)
@@ -67,7 +67,7 @@ def _build_instances(catalog: Catalog, target: str, instances) -> dict[str, dict
                      for path, file in files.items()}
         bundles[_bundle_key(target, product.id, profile)] = files
     for identifier, fingerprint in snapshots.items():
-        if catalog.get(identifier).fingerprint() != fingerprint:
+        if catalog.get(identifier).fingerprint(portable=False) != fingerprint:
             raise KoraError(f"La fuente cambió durante realización: {identifier}")
     # Check physical collisions before any output directory or runtime is touched.
     flat = {}

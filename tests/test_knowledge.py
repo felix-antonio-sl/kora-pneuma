@@ -61,6 +61,100 @@ class KnowledgePublicationTests(unittest.TestCase):
         metadata.update(changes)
         (draft.directory / "object.yaml").write_text(yaml.safe_dump(metadata))
 
+    def clone_library(self):
+        def git(*args):
+            subprocess.run(["git", "-c", "core.hooksPath=/dev/null", *args],
+                           cwd=self.store, check=True, capture_output=True)
+
+        git("init", "-q")
+        git("add", "--", ".")
+        git("-c", "user.name=KORA test", "-c", "user.email=test@localhost",
+            "-c", "commit.gpgsign=false", "commit", "-qm", "Published fixture")
+        clone = self.base / "clone"
+        git("clone", "--quiet", "--no-local", str(self.store), str(clone))
+        return clone
+
+    def test_published_hashes_survive_git_clone_but_detect_bytes_and_executability_changes(self):
+        draft = self.draft(sources=[self.source])
+        draft.content_path.chmod(0o600)
+        (draft.directory / "object.yaml").chmod(0o664)
+        script = draft.directory / "read.sh"
+        script.write_text("#!/bin/sh\ncat content.md\n")
+        script.chmod(0o750)
+        reviewed = review(self.store, draft.id)["reviewed_sha256"]
+        draft.content_path.chmod(0o640)
+        script.chmod(0o755)
+        self.assertEqual(review(self.store, draft.id)["reviewed_sha256"], reviewed)
+        first = approve(self.store, draft.id, reviewed)
+        clone = self.clone_library()
+        copied = Catalog(clone).get(first.id)
+        self.assertEqual(copied.revision, first.revision)
+        self.assertEqual(copied.metadata["publication"]["hash_mode"], "git-v1")
+        self.assertEqual(Catalog(clone).reference_issues(), [])
+        copied_script = copied.directory / "read.sh"
+        copied_script.chmod(0o644)
+        with self.assertRaises(KoraError):
+            Catalog(clone).get(first.id)
+        copied_script.chmod(0o755)
+        original = copied.content_path.read_bytes()
+        copied.content_path.write_bytes(original + b"Unreviewed change.\n")
+        with self.assertRaises(KoraError):
+            Catalog(clone).get(first.id)
+        copied.content_path.write_bytes(original)
+        second_draft = revise(clone, first.id)
+        second_draft.content_path.write_text("A reviewed replacement.\n")
+        second = approve(clone, first.id, review(clone, first.id)["reviewed_sha256"])
+        self.assertNotEqual(second.revision, first.revision)
+        self.assertEqual(Catalog(clone).at_revision(first.id, first.revision).body, first.body)
+
+    def test_legacy_modes_preserve_existing_version_names_and_bytes_after_git_clone(self):
+        # Fixed fixture created by the original Unix-mode hash implementation.
+        revision = "fd141f821443705800e62b3b2ef26a02e4806cbb74a3482c706c4edcce500630"
+        version = self.store / "versions/test/permission" / revision
+        version.mkdir(parents=True)
+        (version / "content.md").write_bytes(b"Valid permission; revocation takes precedence.\n")
+        (version / "content.md").chmod(0o600)
+        (version / "object.yaml").write_text(
+            "id: urn:test:kb:permission\nkind: knowledge\nname: permission\n"
+            "description: Permission and exception\ncontent: content.md\n"
+            "publication:\n  status: legacy\n"
+            "  sha256: 5f164dd03e0d2f4d0a91cb179e0785682bac2985a20e20f05638a3118cb609ee\n"
+        )
+        (version / "object.yaml").chmod(0o664)
+        reference = self.store / "references/test/permission"
+        reference.parent.mkdir(parents=True)
+        reference.symlink_to(f"../../versions/test/permission/{revision}")
+        first = Catalog(self.store).get(self.identifier)
+        original = {p.name: p.read_bytes() for p in version.iterdir()}
+        (self.store / "legacy-modes.yaml").write_text(yaml.safe_dump({
+            revision: {"content.md": 0o600, "object.yaml": 0o664},
+        }))
+        clone = self.clone_library()
+        copied = Catalog(clone).get(self.identifier)
+        self.assertEqual(copied.revision, revision)
+        self.assertEqual({p.name: p.read_bytes() for p in copied.directory.iterdir()}, original)
+        self.assertEqual(copied.metadata["publication"]["status"], "legacy")
+        copied.content_path.chmod(0o755)
+        with self.assertRaises(KoraError):
+            Catalog(clone).get(self.identifier)
+        copied.content_path.chmod(0o644)
+        modes = clone / "legacy-modes.yaml"
+        preserved = modes.read_bytes()
+        modes.unlink()
+        with self.assertRaises(KoraError):
+            Catalog(clone).get(self.identifier)
+        modes.write_bytes(preserved)
+        draft = revise(clone, self.identifier)
+        draft.content_path.write_text("Updated rule, explicitly approved in this test.\n")
+        updated = approve(clone, self.identifier, review(clone, self.identifier)["reviewed_sha256"])
+        self.assertEqual(updated.metadata["publication"]["hash_mode"], "git-v1")
+        self.assertEqual(Catalog(clone).at_revision(self.identifier, revision).body, first.body)
+        self.assertEqual(modes.read_bytes(), preserved)
+        previous = Catalog(clone).at_revision(self.identifier, revision)
+        previous.content_path.write_text("An alteration of the historical content.\n")
+        with self.assertRaises(KoraError):
+            Catalog(clone).at_revision(self.identifier, revision)
+
     def test_draft_is_not_consultable_or_a_realizable_dependency_before_approval(self):
         draft = self.draft()
         consumer = self.consumer()

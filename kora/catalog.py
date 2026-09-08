@@ -43,6 +43,18 @@ def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _digest_mode(relative, mode, *, portable, legacy_modes):
+    """Git preserves the owner's executable bit, not local access permissions."""
+    executable = bool(mode & stat.S_IXUSR)
+    if legacy_modes is not None:
+        previous = legacy_modes.get(relative)
+        if (type(previous) is not int or not 0 <= previous <= 0o7777
+                or bool(previous & stat.S_IXUSR) != executable):
+            raise KoraError(f"Modo histórico ausente o ejecutabilidad modificada: {relative}")
+        return previous
+    return (0o755 if executable else 0o644) if portable else mode
+
+
 def safe_relative(value: str) -> Path:
     if not isinstance(value, str) or not value or "\\" in value:
         raise KoraError(f"Ruta relativa inválida: {value!r}")
@@ -76,6 +88,7 @@ class Product:
     metadata: dict
     revision: str | None = None
     reference_root: Path | None = None
+    legacy_modes: dict | None = None
 
     @property
     def id(self):
@@ -123,21 +136,28 @@ class Product:
                 path.read_bytes(), stat.S_IMODE(path.stat().st_mode))
         return resources
 
-    def fingerprint(self) -> str:
+    def fingerprint(self, *, portable=True, legacy_modes=None) -> str:
         if read_yaml(self.directory / "object.yaml") != self.metadata:
             raise KoraError(f"La ficha cambió durante la operación: {self.id}")
         h = hashlib.sha256()
+        paths = set()
         for path in sorted(self.directory.rglob("*")):
             if path.is_symlink():
                 raise KoraError(f"Recurso enlazado: {path}")
             if path.is_file():
-                h.update(path.relative_to(self.directory).as_posix().encode() + b"\0")
-                h.update(str(stat.S_IMODE(path.stat().st_mode)).encode() + b"\0")
+                relative = path.relative_to(self.directory).as_posix()
+                paths.add(relative)
+                mode = _digest_mode(relative, stat.S_IMODE(path.stat().st_mode),
+                                    portable=portable, legacy_modes=legacy_modes)
+                h.update(relative.encode() + b"\0")
+                h.update(str(mode).encode() + b"\0")
                 h.update(path.read_bytes())
+        if legacy_modes is not None and paths != legacy_modes.keys():
+            raise KoraError(f"Los modos históricos no corresponden a los archivos: {self.id}")
         return h.hexdigest()
 
 
-def reference_digest(product: Product) -> str:
+def reference_digest(product: Product, *, portable=True, legacy_modes=None) -> str:
     """Identify exactly the reviewed metadata, content and resources, before approval."""
     if read_yaml(product.directory / "object.yaml") != product.metadata:
         raise KoraError(f"La ficha cambió durante la operación: {product.id}")
@@ -146,7 +166,8 @@ def reference_digest(product: Product) -> str:
     files = {product.metadata["content"]: File(product.content_path.read_bytes(),
               stat.S_IMODE(product.content_path.stat().st_mode)), **product.resources()}
     for relative, file in sorted(files.items()):
-        h.update(relative.encode() + b"\0" + str(file.mode).encode() + b"\0")
+        mode = _digest_mode(relative, file.mode, portable=portable, legacy_modes=legacy_modes)
+        h.update(relative.encode() + b"\0" + str(mode).encode() + b"\0")
         h.update(digest(file.data).encode() + b"\0")
     return h.hexdigest()
 
@@ -164,7 +185,7 @@ def knowledge_root(root: Path, explicit: Path | None = None) -> Path:
     return root
 
 
-def read_product(directory: Path, revision=None, reference_root=None) -> Product:
+def read_product(directory: Path, revision=None, reference_root=None, legacy_modes=None) -> Product:
     path = directory / "object.yaml"
     metadata = read_yaml(path)
     if not isinstance(metadata, dict):
@@ -189,7 +210,7 @@ def read_product(directory: Path, revision=None, reference_root=None) -> Product
         not isinstance(v, list) or any(not isinstance(x, str) for x in v) for v in relations.values()
     ):
         raise KoraError(f"{path}: relaciones debe mapear tipo a lista de identidades")
-    product = Product(directory, metadata, revision, reference_root)
+    product = Product(directory, metadata, revision, reference_root, legacy_modes)
     product.content_path
     return product
 
@@ -201,8 +222,21 @@ class Catalog:
         self.products: dict[str, Product] = {}
         self.archived: dict[str, Product] = {}
         self.aliases = {}
+        self.legacy_modes = {}
         roots = [self.root] if self.knowledge_root == self.root else [self.root, self.knowledge_root]
         for source in roots:
+            modes_path = source / "legacy-modes.yaml"
+            modes = read_yaml(modes_path) if modes_path.exists() else {}
+            if not isinstance(modes, dict) or any(not isinstance(v, dict) for v in modes.values()):
+                raise KoraError(f"Modos históricos inválidos: {modes_path}")
+            for revision, files in modes.items():
+                if not re.fullmatch(r"[0-9a-f]{64}", revision):
+                    raise KoraError(f"Revisión histórica inválida: {modes_path}")
+                for relative, mode in files.items():
+                    safe_relative(relative)
+                    if type(mode) is not int or not 0 <= mode <= 0o7777:
+                        raise KoraError(f"Modo histórico inválido: {modes_path}: {relative}")
+            self.legacy_modes[source] = modes
             aliases = read_yaml(source / "aliases.yaml") if (source / "aliases.yaml").exists() else {}
             if not isinstance(aliases, dict):
                 raise KoraError("aliases.yaml debe mapear identidad anterior a identidad conservada")
@@ -227,7 +261,8 @@ class Catalog:
         for path, active, container, revision, reference_root in paths:
             if path.is_symlink() or (revision is None and not path.resolve().is_relative_to(container)):
                 raise KoraError(f"Ficha fuera de products: {path}")
-            product = read_product(path.parent, revision, reference_root)
+            modes = self.legacy_modes.get(reference_root, {}).get(revision)
+            product = read_product(path.parent, revision, reference_root, modes)
             if self.knowledge_root != self.root and revision is None and product.kind == "knowledge":
                 raise KoraError(f"Conocimiento fuera de la biblioteca central: {product.id}")
             if revision is not None:
@@ -243,21 +278,29 @@ class Catalog:
         publication = product.metadata.get("publication", {})
         if product.kind != "knowledge" or not isinstance(publication, dict) or publication.get("status") not in {"approved", "legacy"}:
             raise KoraError(f"Referencia sin publicación: {product.id}")
+        if publication.get("hash_mode") not in (None, "git-v1"):
+            raise KoraError(f"Formato de hash desconocido: {product.id}")
         return publication
 
     @staticmethod
     def _verify_reference(product):
         publication = Catalog._check_publication(product)
-        if product.fingerprint() != product.revision or reference_digest(product) != publication.get("sha256"):
+        portable = publication.get("hash_mode") == "git-v1"
+        modes = None if portable else product.legacy_modes
+        if (product.fingerprint(portable=portable, legacy_modes=modes) != product.revision
+                or reference_digest(product, portable=portable, legacy_modes=modes) != publication.get("sha256")):
+            migration_hint = ("; si es una clonación antigua, conserva legacy-modes.yaml desde la biblioteca original"
+                              if not portable and modes is None else "")
             raise KoraError(f"Versión publicada modificada: {product.id}; recupera sus bytes desde Git "
-                            "o una copia intacta antes de preparar un borrador con revise")
+                            f"o una copia intacta antes de preparar un borrador con revise{migration_hint}")
 
     def at_revision(self, identifier: str, revision: str) -> Product:
         current = self._lookup(identifier)
         if current.reference_root is None or not re.fullmatch(r"[0-9a-f]{64}", revision):
             raise KoraError(f"Revisión de conocimiento inválida: {revision}")
         directory = current.reference_root / "versions" / current.directory.parent.name / current.directory.name / revision
-        item = read_product(directory, revision, current.reference_root)
+        modes = self.legacy_modes[current.reference_root].get(revision)
+        item = read_product(directory, revision, current.reference_root, modes)
         if item.id != current.id:
             raise KoraError(f"La revisión no pertenece a {current.id}")
         self._verify_reference(item)

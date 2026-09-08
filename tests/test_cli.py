@@ -5,13 +5,38 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import yaml
 
 from kora.authoring import create
+from kora.catalog import Catalog, KoraError
+from kora.cli import build
 
 
 class CliJourneyTests(unittest.TestCase):
+    def test_realization_still_detects_concurrent_local_permission_changes(self):
+        from kora.render_codex import render
+
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            body = root / "body.md"
+            body.write_text("Read the supplied source.\n")
+            item = create(root, "skill", "test", "reader", "urn:test:skill:reader",
+                          "Read a source", body, targets=["codex"])
+            resource = item.directory / "reference.txt"
+            resource.write_text("Local resource.\n")
+            resource.chmod(0o644)
+
+            def change_permission(catalog, product):
+                files = render(catalog, product)
+                resource.chmod(0o600)
+                return files
+
+            with patch("kora.render_codex.render", side_effect=change_permission):
+                with self.assertRaisesRegex(KoraError, "fuente cambió"):
+                    build(Catalog(root), "codex", [item.id])
+
     def test_an_alias_used_for_installation_also_retires_the_same_product(self):
         with tempfile.TemporaryDirectory() as folder:
             base = Path(folder)

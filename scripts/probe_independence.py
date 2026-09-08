@@ -63,8 +63,9 @@ def copy_operating_tree(work):
     for name in ("references", "versions", "archive/references"):
         if (library / name).exists():
             shutil.copytree(library / name, copied_library / name, symlinks=True)
-    if (library / "aliases.yaml").exists():
-        shutil.copy2(library / "aliases.yaml", copied_library / "aliases.yaml")
+    for name in ("aliases.yaml", "legacy-modes.yaml"):
+        if (library / name).exists():
+            shutil.copy2(library / name, copied_library / name)
     links = [path for path in work.rglob("*") if path.is_symlink()]
     for path in links:
         if path.exists() and path.resolve().is_relative_to(work):

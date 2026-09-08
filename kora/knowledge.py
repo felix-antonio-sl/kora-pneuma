@@ -138,7 +138,7 @@ def revise(root: Path, identifier: str) -> Product:
         if destination.exists():
             item = _draft(root, identifier)
             # A pending edit is work to preserve, including repeated revise calls.
-            if reference_digest(item) != published.metadata["publication"]["sha256"]:
+            if reference_digest(item) != reference_digest(published):
                 return item
             metadata = {k: v for k, v in item.metadata.items() if k != "publication"}
             metadata["revision_base"] = published.revision
@@ -258,6 +258,6 @@ def approve(root: Path, identifier: str, reviewed: str) -> Product:
                 raise KoraError(f"El conocimiento requiere otra referencia publicada, no agentes ni skills: {identifier_needed}")
             seen.add(dependency.id)
             pending.extend(dependency.requires)
-        publication = {"status": "approved", "sha256": reviewed,
+        publication = {"status": "approved", "sha256": reviewed, "hash_mode": "git-v1",
                        "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
         return _publish(root, item, item.directory.parent.name, item.directory.name, publication)

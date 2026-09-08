@@ -48,6 +48,14 @@ vínculos documentales hacia un agente o skill conservan su sentido sin hacer
 que la biblioteca dependa de su instalación. Git conserva historia de los
 archivos; un commit no aprueba su contenido.
 
+Los hashes nuevos usan los permisos portables de Git: archivo normal o
+ejecutable. Los permisos locales de lectura y escritura no cambian la identidad
+del contenido. Las versiones anteriores conservan sus hashes, archivos y rutas;
+`legacy-modes.yaml` en la biblioteca registra los modos originales necesarios
+para verificarlas después de una clonación. Ese registro conserva procedencia
+inmutable de las versiones anteriores; las publicaciones nuevas no lo amplían.
+Cambiar bytes, metadatos, nombres o ejecutabilidad sigue invalidando la revisión.
+
 ## Raíces y traslado
 
 La raíz de maquinaria se deriva del programa invocado y se reemplaza con
