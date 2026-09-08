@@ -1,0 +1,13 @@
+id: urn:dev:artefacto:sanear-repos
+kind: skill
+name: sanear-repos
+description: Audita y sanea repositorios de burocracia, sobreingeniería y deriva institucional
+  o circunstancial. Úsala cuando se pida diagnosticar o reducir complejidad y carga
+  innecesarias, conservando propósito, capacidades y obligaciones vigentes; admite
+  cualquier contenido y organización.
+content: content.md
+targets:
+- codex
+provenance:
+  source_path: /home/felix/.agents/skills/sanear-repos/SKILL.md
+  source_sha256: 9fc0ef32ccf5de6c6edae43577b607fec12f7a14b90759e52328bd552723556e

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sanear repositorios"
+  short_description: "Reduce burocracia, complejidad y deriva con evidencia"
+  default_prompt: "Usa $sanear-repos para diagnosticar y sanear este repositorio, aplicar mejoras locales justificadas y comprobar que conserva su función."
