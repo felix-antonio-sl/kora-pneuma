@@ -1,0 +1,90 @@
+id: urn:kora:artefacto:kora-skills
+kind: skill
+name: kora-skills
+description: Construye, revisa, edita y mantiene skills KORA canonicas con shape de autoria vigente, compatibilidad
+  agentskills verificable y gates previas a transmutacion o deploy.
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/kora/kora-skills/SKILL.md
+  source_sha256: 576792424c3eacf22fe32c465576cfae709d51e610094c2054bfc5b099998ff3
+  original_path: archive/previous/legacy-codex/kora-skills/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:kora:artefacto:kora-skills\n  type: artefacto\n  provenance:\n\
+    \    created_by: OpenAI Codex\n    created_at: '2026-05-04'\n    source: Reconstruccion fresca desde\
+    \ gobernanza, harness-spec, autoria-spec .\n      No absorbe el stack meta-KORA historico marcado\
+    \ rebuild_required.\nversion: 0.2.1\nstatus: activo\nnombre: kora-skills\ndescripcion: Construye,\
+    \ revisa, edita y mantiene skills KORA canonicas con shape\n  de autoria vigente, compatibilidad agentskills\
+    \ verificable y gates previas a\n  transmutacion o deploy.\ntags:\n- kora\n- skills\n- autoria\n-\
+    \ agentskills\n- construccion-agentica\n- mantenimiento\n- ciclo-vida\n- auditoria\nlang: es\nextensions:\n\
+    \  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 0\n      xi: 2\n      lambda: 0\n      phi:\
+    \ 1\n      sigma:\n      - 2\n      - 1\n      - 3\n      - 3\n      - 1\n    presentacion: accion-primaria\n\
+    \    atlas:\n      arnes_categorico: disciplina\n      forma_material: habilidad\n      metafora_relacional:\
+    \ supertool\n    entornos_objetivo:\n    - claude-code\n    - codex\n    - opencode\n    - openclaw\n\
+    \    nivel_prescripcion: alto\n    conocimiento_permitido:\n    - urn:kora:kb:gobernanza\n    - urn:kora:kb:harness-spec\n\
+    \    - urn:kora:kb:autoria-spec\n    - urn:kora:kb:md-spec\n    - urn:kora:kb:qa-spec\n    - urn:kora:kb:risk-register-spec\n\
+    \    - urn:kora:kb:runtime-spec-md\n    - urn:kora:kb:transmutation-spec\n    - urn:kora:kb:agentskills-runtime-extension\n\
+    \    - urn:kora:kb:claude-code-runtime-extension\n    - urn:kora:kb:codex-runtime-extension\n    -\
+    \ urn:agengai:kb:openclaw-runtime-extension\n    - urn:kora:kb:meta-kora-rebuild-directive\n    componible_con:\n\
+    \      - urn:kora:artefacto:kora-agentic-lifecycle\n      - urn:kora:artefacto:kora-agents\n     \
+    \ - urn:kora:artefacto:cat-thinking\nartefacto:\n  perfil:\n    dominio:\n    - kora\n    - skills\n\
+    \    - autoria\n    - construccion\n    - auditoria\n    - agentskills\n    disparadores:\n    - crear\
+    \ una skill KORA nueva desde requerimientos\n    - mantener, editar o versionar un SKILL.md productivo\
+    \ o en staging\n    - revisar o mejorar un SKILL.md contra autoria-spec y construction-spec\n    -\
+    \ normalizar una skill para proyeccion codex, claude-code u openclaw\n    - decidir si una capacidad\
+    \ portable sigue siendo habilidad o debe promoverse a\n      agente\n    - preparar transmutacion\
+    \ y deploy de una skill con gates verificadas\n    - deprecar, retirar o reactivar una skill con evidencia\
+    \ de lifecycle\n    salidas:\n    - SKILL.md canonico en artifacts/skills/_TALLER/REVIEW/ o diagnostico\
+    \ de bloqueo\n    - blueprint minimo con vector, nivel_prescripcion, interfaz y conocimiento permitido\n\
+    \    - reporte de compatibilidad agentskills y riesgos de proyeccion runtime\n    - lista de gates\
+    \ requeridas antes de promover, transmutar o deployar\n  plan:\n    estado_inicial: triaje\n    estado_terminal:\
+    \ cierre-verificado\n    estados:\n    - triaje\n    - cargar-canon\n    - capturar-req\n    - fijar-blueprint\n\
+    \    - materializar-skill\n    - auditar-fidelidad\n    - verificar-gates\n    - cierre-verificado\n\
+    \  interfaz:\n    herramientas:\n    - Read\n    - Grep\n    - Glob\n    - Bash\n    - Write\n   \
+    \ permisos: Lectura de specs KORA y escritura acotada a artifacts/skills/_TALLER/REVIEW/,\n      tests\
+    \ o docs de soporte cuando el operador pide construir, editar,\n      mantener o reparar skills. No\
+    \ pushea ni despliega por si misma.\n    protocolos:\n      entrada: intent, requisitos, path de skill\
+    \ o propuesta de capacidad portable\n      salida: SKILL.md canonico, diagnostico accionable o handoff\
+    \ a kora-agents si\n        la forma material correcta no es habilidad\n  invariantes:\n    reglas_duras:\n\
+    \    - 'Leer la regla propietaria antes de diagnosticar: gobernanza, harness-spec,\n      autoria-spec\
+    \  son el canon minimo.'\n    - No usar artefactos meta-KORA marcados rebuild_required como fuente\
+    \ de diseno,\n      prompt, blueprint ni runtime.\n    - Construir siempre Req -> Blueprint -> IR\
+    \ -> Runtime; nunca saltar directo a\n      un paquete agentskills o bundle runtime.\n    - 'Una skill\
+    \ debe permanecer en el dominio de habilidad: capacidad portable, sin\n      workspace propio, sin\
+    \ memoria ambiental ni servicio always-on.'\n    - Declarar nivel_prescripcion y mantener el body\
+    \ bajo control; detalle voluminoso\n      debe ir a referencias o recursos.\n    - Todo conocimiento\
+    \ gobernado debe declararse como URN resoluble en extensions.kora.conocimiento_permitido.\n    - La\
+    \ proyeccion agentskills no debe perder instrucciones esenciales ni introducir\n      subdirectorios\
+    \ no canonicos.\n    - Los cambios deben terminar con gates o bloqueo explicito; un diagnostico fallido\n\
+    \      no se presenta como listo.\n    compromisos_eticos:\n      transparencia: Separar hechos verificados,\
+    \ inferencias y decisiones editoriales.\n      responsabilidad: Declarar impacto, riesgo y rollback\
+    \ antes de promocion o deploy.\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:kora:kb:gobernanza
+    - urn:kora:kb:harness-spec
+    - urn:kora:kb:autoria-spec
+    - urn:kora:kb:md-spec
+    - urn:kora:kb:qa-spec
+    - urn:kora:kb:risk-register-spec
+    - urn:kora:kb:runtime-spec-md
+    - urn:kora:kb:transmutation-spec
+    - urn:kora:kb:agentskills-runtime-extension
+    - urn:kora:kb:claude-code-runtime-extension
+    - urn:kora:kb:codex-runtime-extension
+    - urn:agengai:kb:openclaw-runtime-extension
+    - urn:kora:kb:meta-kora-rebuild-directive
+    componible_con:
+    - urn:kora:artefacto:kora-agentic-lifecycle
+    - urn:kora:artefacto:kora-agents
+    - urn:kora:artefacto:cat-thinking
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/kora-skills/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

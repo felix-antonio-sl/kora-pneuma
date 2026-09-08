@@ -1,0 +1,87 @@
+id: urn:salud:artefacto:diseno-ui-clinica-web-movil
+kind: skill
+name: diseno-ui-clinica-web-movil
+description: Diseña, implementa y evalúa la gráfica y estética funcional de TLHD-HEALTH
+  y de interfaces clínicas comparables centradas en persona o episodio, exclusivamente
+  para web responsive y mobile web, mediante una lente sintética Karri/Linear y Vercel.
+  Usar al encuadrar, materializar o auditar esa UI; enrutar otros dominios o apps
+  nativas a una capacidad general o específica. No atribuye participación ni aprobación
+  a esas personas o equipos.
+content: content.md
+targets:
+- codex
+requires:
+- urn:dev:kb:canon-diseno-producto-integrado
+relations:
+  conocimiento:
+  - urn:dev:kb:canon-diseno-producto-integrado
+  componible:
+  - urn:dev:artefacto:diseno-producto-integrado
+  - urn:dev:artefacto:design
+  - urn:kora:artefacto:ux-design
+  - urn:fxsl:artefacto:ifml
+  - urn:dev:artefacto:ship-discipline
+provenance:
+  source_path: artefactos/skills/salud/diseno-ui-clinica-web-movil/SKILL.md
+  source_sha256: 58269abfdde08d64a37ca11a9d044b16355659e012d945582f34e1d4636d30f7
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:diseno-ui-clinica-web-movil
+
+    nombre: diseno-ui-clinica-web-movil
+
+    version: 1.1.0
+
+    estado: activo
+
+    descripcion: "Diseña, implementa y evalúa la gráfica y estética funcional de TLHD-HEALTH
+    y de interfaces clínicas comparables centradas en persona o episodio, exclusivamente
+    para web responsive y mobile web, mediante una lente sintética Karri/Linear y
+    Vercel. Usar al encuadrar, materializar o auditar esa UI; enrutar otros dominios
+    o apps nativas a una capacidad general o específica. No atribuye participación
+    ni aprobación a esas personas o equipos."
+
+    fuente: "Síntesis nueva creada el 2026-07-26 desde la especificación SYSTEM TLHD-HEALTH
+    sha256:7b745468294a3a55bc5a20b8af7951cac67c481dd05f0e2c7ea842396bdd0b61, DESIGN
+    PACKET v2 sha256:34a6f80ab006342532e59b391fd51b0a5405ab3e8284f219523baedff43a1103
+    y auditoría Linear-Vercel sha256:ee991086faa8655c9a6fda1587fd1fd0fcb136f759b1cdcc93d16e249ad50a5f;
+    destila fuentes públicas citadas en referencias/marco-ui-clinica-web-movil.md.
+    La síntesis es inferencia operativa, no opinión, participación ni aprobación de
+    Karri Saarinen, Linear o Vercel. Reutiliza capacidades KORA mediante adaptadores
+    explícitos; componible declara candidatos y no prueba wiring ni conducta."
+
+    autor: FS
+
+    creado: 2026-07-26
+
+    lang: es
+
+    tags: [diseno-ui, ui-clinica, diseno-grafico, web, smartphone, responsive, linear,
+    vercel, design-system, accesibilidad, evaluacion-runtime]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [3, 2, 3, 3, 2]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Edit, Glob, Grep, Bash]
+
+    targets: [codex]
+
+    conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
+
+    componible: [urn:dev:artefacto:diseno-producto-integrado, urn:dev:artefacto:design,
+    urn:kora:artefacto:ux-design, urn:fxsl:artefacto:ifml, urn:dev:artefacto:ship-discipline]
+
+    alcance: usuario
+
+    estados: [enrutar, reunir-evidencia, encuadrar, modelar, divergir, decidir, sistematizar,
+    materializar, implementar, evaluar, integrar, entregar]
+
+    ---
+
+    '

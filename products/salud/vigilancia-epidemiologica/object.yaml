@@ -1,0 +1,91 @@
+id: urn:salud:artefacto:vigilancia-epidemiologica
+kind: skill
+name: vigilancia-epidemiologica
+description: Evalua senales de vigilancia, brotes, IAAS, RAM, alertas sanitarias.
+  Detecta, clasifica, estima riesgo, notifica y propone respuesta inmediata para sistemas
+  de hospitalizacion.
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:salubrista
+- urn:salud:kb:salubrista-body-of-knowledge
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:hodom-operacional-iaas
+- urn:salud:kb:notificacion-eno-iaas
+relations:
+  conocimiento:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:salubrista-body-of-knowledge
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:hodom-operacional-iaas
+  - urn:salud:kb:notificacion-eno-iaas
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:hospitalista
+provenance:
+  source_path: artefactos/skills/salud/vigilancia-epidemiologica/SKILL.md
+  source_sha256: b1b6e6172ae768388876fd31b753ee428fc03cea0388e5a06db59b69a7fb94c3
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:vigilancia-epidemiologica
+
+    nombre: vigilancia-epidemiologica
+
+    version: 1.2.1
+
+    estado: activo
+
+    descripcion: "Evalua senales de vigilancia, brotes, IAAS, RAM, alertas sanitarias.
+    Detecta, clasifica, estima riesgo, notifica y propone respuesta inmediata para
+    sistemas de hospitalizacion."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/vigilancia-epidemiologica/SKILL.md
+    v1.0.1 (sha256:dd6b666c924f12d9d55630af7bb82ed695627699747367d8e33415be1e0c9936);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido
+    con razon: target openclaw (no realizado, GENESIS seccion 4). v1.2.0 (2026-06-22):
+    inyeccion de umbrales/criterios operables (evaluacion funcional) — definiciones
+    de caso (sospechoso/probable/confirmado), criterios cuantitativos de brote (incl.
+    IAAS sobre linea de base, tasa de ataque) y campos del formulario de notificacion
+    obligatoria; anclado en RE 60/2022 (citada en urn:salud:kb:hodom-operacional-iaas)
+    y en epidemiologia de campo estandar. Los criterios especificos por evento, plazos
+    y campos oficiales (definiciones ENO, articulado RE 60/2022 no cargado como KB)
+    quedan marcados {{verificar}} para el operador. v1.2.1 (2026-06-22): cierra los
+    {{verificar}} anclando a urn:salud:kb:notificacion-eno-iaas (sintesis de fuentes
+    oficiales verificadas: BCN/LeyChile, MINSAL); CORRIGE la cita ''RE 60/2022'' —
+    el reglamento ENO vigente es el Decreto 7/2019 (deroga DS 158/2004) y la norma
+    IAAS es el Decreto Exento 60/2022 que aprueba la Norma Tecnica 225 (deroga NT
+    124); la incertidumbre irreducible (definiciones de caso por evento, que viven
+    en circulares por enfermedad) queda como referencia grounded al KB, no como placeholder."
+
+    autor: FS
+
+    creado: 2026-05-08
+
+    lang: es
+
+    tags: [salud, vigilancia-epidemiologica, brotes, iaas, alertas, riesgo]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [3, 2, 3, 3, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob, WebSearch]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [caracterizar, clasificar, estimar-riesgo, proponer-respuesta, notificar]
+
+    conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:salubrista-body-of-knowledge,
+    urn:salud:kb:gestion-redes-general, urn:salud:kb:hodom-operacional-iaas, urn:salud:kb:notificacion-eno-iaas]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:hospitalista]
+
+    ---
+
+    '

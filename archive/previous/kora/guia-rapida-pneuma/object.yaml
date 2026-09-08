@@ -1,0 +1,15 @@
+id: urn:kora:kb:guia-rapida-pneuma
+kind: knowledge
+name: guia-rapida-pneuma
+description: Guía rápida de KORA pneuma — qué es, qué alberga, qué garantiza, los
+  seis gestos, el shape, las leyes que velar cobra, lifecycle, transmutación, koraficación
+  y deudas.
+content: content.md
+requires: []
+relations:
+  cita:
+  - urn:kora:kb:alma-de-kora
+provenance:
+  source_path: artefactos/conocimiento/kora/guia-rapida-pneuma.md
+  source_sha256: df00f68d7a0b2e0f0fda1e1f1cef949f6a9f08c56011698bd1fc6d2b83f02d97
+  legacy_state: publicado

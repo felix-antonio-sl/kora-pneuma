@@ -1,0 +1,159 @@
+id: urn:dev:artefacto:test-vivo-iterativo-opmkv
+kind: skill
+name: test-vivo-iterativo-opmkv
+description: 'Skill para auditoria in-vivo iterativa del modelador OPM (deep-opm-pro): conduce un navegador
+  headless contra el dev server, ejecuta una bateria de criterios visuales/UX/funcionales contra el DOM,
+  captura screenshots y errores de runtime, refina iterativamente cuando un FAIL/WARN viene de la sonda,
+  y emite un reporte ejecutivo que siempre reemplaza al previo. Para usar cuando el operador pide validar
+  in-vivo el modelador, regenerar el reporte tras un cambio o cerrar un loop con evidencia visual antes
+  de commitear.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:fxsl:kb:opm-es
+- urn:fxsl:kb:opd-es
+- urn:tde:kb:guia-calidad-web
+- urn:dev:artefacto:ship-discipline
+- urn:kora:artefacto:cat-thinking
+- urn:kora:artefacto:modelamiento-opm
+- urn:fxsl:artefacto:opm-specialist
+- urn:dev:artefacto:ux-research-design-ai
+relations:
+  componible:
+  - urn:dev:artefacto:ship-discipline
+  - urn:kora:artefacto:cat-thinking
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/dev/test-vivo-iterativo-opmkv/SKILL.md
+  source_sha256: 9b1a19b7732b38ff3406691dea1a118c95a0ae31caee0dde1f68efaa927f311d
+  original_path: products/dev/test-vivo-iterativo-opmkv/sources/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:dev:artefacto:test-vivo-iterativo-opmkv\n  type: artefacto\n\
+    \  provenance:\n    created_by: FS\n    created_at: '2026-05-04'\n    source: 'Cristalizacion como\
+    \ skill del proceso in-vivo iterativo aplicado al modelador\n      OPM en deep-opm-pro: Playwright\
+    \ contra dev server real, criterios DOM medibles\n      contra CANON del repo, screenshots fullpage,\
+    \ reporte ejecutivo que reemplaza\n      al previo, idempotencia por localStorage clear y refinamiento\
+    \ iterativo cuando\n      aparecen falsos positivos.'\nversion: 0.1.1\nstatus: activo\nnombre: test-vivo-iterativo-opmkv\n\
+    descripcion: 'Skill para auditoria in-vivo iterativa del modelador OPM (deep-opm-pro):\n  conduce\
+    \ un navegador headless contra el dev server, ejecuta una bateria de criterios\n  visuales/UX/funcionales\
+    \ contra el DOM, captura screenshots y errores de runtime,\n  refina iterativamente cuando un FAIL/WARN\
+    \ viene de la sonda, y emite un reporte\n  ejecutivo que siempre reemplaza al previo. Para usar cuando\
+    \ el operador pide validar\n  in-vivo el modelador, regenerar el reporte tras un cambio o cerrar un\
+    \ loop con evidencia\n  visual antes de commitear.'\ntags:\n- in-vivo\n- browser\n- playwright\n-\
+    \ ux-audit\n- visual-ssot\n- opm\n- modelador\n- iterative-probe\n- executive-report\n- deep-opm-pro\n\
+    lang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 0\n      xi: 2\n  \
+    \    lambda: 0\n      phi: 1\n      sigma:\n      - 2\n      - 1\n      - 2\n      - 2\n      - 1\n\
+    \    presentacion: accion-primaria\n    atlas:\n      arnes_categorico: disciplina\n      forma_material:\
+    \ habilidad\n      metafora_relacional: supertool\n    entornos_objetivo:\n    - claude-code\n   \
+    \ - codex\n    - opencode\n    - openclaw\n    nivel_prescripcion: alto\n    conocimiento_permitido:\n\
+    \    - urn:kora:kb:test-strategy\n    - urn:kora:kb:canario-spec\n    - urn:fxsl:kb:opm-es\n    -\
+    \ urn:fxsl:kb:opd-es\n    - urn:tde:kb:guia-calidad-web\n    componible_con:\n    - urn:dev:artefacto:ship-discipline\n\
+    \    - urn:kora:artefacto:cat-thinking\nartefacto:\n  perfil:\n    dominio:\n    - auditoria-in-vivo-de-aplicacion-web\n\
+    \    - validacion-visual-contra-ssot-del-repo\n    - exploracion-funcional-end-to-end-en-navegador\n\
+    \    - reporteria-ejecutiva-idempotente\n    - probe-engineering-iterativo\n    disparadores:\n  \
+    \  - el operador pide testear in-vivo el modelador OPM contra una URL del dev server\n    - se necesita\
+    \ regenerar el reporte ejecutivo despues de un cambio en `app/`\n    - antes de cerrar un loop de\
+    \ cambios visuales o de UX, se requiere evidencia browser\n    - una sesion empieza con cambios sin\
+    \ commitear y se quiere validar comportamiento\n      previo a commit\n    - se requiere medir conformidad\
+    \ con `app/src/modelo/constantes.ts:CANON` directamente\n      sobre el DOM renderizado\n    salidas:\n\
+    \    - script de exploracion en `app/scripts/in-vivo-test.mjs` (idempotente, recibe\n      URL como\
+    \ argumento)\n    - screenshots fullpage en `app/test-results/in-vivo/` con nombres ordinales por\n\
+    \      escenario\n    - '`app/test-results/in-vivo/_resumen.json` con findings estructurados por seccion/criterio/estado/detalle'\n\
+    \    - '`docs/REPORTE-EJECUTIVO.md` que SIEMPRE reemplaza al previo (no fechado, no\n      versionado\
+    \ en filename)'\n    - lista de hallazgos UX accionables y riesgos detectados, alineados con HANDOFF\n\
+    \      y mvp-alpha-coverage\n    narrativa: Esta skill no escribe codigo de dominio del modelador.\
+    \ Conduce un navegador\n      real contra el dev server, mide criterios objetivos contra el DOM renderizado,\n\
+    \      distingue defectos de la app de errores de la propia sonda (refinando en loop),\n      y emite\
+    \ un reporte ejecutivo que siempre reemplaza al anterior para evitar deriva\n      entre versiones.\n\
+    \  plan:\n    estado_inicial: preparar\n    estado_terminal: cierre\n    estados:\n    - id: preparar\n\
+    \      accion: verificar dev server, herramientas y directorios de salida\n    - id: explorar\n  \
+    \    accion: ejecutar navegador headless y capturar evidencia\n    - id: analizar\n      accion: clasificar\
+    \ findings y distinguir defecto de app vs sonda\n    - id: refinar-sonda\n      accion: corregir aserciones\
+    \ o secuencia UX y repetir exploracion\n    - id: redactar-reporte\n      accion: escribir reporte\
+    \ ejecutivo idempotente\n    - id: cierre\n      accion: resumir resultados y deuda residual\n   \
+    \ - id: abortar\n      accion: detener sin tocar artefactos cuando el preflight falla\n    fsm:\n\
+    \      inicial: preparar\n      terminales:\n      - cierre\n      - abortar\n      transiciones:\n\
+    \        preparar:\n        - explorar\n        - abortar\n        explorar:\n        - analizar\n\
+    \        - abortar\n        analizar:\n        - refinar-sonda\n        - redactar-reporte\n     \
+    \   refinar-sonda:\n        - explorar\n        redactar-reporte:\n        - cierre\n        cierre:\
+    \ []\n        abortar: []\n  interfaz:\n    herramientas:\n    - Bash\n    - Read\n    - Write\n \
+    \   - Edit\n    - Glob\n    - Grep\n    permisos: Lectura/escritura sobre el repo deep-opm-pro (`app/scripts/`,\
+    \ `app/test-results/in-vivo/`,\n      `docs/REPORTE-EJECUTIVO.md`). Ejecucion de Node + Playwright\
+    \ via Bash contra\n      una URL HTTP del dev server especificada por el operador. No requiere auth.\n\
+    \      No commitea ni hace push automaticamente.\n    protocolos:\n      entrada: 'URL del dev server\
+    \ del modelador OPM (default `http://138.201.53.205:5173/`\n        segun HANDOFF), opcional: lista\
+    \ de areas a profundizar.'\n      salida: Resumen textual al operador con conteo OK/FAIL/WARN/INFO\
+    \ + ruta de screenshots\n        + ruta del reporte ejecutivo + hallazgos UX accionables priorizados.\n\
+    \    api_observable:\n      entradas:\n      - nombre: url_objetivo\n        tipo: url-http\n    \
+    \    obligatorio: false\n      - nombre: areas_a_profundizar\n        tipo: lista-de-secciones\n \
+    \       obligatorio: false\n      salidas:\n      - nombre: resumen_findings\n        tipo: texto-estructurado\n\
+    \      - nombre: ruta_screenshots\n        tipo: ruta\n      - nombre: ruta_reporte_ejecutivo\n  \
+    \      tipo: ruta\n      invariantes_io:\n      - Si el dev server no responde 200, abortar antes\
+    \ de tocar artefactos.\n      - Cero `pageerror` y cero `console.error` son criterios duros de salud.\n\
+    \      - Toda WARN/FAIL debe atribuirse a defecto de app o defecto de sonda; no quedan\n        en\
+    \ limbo.\n      - El reporte ejecutivo siempre reemplaza al previo en la misma ruta `docs/REPORTE-EJECUTIVO.md`.\n\
+    \  contexto:\n    qa_budget:\n      umbrales_minimos:\n        ok_ratio: 0.9\n        page_errors:\
+    \ 0\n        console_errors: 0\n        request_failures: 0\n      criterios_bloqueantes:\n      -\
+    \ FAIL en validacion de firma OPM (firma ilegal NO debe crear enlace)\n      - FAIL en visual SSOT\
+    \ (fill, stroke, dimensiones contra CANON)\n      - FAIL en persistencia (export/import o Guardar/Cargar)\n\
+    \      - pageerror > 0\n    risk_register:\n    - risk_id: tvi-falsos-positivos-de-sonda\n      category:\
+    \ validez-de-medicion\n      source: probe-engineering\n      trigger: la sonda asume valores SSOT\
+    \ incorrectos o flujos UX en orden incorrecto\n        y reporta FAIL/WARN espurios\n      likelihood:\
+    \ 0.5\n      impact: 0.4\n      mitigation: antes de declarar defecto, leer `app/src/modelo/constantes.ts:CANON`\n\
+    \        y los handlers del store; refinar la sonda y reejecutar\n      status: mitigated\n    - risk_id:\
+    \ tvi-mensajes-status-acumulados\n      category: ux-noise\n      source: barra-de-status-toolbar\n\
+    \      trigger: la barra de status del Toolbar acumula mensajes entre escenarios y\n        la sonda\
+    \ los lee como del escenario actual\n      likelihood: 0.4\n      impact: 0.2\n      mitigation: limpiar\
+    \ localStorage + reload entre bloques; verificar mensaje en\n        el momento de su accion, no diferido\n\
+    \      status: mitigated\n    - risk_id: tvi-deriva-canon\n      category: drift-de-spec\n      source:\
+    \ app-evolves\n      trigger: el repo cambia colores, dimensiones o tags SVG sin actualizar la sonda\n\
+    \      likelihood: 0.3\n      impact: 0.5\n      mitigation: leer `CANON` del repo en cada ciclo;\
+    \ nunca hardcodear valores en\n        la sonda salvo cuando se verifica conformidad cromatica explicita\
+    \ y declarada\n      status: monitored\n    - risk_id: tvi-screenshot-stale\n      category: artefacto-no-regenerado\n\
+    \      source: workdir-state\n      trigger: el operador lee un screenshot viejo creyendo que refleja\
+    \ el commit\n        actual\n      likelihood: 0.2\n      impact: 0.3\n      mitigation: el script\
+    \ reescribe siempre todos los PNG del directorio; usar `mtime`\n        reciente como heuristica de\
+    \ validez\n      status: mitigated\n    - risk_id: tvi-commit-no-autorizado\n      category: accountability\n\
+    \      source: agente-invocador\n      trigger: el agente confunde 'cierre del loop' con 'commitear\
+    \ el reporte'\n      likelihood: 0.2\n      impact: 0.5\n      mitigation: 'default: no commitea.\
+    \ Solo entrega el patch listo y la ruta del\n        reporte; commit requiere autorizacion explicita\
+    \ del operador'\n      status: mitigated\n  invariantes:\n    reglas_duras:\n    - El reporte ejecutivo\
+    \ en `docs/REPORTE-EJECUTIVO.md` siempre reemplaza al previo.\n      No se versionan reportes con\
+    \ fecha o sufijo.\n    - Antes de declarar un FAIL como defecto de la app, agotar la hipotesis de\
+    \ defecto\n      de la sonda (orden UX, asuncion SSOT, timing). Documentar el descarte.\n    - Los\
+    \ criterios visuales se miden contra `app/src/modelo/constantes.ts:CANON`\n      leido en vivo, no\
+    \ contra valores externos.\n    - Captura siempre `pageerror`, `console.error/warning` y `requestfailed`.\
+    \ Cero\n      es criterio duro.\n    - 'Idempotencia obligatoria: `localStorage.clear()` + `reload`\
+    \ entre bloques que\n      mutan estado, para que la siguiente ejecucion no dependa del estado anterior.'\n\
+    \    - Screenshots fullpage en `app/test-results/in-vivo/` con nombres ordinales (`NN-descripcion.png`)\n\
+    \      que reflejan el orden del workflow.\n    - El script vive en `app/scripts/in-vivo-test.mjs`,\
+    \ recibe la URL como `process.argv[2]`,\n      default `http://138.201.53.205:5173/`.\n    - Esta\
+    \ skill NO commitea, NO hace push y NO altera codigo de dominio del modelador.\n      Su unico writeback\
+    \ son `app/scripts/in-vivo-test.mjs`, `app/test-results/in-vivo/`\n      y `docs/REPORTE-EJECUTIVO.md`.\n\
+    \    - Si el dev server no responde 200, abortar y reportar ANTES de tocar artefactos.\n    - Cuando\
+    \ un cambio del repo invalide la sonda (drift de CANON, nueva firma de\n      enlace, nuevo selector),\
+    \ refinar la sonda en el mismo ciclo y dejarlo escrito\n      en el reporte como deuda de calibracion.\n\
+    ---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:kora:kb:test-strategy
+    - urn:kora:kb:canario-spec
+    - urn:fxsl:kb:opm-es
+    - urn:fxsl:kb:opd-es
+    - urn:tde:kb:guia-calidad-web
+    componible_con:
+    - urn:dev:artefacto:ship-discipline
+    - urn:kora:artefacto:cat-thinking
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: true
+    path: .codex/skills/test-vivo-iterativo-opmkv/SKILL.md
+  inactive_machinery_references:
+  - urn:kora:kb:test-strategy
+  - urn:kora:kb:canario-spec
+  adaptations:
+  - La plantilla recibe la URL explícita del operador y deja de usar un localizador fijo de la instalación
+    anterior.
+  - Se explicita que jobs-healthcare-ux permanece desactivado; se conserva la alternativa UX ya prevista.

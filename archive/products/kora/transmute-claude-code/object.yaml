@@ -1,0 +1,51 @@
+id: urn:kora:artefacto:transmute-claude-code
+kind: skill
+name: transmute-claude-code
+description: Transmuta un AGENT.md KORA a un archivo .md de Claude Code (persona o subagente). Lee las
+  6 dimensiones categoricas del IR y compila cada una al idiom de Claude Code, preservando maxima fidelidad
+  y emitiendo _transmutation.yml proof-carrying.
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/kora/transmute-claude-code/SKILL.md
+  source_sha256: 1c3a953ccc294bd4eb65367f297b2d7d452441b8fe271d348eeca97d2141ff24
+  original_path: archive/previous/legacy-codex/transmute-claude-code/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:kora:artefacto:transmute-claude-code\n  type: artefacto\n\
+    \  provenance:\n    created_by: FS\n    created_at: '2026-04-23'\n    source: 'Migracion desde artifacts/skills/_TALLER/INBOX/transmute-claude-code/SKILL.md\n\
+    \      (legacy skill-overlay v1) a shape unified autoria-spec v1.2; URN regimen artefacto:'\nversion:\
+    \ 2.0.1\nstatus: activo\nnombre: transmute-claude-code\ndescripcion: Transmuta un AGENT.md KORA a\
+    \ un archivo .md de Claude Code (persona o\n  subagente). Lee las 6 dimensiones categoricas del IR\
+    \ y compila cada una al idiom\n  de Claude Code, preservando maxima fidelidad y emitiendo _transmutation.yml\
+    \ proof-carrying.\ntags:\n- transmutacion\n- claude-code\n- proyeccion\n- runtime\nlang: es\nextensions:\n\
+    \  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 0\n      xi: 2\n      lambda: 0\n      phi:\
+    \ 1\n      sigma:\n      - 2\n      - 1\n      - 3\n      - 1\n      - 0\n    presentacion: accion-primaria\n\
+    \    atlas:\n      arnes_categorico: utilidad\n      forma_material: habilidad\n      metafora_relacional:\
+    \ supertool\n    entornos_objetivo:\n    - claude-code\n    - codex\n    - opencode\n    - openclaw\n\
+    \    nivel_prescripcion: alto\n    conocimiento_permitido:\n    - urn:kora:kb:autoria-spec\n    -\
+    \ urn:kora:kb:transmutation-spec\n    - urn:kora:kb:claude-code-runtime-extension\n    componible_con:\
+    \ []\nartefacto:\n  perfil:\n    descripcion: Habilidad de transmutacion que proyecta artefactos KORA/MD\
+    \ a archivos\n      Claude Code preservando fidelidad y registrando perdidas.\n    dominio:\n    -\
+    \ transmutacion de runtime\n    - Claude Code\n    - proof-carrying projection\n    salidas:\n   \
+    \ - archivo Markdown Claude Code\n    - registro _transmutation.yml\n    - diagnostico de fidelidad\n\
+    \  interfaz:\n    herramientas: []\n    permisos:\n      allow: []\n      deny: []\n  invariantes:\n\
+    \    reglas_duras:\n    - \"Toda perdida estructural respecto al IR canonico DEBE registrarse en _transmutation.yml;\
+    \ nunca silenciar.\"\n    - \"URN del artefacto fuente DEBE preservarse en metadata del output runtime;\
+    \ la transmutacion no reescribe identidad.\"\n    - \"Si el vector cae fuera del dominio declarado\
+    \ por claude-code-runtime-extension, abortar antes de emitir output.\"\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:kora:kb:autoria-spec
+    - urn:kora:kb:transmutation-spec
+    - urn:kora:kb:claude-code-runtime-extension
+    componible_con: []
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/transmute-claude-code/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

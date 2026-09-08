@@ -1,0 +1,13 @@
+id: urn:kora:kb:alma-de-kora
+kind: knowledge
+name: alma-de-kora
+description: Destilación del alma de KORA — qué es, qué quiere, cómo se mueve, qué
+  le da forma y qué tensiones la habitan; documento fundacional de la encarnación
+  pneuma.
+content: content.md
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/conocimiento/kora/alma-de-kora.md
+  source_sha256: e5a2c3b730b719327c5b462ccc32d03f0c080ea8e3a92fed479aa80db37166cc
+  legacy_state: publicado

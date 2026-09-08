@@ -1,13 +1,14 @@
-# Derivados — regenerables, jamás autoridad (ley/0 §6)
-censo.json
-_emision/
-__pycache__/
-*.pyc
-.pytest_cache/
-
-# Vigencia documental — red de seguridad fuera del árbol vivo
-_archivo/
+# Estado privado y respaldos locales; nunca autoridad activa.
+._local/
+.env
+.env.*
+!.env.example
 *.tar.gz
-
-# Scratch de sesiones agénticas (ledger sdd)
-.superpowers/
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+/_archivo/
+/.remember/
+/.superpowers/
+/.worktrees/

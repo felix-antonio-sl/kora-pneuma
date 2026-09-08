@@ -1,96 +1,49 @@
-# KORA pneuma
+# KORA
 
-KORA pneuma es un canon gobernado de **conocimiento y especificaciones
-agénticas** con una herramienta de soporte. Mantiene una fuente canónica por
-objeto, identifica cada artefacto mediante URN y proyecta agentes y skills a
-distintos runtimes declarando toda pérdida de fidelidad.
+Maquinaria personal de Félix Korvo para convertir fuentes en conocimiento útil,
+autorar agentes y skills agnósticos, y realizarlos en **Codex y Hermes**.
+Esta raíz contiene el núcleo, los métodos, los agentes, las skills y las pruebas.
+En h289 vive en `/home/felix/kora-pneuma`. La biblioteca central de conocimiento
+vive por separado en `/home/felix/kora-knowledge`, accesible desde el enlace
+`knowledge`. Ambos repositorios usan archivos legibles y Git.
 
-El problema que resuelve es la deriva: que una capacidad tenga versiones
-aparentemente equivalentes, pero semánticamente distintas, repartidas entre
-documentos, prompts, instalaciones y runtimes. KORA conserva el significado en
-la fuente y hace que las demás representaciones sean derivables y auditables.
+Un conocimiento KORA es un artefacto de referencia. Los recursos entran a
+`inbox`, la koraficación produce un borrador y la publicación aprobada lo deja
+disponible por su identidad. Una revisión conserva la referencia anterior hasta
+que se aprueba la nueva. Los conocimientos heredados mantienen su disponibilidad
+como `legacy`, sin atribuirles una aprobación nueva de Félix.
 
-No es una aplicación ni un runtime. `kora.py` y `tests/` sostienen el corpus;
-no cambian su arquetipo principal.
+En Codex, `$kora` activa su perspectiva en la conversación actual; su rol nativo
+permite delegar una tarea explícita. En Hermes, KORA se usa desde el perfil
+`kora`. La [guía de operación](docs/operacion.md) explica cómo ingresar recursos,
+preparar y publicar conocimiento, autorar agentes y skills, instalarlos y recuperar
+cambios.
 
-El canon agéntico es agnóstico al runtime. Codex es la realización operacional
-principal; Claude Code, OpenCode y OpenClaw permanecen como compatibilidad
-mantenida cuando el operador los selecciona explícitamente.
+Para empezar desde una copia del repositorio, en Linux con Python 3.12:
 
-## Orientación en cinco minutos
-
-1. Lee este archivo para ubicarte.
-2. Lee [ALMA.md](ALMA.md) y el estrato pertinente de `ley/` si la decisión es
-   estructural o normativa.
-3. Lee [AGENTS.md](AGENTS.md) antes de modificar fuentes. `CLAUDE.md` importa
-   ese contrato sin duplicarlo.
-4. Usa `python3 kora.py nombre <urn>` para resolver un objeto y sigue las URN
-   que declare su frontmatter.
-
-## Mapa de autoridad y vigencia
-
-| Superficie | Función | Vigencia |
-|---|---|---|
-| `README.md` | Introducción y navegación humana | vigente, no normativa |
-| `ALMA.md` | Finalidad y criterio de interpretación | fundacional |
-| `ley/0..4` | Especificaciones y decisiones normativas | vigentes; prevalecen por estrato |
-| `artefactos/` | Fuentes canónicas de conocimiento, agentes y skills | manda el `estado` de cada frontmatter |
-| [Guía rápida](artefactos/conocimiento/kora/guia-rapida-pneuma.md) | Operación detallada | vigente, subordinada a la ley |
-| `AGENTS.md` y `CLAUDE.md` | Contrato operativo para agentes de desarrollo | vigente, no normativo para KORA |
-| Notas exploratorias fuera del canon | Hipótesis y trabajo en curso aún no clasificado | no autoritativas |
-| `GENESIS.md` | Decisiones de fundación y pérdidas de la sublimación | histórico e inmutable |
-| Git y `_archivo/` | Trazabilidad histórica | no describen por sí solos el estado actual |
-
-Un artefacto `publicado` o `activo` está vigente. `borrador` es material en
-elaboración y no equivale a conocimiento publicado. `deprecado` y `retirado`
-son obsoletos para uso nuevo, pero sus URN siguen resolviendo por diseño.
-
-## Organización
-
-- `ley/`: constitución, ontología, forma, transmutación y koraficación.
-- `artefactos/conocimiento/`: corpus que consumen sistemas LLM.
-- `artefactos/agentes/`: especificaciones gobernadas de actores.
-- `artefactos/skills/`: capacidades proyectables y sus referencias.
-- `_archivo/`: versiones operativas históricas, fuera del árbol Git activo.
-- `kora.py`: censo, resolución, validación, lifecycle y transmutación.
-- `tests/`: pruebas del núcleo y de contratos focales.
-
-`censo.json` y `_emision/` son derivados regenerables. Los conteos, reportes,
-instalaciones runtime y notas locales ignoradas tampoco son autoridad.
-
-## Operación básica
-
-Requiere Python 3.11 o superior y no instala dependencias externas.
-
-El recorrido cotidiano tiene tres gestos:
-
-```bash
-python3 kora.py velar
-python3 kora.py transmutar --urn <urn>
-python3 kora.py transmutar --paridad --urn <urn> --target codex [--proyecto <path>]
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 kora_cli.py --help
 ```
 
-`censo` y `nombre` ayudan a descubrir o resolver. `velar --estricto`, la
-paridad sin filtros y la suite completa son auditorías proporcionales para
-cambios de ley, emisor o varias superficies; no son ceremonia rutinaria.
+Con Codex o Hermes ya disponibles, `install codex urn:kora:artefacto:kora` o
+`install hermes urn:kora:artefacto:kora` instala KORA y las skills que necesita.
+Son subcomandos de `python3 kora_cli.py`. La CLI también funciona sin modelo,
+credenciales ni red; la conversación usa el runtime y proveedor configurados
+por Félix. Mantén la biblioteca junto a esta raíz o selecciona otra ubicación con
+`--knowledge-root RUTA`, antes del subcomando. `--root RUTA` selecciona otra raíz
+de agentes y skills; por defecto se usa la del programa invocado.
 
-`transmutar` elige Codex si se omite `--target`; cualquier otro runtime exige
-selección explícita. Sin `--aplicar` solo materializa una emisión local derivada.
-Instalación, lifecycle, publicación Git, despliegue y aceptación humana son
-acciones distintas y requieren su autoridad correspondiente. Forma válida,
-paridad o tests verdes no prueban conducta, safety ni autorización runtime.
+Agentes y skills se mantienen en `products/<namespace>/<name>/object.yaml` y su
+archivo de contenido. El conocimiento tiene sus borradores, versiones y
+referencias en la biblioteca. El catálogo se deriva al operar; `list` y `resolve`
+consultan referencias publicadas, sin exponer borradores como conocimiento
+aprobado. Los agentes y skills leen esas referencias sin incorporar una copia.
 
-## Dónde vive cada decisión
-
-- Una regla normativa durable vive en `ley/`.
-- El significado de una capacidad o cuerpo de conocimiento vive en su fuente
-  bajo `artefactos/`.
-- Un mecanismo vive en `kora.py` y queda respaldado por pruebas.
-- Una exploración no es autoridad hasta incorporarse en una de esas
-  superficies.
-- Git conserva la historia cerrada. Un `HANDOFF.md` raíz solo existe mientras
-  una interrupción deja trabajo material inconcluso y se elimina al cerrar.
-
-La documentación y las explicaciones se escriben en español de Chile. Código,
-comandos e identificadores permanecen en inglés. Las fechas se expresan como
-`AAAA-MM-DD`.
+- [Guía de operación y comprobaciones](docs/operacion.md).
+- [Instrucciones para trabajar en este repositorio](AGENTS.md).
+- [Diseño de la maquinaria](docs/diseno.md).
+- Contratos efectivos de [Codex](docs/codex.md) y [Hermes](docs/hermes.md).
+- [Antecedentes conservados](archive/reconstruction/migracion.md), de consulta opcional.

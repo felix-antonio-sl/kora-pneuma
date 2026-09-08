@@ -1,0 +1,94 @@
+id: urn:salud:artefacto:asistencial-hospital
+kind: skill
+name: asistencial-hospital
+description: Skill para visita clinica en servicio de medicina intrahospitalaria.
+  Evaluacion SOAP, ajuste terapeutico, decision de alta/continuacion/traslado, plan
+  de seguimiento.
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:gestion-redes-unidades
+- urn:salud:kb:management-engineering-ext-capacidad
+- urn:salud:kb:health-systems-science-operativa
+- urn:salud:kb:umbrales-clinicos-hospitalizacion
+relations:
+  conocimiento:
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-unidades
+  - urn:salud:kb:management-engineering-ext-capacidad
+  - urn:salud:kb:health-systems-science-operativa
+  - urn:salud:kb:umbrales-clinicos-hospitalizacion
+  componible:
+  - urn:salud:artefacto:medico-hospitalista
+  - urn:salud:artefacto:firs-razonamiento-sanitario
+provenance:
+  source_path: artefactos/skills/salud/asistencial-hospital/SKILL.md
+  source_sha256: 7ce84bad74dd3117ee0b8fedce9f76d985f33067ef18d26a627d54a4767eb4b3
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:asistencial-hospital
+
+    nombre: asistencial-hospital
+
+    version: 1.3.0
+
+    estado: activo
+
+    descripcion: "Skill para visita clinica en servicio de medicina intrahospitalaria.
+    Evaluacion SOAP, ajuste terapeutico, decision de alta/continuacion/traslado, plan
+    de seguimiento."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/asistencial-hospital/SKILL.md
+    v1.0.1 (sha256:90fe83b266fa8b8a4185ef6f9311d4824ed5594c4397d7efe8ad3580c6d5e926);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor): modo
+    asistencial hospitalario del agente medico-hospitalista, frontera micro-asistencial
+    declarada. Omitido con razon: target openclaw (GENESIS seccion 4). v1.2.0 (2026-06-22):
+    inyeccion de umbrales/criterios operables (evaluacion funcional) — criterios objetivos
+    de estabilidad para alta (espejo de las banderas rojas de asistencial-hodom) y
+    umbrales de escalamiento a UCI/UTI; fundados en la skill hermana asistencial-hodom
+    y en urn:salud:kb:management-engineering-ext-capacidad (ocupacion UCI >85%, readmision
+    <48h centinela); cortes con {{verificar}} para confirmacion del operador. v1.3.0
+    (2026-06-22): cierra los {{verificar}} clinicos anclando a urn:salud:kb:umbrales-clinicos-hospitalizacion
+    (sintesis de fuentes oficiales: BTS 2017, IDSA/ATS-Halm, Surviving Sepsis Campaign
+    2021). Correcciones de encuadre fundadas en guia: el criterio de estabilidad por
+    SatO2 es >=90% (IDSA/ATS) y el >=92% queda declarado como margen de alta, no como
+    cifra de guia; el ''afebril 48 h'' no es requisito IDSA/ATS 2019 (T<=37.8 sostenida,
+    sin periodo fijo post-estabilidad); ventana antibiotico estratificada <=1 h shock
+    / <=3 h sepsis sin shock (SSC 2021); qSOFA reposicionado como predictor de desenlace,
+    NEWS2 preferido como tamizaje (SSC recomienda en contra de qSOFA como tamizaje
+    unico)."
+
+    autor: FS
+
+    creado: 2026-05-07
+
+    lang: es
+
+    tags: [salud, asistencial, hospitalizacion, visita-clinica, soap, disposicion]
+
+    vector: [2, 1, 1, 0, 1]
+
+    sigma: [3, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob, WebSearch, WebFetch]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [evaluar, ajustar-tratamiento, decidir-disposicion, documentar]
+
+    conocimiento: [urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades,
+    urn:salud:kb:management-engineering-ext-capacidad, urn:salud:kb:health-systems-science-operativa,
+    urn:salud:kb:umbrales-clinicos-hospitalizacion]
+
+    componible: [urn:salud:artefacto:medico-hospitalista, urn:salud:artefacto:firs-razonamiento-sanitario]
+
+    ---
+
+    '

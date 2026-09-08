@@ -1,0 +1,59 @@
+id: urn:dev:artefacto:code-review
+kind: skill
+name: code-review
+description: Revisa un cambio sin modificarlo, contrastando reglas locales y calidad
+  de diseño con los requisitos del encargo. Deriva el alcance con evidencia y entrega
+  hallazgos accionables, con delegación y comprobaciones proporcionales.
+content: content.md
+targets:
+- codex
+requires: []
+relations: {}
+provenance:
+  source_path: artefactos/skills/dev/code-review/SKILL.md
+  source_sha256: 4c439ce7f67340c20c03cfbc46a44db5fe2c79c27faed0c227b0fbd760c035ba
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:dev:artefacto:code-review
+
+    nombre: code-review
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Revisa de forma read-only un cambio desde un punto fijo en dos ejes
+    independientes: Standards, contra los estandares locales y un baseline auxiliar
+    de smells, y Spec, contra la especificacion de origen."
+
+    fuente: "Reescritura KORA de mattpocock/skills/skills/engineering/code-review/SKILL.md;
+    upstream commit: 2ab958093e83e0ec752e6c1c5932da465bf23e0c; sha256:6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f;
+    licencia MIT: referencias/mattpocock-skills-MIT.txt"
+
+    autor: FS
+
+    creado: 2026-08-03
+
+    lang: es
+
+    tags: [dev, code-review, standards, spec, read-only]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Glob, Grep, Bash]
+
+    targets: [codex]
+
+    estados: [fijar-punto, localizar-fuentes, revisar-standards, revisar-spec, validar-citas,
+    unir-recibos]
+
+    ---
+
+    '

@@ -1,0 +1,111 @@
+id: urn:salud:artefacto:director-tecnico-hodom
+kind: agent
+name: director-tecnico-hodom
+description: 'Faro de Dirección Técnica HODOM directamente invocable: convierte mandato,
+  hechos operacionales y fuentes en decisiones, incrementos y evidencia para llevar
+  el producto hasta una candidata segura de preproducción, sin inventar práctica clínica,
+  autorización institucional ni operación productiva.'
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:salud:kb:hodom-direccion-tecnica
+- urn:salud:kb:hodom-reglamento-ds1-2022
+- urn:salud:kb:hodom-decreto-exento-31-2024
+- urn:salud:kb:hodom-norma-tecnica-2024
+- urn:salud:kb:hodom-glosario-ontologia
+- urn:salud:kb:hsc-normativa-hodom-indice
+- urn:salud:kb:perfil-dev-personal-full
+- urn:kora:kb:cat-contrato-ingenieria-agentica
+- urn:salud:artefacto:conducir-decisiones-hodom
+- urn:salud:artefacto:hospitalizacion-domiciliaria
+relations:
+  depende:
+  - urn:salud:artefacto:conducir-decisiones-hodom
+  - urn:salud:artefacto:hospitalizacion-domiciliaria
+  conocimiento:
+  - urn:salud:kb:hodom-direccion-tecnica
+  - urn:salud:kb:hodom-reglamento-ds1-2022
+  - urn:salud:kb:hodom-decreto-exento-31-2024
+  - urn:salud:kb:hodom-norma-tecnica-2024
+  - urn:salud:kb:hodom-glosario-ontologia
+  - urn:salud:kb:hsc-normativa-hodom-indice
+  - urn:salud:kb:perfil-dev-personal-full
+  - urn:kora:kb:cat-contrato-ingenieria-agentica
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:seguridad-informacion-salud
+  - urn:salud:artefacto:interoperabilidad-salud
+  - urn:salud:artefacto:auditor-calidad-hospitalizacion
+  - urn:kora:artefacto:cat-thinking
+  - urn:kora:artefacto:consenso-deliberativo
+  - urn:dev:artefacto:ship-discipline
+provenance:
+  source_path: artefactos/agentes/salud/director-tecnico-hodom.md
+  source_sha256: 5ca95c18190d70974935141c03951c75f53b2b3dec3b6d58ded163558af8f161
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:director-tecnico-hodom
+
+    nombre: director-tecnico-hodom
+
+    version: 1.0.0
+
+    estado: activo
+
+    descripcion: "Faro de Dirección Técnica HODOM directamente invocable: convierte
+    mandato, hechos operacionales y fuentes en decisiones, incrementos y evidencia
+    para llevar el producto hasta una candidata segura de preproducción, sin inventar
+    práctica clínica, autorización institucional ni operación productiva."
+
+    fuente: "Autoría de novo KORA aprobada por el operador el 2026-08-25. Deriva su
+    método decisional de urn:salud:artefacto:conducir-decisiones-hodom (snapshot fuente
+    sha256:2b8c69ddbc8ec755c030330e2c7ad302339fe58301af5546b2861d89e4a390d7), su dominio
+    de urn:salud:artefacto:hospitalizacion-domiciliaria y el corpus de Dirección Técnica
+    HODOM. Coexiste con urn:salud:artefacto:hodom-hsc-direccion-tecnica: aquel es
+    un subagente sintético de participación situado y este es una persona de alcance
+    usuario que representa el mandato técnico humano."
+
+    autor: FS
+
+    creado: 2026-08-25
+
+    lang: es
+
+    tags: [salud, hodom, direccion-tecnica, faro, producto, desarrollo, preproduccion,
+    continuidad, autoridad, antiburocracia]
+
+    vector: [3, 2, 3, 1, 2]
+
+    sigma: [3, 3, 3, 3, 3]
+
+    arnes: persona
+
+    forma: agente
+
+    herramientas: [Read, Grep, Glob, Write, Edit, Bash, WebSearch]
+
+    targets: [codex, hermes]
+
+    alcance: usuario
+
+    estados: [recuperar-mandato, reconstruir-estado-vivo, fijar-verdad-gobernante,
+    elegir-incremento, conducir-decision, resolver-tensiones, decidir-o-escalar, dirigir-realizacion,
+    verificar, cerrar-o-recuperar, mantener-continuidad]
+
+    conocimiento: [urn:salud:kb:hodom-direccion-tecnica, urn:salud:kb:hodom-reglamento-ds1-2022,
+    urn:salud:kb:hodom-decreto-exento-31-2024, urn:salud:kb:hodom-norma-tecnica-2024,
+    urn:salud:kb:hodom-glosario-ontologia, urn:salud:kb:hsc-normativa-hodom-indice,
+    urn:salud:kb:perfil-dev-personal-full, urn:kora:kb:cat-contrato-ingenieria-agentica]
+
+    depende: [urn:salud:artefacto:conducir-decisiones-hodom, urn:salud:artefacto:hospitalizacion-domiciliaria]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:seguridad-informacion-salud,
+    urn:salud:artefacto:interoperabilidad-salud, urn:salud:artefacto:auditor-calidad-hospitalizacion,
+    urn:kora:artefacto:cat-thinking, urn:kora:artefacto:consenso-deliberativo, urn:dev:artefacto:ship-discipline]
+
+    ---
+
+    '

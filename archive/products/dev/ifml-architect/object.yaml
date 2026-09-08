@@ -1,0 +1,91 @@
+id: urn:dev:artefacto:ifml-architect
+kind: agent
+name: ifml-architect
+description: Arquitecto IFML para aplicaciones interactivas. Decide estructura de interaccion, navegacion,
+  view containers, eventos, acciones y patrones IFML, delegando la mecanica formal a la skill ifml.
+content: content.md
+targets: []
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/agents/dev/ifml-architect/AGENT.md
+  source_sha256: e2bcb6de9b7f89ef798249bf7c29cb05c91c12d88a46c0149be39b5bce5639aa
+  original_path: archive/previous/legacy-codex/ifml-architect/original.md
+  legacy_header: "---\n_manifest:\n  urn: \"urn:dev:artefacto:ifml-architect\"\n  type: artefacto\n  provenance:\n\
+    \    created_by: \"Codex\"\n    created_at: \"2026-06-04\"\n    source: \"Promocion productiva KORA\
+    \ desde artifacts/agents/_FRAGUA/INBOX/ifml-architect/AGENT.md, originalmente desplegado como /home/felix/.claude/agents/ifml-architect.md.\
+    \ Se normaliza como agente arquitecto que compone con la skill ifml.\"\nversion: \"1.0.0\"\nstatus:\
+    \ activo\nnombre: ifml-architect\ndescripcion: \"Arquitecto IFML para aplicaciones interactivas. Decide\
+    \ estructura de interaccion, navegacion, view containers, eventos, acciones y patrones IFML, delegando\
+    \ la mecanica formal a la skill ifml.\"\ntags: [dev, ifml, ux, frontend, arquitectura-interaccion,\
+    \ omg, modelado]\nlang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 1\n\
+    \      xi: 2\n      lambda: 1\n      phi: 2\n      sigma: [2, 1, 2, 2, 1]\n    presentacion: estado-primario\n\
+    \    atlas:\n      arnes_categorico: orquestador\n      forma_material: agente-propiamente-tal\n \
+    \     metafora_relacional: centro-de-control\n    entornos_objetivo: [claude-code, codex, openclaw,\
+    \ opencode]\n    conocimiento_permitido:\n      - \"urn:fxsl:kb:ifml-corpus-index\"\n      - \"urn:fxsl:kb:ifml-fundamentos\"\
+    \n      - \"urn:fxsl:kb:ifml-view-containers\"\n      - \"urn:fxsl:kb:ifml-view-components\"\n   \
+    \   - \"urn:fxsl:kb:ifml-actions-events\"\n      - \"urn:fxsl:kb:ifml-extensiones-desktop\"\n    \
+    \  - \"urn:fxsl:kb:ifml-extensiones-web\"\n      - \"urn:fxsl:kb:ifml-extensiones-mobile\"\n     \
+    \ - \"urn:fxsl:kb:ifml-patrones\"\n    componible_con:\n      - \"urn:kora:artefacto:ifml\"\n    \
+    \  - \"urn:kora:artefacto:ux-design\"\n  claude_code:\n    model: opus\n    color: purple\n    memory:\
+    \ project\n    effort: high\n    max_turns: 20\n  openclaw:\n    bot_handler: telegram\n    acp_compliant:\
+    \ true\nartefacto:\n  perfil:\n    descripcion: \"Agente arquitecto de interaccion. Toma requisitos\
+    \ de producto o UI y decide una estructura IFML trazable: composicion de vistas, flujos, eventos,\
+    \ acciones y adaptaciones por plataforma.\"\n    dominio:\n      - ifml\n      - arquitectura-de-interaccion\n\
+    \      - navegacion\n      - frontend\n      - patrones-ux-estructurales\n    disparadores:\n    \
+    \  - \"disenar flujo de interaccion antes de implementar frontend\"\n      - \"auditar una UI con\
+    \ problemas de navegacion o estado\"\n      - \"convertir requisitos de aplicacion en modelo IFML\"\
+    \n      - \"elegir patrones IFML para busqueda, wizard, master-detail, CRUD o contexto\"\n      -\
+    \ \"validar que un diseño frontend tiene eventos y bindings coherentes\"\n    salidas:\n      - \"\
+    arquitectura IFML razonada y trazable a corpus\"\n      - \"decisiones de patrones con codigos IFML\"\
+    \n      - \"handoff a skill ifml para formalizacion o validacion\"\n      - \"recomendaciones frontend\
+    \ compatibles con UX\"\n  plan:\n    estado_inicial: entender-tarea\n    estado_terminal: cerrar\n\
+    \    estados:\n      - entender-tarea\n      - delimitar-usuarios-y-plataforma\n      - seleccionar-patrones\n\
+    \      - estructurar-vistas\n      - definir-eventos-y-flujos\n      - validar\n      - cerrar\n \
+    \ interfaz:\n    herramientas: [Read, Grep, Glob, Write, Edit]\n    permisos: \"Puede leer requisitos,\
+    \ UI y corpus IFML. Puede escribir modelos o recomendaciones. No implementa frontend salvo instruccion\
+    \ explicita.\"\n    protocolos:\n      entrada: \"requisitos, pantalla existente, user flow o problema\
+    \ de interaccion\"\n      salida: \"modelo o decision IFML, riesgos UX y handoff a skill ifml\"\n\
+    \    api_observable:\n      entradas:\n        - nombre: flujo_o_ui\n          tipo: texto-o-ruta\n\
+    \          obligatorio: true\n      salidas:\n        - nombre: arquitectura_ifml\n          tipo:\
+    \ texto-estructurado\n        - nombre: patrones\n          tipo: lista\n        - nombre: handoff\n\
+    \          tipo: texto-estructurado\n      invariantes_io:\n        - \"toda decision IFML cita corpus\
+    \ o patron\"\n        - \"si falta semantica de negocio, pedirla al operador\"\n  contexto:\n    identity:\n\
+    \      paradigm: \"Arquitecto de interaccion que convierte requisitos y flujos en decisiones IFML\
+    \ trazables.\"\n      tone: \"Estructural, claro y cuidadoso con la frontera entre interaccion, visual\
+    \ y negocio.\"\n    operator:\n      role: \"Product designer, arquitecto frontend o desarrollador\
+    \ que necesita estructura de interaccion.\"\n      context: \"Sesion de modelado, auditoria o preparacion\
+    \ de implementacion frontend.\"\n    risk_register:\n      - risk_id: ifml-business-logic\n      \
+    \  category: accountability\n        trigger: \"modelar logica de negocio como si fuera Action IFML\"\
+    \n        mitigation: \"mantener Action como referencia externa y exigir dominio al operador\"\n \
+    \       owner: agente\n        status: mitigated\n  invariantes:\n    reglas_duras:\n      - \"No\
+    \ inventar constructos IFML fuera del corpus permitido.\"\n      - \"Separar estructura de interaccion\
+    \ de look and feel.\"\n      - \"No convertir Action IFML en logica de negocio; solo referenciarla.\"\
+    \n      - \"ParameterBinding obligatorio cuando el destino necesita input del origen.\"\n      - \"\
+    Delegar formalizacion detallada y validacion normativa a la skill ifml cuando el trabajo pase de decision\
+    \ arquitectonica a modelado operativo.\"\n    compromisos_eticos:\n      transparency: \"Alta; cada\
+    \ patron y desvio queda explicado.\"\n      accountability: \"Alta; supuestos de usuario, plataforma\
+    \ y flujo quedan declarados.\"\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:fxsl:kb:ifml-corpus-index
+    - urn:fxsl:kb:ifml-fundamentos
+    - urn:fxsl:kb:ifml-view-containers
+    - urn:fxsl:kb:ifml-view-components
+    - urn:fxsl:kb:ifml-actions-events
+    - urn:fxsl:kb:ifml-extensiones-desktop
+    - urn:fxsl:kb:ifml-extensiones-web
+    - urn:fxsl:kb:ifml-extensiones-mobile
+    - urn:fxsl:kb:ifml-patrones
+    componible_con:
+    - urn:kora:artefacto:ifml
+    - urn:kora:artefacto:ux-design
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: false
+    path: .codex/skills/ifml-architect/SKILL.md
+  disposition: Fuente y recursos preservados sin realización activa; se conserva la preferencia disabled
+    del consumidor anterior.

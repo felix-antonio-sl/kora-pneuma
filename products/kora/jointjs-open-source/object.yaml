@@ -1,0 +1,63 @@
+id: urn:kora:artefacto:jointjs-open-source
+kind: skill
+name: jointjs-open-source
+description: 'Especialista en JointJS open-source para tareas de desarrollo: implementa, integra, depura
+  y explica JointJS consultando siempre la documentación oficial viva en docs.jointjs.com antes de responder.'
+content: content.md
+targets:
+- codex
+requires: []
+relations: {}
+provenance:
+  source_repository: kora
+  source_path: artifacts/skills/kora/jointjs-open-source/SKILL.md
+  source_sha256: 23773363e4a987a9d66ab3c25396218988f35d7f28e770849cc2817bfc87ffd1
+  original_path: products/kora/jointjs-open-source/sources/original.md
+  legacy_header: "---\n_manifest:\n  urn: urn:kora:artefacto:jointjs-open-source\n  type: artefacto\n\
+    \  provenance:\n    created_by: OpenAI Codex\n    created_at: '2026-04-20'\n    source: Skill especializada\
+    \ en JointJS open-source para runtimes de coding agent,\n      con consulta obligatoria a la documentación\
+    \ oficial viva.\nversion: 1.0.1\nstatus: activo\nnombre: JointJS Open-Source\ndescripcion: 'Especialista\
+    \ en JointJS open-source para Claude Code y Codex: implementa,\n  integra, depura y explica JointJS\
+    \ consultando siempre la documentación oficial viva\n  en docs.jointjs.com antes de responder.'\n\
+    tags:\n- jointjs\n- diagramming\n- javascript\n- typescript\n- claude-code\n- codex\n- docs-live\n\
+    lang: es\nextensions:\n  kora:\n    vector_ontologico:\n      pi: 2\n      mu: 0\n      xi: 1\n  \
+    \    lambda: 0\n      phi: 1\n      sigma:\n      - 1\n      - 1\n      - 3\n      - 1\n      - 0\n\
+    \    presentacion: accion-primaria\n    atlas:\n      arnes_categorico: disciplina\n      forma_material:\
+    \ habilidad\n      metafora_relacional: supertool\n    entornos_objetivo:\n    - claude-code\n   \
+    \ - codex\n    - opencode\n    - openclaw\n    nivel_prescripcion: alto\n    conocimiento_permitido:\n\
+    \    - urn:kora:kb:catalogo-patrones-skills\n    - urn:kora:kb:cat-behavioral-preservation\n    componible_con:\
+    \ []\nartefacto:\n  perfil:\n    dominio:\n    - jointjs\n    - diagramming\n    - javascript\n  \
+    \  - typescript\n    - documentacion-oficial\n    disparadores:\n    - pregunta sobre API de JointJS\
+    \ open-source\n    - implementacion de graph, paper, links, ports o shapes\n    - integracion de JointJS\
+    \ con frameworks o bundlers\n    - debugging de comportamiento o rendering en JointJS\n    - necesidad\
+    \ de distinguir JointJS OSS de JointJS+\n    salidas:\n    - respuesta breve y accionable con grounding\
+    \ en docs oficial\n    - codigo minimo util para JointJS OSS\n    - hipotesis de debugging priorizadas\
+    \ y verificables\n  plan:\n    estado_inicial: clasificar-consulta\n    estado_terminal: respuesta-grounded\n\
+    \    estados:\n    - clasificar-consulta\n    - ubicar-seccion-oficial\n    - leer-docs-vivas\n  \
+    \  - responder-o-implementar\n    - respuesta-grounded\n  interfaz:\n    herramientas:\n    - WebSearch\n\
+    \    - Read\n    permisos: Consulta live-docs en https://docs.jointjs.com/ antes de responder sobre\n\
+    \      JointJS OSS.\n    protocolos:\n      entrada: consulta técnica, bug o implementación relacionada\
+    \ con JointJS open-source\n      salida: respuesta o código con mención explícita de la sección oficial\
+    \ consultada\n  invariantes:\n    reglas_duras:\n    - No responder de memoria sobre la API de JointJS\
+    \ si la documentación oficial\n      puede verificarse.\n    - Tratar https://docs.jointjs.com/ como\
+    \ fuente de verdad técnica.\n    - Consultar la documentación oficial también para preguntas simples,\
+    \ no solo para\n      temas complejos.\n    - Si una feature parece ser de JointJS+, declararlo explícitamente\
+    \ y no presentarla\n      como OSS.\n    - No copiar bloques extensos de documentación oficial al\
+    \ output.\n    - Marcar explícitamente cualquier inferencia no confirmada por la docs oficial.\n---\n"
+  legacy_state: activo
+  legacy_relations:
+    conocimiento_permitido:
+    - urn:kora:kb:catalogo-patrones-skills
+    - urn:kora:kb:cat-behavioral-preservation
+    componible_con: []
+  migration: legacy-codex-consumers-2026-09-05
+  installed_preference:
+    surface: codex
+    enabled: true
+    path: .codex/skills/jointjs-open-source/SKILL.md
+  inactive_machinery_references:
+  - urn:kora:kb:catalogo-patrones-skills
+  - urn:kora:kb:cat-behavioral-preservation
+  adaptations:
+  - Se retira del propósito la enumeración de destinos anteriores; el contrato técnico JointJS permanece
+    intacto.
