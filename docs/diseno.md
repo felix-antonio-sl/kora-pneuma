@@ -13,11 +13,22 @@ de datos ni un registro manual. Los recursos técnicos conservan su formato.
 `intake` guarda recursos de entrada y `create --source` conserva los originales
 necesarios para reconstruir el fundamento de un producto.
 
-`catalog.py` representa y resuelve; `authoring.py` conserva y crea fuentes;
-`knowledge.py` recibe recursos, prepara borradores y publica referencias;
+`catalog.py` representa y resuelve por fases coherentes; `needs.py` normaliza
+necesidades tipadas y condicionales. `authoring.py` conserva candidatas y admite
+fuentes después de validar sus destinos; `product_versions.py` conserva revisiones
+de agentes y skills. `knowledge.py` recibe recursos, prepara borradores y publica referencias;
 `render_codex.py` y `render_hermes.py` producen mapas de archivos nativos;
-`install.py` reconoce cambios y recupera operaciones; `cli.py` conecta esos
-recorridos. Los realizadores no modifican el home.
+`realization.py` calcula el alcance y compara instalaciones con sus fuentes;
+`install.py` prepara, aplica y recupera operaciones; `cli.py` conecta esos
+recorridos. `measurement.py` ofrece conteo opcional con un tokenizer real.
+Los realizadores no modifican el home.
+
+La selección distribuible conserva cuerpo y auxiliares declarados o reconocidos
+por la política compatible. Su huella excluye residuos operacionales. La revisión
+de una fuente de agente o skill también conserva su procedencia y archivos
+legítimos no distribuidos; se almacena en `versions/products`, fuera del catálogo
+activo. Las candidatas permanecen en `candidates` hasta su admisión y conservan
+diagnósticos si fallan. Una base que cambió exige reconciliar antes de admitir.
 
 ## Biblioteca de referencia
 
@@ -92,11 +103,17 @@ disponible; la operación de la maquinaria no depende de leerlo.
 
 ## Actualización y recuperación
 
-La CLI reúne las fuentes afectadas por la actualización y los consumidores
-administrados que comparten sus archivos. Considera tanto los paths previamente
-instalados como la realización actual: quitar una dependencia de la fuente no
-borra su propiedad previa. Un producto ajeno a ese alcance se puede mantener por
-separado.
+La CLI calcula efectos sobre las copias nativas administradas que comparten los
+archivos de la dependencia modificada. Compartir solo una referencia de lectura
+no extiende ese alcance. Una actualización de dependencia conserva otros cambios
+pendientes del consumidor. Considera paths previos y actuales: quitar una
+dependencia de la fuente no borra su propiedad previa. La simulación y aplicación
+usan el mismo cálculo; un plan guardado se rechaza si cambiaron sus precondiciones.
+
+`status --compare-source` distingue cambios locales, fuente y dependencias, con
+el origen que conserva cada recibo. Un recibo antiguo sin atribución suficiente
+expone esa incertidumbre. Esta comparación no acredita que el runtime haya
+cargado los archivos; los probes de carga y los canarios aportan esa evidencia.
 
 El instalador guarda hashes y modos de sus archivos, detecta edición local y
 conserva el estado ajeno. Prepara reemplazos y registra la intención antes de

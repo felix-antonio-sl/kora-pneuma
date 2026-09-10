@@ -21,6 +21,7 @@ sin modificarlo. Ambas opciones van antes del subcomando.
 ```sh
 python3 kora_cli.py list --kind knowledge
 python3 kora_cli.py list --kind skill --target codex
+python3 kora_cli.py list --kind skill --query 'recuperación'
 python3 kora_cli.py list --archived
 python3 kora_cli.py resolve urn:kora:kb:frontera-fuentes-tecnicas
 ```
@@ -33,6 +34,13 @@ SHA` recupera una versión exacta cuando la respuesta o cita debe ser reproducib
 Para encontrar contenido sin recorrer borradores ni versiones anteriores, usa
 `rg --follow -l 'término' knowledge/references`. La búsqueda lee las referencias
 vigentes directamente; no requiere mantener un índice adicional.
+
+`list --query TEXTO` busca en identidad, nombre, descripción, propósito, ámbito,
+palabras clave y relaciones presentes en la ficha. `resolve URN --target codex`
+explica el cierre dirigido y la disponibilidad de sus necesidades. Una falla
+ajena solo se contiene si su identidad puede distinguirse sin colisión; `check`
+reúne los defectos que encuentra. Si un archivo mal formado deja indeterminada
+su identidad, la resolución focal informa esa incertidumbre.
 
 La biblioteca conserva conocimientos heredados como `legacy`. Siguen disponibles
 con ese estado; su traslado no acredita una aprobación nueva de Félix. Una
@@ -105,11 +113,33 @@ en `references`. Agentes y skills que leen esa referencia encuentran la nueva
 versión sin reinstalarse. Para corregir un conocimiento publicado, prepara otra
 revisión; las versiones anteriores siguen disponibles para consulta exacta.
 
+`--candidate NOMBRE` permite mantener alternativas explícitas en `create
+knowledge`, `revise`, `review` y `approve`. Cada una conserva la revisión base y
+el nombre canónico de publicación. Publicar una alternativa no sobrescribe las
+otras; la siguiente aprobación detecta si su base quedó obsoleta. Sin ese
+argumento se mantiene el recorrido habitual de un borrador.
+
+`intake --provenance ARCHIVO_JSON` recibe una lista de metadata en el orden de
+los `--source`: localizador, fecha de obtención, versión o vista y límites de
+extracción cuando se conocen. Los originales se conservan por bytes. Obtener o
+calcular el hash de un archivo no acredita que fue extraído, leído o revisado.
+Los valores presentes, ausentes, cero, falso y nulo se mantienen en el original.
+
+`measure --source TEXTO --body CANDIDATA --auxiliary AUXILIAR --wrapper ENVOLTURA`
+mide textos UTF-8 comparables. `--source` y `--auxiliary` pueden repetirse. El
+resultado identifica tokenizer, versión, encoding y costo de cada componente;
+el costo completo incluye los auxiliares requeridos y la envoltura. El contador
+`tiktoken` es optativo y se instala en el entorno Python que ejecute esa orden.
+Sin contador, encoding disponible o texto comparable, la salida dice
+`NOT_MEASURED` y explica por qué. Medir no demuestra fidelidad ni autoriza
+publicación; los binarios requieren una representación comparable identificada.
+
 ## Autoría de agentes y skills
 
 Usa `autoria-kora` para preparar la conducta y las capacidades necesarias.
 `create skill` y `create agent` reciben namespace, nombre, `--id`, `--description`
-y `--body`, con la misma forma del ejemplo anterior. Publican la fuente en
+y `--body`, con la misma forma del ejemplo anterior. Conservan una candidata,
+validan los destinos declarados y admiten la fuente en
 `products/<namespace>/<name>` de la maquinaria. Los cuerpos no llevan un segundo
 frontmatter. Codex y Hermes son los destinos por defecto; `--target` permite
 restringirlos.
@@ -120,10 +150,93 @@ instalación. Los conocimientos permanecen en la biblioteca; no se copian dentro
 del agente o skill. Conserva junto al cuerpo los scripts, ejemplos y otros
 recursos propios que necesite el procedimiento.
 
-Para actualizar un agente o skill, resuelve su identidad y edita esa fuente,
-preservando cambios concurrentes y su versión anterior en Git. `create` rechaza
-una identidad o ubicación ocupada. Revisa también ejemplos y plantillas cuando
-puedan reintroducir instrucciones que acabas de corregir.
+En agentes y skills, `resources` puede declarar archivos o directorios relativos
+acotados, sin globs ni enlaces. Por ejemplo:
+
+```yaml
+resources:
+  - scripts
+  - references/plantilla.json
+  - assets/ejemplo.bin
+  - .env.example
+```
+
+Una declaración vacía significa que el producto no distribuye auxiliares. Sin
+ese campo, la compatibilidad conserva recursos de `referencias`, `references`,
+`scripts`, `agents` y `sources`. Los originales identificados en la procedencia
+se conservan en la fuente, fuera del bundle, salvo selección operativa explícita.
+Un auxiliar fuera de estos contenedores requiere declaración. Cachés, bytecode,
+temporales y estado privado quedan excluidos; una plantilla declarada puede
+conservar su formato nativo. El cuerpo, la ficha y los recursos seleccionados
+determinan la huella distribuible. Las revisiones de conocimiento mantienen su
+algoritmo de integridad y sus archivos históricos.
+
+Una necesidad simple sigue siendo una URN incondicional que consulta la versión
+vigente. Los campos ampliados son optativos y no reescriben esa forma anterior:
+
+```yaml
+requires:
+  - urn:ejemplo:skill:metodo
+  - id: urn:ejemplo:kb:regla
+    kind: knowledge
+    revision: <SHA-256 de la versión conservada>
+  - id: urn:ejemplo:skill:analisis
+    kind: product
+    target: codex
+    condition: el encargo requiere analizar una excepción
+    purpose: aplicar el procedimiento especializado
+```
+
+`kind` puede ser `product`, `knowledge` o `capability`; si se omite, se deriva del
+objeto resuelto. `target` restringe el destino y `condition` identifica un caso;
+el núcleo no interpreta esa frase como código. Una necesidad condicional
+satisfacible queda disponible anticipadamente; si falta ella o su cierre, las
+instrucciones nativas señalan ese recorrido como no disponible. Una necesidad
+obligatoria ausente impide realizar el producto. Dos revisiones incompatibles
+de una misma identidad se informan como conflicto.
+
+Las capacidades se comprueban con evidencia del entorno. `--capability IDENTIDAD`
+declara al preparar, comprobar o explicar que el llamador ya la contrastó; la
+salida conserva ese origen y no concede permisos ni credenciales. Tener archivos
+de una skill disponibles tampoco ejecuta sus helpers.
+
+Cada preparación reutiliza bytes y verificaciones dentro de una fase. `check`
+devuelve trabajo por objetos, referencias, bytes y tiempo. Las fases posteriores
+leen de nuevo; antes de producir efectos se contrastan los archivos, las
+identidades y los enlaces relevantes. En la API Python, `Catalog.phase()` permite
+agrupar una preparación coherente y `Catalog.revalidate()` comprueba que continúa
+vigente mientras esa fase sigue abierta.
+
+Para preparar antes de admitir, añade `--prepare-only` a `create`. La salida
+identifica la candidata conservada; `--candidate NOMBRE` permite nombrarla.
+Para revisar una fuente existente conservando su versión activa:
+
+```sh
+python3 kora_cli.py revise urn:ejemplo:skill:metodo --candidate ajuste
+python3 kora_cli.py review urn:ejemplo:skill:metodo --candidate ajuste
+python3 kora_cli.py admit urn:ejemplo:skill:metodo --candidate ajuste --reviewed SHA_REVISADO
+```
+
+Edita el cuerpo y los auxiliares de la candidata indicada por `revise`. `review`
+informa su hash y los límites formales de cada destino. `admit` exige que esa
+revisión y su base sigan vigentes; un error conserva la candidata y el diagnóstico.
+Una realización válida no acredita la semántica ni la utilidad del procedimiento.
+`--kind skill|agent|knowledge` permite desambiguar una candidata nueva en `review`.
+
+Las revisiones completas de agentes y skills se conservan en
+`versions/products/<namespace>/<name>/<hash>`, fuera del catálogo activo, con su
+procedencia y recursos. `resolve URN --revision HASH` consulta esa revisión sin
+reconstruirla desde Git. La huella distribuible sigue delimitando qué llega al
+runtime. `create` rechaza una identidad o ubicación ocupada. Revisa también
+ejemplos y plantillas cuando puedan reintroducir instrucciones corregidas.
+
+`alias IDENTIDAD_ANTERIOR IDENTIDAD_CONSERVADA` mantiene una entrada alternativa
+sin duplicar el producto. `retire URN --reason MOTIVO --replacement OTRA_URN`
+conserva versiones y registra el motivo y la sustitución opcional. `--dry-run`
+expone los consumidores afectados. El retiro archiva la fuente o referencia,
+mantiene su identidad reservada y deja sus consumidores disponibles para
+reconciliación explícita; no elimina sus instalaciones nativas. `remove`, en
+cambio, actúa sobre los archivos administrados del home seleccionado.
 
 ## Instalar o actualizar
 
@@ -137,9 +250,30 @@ python3 kora_cli.py install hermes urn:kora:artefacto:kora
 
 `install TARGET URN` valida las dependencias afectadas, realiza archivos nativos
 y reconcilia la instalación. Sin URNs procesa todos los productos activos del
-destino. Una actualización focal incluye consumidores administrados que
-comparten archivos o dependencias afectadas, considerando instalación previa y
-fuente actual. Cada destino se actualiza por separado.
+destino. Una actualización focal prepara el producto y sus dependencias
+materiales. Lleva los recursos compartidos a sus copias administradas y ajusta
+su propiedad, conservando el cuerpo y las demás dependencias pendientes de los
+consumidores no seleccionados. Compartir una referencia de conocimiento no
+amplía la selección. Cada destino se actualiza por separado.
+
+Puedes examinar esa misma operación antes de aplicarla:
+
+```sh
+python3 kora_cli.py install codex urn:ejemplo:skill:metodo --home /tmp/kora-home --dry-run
+python3 kora_cli.py remove codex urn:ejemplo:skill:metodo --home /tmp/kora-home --dry-run
+```
+
+La simulación no crea el home ni escribe estado. Su JSON muestra efectos por
+archivo, cambios de propiedad, conflictos y precondiciones. Si guardas el JSON,
+`--plan ARCHIVO` exige que siga vigente al aplicar. La aplicación recalcula bajo
+lock y contrasta fuentes, recibos y destinos. Un cambio material exige preparar
+de nuevo; la simulación no es autorización de publicación ni evidencia de carga.
+
+Un cambio de nombre nativo o una revisión fijada incompatible puede requerir
+seleccionar explícitamente los consumidores afectados. Si no se puede atribuir
+un archivo anterior con certeza, la operación informa el conflicto. Los recibos
+anteriores siguen siendo legibles; la procedencia por archivo se conserva al
+realizar nuevas instalaciones.
 
 `render TARGET URN --output DIRECTORIO_NUEVO` permite inspeccionar una salida sin
 instalarla. Genera el producto y sus dependencias en un directorio inexistente,
@@ -164,7 +298,9 @@ proveedor y modelo explícitos; memoria, configuración y autenticación pertene
 al operador.
 
 La actualización compara bytes y permisos con lo instalado anteriormente. Ante
-una edición local, consérvala o intégrala en la fuente antes de actualizar.
+una edición local de un archivo que va a cambiar, consérvala o intégrala en la
+fuente antes de actualizar. Un archivo sin efecto físico conserva su edición
+local y el estado sigue mostrándola.
 `--adopt archivo.json` permite adoptar archivos existentes mediante un mapa
 revisado de paths relativos al home y SHA-256 actuales. La comparación de bytes
 no acredita propiedad por sí sola ni autoriza sobrescribir trabajo ajeno.
@@ -189,6 +325,13 @@ retira archivos propios intactos y conserva la fuente y las dependencias que
 otro conjunto necesita. Memoria, credenciales, sesiones y archivos ajenos
 permanecen. Retirar un agente o skill no retira sus referencias de conocimiento.
 
+`status --compare-source` añade la comparación con las fuentes. Puedes acotarla
+con `--target codex|hermes`, `--id URN` repetible y, para skills de Hermes,
+`--profile NOMBRE`. Distingue fuente vigente, cambiada, ausente, retirada o no
+realizable; dependencias pendientes; cambios nativos; y carga `not_observed`.
+El estado ordinario y la recuperación funcionan aunque las fuentes no estén
+disponibles. Comparar archivos no demuestra qué leyó una sesión del runtime.
+
 `recover` atiende una instalación interrumpida. `rollback` intenta volver al
 estado anterior de la última transacción y se detiene ante ediciones posteriores.
 Estas operaciones no revierten publicaciones de conocimiento. Conserva los
@@ -199,6 +342,12 @@ seleccionado, fuera de Git y en el mismo filesystem que los archivos gestionados
 `status` muestra en `preserved_changes` las escrituras posteriores detectadas en
 archivos desplazados, con su ruta recuperable. Los respaldos no se eliminan
 automáticamente.
+
+Al retirar de la distribución un caché, bytecode o temporal anteriormente
+administrado, una modificación se conserva como objeto recuperable con su hash
+real y motivo. El recibo deja de distribuirlo; `status` conserva el localizador
+y `rollback` puede restaurarlo. Esta excepción no adopta archivos privados como
+`.env` ni elimina sus conflictos.
 
 ## Comprobar según el cambio
 
@@ -226,3 +375,23 @@ cada instalación. Los contratos de [Codex](codex.md) y [Hermes](hermes.md)
 contienen comprobaciones nativas y fuentes oficiales. Forma válida, fidelidad a
 la fuente, aprobación, instalación coherente y conducta observada acreditan
 propiedades distintas.
+
+Los probes nativos separan descubrimiento de inferencia. `probe_codex.py` y
+`probe_hermes.py` sin flags de inferencia comprueban capacidades del runtime;
+`probe_independence.py --offline` prueba la copia aislada y los fixtures sin modelo.
+Para observar recursos, un helper expresamente autorizado y actualización entre
+sesiones, usa canarios sintéticos:
+
+```sh
+python3 scripts/probe_codex.py --canary --scenario resources --direct
+python3 scripts/probe_codex.py --canary --scenario update --direct
+python3 scripts/probe_hermes.py --live --scenario resources
+python3 scripts/probe_hermes.py --live --scenario update
+```
+
+`--model` y `--effort` identifican la configuración solicitada y el recibo muestra
+la efectiva cuando el runtime la expone. Los homes y catálogos del ensayo son
+temporales. El canario `incomplete` exige observar el resultado del hijo y el
+cierre del padre; el perfil de prueba Hermes no expone delegación y rechaza ese
+escenario antes de inferir. Una respuesta que imita el JSON esperado no acredita
+un intercambio entre agentes.

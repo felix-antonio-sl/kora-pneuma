@@ -42,8 +42,20 @@ referencias en la biblioteca. El catálogo se deriva al operar; `list` y `resolv
 consultan referencias publicadas, sin exponer borradores como conocimiento
 aprobado. Los agentes y skills leen esas referencias sin incorporar una copia.
 
+La autoría de agentes y skills conserva candidatas y revisiones completas antes
+de admitir una fuente. La instalación permite simular efectos con `--dry-run`,
+aplicar un plan guardado y comparar el estado nativo con la fuente mediante
+`status --compare-source`. Las pruebas de carga y conducta observan qué usa
+efectivamente el runtime.
+
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).
 - [Diseño de la maquinaria](docs/diseno.md).
+- [Especificación confirmada de la versión de oro](docs/kora-version-oro.md):
+  conocimiento para LLM con mínimos tokens sin pérdida informativa y operación
+  mono-dev/mono-user en red segura; describe el contrato de destino.
+- [Plan de implementación de la base y maquinaria](docs/plan-implementacion-kora-oro.md):
+  línea base comprobada, incrementos y criterios de cierre; la renovación de
+  agentes, skills y conocimientos corresponde a la etapa posterior.
 - Contratos efectivos de [Codex](docs/codex.md) y [Hermes](docs/hermes.md).
 - [Antecedentes conservados](archive/reconstruction/migracion.md), de consulta opcional.
