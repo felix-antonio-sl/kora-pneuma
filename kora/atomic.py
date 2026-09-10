@@ -25,7 +25,9 @@ def _parent(path: Path):
     # descriptors pin the objects that were actually opened.
     # https://man7.org/linux/man-pages/man2/open.2.html
     path = Path(path).absolute()
-    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    # A dirfd for renameat2 needs traversal, not directory listing permission.
+    # O_PATH keeps the pinned-directory and no-symlink guarantees without read access.
+    flags = os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW
     fd = os.open(path.anchor, flags)
     try:
         for component in path.parts[1:-1]:
