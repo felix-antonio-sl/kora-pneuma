@@ -5,8 +5,9 @@ import unittest
 import yaml
 
 from kora.catalog import Catalog, KoraError, digest
+from kora.install import Installer
 from kora.product_versions import preserve
-from kora.realization import build
+from kora.realization import build, installation_effects
 
 
 class ProductRevisionResolutionTests(unittest.TestCase):
@@ -41,6 +42,21 @@ class ProductRevisionResolutionTests(unittest.TestCase):
         self.assertNotIn(b"Method B.", native.data)
         self.assertEqual(native.source["revision"], revision)
         self.assertEqual(native.source["pinned_revision"], revision)
+
+    def test_fixed_consumer_blocks_incompatible_shared_update(self):
+        method = self.product("method", "Method A.\n")
+        revision = preserve(self.root, method)
+        alpha = self.product("alpha", "Use A.\n", [
+            {"id": method.id, "kind": "product", "revision": revision},
+        ])
+        installer = Installer(self.home)
+        installer.apply(build(Catalog(self.root), "codex", [alpha.id]))
+        method.content_path.write_text("Method B.\n")
+        catalog = Catalog(self.root)
+        with catalog.phase():
+            result = installation_effects(catalog, "codex", [method.id], installer)
+        self.assertTrue(any("fijada" in issue["error"] for issue in result["conflicts"]))
+        self.assertIn("Method A.", (self.home / ".agents/skills/method/SKILL.md").read_text())
 
     def test_tampering_with_nondistributed_snapshot_provenance_is_rejected(self):
         method = self.product("method", "Method A.\n")

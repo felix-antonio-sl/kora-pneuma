@@ -3,73 +3,15 @@
 import argparse
 import json
 from pathlib import Path
-import re
 import shutil
 import sys
 import tempfile
 
 from .atomic import rename_new
 from .authoring import create
-from .catalog import Catalog, File, KoraError, digest, safe_relative, knowledge_root
+from .catalog import Catalog, KoraError, digest, safe_relative, knowledge_root
 from .install import Installer
-from .realization import _bundle_key, _profile_name, _selection, _build_instances, build
-
-
-def _installation_bundles(catalog: Catalog, target: str, identifiers, installed, profile=None):
-    instances = _selection(catalog, target, identifiers, profile)
-
-    def references(identifier):
-        # Establish relevance first. Only selected sources must be realizable;
-        # an archived or absent unrelated source does not block a focal update.
-        found, pending = set(), [identifier]
-        while pending:
-            identifier = pending.pop()
-            if identifier in found:
-                continue
-            found.add(identifier)
-            try:
-                product = catalog.get(identifier)
-            except KoraError:
-                continue
-            found.add(product.id)
-            pending.extend(need.id for need in product.needs
-                           if need.kind != "capability" and need.target in (None, target))
-        return found
-
-    selected = {_bundle_key(target, product.id, place) for product, place in instances}
-    candidates = []
-    for bundle in installed:
-        place = None
-        if bundle.startswith(f"{target}:"):
-            identifier = bundle[len(target) + 1:]
-        elif target == "hermes" and bundle.startswith("hermes@profile:"):
-            place, separator, identifier = bundle[len("hermes@profile:"):].partition(":")
-            if not separator or not identifier:
-                raise KoraError(f"Recibo de instancia Hermes inválido: {bundle}")
-            place = _profile_name(target, place)
-        else:
-            continue
-        if profile is not None and place != profile:
-            continue
-        if bundle not in selected:
-            candidates.append((identifier, place, references(identifier), set(installed[bundle])))
-
-    while True:
-        bundles = _build_instances(catalog, target, instances)
-        affected = set().union(*(references(product.id) for product, _ in instances))
-        affected_paths = set().union(*(set(files) | set(installed.get(key, {}))
-                                      for key, files in bundles.items()))
-        # Previous ownership is physical. Equal skill names in different Hermes
-        # profiles do not establish identity; current references connect copies.
-        remaining = []
-        for identifier, place, required, previous_paths in candidates:
-            if not identifiers or affected & required or affected_paths & previous_paths:
-                instances.append((catalog.get(identifier), place))
-            else:
-                remaining.append((identifier, place, required, previous_paths))
-        if len(remaining) == len(candidates):
-            return bundles
-        candidates = remaining
+from .realization import _bundle_key, _profile_name, build, installation_effects, compare_source
 
 
 def emit(bundles, output: Path):
@@ -144,28 +86,50 @@ def parser():
     render.add_argument("ids", nargs="*")
     render.add_argument("--output", type=Path, required=True)
     render.add_argument("--profile", help="Realizar skills dentro de un perfil nombrado de Hermes")
+    render.add_argument("--capability", action="append", default=[])
     install = commands.add_parser("install", help="Instalar o actualizar conservando cambios locales")
     install.add_argument("target", choices=["codex", "hermes"])
     install.add_argument("ids", nargs="*")
     install.add_argument("--home", type=Path, default=Path.home())
     install.add_argument("--adopt", type=Path, help="Mapa revisado de paths existentes y sus SHA-256")
     install.add_argument("--profile", help="Instalar una instancia de skills en un perfil de Hermes")
+    install.add_argument("--capability", action="append", default=[])
+    install.add_argument("--dry-run", action="store_true", help="Mostrar efectos y conflictos sin escribir")
+    install.add_argument("--plan", type=Path, help="Exigir las precondiciones de una simulación JSON guardada")
     remove = commands.add_parser("remove", help="Retirar solo archivos propios intactos")
     remove.add_argument("target", choices=["codex", "hermes"])
     remove.add_argument("ids", nargs="+")
     remove.add_argument("--home", type=Path, default=Path.home())
     remove.add_argument("--profile", help="Retirar solo la instancia de skills de este perfil Hermes")
+    remove.add_argument("--dry-run", action="store_true")
+    remove.add_argument("--plan", type=Path)
     for name, help_text in (("status", "Detectar cambios en archivos instalados"),
                             ("recover", "Recuperar una instalación interrumpida"),
                             ("rollback", "Deshacer la última instalación sin perder cambios posteriores")):
         command = commands.add_parser(name, help=help_text)
         command.add_argument("--home", type=Path, default=Path.home())
+        if name == "status":
+            command.add_argument("--compare-source", action="store_true", help="Comparar además con las fuentes actuales")
+            command.add_argument("--target", choices=["codex", "hermes"])
+            command.add_argument("--id", action="append", default=[])
+            command.add_argument("--profile")
     return result
 
 
 def execute(args):
     if args.command in ("status", "recover", "rollback"):
-        return getattr(Installer(args.home), args.command)()
+        installer = Installer(args.home)
+        result = getattr(installer, args.command)()
+        if args.command == "status" and args.compare_source:
+            if args.profile and args.target != "hermes":
+                raise KoraError("--profile requiere --target hermes")
+            catalog = Catalog(args.root, knowledge=args.knowledge_root, strict=False)
+            with catalog.phase():
+                result["source_comparison"] = compare_source(
+                    catalog, installer, result, target=args.target,
+                    identifiers=args.id, profile=_profile_name("hermes", args.profile))
+                catalog.revalidate()
+        return result
     profile = (_profile_name(args.target, getattr(args, "profile", None))
                if args.command in ("render", "install", "remove") else None)
     if args.command == "remove":
@@ -184,7 +148,10 @@ def execute(args):
                     raise KoraError("--profile solo admite productos skill")
                 bundle = _bundle_key(args.target, product.id, profile)
             bundles.append(bundle)
-        return installer.apply({}, remove=bundles)
+        if args.dry_run:
+            return installer.prepare({}, remove=bundles)
+        return installer.apply({}, remove=bundles,
+                               plan=json.loads(args.plan.read_text()) if args.plan else None)
     if args.command == "create":
         if args.kind == "knowledge":
             from .knowledge import create_draft
@@ -273,10 +240,30 @@ def execute(args):
         return emit(bundles, args.output)
     if args.command == "install":
         installer = Installer(args.home)
-        bundles = _installation_bundles(catalog, args.target, args.ids,
-                                        installer.receipts(), profile)
         adoption = json.loads(args.adopt.read_text()) if args.adopt else None
-        return installer.apply(bundles, adopt=adoption)
+        with catalog.phase():
+            receipts_before = installer.receipts()
+            effects = installation_effects(catalog, args.target, args.ids, installer, profile)
+            if installer.receipts() != receipts_before:
+                raise KoraError("Los recibos cambiaron durante la preparación; vuelve a calcular los efectos")
+            context = {"sources": catalog.preconditions(), "reasons": effects["reasons"]}
+            kwargs = {"adopt": adoption, "patches": effects["patches"], "context": context}
+            catalog.revalidate()
+            plan = installer.prepare(effects["bundles"], **kwargs)
+            receipts_hash = digest(json.dumps(receipts_before, ensure_ascii=False,
+                                              sort_keys=True, separators=(",", ":")).encode())
+            if plan["preconditions"]["receipt_sha256"] != receipts_hash:
+                raise KoraError("Los recibos cambiaron durante la preparación; vuelve a calcular los efectos")
+            if args.dry_run or effects["conflicts"]:
+                if effects["conflicts"]:
+                    plan["conflicts"].extend(effects["conflicts"])
+                    plan["ok"] = False
+                    plan["plan_sha256"] = digest(json.dumps(
+                        {key: value for key, value in plan.items() if key != "plan_sha256"},
+                        ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode())
+                return plan
+            return installer.apply(effects["bundles"], **kwargs, validate=catalog.revalidate,
+                                   plan=json.loads(args.plan.read_text()) if args.plan else plan)
     raise KoraError(f"Comando desconocido: {args.command}")
 
 

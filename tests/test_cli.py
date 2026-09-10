@@ -341,37 +341,101 @@ class CliProfileMaintenanceTests(unittest.TestCase):
         first = self.product("agent", "a-secondary", [secondary.id], targets=["codex"])
         last = self.product("agent", "z-both", [selected.id, secondary.id], targets=["codex"])
         self.cli("install", "codex", first.id, last.id)
+        state_path = self.home / ".local/state/kora/installed.json"
+        previous_state = json.loads(state_path.read_text())
+        secondary_path = ".agents/skills/secondary/SKILL.md"
+        secondary_before = (self.home / secondary_path).read_bytes()
+        secondary_mode = (self.home / secondary_path).stat().st_mode & 0o777
         selected.content_path.write_text("Selected updated.\n")
         secondary.content_path.write_text("Secondary updated.\n")
         self.cli("install", "codex", selected.id)
-        self.assertIn("Secondary updated", (self.home / ".agents/skills/secondary/SKILL.md").read_text())
+        self.assertIn("Selected updated", (self.home / ".agents/skills/selected/SKILL.md").read_text())
+        self.assertEqual((self.home / secondary_path).read_bytes(), secondary_before)
+        self.assertEqual((self.home / secondary_path).stat().st_mode & 0o777, secondary_mode)
+        current_state = json.loads(state_path.read_text())
+        for bundle in (f"codex:{first.id}", f"codex:{last.id}"):
+            self.assertEqual(current_state[bundle].get(secondary_path), previous_state[bundle].get(secondary_path))
+        comparison = self.cli("status", "--compare-source", "--target", "codex",
+                              "--id", last.id)
+        entry = next(item for item in comparison["source_comparison"]
+                     if item["id"] == last.id)
+        self.assertEqual(entry["source_state"], "current")
+        self.assertEqual(entry["dependency_state"], "changed")
         self.assertEqual(self.cli("status")["changes"], [])
 
     def test_removed_dependency_reconciles_previous_owners_in_each_requested_location(self):
         shared = self.product("skill", "shared")
         consumer = self.product("skill", "consumer", [shared.id])
+        other = self.product("skill", "other-consumer", [shared.id])
         for target in ("codex", "hermes"):
-            self.cli("install", target, consumer.id)
+            self.cli("install", target, consumer.id, other.id)
         self.cli("install", "hermes", consumer.id, "--profile", "dev")
+        self.cli("install", "hermes", other.id, "--profile", "dev")
+        body_before = {}
+        for prefix in (".agents", ".hermes"):
+            body_before[(prefix, "consumer")] = (
+                self.home / prefix / "skills/consumer/SKILL.md").read_bytes()
+            body_before[(prefix, "other-consumer")] = (
+                self.home / prefix / "skills/other-consumer/SKILL.md").read_bytes()
+        body_before[(".hermes/profiles/dev", "consumer")] = (
+            self.home / ".hermes/profiles/dev/skills/consumer/SKILL.md").read_bytes()
+        body_before[(".hermes/profiles/dev", "other-consumer")] = (
+            self.home / ".hermes/profiles/dev/skills/other-consumer/SKILL.md").read_bytes()
         metadata_path = consumer.directory / "object.yaml"
         metadata = yaml.safe_load(metadata_path.read_text())
         metadata["requires"] = []
         metadata_path.write_text(yaml.safe_dump(metadata))
         shared.content_path.write_text("Shared version two.\n")
+        state_path = self.home / ".local/state/kora/installed.json"
+        previous_state = json.loads(state_path.read_text())
 
         for target, prefix in (("codex", ".agents"), ("hermes", ".hermes")):
             with self.subTest(target=target):
                 self.cli("install", target, shared.id)
                 self.assertIn("Shared version two", (self.home / prefix / "skills/shared/SKILL.md").read_text())
-                state = json.loads((self.home / ".local/state/kora/installed.json").read_text())
-                self.assertNotIn(f"{prefix}/skills/shared/SKILL.md", state[f"{target}:{consumer.id}"])
-                self.assertNotIn(shared.id, (self.home / prefix / "skills/consumer/SKILL.md").read_text())
+                state = json.loads(state_path.read_text())
+                shared_path = f"{prefix}/skills/shared/SKILL.md"
+                self.assertIn(shared_path, state[f"{target}:{consumer.id}"])
+                self.assertIn(shared.id, (self.home / prefix / "skills/consumer/SKILL.md").read_text())
+                self.assertEqual(state[f"{target}:{consumer.id}"][f"{prefix}/skills/consumer/SKILL.md"],
+                                 previous_state[f"{target}:{consumer.id}"][f"{prefix}/skills/consumer/SKILL.md"])
+                self.assertEqual((self.home / prefix / "skills/consumer/SKILL.md").read_bytes(),
+                                 body_before[(prefix, "consumer")])
+                self.assertEqual((self.home / prefix / "skills/other-consumer/SKILL.md").read_bytes(),
+                                 body_before[(prefix, "other-consumer")])
+
+                if target == "codex":
+                    self.cli("install", target, consumer.id)
+                    state = json.loads(state_path.read_text())
+                    self.assertNotIn(shared_path, state[f"{target}:{consumer.id}"])
+                    self.assertNotIn(shared.id, (self.home / prefix / "skills/consumer/SKILL.md").read_text())
+                    self.assertEqual((self.home / prefix / "skills/other-consumer/SKILL.md").read_bytes(),
+                                     body_before[(prefix, "other-consumer")])
+                self.assertIn(shared_path, state[f"{target}:{other.id}"])
+                self.assertIn("Shared version two", (self.home / prefix / "skills/shared/SKILL.md").read_text())
+
         profile = self.home / ".hermes/profiles/dev/skills"
-        self.assertFalse((profile / "shared/SKILL.md").exists())
-        self.assertNotIn(shared.id, (profile / "consumer/SKILL.md").read_text())
+        profile_shared = ".hermes/profiles/dev/skills/shared/SKILL.md"
+        profile_consumer = ".hermes/profiles/dev/skills/consumer/SKILL.md"
+        profile_other = ".hermes/profiles/dev/skills/other-consumer/SKILL.md"
+        state = json.loads(state_path.read_text())
+        self.assertIn(profile_shared, state[f"hermes@profile:dev:{consumer.id}"])
+        self.assertIn(shared.id, (self.home / profile_consumer).read_text())
+        self.assertEqual((self.home / profile_consumer).read_bytes(),
+                         body_before[(".hermes/profiles/dev", "consumer")])
+        self.assertEqual((self.home / profile_other).read_bytes(),
+                         body_before[(".hermes/profiles/dev", "other-consumer")])
+        self.assertIn("Shared version two", (self.home / profile_shared).read_text())
+        self.cli("install", "hermes", consumer.id, "--profile", "dev")
+        state = json.loads(state_path.read_text())
+        self.assertNotIn(profile_shared, state[f"hermes@profile:dev:{consumer.id}"])
+        self.assertNotIn(shared.id, (self.home / profile_consumer).read_text())
+        self.assertIn(profile_shared, state[f"hermes@profile:dev:{other.id}"])
+        self.assertTrue((self.home / profile_other).is_file())
+        self.assertIn("Shared version two", (self.home / profile_shared).read_text())
         self.assertEqual(self.cli("status")["changes"], [])
         self.cli("rollback")
-        self.assertIn("version one", (profile / "shared/SKILL.md").read_text())
+        self.assertIn("Shared version two", (profile / "shared/SKILL.md").read_text())
         self.assertIn(shared.id, (profile / "consumer/SKILL.md").read_text())
 
     def test_unrelated_archived_or_missing_source_does_not_block_focal_update(self):
@@ -412,6 +476,7 @@ class CliProfileMaintenanceTests(unittest.TestCase):
         metadata = yaml.safe_load(metadata_path.read_text())
         metadata["requires"] = []
         metadata_path.write_text(yaml.safe_dump(metadata))
+        shared.content_path.write_text("Shared version two.\n")
         state_path = self.home / ".local/state/kora/installed.json"
         previous = state_path.read_bytes()
 
