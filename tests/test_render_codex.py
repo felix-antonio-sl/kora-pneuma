@@ -49,7 +49,7 @@ class CodexRenderTests(unittest.TestCase):
         self.assertEqual(set(result), {".agents/skills/witness/SKILL.md"})
 
     def test_skill_preserves_auxiliary_bytes_modes_and_excludes_source_metadata(self):
-        directory = self.product()
+        directory = self.product(resources=["scripts", "sample.bin"])
         script = directory / "scripts" / "read.py"
         script.parent.mkdir()
         script.write_bytes(b"#!/usr/bin/env python3\nprint('source')\n")
@@ -108,7 +108,7 @@ class CodexRenderTests(unittest.TestCase):
             self.rendered()
 
     def test_resource_collision_cannot_replace_the_native_skill(self):
-        directory = self.product()
+        directory = self.product(resources=["SKILL.md"])
         (directory / "SKILL.md").write_text("Archivo auxiliar que no debe sobrescribir instrucciones.")
         with self.assertRaisesRegex(ValueError, "colisiona"):
             self.rendered()

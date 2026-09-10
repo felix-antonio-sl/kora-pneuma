@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path, PurePosixPath
 import re
-import shlex
 
 import yaml
+
+from .render_common import availability_note, resolver_note, sourced_files
 
 from .catalog import Catalog, File, KoraError, Product
 
@@ -59,17 +60,8 @@ def _source_note(catalog: Catalog, product: Product, dependencies: list[Product]
             )
         else:
             raise KoraError(f"Tipo de dependencia no realizable en Hermes: {dependency.kind}")
-    if any(p.reference_root is not None for p in dependencies):
-        library = next(p.reference_root for p in dependencies if p.reference_root is not None)
-        entrypoint = catalog.root / "kora_cli.py"
-        if not entrypoint.is_file():
-            entrypoint = Path(__file__).resolve().parents[1] / "kora_cli.py"
-        resolver = shlex.join(["python3", str(entrypoint),
-                               "--root", str(library), "resolve", "URN"])
-        lines += ["", "El conocimiento publicado es de consulta. Su `object.yaml` indica "
-                  "el estado de publicación; `legacy` conserva disponibilidad sin una nueva aprobación. "
-                  "Para editarlo prepara un borrador con KORA; conserva la referencia vigente hasta aprobar la revisión.",
-                  f"Resuelve otras identidades y las referencias que añada el conocimiento con `{resolver}`."]
+    lines += resolver_note(catalog, dependencies)
+    lines += availability_note(catalog, product, "hermes")
     return "\n".join(lines) + "\n"
 
 
@@ -96,10 +88,10 @@ def _skill_files(catalog: Catalog, product: Product) -> dict[str, File]:
         if str(path) in files:
             raise KoraError(f"Recurso colisiona con un archivo nativo: {relative}")
         files[str(path)] = resource
-    return files
+    return sourced_files(product, files)
 
 
-def render(catalog: Catalog, product: Product) -> dict[str, File]:
+def _render(catalog: Catalog, product: Product) -> dict[str, File]:
     """Devuelve paths relativos al home del operador; nunca escribe ni configura Hermes.
 
     Los agentes realizan perfiles; sus skills requeridas quedan dentro del perfil.
@@ -123,6 +115,7 @@ def render(catalog: Catalog, product: Product) -> dict[str, File]:
         files = {str(base / "SOUL.md"): File(soul.encode("utf-8"))}
         for relative, resource in product.resources().items():
             files[str(base / "resources" / relative)] = resource
+        files = sourced_files(product, files)
     names: dict[str, str] = {}
     for skill in skills:
         name = _skill_name(skill)
@@ -146,7 +139,15 @@ def render(catalog: Catalog, product: Product) -> dict[str, File]:
         }
         if "version" in product.metadata:
             manifest["version"] = str(product.metadata["version"])
-        files[manifest_name] = File(
-            yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False).encode("utf-8")
-        )
+        files.update(sourced_files(product, {manifest_name: File(
+            yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False).encode("utf-8"))}))
     return files
+
+
+def render(catalog: Catalog, product: Product) -> dict[str, File]:
+    owns_phase = not catalog.in_phase
+    with catalog.phase():
+        files = _render(catalog, catalog.capture(product))
+        if owns_phase:
+            catalog.revalidate()
+        return files

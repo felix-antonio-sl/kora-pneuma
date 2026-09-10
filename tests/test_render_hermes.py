@@ -32,6 +32,8 @@ class HermesRenderTests(unittest.TestCase):
             "targets": ["codex", "hermes"],
             "requires": list(requires),
         }
+        if resources:
+            metadata["resources"] = list(resources)
         (directory / "object.yaml").write_text(yaml.safe_dump(metadata), encoding="utf-8")
         (directory / "content.md").write_text(body, encoding="utf-8")
         for relative, (data, mode) in (resources or {}).items():

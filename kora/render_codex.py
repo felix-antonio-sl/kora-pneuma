@@ -5,10 +5,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
-import shlex
 import tomllib
 
 import yaml
+
+from .render_common import availability_note, resolver_note, sourced_files
 
 from .catalog import Catalog, File, Product
 
@@ -33,17 +34,8 @@ def _resource_instructions(catalog: Catalog, product: Product, dependencies: lis
             lines.append(
                 f"- `{dependency.id}` → `{dependency.content_path.absolute()}`{suffix}."
             )
-    if any(p.reference_root is not None for p in dependencies):
-        library = next(p.reference_root for p in dependencies if p.reference_root is not None)
-        entrypoint = catalog.root / "kora_cli.py"
-        if not entrypoint.is_file():
-            entrypoint = Path(__file__).resolve().parents[1] / "kora_cli.py"
-        resolver = shlex.join(["python3", str(entrypoint),
-                               "--root", str(library), "resolve", "URN"])
-        lines += ["", "El conocimiento publicado es de consulta. Su `object.yaml` indica "
-                  "el estado de publicación; `legacy` conserva disponibilidad sin una nueva aprobación. "
-                  "Para editarlo prepara un borrador con KORA; conserva la referencia vigente hasta aprobar la revisión.",
-                  f"Resuelve otras identidades y las referencias que añada el conocimiento con `{resolver}`."]
+    lines += resolver_note(catalog, dependencies)
+    lines += availability_note(catalog, product, "codex")
     return "\n".join(lines) + "\n"
 
 
@@ -84,7 +76,7 @@ def _render_product(catalog: Catalog, product: Product) -> dict[str, File]:
 
     instructions = _instructions(catalog, product, dependencies)
     if product.kind == "skill":
-        return _skill_files(product, instructions, product.description)
+        return sourced_files(product, _skill_files(product, instructions, product.description))
 
     if product.kind == "agent":
         fields = {
@@ -113,12 +105,12 @@ def _render_product(catalog: Catalog, product: Product) -> dict[str, File]:
         )
         files = _skill_files(product, activation, description)
         files[f".codex/agents/{product.name}.toml"] = File(encoded.encode())
-        return files
+        return sourced_files(product, files)
 
     raise ValueError(f"{product.id}: tipo de producto desconocido: {product.kind}")
 
 
-def render(catalog: Catalog, product: Product) -> dict[str, File]:
+def _render(catalog: Catalog, product: Product) -> dict[str, File]:
     """Return this product and its dependency closure as files relative to HOME.
 
     This function does not write anything. Knowledge stays in the source
@@ -132,3 +124,12 @@ def render(catalog: Catalog, product: Product) -> dict[str, File]:
                 raise ValueError(f"Dos productos distintos colisionan en {path}")
             files[path] = file
     return files
+
+
+def render(catalog: Catalog, product: Product) -> dict[str, File]:
+    owns_phase = not catalog.in_phase
+    with catalog.phase():
+        files = _render(catalog, catalog.capture(product))
+        if owns_phase:
+            catalog.revalidate()
+        return files

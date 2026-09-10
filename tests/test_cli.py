@@ -27,6 +27,8 @@ class CliJourneyTests(unittest.TestCase):
             resource = item.directory / "reference.txt"
             resource.write_text("Local resource.\n")
             resource.chmod(0o644)
+            metadata = {**item.metadata, "resources": ["reference.txt"]}
+            (item.directory / "object.yaml").write_text(yaml.safe_dump(metadata))
 
             def change_permission(catalog, product):
                 files = render(catalog, product)

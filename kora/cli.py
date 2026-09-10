@@ -12,77 +12,7 @@ from .atomic import rename_new
 from .authoring import create
 from .catalog import Catalog, File, KoraError, digest, safe_relative, knowledge_root
 from .install import Installer
-
-
-def _profile_name(target: str, profile: str | None) -> str | None:
-    if profile is None:
-        return None
-    if target != "hermes":
-        raise KoraError("--profile solo está disponible para skills de Hermes")
-    profile = profile.strip().lower()
-    if profile == "default":
-        raise KoraError("El perfil default es la raíz de Hermes; omitir --profile")
-    # Matches named profile IDs in the installed Hermes, without importing it.
-    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,63}", profile) or profile in {
-        "hermes", "test", "tmp", "root", "sudo"
-    }:
-        raise KoraError(f"Nombre de perfil Hermes inválido: {profile!r}")
-    return profile
-
-
-def _bundle_key(target: str, identifier: str, profile: str | None = None) -> str:
-    return f"hermes@profile:{profile}:{identifier}" if profile is not None else f"{target}:{identifier}"
-
-
-def _selection(catalog: Catalog, target: str, identifiers, profile):
-    selected = ([catalog.get(identifier) for identifier in identifiers] if identifiers else
-                [p for p in catalog.products.values() if p.kind != "knowledge" and target in p.targets
-                 and (profile is None or p.kind == "skill")])
-    if profile is not None and any(product.kind != "skill" for product in selected):
-        raise KoraError("--profile solo admite productos skill; no cambia el perfil de un agente")
-    return [(product, profile) for product in selected]
-
-
-def _build_instances(catalog: Catalog, target: str, instances) -> dict[str, dict[str, File]]:
-    if target == "codex":
-        from .render_codex import render
-    elif target == "hermes":
-        from .render_hermes import render
-    else:
-        raise KoraError(f"Destino desconocido: {target}")
-    snapshots = {}
-    for product, profile in instances:
-        if profile is not None and product.kind != "skill":
-            raise KoraError(f"La instancia del perfil {profile} requiere una skill activa: {product.id}")
-        for member in [product, *catalog.dependencies(product, target)]:
-            snapshots[member.id] = member.fingerprint(portable=False)
-    bundles = {}
-    for product, profile in instances:
-        files = render(catalog, product)
-        if profile is not None:
-            prefix = ".hermes/skills/"
-            if any(not path.startswith(prefix) for path in files):
-                raise KoraError(f"La realización de skill invade otro ámbito: {product.id}")
-            files = {f".hermes/profiles/{profile}/skills/{path[len(prefix):]}": file
-                     for path, file in files.items()}
-        bundles[_bundle_key(target, product.id, profile)] = files
-    for identifier, fingerprint in snapshots.items():
-        if catalog.get(identifier).fingerprint(portable=False) != fingerprint:
-            raise KoraError(f"La fuente cambió durante realización: {identifier}")
-    # Check physical collisions before any output directory or runtime is touched.
-    flat = {}
-    for files in bundles.values():
-        for relative, file in files.items():
-            safe_relative(relative)
-            if relative in flat and flat[relative] != file:
-                raise KoraError(f"Colisión de realización en {target}: {relative}")
-            flat[relative] = file
-    return bundles
-
-
-def build(catalog: Catalog, target: str, identifiers=(), *, profile=None) -> dict[str, dict[str, File]]:
-    profile = _profile_name(target, profile)
-    return _build_instances(catalog, target, _selection(catalog, target, identifiers, profile))
+from .realization import _bundle_key, _profile_name, _selection, _build_instances, build
 
 
 def _installation_bundles(catalog: Catalog, target: str, identifiers, installed, profile=None):
@@ -102,7 +32,8 @@ def _installation_bundles(catalog: Catalog, target: str, identifiers, installed,
             except KoraError:
                 continue
             found.add(product.id)
-            pending.extend(product.requires)
+            pending.extend(need.id for need in product.needs
+                           if need.kind != "capability" and need.target in (None, target))
         return found
 
     selected = {_bundle_key(target, product.id, place) for product, place in instances}
@@ -180,9 +111,12 @@ def parser():
     listing.add_argument("--kind", choices=["knowledge", "skill", "agent"])
     listing.add_argument("--target", choices=["codex", "hermes"])
     listing.add_argument("--archived", action="store_true")
+    listing.add_argument("--query", help="Buscar por identidad, nombre, propósito, ámbito o relaciones")
     resolve = commands.add_parser("resolve", help="Resolver identidad a archivo de contenido")
     resolve.add_argument("id")
     resolve.add_argument("--revision", help="Consultar una versión exacta de conocimiento")
+    resolve.add_argument("--target", choices=["codex", "hermes"], help="Explicar necesidades y disponibilidad para un destino")
+    resolve.add_argument("--capability", action="append", default=[], help="Capacidad contrastada por el llamador; no concede permisos")
     intake = commands.add_parser("intake", help="Conservar recursos de entrada sin publicarlos")
     intake.add_argument("name")
     intake.add_argument("--source", type=Path, required=True, action="append")
@@ -273,35 +207,67 @@ def execute(args):
                 knowledge.approve(root, args.id, args.reviewed))
         return {"id": item.id, "path": str(item.content_path), "revision": item.revision,
                 "publication": item.metadata.get("publication", {}).get("status", "draft")}
-    catalog = Catalog(args.root, knowledge=args.knowledge_root)
+    catalog = Catalog(args.root, knowledge=args.knowledge_root, strict=False,
+                      capabilities=getattr(args, "capability", ()))
     if args.command == "resolve":
         product = catalog.at_revision(args.id, args.revision) if args.revision else catalog.get(args.id)
-        return {"id": product.id, "path": str(product.content_path), "active": product.id in catalog.products,
+        result = {"id": product.id, "kind": product.kind, "path": str(product.content_path), "active": product.id in catalog.products,
                 "revision": product.revision,
                 "publication": product.metadata.get("publication", {}).get("status")}
+        if product.kind != "knowledge" and product.revision is None:
+            from .product_versions import source_digest
+            result["source_revision"] = source_digest(product)
+            version = (catalog.root / "versions/products" / product.directory.parent.name /
+                       product.directory.name / result["source_revision"])
+            result["revision_preserved"] = version.exists() or version.is_symlink()
+            if result["revision_preserved"]:
+                catalog.at_revision(product.id, result["source_revision"])
+                result["revision"] = result["source_revision"]
+        if args.target:
+            explanation = catalog.explain(product, args.target)
+            result["dependencies"] = [{"id": p.id, "kind": p.kind, "revision": p.revision,
+                                       "path": str(p.content_path)} for p in explanation["products"]]
+            result["needs"] = explanation["edges"]
+            result["realizable"] = explanation["available"]
+            result["errors"] = explanation["errors"]
+        return result
     if args.command == "list":
         products = catalog.archived if args.archived else catalog.products
-        return [{"id": p.id, "kind": p.kind, "name": p.name, "targets": p.targets, "path": str(p.content_path),
+        query = (args.query or "").casefold()
+        def matches(product):
+            searchable = {field: product.metadata.get(field) for field in
+                          ("id", "kind", "name", "description", "purpose", "scope", "keywords", "relations")}
+            return query in json.dumps(searchable, ensure_ascii=False).casefold()
+        return [{"id": p.id, "kind": p.kind, "name": p.name, "description": p.description,
+                 "targets": p.targets, "path": str(p.content_path), "active": p.id in catalog.products,
+                 "availability": catalog.availability(p.id),
                  "publication": p.metadata.get("publication", {}).get("status")}
                 for p in products.values() if (not args.kind or p.kind == args.kind) and
-                (not args.target or args.target in p.targets)]
+                (not args.target or args.target in p.targets) and matches(p)]
     if args.command == "check":
-        issues = catalog.reference_issues()
-        for target in args.target or ("codex", "hermes"):
-            target_failed = False
-            for product in catalog.products.values():
-                if product.kind != "knowledge" and target in product.targets:
+        with catalog.phase():
+            issues = catalog.reference_issues()
+            for target in args.target or ("codex", "hermes"):
+                target_failed = False
+                for product in catalog.products.values():
+                    if product.kind != "knowledge" and target in product.targets:
+                        try:
+                            build(catalog, target, [product.id])
+                        except (KoraError, ValueError) as error:
+                            issues.append({"source": product.id, "target": target, "error": str(error)})
+                            target_failed = True
+                if not target_failed:
                     try:
-                        build(catalog, target, [product.id])
+                        build(catalog, target)
                     except (KoraError, ValueError) as error:
-                        issues.append({"source": product.id, "target": target, "error": str(error)})
-                        target_failed = True
-            if not target_failed:
+                        issues.append({"target": target, "error": str(error)})
+            if not issues:
                 try:
-                    build(catalog, target)
-                except (KoraError, ValueError) as error:
-                    issues.append({"target": target, "error": str(error)})
-        return {"ok": not issues, "active": len(catalog.products), "archived": len(catalog.archived), "issues": issues}
+                    catalog.revalidate()
+                except KoraError as error:
+                    issues.append({"relation": "revalidation", "error": str(error)})
+        return {"ok": not issues, "active": len(catalog.products), "archived": len(catalog.archived),
+                "issues": issues, "work": catalog.phase_metrics}
     if args.command == "render":
         bundles = build(catalog, args.target, args.ids, profile=profile)
         return emit(bundles, args.output)

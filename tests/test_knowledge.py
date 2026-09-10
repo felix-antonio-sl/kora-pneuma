@@ -207,7 +207,8 @@ class KnowledgePublicationTests(unittest.TestCase):
             with self.subTest(runtime=renderer.__module__):
                 files = renderer(catalog, catalog.get(identifier))
                 instructions = "\n".join(file.data.decode() for file in files.values())
-                self.assertIn(f"python3 {entrypoint} --root {self.store} resolve URN", instructions)
+                self.assertIn(f"python3 {entrypoint} --root {self.machinery} "
+                              f"--knowledge-root {self.store} resolve URN", instructions)
                 generator = Path(__file__).resolve().parents[1] / "kora_cli.py"
                 self.assertNotIn(f"python3 {generator}", instructions)
 
