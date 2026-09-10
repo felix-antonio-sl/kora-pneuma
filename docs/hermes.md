@@ -1,16 +1,30 @@
 # Realización de KORA en Hermes
 
-Decisiones contrastadas el **2026-09-05** con documentación oficial web y la
-instalación local. Hermes declara **0.21.0**, fecha de release **2026.8.31**;
-el checkout efectivo está limpio en
-`9dd6634c5635321cf38840cc30e9b51226689128`, commit del **2026-09-05**. La fecha
-de release y la del commit identifican cosas distintas.
+Contrato contrastado con documentación oficial web el **2026-09-08**. La
+instalación consultada declara **0.21.1** (`2026.9.7`, upstream `96663732`).
+`python3 scripts/probe_hermes.py` reprodujo las diez observaciones offline de
+contexto, descubrimiento y actualización, todas conformes; no acreditan inferencia.
+Los enlaces a commits y los ensayos fechados más abajo conservan evidencia
+histórica, no identifican automáticamente el runtime vigente. Revalida con
+`hermes --version` cuando una decisión dependa de él.
 
-Los enlaces permanentes siguientes conservan el corte `79445a49` usado durante
-la reconstrucción. Al destilar la maquinaria, `python3 scripts/probe_hermes.py`
-repitió en `9dd6634c` las diez observaciones offline de contexto, descubrimiento
-y actualización, todas conformes. Esas pruebas no actualizan Hermes ni acreditan
-por sí solas una nueva inferencia.
+## Perfil, Bot Chat y prueba de una actualización
+
+Un Bot es un perfil Hermes, no un segundo tipo de agente. Su Bot Chat canónico
+es persistente: allí `/new` y `/reset` se convierten en `/compact`, sin crear una
+sesión independiente. La documentación recomienda una sesión nueva para observar
+cambios de `SOUL.md`; actualizar archivos o compactar el historial no demuestra
+por sí solo esa carga. No inicies un segundo escritor sobre el home del perfil
+vivo para probarlo. Usa un home temporal con la realización a comprobar, sin
+memoria ni sesiones personales, y distingue ese ensayo de la conducta del Bot Chat.
+Fuentes: [Bot Mode](https://hermes-agent.nousresearch.com/docs/user-guide/bot-mode),
+[perfiles](https://hermes-agent.nousresearch.com/docs/user-guide/profiles),
+[identidad y overlays](https://hermes-agent.nousresearch.com/docs/user-guide/features/personality).
+
+`--ignore-rules` omite SOUL, contexto, memoria y skills precargadas; no equivale a
+`--safe-mode`, que también desactiva configuración, plugins, hooks y MCP. Ninguno
+sirve para acreditar la carga de instrucciones que deshabilita.
+Fuente: [opciones de chat](https://hermes-agent.nousresearch.com/docs/reference/cli-commands#hermes-chat).
 
 ## Traducción que opera en este host
 
@@ -36,8 +50,8 @@ código instalado confirma `SOUL.md` como identidad del perfil y la cadena de
 `AGENTS.md` desde la raíz Git al directorio de trabajo; por directorio gana
 `AGENTS.override.md` sobre `AGENTS.md`. Un `.hermes.md` encontrado tiene prioridad
 sobre esa cadena. Por eso no se emite un `AGENTS.md` dentro del perfil esperando
-que gobierne cualquier proyecto. La skill especialista instalada describía una
-búsqueda anterior; esta decisión usa el código vigente.
+que gobierne cualquier proyecto. La sección «Directory Chain» de la documentación
+vigente describe esta carga jerárquica; no corresponde el resumen «solo cwd».
 Fuentes: [personalidad](https://hermes-agent.nousresearch.com/docs/user-guide/features/personality),
 [contextos](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files),
 [implementación contrastada](https://github.com/NousResearch/hermes-agent/blob/79445a496c86a19332ad786494b8384d2167e2d0/agent/prompt_builder.py#L1433).
