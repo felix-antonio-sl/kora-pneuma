@@ -10,6 +10,7 @@ import yaml
 
 from kora.catalog import Catalog, KoraError
 from kora.knowledge import approve, create_draft, intake, retire, review, revise
+from kora.measurement import measure
 
 
 class KnowledgeLifecycleTests(unittest.TestCase):
@@ -318,6 +319,53 @@ class KnowledgeLifecycleTests(unittest.TestCase):
         result = retire(self.library, first.id, "otro motivo")
         self.assertEqual(result["status"], "retired")
 
+
+class MeasurementTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(prefix="kora-m5-measure-")
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.source = self.root / "source.md"
+        self.candidate = self.root / "candidate.md"
+        self.aux = self.root / "aux.md"
+        self.wrapper = self.root / "wrapper.md"
+        self.source.write_text("source", encoding="utf-8")
+        self.candidate.write_text("candidate", encoding="utf-8")
+        self.aux.write_text("aux", encoding="utf-8")
+        self.wrapper.write_text("wrapper", encoding="utf-8")
+
+    def test_measurement_stub_identifies_encoding_and_counts_complete_candidate(self):
+        class Encoder:
+            def encode(self, value, **_kwargs):
+                return list(value)
+
+        fake = types.SimpleNamespace(__version__="fixture", get_encoding=lambda name: Encoder())
+        with patch.dict(sys.modules, {"tiktoken": fake}):
+            result = measure(self.source, self.candidate, [self.aux], self.wrapper)
+        self.assertEqual(result["status"], "MEASURED")
+        self.assertEqual(result["tokenizer"], "tiktoken")
+        self.assertEqual(result["encoding"], "cl100k_base")
+        self.assertEqual(result["candidate"]["tokens"], len("candidate"))
+        self.assertEqual(result["total"]["candidate"], len("candidateauxwrapper"))
+
+    def test_missing_counter_and_binary_input_are_not_measured(self):
+        with patch.dict(sys.modules, {"tiktoken": None}):
+            result = measure(self.source, self.candidate)
+        self.assertEqual(result["status"], "NOT_MEASURED")
+        self.assertEqual(result["reason"], "counter_unavailable")
+        binary = self.root / "binary"
+        binary.write_bytes(b"\xff")
+        with patch.dict(sys.modules, {"tiktoken": None}):
+            invalid = measure([self.source, binary], [self.candidate],
+                              auxiliaries=[self.aux], wrapper=self.wrapper)
+        self.assertEqual(invalid["status"], "NOT_MEASURED")
+        self.assertEqual(invalid["reason"], "input_not_utf8")
+        self.assertEqual(invalid["source"]["paths"],
+                         [str(self.source), str(binary)])
+        self.assertEqual(invalid["source"]["bytes"],
+                         self.source.stat().st_size + 1)
+        self.assertIsNone(invalid["source"]["characters"])
+        self.assertIsNone(invalid["total"]["source"])
 
 
 if __name__ == "__main__":

@@ -135,6 +135,12 @@ def parser():
     alias = commands.add_parser("alias", help="Conservar una identidad alternativa para una fuente existente")
     alias.add_argument("alias")
     alias.add_argument("id")
+    measure = commands.add_parser("measure", help="Medir textos comparables con un contador optativo; no acredita fidelidad")
+    measure.add_argument("--source", type=Path, action="append", required=True)
+    measure.add_argument("--body", type=Path, required=True)
+    measure.add_argument("--auxiliary", type=Path, action="append", default=[])
+    measure.add_argument("--wrapper", type=Path)
+    measure.add_argument("--encoding", default="cl100k_base")
     author = commands.add_parser("create", help="Crear una fuente con cuerpo autorado y originales recuperables")
     author.add_argument("kind", choices=["knowledge", "skill", "agent"])
     author.add_argument("namespace")
@@ -241,6 +247,10 @@ def execute(args):
         provenance = json.loads(args.provenance.read_text()) if args.provenance else None
         return intake(knowledge_root(args.root, args.knowledge_root), args.name, args.source,
                       provenance=provenance)
+    if args.command == "measure":
+        from .measurement import measure
+        return measure(args.source, args.body, auxiliaries=args.auxiliary,
+                       wrapper=args.wrapper, encoding=args.encoding)
     if args.command in ("revise", "review", "approve", "admit"):
         from . import authoring, knowledge
         kind = ("knowledge" if args.command == "approve" else "skill" if args.command == "admit"
