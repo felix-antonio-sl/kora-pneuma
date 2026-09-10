@@ -1,6 +1,7 @@
 # Realización nativa en Codex
 
-Investigación y pruebas: **2026-09-05**, **Codex CLI 0.153.4**. El adaptador se
+Investigación inicial: **2026-09-05**, Codex CLI 0.153.4. Comprobación vigente de
+la maquinaria: **2026-09-10**, **Codex CLI 0.154.0**. El adaptador se
 implementa en `kora/render_codex.py`; `scripts/probe_codex.py` contrasta la
 interfaz instalada con datos sintéticos y entrega salida saneada.
 
@@ -204,3 +205,40 @@ publicación y el intercambio de referencias son decisiones de KORA; no se
 atribuyen como funciones nativas de Codex. Las pruebas del pipeline comprueban
 que publicar v2 conserva los bytes del bundle ya instalado y cambia lo leído
 por su referencia, manteniendo v1 consultable por versión.
+
+## Canarios de la base — 2026-09-10
+
+Con `gpt-6-astra`, esfuerzo `max` y catálogos/homes temporales, los escenarios
+`resources --direct` y `update --direct` observaron lectura de la skill, recurso
+y conocimiento, disponibilidad condicional ausente y preservación del sentinel
+frente a instrucciones ajenas contenidas en la fuente. El helper de `resources`
+se ejecutó por autorización expresa del encargo y solo creó su archivo previsto.
+Preparar, revisar, realizar e instalar el fixture no lo ejecutó.
+
+`update` cambió el conocimiento y el rol fuente, reinstaló la realización en el
+home temporal y abrió otra sesión. Se observaron las versiones anterior y nueva
+en respuestas de herramientas, además de la respuesta final. La validación del
+filesystem incluye archivos, enlaces y directorios inesperados. Esto acredita
+los escenarios sintéticos examinados; la utilidad y conducta de los artefactos
+personales se evalúan en la etapa de renovación.
+
+`--canary --scenario incomplete --direct` también pasó en Codex CLI 0.154.0.
+La sesión principal activó la skill, delegó al rol nativo y cerró con la
+limitación recibida. App Server entregó el resultado del hijo en un turno
+separado: el evaluador correlaciona padre e hijo mediante `subAgentActivity`
+iniciado/completado y exige `turn/completed` del mismo hijo con un mensaje final
+exacto. El hijo devolvió `INCOMPLETE` por `MISSING_INPUT`; el padre devolvió
+`CLOSED_WITH_LIMITATION` conservando esa causa. No hubo cambios en el workspace.
+Las pruebas del evaluador rechazan ecos del prompt, estados vacíos, turnos
+ajenos y turnos fallidos o interrumpidos.
+
+Los escenarios ampliados usan `thread/start` y `turn/start` efímeros de App
+Server, con sus eventos nativos y el modelo/esfuerzo efectivos en el recibo.
+El escenario básico conserva el transporte `codex exec` descrito arriba. Una
+espera observada por sí sola no acredita el contenido devuelto por un hijo.
+
+```sh
+python3 scripts/probe_codex.py --canary --scenario resources --direct
+python3 scripts/probe_codex.py --canary --scenario update --direct
+python3 scripts/probe_codex.py --canary --scenario incomplete --direct
+```

@@ -9,6 +9,7 @@ https://github.com/containers/bubblewrap#usage
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -24,6 +25,10 @@ sys.path.insert(0, str(ROOT))
 from kora.catalog import Catalog, knowledge_root
 from kora.cli import build
 from kora.install import Installer
+
+
+DEFAULT_MODEL = "gpt-6-astra"
+DEFAULT_EFFORT = "max"
 
 
 KNOWLEDGE = "urn:probe:kb:envios"
@@ -46,6 +51,29 @@ def emit(value):
     print(json.dumps(value, ensure_ascii=False), flush=True)
 
 
+def synthetic_fixture_checks() -> dict:
+    """Check disposable native fixtures without invoking a runtime or model."""
+    modules = {}
+    for runtime in ("codex", "hermes"):
+        script = Path(__file__).resolve().with_name(f"probe_{runtime}.py")
+        spec = importlib.util.spec_from_file_location(f"kora_probe_{runtime}_fixture", script)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        modules[runtime] = module
+    reports = {}
+    for runtime, module in modules.items():
+        reports[runtime] = {}
+        for scenario in module.SCENARIOS:
+            reports[runtime][scenario] = module.mechanical_canary(scenario, model=None, effort=None)
+    return {"plane": "fixture_pure_evaluation", "runtime": "offline", "model": None,
+            "effort": None, "scenarios": reports,
+            "helper_autoexecution_absent": all(
+                report["before"]["checks"].get("helper_not_autoexecuted") is True
+                for runtime_reports in reports.values() for report in runtime_reports.values()),
+            "ok": all(report["ok"] for runtime_reports in reports.values()
+                       for report in runtime_reports.values())}
+
+
 def copy_operating_tree(work):
     library = knowledge_root(ROOT)
     if library == ROOT:
@@ -56,6 +84,12 @@ def copy_operating_tree(work):
                         ignore=shutil.ignore_patterns("__pycache__"))
     for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):
         shutil.copy2(ROOT / name, work / name)
+    fixed_products = ROOT / "versions/products"
+    if fixed_products.is_dir():
+        (work / "versions").mkdir(parents=True, exist_ok=True)
+        shutil.copytree(fixed_products, work / "versions/products", symlinks=True)
+    if (ROOT / "aliases.yaml").is_file():
+        shutil.copy2(ROOT / "aliases.yaml", work / "aliases.yaml")
     copied_library = work / "knowledge"
     copied_library.mkdir()
     # Only published reference data enters the isolated fixture. In particular,
@@ -63,7 +97,7 @@ def copy_operating_tree(work):
     for name in ("references", "versions", "archive/references"):
         if (library / name).exists():
             shutil.copytree(library / name, copied_library / name, symlinks=True)
-    for name in ("aliases.yaml", "legacy-modes.yaml"):
+    for name in ("aliases.yaml", "legacy-modes.yaml", "lifecycle.yaml"):
         if (library / name).exists():
             shutil.copy2(library / name, copied_library / name)
     links = [path for path in work.rglob("*") if path.is_symlink()]
@@ -116,8 +150,15 @@ def prepare(output):
                                    work / "docs", work / "scripts", work / "tests", work / "knowledge")
                  for path in directory.rglob("*")
                  if (path.is_file() or path.is_symlink()) and "__pycache__" not in path.parts}
+    if (work / "versions/products").is_dir():
+        immutable.update({path.relative_to(work): fingerprint(path)
+                          for path in (work / "versions/products").rglob("*")
+                          if path.is_file() or path.is_symlink()})
     for name in ("kora_cli.py", "README.md", "AGENTS.md", ".gitignore", "requirements.txt"):
         immutable[Path(name)] = fingerprint(work / name)
+    for name in ("aliases.yaml",):
+        if (work / name).is_file():
+            immutable[Path(name)] = fingerprint(work / name)
     return temporary, work, config, immutable
 
 
@@ -134,10 +175,11 @@ def namespace(temporary, config):
             "--unshare-pid", "--new-session", "--proc", "/proc", "--dev", "/dev", "--"], executable
 
 
-def run_codex(prefix, executable, work, config, name, prompt):
+def run_codex(prefix, executable, work, config, name, prompt, *, model=DEFAULT_MODEL,
+              effort=DEFAULT_EFFORT):
     output = work / "reports" / f"{name}-final.txt"
     command = [*prefix, str(executable), "-a", "never", "-s", "danger-full-access",
-               "-m", "gpt-6-astra", "-c", 'model_reasoning_effort="max"',
+               "-m", model, "-c", f"model_reasoning_effort={json.dumps(effort)}",
                "-c", "features.apps=false", "-c", "features.remote_plugin=false",
                "-c", "features.memories=false", "-c", "check_for_update_on_startup=false",
                "-c", f"projects.{json.dumps(str(work))}.trust_level=\"trusted\"",
@@ -146,7 +188,7 @@ def run_codex(prefix, executable, work, config, name, prompt):
     environment = dict(os.environ)
     environment["CODEX_HOME"] = str(config)
     environment["PYTHONPATH"] = str(work)
-    emit({"phase": name, "started": True, "model": "gpt-6-astra", "effort": "max"})
+    emit({"phase": name, "started": True, "model": model, "effort": effort})
     with (work / "reports" / f"{name}-events.jsonl").open("wb") as events, \
          (work / "reports" / f"{name}-errors.log").open("wb") as errors:
         result = subprocess.run(command, cwd=work, env=environment, stdout=events, stderr=errors)
@@ -155,7 +197,8 @@ def run_codex(prefix, executable, work, config, name, prompt):
     return output.read_text(encoding="utf-8")
 
 
-def evaluate(prefix, executable, work, config, name):
+def evaluate(prefix, executable, work, config, name, *, model=DEFAULT_MODEL,
+             effort=DEFAULT_EFFORT):
     prompt = (
         "Usa $inspector-envios directamente en esta sesión, lee su skill y conocimiento. "
         "Evalúa A: permiso VIGENTE, sin lluvia, masa 10 kg; "
@@ -166,7 +209,7 @@ def evaluate(prefix, executable, work, config, name):
         "Devuelve solo JSON con cases (objeto A..E con valor de estado), distance y source_version. "
         "No edites archivos, no delegues y no crees Goals."
     )
-    text = run_codex(prefix, executable, work, config, name, prompt)
+    text = run_codex(prefix, executable, work, config, name, prompt, model=model, effort=effort)
     return json.loads(text.strip().removeprefix("```json").removesuffix("```").strip())
 
 
@@ -214,8 +257,11 @@ def offline():
              "assert not Path('knowledge/drafts').exists()"])
         report = json.loads(run(["kora_cli.py", "check"]).stdout)
         assert report["ok"], report
+        fixture_report = synthetic_fixture_checks()
+        assert fixture_report["ok"], fixture_report
         emit({"phase": "isolated_catalog", "active": report["active"], "archived": report["archived"],
-              "internal_links": internal_links, "separate_library": True, "ok": True})
+              "internal_links": internal_links, "separate_library": True,
+              "fixture_canaries": fixture_report, "ok": True})
         installations = {}
         for target in ("codex", "hermes"):
             receipt = json.loads(run(["kora_cli.py", "install", target, "--home", str(home)]).stdout)
@@ -225,6 +271,7 @@ def offline():
         result = run(["-m", "unittest", "discover", "-s", "tests", "-v"])
         emit({"phase": "offline", "ok": True, "network": False, "personal_home": False,
               "construction_archive": False, "git_required": False, "model_called": False,
+              "model": None, "effort": None, "fixture_canaries": fixture_report,
               "installations": installations, "tests": result.stderr.strip().splitlines()[-3:],
               "skipped": [line for line in result.stderr.splitlines() if "... skipped " in line]})
     return 0
@@ -232,6 +279,8 @@ def offline():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="Modelo explícito para las fases con inferencia")
+    parser.add_argument("--effort", default=DEFAULT_EFFORT, help="Esfuerzo de razonamiento explícito para las fases con inferencia")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--offline", action="store_true", help="Probar el árbol operativo sin red ni modelo")
     mode.add_argument("--output", type=Path, help="Usar inferencia real; directorio privado nuevo para recibo y localizador")
@@ -267,7 +316,8 @@ def main():
         "maquinaria ni el original. Puedes preparar cuerpos en inputs/. No lances otros modelos, no delegues, "
         "no publiques Git y no crees Goals. Completa la realización efectiva y devuelve qué comprobaste."
     )
-    run_codex(prefix, executable, work, config, "author", prompt)
+    run_codex(prefix, executable, work, config, "author", prompt,
+              model=args.model, effort=args.effort)
     catalog = Catalog(work)
     knowledge, skill, agent = [catalog.get(identifier) for identifier in (KNOWLEDGE, SKILL, AGENT)]
     assert knowledge.kind == "knowledge" and skill.kind == "skill" and agent.kind == "agent"
@@ -288,7 +338,8 @@ def main():
                      for target in ("codex", "hermes")
                      for files in build(catalog, target, [SKILL, AGENT]).values()
                      for relative in files}
-    before = evaluate(prefix, executable, work, config, "read_v1")
+    before = evaluate(prefix, executable, work, config, "read_v1",
+                      model=args.model, effort=args.effort)
     expected = {"A": "AUTORIZADA", "B": "DIFERIDA", "C": "UNKNOWN", "D": "DENEGADA", "E": "DENEGADA"}
     assert before["cases"] == expected and before["distance"] == "UNKNOWN" and before["source_version"] == "PZ_6139_V1", before
     update = SOURCE.replace("versión 1", "versión 2").replace("PZ_6139_V1", "PZ_6139_V2").replace("12 kg", "15 kg")
@@ -302,8 +353,9 @@ def main():
         "No cambies ni reinstales skill o agente: deben leer la nueva versión por la misma referencia estable. "
         "No apruebes ni edites otros conocimientos. Conserva el estado ajeno; no modifiques maquinaria, "
         "no delegues, no lances inferencia adicional ni crees Goals."
-    ))
-    after = evaluate(prefix, executable, work, config, "read_v2")
+    ), model=args.model, effort=args.effort)
+    after = evaluate(prefix, executable, work, config, "read_v2",
+                     model=args.model, effort=args.effort)
     expected["D"] = "AUTORIZADA"
     assert after["cases"] == expected and after["distance"] == "UNKNOWN" and after["source_version"] == "PZ_6139_V2", after
     for relative, expected_hash in immutable.items():
@@ -332,7 +384,9 @@ def main():
         cwd=work, capture_output=True, text=True)
     (work / "reports/recovery-tests.log").write_text(test_result.stdout + test_result.stderr)
     assert test_result.returncode == 0, "Pruebas de recuperación independientes fallaron"
-    report = {"ok": True, "old_core_access": False, "authoring": "actual KORA native direct activation",
+    report = {"ok": True, "model": args.model, "effort": args.effort,
+              "reasoning_effort": args.effort,
+              "old_core_access": False, "authoring": "actual KORA native direct activation",
               "targets_installed": ["codex", "hermes"], "native_behavior_observed": ["codex"],
               "separate_library": True, "knowledge_approval": "delegated only for synthetic probe knowledge",
               "updated_without_reinstall": True, "exact_prior_revision_readable": True,

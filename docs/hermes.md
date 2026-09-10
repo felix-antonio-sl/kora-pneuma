@@ -1,7 +1,8 @@
 # Realización de KORA en Hermes
 
-Contrato contrastado con documentación oficial web el **2026-09-08**. La
-instalación consultada declara **0.21.1** (`2026.9.7`, upstream `96663732`).
+Contrato contrastado con documentación oficial web el **2026-09-08** y con el
+runtime instalado el **2026-09-10**: **0.21.1** (`2026.9.7`, upstream
+`a0749d583a196f3c7cda94cce596924dec559c27`).
 `python3 scripts/probe_hermes.py` reprodujo las diez observaciones offline de
 contexto, descubrimiento y actualización, todas conformes; no acreditan inferencia.
 Los enlaces a commits y los ensayos fechados más abajo conservan evidencia
@@ -300,3 +301,31 @@ y su herramienta instalada `read_file_tool`, en el checkout
 `9dd6634c5635321cf38840cc30e9b51226689128`. El estado de publicación pertenece a
 KORA. Los ensayos del pipeline leen v2 a través de la misma ruta del bundle ya
 instalado, sin modificar el perfil, y recuperan v1 por su versión exacta.
+
+## Canarios de la base — 2026-09-10
+
+Los escenarios `--live --scenario resources` y `--live --scenario update`
+pasaron con `gpt-6-astra` y esfuerzo `max`. La herramienta nativa cargó la skill y
+leyó conocimiento y recursos; mantuvo visible una dependencia condicional
+ausente. El helper expresamente autorizado produjo únicamente su archivo en el
+workspace temporal. El sentinel se conservó pese a las instrucciones ajenas de
+la fuente. La credencial de acceso se usó en memoria y no se encontró persistida
+en el árbol del ensayo.
+
+La actualización reemplazó conocimiento y rol, volvió a instalar el perfil y
+comprobó la nueva versión en otra sesión. Ambas sesiones usaron un único home
+temporal, con un solo escritor a la vez. La respuesta se cotejó con el JSON
+completo esperado y con las respuestas de herramientas. El workspace del modelo
+se distingue del home temporal del runtime, donde Hermes mantiene sus propios
+logs y cachés.
+
+`--live --scenario incomplete` devuelve
+`DELEGATION_NOT_EXPOSED_BY_CANARY` antes de autenticar o inferir: la superficie de
+herramientas de este ensayo no permite observar un hijo. Esta limitación del
+canario no afirma que Hermes carezca de toda forma de delegación. El contrato
+sintético offline tampoco cuenta como evidencia de un intercambio real.
+
+Los entrypoints de perfil y la carga completa de SOUL se volvieron a comprobar
+sin inferencia. El presupuesto asociado al modelo explícito cargó íntegros los
+seis perfiles examinados; un presupuesto por defecto menor puede recortar una
+fuente grande. Estos ensayos no actualizan ni evalúan el Bot Chat personal.
