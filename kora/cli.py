@@ -9,7 +9,7 @@ import tempfile
 
 from .atomic import rename_new
 from .authoring import create
-from .catalog import Catalog, KoraError, digest, safe_relative, knowledge_root
+from .catalog import Catalog, KoraError, digest, safe_relative, knowledge_root, read_product
 from .install import Installer
 from .realization import _bundle_key, _profile_name, build, installation_effects, compare_source
 
@@ -44,6 +44,58 @@ def emit(bundles, output: Path):
     return {"output": str(output), "files": len(files), "bundles": sorted(bundles)}
 
 
+def _source_kind(args):
+    explicit = getattr(args, "kind", None)
+    if args.command == "retire":
+        # A stopped knowledge retirement can temporarily expose both names.
+        # Its own intent is the route to reconciliation before strict identity
+        # discovery becomes possible again; reading the intent has no effects.
+        from .knowledge import _read_lifecycle, _retirement_alias
+        library = knowledge_root(args.root, args.knowledge_root)
+        pending_id = _retirement_alias(library, args.id)
+        pending = _read_lifecycle(library).get(pending_id)
+        if isinstance(pending, dict) and pending.get("status") == "retiring":
+            return "knowledge"
+    catalog = Catalog(args.root, knowledge=args.knowledge_root, strict=False)
+    if catalog.availability(args.id) != "absent":
+        kind = catalog._lookup(args.id).kind
+        if explicit and explicit != kind:
+            raise KoraError(f"La identidad es {kind}, no {explicit}: {args.id}")
+        return kind
+    if explicit:
+        return explicit
+    matches = set()
+    for path in (args.root / "candidates").glob("*/*/*/product/object.yaml"):
+        if getattr(args, "candidate", None) and path.parent.parent.name != args.candidate:
+            continue
+        try:
+            item = read_product(path.parent)
+        except KoraError:
+            continue
+        if item.id == args.id:
+            matches.add(item.kind)
+    if len(matches) > 1:
+        raise KoraError("Hay candidatas de tipos distintos; indica --kind y --candidate")
+    return next(iter(matches), "knowledge")
+
+
+def _item_result(item, *, state=None):
+    revision = item.revision
+    if item.kind != "knowledge" and revision is None:
+        from .product_versions import source_digest
+        revision = source_digest(item)
+    result = {"id": item.id, "kind": item.kind, "path": str(item.content_path), "revision": revision}
+    if item.kind == "knowledge":
+        result["publication"] = item.metadata.get("publication", {}).get("status", "draft")
+        if item.metadata.get("candidate") is not None:
+            result["candidate"] = item.metadata["candidate"]
+    elif state:
+        result["state"] = state
+        if state == "candidate":
+            result["candidate"] = item.directory.parent.name
+    return result
+
+
 def parser():
     result = argparse.ArgumentParser(description="KORA: fuentes, productos nativos y recuperación")
     result.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1], help="Raíz de la maquinaria o de un corpus independiente")
@@ -62,13 +114,27 @@ def parser():
     intake = commands.add_parser("intake", help="Conservar recursos de entrada sin publicarlos")
     intake.add_argument("name")
     intake.add_argument("--source", type=Path, required=True, action="append")
+    intake.add_argument("--provenance", type=Path, help="JSON con metadata de procedencia, en el orden de las fuentes")
     for name, help_text in (("revise", "Preparar un borrador conservando la referencia vigente"),
                             ("review", "Mostrar el borrador y el hash de los archivos a revisar"),
-                            ("approve", "Publicar el contenido cuya aprobación fue autorizada")):
+                            ("approve", "Publicar el contenido cuya aprobación fue autorizada"),
+                            ("admit", "Admitir una candidata realizable de agente o skill")):
         command = commands.add_parser(name, help=help_text)
         command.add_argument("id")
-        if name == "approve":
+        command.add_argument("--candidate", help="Nombre explícito de una candidata conservada")
+        if name in ("revise", "review"):
+            command.add_argument("--kind", choices=["knowledge", "skill", "agent"],
+                                 help="Desambiguar una candidata nueva sin fuente activa")
+        if name in ("approve", "admit"):
             command.add_argument("--reviewed", required=True, help="SHA-256 de la revisión concreta aprobada")
+    retire = commands.add_parser("retire", help="Retirar una fuente conservando versiones y consumidores")
+    retire.add_argument("id")
+    retire.add_argument("--reason", required=True)
+    retire.add_argument("--replacement")
+    retire.add_argument("--dry-run", action="store_true")
+    alias = commands.add_parser("alias", help="Conservar una identidad alternativa para una fuente existente")
+    alias.add_argument("alias")
+    alias.add_argument("id")
     author = commands.add_parser("create", help="Crear una fuente con cuerpo autorado y originales recuperables")
     author.add_argument("kind", choices=["knowledge", "skill", "agent"])
     author.add_argument("namespace")
@@ -79,8 +145,11 @@ def parser():
     author.add_argument("--source", type=Path, action="append", default=[])
     author.add_argument("--target", choices=["codex", "hermes"], action="append", default=[])
     author.add_argument("--requires", action="append", default=[])
+    author.add_argument("--candidate")
+    author.add_argument("--prepare-only", action="store_true", help="Conservar candidata de agente o skill antes de admitirla")
     check = commands.add_parser("check", help="Comprobar referencias y realizaciones; no acredita semántica ni conducta")
     check.add_argument("--target", choices=["codex", "hermes"], action="append")
+    check.add_argument("--capability", action="append", default=[])
     render = commands.add_parser("render", help="Producir archivos nativos en una salida nueva")
     render.add_argument("target", choices=["codex", "hermes"])
     render.add_argument("ids", nargs="*")
@@ -158,22 +227,49 @@ def execute(args):
             if args.target:
                 raise KoraError("El conocimiento de referencia no tiene runtime de destino")
             item = create_draft(knowledge_root(args.root, args.knowledge_root), args.namespace, args.name,
-                                args.id, args.description, args.body, sources=args.source, requires=args.requires)
-            return {"id": item.id, "path": str(item.content_path), "publication": "draft"}
-        item = create(args.root, args.kind, args.namespace, args.name, args.id, args.description, args.body,
-                      sources=args.source, targets=args.target, requires=args.requires, knowledge=args.knowledge_root)
-        return {"id": item.id, "path": str(item.content_path)}
-    if args.command in ("intake", "revise", "review", "approve"):
-        from . import knowledge
-        root = knowledge_root(args.root, args.knowledge_root)
-        if args.command == "intake":
-            return knowledge.intake(root, args.name, args.source)
+                                args.id, args.description, args.body, sources=args.source, requires=args.requires,
+                                candidate=args.candidate)
+            return _item_result(item)
+        from .authoring import prepare
+        operation = prepare if args.prepare_only else create
+        item = operation(args.root, args.kind, args.namespace, args.name, args.id, args.description, args.body,
+                         sources=args.source, targets=args.target, requires=args.requires,
+                         knowledge=args.knowledge_root, candidate=args.candidate)
+        return _item_result(item, state="candidate" if args.prepare_only else "admitted")
+    if args.command == "intake":
+        from .knowledge import intake
+        provenance = json.loads(args.provenance.read_text()) if args.provenance else None
+        return intake(knowledge_root(args.root, args.knowledge_root), args.name, args.source,
+                      provenance=provenance)
+    if args.command in ("revise", "review", "approve", "admit"):
+        from . import authoring, knowledge
+        kind = ("knowledge" if args.command == "approve" else "skill" if args.command == "admit"
+                else _source_kind(args))
+        if kind == "knowledge":
+            root = knowledge_root(args.root, args.knowledge_root)
+            if args.command == "review":
+                return knowledge.review(root, args.id, candidate=args.candidate)
+            item = (knowledge.revise(root, args.id, candidate=args.candidate) if args.command == "revise" else
+                    knowledge.approve(root, args.id, args.reviewed, candidate=args.candidate))
+            return _item_result(item)
+        kwargs = {"candidate": args.candidate, "knowledge": args.knowledge_root}
         if args.command == "review":
-            return knowledge.review(root, args.id)
-        item = (knowledge.revise(root, args.id) if args.command == "revise" else
-                knowledge.approve(root, args.id, args.reviewed))
-        return {"id": item.id, "path": str(item.content_path), "revision": item.revision,
-                "publication": item.metadata.get("publication", {}).get("status", "draft")}
+            return authoring.review(args.root, args.id, **kwargs)
+        item = (authoring.revise(args.root, args.id, **kwargs) if args.command == "revise" else
+                authoring.admit(args.root, args.id, args.reviewed, **kwargs))
+        return _item_result(item, state="candidate" if args.command == "revise" else "admitted")
+    if args.command == "retire":
+        from . import authoring, knowledge
+        if _source_kind(args) == "knowledge":
+            return knowledge.retire(knowledge_root(args.root, args.knowledge_root), args.id, args.reason,
+                                    replacement=args.replacement, dry_run=args.dry_run, consumer_root=args.root)
+        return authoring.retire(args.root, args.id, args.reason, replacement=args.replacement,
+                                dry_run=args.dry_run, knowledge=args.knowledge_root)
+    if args.command == "alias":
+        from .authoring import alias
+        root = (knowledge_root(args.root, args.knowledge_root)
+                if _source_kind(args) == "knowledge" else args.root)
+        return alias(root, args.alias, args.id, knowledge=args.knowledge_root)
     catalog = Catalog(args.root, knowledge=args.knowledge_root, strict=False,
                       capabilities=getattr(args, "capability", ()))
     if args.command == "resolve":

@@ -1,6 +1,7 @@
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import yaml
 
@@ -42,6 +43,25 @@ class ProductRevisionResolutionTests(unittest.TestCase):
         self.assertNotIn(b"Method B.", native.data)
         self.assertEqual(native.source["revision"], revision)
         self.assertEqual(native.source["pinned_revision"], revision)
+
+    def test_candidate_review_rejects_a_provider_changed_during_native_validation(self):
+        from kora import authoring, render_codex
+
+        method = self.product("method", "Method A.\n")
+        alpha = self.product("alpha", "Use the method.\n", [method.id])
+        candidate = authoring.revise(self.root, alpha.id, candidate="change")
+        original = render_codex._render
+
+        def render_then_change_provider(*args, **kwargs):
+            result = original(*args, **kwargs)
+            method.content_path.write_text("Method changed during review.\n")
+            return result
+
+        with patch.object(render_codex, "_render", side_effect=render_then_change_provider):
+            valid, _, errors, _ = authoring._validate_candidate(self.root, candidate)
+        self.assertFalse(valid)
+        self.assertTrue(any("cambió" in error for error in errors), errors)
+        self.assertTrue(candidate.directory.is_dir())
 
     def test_fixed_consumer_blocks_incompatible_shared_update(self):
         method = self.product("method", "Method A.\n")
