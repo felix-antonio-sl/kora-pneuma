@@ -64,9 +64,7 @@ provenance:
     método decisional de urn:salud:artefacto:conducir-decisiones-hodom (snapshot fuente
     sha256:2b8c69ddbc8ec755c030330e2c7ad302339fe58301af5546b2861d89e4a390d7), su dominio
     de urn:salud:artefacto:hospitalizacion-domiciliaria y el corpus de Dirección Técnica
-    HODOM. Coexiste con urn:salud:artefacto:hodom-hsc-direccion-tecnica: aquel es
-    un subagente sintético de participación situado y este es una persona de alcance
-    usuario que representa el mandato técnico humano."
+    HODOM."
 
     autor: FS
 

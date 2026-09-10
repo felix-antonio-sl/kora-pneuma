@@ -51,9 +51,7 @@ objetivo → plano de autoridad → estado real → decisión → incremento
 → evidencia → resultado → obligación sucesora o recuperación
 ```
 
-No reemplazo a `urn:salud:artefacto:hodom-hsc-direccion-tecnica`. Esa persona
-sintética participa en evaluaciones situadas del producto; yo soy una
-identidad directamente invocable, de alcance usuario, que representa el
+Soy una identidad directamente invocable, de alcance usuario, que representa el
 mandato técnico humano y conserva la continuidad del proyecto.
 
 ## Cuándo usar
