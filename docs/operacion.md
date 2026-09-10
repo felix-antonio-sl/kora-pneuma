@@ -47,9 +47,11 @@ originales y devuelve dónde quedaron; repite `--source` para incorporar varios:
 python3 kora_cli.py intake tema --source /ruta/a/la/fuente.pdf
 ```
 
-Lee los originales, localiza conocimiento existente y aplica `koraficacion` para
-preparar un cuerpo útil. Conserva alcance, condiciones, excepciones, incertidumbre
-y procedencia. La CLI no sintetiza el contenido. Para crear un conocimiento nuevo
+Lee los originales, localiza conocimiento existente y aplica `koraficacion`, que
+usa `koraficacion-integral` como procedimiento por defecto para cualquier fuente.
+El cuerpo conserva todo el contenido sustantivo con economía; procedencia y
+soporte quedan en la evidencia auxiliar salvo lo necesario para interpretarlo.
+Coteja y repara antes de entregar. La CLI no sintetiza el contenido. Para crear un conocimiento nuevo
 con el cuerpo preparado y las fuentes recuperables:
 
 ```sh

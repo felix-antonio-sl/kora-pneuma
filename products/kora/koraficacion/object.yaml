@@ -1,13 +1,14 @@
 id: urn:kora:artefacto:koraficacion
 kind: skill
 name: koraficacion
-description: Transforma fuentes en conocimiento útil y recuperable preservando alcance,
-  excepciones, incertidumbre, relaciones y originales técnicos.
+description: Korafica cualquier fuente con compresión integral de su contenido sustantivo,
+  cotejo y procedencia recuperable; prepara y publica referencias KORA con la autoridad del encargo.
 content: content.md
 targets:
 - codex
 - hermes
 requires:
+- urn:kora:artefacto:koraficacion-integral
 - urn:kora:kb:frontera-fuentes-tecnicas
 provenance:
   date: '2026-09-05'

@@ -24,9 +24,11 @@ La biblioteca de conocimiento es un repositorio separado, seleccionado mediante
 `knowledge` o `--knowledge-root`. Consulto sus referencias publicadas y distingo
 las conservadas como `legacy` de las que tienen una aprobación registrada.
 
-- Para transformar fuentes, uso `koraficacion`. El conocimiento conserva aquello
-  que cambia su interpretación o uso: alcance, condiciones, excepciones,
-  incertidumbre, relaciones y procedencia. Los originales siguen recuperables.
+- Para transformar fuentes, uso `koraficacion` y su procedimiento integral por
+  defecto. El conocimiento expresa con economía todo el contenido sustantivo:
+  alcance, condiciones, excepciones, incertidumbre y relaciones. La procedencia
+  y los originales siguen recuperables fuera del cuerpo, salvo atribuciones
+  necesarias para entenderlo.
   Preparo el borrador, comparo su contenido con las fuentes y presento una revisión
   concreta para aprobación. Publico cuando Félix aprobó ese contenido o delegó
   explícitamente esa decisión; la autoridad para cambiar maquinaria no la

@@ -1,12 +1,21 @@
 # Koraficación
 
 Transforma una o varias fuentes en conocimiento que ayude a comprender o actuar.
-Parte del uso esperado y de la fuente completa dentro de ese alcance. La salida
+El tratamiento por defecto conserva todo su contenido sustantivo y lo expresa
+con economía, cualquiera sea su formato o dominio. Sólo una selección de alcance
+explícita permite dejar contenido fuera; una pregunta actual no redefine por sí
+sola qué merece conservarse. La salida
 debe poder leerse, comprobarse, recuperarse y actualizarse sin depender de la
 memoria de quien la escribió. El artefacto resultante es una referencia de la
 biblioteca de conocimiento, separada de agentes y skills.
 
 ## Leer y componer
+
+Aplica `koraficacion-integral` como procedimiento de transformación en toda
+koraficación. Lee su [fuente](../koraficacion-integral/content.md) o su `SKILL.md`
+instalado y sigue el inventario, compresión, cotejo y reparación que establece.
+Esta skill conduce la entrada y publicación en KORA; el método integral mantiene
+en un solo lugar el criterio de contenido y el trabajo por bloques.
 
 Identifica procedencia, fecha o versión pertinente y alcance de cada fuente.
 Conserva los originales recuperables. Consulta fuentes oficiales vigentes cuando
@@ -20,11 +29,17 @@ queda desconocido; no se convierte en cero, falso ni una conclusión negativa.
 Si dos fuentes discrepan, muestra el desacuerdo y su alcance antes de decidir
 si hay evidencia suficiente para resolverlo.
 
-Escribe el cuerpo con el detalle que requiere su consumidor. Incluye referencias
-localizables cerca de afirmaciones materiales. La compresión se detiene cuando
-elimina una condición relevante o vuelve imposible reconstruir el fundamento.
-Un esquema, dataset, imagen, binario o script conserva su formato cuando
-convertirlo en prosa destruiría su función; el cuerpo explica cómo usarlo.
+Escribe para las decisiones de su consumidor, no siguiendo por inercia los
+encabezados de la fuente. Fusiona obligaciones repetidas cuando no aporten una
+condición, autoridad o énfasis distinto; conserva cada regla en un lugar y
+remite a ella donde haga falta. Pasar listas a párrafos no elimina redundancia.
+La compresión se detiene antes de perder una condición relevante o su fundamento.
+Mantén la procedencia y los localizadores comprobables en la evidencia auxiliar.
+Incluye en el cuerpo la atribución o referencia que el lector necesite para
+interpretar una afirmación, distinguir versiones o resolver una discrepancia;
+no arrastres el soporte del ejemplar. Un esquema,
+dataset, imagen, binario o script conserva su formato si la prosa destruye su
+función; el cuerpo explica cómo usarlo.
 
 Antes de crear un objeto, busca por su identidad y por términos distintivos en
 las referencias existentes. Si el conocimiento ya está representado, decide si
@@ -63,13 +78,14 @@ directamente versiones publicadas ni enlaces de referencia.
 
 ## Comprobar el resultado
 
-Coteja el contenido nuevo o modificado con los originales, especialmente las
-condiciones y excepciones que cambian su uso. Para comprobar utilidad, responde
-desde el producto una pregunta que dependa de ese contenido y contrasta la
-respuesta con la fuente; incluye una excepción o un dato ausente cuando sean
-materiales. Una respuesta fluida no acredita fidelidad. Abre los recursos
-técnicos necesarios y resuelve las referencias cambiadas. La guía distingue
-estas comprobaciones del diagnóstico del catálogo completo.
+Coteja fuente→salida para detectar omisiones y salida→fuente para detectar
+adiciones o cambios de sentido. Comprueba condiciones, excepciones y modalidad:
+«si basta» no equivale a «siempre basta». Revisa también las repeticiones que
+quedan, antes de afirmar que eliminaste redundancia. Para comprobar utilidad,
+responde desde el producto una pregunta y contrástala con la fuente; incluye
+una excepción o dato ausente cuando cambien su uso. Una respuesta fluida no
+acredita fidelidad. Abre los recursos técnicos necesarios y resuelve las
+referencias cambiadas; el diagnóstico del catálogo es una comprobación distinta.
 
 Usa `review` para identificar el borrador concreto por su hash. Presenta el
 contenido revisado, su procedencia y cualquier pérdida o incompatibilidad
