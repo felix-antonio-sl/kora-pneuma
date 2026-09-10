@@ -35,6 +35,8 @@ def _source_note(catalog: Catalog, product: Product, dependencies: list[Product]
         f"Identidad: `{product.id}`.",
         f"Fuente editable: `{product.content_path.resolve()}`.",
         "Este archivo es una realización; las actualizaciones se hacen desde su fuente.",
+        f"Referencias relativas del cuerpo: base `{product.content_path.parent.resolve()}`; "
+        "léelas con `read_file`. `skill_view` solo abre recursos internos del bundle instalado.",
     ]
     if product.kind == "agent" and product.resources():
         lines.extend([

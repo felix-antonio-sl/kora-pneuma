@@ -49,6 +49,13 @@ herramientas en una promesa de enforcement.
 Fuentes: [Agent Skills](https://agentskills.io/specification),
 [skills de Hermes](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills).
 
+Los enlaces relativos del cuerpo conservan la base de su fuente. El renderer
+Hermes la declara explícitamente en la nota nativa: usa `read_file` para leer
+esos archivos; `skill_view` solo abre recursos internos del bundle. Esto permite
+recuperar una guía de la maquinaria sin copiarla al perfil ni interpretar
+`../../../docs/operacion.md` desde el directorio de la skill instalada. El cuerpo
+se conserva literal; la nota define cómo leerlo, no reescribe enlaces Markdown.
+
 ## Entrada nativa y tamaño efectivo de SOUL
 
 Los perfiles nuevos `fugaz` y `agent-architect` funcionan sin que KORA genere un

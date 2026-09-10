@@ -59,6 +59,27 @@ class HermesRenderTests(unittest.TestCase):
         self.assertEqual(files[".hermes/skills/method/assets/data.bin"].data, b"\x00\xff")
         self.assertEqual(files[".hermes/skills/method/scripts/run.sh"].mode & 0o777, 0o755)
 
+    def test_source_relative_guide_is_recoverable_outside_installed_bundle(self):
+        guide = self.root / "docs/operacion.md"
+        guide.parent.mkdir()
+        guide.write_text("Guía del ensayo.\n", encoding="utf-8")
+        body = "Lee la [guía](../../../docs/operacion.md).\n"
+        skill = self.product("test", "method", "skill", body)
+        catalog = Catalog(self.root)
+        product = catalog.get(skill)
+        files = render(catalog, product)
+        installed = self.root / "home/.hermes/skills/method/SKILL.md"
+        installed.parent.mkdir(parents=True)
+        content = files[".hermes/skills/method/SKILL.md"].data.decode("utf-8")
+        installed.write_text(content, encoding="utf-8")
+        relative = "../../../docs/operacion.md"
+        self.assertFalse((installed.parent / relative).exists())
+        self.assertEqual((product.content_path.parent / relative).read_text(), "Guía del ensayo.\n")
+        self.assertIn(body, content)
+        self.assertIn(f"Referencias relativas del cuerpo: base `{product.content_path.parent.resolve()}`", content)
+        self.assertIn("`read_file`", content)
+        self.assertIn("`skill_view` solo abre recursos internos del bundle", content)
+
     def test_agent_packages_transitive_skills_with_explicit_file_ownership(self):
         secondary = self.product("test", "secondary", "skill", "Procedimiento auxiliar.\n")
         primary = self.product("test", "primary", "skill", "Procedimiento principal.\n", [secondary])
