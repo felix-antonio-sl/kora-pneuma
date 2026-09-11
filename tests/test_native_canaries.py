@@ -91,11 +91,11 @@ class NativeCanaryFixtureTests(unittest.TestCase):
                 evidence = module.evaluate_synthetic_fixture(fixture)
                 self.assertTrue(evidence["ok"], evidence)
                 self.assertEqual(evidence["loaded_versions"], ["V1", "V2"])
-                self.assertTrue(evidence["checks"]["source_v1_loaded"])
-                self.assertTrue(evidence["checks"]["source_v2_loaded_in_new_read"])
+                self.assertTrue(evidence["checks"]["source_v1_read"])
+                self.assertTrue(evidence["checks"]["source_v2_read"])
                 self.assertTrue(evidence["checks"]["same_source_path"])
-                self.assertTrue(evidence["checks"]["native_role_v1_loaded"])
-                self.assertTrue(evidence["checks"]["native_role_v2_loaded"])
+                self.assertTrue(evidence["checks"]["native_role_v1_materialized"])
+                self.assertTrue(evidence["checks"]["native_role_v2_materialized"])
                 self.assertTrue(fixture["sentinel"].is_file())
 
     def test_incomplete_contract_is_declared_without_faking_runtime_evidence(self):

@@ -46,16 +46,22 @@ La autoría de agentes y skills conserva candidatas y revisiones completas antes
 de admitir una fuente. La instalación permite simular efectos con `--dry-run`,
 aplicar un plan guardado y comparar el estado nativo con la fuente mediante
 `status --compare-source`. Las pruebas de carga y conducta observan qué usa
-efectivamente el runtime.
+efectivamente el runtime. `check` informa su alcance: un resultado verde no
+acredita fidelidad del conocimiento, utilidad diferencial de un agente ni
+conducta futura. Un recibo `current` compara la realización; el conocimiento
+consultado por una referencia viva puede cambiar sin reinstalar el agente.
+
+Usa el producto que resuelva el trabajo. Para una fuente simple basta el cotejo
+directo de koraficación; el helper de bloques sirve cuando hace falta partición o
+reanudación. Los métodos de diagnóstico y diseño permiten avanzar con evidencia
+parcial y propuestas explícitas, conservando lo que falta para afirmar un resultado
+comprobado. Formularios, fases y papeles adicionales se justifican por su uso.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).
 - [Diseño de la maquinaria](docs/diseno.md).
-- [Especificación confirmada de la versión de oro](docs/kora-version-oro.md):
-  conocimiento para LLM con mínimos tokens sin pérdida informativa y operación
-  mono-dev/mono-user en red segura; describe el contrato de destino.
-- [Plan de implementación de la base y maquinaria](docs/plan-implementacion-kora-oro.md):
-  línea base comprobada, incrementos y criterios de cierre; la renovación de
-  agentes, skills y conocimientos corresponde a la etapa posterior.
+- [Especificación de referencia](docs/kora-version-oro.md): contrato de destino;
+  su existencia no certifica cumplimiento de todos los requisitos.
 - Contratos efectivos de [Codex](docs/codex.md) y [Hermes](docs/hermes.md).
-- [Antecedentes conservados](archive/reconstruction/migracion.md), de consulta opcional.
+- Antecedentes de consulta: [reconstrucción](archive/reconstruction/migracion.md)
+  y [plan de implementación concluido](docs/plan-implementacion-kora-oro.md).

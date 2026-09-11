@@ -15,6 +15,30 @@ from kora.cli import build
 
 
 class CliJourneyTests(unittest.TestCase):
+    def test_check_rejects_missing_or_file_root_without_creating_it(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            absent, occupied = base / "absent", base / "file"
+            occupied.write_text("user data")
+            library = base / "library"
+            library.mkdir()
+            executable = Path(__file__).resolve().parents[1] / "kora_cli.py"
+            for root in (absent, occupied):
+                with self.subTest(root=root):
+                    result = subprocess.run([
+                        sys.executable, str(executable), "--root", str(root),
+                        "--knowledge-root", str(library), "check",
+                    ], capture_output=True, text=True)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("raíz", result.stdout + result.stderr)
+            self.assertFalse(absent.exists())
+            self.assertEqual(occupied.read_text(), "user data")
+            result = subprocess.run([
+                sys.executable, str(executable), "--root", str(library), "check",
+            ], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue(json.loads(result.stdout)["ok"])
+
     def test_realization_still_detects_concurrent_local_permission_changes(self):
         from kora.render_codex import render
 

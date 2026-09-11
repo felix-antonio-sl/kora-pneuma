@@ -315,8 +315,8 @@ def evaluate_synthetic_fixture(fixture: dict, *, helper_result: dict | None = No
         })
         evidence["conditional_edge"] = optional_edge
     if scenario == "update":
-        checks["source_v1_loaded"] = _fixture_version(fixture) == "V1"
-        checks["native_role_v1_loaded"] = "KORA_CANARY_ROLE_SOURCE_V1" in (
+        checks["source_v1_read"] = _fixture_version(fixture) == "V1"
+        checks["native_role_v1_materialized"] = "KORA_CANARY_ROLE_SOURCE_V1" in (
             fixture["native_agent"].read_text(encoding="utf-8") if fixture["native_agent"].is_file() else ""
         )
         if advance:
@@ -326,8 +326,8 @@ def evaluate_synthetic_fixture(fixture: dict, *, helper_result: dict | None = No
             role_path.write_text(role_path.read_text(encoding="utf-8").replace(
                 "KORA_CANARY_ROLE_SOURCE_V1", "KORA_CANARY_ROLE_SOURCE_V2"), encoding="utf-8")
             reinstall_synthetic_fixture(fixture)
-            checks["source_v2_loaded_in_new_read"] = _fixture_version(fixture) == "V2"
-            checks["native_role_v2_loaded"] = "KORA_CANARY_ROLE_SOURCE_V2" in (
+            checks["source_v2_read"] = _fixture_version(fixture) == "V2"
+            checks["native_role_v2_materialized"] = "KORA_CANARY_ROLE_SOURCE_V2" in (
                 fixture["native_agent"].read_text(encoding="utf-8")
                 if fixture["native_agent"].is_file() else ""
             )
@@ -934,15 +934,15 @@ def _live_extended_scenario(source: Path, temporary: Path, auth_store: Path, res
         event_text = json.dumps(first_events + second_events, ensure_ascii=False)
         checks = {
             "first_session_passed": first.get("passed") is True,
-            "first_load_v1_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V1" in event_text,
+            "knowledge_v1_marker_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V1" in event_text,
             "source_updated_between_uses": _fixture_version(fixture) == "V2",
             "native_role_reinstalled": "KORA_CANARY_ROLE_SOURCE_V2" in (
                 fixture["native_agent"].read_text(encoding="utf-8")
                 if fixture["native_agent"].is_file() else ""
             ),
             "new_session_passed": second.get("passed") is True,
-            "new_load_v2_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V2" in json.dumps(second_events, ensure_ascii=False),
-            "new_role_v2_observed": "KORA_CANARY_ROLE_SOURCE_V2" in json.dumps(second_events, ensure_ascii=False),
+            "knowledge_v2_marker_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V2" in json.dumps(second_events, ensure_ascii=False),
+            "role_v2_marker_observed": "KORA_CANARY_ROLE_SOURCE_V2" in json.dumps(second_events, ensure_ascii=False),
             "answer_matches_new_role": second.get("answer", {}).get("role_version") == "V2",
             "first_conditional_absent_observed": first.get("conditional_native_observed") is True,
             "new_conditional_absent_observed": second.get("conditional_native_observed") is True,
@@ -955,7 +955,8 @@ def _live_extended_scenario(source: Path, temporary: Path, auth_store: Path, res
                       "session_labels": [first.get("session_label"), second.get("session_label")]},
                       profile_writer_count=1,
                       limits=["Dos sesiones secuenciales usaron el mismo home Hermes temporal.",
-                              "La inferencia depende de proveedor y versión efectiva."])
+                              "La inferencia depende de proveedor y versión efectiva.",
+                              "Los marcadores prueban lectura/acceso; no distinguen carga de instrucciones de lectura explícita del rol como dato."])
         return result
     prompt = _extended_prompt(fixture, scenario, "first")
     expected = ({"scenario": "resources", "knowledge_version": "V1",

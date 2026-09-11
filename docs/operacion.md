@@ -56,7 +56,9 @@ python3 kora_cli.py intake tema --source /ruta/a/la/fuente.pdf
 ```
 
 Lee los originales, localiza conocimiento existente y aplica `koraficacion`, que
-usa `koraficacion-integral` como procedimiento por defecto para cualquier fuente.
+usa `koraficacion-integral` para conservar el significado. El cotejo directo
+basta cuando puede compararse la fuente completa sin perder contexto; el helper
+por bloques se usa si partición, relaciones cruzadas o reanudación aportan valor.
 El cuerpo conserva todo el contenido sustantivo con economía; procedencia y
 soporte quedan en la evidencia auxiliar salvo lo necesario para interpretarlo.
 Coteja y repara antes de entregar. La CLI no sintetiza el contenido. Para crear un conocimiento nuevo
@@ -223,6 +225,13 @@ revisión y su base sigan vigentes; un error conserva la candidata y el diagnós
 Una realización válida no acredita la semántica ni la utilidad del procedimiento.
 `--kind skill|agent|knowledge` permite desambiguar una candidata nueva en `review`.
 
+La caché y el bytecode regenerables quedan fuera de la revisión publicada y no
+bloquean las candidatas nuevas. Los archivos privados y temporales siguen
+protegidos. Las candidatas anteriores con su huella antigua intacta son compatibles;
+si cambió un residuo que aquella huella agregada no puede distinguir, conserva
+el trabajo y prepara otra candidata desde la fuente vigente. Repetir la misma
+revisión no repara una base de residuos incompatible.
+
 Las revisiones completas de agentes y skills se conservan en
 `versions/products/<namespace>/<name>/<hash>`, fuera del catálogo activo, con su
 procedencia y recursos. `resolve URN --revision HASH` consulta esa revisión sin
@@ -329,6 +338,10 @@ permanecen. Retirar un agente o skill no retira sus referencias de conocimiento.
 con `--target codex|hermes`, `--id URN` repetible y, para skills de Hermes,
 `--profile NOMBRE`. Distingue fuente vigente, cambiada, ausente, retirada o no
 realizable; dependencias pendientes; cambios nativos; y carga `not_observed`.
+Una referencia de conocimiento viva puede cambiar de contenido sin alterar los
+archivos nativos ni este estado. Para reproducir una evaluación, conserva las
+revisiones realmente consultadas junto al caso y la configuración pertinente;
+no hace falta fijar toda la biblioteca para el uso ordinario.
 El estado ordinario y la recuperación funcionan aunque las fuentes no estén
 disponibles. Comparar archivos no demuestra qué leyó una sesión del runtime.
 
@@ -363,7 +376,11 @@ python3 -m unittest discover -s tests -v
 git diff --check
 ```
 
-`check` diagnostica referencias y realizaciones del conjunto; `--target codex` o
+`check` diagnostica referencias y realizaciones del conjunto; devuelve su alcance
+y lo no comprobado junto a `ok`. No revisa fidelidad, conducta, ventaja frente a
+una instrucción breve ni todas las versiones históricas conservadas. Rechaza una
+raíz inexistente; un directorio vacío existente es un catálogo vacío válido.
+`--target codex` o
 `--target hermes` acota el destino. Selecciona las pruebas pertinentes al cambiar
 maquinaria; una operación ordinaria no requiere repetir la suite. Usa raíces
 temporales con `--root` y `--knowledge-root`, y `--home DIRECTORIO_TEMPORAL` para
@@ -395,3 +412,11 @@ temporales. El canario `incomplete` exige observar el resultado del hijo y el
 cierre del padre; el perfil de prueba Hermes no expone delegación y rechaza ese
 escenario antes de inferir. Una respuesta que imita el JSON esperado no acredita
 un intercambio entre agentes.
+
+Los campos de actualización de los probes nombran lo observado: lectura de fuente,
+materialización del rol y aparición de marcadores. Los anteriores campos
+`*_loaded` y `new_*_observed` se sustituyeron por nombres `*_read`,
+`*_materialized` y `*_marker_observed` según el caso. Encontrar el marcador tras
+pedir leer un archivo no distingue carga de instrucciones de lectura como dato.
+Para afirmar un cambio de conducta, el caso debe hacer observable una decisión
+distinta bajo la versión anterior y la nueva sin revelar la respuesta esperada.

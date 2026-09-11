@@ -280,6 +280,8 @@ def execute(args):
         root = (knowledge_root(args.root, args.knowledge_root)
                 if _source_kind(args) == "knowledge" else args.root)
         return alias(root, args.alias, args.id, knowledge=args.knowledge_root)
+    if args.command == "check" and not Path(args.root).is_dir():
+        raise KoraError(f"La raíz del catálogo no es un directorio existente: {Path(args.root).resolve()}")
     catalog = Catalog(args.root, knowledge=args.knowledge_root, strict=False,
                       capabilities=getattr(args, "capability", ()))
     if args.command == "resolve":
@@ -340,7 +342,10 @@ def execute(args):
                 except KoraError as error:
                     issues.append({"relation": "revalidation", "error": str(error)})
         return {"ok": not issues, "active": len(catalog.products), "archived": len(catalog.archived),
-                "issues": issues, "work": catalog.phase_metrics}
+                "issues": issues, "work": catalog.phase_metrics,
+                "scope": "Referencias del catálogo y realizaciones de los destinos seleccionados",
+                "not_checked": ["fidelidad semántica", "conducta del runtime", "utilidad diferencial",
+                                "todas las revisiones históricas"]}
     if args.command == "render":
         bundles = build(catalog, args.target, args.ids, profile=profile)
         return emit(bundles, args.output)

@@ -800,7 +800,7 @@ class Catalog:
                     kind = 'knowledge' if dependency.kind == 'knowledge' else 'product'
                     if need.kind is not None and need.kind != kind:
                         raise KoraError(f'Tipo de necesidad incompatible: {need.id}; requiere {need.kind}, resuelve {kind}')
-                    edge.update(kind=kind, revision=dependency.revision)
+                    edge.update(kind=kind, revision=dependency.revision, resolved_id=dependency.id)
                     if dependency.id in seen:
                         if seen[dependency.id] != dependency.revision:
                             raise KoraError(f'Revisiones incompatibles de {dependency.id}')
