@@ -370,7 +370,11 @@ python3 -m unittest discover -s tests -v
 git diff --check
 ```
 
-`check` diagnostica referencias y realizaciones del conjunto; `--target codex` o
+`check` diagnostica referencias y realizaciones del conjunto; devuelve su alcance
+y lo no comprobado junto a `ok`. No revisa fidelidad, conducta, ventaja frente a
+una instrucción breve ni todas las versiones históricas conservadas. Rechaza una
+raíz inexistente; un directorio vacío existente es un catálogo vacío válido.
+`--target codex` o
 `--target hermes` acota el destino. Selecciona las pruebas pertinentes al cambiar
 maquinaria; una operación ordinaria no requiere repetir la suite. Usa raíces
 temporales con `--root` y `--knowledge-root`, y `--home DIRECTORIO_TEMPORAL` para
