@@ -415,22 +415,20 @@ class Installer:
                              f"Se detectó cambio local; conservar y reconciliar: {relative}",
                              expected=expected, actual=live, desired=desired)
                 continue
-            adopted = False
             if expected is None and live is not None:
                 if reviewed.get(relative) != live["sha256"]:
                     add_conflict("foreign", relative,
                                  f"Archivo ajeno sin adopción comprobada: {relative}",
                                  actual=live, desired=desired)
                     continue
-                adopted = True
             if desired is not None and desired != live and relative not in payloads:
                 add_conflict("payload", relative,
                              f"No hay payload para actualizar: {relative}",
                              expected=expected, actual=live, desired=desired)
                 continue
-            entry = {"path": relative, "before": expected, "after": desired}
-            if adopted:
-                entry["adopted"] = True
+            # Physical presence and prior ownership are different: adopting
+            # captures the existing inode, while before_state remains unowned.
+            entry = {"path": relative, "before": live, "after": desired}
             entries.append(entry)
 
         ownership = []
@@ -569,11 +567,7 @@ class Installer:
             details = "; ".join(item.get("error", "conflicto de instalación")
                                  for item in plan["conflicts"])
             raise KoraError(details or "Conflicto de instalación")
-        entries = []
-        for raw in calculation["entries"]:
-            entry = {key: copy.deepcopy(value) for key, value in raw.items()
-                     if key not in ("adopted",)}
-            entries.append(entry)
+        entries = copy.deepcopy(calculation["entries"])
         before_state = calculation["before_state"]
         after_state = calculation["after_state"]
         if not entries and before_state == after_state:

@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from kora.catalog import File, KoraError
+from kora.catalog import File, KoraError, digest
 from kora.install import Installer
 
 
@@ -21,6 +21,47 @@ class InstallerTests(unittest.TestCase):
 
     def files(self, body=b"version one"):
         return {self.skill: File(body)}
+
+    def test_adoption_captures_existing_bytes_and_rollback_releases_ownership(self):
+        for desired in (b"personal", b"updated"):
+            with self.subTest(desired=desired), tempfile.TemporaryDirectory() as directory:
+                installer = Installer(Path(directory))
+                path = installer.home / self.skill
+                path.parent.mkdir(parents=True)
+                path.write_bytes(b"personal")
+                path.chmod(0o600)
+                original_inode = path.stat().st_ino
+                bundles = {"codex:example": self.files(desired)}
+                adoption = {self.skill: digest(b"personal")}
+                plan = installer.prepare(bundles, adopt=adoption)
+                self.assertTrue(plan["ok"])
+                installer.apply(bundles, adopt=adoption, plan=plan)
+                self.assertEqual(path.read_bytes(), desired)
+                self.assertEqual(installer.status()["changes"], [])
+                installer.rollback()
+                self.assertEqual(path.read_bytes(), b"personal")
+                self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+                self.assertEqual(path.stat().st_ino, original_inode)
+                self.assertEqual(installer.receipts(), {})
+
+    def test_adoption_preserves_edit_between_preflight_and_exchange(self):
+        path = self.home / self.skill
+        path.parent.mkdir(parents=True)
+        path.write_bytes(b"personal")
+        replace = self.installer._replace
+        changed = False
+        def concurrent_edit(source, destination):
+            nonlocal changed
+            if not changed:
+                destination.write_bytes(b"late personal edit")
+                changed = True
+            return replace(source, destination)
+        with patch.object(self.installer, "_replace", side_effect=concurrent_edit):
+            with self.assertRaises(KoraError):
+                self.installer.apply({"codex:example": self.files(b"new")},
+                                     adopt={self.skill: digest(b"personal")})
+        self.assertEqual(path.read_bytes(), b"late personal edit")
+        self.assertEqual(self.installer.receipts(), {})
 
     def test_update_and_retirement_preserve_other_files(self):
         self.installer.apply({"codex:example": self.files()})
