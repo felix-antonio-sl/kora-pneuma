@@ -323,19 +323,21 @@ def execute(args):
         with catalog.phase():
             issues = catalog.reference_issues()
             for target in args.target or ("codex", "hermes"):
-                target_failed = False
-                for product in catalog.products.values():
-                    if product.kind != "knowledge" and target in product.targets:
-                        try:
-                            build(catalog, target, [product.id])
-                        except (KoraError, ValueError) as error:
-                            issues.append({"source": product.id, "target": target, "error": str(error)})
-                            target_failed = True
-                if not target_failed:
-                    try:
-                        build(catalog, target)
-                    except (KoraError, ValueError) as error:
-                        issues.append({"target": target, "error": str(error)})
+                try:
+                    build(catalog, target)
+                except (KoraError, ValueError) as combined_error:
+                    # The normal path already checks every product and shared
+                    # output. Isolate failures only when that path fails, so
+                    # diagnosis stays complete without rendering twice by default.
+                    individual_issues = []
+                    for product in catalog.products.values():
+                        if product.kind != "knowledge" and target in product.targets:
+                            try:
+                                build(catalog, target, [product.id])
+                            except (KoraError, ValueError) as error:
+                                individual_issues.append({"source": product.id, "target": target,
+                                                          "error": str(error)})
+                    issues.extend(individual_issues or [{"target": target, "error": str(combined_error)}])
             if not issues:
                 try:
                     catalog.revalidate()

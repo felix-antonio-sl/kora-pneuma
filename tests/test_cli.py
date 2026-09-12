@@ -11,7 +11,7 @@ import yaml
 
 from kora.authoring import create
 from kora.catalog import Catalog, KoraError
-from kora.cli import build
+from kora.cli import build, execute, parser
 
 
 class CliJourneyTests(unittest.TestCase):
@@ -97,6 +97,26 @@ class CliJourneyTests(unittest.TestCase):
             report = json.loads(result.stdout)
             self.assertFalse(report["ok"])
             self.assertIn("same-name/SKILL.md", report["issues"][0]["error"])
+
+    def test_check_reports_independent_failures_after_combined_realization_fails(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            body = root / "body.md"
+            body.write_text("Consultar la fuente.\n")
+            first = create(root, "skill", "test", "first", "urn:test:skill:first",
+                           "Primera función", body, targets=["codex"])
+            second = create(root, "skill", "test", "second", "urn:test:skill:second",
+                            "Segunda función", body, targets=["codex"])
+            for product, updates in (
+                (first, {"description": "x" * 1025}),
+                (second, {"requires": ["urn:test:skill:missing"]}),
+            ):
+                (product.directory / "object.yaml").write_text(
+                    yaml.safe_dump({**product.metadata, **updates}))
+            report = execute(parser().parse_args(["--root", str(root), "check", "--target", "codex"]))
+            self.assertFalse(report["ok"])
+            failures = {issue.get("source") for issue in report["issues"] if issue.get("target") == "codex"}
+            self.assertEqual(failures, {first.id, second.id})
 
     def test_relocated_source_to_two_native_targets_update_and_rollback(self):
         import hashlib

@@ -142,6 +142,8 @@ PyYAML lee y serializa YAML sin ejecutar objetos. El frontmatter generado se
 vuelve a leer antes de instalar; las barras inversas no se escapan a mano.
 La lectura usa el parser seguro nativo de PyYAML cuando está disponible y su
 equivalente Python en otro caso, conservando el rechazo de claves duplicadas.
+`check` realiza el conjunto una vez por destino y desglosa productos solo ante
+un fallo; conserva la detección de colisiones y la revalidación de las fuentes.
 Los requisitos para operar están en la guía. Los contratos específicos y su
 contraste con los runtimes se documentan en [Codex](codex.md) y [Hermes](hermes.md).
 
