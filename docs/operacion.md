@@ -336,6 +336,10 @@ permanecen. Retirar un agente o skill no retira sus referencias de conocimiento.
 con `--target codex|hermes`, `--id URN` repetible y, para skills de Hermes,
 `--profile NOMBRE`. Distingue fuente vigente, cambiada, ausente, retirada o no
 realizable; dependencias pendientes; cambios nativos; y carga `not_observed`.
+Una referencia de conocimiento viva puede cambiar de contenido sin alterar los
+archivos nativos ni este estado. Para reproducir una evaluación, conserva las
+revisiones realmente consultadas junto al caso y la configuración pertinente;
+no hace falta fijar toda la biblioteca para el uso ordinario.
 El estado ordinario y la recuperación funcionan aunque las fuentes no estén
 disponibles. Comparar archivos no demuestra qué leyó una sesión del runtime.
 
