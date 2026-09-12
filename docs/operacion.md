@@ -431,3 +431,8 @@ conocimiento, instrucciones observadas en resultados de herramientas y conducta
 contrastante. Los fixtures mecánicos sin inferencia solo comprueban fuentes y
 realización; tampoco una respuesta que repite un marcador acredita carga nativa.
 Este caso sintético no evalúa la utilidad de los productos reales.
+
+La aceptación de maquinaria del 2026-09-13 comprobó este contraste en Codex
+0.154.0 y Hermes con `gpt-6-astra` y esfuerzo `max`, además del traslado y los
+recorridos mecánicos en raíces y homes temporales. La renovación y evaluación de
+agentes, skills y conocimientos requiere el encargo posterior.
