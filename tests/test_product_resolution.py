@@ -44,6 +44,30 @@ class ProductRevisionResolutionTests(unittest.TestCase):
         self.assertEqual(native.source["revision"], revision)
         self.assertEqual(native.source["pinned_revision"], revision)
 
+    def test_alias_and_chained_alias_preserve_shared_dependency_pin(self):
+        from kora.authoring import alias
+        method = self.product("method", "Method A.\n")
+        revision = preserve(self.root, method)
+        alias(self.root, "urn:test:alias:method", method.id)
+        alias(self.root, "urn:test:alias:chain", "urn:test:alias:method")
+        for index, requested in enumerate((method.id, "urn:test:alias:method", "urn:test:alias:chain")):
+            with self.subTest(requested=requested):
+                alpha = self.product("alpha" + str(index), "Use A.\n", [
+                    {"id": requested, "kind": "product", "revision": revision},
+                ])
+                installer = Installer(self.home / str(index))
+                installer.apply(build(Catalog(self.root), "codex", [alpha.id]))
+                path = ".agents/skills/method/SKILL.md"
+                receipt = installer.receipts()["codex:" + alpha.id][path]
+                self.assertEqual(receipt["source"]["pinned_revision"], revision)
+                method.content_path.write_text("Method B.\n")
+                catalog = Catalog(self.root)
+                with catalog.phase():
+                    effects = installation_effects(catalog, "codex", [method.id], installer)
+                self.assertTrue(any("fijada" in issue["error"] for issue in effects["conflicts"]))
+                self.assertIn("Method A.", (installer.home / path).read_text())
+                method.content_path.write_text("Method A.\n")
+
     def test_candidate_review_rejects_a_provider_changed_during_native_validation(self):
         from kora import authoring, render_codex
 

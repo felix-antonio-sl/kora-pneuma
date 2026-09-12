@@ -54,7 +54,7 @@ def _build_instances_in_phase(catalog: Catalog, target: str, instances) -> dict[
     bundles = {}
     for product, profile in instances:
         files = render(catalog, product)
-        pins = {edge["target"]: edge["requested_revision"]
+        pins = {edge["resolved_id"]: edge["requested_revision"]
                 for edge in catalog.explain(product, target)["edges"]
                 if edge["status"] == "available" and edge["requested_revision"]}
         files = {path: replace(file, source={**file.source,
