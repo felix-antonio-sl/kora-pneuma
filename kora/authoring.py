@@ -708,7 +708,7 @@ def _recover_admission(root, record, active, reviewed, expected_base, expected_r
     can therefore finish moving the old source without treating the already
     visible reviewed revision as a stale candidate.
     """
-    from .product_versions import at_revision, residue_digest, source_digest, verify
+    from .product_versions import at_revision, residue_matches, source_digest, verify
 
     destination = _destination_for_record(root, record)
     if Path(active.directory).absolute() != destination.absolute():
@@ -718,11 +718,11 @@ def _recover_admission(root, record, active, reviewed, expected_base, expected_r
     # Confirm the immutable snapshot before changing any recovery locator.
     at_revision(root, active, reviewed)
     if expected_residue is not None:
-        candidate_residue = residue_digest(record["product"])
-        if candidate_residue != expected_residue:
+        candidate_residue_matches = residue_matches(record["product"], expected_residue)
+        if not candidate_residue_matches:
             raise KoraError(
                 "La candidata cambió en archivos operacionales desde la revisión; "
-                "vuelve a revisar el contenido"
+                "conserva los cambios y prepara otra candidata desde la fuente vigente"
             )
     state = record.get("state", {})
     staged_value = state.get("staged_path")
@@ -775,7 +775,7 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
     with _author_lock(root):
         record = _find_candidate(root, identifier, candidate=candidate, knowledge=knowledge)
         item = record["product"]
-        from .product_versions import (preserve, residue_digest, source_digest,
+        from .product_versions import (preserve, residue_matches, source_digest,
                                        verify, _copy_source_tree)
         if not isinstance(reviewed, str) or not _REVISION.fullmatch(reviewed):
             message = "La revisión aprobada debe ser un SHA-256 completo"
@@ -812,25 +812,25 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                 )
 
         # ``source_digest`` intentionally ignores operational residue.  Keep
-        # a separate state stamp so a late edit to a private/cache file cannot
+        # a separate state stamp so a late edit to a private/temporary file cannot
         # be overwritten by an admission prepared from an older active tree.
         # During recovery the active tree is already the new selected source;
         # _recover_admission validates the candidate and its snapshot instead.
         if expected_residue is not None:
             try:
-                candidate_residue = residue_digest(item)
-                active_residue = residue_digest(active) if active is not None else None
+                candidate_residue_matches = residue_matches(item, expected_residue)
+                active_residue_matches = residue_matches(active, expected_residue) if active is not None else True
             except KoraError as error:
                 _failure(root, record, str(error), reviewed=actual)
                 raise
-            if candidate_residue != expected_residue:
+            if not candidate_residue_matches:
                 message = (
                     "La candidata cambió en archivos operacionales desde la preparación; "
-                    "vuelve a revisar el contenido"
+                    "conserva los cambios y prepara otra candidata desde la fuente vigente"
                 )
                 _failure(root, record, message, reviewed=actual)
                 raise KoraError(message)
-            if active is not None and active_residue != expected_residue:
+            if not active_residue_matches:
                 message = (
                     "La fuente activa cambió en archivos operacionales desde la preparación; "
                     "se conserva la candidata y el trabajo local"
@@ -893,10 +893,10 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
             )
             if source_digest(item) != actual:
                 raise KoraError("La candidata cambió antes de la admisión; vuelve a revisar el contenido")
-            if expected_residue is not None and residue_digest(item) != expected_residue:
+            if expected_residue is not None and not residue_matches(item, expected_residue):
                 raise KoraError(
                     "La candidata cambió en archivos operacionales antes de la admisión; "
-                    "vuelve a revisar el contenido"
+                    "conserva los cambios y prepara otra candidata desde la fuente vigente"
                 )
             if not fresh_valid:
                 raise KoraError("; ".join(fresh_errors) or "La candidata dejó de ser realizable")
@@ -911,7 +911,7 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                     raise KoraError(
                         f"La fuente activa cambió antes de la admisión; base esperada {expected_base}, actual {fresh_base}"
                     )
-                if expected_residue is not None and residue_digest(fresh_active) != expected_residue:
+                if expected_residue is not None and not residue_matches(fresh_active, expected_residue):
                     raise KoraError(
                         "La fuente activa cambió en archivos operacionales antes de la admisión; "
                         "se conserva la candidata y el trabajo local"
@@ -938,7 +938,7 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                     raise KoraError(
                         f"La fuente activa cambió antes del intercambio; base esperada {expected_base}, actual {current_base}"
                     )
-                if expected_residue is not None and residue_digest(current) != expected_residue:
+                if expected_residue is not None and not residue_matches(current, expected_residue):
                     raise KoraError(
                         "La fuente activa cambió en archivos operacionales justo antes del intercambio; "
                         "se conserva la candidata y el trabajo local"
@@ -952,10 +952,10 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                         "La candidata cambió justo antes del intercambio; "
                         "vuelve a revisar el contenido"
                     )
-                if expected_residue is not None and residue_digest(item) != expected_residue:
+                if expected_residue is not None and not residue_matches(item, expected_residue):
                     raise KoraError(
                         "La candidata cambió en archivos operacionales justo antes del intercambio; "
-                        "vuelve a revisar el contenido"
+                        "conserva los cambios y prepara otra candidata desde la fuente vigente"
                     )
                 if _dependency_context(root, item, knowledge=knowledge) != fresh_dependency_context:
                     raise KoraError(
@@ -977,7 +977,7 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                         raise KoraError(
                             f"La fuente activa cambió durante el intercambio; base esperada {expected_base}, actual {displaced_revision}"
                         )
-                    if expected_residue is not None and residue_digest(displaced_active) != expected_residue:
+                    if expected_residue is not None and not residue_matches(displaced_active, expected_residue):
                         raise KoraError(
                             "La fuente activa cambió en archivos operacionales durante el intercambio; "
                             "se conserva la candidata y el trabajo local"
@@ -1000,10 +1000,10 @@ def admit(root: Path, identifier: str, reviewed: str, candidate=None, knowledge=
                         "La candidata cambió justo antes de la admisión; "
                         "vuelve a revisar el contenido"
                     )
-                if expected_residue is not None and residue_digest(item) != expected_residue:
+                if expected_residue is not None and not residue_matches(item, expected_residue):
                     raise KoraError(
                         "La candidata cambió en archivos operacionales justo antes de la admisión; "
-                        "vuelve a revisar el contenido"
+                        "conserva los cambios y prepara otra candidata desde la fuente vigente"
                     )
                 if _dependency_context(root, item, knowledge=knowledge) != fresh_dependency_context:
                     raise KoraError(

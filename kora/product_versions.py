@@ -166,28 +166,48 @@ def _digest_records(prefix: bytes, entries, *, portable):
     return result.hexdigest()
 
 
-def residue_digest(product: Product | Path, *, portable=False) -> str:
-    """Stamp files excluded as operational residue by source selection.
-
-    The stamp is kept in candidate state, outside the product source.  It is
-    intentionally separate from ``source_digest``: changing a cache, private
-    file, or temporary artifact must not create a published revision, while a
-    change made after ``revise`` must still be detected before an admission.
-    Exact host modes are used by default because this is a local race guard;
-    callers may request Git-portable mode for cross-machine diagnostics.
-    """
+def _residue_records(product: Product | Path):
+    """Current and historical selections from the same filesystem read."""
     product = _product_value(product)
     explicit_resources, declared_roots, _ = _resource_selection(
         product.metadata, Path(product.directory)
     )
-    residue = []
+    current, historical = [], []
     for relative, mode, data in _all_regular_files(product.directory):
         reason = _resource_exclusion(
             relative, declared=explicit_resources and _is_declared(relative, declared_roots)
         )
         if reason is not None:
-            residue.append((relative, mode, data))
-    return _digest_records(b"kora-product-residue-v1\0", residue, portable=portable)
+            entry = (relative, mode, data)
+            historical.append(entry)
+            if reason not in {"caché", "bytecode"}:
+                current.append(entry)
+    return current, historical
+
+
+def residue_digest(product: Product | Path, *, portable=False) -> str:
+    """Stamp private/temporary residue without blocking on generated caches.
+
+    This local race guard is separate from the published source revision.
+    Caches and bytecode remain outside both publication and the new stamp.
+    Exact host modes are used unless portable modes are explicitly requested.
+    """
+    current, _ = _residue_records(product)
+    return _digest_records(b"kora-product-residue-v1\0", current, portable=portable)
+
+
+def residue_matches(product: Product | Path, expected: str) -> bool:
+    """Accept unchanged candidates prepared before generated caches were ignored.
+
+    Older candidate states stored the historical stamp without a policy field.
+    Both comparisons retain private/temporary bytes and modes; neither treats a
+    sensitive change as a cache change. No saved state or source is rewritten.
+    """
+    current, historical = _residue_records(product)
+    prefix = b"kora-product-residue-v1\0"
+    if expected == _digest_records(prefix, current, portable=False):
+        return True
+    return expected == _digest_records(prefix, historical, portable=False)
 
 
 def _copy_source_tree(product: Product, destination: Path):

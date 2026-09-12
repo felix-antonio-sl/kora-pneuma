@@ -223,6 +223,13 @@ revisión y su base sigan vigentes; un error conserva la candidata y el diagnós
 Una realización válida no acredita la semántica ni la utilidad del procedimiento.
 `--kind skill|agent|knowledge` permite desambiguar una candidata nueva en `review`.
 
+La caché y el bytecode regenerables quedan fuera de la revisión publicada y no
+bloquean las candidatas nuevas. Los archivos privados y temporales siguen
+protegidos. Las candidatas anteriores con su huella antigua intacta son compatibles;
+si cambió un residuo que aquella huella agregada no puede distinguir, conserva
+el trabajo y prepara otra candidata desde la fuente vigente. Repetir la misma
+revisión no repara una base de residuos incompatible.
+
 Las revisiones completas de agentes y skills se conservan en
 `versions/products/<namespace>/<name>/<hash>`, fuera del catálogo activo, con su
 procedencia y recursos. `resolve URN --revision HASH` consulta esa revisión sin
