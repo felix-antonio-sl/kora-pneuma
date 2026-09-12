@@ -18,7 +18,7 @@ class KoraError(Exception):
     """An actionable source or installation conflict."""
 
 
-class UniqueLoader(yaml.SafeLoader):
+class UniqueLoader(getattr(yaml, "CSafeLoader", yaml.SafeLoader)):
     """YAML mappings must not silently replace an earlier value."""
 
 

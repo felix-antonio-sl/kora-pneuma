@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from kora.catalog import Catalog, KoraError
+from kora.catalog import Catalog, KoraError, read_yaml
 
 
 class CatalogTests(unittest.TestCase):
@@ -83,6 +83,15 @@ class CatalogTests(unittest.TestCase):
             stream.write("id: urn:test:skill:overwritten\n")
         with self.assertRaises(KoraError):
             Catalog(self.root)
+
+    def test_yaml_rejects_object_tags_nontext_keys_and_nested_duplicates(self):
+        path = self.root / "source.yaml"
+        for text in ("value: !!python/tuple [1, 2]\n", "1: value\n",
+                     "metadata:\n  name: first\n  name: second\n"):
+            with self.subTest(text=text):
+                path.write_text(text)
+                with self.assertRaises(KoraError):
+                    read_yaml(path)
 
     def test_dependency_must_exist_on_requested_runtime(self):
         self.product(requires=["urn:test:skill:two"])
