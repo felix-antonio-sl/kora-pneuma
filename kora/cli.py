@@ -156,6 +156,8 @@ def parser():
     check = commands.add_parser("check", help="Comprobar referencias y realizaciones; no acredita semántica ni conducta")
     check.add_argument("--target", choices=["codex", "hermes"], action="append")
     check.add_argument("--capability", action="append", default=[])
+    check.add_argument("--history", action="store_true",
+                       help="Verificar además todas las revisiones conservadas de productos y conocimiento")
     render = commands.add_parser("render", help="Producir archivos nativos en una salida nueva")
     render.add_argument("target", choices=["codex", "hermes"])
     render.add_argument("ids", nargs="*")
@@ -343,11 +345,19 @@ def execute(args):
                     catalog.revalidate()
                 except KoraError as error:
                     issues.append({"relation": "revalidation", "error": str(error)})
-        return {"ok": not issues, "active": len(catalog.products), "archived": len(catalog.archived),
+        history = catalog.historical_integrity() if args.history else None
+        if history is not None:
+            issues.extend(history['issues'])
+        result = {"ok": not issues, "active": len(catalog.products), "archived": len(catalog.archived),
                 "issues": issues, "work": catalog.phase_metrics,
                 "scope": "Referencias del catálogo y realizaciones de los destinos seleccionados",
                 "not_checked": ["fidelidad semántica", "conducta del runtime", "utilidad diferencial",
                                 "todas las revisiones históricas"]}
+        if history is not None:
+            result['history'] = history
+            result['scope'] += "; integridad de todas las revisiones conservadas"
+            result['not_checked'].remove("todas las revisiones históricas")
+        return result
     if args.command == "render":
         bundles = build(catalog, args.target, args.ids, profile=profile)
         return emit(bundles, args.output)

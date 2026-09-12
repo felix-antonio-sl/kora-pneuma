@@ -378,6 +378,15 @@ git diff --check
 y lo no comprobado junto a `ok`. No revisa fidelidad, conducta, ventaja frente a
 una instrucción breve ni todas las versiones históricas conservadas. Rechaza una
 raíz inexistente; un directorio vacío existente es un catálogo vacío válido.
+`check --history` añade la comprobación mecánica de todas las revisiones presentes
+en `versions/products` de la maquinaria y `versions` de las bibliotecas leídas,
+incluidas versiones anteriores, identidades retiradas y versiones sin referencia
+vigente. Reutiliza las huellas y verificadores de revisión; informa cantidades
+verificadas y defectos por ruta, también ante entradas malformadas o enlazadas.
+No escribe ni repara la historia. Su alcance es lo conservado en disco: no acredita
+que nunca se haya eliminado una versión, ni aprobación o fidelidad semántica.
+Este recorrido solo ocurre al pedir `--history`; las consultas y el `check`
+ordinario mantienen su alcance y costo habituales.
 `--target codex` o
 `--target hermes` acota el destino. Selecciona las pruebas pertinentes al cambiar
 maquinaria; una operación ordinaria no requiere repetir la suite. Usa raíces

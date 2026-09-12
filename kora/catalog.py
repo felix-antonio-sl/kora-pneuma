@@ -864,3 +864,67 @@ class Catalog:
                             issues.append({'source': product.id, 'relation': 'requires',
                                            'target': need.id, 'error': str(error)})
         return issues
+
+    def historical_integrity(self) -> dict:
+        """Verify retained snapshots on demand, even without a current identity.
+
+        Walk the version layout rather than the active catalog: old revisions,
+        retired identities and snapshots left by an interrupted publication all
+        retain the same integrity contract. Ordinary discovery never calls this.
+        """
+        result = {'verified': {'products': 0, 'knowledge': 0}, 'issues': []}
+        identities = {}
+        for item in [*self.products.values(), *self.archived.values()]:
+            if item.kind == 'knowledge':
+                if item.reference_root is None:
+                    continue
+                container = item.reference_root / 'versions'
+            else:
+                container = self.root / 'versions/products'
+            identities[container / item.directory.parent.name / item.directory.name] = item.id
+
+        def diagnose(path, error):
+            result['issues'].append({'path': str(path), 'source': str(path),
+                                     'relation': 'historical_integrity', 'error': str(error)})
+
+        def walk(path, depth, kind, source):
+            try:
+                if path.is_symlink() or not path.is_dir():
+                    raise KoraError(f'La historia requiere un directorio propio: {path}')
+                if depth:
+                    for child in sorted(path.iterdir()):
+                        walk(child, depth - 1, kind, source)
+                    return
+                revision = path.name
+                if not re.fullmatch(r'[0-9a-f]{64}', revision):
+                    raise KoraError(f'Revisión histórica inválida: {path}')
+                if (path / 'object.yaml').is_symlink():
+                    raise KoraError(f'Ficha histórica enlazada: {path / "object.yaml"}')
+                modes = self.legacy_modes.get(source, {}).get(revision)
+                item = read_product(path, revision, source if kind == 'knowledge' else None, modes)
+                if (item.kind == 'knowledge') != (kind == 'knowledge'):
+                    raise KoraError(f'Tipo incompatible con la ubicación histórica: {path}')
+                self._verify_reference(item)
+                expected = identities.setdefault(path.parent, item.id)
+                if item.id != expected:
+                    raise KoraError(f'La revisión no pertenece a {expected}: {path}')
+                result['verified'][kind] += 1
+            except (KoraError, OSError, RuntimeError) as error:
+                diagnose(path, error)
+
+        roots = [self.root] if self.knowledge_root == self.root else [self.root, self.knowledge_root]
+        for source in roots:
+            versions = source / 'versions'
+            if not versions.exists() and not versions.is_symlink():
+                continue
+            try:
+                if versions.is_symlink() or not versions.is_dir():
+                    raise KoraError(f'La historia requiere un directorio propio: {versions}')
+                for namespace in sorted(versions.iterdir()):
+                    if source == self.root and namespace.name == 'products':
+                        walk(namespace, 3, 'products', source)
+                    else:
+                        walk(namespace, 2, 'knowledge', source)
+            except (KoraError, OSError, RuntimeError) as error:
+                diagnose(versions, error)
+        return result
