@@ -406,3 +406,11 @@ temporales. El canario `incomplete` exige observar el resultado del hijo y el
 cierre del padre; el perfil de prueba Hermes no expone delegación y rechaza ese
 escenario antes de inferir. Una respuesta que imita el JSON esperado no acredita
 un intercambio entre agentes.
+
+Los campos de actualización de los probes nombran lo observado: lectura de fuente,
+materialización del rol y aparición de marcadores. Los anteriores campos
+`*_loaded` y `new_*_observed` se sustituyeron por nombres `*_read`,
+`*_materialized` y `*_marker_observed` según el caso. Encontrar el marcador tras
+pedir leer un archivo no distingue carga de instrucciones de lectura como dato.
+Para afirmar un cambio de conducta, el caso debe hacer observable una decisión
+distinta bajo la versión anterior y la nueva sin revelar la respuesta esperada.

@@ -321,8 +321,8 @@ def evaluate_synthetic_fixture(fixture: dict, *, helper_result: dict | None = No
         })
         evidence["conditional_edge"] = optional_edge
     if scenario == "update":
-        checks["source_v1_loaded"] = _fixture_version(fixture) == "V1"
-        checks["native_role_v1_loaded"] = "KORA_CANARY_ROLE_SOURCE_V1" in (
+        checks["source_v1_read"] = _fixture_version(fixture) == "V1"
+        checks["native_role_v1_materialized"] = "KORA_CANARY_ROLE_SOURCE_V1" in (
             fixture["native_agent"].read_text(encoding="utf-8") if fixture["native_agent"].is_file() else ""
         )
         if advance:
@@ -333,8 +333,8 @@ def evaluate_synthetic_fixture(fixture: dict, *, helper_result: dict | None = No
             role_path.write_text(role_path.read_text(encoding="utf-8").replace(
                 "KORA_CANARY_ROLE_SOURCE_V1", "KORA_CANARY_ROLE_SOURCE_V2"), encoding="utf-8")
             reinstall_synthetic_fixture(fixture)
-            checks["source_v2_loaded_in_new_read"] = _fixture_version(fixture) == "V2"
-            checks["native_role_v2_loaded"] = "KORA_CANARY_ROLE_SOURCE_V2" in (
+            checks["source_v2_read"] = _fixture_version(fixture) == "V2"
+            checks["native_role_v2_materialized"] = "KORA_CANARY_ROLE_SOURCE_V2" in (
                 fixture["native_agent"].read_text(encoding="utf-8")
                 if fixture["native_agent"].is_file() else ""
             )
@@ -952,12 +952,12 @@ def _extended_canary(direct: bool, model: str, effort: str, scenario: str) -> bo
             first_text = _events_text(first["events"])
             second_text = _events_text(second["events"])
             checks.update({
-                "first_load_v1_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V1" in first_text,
+                "knowledge_v1_marker_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V1" in first_text,
                 "source_updated_between_uses": _fixture_version(fixture) == "V2",
                 "new_session_invoked": len(calls) == 2,
-                "new_load_v2_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V2" in second_text,
+                "knowledge_v2_marker_observed": "KORA_SYNTHETIC_RESOURCE_KNOWLEDGE_V2" in second_text,
                 "answer_matches_new_version": second["answer"].get("knowledge_version") == "V2",
-                "new_role_v2_observed": "KORA_CANARY_ROLE_SOURCE_V2" in second_text,
+                "role_v2_marker_observed": "KORA_CANARY_ROLE_SOURCE_V2" in second_text,
                 "native_role_reinstalled": "KORA_CANARY_ROLE_SOURCE_V2" in (
                     fixture["native_agent"].read_text(encoding="utf-8")
                     if fixture["native_agent"].is_file() else ""
@@ -998,7 +998,8 @@ def _extended_canary(direct: bool, model: str, effort: str, scenario: str) -> bo
                              "app_server_errors": [call.get("app_server_error") for call in calls]},
                   "mechanical": mechanical,
                   "limits": ["La evidencia depende de la versión efectiva de Codex y del proveedor configurado.",
-                             "El canario sintético no acredita personas ni agentes reales."]}
+                             "El canario sintético no acredita personas ni agentes reales.",
+                             "Los marcadores de actualización prueban lectura/acceso; no distinguen carga de instrucciones de lectura explícita del rol como dato."]}
         if not report["ok"]:
             report["limits"].append("La respuesta del modelo no sustituyó evidencia de eventos ni filesystem.")
         emit(report)
