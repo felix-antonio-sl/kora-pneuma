@@ -408,7 +408,7 @@ sesiones, usa canarios sintéticos:
 
 ```sh
 python3 scripts/probe_codex.py --canary --scenario resources --direct
-python3 scripts/probe_codex.py --canary --scenario update --direct
+python3 scripts/probe_codex.py --canary --scenario update
 python3 scripts/probe_hermes.py --live --scenario resources
 python3 scripts/probe_hermes.py --live --scenario update
 ```
@@ -420,10 +420,14 @@ cierre del padre; el perfil de prueba Hermes no expone delegación y rechaza ese
 escenario antes de inferir. Una respuesta que imita el JSON esperado no acredita
 un intercambio entre agentes.
 
-Los campos de actualización de los probes nombran lo observado: lectura de fuente,
-materialización del rol y aparición de marcadores. Los anteriores campos
-`*_loaded` y `new_*_observed` se sustituyeron por nombres `*_read`,
-`*_materialized` y `*_marker_observed` según el caso. Encontrar el marcador tras
-pedir leer un archivo no distingue carga de instrucciones de lectura como dato.
-Para afirmar un cambio de conducta, el caso debe hacer observable una decisión
-distinta bajo la versión anterior y la nueva sin revelar la respuesta esperada.
+El escenario `update` instala dos versiones contrastantes del rol y repite la
+misma tarea en sesiones nuevas. La política de ordenamiento está solo en el rol:
+la primera versión ordena de menor a mayor y la segunda de mayor a menor. El
+prompt no revela esa política ni pide leer el archivo del rol. Codex usa su rol
+personalizado mediante delegación; `--direct` activa una skill y no sirve para
+esta comprobación de carga del rol. Hermes incorpora el SOUL mediante su
+constructor nativo de prompt. Los recibos distinguen instalación, lectura de
+conocimiento, instrucciones observadas en resultados de herramientas y conducta
+contrastante. Los fixtures mecánicos sin inferencia solo comprueban fuentes y
+realización; tampoco una respuesta que repite un marcador acredita carga nativa.
+Este caso sintético no evalúa la utilidad de los productos reales.

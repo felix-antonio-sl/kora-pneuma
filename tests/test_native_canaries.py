@@ -98,6 +98,65 @@ class NativeCanaryFixtureTests(unittest.TestCase):
                 self.assertTrue(evidence["checks"]["native_role_v2_materialized"])
                 self.assertTrue(fixture["sentinel"].is_file())
 
+    def test_update_policy_is_only_in_role_and_task_is_identical(self):
+        for runtime in ("codex", "hermes"):
+            module = load_probe(runtime)
+            with self.subTest(runtime=runtime), tempfile.TemporaryDirectory() as folder:
+                fixture = module.build_synthetic_fixture(Path(folder), "update")
+                def prompt(phase):
+                    return (module._extended_prompt(fixture, "update", False, phase=phase)
+                            if runtime == "codex" else module._extended_prompt(fixture, "update", phase))
+                first = prompt("v1")
+                role_before = fixture["native_agent"].read_text()
+                self.assertIn("de menor a mayor", role_before)
+                self.assertIn("role_version (V1)", role_before)
+                module.evaluate_synthetic_fixture(fixture)
+                self.assertEqual(first, prompt("v2"))
+                role_after = fixture["native_agent"].read_text()
+                self.assertIn("de mayor a menor", role_after)
+                self.assertIn("role_version (V2)", role_after)
+                self.assertNotIn("de menor a mayor", role_after)
+                other_inputs = first + fixture["skill"].body + fixture["knowledge"].body
+                for hidden in ("de menor a mayor", "de mayor a menor", "role_version (V1)",
+                               "role_version (V2)", "KORA_CANARY_ROLE_SOURCE_"):
+                    self.assertNotIn(hidden, other_inputs)
+                self.assertNotIn(str(fixture["native_agent"]), first)
+                self.assertNotIn("lee el rol", first.lower())
+
+    def test_codex_direct_update_reports_limit_before_authentication(self):
+        module = load_probe("codex")
+        with patch.object(module, "emit") as emit, patch.object(module.subprocess, "check_output") as runtime:
+            self.assertFalse(module._extended_canary(True, module.DEFAULT_MODEL, module.DEFAULT_EFFORT, "update"))
+        runtime.assert_not_called()
+        self.assertEqual(emit.call_args.args[0]["preflight"], "UPDATE_REQUIRES_NATIVE_ROLE")
+        self.assertFalse(emit.call_args.args[0]["inference_started"])
+
+    def test_native_update_child_requires_linked_completed_session_and_exact_answer(self):
+        module = load_probe("codex")
+        expected = {"scenario": "update", "order": ["B", "A"]}
+        lifecycle = [{"method": "item/completed", "params": {"threadId": "parent", "item": {
+            "type": "subAgentActivity", "agentThreadId": "child", "agentPath": "/child",
+            "kind": kind}}} for kind in ("started", "completed")]
+        completed = {"method": "turn/completed", "params": {"threadId": "child", "turn": {
+            "status": "completed", "items": [{"type": "agentMessage", "phase": "final_answer",
+            "text": json.dumps(expected)}]}}}
+        self.assertTrue(module._completed_child_turn([*lifecycle, completed], expected)["observed"])
+        self.assertIsNone(module._completed_child_turn([*lifecycle, completed], expected,
+                                                     expected_role="kora-canary-witness"))
+        spawn = {"method": "rawResponseItem/completed", "params": {"item": {
+            "type": "function_call", "name": "spawn_agent", "call_id": "spawn-1",
+            "arguments": json.dumps({"agent_type": "kora-canary-witness"})}}}
+        lifecycle[0]["params"]["item"]["id"] = "spawn-1"
+        evidence = module._completed_child_turn([spawn, *lifecycle, completed], expected,
+                                               expected_role="kora-canary-witness")
+        self.assertEqual(evidence["agent_type"], "kora-canary-witness")
+        self.assertIsNone(module._completed_child_turn([completed], expected))
+        completed["params"]["threadId"] = "parent"
+        self.assertIsNone(module._completed_child_turn([*lifecycle, completed], expected))
+        completed["params"]["threadId"] = "child"
+        self.assertIsNone(module._completed_child_turn([*lifecycle, completed],
+                                                       {**expected, "order": ["A", "B"]}))
+
     def test_incomplete_contract_is_declared_without_faking_runtime_evidence(self):
         for runtime in ("codex", "hermes"):
             module = load_probe(runtime)

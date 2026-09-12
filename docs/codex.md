@@ -83,6 +83,15 @@ pero implementar otro lanzador no es necesario para el recorrido actual. Las
 interfaces se contrastan con [Codex App Server](https://learn.chatgpt.com/docs/app-server)
 y la ayuda de la CLI instalada.
 
+El canario de actualización del 2026-09-13 detectó una condición adicional en
+App Server 0.154.0: pasar la confianza del proyecto mediante `-c` no habilitó
+su capa local. El evento `configWarning` informó que las skills seguían
+disponibles, mientras la configuración del proyecto permanecía deshabilitada.
+El probe guarda esa confianza en el `config.toml` de su home temporal antes de
+arrancar. Exige crear el hijo con `agent_type` explícito y `fork_turns=none`,
+y vincula la creación con el cierre del hijo. La respuesta de un hijo genérico
+que leyó la skill espejo no satisface esta comprobación.
+
 Codex mantiene su cadena de instrucciones globales y de proyecto. KORA no
 reescribe `AGENTS.md` global para seleccionar cada producto. La cadena se
 describe en [Custom instructions with AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md).

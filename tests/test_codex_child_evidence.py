@@ -33,6 +33,9 @@ class CodexChildEvidenceTests(unittest.TestCase):
                                                 "text": json.dumps(answer)}]}}}
         observed = module._incomplete_child_result([start, turn, end])
         self.assertTrue(observed["observed"])
+        extended = json.loads(json.dumps(turn))
+        extended["params"]["turn"]["items"][0]["text"] = json.dumps({**answer, "detail": "input absent"})
+        self.assertTrue(module._incomplete_child_result([start, extended, end])["observed"])
         self.assertEqual(observed["child_thread_id"], "child")
         self.assertEqual(observed["parent_thread_id"], "parent")
         for missing in ([turn], [start, turn], [turn, end]):
