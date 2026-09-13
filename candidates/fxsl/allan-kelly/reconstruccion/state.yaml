@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:allan-kelly
+kind: agent
+namespace: fxsl
+name: allan-kelly
+candidate: reconstruccion
+base: 7b5d13c752aa73e08d19168d89314f7d782a366df97cf8c269872f37f23d50a4
+base_revision: 7b5d13c752aa73e08d19168d89314f7d782a366df97cf8c269872f37f23d50a4
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 84bb98597efba32f4591ba3bcf103a88623f288f7e91e14bfc00291e25b57efc
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 84bb98597efba32f4591ba3bcf103a88623f288f7e91e14bfc00291e25b57efc
+previous_revision: 7b5d13c752aa73e08d19168d89314f7d782a366df97cf8c269872f37f23d50a4
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/fxsl/allan-kelly
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/allan-kelly/reconstruccion/displaced-c0d671abfe294a9e9d45300771e15ecc
+admitted_at: '2026-09-13T18:43:18+00:00'

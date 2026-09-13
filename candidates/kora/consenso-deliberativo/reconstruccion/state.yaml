@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:consenso-deliberativo
+kind: skill
+namespace: kora
+name: consenso-deliberativo
+candidate: reconstruccion
+base: fd846c0b264e1388fe3c2d0a0c05b0aacf27284e4b90b28713a9d9fe6e3585a1
+base_revision: fd846c0b264e1388fe3c2d0a0c05b0aacf27284e4b90b28713a9d9fe6e3585a1
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 9be2f39d2db69a5fb6f94ae9209822c1afa2c93c2066f8f0145e619433ab3228
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 9be2f39d2db69a5fb6f94ae9209822c1afa2c93c2066f8f0145e619433ab3228
+previous_revision: fd846c0b264e1388fe3c2d0a0c05b0aacf27284e4b90b28713a9d9fe6e3585a1
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/consenso-deliberativo
+displaced_path: /home/felix/kora-pneuma/candidates/kora/consenso-deliberativo/reconstruccion/displaced-7ad65a725328456bb32aadd962dd4c1b
+admitted_at: '2026-09-13T18:43:15+00:00'

@@ -1,0 +1,79 @@
+id: urn:fxsl:artefacto:cell-design
+kind: skill
+name: cell-design
+description: 'Skill de diseno organizacional para celulas humano-agente: intent contracts,
+  autonomy envelopes, evals, control plane, debt audit, recalibracion. Para cualquier
+  agente que disene, evalue o recalibre unidades de delivery donde humanos y agentes
+  operan como una sola unidad de entrega con responsabilidad de valor compartida.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:fxsl:kb:allan-kelly-gemelo-digital-intelectual
+relations:
+  conocimiento:
+  - urn:fxsl:kb:allan-kelly-gemelo-digital-intelectual
+  componible:
+  - urn:kora:artefacto:mente-omega
+  - urn:kora:artefacto:cat-thinking
+provenance:
+  source_path: artefactos/skills/fxsl/cell-design/SKILL.md
+  source_sha256: ee172edec58d7af1b6befd1585a3a963046b7fc4e3cfb5c9bc496c953323bdd7
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:fxsl:artefacto:cell-design
+
+    nombre: cell-design
+
+    version: 1.0.2
+
+    estado: activo
+
+    descripcion: "Skill de diseno organizacional para celulas humano-agente: intent
+    contracts, autonomy envelopes, evals, control plane, debt audit, recalibracion.
+    Para cualquier agente que disene, evalue o recalibre unidades de delivery donde
+    humanos y agentes operan como una sola unidad de entrega con responsabilidad de
+    valor compartida."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/fxsl/cell-design/SKILL.md
+    v1.0.1 (sha256:3f3845200c3913d20bdd8c78bcee42a8d2172d1eff4644faea28e4a8bd728234);
+    cuerpo Markdown preservado byte-fiel salvo la correccion 1.0.2. Correccion 1.0.2
+    (2026-06-15): las referencias de ''Cuando NO Usar'' y de la tabla de composicion
+    apuntaban a urn:kora:kb:meta-kora-rebuild-directive (registro no migrable de la
+    bestia) y a gtd-flow en staging de la bestia, en idiom de bestia (IR, staging);
+    se reapuntaron a urn:kora:kb:regimen-de-ley y se tradujeron al regimen de doctrina
+    de pneuma (H1/H2, auditoria 2026-06-15). 3 referencias byte-identicas. Omitido
+    con razon: target openclaw (no realizado, GENESIS seccion 4)."
+
+    autor: FS
+
+    creado: 2026-04-28
+
+    lang: es
+
+    tags: [cell-design, allan-kelly, organizational-architecture, intent-contract,
+    autonomy-envelope, evals, control-plane, debt-audit, hcai]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [2, 2, 3, 3, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Edit, Glob, Grep]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [diagnosticar, posicionar-valor, disenar-celula, disenar-contratos, disenar-evals,
+    auditar-deuda, entregar]
+
+    conocimiento: [urn:fxsl:kb:allan-kelly-gemelo-digital-intelectual]
+
+    componible: [urn:kora:artefacto:mente-omega, urn:kora:artefacto:cat-thinking]
+
+    ---
+
+    '

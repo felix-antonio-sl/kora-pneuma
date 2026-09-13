@@ -168,6 +168,21 @@ identidad nativa; no se afirma utilidad diferencial. Las seis instalaciones
 personales quedaron `current` en ambos destinos, sin cambios pendientes ni
 recuperación, y sin dependencia efectiva del servicio excluido gtd-felix.
 
+El lote de organización quedó admitido e instalado en Codex y Hermes:
+`cell-design`, `consenso-deliberativo` y `allan-kelly` (tres revisiones
+concretas, método antes que agente). Sesiones nuevas acreditaron carga y
+conducta en fixtures sintéticos —Hermes Sol/high, Codex Sol sin esfuerzo
+declarado (además de casos previos con el default del perfil)—: célula con
+efecto irreversible sin rollback fingido, deliberación en encarnación sin
+objeción inventada, entrada que compone el método sin duplicarlo y no
+activación vecina en ambos destinos. Comparación de fuentes contra vigente
+y sin-producto; la vigente no existe en Hermes por construcción y su corrida
+Codex se invalidó por lectura fuera del montaje (documentadas, sin ocultar).
+Allan se conserva provisionalmente por acceso directo, composición y cobertura;
+sin utilidad diferencial ni superioridad sobre Dori (comparación con Dori no
+ejecutada). Instalaciones personales `current`, sin cambios ni recuperación,
+sin tocar GTD protegido ni otros perfiles.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

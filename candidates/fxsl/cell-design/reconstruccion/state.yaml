@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:cell-design
+kind: skill
+namespace: fxsl
+name: cell-design
+candidate: reconstruccion
+base: 2d592b367badca95e0e54cc6de44a55f2b7744938159343238a390620deacdce
+base_revision: 2d592b367badca95e0e54cc6de44a55f2b7744938159343238a390620deacdce
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 98de353c348dd4ddf575c22f770de0989126f02ea7010d2a808b30788aad7827
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: 98de353c348dd4ddf575c22f770de0989126f02ea7010d2a808b30788aad7827
+previous_revision: 2d592b367badca95e0e54cc6de44a55f2b7744938159343238a390620deacdce
+destination_path: /home/felix/kora-pneuma/products/fxsl/cell-design
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/cell-design/reconstruccion/displaced-1c88f55cf33441c8a7fa3cedb5b07da9
+admitted_at: '2026-09-13T18:43:07+00:00'

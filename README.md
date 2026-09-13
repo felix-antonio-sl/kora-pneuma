@@ -78,8 +78,15 @@ especializados KORA se conservan como identidades propias en ambos destinos:
 caso de verificación cada uno; retirar y aliasar no redirige la identidad
 nativa y no se afirma utilidad diferencial. Las seis instalaciones personales
 quedaron `current` en ambos destinos, sin dependencia efectiva del servicio
-excluido gtd-felix. El resto de la colección sigue en ejecución; estos lotes no
-lo validan.
+excluido gtd-felix. El lote de organización también está admitido e instalado
+en ambos destinos: `cell-design` (método), `consenso-deliberativo` (deliberación
+con disenso preservado) y `allan-kelly` (entrada que compone el método sin
+duplicarlo), con carga y conducta acreditadas en fixtures sintéticos —Hermes
+Sol/high y Codex Sol sin esfuerzo declarado (casos previos con el default del
+perfil)—, comparación de fuentes contra vigente y sin-producto, y Allan
+provisional sin superioridad afirmada sobre Dori. Instalaciones personales
+`current` sin cambios ni recuperación pendiente. El resto de la colección sigue
+en ejecución; estos lotes no lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).
