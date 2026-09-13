@@ -1,0 +1,42 @@
+id: urn:fxsl:artefacto:gtd-operations
+kind: skill
+name: gtd-operations
+description: Operar el sistema GTD agéntico de Félix mediante estado persistente,
+  comandos versionados, ejecución bajo mandato y revisión continua.
+content: content.md
+targets:
+- hermes
+resources:
+- references/operations.md
+- runtime/gtd_felix/__init__.py
+- runtime/gtd_felix/__main__.py
+- runtime/gtd_felix/adapters.py
+- runtime/gtd_felix/application.py
+- runtime/gtd_felix/calendar_effects.py
+- runtime/gtd_felix/canary.py
+- runtime/gtd_felix/cli.py
+- runtime/gtd_felix/codex.py
+- runtime/gtd_felix/codex_local.py
+- runtime/gtd_felix/codex_remote.py
+- runtime/gtd_felix/control.py
+- runtime/gtd_felix/deployment.py
+- runtime/gtd_felix/domain.py
+- runtime/gtd_felix/effect_monitor.py
+- runtime/gtd_felix/effects.py
+- runtime/gtd_felix/gmail_effects.py
+- runtime/gtd_felix/google_sources.py
+- runtime/gtd_felix/google_transport.py
+- runtime/gtd_felix/gtd.py
+- runtime/gtd_felix/hermes.py
+- runtime/gtd_felix/material_files.py
+- runtime/gtd_felix/mcp.py
+- runtime/gtd_felix/native_context.py
+- runtime/gtd_felix/native_guard.py
+- runtime/gtd_felix/orchestration.py
+- runtime/gtd_felix/service.py
+- runtime/gtd_felix/recovery_bundle.py
+- runtime/gtd_felix/source_monitor.py
+- runtime/gtd_felix/source_sync.py
+- runtime/gtd_felix/store.py
+- runtime/gtd_felix/telegram.py
+- runtime/pyproject.toml

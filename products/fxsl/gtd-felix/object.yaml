@@ -1,0 +1,11 @@
+id: urn:fxsl:artefacto:gtd-felix
+kind: agent
+name: gtd-felix
+description: 'Asistente de confianza de Félix: sostener intención y continuidad,
+  realizar trabajo autorizado y devolver resultados útiles con el menor cuerpo técnico suficiente.'
+content: content.md
+targets:
+- hermes
+requires:
+- urn:fxsl:artefacto:gtd-operations
+resources: []

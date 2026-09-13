@@ -1,0 +1,431 @@
+"""Read-only Google source adapters, without OAuth or a network implementation.
+
+Transport contract: authenticated_account identifies the credential's verified
+account, and async request('GET', absolute_url, params=dict) returns
+{'status': int, 'body': bytes}. It must enforce its own connection timeout and
+must not redirect requests to another authority. Bodies are bounded here before
+parsing; transports should bound their receive buffers too.
+
+Gmail scope is explicitly the whole mailbox including Spam/Trash, not arbitrary
+search or label filters. Original JSON response bytes retain RAW MIME/attachments; text projection does not interpret
+attachments, HTML, or remote content. Calendar sync preserves raw masters and
+exceptions (singleEvents=false), without expanding recurrence or bounding time.
+"""
+import asyncio
+import base64
+import binascii
+import copy
+from email import policy
+from email.parser import BytesParser
+import hashlib
+from html.parser import HTMLParser
+import json
+from urllib.parse import quote
+import uuid
+
+from .source_sync import _hash, _json, _now
+
+
+class VisibleHTML(HTMLParser):
+    """Text-only projection: no browser, fetching, CSS execution or DOM effects."""
+    VOID = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
+    HIDDEN = {'script','style','head','template','noscript'}
+    BLOCK = {'p','div','section','article','header','footer','li','tr','h1','h2','h3','h4','h5','h6','blockquote'}
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.stack, self.parts = [], []
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        style = ''.join((values.get('style') or '').lower().split())
+        hidden = (any(v for _,v in self.stack) or tag in self.HIDDEN or 'hidden' in values
+                  or (values.get('aria-hidden') or '').lower() == 'true'
+                  or 'display:none' in style or 'visibility:hidden' in style)
+        if not hidden and (tag in self.BLOCK or tag in {'br','hr'}):
+            self.parts.append('\n')
+        if tag not in self.VOID:
+            self.stack.append((tag, hidden))
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if tag not in self.VOID:
+            self.handle_endtag(tag)
+
+    def handle_endtag(self, tag):
+        for index in range(len(self.stack)-1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                break
+        if tag in self.BLOCK and not any(v for _,v in self.stack):
+            self.parts.append('\n')
+
+    def handle_data(self, data):
+        if not any(v for _,v in self.stack):
+            self.parts.append(data)
+
+    def text(self):
+        return '\n'.join(line for line in (' '.join(v.split()) for v in ''.join(self.parts).splitlines()) if line)
+
+
+class ResponseDocument(dict):
+    def __init__(self, value, original):
+        super().__init__(value)
+        self.original = original
+
+
+class SourceError(ValueError):
+    pass
+
+
+def _require(value, code):
+    if not value:
+        raise SourceError(code)
+
+
+def _string(value):
+    return isinstance(value, str) and bool(value)
+
+
+class GoogleSources:
+    def __init__(self, sync, transport, config):
+        self.sync, self.store, self.transport = sync, sync.store, transport
+        self.config = copy.deepcopy(config)
+        self._locks = {}
+        _require(isinstance(config, dict) and config, 'source_config_required')
+        for source_id in config:
+            self._source(source_id)
+
+    def _source(self, source_id):
+        _require(source_id in self.config and _string(source_id), 'unknown_source')
+        cfg = self.config[source_id]
+        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit'}
+        _require(isinstance(cfg, dict) and not set(cfg) - allowed, 'unsupported_source_filter')
+        _require(cfg.get('provider') in {'gmail', 'calendar'} and _string(cfg.get('account')), 'explicit_account_required')
+        _require(cfg.get('scope') == ('whole_mailbox' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions'), 'explicit_coverage_scope_required')
+        calendar = cfg.get('calendar_id')
+        _require(cfg['provider'] != 'calendar' or _string(calendar) and calendar != 'primary', 'concrete_calendar_required')
+        _require(cfg['provider'] != 'gmail' or calendar is None, 'gmail_calendar_mismatch')
+        for key, default, maximum in [('page_size', 100, 500), ('max_pages', 100, 1000),
+                                      ('max_response_bytes', 6 * 1024 * 1024, 8 * 1024 * 1024),
+                                      ('request_timeout_seconds', 20, 60), ('pending_retry_limit', 10, 100)]:
+            value = cfg.get(key, default)
+            _require(type(value) is int and 0 < value <= maximum, 'invalid_source_limit')
+        params = {'maxResults': cfg.get('page_size', 100)}
+        if cfg['provider'] == 'gmail':
+            params['includeSpamTrash'] = 'true'
+        else:
+            params.update(singleEvents='false', showDeleted='true')
+        partition = {'provider': cfg['provider'], 'account': cfg['account'],
+            'collection': 'messages' if cfg['provider'] == 'gmail' else calendar,
+            'scope_digest': _hash({'params': params, 'representation': 'raw-mime-v1' if cfg['provider'] == 'gmail' else 'raw-event-v1'})}
+        return cfg, params, partition
+
+    def _key(self, partition):
+        return 'source-sync:google:' + _hash(partition)
+
+    def _load(self, partition):
+        with self.store.lock:
+            row = self.store.db.execute('SELECT value FROM metadata WHERE key=?', (self._key(partition),)).fetchone()
+            return json.loads(row[0]) if row else None
+
+    def _save(self, partition, state):
+        with self.store.transaction():
+            self.store.db.execute('INSERT INTO metadata VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',
+                                  (self._key(partition), _json(state)))
+
+    def inspect(self, source_id):
+        cfg, params, partition = self._source(source_id)
+        adapter = self._load(partition)
+        state = self.sync.inspect(partition)
+        pending = (adapter or {}).get('pending_reads', {})
+        health = 'degraded' if pending or (adapter or {}).get('error') or state and state['coverage'] in {'degraded','rebuild_required'} else 'complete' if state and state['coverage'] == 'complete' and state['projection'] == 'current' else 'in_progress'
+        return {'partition': partition, 'effective_parameters': params, 'health': health,
+            'originals_complete': not pending and bool(state) and state['coverage'] == 'complete',
+            'pending_reads': copy.deepcopy(pending),
+            'coverage_contract': {'scope': 'whole_mailbox_including_spam_trash' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions',
+                'interval': None, 'recurrence_expanded': False, 'attachments_interpreted': False,
+                'semantic_review': 'not_evaluated'},
+            'adapter': adapter, 'sync': state}
+
+    async def _get(self, cfg, url, params):
+        _require(getattr(self.transport, 'authenticated_account', None) == cfg['account'], 'credential_account_mismatch')
+        response = await asyncio.wait_for(self.transport.request('GET', url, params=copy.deepcopy(params)),
+                                         cfg.get('request_timeout_seconds', 20))
+        _require(isinstance(response, dict) and type(response.get('status')) is int
+                 and isinstance(response.get('body'), bytes), 'invalid_http_response')
+        _require(len(response['body']) <= cfg.get('max_response_bytes', 6 * 1024 * 1024), 'response_too_large')
+        status = response['status']
+        if status != 200:
+            return status, {}
+        try:
+            body = json.loads(response['body'])
+        except (ValueError, UnicodeError):
+            raise SourceError('invalid_json') from None
+        _require(isinstance(body, dict), 'invalid_response_shape')
+        return status, ResponseDocument(body, response['body'])
+
+    async def _ok(self, cfg, url, params):
+        status, body = await self._get(cfg, url, params)
+        _require(status == 200, 'http_' + str(status))
+        return body
+
+    def _gmail_object(self, message, identity):
+        _require(message.get('id') == identity and _string(message.get('threadId'))
+                 and _string(message.get('historyId')) and _string(message.get('raw')),
+                 'message_identity_or_raw_missing')
+        _require(_string(message.get('internalDate')) and message['internalDate'].isdigit()
+                 and ('labelIds' not in message or isinstance(message['labelIds'], list) and all(_string(v) for v in message['labelIds'])),
+                 'message_metadata_missing')
+        raw = message['raw']
+        try:
+            rfc = base64.b64decode(raw + '=' * (-len(raw) % 4), altchars=b'-_', validate=True)
+            parsed = BytesParser(policy=policy.default).parsebytes(rfc)
+        except (ValueError, binascii.Error):
+            raise SourceError('invalid_raw_message') from None
+        original = message.original
+        _require(len(original) <= 4 * 1024 * 1024, 'message_too_large')
+        _require(not parsed.defects, 'mime_parse_degraded')
+        parts, html_parts, attachments = [], [], []
+        for part in parsed.walk():
+            _require(not part.defects, 'mime_parse_degraded')
+            if part.is_multipart():
+                continue
+            if part.get_content_disposition() == 'attachment' or part.get_filename():
+                attachments.append({'filename': part.get_filename(), 'content_type': part.get_content_type()})
+            elif part.get_content_type() in {'text/plain','text/html'}:
+                try:
+                    content = part.get_content()
+                    if part.get_content_type() == 'text/plain':
+                        parts.append(content)
+                    else:
+                        parser = VisibleHTML(); parser.feed(content); parser.close()
+                        html_parts.append(parser.text())
+                except (LookupError, UnicodeError, ValueError):
+                    raise SourceError('mime_text_decode_degraded') from None
+        metadata = {k: message.get(k) for k in ('id', 'threadId', 'historyId', 'internalDate', 'labelIds')}
+        metadata['headers'] = {k: str(parsed[k]) for k in ('Subject', 'From', 'To', 'Date', 'Message-ID') if parsed[k] is not None}
+        metadata['attachments_not_interpreted'] = attachments
+        metadata['html_not_executed_or_rendered'] = True
+        metadata['body_projection'] = 'plain' if parts else 'visible_html' if html_parts else 'unavailable'
+        text = _json(metadata) + '\n\n' + ('\n'.join(parts or html_parts) if parts or html_parts else '[No text body; original MIME retained, attachments not interpreted.]')
+        _require(len(text) <= 1024 * 1024, 'message_text_too_large')
+        return dict(external_id=identity, revision='message:' + message['historyId'] + ':' + hashlib.sha256(original).hexdigest(), status='present',
+            text=text, original=original, sha256=hashlib.sha256(original).hexdigest(),
+            url='https://mail.google.com/mail/u/' + quote(self.transport.authenticated_account, safe='') + '/#all/' + quote(identity, safe=''),
+            mime_type='application/json')
+
+    def _mail_url(self, cfg, identity):
+        return 'https://mail.google.com/mail/u/' + quote(cfg['account'], safe='') + '/#all/' + quote(identity, safe='')
+
+    async def _read_message(self, cfg, identity, adapter):
+        try:
+            message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format':'raw'})
+            obj = self._gmail_object(message, identity)
+            if identity in adapter.get('pending_reads', {}):
+                adapter['pending_reads'][identity]['resolving_revision'] = obj['revision']
+            return obj
+        except SourceError as exc:
+            if str(exc) not in {'response_too_large','message_too_large','mime_parse_degraded',
+                'mime_text_decode_degraded','invalid_raw_message','message_text_too_large','http_404',
+                'message_metadata_missing','message_identity_or_raw_missing'}:
+                raise
+            stamp = _now()
+            pending = adapter.setdefault('pending_reads', {}).setdefault(identity,
+                {'external_id':identity, 'observed_at':stamp, 'attempts':0})
+            pending.update(reason=str(exc), last_attempt_at=stamp, attempts=pending['attempts']+1)
+            pending.pop('resolving_revision', None)
+            return dict(external_id=identity, revision='unread-observation:' + _hash([identity, pending['observed_at'], pending['reason']]), status='degraded',
+                        text=None, original=None, sha256=None, url=self._mail_url(cfg, identity))
+
+    def _clear_projected_reads(self, partition, adapter, state):
+        if state and state['projection'] == 'current' and not state['pending']:
+            for identity, pending in list(adapter.get('pending_reads', {}).items()):
+                obj = state['objects'].get(identity, {})
+                if pending.get('resolving_revision') == obj.get('revision') and obj.get('availability') in {'present','deleted'}:
+                    del adapter['pending_reads'][identity]
+            self._save(partition, adapter)
+
+    async def _gmail_page(self, cfg, params, cycle, adapter):
+        base = 'https://gmail.googleapis.com/gmail/v1/users/me'
+        token = cycle['next_page_token']
+        query = {'maxResults': params['maxResults']}
+        if token is not None:
+            query['pageToken'] = token
+        incremental = cycle['mode'] == 'incremental'
+        if incremental:
+            query['startHistoryId'] = cycle['base_cursor']
+            status, body = await self._get(cfg, base + '/history', query)
+            if status == 404:
+                raise SourceError('cursor_expired')
+        else:
+            query['includeSpamTrash'] = 'true'
+            status, body = await self._get(cfg, base + '/messages', query)
+        _require(status == 200, 'http_' + str(status))
+        changed, deleted = {}, {}
+        if incremental:
+            history = body.get('history', [])
+            _require(isinstance(history, list), 'invalid_history')
+            for entry in history:
+                _require(isinstance(entry, dict) and _string(entry.get('id')), 'invalid_history')
+                for kind in ('messagesAdded', 'labelsAdded', 'labelsRemoved', 'messagesDeleted'):
+                    entries = entry.get(kind, [])
+                    _require(isinstance(entries, list), 'invalid_history')
+                    for value in entries:
+                        message = value.get('message', {}) if isinstance(value, dict) else {}
+                        identity = message.get('id')
+                        _require(_string(identity), 'history_message_id_missing')
+                        if kind == 'messagesDeleted':
+                            deleted[identity] = entry['id']
+                            changed.pop(identity, None)
+                        else:
+                            changed[identity] = True
+                            deleted.pop(identity, None)
+                # Generic messages can repeat typed entries; do not infer deletion.
+                for message in entry.get('messages', []):
+                    _require(isinstance(message, dict) and _string(message.get('id')), 'invalid_history')
+                    if message['id'] not in deleted:
+                        changed[message['id']] = True
+        else:
+            messages = body.get('messages', [])
+            _require(isinstance(messages, list), 'invalid_message_list')
+            for message in messages:
+                _require(isinstance(message, dict) and _string(message.get('id')), 'invalid_message_list')
+                changed[message['id']] = True
+        objects = []
+        for identity in changed:
+            objects.append(await self._read_message(cfg, identity, adapter))
+        for identity, revision in deleted.items():
+            if identity in adapter.get('pending_reads', {}):
+                adapter['pending_reads'][identity]['resolving_revision'] = 'deleted:' + revision
+            objects.append(dict(external_id=identity, revision='deleted:' + revision, status='deleted',
+                text=None, original=None, sha256=None,
+                url='https://mail.google.com/mail/u/' + quote(cfg['account'], safe='') + '/#all/' + quote(identity, safe='')))
+        next_token = body.get('nextPageToken')
+        _require(next_token is None or _string(next_token), 'invalid_next_page_token')
+        cursor = body.get('historyId') if incremental else adapter['baseline_history_id']
+        _require(next_token is not None or _string(cursor), 'final_cursor_missing')
+        return objects, next_token, None if next_token is not None else cursor
+
+    async def _calendar_page(self, cfg, params, cycle, adapter):
+        query = dict(params)
+        if cycle['next_page_token'] is not None:
+            query['pageToken'] = cycle['next_page_token']
+        if cycle['mode'] == 'incremental':
+            query['syncToken'] = cycle['base_cursor']
+        url = 'https://www.googleapis.com/calendar/v3/calendars/' + quote(cfg['calendar_id'], safe='') + '/events'
+        status, body = await self._get(cfg, url, query)
+        if status == 410 and cycle['mode'] == 'incremental':
+            raise SourceError('cursor_expired')
+        _require(status == 200, 'http_' + str(status))
+        events = body.get('items', [])
+        _require(isinstance(events, list), 'invalid_event_list')
+        objects = []
+        for event in events:
+            _require(isinstance(event, dict) and _string(event.get('id')) and event.get('status') in {'confirmed','tentative','cancelled'}, 'invalid_event')
+            original = _json(event).encode()
+            _require(len(original) <= 4 * 1024 * 1024, 'event_too_large')
+            revision = event.get('etag')
+            # Cancelled exceptions may expose only ID; hash their exact tombstone,
+            # never fabricate title/dates or withdraw the adopted GTD item.
+            _require(_string(revision) or event['status'] == 'cancelled', 'event_revision_missing')
+            revision = 'etag:' + revision if revision else 'tombstone:' + hashlib.sha256(original).hexdigest()
+            link = event.get('htmlLink') or url + '/' + quote(event['id'], safe='')
+            objects.append(dict(external_id=event['id'], revision=revision,
+                status='deleted' if event['status'] == 'cancelled' else 'present',
+                text=_json(event), original=original, sha256=hashlib.sha256(original).hexdigest(),
+                url=link, mime_type='application/json'))
+        next_token = body.get('nextPageToken')
+        _require(next_token is None or _string(next_token), 'invalid_next_page_token')
+        cursor = body.get('nextSyncToken')
+        _require(next_token is None and _string(cursor) or next_token is not None and cursor is None, 'final_cursor_missing')
+        return objects, next_token, cursor
+
+    async def synchronize(self, source_id):
+        cfg, params, partition = self._source(source_id)
+        async with self._locks.setdefault(self._key(partition), asyncio.Lock()):
+            return await self._synchronize(source_id, cfg, params, partition)
+
+    async def _synchronize(self, source_id, cfg, params, partition):
+        adapter = self._load(partition)
+        cycle_id = adapter.get('cycle_id') if adapter and adapter.get('active') else None
+        try:
+            _require(getattr(self.transport, 'authenticated_account', None) == cfg['account'], 'credential_account_mismatch')
+            state = self.sync.inspect(partition)
+            if state and state['pending']:
+                state = self.sync.recover(partition)
+                if state['projection'] == 'blocked':
+                    return self.inspect(source_id)
+            if adapter:
+                self._clear_projected_reads(partition, adapter, state)
+            if cycle_id:
+                # Recovery first: a completed durable page is never fetched again.
+                if state is None or cycle_id not in state['cycles']:
+                    self.sync.begin(partition, cycle_id, adapter['mode'])
+                state = self.sync.recover(partition)
+                if state['cycles'][cycle_id]['status'] == 'complete':
+                    adapter.update(active=False, status='complete', completed_at=_now())
+                    self._save(partition, adapter)
+                    return self.inspect(source_id)
+            else:
+                mode = 'incremental' if state and state['cursor_valid'] else ('rebuild' if state else 'full')
+                baseline = None
+                if cfg['provider'] == 'gmail':
+                    profile = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/profile', {})
+                    _require(profile.get('emailAddress') == cfg['account'] and _string(profile.get('historyId')), 'gmail_profile_mismatch')
+                    baseline = profile['historyId']
+                cycle_id = uuid.uuid4().hex
+                pending_reads = (adapter or {}).get('pending_reads', {})
+                adapter = {'pending_reads':pending_reads, 'cycle_id': cycle_id, 'mode': mode, 'active': True,
+                    'verified_account': cfg['account'], 'started_at': _now(), 'baseline_history_id': baseline}
+                self._save(partition, adapter)
+                self.sync.begin(partition, cycle_id, mode)
+            retried = []
+            if cfg['provider'] == 'gmail':
+                pending = adapter.get('pending_reads', {})
+                oldest = sorted(pending, key=lambda identity: (pending[identity].get('last_attempt_at', pending[identity]['observed_at']), identity))
+                for identity in oldest[:cfg.get('pending_retry_limit', 10)]:
+                    retried.append(await self._read_message(cfg, identity, adapter))
+                self._save(partition, adapter)
+            for _ in range(cfg.get('max_pages', 100)):
+                state = self.sync.inspect(partition)
+                cycle = state['cycles'][cycle_id]
+                if state['projection'] == 'blocked':
+                    return self.inspect(source_id)
+                loader = self._gmail_page if cfg['provider'] == 'gmail' else self._calendar_page
+                objects, next_token, cursor = await loader(cfg, params, cycle, adapter)
+                # A later explicit history deletion wins over an earlier retry.
+                current_ids = {obj['external_id'] for obj in objects}
+                objects = [obj for obj in retried if obj['external_id'] not in current_ids] + objects
+                retried = []
+                # Read failures/resolution intent precede page commit, so a cut
+                # cannot lose the independent retry obligation when cursor advances.
+                self._save(partition, adapter)
+                request_token = cycle['next_page_token']
+                page = {'page_id': _hash([cycle_id, request_token]), 'request_token': request_token,
+                    'next_page_token': next_token, 'cursor': cursor, 'objects': objects}
+                state = self.sync.apply_page(partition, cycle_id, page)
+                self._clear_projected_reads(partition, adapter, state)
+                if state['projection'] == 'blocked':
+                    return self.inspect(source_id)
+                if state['cycles'][cycle_id]['status'] == 'complete':
+                    adapter.update(active=False, status='complete', completed_at=_now())
+                    self._save(partition, adapter)
+                    return self.inspect(source_id)
+            adapter.update(active=True, status='in_progress', yielded_at=_now())
+            self._save(partition, adapter)
+            return self.inspect(source_id)
+        except (SourceError, OSError, asyncio.TimeoutError, ValueError) as exc:
+            code = str(exc) if isinstance(exc, (ValueError, SourceError)) else 'transport_unavailable'
+            # Error values are bounded validation codes; do not retain response bodies.
+            code = code if len(code) < 100 and code.replace('_','').isalnum() else 'source_unavailable'
+            state = self.sync.inspect(partition)
+            if cycle_id and state and state['active_cycle'] == cycle_id:
+                if code == 'cursor_expired':
+                    self.sync.invalidate_cursor(partition, cycle_id)
+                else:
+                    self.sync.degrade(partition, cycle_id, code)
+            adapter = adapter or {'active': False}
+            adapter.update(active=False, error=code, degraded_at=_now())
+            self._save(partition, adapter)
+            return self.inspect(source_id)
