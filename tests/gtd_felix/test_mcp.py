@@ -31,8 +31,8 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
     def test_mail_index_uses_subject_without_copying_source_body_or_overriding_human_title(self):
         from gtd_felix.mcp import item_index
         raw = json.dumps({'attachments_not_interpreted': ['x' * 200],
-                          'headers': {'Subject': 'Revisión horaria de julio'}}) + '\nPRIVATE_BODY'
-        item = {'id': 'mail', 'version': 1, 'source': {'provider': 'gmail'}, 'title': raw, 'text': raw}
+                          'headers': {'Subject': 'Revisión horaria de julio'}}) + '\nPRIVATE_BODY\r\n'
+        item = {'id': 'mail', 'version': 1, 'source': {'provider': 'gmail'}, 'title': raw.strip(), 'text': raw}
         row = item_index([item], {})['items'][0]
         self.assertEqual('Revisión horaria de julio', row['title'])
         self.assertNotIn('PRIVATE_BODY', json.dumps(row))

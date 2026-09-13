@@ -307,7 +307,9 @@ def item_index(items, arguments, job_id=None):
         truncated = []
         source = item.get('source') if isinstance(item.get('source'), dict) else {}
         title = item.get('title')
-        if source.get('provider') == 'gmail' and isinstance(title, str) and title == item.get('text'):
+        text = item.get('text')
+        if (source.get('provider') == 'gmail' and isinstance(title, str)
+                and isinstance(text, str) and title == text.strip()):
             # Projected mail starts with transport metadata, not a useful title.
             # Preserve an explicitly edited title; never fall back to body text.
             try:
