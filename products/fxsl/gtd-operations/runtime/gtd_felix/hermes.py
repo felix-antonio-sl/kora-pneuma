@@ -756,14 +756,21 @@ class HermesAdapter:
     async def stop(self, job_id):
         # Descendants registered by ExecutionControl have independent exact
         # identities. Stop each one; never guess PIDs or traverse native tasks
-        # that were not admitted through control.
-        jobs = self.control.pending()
+        # that were not admitted through control. Bounded descendant walk via
+        # parent_run_id (families are tiny), never a full pending scan.
         affected = {job_id}
+        store = self.control.store
         while True:
-            expanded = affected | {j['id'] for j in jobs if j.get('parent_job_id') in affected}
+            placeholders = ",".join("?" for _ in affected)
+            rows = store.db.execute(
+                f"SELECT id FROM runs WHERE parent_run_id IN ({placeholders})",
+                tuple(affected)).fetchall()
+            expanded = affected | {r["id"] for r in rows}
             if expanded == affected:
                 break
             affected = expanded
+            if len(affected) > 64:
+                break
         result = await self._stop_one(job_id)
         children = [await self._stop_one(identity) for identity in sorted(affected - {job_id})]
         if children:
