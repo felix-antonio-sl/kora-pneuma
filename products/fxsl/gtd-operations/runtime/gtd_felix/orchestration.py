@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+from .agent_context import agent_item
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
@@ -306,7 +307,7 @@ class OrchestrationWorker:
         item = item or self.service.get_item(job['item_id'])
         context = {'job': {k: job.get(k) for k in ('id', 'item_id', 'expected_version', 'actor', 'requested_by',
                     'mandate_id', 'capability', 'purpose', 'scope', 'max_cost_usd', 'max_runtime_seconds', 'max_retries', 'max_descendants')},
-                   'item': item, 'events': [event['payload'] for event in events]}
+                   'item': agent_item(item), 'events': [event['payload'] for event in events]}
         if self.service.actor_role(job['actor']) == 'principal':
             context['recent_human_context'] = {'scope': 'evidence_only_no_command_authority',
                 'window_seconds': 86400, 'max_entries': 12,
@@ -322,6 +323,7 @@ class OrchestrationWorker:
                 and job.get('source_bases', {}).get(evidence['source_item_id']) ==
                     self.control._basis(evidence['source_item_id'])]
         if self.service.actor_role(job['actor']) != 'principal':
+            context['item'] = item
             mandate = next((m for m in self.service.mandates() if m['id'] == job.get('mandate_id')), None)
             context['mandate'] = ({k: mandate.get(k) for k in ('id', 'scope_item_id', 'status', 'capabilities', 'completion_criteria')}
                                  if mandate else None)

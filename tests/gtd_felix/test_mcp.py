@@ -50,6 +50,29 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
         self.url = 'http://127.0.0.1:' + str(site._server.sockets[0].getsockname()[1])
         self.client = MCPClient(self.url, PRINCIPAL)
 
+    async def test_item_presentation_retains_evidence_and_full_authoritative_access(self):
+        current = self.service.execute('felix', self.command('meaning-for-assessment',
+            fields={'kind':'action','commitment':'committed','completion_criteria':'Synthetic criterion'}))
+        self.assertEqual('applied', current['status'], current)
+        assessed = self.service.execute('felix', self.command('assess-context', action='assess_result',
+            expected_version=current['item']['version'], fields={'satisfied':False,
+                'evidence':'Synthetic observation remains visible', 'gap':'Synthetic missing result'}))
+        self.assertEqual('applied', assessed['status'], assessed)
+        authoritative = self.service.get_item(self.item['id'])
+        current = await self.client.call('gtd_read', {'view':'item','item_id':self.item['id']})
+        complete = await self.client.call('gtd_read', {'view':'item','item_id':self.item['id'],'detail':'full'})
+        self.assertEqual(authoritative, {k:v for k,v in complete.items() if k != 'field_provenance'})
+        self.assertEqual(complete['field_provenance'],current['field_provenance'])
+        self.assertEqual(authoritative, self.service.get_item(self.item['id']))
+        self.assertNotIn('resolution_basis', current['assessments'][0])
+        self.assertIn('resolution_basis', complete['assessments'][0])
+        for key, value in authoritative.items():
+            if key != 'assessments': self.assertEqual(value, current[key], key)
+        for key,value in authoritative['assessments'][0].items():
+            if key not in {'resolution_basis','material_basis'}:
+                self.assertEqual(value,current['assessments'][0][key],key)
+        self.assertEqual({'view':'item','item_id':self.item['id'],'detail':'full'}, current['_presentation']['full_record'])
+
     async def test_misnested_material_command_gets_safe_repair_then_persists(self):
         material = self.command('repair-material', action='put_material', fields={'content': 'SYNTHETIC_PRIVATE_MATERIAL'})
         malformed = {k:v for k,v in material.items() if k not in {'operation_id', 'item_id'}}

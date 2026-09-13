@@ -159,6 +159,23 @@ class OrchestrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['status'], 'applied', result)
         return result['item']
 
+    async def test_principal_prompt_omits_only_nested_assessment_snapshots(self):
+        self.native.keep_running = True
+        await self.worker.tick()
+        job = self.control.get_job(self.native.submissions[0]['job_id'])
+        item = {**self.service.get_item(self.item['id']), 'assessments': [{
+            'actor':'felix', 'evidence':'RETAIN_OBSERVATION', 'gap':'RETAIN_GAP',
+            'material_id':'EXACT_MATERIAL', 'material_version':2,
+            'resolution_basis':{'snapshot':'DUPLICATED_SNAPSHOT_'*1000},
+            'material_basis':[{'snapshot':'DUPLICATED_MATERIAL_'*1000}]}]}
+        before = json.dumps(item, sort_keys=True)
+        prompt = self.worker._prompt(job, [], item)
+        self.assertNotIn('DUPLICATED_', prompt)
+        for marker in ('RETAIN_OBSERVATION','RETAIN_GAP','EXACT_MATERIAL',job['id'],item['text']):
+            self.assertIn(marker,prompt)
+        self.assertIn('full_record',prompt)
+        self.assertEqual(before,json.dumps(item,sort_keys=True))
+
     async def test_parent_source_change_refreshes_existing_child_once_across_restart(self):
         self.native.clarify_only = True
         await self.worker.tick()

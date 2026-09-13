@@ -946,6 +946,14 @@ la devolución pendiente y comunica la necesidad de otro transporte.
 
 ## Índice MCP de asuntos
 
+La vista `item` y el asunto entregado al principal conservan todos sus campos,
+autoría, fuentes, evaluaciones y evidencia, pero omiten de cada evaluación las
+copias `resolution_basis` y `material_basis`. El servicio conserva y verifica
+esas bases completas. `_presentation.full_record` indica cómo pedir el registro
+íntegro: `gtd_read(view="item", item_id="…", detail="full")`. Los recibos de
+comandos usan la misma presentación; la operación y su persistencia no cambian.
+Los ejecutores que dependen sólo del contexto recibido mantienen el asunto íntegro.
+
 `gtd_read(view="items", filters={...}, page_size=20, cursor=null)` devuelve un
 objeto con `items`, `total`, `offset`, `returned`, `page_size`, `snapshot` y
 `next_cursor`. Cada entrada contiene sólo id, versión, título hasta 160 caracteres

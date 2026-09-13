@@ -10,6 +10,7 @@ resources:
 - references/operations.md
 - runtime/gtd_felix/__init__.py
 - runtime/gtd_felix/__main__.py
+- runtime/gtd_felix/agent_context.py
 - runtime/gtd_felix/adapters.py
 - runtime/gtd_felix/application.py
 - runtime/gtd_felix/calendar_effects.py
