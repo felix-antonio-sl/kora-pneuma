@@ -2,6 +2,9 @@
 import asyncio
 import json
 import multiprocessing
+import os
+import signal
+import time
 import tempfile
 from pathlib import Path
 import sys
@@ -68,6 +71,43 @@ class Process:
         self.closed = True
 
 
+class FakeLifetime:
+    def __init__(self, process):
+        self.process = process
+    def attach(self):
+        pass
+    def dead(self):
+        return not self.process.alive
+    def send_signal(self, sig):
+        self.process.alive = False
+    def close(self):
+        self.process.join(0)
+        self.process.close()
+
+
+def reaped_result_child(pipe):
+    pipe.recv()
+    pipe.send(bridge.closed_result({'classification': 'selected', 'reason_code': 'gtd_relevant'}))
+    pipe.close()
+
+
+def waiting_child(pipe):
+    pipe.recv()
+    time.sleep(30)
+
+
+class RealContext:
+    def __init__(self, target):
+        self.context = multiprocessing.get_context('spawn')
+        self.target = target
+    def Pipe(self, duplex):
+        return self.context.Pipe(duplex)
+    def Process(self, **kwargs):
+        kwargs['target'] = self.target
+        self.process = self.context.Process(**kwargs)
+        return self.process
+
+
 class Context:
     def __init__(self, ready=True):
         self.ready = ready
@@ -98,7 +138,7 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         return 10.0
     async def call(self, validator=None):
         return await bridge.evaluate(self.adapter, self.request, self.payload,
-                                     validator=validator or self.valid, context=self.context)
+                                     validator=validator or self.valid, context=self.context, lifetime_factory=FakeLifetime)
     def assert_closed(self):
         self.assertFalse(bridge._BUSY)
         self.assertTrue(self.context.process.joined)
@@ -239,6 +279,73 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
                     with self.assertRaisesRegex(ValueError, '^validation_timeout$'):
                         await bridge.service_validate({'job_id': 'stub'})
         self.assertEqual('validation_timeout', bridge.error_code(ValueError('validation_timeout')))
+
+    async def test_real_spawn_externally_reaped_then_second_evaluation(self):
+        context = RealContext(reaped_result_child)
+        calls = 0
+        async def validator(binding):
+            nonlocal calls
+            calls += 1
+            if calls == 3:  # Final validation: pipe result arrived, let competing reaper win.
+                pid = context.process.pid
+                for _ in range(100):
+                    if os.waitpid(pid, os.WNOHANG)[0] == pid:
+                        break
+                    await asyncio.sleep(.01)
+                else:
+                    self.fail('synthetic child did not exit')
+                self.assertTrue(context.process.is_alive())  # Reproduces CPython's stale state.
+            return 10
+        result = await bridge.evaluate(self.adapter, self.request, self.payload,
+                                       validator=validator, context=context)
+        self.assertEqual('selected', result['classification'])
+        self.assertTrue(context.process._closed)
+        self.assertFalse(bridge._BUSY)
+        self.assertEqual('selected', (await self.call())['classification'])
+
+    async def test_real_spawn_cancellation_is_shielded_until_death(self):
+        context = RealContext(waiting_child)
+        attached = asyncio.Event()
+        lifetimes = []
+        class Guard(bridge._ChildLifetime):
+            def attach(self):
+                super().attach()
+                lifetimes.append(self)
+                attached.set()
+        task = asyncio.create_task(bridge.evaluate(self.adapter, self.request, self.payload,
+            validator=self.valid, context=context, lifetime_factory=Guard))
+        await attached.wait()
+        task.cancel()
+        await asyncio.sleep(.001)
+        task.cancel()
+        with self.assertRaises(asyncio.CancelledError):
+            await task
+        self.assertTrue(lifetimes[0].death_proven)
+        self.assertTrue(context.process._closed)
+        self.assertFalse(bridge._BUSY)
+
+    async def test_start_failure_does_not_leak_busy(self):
+        with patch.object(Process, 'start', side_effect=RuntimeError('synthetic_start_failure')):
+            with self.assertRaises(RuntimeError):
+                await self.call()
+        self.assert_closed()
+
+    async def test_cleanup_failure_while_alive_rejects_result_and_next_helper(self):
+        class Stuck(FakeLifetime):
+            def send_signal(self, sig):
+                pass
+        async def failed_cleanup(lifetime, pipe, peer):
+            raise ValueError('helper_cleanup_pending')
+        with patch.object(bridge, '_cleanup_child', new=failed_cleanup):
+            with self.assertRaisesRegex(ValueError, '^helper_cleanup_pending$'):
+                await bridge.evaluate(self.adapter, self.request, self.payload,
+                    validator=self.valid, context=self.context, lifetime_factory=Stuck)
+        self.assertTrue(bridge._BUSY)
+        with self.assertRaisesRegex(ValueError, '^helper_busy$'):
+            await self.call()
+        # Synthetic fixture has no OS process; release only for subsequent tests.
+        self.context.process.alive = False
+        bridge._BUSY = False
 
     def test_closed_output_never_quotes_model_error(self):
         for raw in (MARKER, {'classification': 'noise', 'reason_code': MARKER},

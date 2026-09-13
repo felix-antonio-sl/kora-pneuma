@@ -13,6 +13,8 @@ import logging
 import math
 import multiprocessing
 import os
+import select
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -40,7 +42,7 @@ noise/non_actionable, uncertain/needs_review. No incluyas citas ni explicación.
 
 _ERROR_CODES = frozenset({"invalid_request", "provider_mismatch", "helper_busy",
     "inactive_parent", "evaluation_not_active", "evaluation_cancelled", "helper_failed",
-    "validation_timeout"})
+    "validation_timeout", "helper_monitor_unavailable", "helper_cleanup_pending"})
 
 
 def error_code(exc):
@@ -225,7 +227,107 @@ async def service_validate(binding):
         return 0.0
 
 
-async def evaluate(adapter, request, payload, *, validator=service_validate, context=None):
+class _ChildLifetime:
+    """Linux child identity/death independent of a competing waitpid(-1) reaper."""
+    def __init__(self, process):
+        self.process = process
+        self.pidfd = None
+        self.sentinel = None
+        self.death_proven = False
+
+    def attach(self):
+        self.sentinel = self.process.sentinel
+        try:
+            self.pidfd = os.pidfd_open(self.process.pid, 0)
+        except OSError:
+            if not self.dead():
+                raise ValueError("helper_monitor_unavailable") from None
+
+    def dead(self):
+        if self.death_proven:
+            return True
+        if self.process.pid is None:
+            self.death_proven = True
+            return True  # start() did not create a child.
+        descriptors = [fd for fd in (self.pidfd, self.sentinel) if fd is not None]
+        if descriptors and select.select(descriptors, [], [], 0)[0]:
+            self.death_proven = True
+        return self.death_proven
+
+    def send_signal(self, sig):
+        if self.dead():
+            return
+        if self.pidfd is None:
+            return  # No numeric-PID fallback: the original PID may have been recycled.
+        try:
+            signal.pidfd_send_signal(self.pidfd, sig)
+        except ProcessLookupError:
+            pass  # Still require pidfd/sentinel readiness; never invent an exit status.
+
+    def close(self):
+        if not self.dead():
+            raise ValueError("helper_cleanup_pending")
+        try:
+            if self.process.pid is not None:
+                self.process.join(0)
+            try:
+                self.process.close()
+            except ValueError:
+                # CPython 3.11/3.12 Popen.poll() keeps returncode=None when another
+                # waitpid reaped this child. Mirror BaseProcess.close's resource-only
+                # branch AFTER independent death proof; no synthetic returncode.
+                if sys.implementation.name != "cpython" or sys.version_info[:2] not in {(3, 11), (3, 12)}:
+                    raise
+                from multiprocessing.process import _children
+                popen = self.process._popen
+                if popen is not None:
+                    popen.close()
+                    self.process._popen = None
+                    del self.process._sentinel
+                    _children.discard(self.process)
+                self.process._closed = True
+        finally:
+            if self.pidfd is not None:
+                os.close(self.pidfd)
+                self.pidfd = None
+
+
+async def _cleanup_child(lifetime, pipe, peer):
+    # Also unblocks a child awaiting its first envelope if pidfd attachment failed.
+    for connection in (peer, pipe):
+        if connection is not None:
+            connection.close()
+    if lifetime is None:
+        return
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        if lifetime.dead():
+            break
+        lifetime.send_signal(sig)
+        until = time.monotonic() + 1.0
+        while not lifetime.dead() and time.monotonic() < until:
+            await asyncio.sleep(0.02)
+    if not lifetime.dead():
+        raise ValueError("helper_cleanup_pending")
+    lifetime.close()
+
+
+async def _shield_cleanup(coroutine):
+    """Repeated request cancellation must not abandon the child cleanup task."""
+    task = asyncio.create_task(coroutine)
+    cancelled = False
+    while True:
+        try:
+            await asyncio.shield(task)
+            break
+        except asyncio.CancelledError:
+            if task.done():
+                raise
+            cancelled = True
+    if cancelled:
+        raise asyncio.CancelledError
+
+
+async def evaluate(adapter, request, payload, *, validator=service_validate, context=None, lifetime_factory=None):
     global _BUSY
     validate_payload(payload)
     if _BUSY:
@@ -238,7 +340,7 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
     binding["digest"] = evidence_digest(payload)
     started = time.monotonic()
     deadline = started + MAX_SECONDS
-    process = pipe = peer = None
+    process = pipe = peer = lifetime = None
     _BUSY = True
     try:
         def active():
@@ -271,7 +373,9 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
         ctx = context or multiprocessing.get_context("spawn")
         pipe, peer = ctx.Pipe(duplex=True)
         process = ctx.Process(target=_child, args=(peer,), daemon=True)
+        lifetime = (lifetime_factory or _ChildLifetime)(process)
         process.start()
+        lifetime.attach()  # Acquire stable Linux identity BEFORE sending body or credentials.
         peer.close()
         peer = None
         # Pipe send can exceed the OS buffer; avoid blocking gateway supervision.
@@ -297,26 +401,20 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
                         raise ValueError("evaluation_not_active")
                     return closed_result({key: result.get(key) for key in ("classification", "reason_code")},
                                          result.get("usage"), time.monotonic() - started)
-                if not process.is_alive():
+                if lifetime.dead():
                     raise ValueError("helper_failed")
                 await asyncio.sleep(0.05)
         finally:
             # Process termination below releases a potentially blocked pipe sender.
             sending.cancel()
     finally:
-        if process is not None:
-            if process.is_alive():
-                process.terminate()
-            await asyncio.to_thread(process.join, 1.0)
-            if process.is_alive():
-                process.kill()
-                await asyncio.to_thread(process.join, 1.0)
-            process.close()
-        if pipe is not None:
-            pipe.close()
-        if peer is not None:
-            peer.close()
-        _BUSY = False
+        try:
+            await _shield_cleanup(_cleanup_child(lifetime, pipe, peer))
+        finally:
+            # Fail closed while any started helper is not independently confirmed dead.
+            # A resource-close error after death can fail this call but cannot overlap models.
+            if lifetime is None or lifetime.dead():
+                _BUSY = False
 
 
 def install_route(adapter_type):

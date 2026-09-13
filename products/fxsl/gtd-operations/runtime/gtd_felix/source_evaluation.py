@@ -18,7 +18,7 @@ def digest_message(message):
 
 
 BRIDGE_ERRORS = frozenset({'invalid_request', 'helper_busy', 'inactive_parent', 'provider_mismatch',
-    'validation_timeout', 'evaluation_not_active', 'evaluation_cancelled', 'helper_failed', 'evaluation_unavailable', 'unauthorized',
+    'helper_monitor_unavailable', 'helper_cleanup_pending', 'validation_timeout', 'evaluation_not_active', 'evaluation_cancelled', 'helper_failed', 'evaluation_unavailable', 'unauthorized',
     'bridge_timeout_error', 'bridge_attribute_error', 'bridge_type_error', 'bridge_os_error',
     'bridge_value_error', 'bridge_internal_error'})
 
