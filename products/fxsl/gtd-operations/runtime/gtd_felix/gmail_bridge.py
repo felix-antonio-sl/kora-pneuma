@@ -42,7 +42,10 @@ noise/non_actionable, uncertain/needs_review. No incluyas citas ni explicación.
 
 _ERROR_CODES = frozenset({"invalid_request", "provider_mismatch", "helper_busy",
     "inactive_parent", "evaluation_not_active", "evaluation_cancelled", "helper_failed",
-    "validation_timeout", "helper_monitor_unavailable", "helper_cleanup_pending"})
+    "validation_timeout", "helper_monitor_unavailable", "helper_cleanup_pending",
+    "helper_turn_failed", "helper_incomplete_result", "helper_invalid_result", "helper_write_denied",
+    "bridge_timeout_error", "bridge_attribute_error", "bridge_type_error", "bridge_os_error",
+    "bridge_value_error", "bridge_internal_error"})
 
 
 def error_code(exc):
@@ -50,6 +53,8 @@ def error_code(exc):
     if (type(exc) is ValueError and len(exc.args) == 1
             and type(exc.args[0]) is str and exc.args[0] in _ERROR_CODES):
         return exc.args[0]
+    if (type(exc) is PermissionError and exc.args == ("ephemeral_write_denied",)):
+        return "helper_write_denied"
     for exception_type, code in ((TimeoutError, "bridge_timeout_error"),
             (AttributeError, "bridge_attribute_error"), (TypeError, "bridge_type_error"),
             (OSError, "bridge_os_error"), (ValueError, "bridge_value_error")):
@@ -114,6 +119,24 @@ def closed_result(raw, usage=None, duration=0.0):
             "duration_seconds": round(max(0.0, min(float(duration), MAX_SECONDS)), 6)}
 
 
+def _inference_result(result, usage):
+    """Distinguish runtime failure from a valid semantic uncertainty, without text."""
+    if not isinstance(result, dict):
+        raise ValueError("helper_invalid_result")
+    if result.get("failed") is True:
+        raise ValueError("helper_turn_failed")
+    if result.get("completed") is False or result.get("interrupted") is True:
+        raise ValueError("helper_incomplete_result")
+    # The prompt permits needs_review, never the transport's unavailable sentinel.
+    output = closed_result(result.get("final_response"), usage)
+    if output["reason_code"] == "evaluation_unavailable":
+        raise ValueError("helper_invalid_result")
+    # Hermes initializes both counters to zero, including when no usage arrived.
+    if not any(value for value in output["usage"].values()):
+        output["usage"] = {"input_tokens": None, "output_tokens": None}
+    return output
+
+
 def _disable_child_extensions():
     # These are actual entry points in HERMES_COMMIT, patched only in the fresh child.
     from hermes_cli import plugins, lifecycle
@@ -173,7 +196,7 @@ def _infer(credentials, text):
     sys.addaudithook(_deny_writes)
     try:
         result = agent.run_conversation(text, system_message=PROMPT)
-        return closed_result(result.get("final_response"), {
+        return _inference_result(result, {
             "input_tokens": getattr(agent, "session_input_tokens", None),
             "output_tokens": getattr(agent, "session_output_tokens", None)})
     finally:
@@ -198,8 +221,8 @@ def _child(pipe):
             result = _infer(envelope["credentials"], envelope["text"])
             result["duration_seconds"] = min(time.monotonic() - started, MAX_SECONDS)
             pipe.send(result)
-        except BaseException:
-            pipe.send(closed_result(None, duration=time.monotonic() - started))
+        except BaseException as exc:
+            pipe.send({"error": error_code(exc)})
         finally:
             pipe.close()
 
@@ -399,6 +422,11 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
                     result = pipe.recv()
                     if not active() or await checked_validation() <= 0 or time.monotonic() >= deadline:
                         raise ValueError("evaluation_not_active")
+                    if not isinstance(result, dict):
+                        raise ValueError("helper_invalid_result")
+                    if "error" in result:
+                        code = result["error"]
+                        raise ValueError(code if type(code) is str and code in _ERROR_CODES else "helper_failed")
                     return closed_result({key: result.get(key) for key in ("classification", "reason_code")},
                                          result.get("usage"), time.monotonic() - started)
                 if lifetime.dead():

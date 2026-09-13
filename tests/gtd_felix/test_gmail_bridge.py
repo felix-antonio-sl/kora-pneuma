@@ -161,6 +161,36 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.context.envelope['credentials']['model'], 'gpt-5.6-luna')
         self.assertEqual(self.context.envelope['credentials']['provider'], 'openai-codex')
         self.assert_closed()
+    async def test_child_failure_keeps_only_closed_code_and_releases_helper(self):
+        for supplied, expected in [('helper_turn_failed', 'helper_turn_failed'),
+                ('helper_incomplete_result', 'helper_incomplete_result'),
+                ('helper_write_denied', 'helper_write_denied'),
+                (MARKER, 'helper_failed'), ([], 'helper_failed')]:
+            self.context = Context()
+            self.context.result = {'error': supplied}
+            with self.assertRaisesRegex(ValueError, '^' + expected + '$'):
+                await self.call()
+            self.assert_closed()
+
+    def test_runtime_outcomes_never_promote_failed_or_incomplete_final(self):
+        final = json.dumps({'classification': 'selected', 'reason_code': 'gtd_relevant'})
+        for result, code in [({'failed': True, 'error': MARKER, 'final_response': final}, 'helper_turn_failed'),
+                ({'completed': False, 'final_response': final}, 'helper_incomplete_result'),
+                ({'interrupted': True, 'final_response': final}, 'helper_incomplete_result'),
+                ({'completed': True, 'final_response': MARKER}, 'helper_invalid_result'),
+                (None, 'helper_invalid_result')]:
+            with self.assertRaisesRegex(ValueError, '^' + code + '$'):
+                bridge._inference_result(result, {'input_tokens': 0, 'output_tokens': 0})
+        for usage, expected in [({'input_tokens': 0, 'output_tokens': 0},
+                                {'input_tokens': None, 'output_tokens': None}),
+                               ({'input_tokens': 12, 'output_tokens': 3},
+                                {'input_tokens': 12, 'output_tokens': 3})]:
+            result = bridge._inference_result({'completed': True, 'final_response': final}, usage)
+            self.assertEqual(expected, result['usage'])
+        uncertain = bridge._inference_result({'final_response':
+            '{"classification":"uncertain","reason_code":"needs_review"}'}, {})
+        self.assertEqual('needs_review', uncertain['reason_code'])
+
     async def test_provider_mismatch_before_child_or_validation(self):
         self.parent.model = 'other'
         with self.assertRaisesRegex(ValueError, '^provider_mismatch$'):
@@ -371,6 +401,7 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
                 (TypeError(MARKER), 'bridge_type_error'),
                 (TimeoutError(MARKER), 'bridge_timeout_error'),
                 (OSError(MARKER), 'bridge_os_error'),
+                (PermissionError('ephemeral_write_denied'), 'helper_write_denied'),
                 (HostileError(MARKER), 'bridge_internal_error')]:
             self.assertEqual(expected, bridge.error_code(error))
 
@@ -446,7 +477,7 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
                 pipe.send({'credentials': {'api_key': 'SECRET'}, 'text': MARKER})
                 self.assertTrue(pipe.poll(5))
                 result = pipe.recv()
-                self.assertEqual('evaluation_unavailable', result['reason_code'])
+                self.assertEqual({'error': 'helper_write_denied'}, result)
                 self.assertNotIn(MARKER, json.dumps(result))
                 self.assertEqual([], list(Path(directory).iterdir()))
                 process.join(5)

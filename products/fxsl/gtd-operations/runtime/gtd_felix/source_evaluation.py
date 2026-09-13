@@ -20,7 +20,8 @@ def digest_message(message):
 BRIDGE_ERRORS = frozenset({'invalid_request', 'helper_busy', 'inactive_parent', 'provider_mismatch',
     'helper_monitor_unavailable', 'helper_cleanup_pending', 'validation_timeout', 'evaluation_not_active', 'evaluation_cancelled', 'helper_failed', 'evaluation_unavailable', 'unauthorized',
     'bridge_timeout_error', 'bridge_attribute_error', 'bridge_type_error', 'bridge_os_error',
-    'bridge_value_error', 'bridge_internal_error'})
+    'bridge_value_error', 'bridge_internal_error', 'helper_turn_failed',
+    'helper_incomplete_result', 'helper_invalid_result', 'helper_write_denied'})
 
 
 class SourceEvaluation:

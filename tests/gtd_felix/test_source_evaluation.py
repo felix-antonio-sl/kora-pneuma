@@ -195,6 +195,20 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(['bridge_inactive_parent'], [row['error'] for row in receipts])
         self.assertNotIn('PRIVATE_BODY', json.dumps(receipts))
 
+    async def test_helper_failure_preserves_debt_without_claiming_zero_usage(self):
+        self.messages(['noise'])
+        async def failed(*args):
+            raise ValueError('bridge_helper_turn_failed')
+        self.evaluation.bridge = failed
+        result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual({'input_tokens': None, 'output_tokens': None}, result['usage'])
+        receipts = [json.loads(row[0]) for row in self.service.store.db.execute(
+            "SELECT value FROM metadata WHERE key LIKE 'source-evaluation:receipt:%'")]
+        self.assertEqual(['bridge_helper_turn_failed'], [row['error'] for row in receipts])
+        self.assertIn('noise', self.monitor.sources['mail'][1].inspect('mail')['pending_reads'])
+        self.assertEqual([], self.service.query({'source': {'provider': 'gmail'}}))
+        self.assertNotIn('PRIVATE_BODY_noise', '\n'.join(self.service.store.db.iterdump()))
+
     async def test_malformed_validation_and_result_fail_closed(self):
         for value in [{}, {'job_id': []}, None]:
             self.assertFalse(self.evaluation.validate('gtd-felix', value)['allowed'])
