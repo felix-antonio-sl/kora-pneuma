@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:opm-specialist
+kind: agent
+namespace: fxsl
+name: opm-specialist
+candidate: reconstruccion
+base: 72c287fccae3e226b2c31cef17949682d7bbf13c06025c161906f382b00b1a15
+base_revision: 72c287fccae3e226b2c31cef17949682d7bbf13c06025c161906f382b00b1a15
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: d587f7ef5eb9f4cb4838da4a36544ffe1f2565742107ff9fb122c1698320f420
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: d587f7ef5eb9f4cb4838da4a36544ffe1f2565742107ff9fb122c1698320f420
+previous_revision: 72c287fccae3e226b2c31cef17949682d7bbf13c06025c161906f382b00b1a15
+destination_path: /home/felix/kora-pneuma/products/fxsl/opm-specialist
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/opm-specialist/reconstruccion/displaced-54f876f9089e4c7eb1cf8231cdfd80df
+admitted_at: '2026-09-13T20:07:08+00:00'

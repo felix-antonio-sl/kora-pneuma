@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:cat-thinking
+kind: skill
+namespace: kora
+name: cat-thinking
+candidate: reconstruccion
+base: 543fcba9ce72aa59d6babb1bc350dddbfb6fb2ca75bd0cf08b76092e85dcc4d7
+base_revision: 543fcba9ce72aa59d6babb1bc350dddbfb6fb2ca75bd0cf08b76092e85dcc4d7
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 48b8a61d26888a557cc64538a1f0e526ca29ba222930a4a22757635e99e3081b
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: 48b8a61d26888a557cc64538a1f0e526ca29ba222930a4a22757635e99e3081b
+previous_revision: 543fcba9ce72aa59d6babb1bc350dddbfb6fb2ca75bd0cf08b76092e85dcc4d7
+destination_path: /home/felix/kora-pneuma/products/kora/cat-thinking
+displaced_path: /home/felix/kora-pneuma/candidates/kora/cat-thinking/reconstruccion/displaced-5adf0cf68584457a957bf5c913b341d7
+admitted_at: '2026-09-13T20:06:51+00:00'

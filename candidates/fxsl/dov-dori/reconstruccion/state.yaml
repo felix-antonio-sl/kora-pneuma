@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:dov-dori
+kind: agent
+namespace: fxsl
+name: dov-dori
+candidate: reconstruccion
+base: b487c4963c2167d3c44f1eb39166e813c85b7382796c9a056b328e11bfa637c9
+base_revision: b487c4963c2167d3c44f1eb39166e813c85b7382796c9a056b328e11bfa637c9
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: cbf40fcb2e15bb3a4629242bbf44b49120f182016e210b23903245ed5dd35508
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: cbf40fcb2e15bb3a4629242bbf44b49120f182016e210b23903245ed5dd35508
+previous_revision: b487c4963c2167d3c44f1eb39166e813c85b7382796c9a056b328e11bfa637c9
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/fxsl/dov-dori
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/dov-dori/reconstruccion/displaced-c5898efb9b64488aa03f81694ac54d92
+admitted_at: '2026-09-13T20:07:15+00:00'

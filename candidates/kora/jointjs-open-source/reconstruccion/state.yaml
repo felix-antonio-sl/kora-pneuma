@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:jointjs-open-source
+kind: skill
+namespace: kora
+name: jointjs-open-source
+candidate: reconstruccion
+base: 0b2918a7a63cd7046d36838ffe373e34f5c9962bb072971fe1bc812ca383591a
+base_revision: 0b2918a7a63cd7046d36838ffe373e34f5c9962bb072971fe1bc812ca383591a
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: cb920ae6e05dfad1c75b752c7cfdebff580d94e14f269b1c10db1b6b2e674d69
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: cb920ae6e05dfad1c75b752c7cfdebff580d94e14f269b1c10db1b6b2e674d69
+previous_revision: 0b2918a7a63cd7046d36838ffe373e34f5c9962bb072971fe1bc812ca383591a
+destination_path: /home/felix/kora-pneuma/products/kora/jointjs-open-source
+displaced_path: /home/felix/kora-pneuma/candidates/kora/jointjs-open-source/reconstruccion/displaced-c53308c74ccd466f868ffd7d6b5f92a5
+admitted_at: '2026-09-13T20:07:01+00:00'

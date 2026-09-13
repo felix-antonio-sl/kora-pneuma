@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:ifml
+kind: skill
+namespace: fxsl
+name: ifml
+candidate: reconstruccion
+base: 93c33f3f8c1ec54f7a6a0495df42abda0cfa59fc82ff3d30e7e63b1a78eab361
+base_revision: 93c33f3f8c1ec54f7a6a0495df42abda0cfa59fc82ff3d30e7e63b1a78eab361
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 68811da3feb3f22097ddceea11836c3a5b35db12b98db953ceb714a146afacd2
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: 68811da3feb3f22097ddceea11836c3a5b35db12b98db953ceb714a146afacd2
+previous_revision: 93c33f3f8c1ec54f7a6a0495df42abda0cfa59fc82ff3d30e7e63b1a78eab361
+destination_path: /home/felix/kora-pneuma/products/fxsl/ifml
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/ifml/reconstruccion/displaced-9ac70e45c5504cd4839e7c39e99208af
+admitted_at: '2026-09-13T20:07:05+00:00'

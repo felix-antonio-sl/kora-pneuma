@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:pensamiento-modelador
+kind: skill
+namespace: kora
+name: pensamiento-modelador
+candidate: reconstruccion
+base: 2c385dfb4c7a61c2a18f6746d6839a4064f5733e30ed3671a0021fa975711248
+base_revision: 2c385dfb4c7a61c2a18f6746d6839a4064f5733e30ed3671a0021fa975711248
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 84c0b25f6f32ab10c7d808194a3f2f6814739ce37e1cd0df159210781426b03e
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: 84c0b25f6f32ab10c7d808194a3f2f6814739ce37e1cd0df159210781426b03e
+previous_revision: 2c385dfb4c7a61c2a18f6746d6839a4064f5733e30ed3671a0021fa975711248
+destination_path: /home/felix/kora-pneuma/products/kora/pensamiento-modelador
+displaced_path: /home/felix/kora-pneuma/candidates/kora/pensamiento-modelador/reconstruccion/displaced-6d1bcb4fad764cbcb71915ee7224ab84
+admitted_at: '2026-09-13T20:06:58+00:00'

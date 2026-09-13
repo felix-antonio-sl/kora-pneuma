@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:modelamiento-opm
+kind: skill
+namespace: kora
+name: modelamiento-opm
+candidate: reconstruccion
+base: f0e73ad7bee29765aa3ce5b212d3333d8d56584e8f31ad7af5bd872abb5c4caa
+base_revision: f0e73ad7bee29765aa3ce5b212d3333d8d56584e8f31ad7af5bd872abb5c4caa
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: ad40de34c5de62f1b4b60ec75910c1463b74153fcf9a8f7db0ecb126a8f98960
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: ad40de34c5de62f1b4b60ec75910c1463b74153fcf9a8f7db0ecb126a8f98960
+previous_revision: f0e73ad7bee29765aa3ce5b212d3333d8d56584e8f31ad7af5bd872abb5c4caa
+destination_path: /home/felix/kora-pneuma/products/kora/modelamiento-opm
+displaced_path: /home/felix/kora-pneuma/candidates/kora/modelamiento-opm/reconstruccion/displaced-b3c32aa191d04e3c9919e7e50d6d63e8
+admitted_at: '2026-09-13T20:06:47+00:00'

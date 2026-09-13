@@ -1,0 +1,154 @@
+# Falsos amigos — vocablos categoricos vs analogias informales
+
+Cuando el vocabulario categorial entra al lenguaje cotidiano de ingenieria, sus palabras se diluyen. Esta tabla preserva la **distincion estricta**: lo que parece pero no es. La skill **debe** usar el termino preciso o renombrar el caso.
+
+## Funtor
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "una funcion entre dos cosas" | un mapeo `F: C → D` que preserva **composicion** (`F(g ∘ f) = F(g) ∘ F(f)`) e **identidad** (`F(id_A) = id_F(A)`). Sin esas dos leyes no es funtor. |
+| "como un map de listas" | `List` es un endofuntor en `Set` y `map` describe su accion sobre morfismos; no toda funcion entre estructuras define un funtor. |
+
+**Si el "funtor" propuesto no preserva composicion o identidad, no es funtor.** Llamarlo "transformacion" o "mapping" hasta que se demuestre que cumple las leyes.
+
+## Transformacion natural
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "un map" | una familia de morfismos `α_A: F(A) → G(A)` indexada por objetos, **uniforme** en el sentido de que conmuta con los morfismos del dominio. |
+| "polimorfismo paramétrico" | puede inducir naturalidad en un cálculo paramétrico total y una semántica precisa; `bottom`, `seq` y efectos impiden inferirla de una firma de lenguaje por sí sola. |
+
+**Si los componentes no conmutan con los morfismos, no es transformacion natural; es una familia de morfismos sin garantia.**
+
+## Monada
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "un pipeline con efectos" | un endofuntor `T: C → C` con dos transformaciones naturales `η: Id → T` (unit) y `μ: T² → T` (multiplication) que cumplen leyes de asociatividad e identidad. |
+| "una clase con `then`" | la clase con `then` cumple las leyes solo cuando `then` es la operacion de Kleisli `>>=` y satisface coherencia. |
+| "wrapper de errores" | hay una monada de errores (`Maybe`, `Either`), pero "envolver errores" en general no es la monada. |
+
+**Si las leyes de monada (left identity, right identity, asociatividad) no se cumplen, no es monada. Es una abstraccion sin garantias de composicion.**
+
+## Coalgebra
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "una clase con metodo `next`" | una funcion `α: A → F(A)` para un endofuntor `F`. La estructura captura **observacion**: estado produce observaciones via interface functor. |
+| "un iterador" | puede modelarse como coálgebra `X → 1 + E × X`, donde `X` es el estado y `E` el elemento producido; una API `next()` no aporta automáticamente ese estado, ese funtor ni sus leyes. |
+
+## Bisimulacion
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "dos cosas que parecen iguales" | una relación entre coálgebras de un mismo endofuntor, equipada con estructura que hace coalgebraicos sus mapas de proyección; las presentaciones por lifting relacional requieren las hipótesis correspondientes. |
+| "los outputs son iguales" | no basta: la relación debe ser estable bajo la estructura de transición y observación elegida. |
+
+**"Hace lo mismo" no es bisimulacion sin coalgebra de soporte.**
+
+## Adjuncion
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "F y G son inversos" | tener `Hom(F(X), Y) ≅ Hom(X, G(Y))` natural en X y Y. **No** son inversos: F y G casi nunca componen a la identidad. |
+| "F construye, G destruye" | en una adjuncion **libre/olvidadiza**, F construye libremente y G olvida estructura; no toda adjuncion tiene esa lectura ni "mide perdida". |
+
+**No declarar adjuncion sin verificar el iso natural de hom-sets.**
+
+## Limite / colimite
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "el resultado de combinar varios" | el objeto **universal** que satisface el diagrama: cualquier otra solucion factoriza unicamente a traves de el. |
+| "el conjunto interseccion" | la interseccion es un caso particular (pullback en Set sobre conjuntos con inclusion). |
+
+**Sin universalidad explicita, no es limite. Es solo "una solucion".**
+
+## Yoneda
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "puedo entender un objeto por su API" | un objeto `A` queda determinado salvo isomorfismo natural por el funtor representable `Hom(A, -)`. |
+| "duck typing" | duck typing es heuristica; Yoneda es teorema bajo categoria correcta. |
+
+**Yoneda no autoriza confundir objetos distintos con la misma API. Autoriza tratar isomorfismos de hom-funtores como isomorfismos de objetos.**
+
+## Topos
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "una categoria con logica" | una categoria con limites finitos, exponenciales y clasificador de subobjetos `Ω`. |
+| "feature flags" | feature flags se *modelan* en algunos topos, pero "tener flags" no implica trabajar en un topos. |
+
+**No nombrar topos sin identificar limites finitos, exponenciales y clasificador.**
+
+## Sheaf
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "datos distribuidos que cuajan" | un presheaf que satisface la **condicion de pegado**: secciones locales compatibles tienen una unica seccion global. |
+| "log distribuido" | un log distribuido **puede** ser sheaf si cumple pegado; sin verificar la condicion, es solo un presheaf. |
+
+## Free monad
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "monada cualquiera" | la monada *libre* sobre un funtor `F`: la mas general posible, sin operaciones extra. |
+| "DSL de comandos" | puede implementarse mediante la mónada libre sobre un funtor de comandos cuando se especifican el funtor y la propiedad universal; una sintaxis de comandos cualquiera no basta. |
+
+Un DSL de comandos puede **implementarse** como monada libre cuando se especifican el funtor generador y la propiedad universal; la mera sintaxis de comandos no basta.
+
+## Cofree comonad
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "stream infinito" | una *instancia* de cofree comonad sobre el funtor adecuado. |
+| "tipo recursivo lazy" | un tipo recursivo no necesariamente es cofree; lo es bajo construccion explicita y leyes verificadas. |
+
+## Operad
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "estructura jerarquica" | una operad es una familia de **espacios de operaciones** con composicion sustitutiva y unidades. |
+| "tree de containers" | la operad puede capturar la composicion entre niveles, no es la jerarquia misma. |
+
+## Polynomial functor
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| "una API" | un polinomio `Σ_{i∈I} y^{A_i}` donde `I` son posiciones (lo que la API muestra) y `A_i` son direcciones (lo que la API acepta). |
+| "un product type" | un product type puede ser polynomial; no todo product type lo es ni todo polynomial es product. |
+
+## Declaraciones agénticas
+
+| Lo que parece | Lo que es |
+|---------------|-----------|
+| `componible: [b]` | arista que declara un candidato; no aporta puertos, wiring, álgebra semántica ni compatibilidad de efectos. |
+| `estados: [x,y,z]` | lista de etiquetas de workflow; sin eventos y aristas no es FSM ni estado coalgebraico. |
+| `herramientas: [Read]` | conjunto fuente declarado; no prueba qué autoridad efectiva concede el runtime. |
+| sello/paridad fiel | procedencia e igualdad material de la frontera gestionada; no bisimulación, safety ni preservación semántica. |
+| misma firma PMI × LFS | misma celda clasificatoria; no mismo agente, interfaz, coálgebra ni conducta. |
+| morfismo de coálgebras | mapa que preserva estructura entre coálgebras de un mismo funtor; no cableado serial de agentes. |
+| paper retirado citado por una monografía | antecedente trazable, no teorema utilizable; la delegación dinámica basada en arXiv 2410.08373 queda en `X`. |
+
+**Antes de afirmar conducta**, separar `Spec`, `Model` y `Runtime` y exhibir
+los testigos de `urn:kora:kb:cat-contrato-ingenieria-agentica`.
+
+## Otros colapsos frecuentes
+
+| Confusion | Distincion estricta |
+|-----------|---------------------|
+| grafo = categoria | un grafo dirigido solo aporta generadores; la categoria libre añade caminos, identidades y composicion. |
+| *faithful* = "no pierde informacion" | *faithful* significa inyectividad en cada hom-set; no garantiza inyectividad en objetos, calidad de datos ni preservacion de toda semantica. |
+| end/coend = `forall`/`exists` operacional | la notacion sugiere una analogia logica, pero un end/coend requiere un bifuntor tipado y su propiedad universal. |
+| punto fijo = coalgebra final = optimo | son tres nociones distintas; una ecuacion de punto fijo no prueba finality ni optimalidad. |
+| bucle = traza = coinduccion | iterar codigo no proporciona automaticamente una estructura trazada ni una prueba coinductiva. |
+| sheafification = reconciliacion/defensa en profundidad | la sheafification es, bajo hipotesis, un reflector de presheaves a sheaves; no implementa por si sola un protocolo operacional o de seguridad. |
+
+## Reglas de uso
+
+1. **Siempre escribir el termino preciso**, no el termino que parece.
+2. **Si el termino preciso no aplica**, usar un termino mas debil ("mapping", "transformacion") y declarar que las leyes no se han verificado.
+3. **No "promover" una analogia a teorema** sin verificar las leyes correspondientes.
+4. **Si la skill dice "esto es una monada"**, debe poder citar las tres leyes y declarar que se cumplen.
+5. **Si el agente invocador usa un falso amigo**, la skill lo corrige antes de modelar.

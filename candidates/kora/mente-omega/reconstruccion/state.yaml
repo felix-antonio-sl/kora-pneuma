@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:mente-omega
+kind: skill
+namespace: kora
+name: mente-omega
+candidate: reconstruccion
+base: db59cf3a8da27cbc89b1c2cb04141f6b5fc0b8212ee405f7020d346b974e0771
+base_revision: db59cf3a8da27cbc89b1c2cb04141f6b5fc0b8212ee405f7020d346b974e0771
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 24b098d9e38c28ef8871b0b935eb35a4c1fb054de3604537a456eed7be830816
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+staged_path: null
+revision: 24b098d9e38c28ef8871b0b935eb35a4c1fb054de3604537a456eed7be830816
+previous_revision: db59cf3a8da27cbc89b1c2cb04141f6b5fc0b8212ee405f7020d346b974e0771
+destination_path: /home/felix/kora-pneuma/products/kora/mente-omega
+displaced_path: /home/felix/kora-pneuma/candidates/kora/mente-omega/reconstruccion/displaced-181d30912a4a41fe89015cbe82bcd509
+admitted_at: '2026-09-13T20:06:54+00:00'

@@ -192,6 +192,22 @@ sin browser vivo certificado ni utilidad diferencial. Instalación personal
 `current` sin cambios ni recuperación; los originales retirados del bundle
 siguen preservados en fuentes y versiones.
 
+El lote de modelado quedó admitido e instalado en Codex y Hermes:
+`modelamiento-opm`, `cat-thinking`, `mente-omega`, `pensamiento-modelador`,
+`jointjs-open-source`, `ifml`, `opm-specialist` y `dov-dori` (ocho revisiones
+concretas, métodos antes que el agente). Sesiones nuevas acreditaron carga y
+conducta en fixtures sintéticos Sol/high en ambos destinos: Dori conduce
+coordinación sin forzar OPM ni repreguntar hechos; OPM separa corrección formal
+de hecho de dominio; IFML conserva la pregunta TBD y la distinción
+norma/práctica; omega declara una pérdida explícita sin equivalencias;
+cat-thinking mínimo sin sobre-formalizar; pensamiento-modelador con tensiones
+decisivas; JointJS según documentación oficial v4.0 OSS. La envoltura Hermes
+compacta conserva identidades, paths, condiciones y ruteo (SOUL Dori 65.239 en
+ensayo / 65.223 personal frente a cap 65.280 de Sol/ventana 272.000, sin
+promesa universal). Carga Codex Dori parcial 1–840/978, sólo alcance
+conceptual. Instalaciones personales `current`, sin cambios ni recuperación,
+sin tocar GTD protegido, otros perfiles ni config ajena.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

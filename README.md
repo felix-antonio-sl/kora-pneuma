@@ -92,7 +92,14 @@ entrega mínima suficiente) y `test-vivo-iterativo-opmkv` (auditoría in-vivo
 con clasificación contra evidencia e informe ajeno intocable), con conducta
 acreditada en fixtures sintéticos Codex Sol/high —sin browser vivo certificado
 ni utilidad diferencial—. Instalación personal `current`, originales
-preservados en fuentes. El resto de la colección sigue
+preservados en fuentes. El lote de modelado quedó admitido e instalado en
+ambos destinos: `modelamiento-opm`, `cat-thinking`, `mente-omega`,
+`pensamiento-modelador`, `jointjs-open-source`, `ifml`, `opm-specialist` y
+`dov-dori`, con conducta acreditada en fixtures sintéticos Sol/high en ambos
+destinos y envoltura Hermes compacta que conserva identidades, paths,
+condiciones y ruteo (SOUL Dori personal 65.223; presupuesto 65.280 comprobado
+sólo con Sol/ventana 272.000, sin promesa universal). Instalaciones personales
+`current` sin cambios ni recuperación pendiente. El resto de la colección sigue
 en ejecución; estos lotes no lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
