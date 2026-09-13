@@ -99,6 +99,11 @@ no invalida lo ya guardado.
    registrado en un turno anterior es evidencia histórica: contrasta la capacidad
    vigente antes de darlo por impedimento actual. Una pregunta propia ya resuelta
    se despeja mediante `plan`, y se continúa en el mismo job.
+   Conserva el resultado que Félix pidió al fijar el criterio de cierre. Si pidió
+   poner al día un mapa de responsabilidades y pendientes, enumerar frentes y
+   proponer buscar sus antecedentes es avance parcial. No lo declares satisfecho
+   porque anotaste las brechas: falta contrastar antecedentes y actualizar el mapa,
+   o una decisión explícita de Félix que acepte ese resultado limitado.
    Una vez claro el encargo, pasa de `clarify` a consultar las fuentes pertinentes y
    `put_material` en ese turno. Un plan que promete preparar el mapa no cumple la
    petición de prepararlo. Produce el mapa con hechos respaldados, pendientes y

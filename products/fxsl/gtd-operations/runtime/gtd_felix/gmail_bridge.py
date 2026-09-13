@@ -37,6 +37,23 @@ classification y reason_code. Pares permitidos: selected/gtd_relevant,
 noise/non_actionable, uncertain/needs_review. No incluyas citas ni explicación."""
 
 
+_ERROR_CODES = frozenset({"invalid_request", "provider_mismatch", "helper_busy",
+    "inactive_parent", "evaluation_not_active", "evaluation_cancelled", "helper_failed"})
+
+
+def error_code(exc):
+    """Closed diagnostics only: never stringify exceptions or return their arguments."""
+    if (type(exc) is ValueError and len(exc.args) == 1
+            and type(exc.args[0]) is str and exc.args[0] in _ERROR_CODES):
+        return exc.args[0]
+    for exception_type, code in ((TimeoutError, "bridge_timeout_error"),
+            (AttributeError, "bridge_attribute_error"), (TypeError, "bridge_type_error"),
+            (OSError, "bridge_os_error"), (ValueError, "bridge_value_error")):
+        if isinstance(exc, exception_type):
+            return code
+    return "bridge_internal_error"
+
+
 def _prepare_import_path():
     """Script mode must not expose sibling mcp.py as Hermes's top-level mcp SDK."""
     package_dir = Path(__file__).resolve().parent
@@ -305,8 +322,8 @@ def install_route(adapter_type):
             return web.json_response(await evaluate(adapter, request, payload))
         except asyncio.CancelledError:
             raise
-        except Exception:
-            return web.json_response({"error": "evaluation_unavailable"}, status=409)
+        except Exception as exc:
+            return web.json_response({"error": error_code(exc)}, status=409)
 
     def routes(adapter):
         async def endpoint(request):

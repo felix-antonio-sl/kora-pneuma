@@ -182,6 +182,19 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([], self.service.query({'source': {'provider': 'gmail'}}))
         self.assertEqual({}, self.evaluation.active)
 
+    async def test_bridge_failure_receipt_has_closed_code_and_unknown_usage(self):
+        self.messages(['noise'])
+        async def failed(*args):
+            raise ValueError('bridge_inactive_parent')
+        self.evaluation.bridge = failed
+        result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual({'input_tokens': None, 'output_tokens': None}, result['usage'])
+        self.assertEqual(1, result['counts']['uncertain'])
+        receipts = [json.loads(row[0]) for row in self.service.store.db.execute(
+            "SELECT value FROM metadata WHERE key LIKE 'source-evaluation:receipt:%'")]
+        self.assertEqual(['bridge_inactive_parent'], [row['error'] for row in receipts])
+        self.assertNotIn('PRIVATE_BODY', json.dumps(receipts))
+
     async def test_malformed_validation_and_result_fail_closed(self):
         for value in [{}, {'job_id': []}, None]:
             self.assertFalse(self.evaluation.validate('gtd-felix', value)['allowed'])

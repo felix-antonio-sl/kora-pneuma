@@ -166,6 +166,19 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
             output = bridge.closed_result(raw, {'input_tokens': MARKER, 'output_tokens': -1})
             self.assertEqual('uncertain', output['classification'])
             self.assertNotIn(MARKER, json.dumps(output))
+    def test_closed_diagnostic_codes_do_not_stringify_exceptions(self):
+        class HostileError(Exception):
+            def __str__(self):
+                raise AssertionError('must not stringify')
+        for error, expected in [(ValueError('provider_mismatch'), 'provider_mismatch'),
+                (ValueError(MARKER), 'bridge_value_error'),
+                (AttributeError(MARKER), 'bridge_attribute_error'),
+                (TypeError(MARKER), 'bridge_type_error'),
+                (TimeoutError(MARKER), 'bridge_timeout_error'),
+                (OSError(MARKER), 'bridge_os_error'),
+                (HostileError(MARKER), 'bridge_internal_error')]:
+            self.assertEqual(expected, bridge.error_code(error))
+
     def test_payload_bound_digest_and_no_extra_authority(self):
         old = bridge.evidence_digest(self.payload)
         self.payload['revision'] = 'message:20'
@@ -214,7 +227,11 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
                 response = await client.post('/v1/gtd/evaluate-mail', json=self.payload,
                     headers={'Authorization': 'Bearer test'})
                 self.assertEqual(409, response.status)
-                self.assertNotIn(MARKER, await response.text())
+                self.assertEqual({'error': 'bridge_internal_error'}, await response.json())
+            with patch.object(bridge, 'evaluate', new=AsyncMock(side_effect=ValueError('inactive_parent'))):
+                response = await client.post('/v1/gtd/evaluate-mail', json=self.payload,
+                    headers={'Authorization': 'Bearer test'})
+                self.assertEqual({'error': 'inactive_parent'}, await response.json())
             self.assertEqual('dispatch', adapter.permission)
 
     def test_real_spawn_error_body_stays_private_and_no_file(self):

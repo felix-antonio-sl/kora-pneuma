@@ -17,6 +17,12 @@ def digest_message(message):
         sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
 
 
+BRIDGE_ERRORS = frozenset({'invalid_request', 'helper_busy', 'inactive_parent', 'provider_mismatch',
+    'evaluation_not_active', 'evaluation_cancelled', 'helper_failed', 'evaluation_unavailable', 'unauthorized',
+    'bridge_timeout_error', 'bridge_attribute_error', 'bridge_type_error', 'bridge_os_error',
+    'bridge_value_error', 'bridge_internal_error'})
+
+
 class SourceEvaluation:
     def __init__(self, service, control, monitor, config, *, bridge=None, clock=time.monotonic):
         self.service, self.control, self.monitor, self.config = service, control, monitor, config
@@ -74,12 +80,14 @@ class SourceEvaluation:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout), trust_env=False) as session:
             async with session.post(route['base_url'].rstrip('/') + '/v1/gtd/evaluate-mail',
                     headers={'Authorization': 'Bearer ' + token}, json=payload, allow_redirects=False) as response:
-                if response.status != 200:
-                    raise ValueError('bridge_unavailable')
                 raw = await response.content.read(8193)
                 if len(raw) > 8192:
                     raise ValueError('bridge_response_too_large')
-                return json.loads(raw)
+                value = json.loads(raw)
+                if response.status != 200:
+                    code = value.get('error') if isinstance(value, dict) else None
+                    raise ValueError('bridge_' + (code if code in BRIDGE_ERRORS else 'evaluation_unavailable'))
+                return value
 
     @staticmethod
     def _result(result):
@@ -164,6 +172,20 @@ class SourceEvaluation:
                          'usage': result['usage'], 'duration_seconds': result['duration_seconds'],
                          'time_accounting': 'included_in_parent_wall_time', 'cost_usd': None})
                 return decision
+            except (Exception, asyncio.CancelledError) as exc:
+                code = str(exc) if isinstance(exc, ValueError) else ''
+                code = code if code in {'bridge_' + error for error in BRIDGE_ERRORS} else (
+                    'evaluation_interrupted' if isinstance(exc, asyncio.CancelledError) else 'evaluation_unavailable')
+                counts['uncertain'] += 1
+                for key in total_usage:
+                    total_usage[key] = None
+                with self.service.store.transaction():
+                    self.service._set_meta('source-evaluation:receipt:' + identity,
+                        {'job_id': job_id, 'run_id': job['native']['id'], 'source_id': source_id,
+                         'classification': 'uncertain', 'reason_code': 'evaluation_unavailable', 'error': code,
+                         'usage': {'input_tokens': None, 'output_tokens': None},
+                         'time_accounting': 'included_in_parent_wall_time', 'cost_usd': None})
+                raise
             finally:
                 self.active.pop(identity, None)
 
