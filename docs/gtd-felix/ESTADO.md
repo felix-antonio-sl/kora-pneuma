@@ -90,12 +90,25 @@ en ~22 ms y el estado activo en 7.663 bytes.
   `test_spent_continuation` 7/7 PASS; `test_orchestration` 62/62 PASS;
   `test_core`+`test_gtd`+`test_source_evaluation` 76/76 PASS (las 6 fallidas de
   fuentes citadas en el corte anterior ya no reproducen en este candidato;
-  su capa completa se resuelve en I3). Total focal 231/231 PASS.
-- Fuera de la suite focal: `test_hermes.HermesTest.test_stop_registered_family_exact_ids`
-  (`submit` hijo devuelve `uncertain`, se esperaba `submitted`) falla idéntico
-  con y sin estas correcciones (comprobado por estante sobre `1f6ebe0`); defecto
-  preexistente del candidato revisado en ruta de delegación Hermes, no efecto
-  de esta corrección; pendiente de encargo propio, visible y no oculto.
+  su capa completa se resuelve en I3). Total focal con Hermes y claim: 274/274
+  PASS (94 control/diaria/gasto + 42 Hermes + 138 orquestación/núcleo/fuentes).
+- Cierre de integración I1 (revisión 2026-09-14, paquete 2): la plaza nativa se
+  reclama durable y atómicamente (`control.claim_dispatch`) ANTES del efecto
+  remoto, con la red fuera de la transacción; el segundo despacho no crea otro
+  run remoto (`uncertain`/`native_slot_busy`, 1 POST); concurrencia resuelta por
+  el índice único; la incertidumbre conserva la plaza y se reconcilia antes de
+  reintentar (misma `Idempotency-Key`, sin duplicar runs); el hijo corre tras la
+  terminalidad del padre con su asignación (60 s / coste 2, un activo local);
+  STOP sólo llega a identidades nativas admitidas exactas. `max_active=2` sigue
+  admitido: acota reservas, no ejecuciones; la plaza nativa sigue única global.
+  El fallo Hermes heredado era regresión de I1 mal clasificada, ahora corregida:
+  el test espera padre e hijo secuenciales y pasa.
+- Suite del adaptador Hermes 42/42 PASS (6 pruebas nuevas + test heredado
+  adaptado al contrato secuencial; 7 de 8 fallan sobre `b3cc45b` por estante, la
+  restante guarda incertidumbre y pasa en ambos). `test_adapters` (Codex, 1 fallo
+  + 1 error) y su par fallan idénticos con y sin estas correcciones (estante
+  sobre `b3cc45b`): preexistentes fuera de la frontera Hermes, visibles y no
+  ocultos; pertenecen a encargo propio.
 - Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
   autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
   incertidumbre y delegación, STOP/corrección/invalidación, reinicio y

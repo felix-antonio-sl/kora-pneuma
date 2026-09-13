@@ -512,6 +512,13 @@ esas condiciones y mantiene la red fuera de la transacción. Fuentes primarias:
   asunto es otro intento del mismo ciclo, sobre otro asunto es ciclo hijo con
   `parent_cycle_id` y asignación del padre. Evidencia: pruebas de propósito
   activo y concurrencia actualizadas a asuntos distintos.
+- La plaza nativa se reclama (`claim_dispatch`, transacción sólo de
+  almacenamiento) antes de cualquier efecto remoto; la red nunca va dentro de
+  la transacción. Sin plaza no hay POST: el segundo despacho queda `uncertain`
+  (`native_slot_busy`) y reintenta por reconciliación con la misma
+  `Idempotency-Key`. `max_active=2` acota reservas admitidas, no ejecuciones
+  simultáneas: con dos reservas, la segunda espera la terminalidad de la
+  primera y el hijo corre después con su asignación propia.
 - `no_domain_progress` y `accepted_pending_integration` se conservan en
   `detail_json` para compatibilidad de comandos/recibos; la columna usa el
   ternario `pending/integrated/discarded`. Ciclo `completed` pasa a `waiting`
