@@ -501,8 +501,11 @@ esas condiciones y mantiene la red fuera de la transacción. Fuentes primarias:
   agregado, orquestación activa 138 bytes frente a 3.531.798 bytes.
 - `trigger_key` causa: `gtd-event:<identidad>` sin sufijo de intento,
   `op:<operation_id>` para reservas manuales, `migrated:<job_id>` para historia.
-  Repetir la causa no readmite; la idempotencia por `operation_id` se conserva
-  en claves `control:op:<id>` acotadas.
+  Repetir la causa no readmite: con el asunto aún abierto se devuelve
+  `purpose_already_active`; tras el cierre, `duplicate_cause` estructurado (nunca
+  excepción SQL ni ciclo parcial). La idempotencia por `operation_id` se conserva
+  en claves `control:op:<id>` acotadas; un rechazo previo a la migración no deja
+  recibo para seguir reintentable tras el corte.
 - Un ciclo abierto por asunto (`one_open_cycle_per_item`) y una ejecución
   nativa global (`one_native_active`, incluye `uncertain`). Dos propósitos
   concurrentes sobre el mismo asunto ya no se admiten; el hijo sobre el mismo

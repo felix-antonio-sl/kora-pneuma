@@ -9,10 +9,12 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 ## Veredicto de producto
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
-C1 operativo; C2–C6 abiertos. I1 implementado como candidato integrado y
-verificable en aislamiento; no instalado en vivo ni aceptado en producción.
-La dirección arquitectónica e integración las conserva Codex; Hermes sigue como
-runtime del bot. Este encargo se ejecutó en OpenCode según lo asignado.
+C1 operativo; C2–C6 abiertos. I1 corregido como candidato integrado y
+verificable en aislamiento tras la revisión independiente de 2026-09-14 (cinco
+defectos P1/P1/P1/P1/P2 reproducidos y corregidos); no instalado en vivo ni
+aceptado en producción. La dirección arquitectónica e integración las conserva
+Codex; Hermes sigue como runtime del bot. Este encargo se ejecutó en OpenCode
+según lo asignado.
 
 El último recorrido real reutilizó un material existente, registró una evaluación
 insatisfecha y confirmó la devolución por Telegram en 192,3 s sobre 240 s
@@ -69,18 +71,31 @@ en ~22 ms y el estado activo en 7.663 bytes.
 | C5 recuperabilidad | Parcial | Restore, rollback, configuración/dependencias y reconciliación de la revisión final (I5; I1 deja migración/rollback ensayados) |
 | C6 aceptación | Abierto | Usuario reconoce utilidad en asuntos propios tras el recorrido; no inferirla de entrega ni de silencio |
 
-- I1 migración: PASS semántico (0 diferencias en IDs, nativas, versiones,
-  períodos, 866/866 observaciones; tablas dominio intactas 261/325/396/1/298;
-  presupuesto migrado 2.262,4 s y período `daily:...:2026-09-13` idénticos al
-  recibo; 118/118 idempotencias preservadas).
-- I1 lecturas acotadas: PASS (estado 7.663 B vs 4.734.704 B; orquestación 138 B
-  vs 3.531.798 B; `get_job` 0,4 ms, `pending` 0,1 ms, `budget` ~20 ms; con 532
-  runs el presupuesto sigue ~22 ms y el estado en 7.663 B).
-- `test_control` 64/64 PASS; `test_daily_budget` 17/17 PASS;
+- Revisión independiente 2026-09-14 (`i1-director-review-20260914`, cinco
+  sondas): los cinco casos fallaban en `1f6ebe0` y pasan con la corrección
+  (guardia de migración preserva 1 job heredado sin backup; límites del hijo
+  50 s / coste 1 / 0 descendientes como la base; causa repetida devuelve
+  `duplicate_cause` estructurado sin ciclo parcial; agotado visible tras 64
+  históricos; observación rechazada deja 0 filas y plaza `reserved`).
+- I1 migración (repetida tras corregir): PASS semántico (0 diferencias en IDs,
+  nativas, versiones, períodos, 866/866 observaciones; tablas dominio intactas
+  261/325/396/1/298; presupuesto migrado 2.262,4 s y período
+  `daily:...:2026-09-13` idénticos al recibo; 118/118 idempotencias preservadas).
+- I1 lecturas acotadas y completas: PASS (estado 7.663 B vs 4.734.704 B;
+  orquestación 138 B vs 3.531.798 B; `get_job` 0,4 ms, `pending` 0,1 ms,
+  `budget` ~20 ms; con 532 runs el presupuesto sigue ~29 ms y el estado en
+  7.663 B; recorridos por asunto/actor/integración paginados sin tope).
+- `test_control` 69/69 PASS (64 + 5 regresiones nuevas que fallan en `1f6ebe0`:
+  4 fallos + 1 error comprobados por estante); `test_daily_budget` 17/17 PASS;
   `test_spent_continuation` 7/7 PASS; `test_orchestration` 62/62 PASS;
   `test_core`+`test_gtd`+`test_source_evaluation` 76/76 PASS (las 6 fallidas de
   fuentes citadas en el corte anterior ya no reproducen en este candidato;
-  su capa completa se resuelve en I3).
+  su capa completa se resuelve en I3). Total focal 231/231 PASS.
+- Fuera de la suite focal: `test_hermes.HermesTest.test_stop_registered_family_exact_ids`
+  (`submit` hijo devuelve `uncertain`, se esperaba `submitted`) falla idéntico
+  con y sin estas correcciones (comprobado por estante sobre `1f6ebe0`); defecto
+  preexistente del candidato revisado en ruta de delegación Hermes, no efecto
+  de esta corrección; pendiente de encargo propio, visible y no oculto.
 - Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
   autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
   incertidumbre y delegación, STOP/corrección/invalidación, reinicio y
@@ -125,6 +140,12 @@ incrementos; `items.document`/`field_versions` conservan el agregado humano.
 Doble escritura permanente eliminada: tablas + blobs activos pequeños son la
 única autoridad tras el corte; `*:legacy:v1` queda congelado para consulta,
 idempotencia y recuperación. Directorios `candidates/` y `versions/` preservados.
+Límites reales medidos: el conjunto activo vive del protocolo (plaza nativa
+única, `max_active`, familias pequeñas) y se recorre completo sin topes;
+`duplicate_cause` es el rechazo de dominio para causa repetida tras cierre
+(`purpose_already_active` si el asunto sigue abierto); `_own_event` cubre el
+asunto más sus antecesores (cadena `parent_id` ≤16); `pending()` de dueño
+devuelve el activo completo sin paginar por ser pequeño por protocolo.
 
 Siguiente: **I2 · conversación, material y devolución** sobre I1, con fuentes ya
 disponibles y sin reescribir todos los módulos. Instalación viva y publicación
