@@ -788,6 +788,24 @@ cada conjunto funcional con el conocimiento y los consumidores que necesita,
 anteponiendo dependencias a paralelismo. El mapa de migración y los casos de este
 documento evitan reconstruir decisiones o inventar otro backlog.
 
+**KORA todavía no ha absorbido íntegramente esta propuesta.** La comprobación
+focal del 2026-09-13 encontró que su manifiesto conserva la composición anterior
+y que `autoria-kora` aún indica actualizar editando la fuente directamente,
+mientras `docs/operacion.md` documenta candidatas con `revise`, `review` y `admit`.
+El agente ya contiene criterios útiles de proporcionalidad y autoridad; eso no
+acredita que su cierre de métodos, recursos y conocimiento esté reconstruido.
+
+El primer lote es un prerrequisito efectivo para usar KORA en la producción del
+resto. El integrador lo prepara desde este encargo y la operación vigente,
+tratando los productos anteriores como material examinado, no como autoridad que
+deba aprobar su propio reemplazo. Cierra el agente, sus cuatro funciones y las
+referencias operacionales que podrían reintroducir instrucciones retiradas.
+Comprueba su realización y carga en sesiones nuevas, y un caso de autoría y otro
+de transformación con una excepción relevante. Hasta entonces puede avanzar la
+investigación independiente de otros lotes, pero no su producción dirigida por
+KORA heredado. No se agrega un gate a la maquinaria: se resuelve una dependencia
+concreta de esta reconstrucción mediante los mecanismos existentes.
+
 La base conocida, revisión de contenido, concurrencia, propiedad y recuperación
 se conservan con los mecanismos existentes. Se rechaza un lote incompatible,
 corrupto o basado en una revisión desplazada; no se elude la comprobación para
@@ -908,8 +926,18 @@ serializa mutaciones compartidas. Continúa trabajo independiente mientras llega
 resultados y reúne los necesarios antes de cerrar el lote. Evita cadenas de
 delegación, exploración duplicada y respuestas que vuelquen logs al integrador.
 
-Comienza por el agente KORA y sus cuatro métodos para que la siguiente autoría
-use contratos corregidos. Después avanza por conjuntos funcionales completos:
+Antes de usar KORA para reconstruir el resto, cierra su agente, sus cuatro
+funciones —autoría, transformación, evaluación y realización— y las referencias
+operacionales necesarias. El integrador prepara este primer lote desde el encargo
+y la operación vigente; examina los productos heredados sin someterse a sus
+instrucciones contradictorias. No basta reescribir el agente dejando sus métodos,
+recursos, ejemplos o conocimiento requerido sin corregir. Admite y realiza el
+conjunto; comprueba en sesiones nuevas la carga de instrucciones corregidas y
+casos de autoría y transformación con excepciones relevantes. Sólo entonces usa
+ese KORA para producir los lotes siguientes. Mientras tanto puede avanzar la
+investigación independiente. Esta dependencia no requiere un nuevo gate o registro.
+
+Después avanza por conjuntos funcionales completos:
 agente, métodos, recursos, conocimiento necesario, consumidores y realizaciones.
 Decide el orden según dependencias y riesgo. Diseña agentes por responsabilidad
 y límites; skills por tarea y disparador, con instrucciones claras y recursos
