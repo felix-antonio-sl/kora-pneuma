@@ -1,16 +1,13 @@
 id: urn:fxsl:artefacto:gtd-flow
 kind: skill
 name: gtd-flow
-description: 'Skill de claridad operable integrada: GTD + regulacion emocional + co-agencia.
-  Loop de siete movimientos (recuperar estado, capturar, clarificar, organizar, comprometer,
-  revisar, regenerar). Para cualquier agente que sostenga claridad personal o de equipo
-  distinguiendo regulacion, operacion y generacion como capas inseparables.'
+description: Captura, clarifica, organiza, realiza y revisa trabajo y compromisos con un recorrido
+  adaptable y continuidad en el sistema autorizado.
 content: content.md
 targets:
 - codex
-requires:
-- urn:fxsl:kb:david-allen-gemelo-digital-intelectual
-- urn:fxsl:kb:manual-de-vida
+- hermes
+requires: []
 relations:
   conocimiento:
   - urn:fxsl:kb:david-allen-gemelo-digital-intelectual
@@ -31,23 +28,20 @@ provenance:
 
     estado: activo
 
-    descripcion: "Skill de claridad operable integrada: GTD + regulacion emocional
-    + co-agencia. Loop de siete movimientos (recuperar estado, capturar, clarificar,
-    organizar, comprometer, revisar, regenerar). Para cualquier agente que sostenga
-    claridad personal o de equipo distinguiendo regulacion, operacion y generacion
-    como capas inseparables."
+    descripcion: "Skill de claridad operable integrada: GTD + regulacion emocional + co-agencia.
+    Loop de siete movimientos (recuperar estado, capturar, clarificar, organizar, comprometer,
+    revisar, regenerar). Para cualquier agente que sostenga claridad personal o de equipo distinguiendo
+    regulacion, operacion y generacion como capas inseparables."
 
-    fuente: "Migrado de la bestia (~/kora) artifacts/skills/pro/gtd-flow/SKILL.md
-    v1.0.1 (sha256:acb8c0608d8035004c230bebfad0071136deaef5fc37f828bf97e436e59cc5af)
-    el 2026-06-21; cuerpo y referencias/ byte-fieles. Cristalizacion (en la bestia)
-    de la doctrina David Allen + las 10 skills OpenClaw del workspace gtd-integral
-    fusionadas en un nucleo unico. Normalizacion pneuma: frontmatter _manifest anidado
-    -> shape plano; vector bestia [3,1,3,2,1] (ilegal para habilidad, ley/2 §7) re-derivado
-    a [2,0,2,0,1] disciplina; conocimiento re-apuntado al gemelo migrado; target openclaw
-    omitido (no realizado). v1.1.0 (2026-06-21, consenso steipete+allan-kelly): suma
-    urn:fxsl:kb:manual-de-vida como conocimiento (profundidad operacional de protocolos
-    — DBT/Sirois/Kaufman/Koe — que el gemelo solo nombraba); con la mecanica baja
-    la frontera detect-not-administer (§9-partido) a Limites absolutos: los protocolos
+    fuente: "Migrado de la bestia (~/kora) artifacts/skills/pro/gtd-flow/SKILL.md v1.0.1 (sha256:acb8c0608d8035004c230bebfad0071136deaef5fc37f828bf97e436e59cc5af)
+    el 2026-06-21; cuerpo y referencias/ byte-fieles. Cristalizacion (en la bestia) de la doctrina
+    David Allen + las 10 skills OpenClaw del workspace gtd-integral fusionadas en un nucleo
+    unico. Normalizacion pneuma: frontmatter _manifest anidado -> shape plano; vector bestia
+    [3,1,3,2,1] (ilegal para habilidad, ley/2 §7) re-derivado a [2,0,2,0,1] disciplina; conocimiento
+    re-apuntado al gemelo migrado; target openclaw omitido (no realizado). v1.1.0 (2026-06-21,
+    consenso steipete+allan-kelly): suma urn:fxsl:kb:manual-de-vida como conocimiento (profundidad
+    operacional de protocolos — DBT/Sirois/Kaufman/Koe — que el gemelo solo nombraba); con la
+    mecanica baja la frontera detect-not-administer (§9-partido) a Limites absolutos: los protocolos
     de regulacion/crisis del manual son auto-aplicables por el operador, NUNCA administrables
     por la skill — detectar obliga a derivar."
 
@@ -57,8 +51,8 @@ provenance:
 
     lang: es
 
-    tags: [gtd, david-allen, claridad-operable, regulacion-emocional, co-agencia,
-    captura, review, vision]
+    tags: [gtd, david-allen, claridad-operable, regulacion-emocional, co-agencia, captura, review,
+    vision]
 
     vector: [2, 0, 2, 0, 1]
 
@@ -72,8 +66,7 @@ provenance:
 
     targets: [claude-code, codex, opencode]
 
-    estados: [recuperar-estado, capturar, clarificar, organizar, comprometer, revisar,
-    regenerar]
+    estados: [recuperar-estado, capturar, clarificar, organizar, comprometer, revisar, regenerar]
 
     conocimiento: [urn:fxsl:kb:david-allen-gemelo-digital-intelectual, urn:fxsl:kb:manual-de-vida]
 
@@ -82,3 +75,14 @@ provenance:
     ---
 
     '
+  reconstruction:
+    date: '2026-09-13'
+    basis: docs/propuesta-refactorizacion-productos.md y mandato de reconstrucción; fuentes
+      y recursos heredados conservados en revision_base.
+    decision: Conserva identidad y acceso directo. Método contextual, autoridad por encargo
+      y fuentes bajo demanda; retira cadencias, gates y diagnósticos presuntos universales sin
+      tocar sistemas GTD protegidos.
+    limits: No acredita eficacia terapéutica, aprendizaje ni utilidad diferencial; no accede
+      al estado personal.
+resources:
+- referencias

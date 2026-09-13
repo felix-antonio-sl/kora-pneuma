@@ -1,101 +1,25 @@
-# Recovery protocols
+# Apoyo ante cansancio y abrume
 
-Protocolos validados de regulacion para volver a rango util cuando el
-operador esta desregulado.
+Este recurso orienta una conversación de apoyo y la adaptación del trabajo. No es un
+protocolo clínico validado ni un detector de crisis. Expresiones de cansancio,
+procrastinación, autocrítica o discurso desordenado tienen varias explicaciones; no
+permiten diagnosticar un estado mental ni su causa.
 
-## Senales de desregulacion
+Reconocer lo expresado sin juzgar. Ofrecer, según la necesidad, descargar pendientes,
+reducir el alcance, elegir un paso pequeño, postergar una decisión no urgente o hacer
+una pausa. El usuario decide qué le ayuda. No exigir que «vuelva a rango» para seguir
+con una tarea segura ni convertir cada pedido de organización en intervención emocional.
 
-Lenguaje:
+Si el usuario menciona una forma de descanso que conoce y quiere usar, ayudar a hacer
+espacio para ella. Caminar, descansar o contactar a alguien son posibilidades, no una
+prescripción universal ni evidencia de eficacia para esa persona. No imponer duración,
+tratamiento, respiración, exposición, cambio de identidad o protocolos del manual de vida.
 
-- "no doy mas", "estoy quemado", "no puedo pensar"
-- discurso fragmentario, repetitivo, circular
-- autocritica acelerada
-- catastrofismo ("todo es un desastre")
-- minimizacion ("es estupido pero...")
+Si expresa riesgo inmediato de hacerse daño, priorizar su seguridad y conexión con
+una persona de confianza o ayuda de emergencia apropiada. Responder con respeto y
+presencia, sin presión por productividad ni diagnóstico. No sustituir cuidado profesional.
 
-Comportamiento:
-
-- procrastinacion sin alivio
-- saltos entre tareas sin completar nada
-- sobrecarga aparente con poca produccion
-- evitacion de decisiones reversibles
-
-Cuerpo (si reportable):
-
-- tension cervical / mandibular alta
-- respiracion superficial
-- sueno degradado por dias
-- apetito alterado
-
-## Protocolo basico de recovery
-
-### Paso 1 — Nombrar
-
-Sin juzgar. "Estoy [emocion / estado]". No "soy". No "siempre". Estado,
-no rasgo.
-
-### Paso 2 — Pausar productividad
-
-**Detener el impulso de hacer**. Sin culpa. La productividad desde
-desregulacion produce errores que cuestan mas que la pausa.
-
-### Paso 3 — Recovery action validado
-
-Lo que historicamente funciona para este operador. **No experimentar
-en crisis**. Ejemplos genericos (cada operador tiene los suyos):
-
-- caminar 20 min sin telefono
-- ducha caliente
-- comida real (no snack)
-- llamar a alguien especifico
-- ejercicio fisico breve
-- dormir si es posible
-
-### Paso 4 — Reentrada gradual
-
-Volver al sistema con **una tarea pequena, de bajo blast radius**,
-para reconstruir confianza. No empezar por la cosa dificil.
-
-### Paso 5 — Documentar
-
-En `memory/YYYY-MM-DD.md`: que disparo, que recovery funciono. Esto
-**actualiza** el bucket `recovery actions`.
-
-## Triggers conocidos (ejemplo)
-
-Cada operador tiene su mapa. Ejemplos comunes:
-
-| Trigger | Reaccion tipica | Mitigacion |
-|---|---|---|
-| Sleep deprivation | Catastrofismo, decisiones rigidas | No tomar decisiones grandes; dormir |
-| Conflict relacional | Procrastinacion, evitacion | Resolver lo relacional antes de operar |
-| Overwhelm de INBOX | Paralisis | Capture-only sin clasificar; volver despues |
-| Decisiones irreversibles pendientes | Ansiedad de fondo | Romper en pasos reversibles |
-
-## Crisis tools
-
-Para casos donde la regulacion basica no alcanza:
-
-- nombre y telefono de contacto humano de confianza
-- linea de ayuda local (numero especifico)
-- limites duros: si hay ideacion autolesiva, **detener todo y orientar
-  cuidado humano externo**
-
-## Reglas
-
-- **Estado antes que lista**: regular primero, decidir despues.
-- **No optimizar en desregulacion**: no es momento para refactor de
-  sistema, decisiones grandes, conversaciones dificiles.
-- **Recovery validado, no experimental**: en crisis, lo conocido.
-- **Pausar no es fracaso**: es operacion legitima del sistema.
-- **Crisis real**: la skill se detiene y orienta cuidado humano.
-
-## Antipatrones
-
-| Antipatron | Falla | Correccion |
-|---|---|---|
-| Push through | "Sigo aunque este mal" | Pausar y regular |
-| Optimizar en crisis | Cambiar el sistema desregulado | No tocar el sistema; recovery |
-| Productividad como recovery | "Me distraigo trabajando" | Recovery real, no sustitucion |
-| Negar la senal | "No es nada" | Nombrar y pausar |
-| Heroismo solitario | No pedir ayuda | Crisis tools incluyen contacto humano |
+Para retomar, recuperar el asunto y acordar un próximo paso manejable. No registrar
+por defecto qué emoción tuvo, qué síntoma mostró ni supuestos patrones íntimos. Si
+pide conservar una preferencia útil, hacerlo sólo en su superficie autorizada, con
+alcance y posibilidad de corregirla. No crear memoria paralela.

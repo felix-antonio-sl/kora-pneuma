@@ -1,93 +1,32 @@
-# Clarify-triage protocol
+# Clarificar material capturado
 
-Procesamiento item por item del INBOX. **Capturar y triage estan
-separados.** Capturar acepta sin juicio; triage aplica preguntas.
+Capturar conserva una intención; clarificar determina qué hacer con ella. Separar
+ambas actividades cuando una descarga necesita fluidez. Pueden seguirse de inmediato
+si el usuario lo pide y el elemento es claro.
 
-## Preguntas de triage en orden
+Preguntar lo pertinente, sin administrar una entrevista completa a cada entrada:
 
-Para cada item:
+1. Qué significa el elemento y de dónde viene.
+2. Si necesita acción, referencia, incubación o descarte autorizado.
+3. Qué resultado suficiente se busca.
+4. Cuál es el próximo paso concreto y si depende de algo.
+5. Quién puede ejecutarlo y con qué autoridad.
+6. Qué condición permitirá revisarlo o retomarlo.
 
-### 1. Que es?
+La energía, el sentido o el malestar importan cuando el usuario los trae o cambian la
+decisión; no se infieren del hecho de que algo quede pendiente. Fatigarse al clasificar
+puede indicar un método costoso, falta de información o cansancio, no necesariamente
+una causa emocional oculta.
 
-Nombrar la naturaleza: idea, recordatorio, compromiso, sentimiento,
-referencia, ruido. Si no se puede nombrar, es candidato a archivar
-(reference) o descartar.
+Un resultado concreto puede ser «borrador listo para revisión»; no todo encargo termina
+en publicación. Una acción puede ser leer un apartado, comparar dos opciones o tomar
+una decisión informada. No reducir todo trabajo cognitivo a abrir un archivo.
 
-### 2. Que capa es?
+Si una acción breve está autorizada y conviene realizarla ahora, hacerla. Dos minutos
+es una orientación para reducir gestión, no permiso ni obligación. Si falta una decisión
+material, formular una pregunta precisa y avanzar con los elementos independientes.
+No imponer una cuota de intentos ni descartar una intención sólo por no entenderla.
 
-| Capa | Senales |
-|---|---|
-| **Regulacion** | Lenguaje emocional, cuerpo, energia, amenaza identitaria |
-| **Operacion** | Tarea, compromiso, output, resultado |
-| **Generacion** | Vision, sentido, direccion, valores, identidad |
-
-Sin esta clasificacion el item se pierde.
-
-### 3. Requiere accion?
-
-- **Si**: continuar al paso 4.
-- **No**: ir a `reference` (util tener), `someday/maybe` (quiza si),
-  o descartar.
-
-### 4. Cual es el outcome?
-
-Que pasa cuando esto este hecho? **Verificable**, no vago.
-
-- Vago: "trabajar en X"
-- Verificable: "X publicado en Y con criterio Z"
-
-### 5. Cual es la next action visible?
-
-El paso fisico, ejecutable, concreto.
-
-- Vago: "pensar en X"
-- Visible: "abrir doc X, leer hasta seccion Y"
-
-### 6. Quien es el owner correcto?
-
-| Owner | Bucket destino |
-|---|---|
-| Yo, ahora o pronto | `next actions` |
-| Yo, fecha fija | `calendar` |
-| Yo, multiples acciones encadenadas | `projects` |
-| Humano | `waiting for humans` |
-| Agente | `waiting for agents` |
-
-### 7. Que review lo vuelve confiable?
-
-Cadencia de check para el item:
-
-- compromisos rapidos: revision diaria
-- proyectos: revision semanal
-- delegaciones: revision al deadline + 1 dia
-- vision/anti-vision: revision mensual o trimestral
-
-## Decisiones rapidas
-
-Si el item:
-
-| Tarda menos de 2 minutos | hacerlo ahora, no clasificar |
-| Es ruido (no aplica) | descartar |
-| Es referencia util | `reference` con tags |
-| Tiene fecha vinculante | `calendar` |
-| Es delegable | preparar contrato de delegacion (ver `contrato-delegacion.md`) |
-| Es ambiguo despues de triage | volver al operador con pregunta puntual |
-
-## Reglas
-
-- **Captura no juzga**; clasificacion juzga.
-- **Outcome-owner-review** completos antes de soltar el item.
-- **Si despues de 2 intentos** el item sigue ambiguo, devolverlo al
-  operador con pregunta concreta (no especular).
-- **Costo psiquico minimo**: si clasificar el item esta agotando, hay
-  algo emocional debajo — escalar a `recuperar-estado`.
-
-## Antipatrones
-
-| Antipatron | Falla | Correccion |
-|---|---|---|
-| Triage sin clarificar | Items sin outcome ni owner van a buckets | Completar las 7 preguntas |
-| Outcome vago | "Trabajar en X" | Verificable: que cambia cuando este hecho |
-| Next action no visible | "Pensar en Y" | Paso fisico, ejecutable, concreto |
-| Triage como ritual | Procesar todo aunque sea ruido | Descartar sin culpa |
-| Mezcla capas | Items emocionales como tarea | Diagnosticar capa primero |
+Cerrar la clarificación con el estado real: propuesta, compromiso confirmado, acción
+realizada, espera, referencia o pendiente de aclarar. No convertir una propuesta de
+fecha en cita ni una posible delegación en compromiso de otra persona.

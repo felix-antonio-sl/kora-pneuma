@@ -1,15 +1,12 @@
 id: urn:fxsl:artefacto:memorizacion-espaciada
 kind: skill
 name: memorizacion-espaciada
-description: 'Skill para conducir un loop sostenible de memorizacion por repeticion
-  espaciada (Anki/FSRS): capturar semillas en caliente, triar en frio (borrar es resultado
-  valido), formular tarjetas atomicas con las palabras del operador mientras la IA
-  audita contra las reglas de Wozniak, repasar anclado con valvula de desborde para
-  el dia malo, y revisar con evals de transferencia. El norte no es retencion ni streak:
-  es soltar lo aprendido y confiar en que el sistema lo sostiene, sin culpa.'
+description: Selecciona conocimiento, formula o revisa tarjetas, conduce recuperación y comprueba
+  transferencia con carga y herramientas ajustadas al propósito.
 content: content.md
 targets:
 - codex
+- hermes
 requires: []
 relations:
   componible:
@@ -28,23 +25,21 @@ provenance:
 
     estado: activo
 
-    descripcion: "Skill para conducir un loop sostenible de memorizacion por repeticion
-    espaciada (Anki/FSRS): capturar semillas en caliente, triar en frio (borrar es
-    resultado valido), formular tarjetas atomicas con las palabras del operador mientras
-    la IA audita contra las reglas de Wozniak, repasar anclado con valvula de desborde
-    para el dia malo, y revisar con evals de transferencia. El norte no es retencion
-    ni streak: es soltar lo aprendido y confiar en que el sistema lo sostiene, sin
-    culpa."
+    descripcion: "Skill para conducir un loop sostenible de memorizacion por repeticion espaciada
+    (Anki/FSRS): capturar semillas en caliente, triar en frio (borrar es resultado valido),
+    formular tarjetas atomicas con las palabras del operador mientras la IA audita contra las
+    reglas de Wozniak, repasar anclado con valvula de desborde para el dia malo, y revisar con
+    evals de transferencia. El norte no es retencion ni streak: es soltar lo aprendido y confiar
+    en que el sistema lo sostiene, sin culpa."
 
-    fuente: "Autorada en pneuma el 2026-06-21 desde la sintesis de un panel de tres:
-    steipete (adoptar no construir: usar Anki/FSRS, add-ons minimos, sin heatmap de
-    vanidad); allan-kelly (formular=aprender, la IA audita pero el humano escribe;
-    evals de transferencia por un agente distinto del auditor; desired retention 0.90;
-    el cuello es la atencion, no la generacion); david-allen (captura != formulacion,
-    valvula del dia malo, ''1 ancla + 2 de oportunidad'', sostenibilidad sin culpa
-    como norte). Reglas de formulacion condensadas de las 20 reglas de Piotr Wozniak
-    (SuperMemo). El documento humano de habilitacion (instalacion Anki/FSRS, checklist)
-    vive en el cuaderno del operador ~/projects/formacion-continua/00-rol/."
+    fuente: "Autorada en pneuma el 2026-06-21 desde la sintesis de un panel de tres: steipete
+    (adoptar no construir: usar Anki/FSRS, add-ons minimos, sin heatmap de vanidad); allan-kelly
+    (formular=aprender, la IA audita pero el humano escribe; evals de transferencia por un agente
+    distinto del auditor; desired retention 0.90; el cuello es la atencion, no la generacion);
+    david-allen (captura != formulacion, valvula del dia malo, ''1 ancla + 2 de oportunidad'',
+    sostenibilidad sin culpa como norte). Reglas de formulacion condensadas de las 20 reglas
+    de Piotr Wozniak (SuperMemo). El documento humano de habilitacion (instalacion Anki/FSRS,
+    checklist) vive en el cuaderno del operador ~/projects/formacion-continua/00-rol/."
 
     autor: FS
 
@@ -52,8 +47,8 @@ provenance:
 
     lang: es
 
-    tags: [memorizacion, repeticion-espaciada, anki, fsrs, formulacion, aprendizaje,
-    wozniak, sostenibilidad]
+    tags: [memorizacion, repeticion-espaciada, anki, fsrs, formulacion, aprendizaje, wozniak,
+    sostenibilidad]
 
     vector: [2, 0, 2, 0, 1]
 
@@ -74,3 +69,17 @@ provenance:
     ---
 
     '
+  reconstruction:
+    date: '2026-09-13'
+    basis: docs/propuesta-refactorizacion-productos.md y mandato de reconstrucción; fuentes
+      y recursos heredados conservados en revision_base.
+    decision: Conserva identidad y acceso directo. Método contextual, autoridad por encargo
+      y fuentes bajo demanda; retira cadencias, gates y diagnósticos presuntos universales sin
+      tocar sistemas GTD protegidos.
+    limits: No acredita eficacia terapéutica, aprendizaje ni utilidad diferencial; no accede
+      al estado personal.
+    consulted_sources:
+    - https://www.supermemo.com/en/blog/twenty-rules-of-formulating-knowledge
+    - https://docs.ankiweb.net/deck-options.html#fsrs
+resources:
+- referencias
