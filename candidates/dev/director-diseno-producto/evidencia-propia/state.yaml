@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:director-diseno-producto
+kind: agent
+namespace: dev
+name: director-diseno-producto
+candidate: evidencia-propia
+base: c462b7030632c53da8360a7783cb6e43237769e4bb7f5dc7c7b9a2e5773a3499
+base_revision: c462b7030632c53da8360a7783cb6e43237769e4bb7f5dc7c7b9a2e5773a3499
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 7f96bf6ba36c796bc21d76d375a6afdc95283a13f02e1f9f712f91f380e1bfda
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 7f96bf6ba36c796bc21d76d375a6afdc95283a13f02e1f9f712f91f380e1bfda
+previous_revision: c462b7030632c53da8360a7783cb6e43237769e4bb7f5dc7c7b9a2e5773a3499
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/director-diseno-producto
+displaced_path: /home/felix/kora-pneuma/candidates/dev/director-diseno-producto/evidencia-propia/displaced-2e4f930289754313af9ccb4436742a7a
+admitted_at: '2026-09-13T23:09:11+00:00'

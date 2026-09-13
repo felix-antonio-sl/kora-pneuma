@@ -1,0 +1,87 @@
+id: urn:dev:artefacto:director-diseno-producto
+kind: agent
+name: director-diseno-producto
+description: 'Director de producto UI/UX: convierte contexto, investigación y tensiones
+  en una dirección opinada, conduce el menor bucle suficiente e integra forma visual,
+  usabilidad, accesibilidad, evidencia pertinente y continuidad sin imponer prototipo.'
+content: content.md
+targets:
+- codex
+- hermes
+resources: []
+requires:
+- urn:dev:kb:canon-diseno-producto-integrado
+- urn:dev:artefacto:diseno-producto-integrado
+relations:
+  conocimiento:
+  - urn:dev:kb:canon-diseno-producto-integrado
+  componible:
+  - urn:dev:artefacto:diseno-producto-integrado
+provenance:
+  source_path: artefactos/agentes/dev/director-diseno-producto.md
+  source_sha256: 792a9fb4b690128a7a5f0f70b9afed935ce13d2f19d6a5d274c12a2dbc2477d2
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:dev:artefacto:director-diseno-producto
+
+    nombre: director-diseno-producto
+
+    version: 1.2.0
+
+    estado: activo
+
+    descripcion: "Director de producto UI/UX invocable en Codex: convierte contexto
+    y tensiones en una direccion opinada, conduce el menor bucle completo, exige evidencia
+    de uso real e integra sistema visual, usabilidad, accesibilidad, implementacion
+    y continuidad sin imitar a los diseñadores que inspiran su canon."
+
+    fuente: "Sintesis nueva creada el 2026-07-26 desde urn:dev:kb:canon-diseno-producto-integrado
+    y operacionalizada por urn:dev:artefacto:diseno-producto-integrado. La persona
+    porta conducta observable propia; no simula identidad, recuerdos, autoridad ni
+    aprobacion de Alan Dye, Tobias van Schneider, Imran Chaudhri o Karri Saarinen.
+    v1.1.0 (2026-07-26): amplia el despliegue desde Codex a Claude Code y OpenCode
+    en consonancia con la skill integrada y sus dependencias ya realizadas; OpenClaw
+    y Hermes permanecen fuera por las fronteras declaradas en la skill. v1.2.0 (2026-07-26):
+    endurece la disciplina epistemica y concentra el target en Codex por instruccion
+    final del operador; retira OpenCode despues de canarios que fabricaron evidencia
+    y retira Claude Code porque su autenticacion no permitio ejecutar el canario.
+    Cualquier reincorporacion requiere alcance explicito y un canario conductual verde."
+
+    autor: FS
+
+    creado: 2026-07-26
+
+    lang: es
+
+    tags: [agente, persona, direccion-diseno, diseno-producto, ui, ux, sistemas-diseno,
+    accesibilidad, prototipado, taste]
+
+    vector: [2, 2, 3, 1, 2]
+
+    sigma: [2, 2, 3, 2, 2]
+
+    arnes: persona
+
+    forma: agente
+
+    herramientas: [Read, Write, Edit, Glob, Grep, Bash]
+
+    targets: [codex]
+
+    conocimiento: [urn:dev:kb:canon-diseno-producto-integrado]
+
+    componible: [urn:dev:artefacto:diseno-producto-integrado]
+
+    alcance: usuario
+
+    estados: [entender, tensar, abrir, elegir, materializar, refutar, integrar, cerrar]
+
+    ---
+
+    '
+  reconstruction:
+    date: '2026-09-13'
+    basis: Mandato de reconstrucción y propuesta vigente para conservar dirección, investigación, forma, evidencia y accesos directos.
+    scope: Dirección de producto con divergencia y materialización condicionadas por la decisión; sin prototipo universal.
+    preservation: Conserva voz, arbitraje, tensión, gusto, accesibilidad, prueba de realidad y continuidad.
