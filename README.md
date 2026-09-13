@@ -13,8 +13,8 @@ disponible por su identidad. Una revisión conserva la referencia anterior hasta
 que se aprueba la nueva. Los conocimientos heredados mantienen su disponibilidad
 como `legacy`, sin atribuirles una aprobación nueva de Félix.
 
-En Codex, `$kora` activa su perspectiva en la conversación actual; su rol nativo
-permite delegar una tarea explícita. En Hermes, KORA se usa desde el perfil
+En Codex, `$kora` activa su perspectiva en la conversación actual; se emite además un rol personalizado cuya invocación depende del contrato
+efectivo de la sesión (véase el límite observado en `docs/codex.md`). En Hermes, KORA se usa desde el perfil
 `kora`. La [guía de operación](docs/operacion.md) explica cómo ingresar recursos,
 preparar y publicar conocimiento, autorar agentes y skills, instalarlos y recuperar
 cambios.
@@ -57,8 +57,10 @@ productos. La [propuesta de reconstrucción](docs/propuesta-refactorizacion-prod
 reúne el diagnóstico, la arquitectura candidata, la migración y el goal preparado
 para ejecutar esa etapa. El primer lote de KORA está admitido: autoría,
 transformación, evaluación y realización, con siete referencias operacionales
-revisadas. La comprobación de conducta en sesiones nuevas y el resto de la
-colección siguen en ejecución; la admisión no los da por validados.
+revisadas. Sesiones nuevas acreditaron autoría y transformación operativas
+mediante `$kora` en Codex y el SOUL de KORA en Hermes; ambas instalaciones
+personales gestionadas están actualizadas. El rol delegado Codex no quedó
+acreditado. El resto de la colección sigue en ejecución; este lote no lo valida.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

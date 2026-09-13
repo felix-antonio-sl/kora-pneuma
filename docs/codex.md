@@ -71,7 +71,7 @@ dependencia declarada no constituye un control de permisos. Véanse
 | `$CODEX_HOME/agents/*.toml` | Descubrimiento personal de agentes standalone; no requiere registros por agente. |
 | `.codex/agents/*.toml` del repositorio | Agentes locales del proyecto cuando este es confiable; superficie usada por el canario sintético. |
 | `skills/list` con `forceReload: true` | Vuelve a leer skills y reporta paths, scope, habilitación y errores; no prueba su ejecución. |
-| `spawn_agent` con el tipo nativo | Selecciona el agente personalizado y aplica su configuración a la sesión hija. |
+| `spawn_agent` con el tipo nativo | Selecciona el agente personalizado cuando el esquema efectivo admite esa selección; la campaña focal del 2026-09-13 no la acreditó. |
 | `$<agente>` con la skill generada | Activa la conducta en la sesión actual; no aplica la configuración de un rol nuevo. |
 
 La CLI instalada no anuncia `--agent`; `codex agents` y `/agent` administran
@@ -251,3 +251,21 @@ python3 scripts/probe_codex.py --canary --scenario resources --direct
 python3 scripts/probe_codex.py --canary --scenario update --direct
 python3 scripts/probe_codex.py --canary --scenario incomplete --direct
 ```
+
+## Límite del rol KORA — 2026-09-13
+
+La campaña aislada con Codex 0.154.0 y `gpt-5.6-sol/high` acreditó
+activación directa de `$kora`, autoría, transformación, publicación autorizada
+y actualización de referencias sin reinstalación. El TOML del rol personalizado
+se emitió correctamente, pero no quedó acreditada su invocación: la primera
+sesión sólo emitió un `wait` vacío y respondió desde el padre; una repetición
+focal con `spawn_agent`, `agent_type=kora` y `fork_turns=none` informó que el
+esquema disponible no admitía `agent_type` y no creó un hijo. Esa declaración
+del modelo no es una inspección independiente del esquema de transporte.
+
+Se conserva la realización del rol, sin deducir un defecto del renderer ni
+atribuirle conducta del padre. Una afirmación de rol cargado exige solicitud
+con tipo explícito y creación, cierre y resultado del mismo hijo correlacionados.
+El soporte descrito por documentación y ensayos anteriores no sustituye esa
+evidencia para una sesión concreta. Este límite no afecta la activación directa
+comprobada; tampoco se generaliza a todas las superficies de Codex.

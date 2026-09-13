@@ -2,7 +2,9 @@
 
 Contrato contrastado con documentación oficial web el **2026-09-08** y con el
 runtime instalado el **2026-09-10**: **0.21.1** (`2026.9.7`, upstream
-`a0749d583a196f3c7cda94cce596924dec559c27`).
+`a0749d583a196f3c7cda94cce596924dec559c27`). La campaña operativa del
+**2026-09-13** observó **0.21.2** (`2026.9.11`, upstream `205645ee`);
+no reatribuye a esa versión todos los ensayos históricos.
 `python3 scripts/probe_hermes.py` reprodujo las diez observaciones offline de
 contexto, descubrimiento y actualización, todas conformes; no acreditan inferencia.
 Los enlaces a commits y los ensayos fechados más abajo conservan evidencia
@@ -329,3 +331,22 @@ Los entrypoints de perfil y la carga completa de SOUL se volvieron a comprobar
 sin inferencia. El presupuesto asociado al modelo explícito cargó íntegros los
 seis perfiles examinados; un presupuesto por defecto menor puede recortar una
 fuente grande. Estos ensayos no actualizan ni evalúan el Bot Chat personal.
+
+## KORA reconstruida — 2026-09-13
+
+Una sesión nueva `AIAgent`, con `gpt-5.6-sol/high`, SOUL del perfil KORA,
+memoria deshabilitada y filesystem temporal aislado mediante `bwrap`, cargó
+los métodos de autoría, transformación integral e instalación. Usó las
+herramientas nativas `skill_view`, `read_file` y `terminal` para ejecutar el
+helper integral, publicar conocimiento ficticio por revisión concreta, admitir
+una skill y realizarla en ambos destinos dentro del home sintético. El estado
+final comparado con fuente fue vigente, sin cambios nativos ni recuperación
+pendiente. No se persistieron credenciales ni se alteró la maquinaria.
+
+El cotejo conservó la excepción por lluvia, prioridad de revocación, ausencia
+como desconocido y la falta de autoridad del imperativo incluido en la fuente.
+Casos separados de lectura y decisión acreditaron selección de métodos; el
+vecino `2 + 2` no usó herramientas. Los falsos negativos de formato del evaluador
+temporal se corrigieron cotejando los artefactos conservados, sin nueva sesión.
+El resultado acredita este recorrido operativo, no utilidad diferencial general
+ni actuación del Bot Chat persistente o de otros perfiles.

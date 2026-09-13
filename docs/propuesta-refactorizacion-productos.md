@@ -25,10 +25,36 @@ incorpora exposición. Las identidades de origen permanecen activas hasta
 comprobar sus migraciones. Se revisaron siete referencias operacionales por el
 ciclo editorial existente; la guía anterior conserva su identidad como entrada
 a `docs/operacion.md` y su versión previa como historia. Una revisión independiente
-contrastó contenido, bases y procedencia; los casos de conducta nativa y la
-instalación personal siguen pendientes. Esto no valida el resto de la colección
-ni la biblioteca. Las decisiones y casos propuestos abajo conservan su función
+contrastó contenido, bases y procedencia. Sesiones nuevas acreditaron autoría
+y transformación operativas con `$kora` en Codex y SOUL en Hermes; las
+instalaciones personales gestionadas de ambos destinos están actualizadas.
+La invocación del rol personalizado Codex no quedó acreditada: la sesión
+informó no disponer de `agent_type` y no produjo un hijo correlacionable.
+Esto no valida el resto de la colección ni la biblioteca. Las decisiones y casos propuestos abajo conservan su función
 como entrada de ejecución.
+
+Dictamen del primer lote, con fixtures sintéticos y sin acceso al corpus privado:
+
+| Dimensión | Resultado observado | Límite |
+|---|---|---|
+| Integridad mecánica | `check` sin incidencias; 49 pruebas pertinentes de autoría, conocimiento e integral; revisiones e historia recuperables | No valida toda la biblioteca |
+| Fidelidad semántica | Cotejo de los seis productos, siete referencias y procedencia; revisión independiente detectó la corrupción deliberada de conjunción a disyunción | Control negativo acotado, no garantía universal |
+| Carga nativa | `$kora` y métodos en Codex 0.154.0; SOUL y `skill_view` en Hermes 0.21.2, sesiones nuevas Sol/high | Rol personalizado Codex no acreditado; lectura no se presenta como delegación |
+| Conducta | Autoría y transformación ejecutadas: excepción por lluvia, revocación prioritaria, ausente como desconocido, imperativo de fuente sin autoridad; Hermes resolvió el caso vecino sin métodos | Casos sintéticos; no conducta clínica ni institucional |
+| Utilidad | `NOT_RUN` para valor diferencial general | No hubo comparación suficiente entre candidata, vigente y asistencia sin producto |
+| Efectos | Publicación, admisión e instalación sintéticas; referencia v2 leída sin reinstalar y v1 recuperada. Instalaciones personales focales de ambos destinos sin cambios pendientes ni recuperación | No envíos ni cambios institucionales; conservación de propiedad y exclusiones |
+
+La evaluación temporal Hermes tuvo falsos negativos por etiquetas y formato
+(ASCII frente a flecha Unicode y estado estructurado frente a una etiqueta).
+El cotejo semántico posterior de respuestas y artefactos conservados resolvió
+esas diferencias sin repetir inferencia; no se informa igualdad exacta del
+oráculo original. Las copias administradas de `instalacion-kora` en los perfiles
+Hermes hospitalista y urgencia se actualizaron por propiedad compartida, sin
+cambiar sus SOUL, configuración, estado o servicios.
+
+Esta evidencia cierra el prerrequisito operativo para usar KORA reconstruida
+en los lotes siguientes. Permanecen pendientes las comparaciones y migraciones
+que permitan retirar identidades de origen y la reconstrucción del resto.
 
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
@@ -81,10 +107,10 @@ David Allen, gtd-flow y el conocimiento general de GTD están dentro de la
 propuesta. No se asigna al servicio excluido ninguna obligación nueva ni se
 presume autorización para usar su estado al comprobar claridad personal.
 
-El encargo permite plantear una reconstrucción radical. Este resultado es la
-propuesta concreta: no se han admitido candidatas, publicado revisiones de
-conocimiento, retirado fuentes ni actualizado instalaciones personales. Publicar
-este documento en Git tampoco realiza esas operaciones.
+El diagnóstico original precede la ejecución. El estado del primer lote se
+registra arriba; el resto de las decisiones sigue siendo propuesta hasta su
+admisión y comprobación. Publicar este documento en Git no realiza por sí solo
+las operaciones descritas.
 
 ## Cobertura y calidad de la evidencia
 

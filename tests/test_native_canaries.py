@@ -157,6 +157,61 @@ class NativeCanaryFixtureTests(unittest.TestCase):
         self.assertIsNone(module._completed_child_turn([*lifecycle, completed],
                                                        {**expected, "order": ["A", "B"]}))
 
+    def test_basic_role_evidence_rejects_empty_wait_and_requires_typed_child_lifecycle(self):
+        module = load_probe("codex")
+        answer = {"state": "diferida", "distance": "UNKNOWN",
+                  "knowledge_marker": "KORA_FACT_LITERAL_37B9",
+                  "skill_marker": "KORA_SKILL_NATIVE_5B2C",
+                  "role_marker": "KORA_ROLE_NATIVE_8FA1",
+                  "exception": "lluvia"}
+        empty_wait_and_parent_answer = [
+            {"type": "item.completed", "item": {
+                "type": "collab_tool_call", "tool": "wait", "status": "completed",
+                "receiver_thread_ids": [], "agents_states": {},
+            }},
+            {"type": "item.completed", "item": {
+                "type": "agent_message", "text": json.dumps(answer),
+            }},
+        ]
+        self.assertFalse(module._native_role_evidence(
+            empty_wait_and_parent_answer, answer, expected_role="kora-canary-witness"
+        )["observed"])
+
+        spawn = {"method": "rawResponseItem/completed", "params": {"item": {
+            "type": "function_call", "name": "spawn_agent", "call_id": "spawn-1",
+            "arguments": json.dumps({"agent_type": "kora-canary-witness",
+                                     "fork_turns": "none"}),
+        }}}
+        lifecycle = [{"method": "item/completed", "params": {
+            "threadId": "parent", "item": {
+                "type": "subAgentActivity", "id": "spawn-1" if kind == "started" else "end-1",
+                "agentThreadId": "child", "agentPath": "/parent/child", "kind": kind,
+            },
+        }} for kind in ("started", "completed")]
+        child_final = {"method": "turn/completed", "params": {
+            "threadId": "child", "turn": {"status": "completed", "items": [{
+                "type": "agentMessage", "phase": "final_answer", "text": json.dumps(answer),
+            }]},
+        }}
+
+        evidence = module._native_role_evidence(
+            [spawn, *lifecycle, child_final], answer, expected_role="kora-canary-witness"
+        )
+        self.assertTrue(evidence["observed"])
+        self.assertEqual(evidence["agent_type"], "kora-canary-witness")
+        self.assertEqual(evidence["child_thread_id"], "child")
+        for incomplete in (
+            [*lifecycle, child_final],
+            [spawn, lifecycle[0], child_final],
+            [spawn, *lifecycle],
+        ):
+            self.assertFalse(module._native_role_evidence(
+                incomplete, answer, expected_role="kora-canary-witness"
+            )["observed"])
+        self.assertFalse(module._native_role_evidence(
+            [spawn, *lifecycle, child_final], answer, expected_role="generic"
+        )["observed"])
+
     def test_incomplete_contract_is_declared_without_faking_runtime_evidence(self):
         for runtime in ("codex", "hermes"):
             module = load_probe(runtime)

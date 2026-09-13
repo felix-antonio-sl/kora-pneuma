@@ -565,6 +565,15 @@ def _completed_child_turn(events: list[dict], expected: dict | None = None,
     return None
 
 
+def _native_role_evidence(events: list[dict], answer: dict,
+                          *, expected_role: str) -> dict:
+    """Require a typed spawn, linked child lifecycle and that child's final answer."""
+    if not isinstance(answer, dict) or not answer:
+        return {"observed": False}
+    evidence = _completed_child_turn(events, answer, expected_role=expected_role)
+    return evidence if evidence is not None else {"observed": False}
+
+
 def _incomplete_child_result(events: list[dict]) -> dict:
     """Extract a child's final contract only from completed/wait collab results.
 
@@ -1449,7 +1458,8 @@ def canary(direct=False, model=DEFAULT_MODEL, effort=DEFAULT_EFFORT, scenario="b
             "Devuelve solo el objeto JSON que indique el procedimiento. "
             "No delegues, no crees Goals ni ejecutes otras tareas."
         ) if direct else (
-            "Usa un único subagente de tipo kora-canary-witness. No inspecciones tú los "
+            "Llama spawn_agent con agent_type=kora-canary-witness y fork_turns=none para crear "
+            "un único hijo nativo. No inspecciones tú los "
             "archivos del caso ni actives la skill homónima en la sesión principal. "
             "Envíale: Evalúa el caso color verde, con lluvia, aplicando "
             "tu skill requerida; devuelve el objeto JSON que indique tu procedimiento. "
@@ -1519,9 +1529,10 @@ def canary(direct=False, model=DEFAULT_MODEL, effort=DEFAULT_EFFORT, scenario="b
         if direct:
             checks["no_delegation_event"] = not collab_items
         else:
-            checks["native_delegation_observed"] = bool(
-                collaboration_tools & {"spawn_agent", "spawnAgent", "wait", "wait_agent"}
+            role_evidence = _native_role_evidence(
+                event_objects, answer, expected_role="kora-canary-witness"
             )
+            checks["native_delegation_observed"] = role_evidence["observed"]
         checks["process_completed"] = result.returncode == 0
         checks["isolated_skill_context"] = isolated_context
         sanitized = {"phase": "canary_completed", "ok": all(checks.values()),
@@ -1531,6 +1542,8 @@ def canary(direct=False, model=DEFAULT_MODEL, effort=DEFAULT_EFFORT, scenario="b
                      "checks": checks, "answer": {key: answer.get(key) for key in [*expected, "exception"]},
                      "event_item_types": dict(item_types),
                      "collaboration_tools": sorted(collaboration_tools)}
+        if not direct:
+            sanitized["child_evidence"] = role_evidence
         if result.returncode:
             sanitized["failure_event_types"] = sorted({str(item.get("type")) for item in event_objects})
         if not sanitized["ok"]:
