@@ -195,11 +195,23 @@ class TelegramAdapter:
         return 'telegram-question-return:' + digest([self.config.account, self.config.chat_id,
             self.config.owner_user_id, event['payload'].get('item_id')])
 
-    def _notification_receipt(self, event, status, reason=None, *, question_basis=None):
+    def _material_return_key(self, event):
+        return 'telegram-material-return:' + digest([self.config.account, self.config.chat_id,
+            self.config.owner_user_id, self.config.actor, event['payload'].get('item_id')])
+
+    @staticmethod
+    def _material_return_identity(material):
+        return digest([material['id'], material['version'], material['original']['sha256']])
+
+    def _notification_receipt(self, event, status, reason=None, *, question_basis=None, material_keys=()):
         # This receipt is transport state; it never changes the notification's
         # original payload or asserts that the underlying GTD result is done.
         key = 'telegram-delivery:' + digest([self.config.account, event['event_key']])
         with self.service.store.transaction() as db:
+            if status == 'confirmed' and material_keys:
+                prior = self.service._meta(self._material_return_key(event), {})
+                self.service._set_meta(self._material_return_key(event), {
+                    'materials': sorted(set(prior.get('materials', [])) | set(material_keys))})
             if status == 'confirmed' and question_basis is not None:
                 self.service._set_meta(self._question_return_key(event), {
                     'basis': question_basis, 'event_key': event['event_key']})
@@ -212,7 +224,7 @@ class TelegramAdapter:
                 ('done' if status == 'confirmed' else 'ignored' if status == 'suppressed' else 'pending',
                  reason, event['event_key']))
 
-    def _notification_content(self, event):
+    def _notification_content(self, event, *, omit_materials=frozenset()):
         payload = event['payload']
         item = self.service.get_item(payload.get('item_id'))
         if not item or item['version'] != payload.get('version'):
@@ -234,6 +246,8 @@ class TelegramAdapter:
             sections[0] += '\nDecisión pendiente: ' + item['decision_question']
         used = len(sections[0].encode())
         for material in latest.values():
+            if self._material_return_identity(material) in omit_materials:
+                continue
             original = material['original']
             mime = original.get('mime_type', 'text/plain').split(';', 1)[0].lower()
             if not (mime.startswith('text/') or mime in {'application/json', 'application/xml'}):
@@ -343,7 +357,12 @@ class TelegramAdapter:
                     intent.get('event') == key and intent.get('account') == self.config.account
                     and intent.get('status') != 'confirmed' for intent in intents):
                 return False
-            chunks = self._notification_content(event)
+            with self.service.store.lock:
+                latest = {m['id']: m for m in self.service.materials(event['payload'].get('item_id'))}
+                material_keys = {self._material_return_identity(m) for m in latest.values()}
+                confirmed_materials = self.service._meta(self._material_return_key(event), {}).get('materials', [])
+            omitted = frozenset(confirmed_materials) if automatic else frozenset()
+            chunks = self._notification_content(event, omit_materials=omitted)
             question_basis = self._question_return_basis(event)
             with self.service.store.lock:
                 delivered = self.service._meta(self._question_return_key(event), {})
@@ -353,7 +372,7 @@ class TelegramAdapter:
             for index, chunk in enumerate(chunks):
                 # Earlier sends yield to other work. Revalidate before each new
                 # effect; a correction during a multipart delivery stops the rest.
-                self._notification_content(event)
+                self._notification_content(event, omit_materials=omitted)
                 if automatic and not self._auto_return_allowed(event):
                     return False
                 options = {}
@@ -367,7 +386,8 @@ class TelegramAdapter:
                 if not isinstance(response, dict) or not response.get('message_id'):
                     self._notification_receipt(event, 'uncertain', 'notification_delivery_uncertain')
                     return True
-            self._notification_receipt(event, 'confirmed', question_basis=question_basis)
+            self._notification_receipt(event, 'confirmed', question_basis=question_basis,
+                                       material_keys=material_keys - omitted)
             return True
         except asyncio.CancelledError:
             raise

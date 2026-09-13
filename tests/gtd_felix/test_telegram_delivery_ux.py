@@ -167,6 +167,55 @@ class DeliveryUXTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.gather(*(self.adapter._deliver_notification(event, automatic=True) for event in events))
         self.assertEqual(1, len(self.http.sent))
 
+    def material_item(self):
+        item = self.capture()
+        result = self.service.execute('felix', {'operation_id': 'material-first', 'action': 'put_material',
+            'item_id': item['id'], 'expected_version': item['version'],
+            'fields': {'title': 'Informe', 'content': 'OLD_MATERIAL_BODY', 'source_versions': {}}})
+        self.assertEqual('applied', result['status'], result)
+        self.adapter.config = dataclasses.replace(self.adapter.config, auto_return=True)
+        return result['item']
+
+    async def test_confirmed_material_not_reattached_after_restart_but_explicit_read_full(self):
+        item = self.material_item()
+        await self.adapter._deliver_notification(self.return_event(item, 'material-first-return'), automatic=True)
+        self.assertIn('OLD_MATERIAL_BODY', self.http.sent[-1]['text'])
+        config = self.adapter.config
+        self.service.close()
+        self.service = fixtures.GTDService(fixtures.Path(self.fixture.temp.name))
+        self.fixture.service = self.service
+        self.adapter = fixtures.TelegramAdapter(self.service, self.fixture.client, config)
+        await self.adapter._deliver_notification(self.return_event(item, 'material-second-return'), automatic=True)
+        self.assertEqual('¿Qué período revisamos?', self.http.sent[-1]['text'])
+        await self.adapter.show_result(item['id'])
+        self.assertIn('OLD_MATERIAL_BODY', self.http.sent[-1]['text'])
+
+    async def test_changed_material_version_delivered_and_other_account_not_deduplicated(self):
+        item = self.material_item()
+        await self.adapter._deliver_notification(self.return_event(item, 'initial-material'), automatic=True)
+        material = self.service.materials(item['id'])[-1]
+        result = self.service.execute('felix', {'operation_id': 'material-updated', 'action': 'put_material',
+            'item_id': item['id'], 'expected_version': item['version'], 'fields': {
+                'material_id': material['id'], 'title': 'Informe', 'content': 'NEW_MATERIAL_BODY', 'source_versions': {}}})
+        self.assertEqual('applied', result['status'], result)
+        item = result['item']
+        await self.adapter._deliver_notification(self.return_event(item, 'updated-material'), automatic=True)
+        self.assertIn('NEW_MATERIAL_BODY', self.http.sent[-1]['text'])
+        self.assertNotIn('OLD_MATERIAL_BODY', self.http.sent[-1]['text'])
+        self.adapter.config = dataclasses.replace(self.adapter.config, account='other-owner-account')
+        await self.adapter._deliver_notification(self.return_event(item, 'other-account-material'), automatic=True)
+        self.assertIn('NEW_MATERIAL_BODY', self.http.sent[-1]['text'])
+
+    async def test_uncertain_material_delivery_keeps_material_for_next_return(self):
+        item = self.material_item()
+        event = self.return_event(item, 'uncertain-material')
+        with patch.object(self.adapter, '_send', new=AsyncMock(return_value=None)):
+            await self.adapter._deliver_notification(event, automatic=True)
+        with self.service.store.lock:
+            self.assertIsNone(self.service._meta(self.adapter._material_return_key(event)))
+        await self.adapter._deliver_notification(self.return_event(item, 'after-uncertain-material'), automatic=True)
+        self.assertIn('OLD_MATERIAL_BODY', self.http.sent[-1]['text'])
+
     async def test_capture_ack_and_list_use_human_language(self):
         await self.fixture.deliver(fixtures.message(980, 'Mensaje con un título largo que no hace falta repetir'))
         self.assertEqual(self.http.sent[-1]['text'], 'Guardado.')

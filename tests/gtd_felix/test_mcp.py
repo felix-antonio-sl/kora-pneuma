@@ -320,6 +320,27 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
         actions = TOOLS[1]['inputSchema']['properties']['command']['oneOf']
         self.assertIn('intent_basis', next(a for a in actions if a['properties']['action']['const'] == 'clarify')['properties']['fields']['properties'])
 
+    async def test_large_reference_is_readable_in_bounded_pages(self):
+        native = self.root / 'reference-pages'
+        (native / 'references').mkdir(parents=True)
+        content = '# Operaciones\n' + 'á' * 16001 + '\n## Revisar\nRetorno operativo'
+        (native / 'references/operations.md').write_text(content)
+        page = instructions('references/operations.md', root=native)
+        self.assertLessEqual(len(page['content']), 8000)
+        self.assertEqual(page['sections'][-1]['title'], 'Revisar')
+        parts = [page['content']]
+        while page['next_offset'] is not None:
+            page = instructions('references/operations.md', root=native, offset=page['next_offset'])
+            parts.append(page['content'])
+        self.assertEqual(''.join(parts), content)
+        client = MCPClient(self.url, PRINCIPAL, instruction_root=native)
+        section = await client.call('gtd_read', {'view': 'instructions',
+            'reference': 'references/operations.md', 'offset': page['sections'][-1]['offset']})
+        self.assertEqual(section['content'], '## Revisar\nRetorno operativo')
+        for offset in (-1, True, '1', len(content) + 1):
+            with self.assertRaises(ValueError):
+                instructions('references/operations.md', root=native, offset=offset)
+
     async def test_identical_command_replay_after_progress_is_not_a_second_effect(self):
         args = {'job_id': self.job, 'command': self.command()}
         first = await self.client.call('gtd_command', args)
