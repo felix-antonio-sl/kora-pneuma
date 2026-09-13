@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:gtd-flow
+kind: skill
+namespace: fxsl
+name: gtd-flow
+candidate: reconstruccion
+base: 434853916cc8fc9e7cdd8538826cd2b0c6bb711286de67e87cb927344be8c7c7
+base_revision: 434853916cc8fc9e7cdd8538826cd2b0c6bb711286de67e87cb927344be8c7c7
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: dcf559b363f63d8aa37e0b2669be21874f02c19f9c5620a28c6ee4867c0db589
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: dcf559b363f63d8aa37e0b2669be21874f02c19f9c5620a28c6ee4867c0db589
+previous_revision: 434853916cc8fc9e7cdd8538826cd2b0c6bb711286de67e87cb927344be8c7c7
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/fxsl/gtd-flow
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/gtd-flow/reconstruccion/displaced-686b85366a294c2584613593dca8b418
+admitted_at: '2026-09-13T05:03:51+00:00'

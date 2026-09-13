@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:memorizacion-espaciada
+kind: skill
+namespace: fxsl
+name: memorizacion-espaciada
+candidate: reconstruccion
+base: 40761b0c4a5f469eb34e206f1e5d681af19b62cfe53463c7a6da03112b12c05e
+base_revision: 40761b0c4a5f469eb34e206f1e5d681af19b62cfe53463c7a6da03112b12c05e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: dc49fc2af97fcfb2ce0e390931f626f01e2a9d940dc3dc96a51369842c62fd13
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: dc49fc2af97fcfb2ce0e390931f626f01e2a9d940dc3dc96a51369842c62fd13
+previous_revision: 40761b0c4a5f469eb34e206f1e5d681af19b62cfe53463c7a6da03112b12c05e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/fxsl/memorizacion-espaciada
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/memorizacion-espaciada/reconstruccion/displaced-be0bf539e8054a618e1762ee0b2d7e50
+admitted_at: '2026-09-13T05:03:55+00:00'

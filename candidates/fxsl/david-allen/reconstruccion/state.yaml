@@ -1,0 +1,22 @@
+id: urn:fxsl:artefacto:david-allen
+kind: agent
+namespace: fxsl
+name: david-allen
+candidate: reconstruccion
+base: 1e18aacf5fd6f0347da856f45a30bfc7b5b2a6cd47283df59c983b74e4e16cf2
+base_revision: 1e18aacf5fd6f0347da856f45a30bfc7b5b2a6cd47283df59c983b74e4e16cf2
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f1349ed665960ccd4765566d88b3c58d30699ad906c24c6aa71338eebaaea7ef
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f1349ed665960ccd4765566d88b3c58d30699ad906c24c6aa71338eebaaea7ef
+previous_revision: 1e18aacf5fd6f0347da856f45a30bfc7b5b2a6cd47283df59c983b74e4e16cf2
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/fxsl/david-allen
+displaced_path: /home/felix/kora-pneuma/candidates/fxsl/david-allen/reconstruccion/displaced-1524c0dbf0304ad4a735c0ff7cac37bf
+admitted_at: '2026-09-13T05:03:59+00:00'
