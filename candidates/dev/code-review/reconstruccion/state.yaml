@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:code-review
+kind: skill
+namespace: dev
+name: code-review
+candidate: reconstruccion
+base: d91cf168619b82ebfa7d9636907ae9456b4f656c155e1b6111048bdabda5f944
+base_revision: d91cf168619b82ebfa7d9636907ae9456b4f656c155e1b6111048bdabda5f944
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 7af4193a2e2bf7a0a12eb67e87c5cd19efd69a7f742c8bbe071eb6bc2b5d2ac1
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 7af4193a2e2bf7a0a12eb67e87c5cd19efd69a7f742c8bbe071eb6bc2b5d2ac1
+previous_revision: d91cf168619b82ebfa7d9636907ae9456b4f656c155e1b6111048bdabda5f944
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/code-review
+displaced_path: /home/felix/kora-pneuma/candidates/dev/code-review/reconstruccion/displaced-09fd1ce214f94b1fbdb09a6f769240a7
+admitted_at: '2026-09-13T04:18:47+00:00'

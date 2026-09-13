@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:diagnosing-bugs
+kind: skill
+namespace: dev
+name: diagnosing-bugs
+candidate: reconstruccion
+base: 6dd72d54d35bbdcc90e07eb38f6c2b3e019669afce4fa5c08c4aa19a3ea8ff9e
+base_revision: 6dd72d54d35bbdcc90e07eb38f6c2b3e019669afce4fa5c08c4aa19a3ea8ff9e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 924414cea518dad46a1ef15b1eb3c8dacb92a959c311617e80cb67c24f7b0ea3
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 924414cea518dad46a1ef15b1eb3c8dacb92a959c311617e80cb67c24f7b0ea3
+previous_revision: 6dd72d54d35bbdcc90e07eb38f6c2b3e019669afce4fa5c08c4aa19a3ea8ff9e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/diagnosing-bugs
+displaced_path: /home/felix/kora-pneuma/candidates/dev/diagnosing-bugs/reconstruccion/displaced-9747195fd0234ccd9b4fe725b346e008
+admitted_at: '2026-09-13T04:18:40+00:00'

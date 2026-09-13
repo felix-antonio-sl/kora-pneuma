@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:steipete
+kind: agent
+namespace: dev
+name: steipete
+candidate: reconstruccion
+base: 0f93bc9045c2938cb9fca37dc2ae717077671dd24a6abeb34a73f43e069b875a
+base_revision: 0f93bc9045c2938cb9fca37dc2ae717077671dd24a6abeb34a73f43e069b875a
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 570b34561eff2cd1298628d54271f3006e04afd9b3c8ab0192594697d9b6f337
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 570b34561eff2cd1298628d54271f3006e04afd9b3c8ab0192594697d9b6f337
+previous_revision: 0f93bc9045c2938cb9fca37dc2ae717077671dd24a6abeb34a73f43e069b875a
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/steipete
+displaced_path: /home/felix/kora-pneuma/candidates/dev/steipete/reconstruccion/displaced-bc9c3d8714df4fd09cbdca3a07cbf141
+admitted_at: '2026-09-13T04:19:08+00:00'

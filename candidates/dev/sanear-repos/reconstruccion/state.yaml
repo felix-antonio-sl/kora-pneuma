@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:sanear-repos
+kind: skill
+namespace: dev
+name: sanear-repos
+candidate: reconstruccion
+base: a41c03173d68989249267bce81e70fb03ae9119da6ef2dd3b4cc9402fa1281fe
+base_revision: a41c03173d68989249267bce81e70fb03ae9119da6ef2dd3b4cc9402fa1281fe
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f765ce162468183f3f063a878a75daf4dd08a3560c84637849cf2c3ab0695db9
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f765ce162468183f3f063a878a75daf4dd08a3560c84637849cf2c3ab0695db9
+previous_revision: a41c03173d68989249267bce81e70fb03ae9119da6ef2dd3b4cc9402fa1281fe
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/sanear-repos
+displaced_path: /home/felix/kora-pneuma/candidates/dev/sanear-repos/reconstruccion/displaced-9646288aa0404c369c0b71053f21734a
+admitted_at: '2026-09-13T04:18:53+00:00'

@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:decommission-repo-legado
+kind: skill
+namespace: dev
+name: decommission-repo-legado
+candidate: reconstruccion
+base: ba1ba787eb50177d67c931a88ad900ef580ad698706850c125e26805fd515de3
+base_revision: ba1ba787eb50177d67c931a88ad900ef580ad698706850c125e26805fd515de3
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 53ee26038765ab3e6d11b8296a4043ba05651fa5f1950e4735419beaaa26ef0d
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 53ee26038765ab3e6d11b8296a4043ba05651fa5f1950e4735419beaaa26ef0d
+previous_revision: ba1ba787eb50177d67c931a88ad900ef580ad698706850c125e26805fd515de3
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/decommission-repo-legado
+displaced_path: /home/felix/kora-pneuma/candidates/dev/decommission-repo-legado/reconstruccion/displaced-443c2962a3e64c61951320bc31659a66
+admitted_at: '2026-09-13T04:18:57+00:00'

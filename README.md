@@ -60,7 +60,11 @@ transformación, evaluación y realización, con siete referencias operacionales
 revisadas. Sesiones nuevas acreditaron autoría y transformación operativas
 mediante `$kora` en Codex y el SOUL de KORA en Hermes; ambas instalaciones
 personales gestionadas están actualizadas. El rol delegado Codex no quedó
-acreditado. El resto de la colección sigue en ejecución; este lote no lo valida.
+acreditado. El lote de ingeniería también está admitido e instalado en ambos
+destinos: diez productos con sus especialidades accesibles, y cuatro casos
+sintéticos por runtime que acreditan diagnóstico provisional, continuidad
+autorizada, revisión vacía y no activación vecina. El resto de la colección
+sigue en ejecución; estos lotes no lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

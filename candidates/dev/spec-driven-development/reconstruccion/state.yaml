@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:spec-driven-development
+kind: skill
+namespace: dev
+name: spec-driven-development
+candidate: reconstruccion
+base: d0231c9c32004dbe7edb80c9c3e618f05a879cbfb727101b0256b4c2f12fb995
+base_revision: d0231c9c32004dbe7edb80c9c3e618f05a879cbfb727101b0256b4c2f12fb995
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: fcabe7571cbf849bb4b2a7283d956f447fb459c9252419c0d78305b83848b0b5
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: fcabe7571cbf849bb4b2a7283d956f447fb459c9252419c0d78305b83848b0b5
+previous_revision: d0231c9c32004dbe7edb80c9c3e618f05a879cbfb727101b0256b4c2f12fb995
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/spec-driven-development
+displaced_path: /home/felix/kora-pneuma/candidates/dev/spec-driven-development/reconstruccion/displaced-d077161564a94096a1f8ff40c763e982
+admitted_at: '2026-09-13T04:18:43+00:00'

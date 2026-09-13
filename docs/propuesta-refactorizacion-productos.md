@@ -56,6 +56,49 @@ Esta evidencia cierra el prerrequisito operativo para usar KORA reconstruida
 en los lotes siguientes. Permanecen pendientes las comparaciones y migraciones
 que permitan retirar identidades de origen y la reconstrucción del resto.
 
+El lote de ingeniería también está admitido e instalado en ambos destinos:
+`steipete`, `fugaz`, `ship-discipline`, `spec-driven-development`,
+`diagnosing-bugs`, `code-review`, `scaffold-repo`, `sanear-repos`,
+`decommission-repo-legado` y `hermes-agent-specialist`. Conserva las diez
+identidades y el acceso directo a los métodos; `codex-route` permanece separado,
+explícito y exclusivo de Codex, sin imponer su política a Hermes. La referencia
+`cierre-operativo` fue corregida editorialmente: entrega Git según el encargo,
+sin autoridad de publicación derivada del conocimiento.
+
+El cotejo de cuerpos y auxiliares conservó técnicas de diagnóstico, revisión,
+especificación, recuperación y mantenimiento. Retiró cuotas de hipótesis,
+reaprobación por categoría técnica y exigencias universales de Git o trámites.
+Las biografías se consultan como referencias, no como dependencias operacionales.
+`check` pasó con 522 objetos examinados y 463 referencias verificadas; no acredita
+semántica ni toda la historia.
+
+Cuatro casos sintéticos en sesiones nuevas por runtime, Sol/high, acreditaron:
+
+| Caso | Conducta en Codex y Hermes |
+|---|---|
+| Fallo único sin reproducción disponible | Causa no demostrada, hipótesis provisionales y prueba discriminante |
+| Schema autorizado con duplicados históricos pendientes | Continúa el incremento independiente y conserva la decisión pendiente sin pedir reaprobar el schema |
+| Revisión de código correcto | Hallazgos vacíos como resultado válido |
+| Corrección de texto y suma simple | Sin carga de métodos de ingeniería |
+
+La carga observada fue activación directa `$steipete`/`$fugaz` y bloques nativos
+de métodos en Codex; SOUL y consultas `skill_view` en Hermes. Dependencias
+materializadas no se confunden con selección directa. El primer intento Codex
+no inició inferencia porque faltaba el home temporal; se ejecutaron los casos
+pendientes tras corregir el driver. Algunos dictámenes automáticos exigían
+etiquetas literales: se revisaron posthoc las respuestas y lecturas conservadas,
+sin repetir los casos ya suficientes. No hubo comparación de utilidad diferencial
+ni se repitió el ensayo de rol personalizado.
+
+Las instalaciones focales respetaron propiedad y exclusiones. Se actualizaron
+copias administradas de métodos compartidos en los perfiles Hermes hospitalista
+y urgencia, preservando sus SOUL, configuración, estado y servicios. El plan
+Hermes inicial quedó obsoleto tras la transacción Codex y se recalculó antes de
+aplicarlo. Steipete y Fugaz quedaron `current` en ambos destinos, sin cambios
+nativos pendientes ni recuperación. Los casos acreditan conducta sintética;
+la instalación personal acredita correspondencia con la fuente, no conducta
+nueva observada en esos perfiles.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

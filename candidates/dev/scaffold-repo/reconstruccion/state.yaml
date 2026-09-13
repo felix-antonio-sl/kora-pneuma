@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:scaffold-repo
+kind: skill
+namespace: dev
+name: scaffold-repo
+candidate: reconstruccion
+base: 486d2f4647aef05ba3e82b5dc22408456abba05e47d590438e5fd43ce4a1f19d
+base_revision: 486d2f4647aef05ba3e82b5dc22408456abba05e47d590438e5fd43ce4a1f19d
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 493f4f72117f839773851d5c5ac5fcf1580722f61420a4b9e656ee990dda43ab
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 493f4f72117f839773851d5c5ac5fcf1580722f61420a4b9e656ee990dda43ab
+previous_revision: 486d2f4647aef05ba3e82b5dc22408456abba05e47d590438e5fd43ce4a1f19d
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/scaffold-repo
+displaced_path: /home/felix/kora-pneuma/candidates/dev/scaffold-repo/reconstruccion/displaced-d9946bb3b85d4a7ea3429ef21dc6afcf
+admitted_at: '2026-09-13T04:18:50+00:00'

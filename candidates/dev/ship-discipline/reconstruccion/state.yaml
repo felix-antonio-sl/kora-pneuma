@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:ship-discipline
+kind: skill
+namespace: dev
+name: ship-discipline
+candidate: reconstruccion
+base: a2632891196523e3001b6c9c2e907c23402ff28b3ab5c82ab0dfd1e5c05bfaad
+base_revision: a2632891196523e3001b6c9c2e907c23402ff28b3ab5c82ab0dfd1e5c05bfaad
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 88469fe07d7b9a9e4453654c42dba3ea1749c68969b47006c069edb7c429ea0a
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 88469fe07d7b9a9e4453654c42dba3ea1749c68969b47006c069edb7c429ea0a
+previous_revision: a2632891196523e3001b6c9c2e907c23402ff28b3ab5c82ab0dfd1e5c05bfaad
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/ship-discipline
+displaced_path: /home/felix/kora-pneuma/candidates/dev/ship-discipline/reconstruccion/displaced-f4abeaa5e95946d785ac0f7a2ecdf730
+admitted_at: '2026-09-13T04:18:37+00:00'

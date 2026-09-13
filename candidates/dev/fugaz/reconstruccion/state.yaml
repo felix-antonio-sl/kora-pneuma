@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:fugaz
+kind: agent
+namespace: dev
+name: fugaz
+candidate: reconstruccion
+base: 4b278807aec7616a86a48533f6b66a93e3a2ae50bf5ef88e64739d007d3aeda3
+base_revision: 4b278807aec7616a86a48533f6b66a93e3a2ae50bf5ef88e64739d007d3aeda3
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 527ec4a81b8eb6f596434d56589858f409051a235b6d2b37219ff90d7e8260d2
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 527ec4a81b8eb6f596434d56589858f409051a235b6d2b37219ff90d7e8260d2
+previous_revision: 4b278807aec7616a86a48533f6b66a93e3a2ae50bf5ef88e64739d007d3aeda3
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/fugaz
+displaced_path: /home/felix/kora-pneuma/candidates/dev/fugaz/reconstruccion/displaced-e786b4112967411d8d162fd80bd6ecff
+admitted_at: '2026-09-13T04:19:04+00:00'

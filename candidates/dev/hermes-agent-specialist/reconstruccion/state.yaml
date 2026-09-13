@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:hermes-agent-specialist
+kind: skill
+namespace: dev
+name: hermes-agent-specialist
+candidate: reconstruccion
+base: 9854037878185caee0aed515962ad59f35fa400289f91312c384883069620769
+base_revision: 9854037878185caee0aed515962ad59f35fa400289f91312c384883069620769
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: d044533faab9905b6f09791e7b6b6b054085399ac577613e7aeeea6fe19432c0
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: d044533faab9905b6f09791e7b6b6b054085399ac577613e7aeeea6fe19432c0
+previous_revision: 9854037878185caee0aed515962ad59f35fa400289f91312c384883069620769
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/hermes-agent-specialist
+displaced_path: /home/felix/kora-pneuma/candidates/dev/hermes-agent-specialist/reconstruccion/displaced-f37834106ec14b3b96d5c83c63a1ce79
+admitted_at: '2026-09-13T04:19:00+00:00'
