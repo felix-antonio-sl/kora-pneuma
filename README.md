@@ -52,72 +52,17 @@ conducta futura. Un recibo `current` compara la realización; el conocimiento
 consultado por una referencia viva puede cambiar sin reinstalar el agente.
 
 El [estado y plan de productos](docs/estado-y-plan-productos.md) fija el corte
-vigente del 2026-09-14: contratos reconstruidos, integración personal pendiente
-y utilidad parcialmente demostrada. Los cierres por lote resumidos a
-continuación conservan su alcance histórico; no certifican el estado instalado
-actual de toda la colección.
+vigente del 2026-09-14: contratos reconstruidos y admitidos, integración personal
+pendiente y utilidad parcialmente demostrada. Conserva la evidencia, las
+brechas y el plan por recorridos completos para Félix, único usuario y
+desarrollador de este host.
 
-El saneamiento de la maquinaria tiene sus recorridos comprobados con casos
-sintéticos; ese resultado no valida los contenidos, métodos o utilidad de los
-productos. La [propuesta de reconstrucción](docs/propuesta-refactorizacion-productos.md)
-reúne el diagnóstico, la arquitectura candidata, la migración y el goal preparado
-para ejecutar esa etapa. El primer lote de KORA está admitido: autoría,
-transformación, evaluación y realización, con siete referencias operacionales
-revisadas. Sesiones nuevas acreditaron autoría y transformación operativas
-mediante `$kora` en Codex y el SOUL de KORA en Hermes; ambas instalaciones
-personales gestionadas están actualizadas. El rol delegado Codex no quedó
-acreditado. El lote de ingeniería también está admitido e instalado en ambos
-destinos: diez productos con sus especialidades accesibles, y cuatro casos
-sintéticos por runtime que acreditan diagnóstico provisional, continuidad
-autorizada, revisión vacía y no activación vecina. El lote sanitario incorpora
-18 productos, incluidos los gemelos de Dirección Técnica HODOM y Jefatura de
-Telemedicina, con seis referencias revisadas y siete casos sintéticos por
-destino. Sus instalaciones están actualizadas; no se ejecutaron actos clínicos
-ni institucionales. El lote GTD general también está admitido e instalado en ambos
-destinos: `david-allen`, `gtd-flow` con sus cuatro referencias y
-`memorizacion-espaciada` con sus reglas de formulación. Cinco casos sintéticos
-por runtime en sesiones nuevas acreditaron claridad, retención con excepción,
-espera como responsabilidad ajena y no activación vecina; los oráculos de
-formato se reevaluaron posthoc sin repetir inferencia. Los tres accesos
-especializados KORA se conservan como identidades propias en ambos destinos:
-`agent-architect`, `autoria-de-persona` y `auditoria-exposicion-kora`, con su
-caso de verificación cada uno; retirar y aliasar no redirige la identidad
-nativa y no se afirma utilidad diferencial. Las seis instalaciones personales
-quedaron `current` en ambos destinos, sin dependencia efectiva del servicio
-excluido gtd-felix. El lote de organización también está admitido e instalado
-en ambos destinos: `cell-design` (método), `consenso-deliberativo` (deliberación
-con disenso preservado) y `allan-kelly` (entrada que compone el método sin
-duplicarlo), con carga y conducta acreditadas en fixtures sintéticos —Hermes
-Sol/high y Codex Sol sin esfuerzo declarado (casos previos con el default del
-perfil)—, comparación de fuentes contra vigente y sin-producto, y Allan
-provisional sin superioridad afirmada sobre Dori. Instalaciones personales
-`current` sin cambios ni recuperación pendiente. Las dos especialidades de
-proyecto quedaron admitidas e instaladas en Codex (su destino prometido, sin
-ampliar a Hermes): `lineas-paralelas` (partición con ownership y convergencia,
-entrega mínima suficiente) y `test-vivo-iterativo-opmkv` (auditoría in-vivo
-con clasificación contra evidencia e informe ajeno intocable), con conducta
-acreditada en fixtures sintéticos Codex Sol/high —sin browser vivo certificado
-ni utilidad diferencial—. Instalación personal `current`, originales
-preservados en fuentes. El lote de modelado quedó admitido e instalado en
-ambos destinos: `modelamiento-opm`, `cat-thinking`, `mente-omega`,
-`pensamiento-modelador`, `jointjs-open-source`, `ifml`, `opm-specialist` y
-`dov-dori`, con conducta acreditada en fixtures sintéticos Sol/high en ambos
-destinos y envoltura Hermes compacta que conserva identidades, paths,
-condiciones y ruteo (SOUL Dori personal 65.223; presupuesto 65.280 comprobado
-sólo con Sol/ventana 272.000, sin promesa universal). Instalaciones personales
-`current` sin cambios ni recuperación pendiente. El lote de diseño quedó admitido
-e instalado en ambos destinos: `diseno-producto-integrado` (método),
-`design` (materialización SPEC_ONLY), `ux-design` (auditoría con criterio y
-evidencia), `ux-research-design-ai` (agente: protocolo sin hallazgos inventados),
-`steve-jobs` (agente: crítica con principios por nombre, recuperación
-preservada), `director-diseno-producto` (agente: propuesta no probada como
-pendiente) y `diseno-ui-clinica-web-movil` (datos sintéticos, excepción
-documentada, phi-boundary), con conducta acreditada en fixtures sintéticos
-Sol/high en ambos destinos (16/16; Hermes research con timeout de transporte
-documentado) y 4 KB Jobs aprobados como lente consultable. Instalaciones
-personales `current` sin cambios ni recuperación pendiente. La colección queda
-admitida por lotes, con reconciliación Hermes y evaluación de utilidad pendientes;
-estos lotes no validan utilidad diferencial, eficacia clínica ni biblioteca completa.
+La [propuesta anterior](docs/propuesta-refactorizacion-productos.md) conserva
+el diagnóstico y los dictámenes de los lotes KORA, ingeniería, salud, GTD
+general, compatibilidad, organización, proyecto, modelado y Diseño. Sus estados
+de instalación corresponden a esos cortes históricos. La suite de maquinaria
+y los casos sintéticos no certifican utilidad diferencial, eficacia clínica ni
+validación de toda la biblioteca.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).
