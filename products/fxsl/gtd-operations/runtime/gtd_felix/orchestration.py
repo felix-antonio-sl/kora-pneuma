@@ -603,6 +603,84 @@ class OrchestrationWorker:
         run['item_id'] = job['item_id']
         self._save(state)
 
+    @staticmethod
+    def _reservation_spent(job):
+        limit = job.get('max_runtime_seconds')
+        return (bool(job.get('terminal')) and job.get('integration') != 'integrated'
+                and isinstance(limit, (int, float)) and not isinstance(limit, bool) and limit > 0
+                and (job.get('observed_runtime_seconds') or 0) >= limit)
+
+    def _tied_spent_reviews(self, control_state, item_id):
+        """Spent reviews tied at the max written version.
+
+        Jobs carry no durable timestamps and persisted JSON orders UUIDs, not
+        time, so dict order never breaks ties: every tied candidate counts. If
+        any of them already contains the current bases, the change is consumed.
+        """
+        best, best_written = [], -1
+        for job in control_state['jobs'].values():
+            if job.get('item_id') != item_id or not self._reservation_spent(job):
+                continue
+            written = self._written_version(job, item_id)
+            if written > best_written:
+                best, best_written = [job], written
+            elif written == best_written:
+                best.append(job)
+        return best, best_written
+
+    @staticmethod
+    def _written_version(job, item_id):
+        versions = [progress.get('version') for progress in job.get('progress') or []
+                    if progress.get('item_id') == item_id and isinstance(progress.get('version'), int)]
+        return max([job.get('expected_version') or 0, *versions])
+
+    def _spent_review_blocks(self, control_state, item, external_basis, changed_sources):
+        """A spent review alone never funds another reservation.
+
+        Compares bases and versions with provenance, never bare ID sets and
+        never the bare item version: agent outputs raise the version without
+        human direction. A fresh owner operation past the spent writes, newer
+        integrated work, or a genuinely changed known input keeps the
+        authorized path; an unknown sid alone proves nothing, and citing a
+        known source or writing material does not count as external change.
+        Only a consumed reservation blocks, so human STOP and pause keep
+        their contract. An owner operation at the same version never re-arms
+        by itself.
+        """
+        jobs = [job for job in control_state['jobs'].values() if job.get('item_id') == item['id']]
+        tied, written = self._tied_spent_reviews(control_state, item['id'])
+        if not tied:
+            return False
+        for other in jobs:
+            if other.get('integration') != 'integrated':
+                continue
+            if self._written_version(other, item['id']) > written:
+                return False
+        with self.service.store.lock:
+            rows = self.service.store.db.execute(
+                'SELECT applied_version FROM operations WHERE item_id=? AND actor=?',
+                (item['id'], self.service.owner_actor)).fetchall()
+        if any(isinstance(row[0], int) and row[0] > written for row in rows):
+            return False
+        start_sets = []
+        for job in tied:
+            start = dict(job.get('item_bases') or {})
+            start.update(job.get('source_bases') or {})
+            start_sets.append(start)
+        inputs = set((external_basis or {}).keys()) | set((changed_sources or {}).keys())
+        inputs.discard(item['id'])
+        for start in start_sets:
+            same = True
+            for sid in inputs:
+                if sid not in start:
+                    continue
+                if digest(self.control._basis(sid)) != digest(start[sid]):
+                    same = False
+                    break
+            if same:
+                return True
+        return False
+
     async def _continue_work(self, state):
         records = state.setdefault('continuations', {})
         control_state = self.control._load()
@@ -722,6 +800,9 @@ class OrchestrationWorker:
                 blocker = blocker or 'budget_unavailable'
             record['status'], record['blocker'] = 'pending', blocker
             if blocker:
+                continue
+            if self._spent_review_blocks(control_state, item, external_basis, changed_sources):
+                record['status'], record['blocker'] = 'blocked', 'spent_review_without_new_direction'
                 continue
             request = {**reservation, 'item_id': item_id, 'expected_version': item['version'],
                 'mandate_id': origin.get('mandate_id'), 'capability': origin['capability'],
