@@ -1,0 +1,21 @@
+id: urn:dev:artefacto:lineas-paralelas
+kind: skill
+namespace: dev
+name: lineas-paralelas
+candidate: reconstruccion
+base: 43539261a5c034e2f2b102bb8c0f915a1b5d4ca5ae8e45adc0093d06f92daf7b
+base_revision: 43539261a5c034e2f2b102bb8c0f915a1b5d4ca5ae8e45adc0093d06f92daf7b
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 3376a0b4ec20073957e9ad893ddd2c67f9d11d78cdf8274de037c6640b19f9ae
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+revision: 3376a0b4ec20073957e9ad893ddd2c67f9d11d78cdf8274de037c6640b19f9ae
+previous_revision: 43539261a5c034e2f2b102bb8c0f915a1b5d4ca5ae8e45adc0093d06f92daf7b
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/lineas-paralelas
+displaced_path: /home/felix/kora-pneuma/candidates/dev/lineas-paralelas/reconstruccion/displaced-f45887a5be4248f6aed86d9d24cb9078
+admitted_at: '2026-09-13T19:31:21+00:00'

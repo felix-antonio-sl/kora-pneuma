@@ -2,26 +2,16 @@ id: urn:dev:artefacto:lineas-paralelas
 kind: skill
 name: lineas-paralelas
 description: 'Skill local para deep-opm-pro: estructura el trabajo pendiente del repo en N lineas de desarrollo
-  paralelas con ownership, dependencias y convergencia; entrega minima suficiente (documento unico
-  o README maestro, briefs y prompt segun la delegacion requiera), sin documentos, secciones
-  ni cuotas impuestas.'
+  paralelas, generando README maestro, un brief por linea y prompt generico de asignacion en docs/instrucciones-lineas-dev/<ronda>/,
+  con minimo overlap por archivo y revision profunda obligatoria de opm-extracted antes de crear soluciones
+  nuevas.'
 content: content.md
-resources: []
 targets:
 - codex
 requires:
-- id: urn:fxsl:kb:swarm-ops-metodologia
-  kind: knowledge
-  condition: la particion necesita metodologia de enjambre segun el encargo
-  purpose: orientar coordinacion concurrente cuando aplique
-- id: urn:fxsl:kb:xanpan-agents-metodologia
-  kind: knowledge
-  condition: la asignacion a agentes necesita esa metodologia segun el encargo
-  purpose: orientar delegacion cuando aplique
-- id: urn:fxsl:kb:opm-es
-  kind: knowledge
-  condition: el trabajo pendiente toca modelado OPM y requiere su regla
-  purpose: anclar decisiones OPM solo cuando pertinente
+- urn:fxsl:kb:swarm-ops-metodologia
+- urn:fxsl:kb:xanpan-agents-metodologia
+- urn:fxsl:kb:opm-es
 relations:
   componible:
   - urn:dev:artefacto:steipete

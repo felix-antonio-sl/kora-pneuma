@@ -2,47 +2,23 @@ id: urn:dev:artefacto:test-vivo-iterativo-opmkv
 kind: skill
 name: test-vivo-iterativo-opmkv
 description: 'Skill para auditoria in-vivo iterativa del modelador OPM (deep-opm-pro): conduce un navegador
-  headless contra el objetivo verificado, ejecuta criterios visuales/UX/funcionales con cobertura
-  proporcional al cambio, captura screenshots y errores de runtime, clasifica cada hallazgo contra
-  evidencia (app, sonda, entorno o indeterminado) y emite reporte dentro del mandato, reemplazando
-  solo lo propio prescindible y sin tocar informes ajenos.'
+  headless contra el dev server, ejecuta una bateria de criterios visuales/UX/funcionales contra el DOM,
+  captura screenshots y errores de runtime, refina iterativamente cuando un FAIL/WARN viene de la sonda,
+  y emite un reporte ejecutivo que siempre reemplaza al previo. Para usar cuando el operador pide validar
+  in-vivo el modelador, regenerar el reporte tras un cambio o cerrar un loop con evidencia visual antes
+  de commitear.'
 content: content.md
 targets:
 - codex
 requires:
-- id: urn:fxsl:kb:opm-es
-  kind: knowledge
-  condition: el entregable requiere regla o sintaxis OPM de esta fuente
-  purpose: anclar validez formal cuando pertinente
-- id: urn:fxsl:kb:opd-es
-  kind: knowledge
-  condition: el entregable requiere regla OPD de esta fuente
-  purpose: anclar diagramacion cuando pertinente
-- id: urn:tde:kb:guia-calidad-web
-  kind: knowledge
-  condition: la auditoria trata calidad de servicio web
-  purpose: referencia contextual legacy, no cumplimiento actual
-- id: urn:dev:artefacto:ship-discipline
-  kind: product
-  condition: el ciclo que motiva la auditoria toca codigo de dominio
-  purpose: blast radius y cierre del loop en ese caso
-- id: urn:kora:artefacto:cat-thinking
-  kind: product
-  condition: la auditoria revela tension arquitectural que exige lectura categorial
-  purpose: enmarque estructural antes del fix, nunca capa obligatoria
-- id: urn:kora:artefacto:modelamiento-opm
-  kind: product
-  condition: se detecta deriva semantica respecto a SSOT OPM/ISO
-  purpose: dictamen normativo en ese caso
-- id: urn:fxsl:artefacto:opm-specialist
-  kind: product
-  condition: se requiere ingenieria inversa de OPCloud y esta admitido
-  purpose: especialidad OPM en ese caso
-- id: urn:dev:artefacto:ux-research-design-ai
-  kind: product
-  condition: se requiere diseno UX nuevo o auditoria UX exhaustiva
-  purpose: recorrido UX completo en ese caso
-resources: []
+- urn:fxsl:kb:opm-es
+- urn:fxsl:kb:opd-es
+- urn:tde:kb:guia-calidad-web
+- urn:dev:artefacto:ship-discipline
+- urn:kora:artefacto:cat-thinking
+- urn:kora:artefacto:modelamiento-opm
+- urn:fxsl:artefacto:opm-specialist
+- urn:dev:artefacto:ux-research-design-ai
 relations:
   componible:
   - urn:dev:artefacto:ship-discipline

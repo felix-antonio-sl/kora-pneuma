@@ -1,0 +1,338 @@
+---
+_manifest:
+  urn: urn:dev:artefacto:lineas-paralelas
+  type: artefacto
+  provenance:
+    created_by: FS
+    created_at: '2026-05-05'
+    source: Cristalizacion del patron observable en deep-opm-pro/docs/instrucciones-lineas-dev/
+      (rondas 1, 2 y 3) que estructura trabajo pendiente en N lineas paralelas con
+      README maestro, briefs disjuntos por linea y prompt generico de asignacion.
+version: 1.0.1
+status: activo
+nombre: lineas-paralelas
+descripcion: 'Skill local para deep-opm-pro: estructura el trabajo pendiente del repo
+  en N lineas de desarrollo paralelas, generando README maestro, un brief por linea
+  y prompt generico de asignacion en docs/instrucciones-lineas-dev/<ronda>/, con minimo
+  overlap por archivo y revision profunda obligatoria de opm-extracted antes de crear
+  soluciones nuevas.'
+tags:
+- lineas-paralelas
+- ronda
+- briefs
+- paralelismo
+- deep-opm-pro
+- local
+- scaffolding-docs
+lang: es
+extensions:
+  kora:
+    vector_ontologico:
+      pi: 2
+      mu: 0
+      xi: 1
+      lambda: 0
+      phi: 1
+      sigma:
+      - 1
+      - 1
+      - 1
+      - 1
+      - 0
+    presentacion: accion-primaria
+    atlas:
+      arnes_categorico: disciplina
+      forma_material: habilidad
+      metafora_relacional: supertool
+    entornos_objetivo:
+    - claude-code
+    - codex
+    - opencode
+    - openclaw
+    nivel_prescripcion: alto
+    alcance_despliegue: /home/felix/projects/deep-opm-pro
+    conocimiento_permitido:
+    - urn:fxsl:kb:swarm-ops-metodologia
+    - urn:fxsl:kb:xanpan-agents-metodologia
+    - urn:kora:kb:procesos-spec
+    componible_con: []
+artefacto:
+  perfil:
+    dominio:
+    - planning
+    - paralelismo
+    - briefs-de-desarrollo
+    - scaffolding-docs
+    - deep-opm-pro
+    disparadores:
+    - estructura el trabajo pendiente en N lineas paralelas
+    - genera ronda nueva de lineas de desarrollo
+    - /lineas-paralelas
+    - asigna lineas paralelas a agentes independientes
+    - genera briefs paralelos a partir del HANDOFF
+    salidas:
+    - <repo>/docs/instrucciones-lineas-dev/<ronda>/README.md
+    - <repo>/docs/instrucciones-lineas-dev/<ronda>/linea-<i>-<slug>.md (uno por linea)
+    - <repo>/docs/instrucciones-lineas-dev/<ronda>/prompt-asignacion.md
+  plan:
+    estado_inicial: capturar-intent
+    estado_terminal: ronda-emitida
+    estados:
+    - capturar-intent
+    - leer-handoff-y-backlog
+    - mapear-corpus-reusable
+    - particionar-en-N-lineas
+    - generar-readme-maestro
+    - generar-briefs-por-linea
+    - generar-prompt-asignacion
+    - ronda-emitida
+  interfaz:
+    herramientas:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+    permisos: Lectura libre del repo. Escritura limitada a docs/instrucciones-lineas-dev/<ronda>/.
+      No tocar codigo fuente, HANDOFF.md ni backlog HU desde la skill.
+    protocolos:
+      entrada: intent del operador con (a) numero N de lineas, (b) nombre o numero
+        de ronda destino, (c) opcionalmente HU/pendientes a cubrir; si falta dato,
+        leer HANDOFF y proponer particion
+      salida: directorio docs/instrucciones-lineas-dev/<ronda>/ con README + N briefs
+        + prompt; reporte breve al operador con tabla de lineas y orden de merge sugerido
+  invariantes:
+    reglas_duras:
+    - Cada linea ancla HU especificas del backlog vivo del repo. No inventar HU.
+    - Cambios solo aditivos como filosofia operativa de la ronda. Renombrar, eliminar
+      APIs y romper round-trip de persistencia estan prohibidos en briefs.
+    - Antes de crear soluciones nuevas, revisar en profundidad /home/felix/projects/deep-opm-pro/opm-extracted
+      como fuente primaria de codigo, patrones y assets de una app estado del arte;
+      reciclar todo lo posible y citar evidencia concreta. La revision superficial
+      no basta.
+    - Tabla de colisiones por archivo es obligatoria en el README. Cada celda declara
+      aditivo, lectura o vacio.
+    - Cada decision semantica en un brief cita SSOT explicita o documento canonico
+      interno con id de seccion.
+    - 'Modularidad por dominio: cada linea con dominio nuevo crea archivo disjunto
+      en lugar de expandir archivos monoliticos compartidos.'
+    - 'El brief es contrato: secciones obligatorias en orden Mision, HU base, Anclaje
+      a evidencia, Archivos permitidos, Restricciones de no-colision, Slice minimo,
+      Tests obligatorios, Verificacion, Decisiones bloqueadas, Decisiones libres,
+      Forma del entregable.'
+    - No tocar HANDOFF.md ni docs/historias-usuario-v2/ desde la skill. La consolidacion
+      final reescribe HANDOFF, no las lineas individuales.
+    - 'Idiomas: documentos en es-CL; identificadores y comandos en su forma original.'
+    - 'Loop verde obligatorio declarado en cada brief: comandos del repo que el agente
+      debe ejecutar antes de cerrar.'
+    - Despliegue exclusivo en /home/felix/projects/deep-opm-pro. No instalar globalmente
+      en ~/.claude/skills, ~/.codex/skills ni ~/.opencode/skills.
+---
+
+# Lineas-Paralelas
+
+## Proposito
+
+Estructurar el trabajo pendiente de un repo en **N lineas de desarrollo
+paralelas** con minimo overlap por archivo, dependencia explicita y orden de
+merge controlado. Salida: tres clases de documento en
+`docs/instrucciones-lineas-dev/<ronda>/`:
+
+1. `README.md` maestro con filosofia, reglas duras comunes, tabla de
+   colisiones y protocolo de conciliacion.
+2. `linea-<i>-<slug>.md` por cada linea, autocontenido, asignable a un agente
+   independiente.
+3. `prompt-asignacion.md` con plantilla generica + invocaciones concretas por
+   linea para ruteo a agentes.
+
+El patron canonico de referencia es la ronda 3 ya emitida en
+`docs/instrucciones-lineas-dev/ronda3/` del repo.
+
+## Cuando Usar
+
+- El operador pide estructurar trabajo pendiente para ejecucion concurrente.
+- Hay HANDOFF.md vigente con pendientes priorizados que necesitan particion.
+- Se quiere convergencia controlada con orden de merge declarado.
+- Se necesita asignacion a agentes independientes con scope estricto.
+
+## Cuando No Usar
+
+- Tarea unica de una sola linea: escribir directo, no generar 3 docs.
+- Decision arquitectural pura sin trabajo de implementacion: usar
+  `urn:dev:artefacto:steipete` o un agente de pensamiento.
+- Reescribir HANDOFF o backlog HU: esos archivos son responsabilidad del
+  operador o de la skill custodio canonica.
+- Generar codigo: esta skill emite documentos de instrucciones, no codigo.
+
+## Workflow
+
+### 1. Capturar intent
+
+Identificar:
+
+- **N**: numero de lineas a generar (suele ser 3-7).
+- **Ronda destino**: nombre del directorio (`ronda3`, `ronda-2026-05`, etc.).
+  Si el operador no lo da, usar `ronda<N+1>` calculando del directorio
+  existente.
+- **Pendientes a cubrir**: lista explicita o "los del HANDOFF".
+- **Restricciones**: orden de merge sugerido, lineas excluidas, prioridades.
+
+Si el intent es ambiguo: leer HANDOFF y proponer particion al operador antes
+de codificar.
+
+### 2. Leer HANDOFF y backlog
+
+- `docs/HANDOFF.md`: estado, decisiones vigentes, pendientes inmediatos.
+- `docs/historias-usuario-v2/` o equivalente: backlog HU para anclar cada
+  linea.
+- `docs/instrucciones-lineas-dev/<ronda-previa>/README.md` si existe: heredar
+  formato y reglas duras estables.
+
+Identificar:
+
+- HU M0/M1 cubiertas por la ronda.
+- Archivos clave del repo y su estado (tamaño, dueno conceptual).
+- Decisiones vigentes que las lineas deben respetar.
+
+### 3. Mapear corpus reusable
+
+Antes de inventar, verificar fuentes ya disponibles:
+
+- Fuente primaria de codigo, patrones y assets:
+  `/home/felix/projects/deep-opm-pro/opm-extracted/`. Tratarla como app
+  estado del arte ya extraida, curada e indexada. Revisar en profundidad
+  `INDEX.md`, `MODULES.md`, `README.md`, `REFACTOR-NOTES.md`, `assets/` y los
+  modulos `src/` relevantes antes de proponer trabajo nuevo. La revision no
+  puede quedarse en una busqueda superficial; cada linea debe reciclar todo lo
+  razonablemente reutilizable y declarar que evidencia concreta encontro.
+- SSOT canonica externa (en `deep-opm-pro`: `/home/felix/kora/artifacts/
+  knowledge/fxsl/opm/opm-ssot-es/`).
+- Briefs de rondas previas que se pueden citar como precedente.
+
+Cada brief debe citar al menos un recurso interno reusable.
+
+### 4. Particionar en N lineas
+
+Criterios de particion:
+
+- **Disjuntez por dominio**: cada linea con dominio nuevo crea archivo
+  disjunto (`abanicos.ts`, `modificadores.ts`) en lugar de expandir archivos
+  monoliticos compartidos.
+- **Solo una linea modifica firmas compartidas criticas**. Las otras leen.
+- **Riesgo equilibrado**: una linea con blast radius alto (la que define
+  contrato) + el resto con blast radius medio o bajo.
+- **Cada linea entrega una HU eje** y opcionalmente HU dependientes que caben
+  en el slice.
+
+Si dos lineas chocan en mas de 1-2 archivos compartidos: rebalancear o fundir.
+
+### 5. Generar README maestro
+
+Secciones obligatorias en este orden:
+
+1. Encabezado con fecha, base commit, objetivo.
+2. Filosofia operativa: no reinventar, HU como contrato, aditividad,
+   modularidad por dominio, loop verde obligatorio.
+3. Reglas duras comunes: aditividad, scope estricto, evidencia, reuso
+   obligatorio del corpus interno y SSOT, citas explicitas, idiomas, tests,
+   commits, qué no tocar.
+4. Stack y comandos del repo.
+5. Vision general de las N lineas: tabla con ID, titulo, pendiente que cierra,
+   HU eje, tamaño, riesgo.
+6. Mapa de archivos por linea (tabla de colisiones): filas = archivos, columnas
+   = lineas, celdas = `aditivo | lectura | nuevo | vacio`.
+7. Protocolo de conciliacion: orden de merge sugerido y rationale.
+8. Anclaje obligatorio a HU y SSOT.
+9. Brief por linea: tabla con enlaces.
+10. Verificacion al cierre de la ronda con metricas esperadas.
+
+### 6. Generar briefs por linea
+
+Cada `linea-<i>-<slug>.md` con secciones obligatorias en orden:
+
+1. **Mision**: que cierra la linea, slice minimo entregable, pendientes
+   explicitos fuera de slice.
+2. **HU base**: tabla de HU con path absoluto al archivo de la HU y aporte.
+3. **Anclaje a evidencia**: SSOT, corpus interno reusable, estado actual del
+   codigo (paths concretos).
+4. **Archivos permitidos**: bloque `path  TIPO`, donde TIPO es `EDIT aditivo`,
+   `LECTURA`, `NUEVO`, etc.
+5. **Restricciones de no-colision**: que NO tocar, como evitar choques con
+   otras lineas.
+6. **Slice minimo shippeable**: subsecciones por capa (modelo, operaciones,
+   serializacion, render, OPL, UX, cross-capa) con TS o pseudocodigo cuando
+   ayuda.
+7. **Tests obligatorios**: unit tests con conteo estimado, smoke browser si
+   aplica.
+8. **Verificacion**: comandos del repo (`cd app && bun run check`, etc.).
+9. **Decisiones bloqueadas (no reabrir)**: lista cerrada con rationale breve.
+10. **Decisiones que tomas vos (documentar en commit)**: lista abierta con
+    opciones.
+11. **Forma del entregable**: commits sugeridos con prefijos, co-author footer,
+    qué no tocar.
+
+### 7. Generar prompt de asignacion
+
+`prompt-asignacion.md` contiene:
+
+- Plantilla generica con `{{LINEA}}` y `{{PATH_BRIEF}}` placeholders.
+- Reglas duras comunes citadas (no negociables).
+- Loop verde obligatorio.
+- Forma del entregable (hashes, tests, decisiones, bloqueos).
+- Invocaciones concretas listas para copia-pega, una por linea.
+- Notas operativas sobre aislamiento (worktrees), coherencia metodologica,
+  reporte unificado.
+
+## Reglas Duras
+
+- Cada linea ancla HU especificas del backlog vivo. No inventar.
+- Cambios solo aditivos como filosofia operativa de la ronda.
+- Reuso obligatorio del corpus interno, especialmente
+  `/home/felix/projects/deep-opm-pro/opm-extracted/`, y SSOT. Buscar ahi en
+  profundidad antes de crear soluciones nuevas; reciclar codigo, patrones y
+  assets siempre que el stack actual lo permita.
+- Tabla de colisiones explicita en README, sin celdas ambiguas.
+- Cada decision semantica cita SSOT o documento canonico interno con id de
+  seccion.
+- Modularidad por dominio: archivos disjuntos cuando hay dominio nuevo.
+- 11 secciones obligatorias en cada brief, en orden.
+- No tocar HANDOFF.md ni `docs/historias-usuario-v2/` desde la skill.
+- Idiomas: documentos en es-CL; identificadores y comandos en forma original.
+- Loop verde obligatorio en cada brief con comandos del repo.
+- Si una linea propone violar una regla comun del README, la skill rechaza la
+  particion y propone reescribirla.
+
+## Alcance De Despliegue
+
+Esta skill se despliega **solo en `/home/felix/projects/deep-opm-pro`**:
+
+- `<repo>/.claude/skills/lineas-paralelas/SKILL.md`
+- `<repo>/.codex/skills/lineas-paralelas/SKILL.md`
+- `<repo>/.opencode/skills/lineas-paralelas/SKILL.md`
+
+No instalar en `~/.claude/skills/`, `~/.codex/skills/` ni
+`~/.opencode/skills/` globales. La SSOT del SKILL.md fuente vive en
+`~/kora/artifacts/skills/dev/lineas-paralelas/SKILL.md`; las proyecciones
+runtime se mantienen sincronizadas con el toolchain
+`python3 toolchain/kora transmute --target {target} --agent dev/lineas-paralelas`.
+
+## Salida Esperada
+
+Un directorio `<repo>/docs/instrucciones-lineas-dev/<ronda>/` completo:
+
+```
+<ronda>/
+├── README.md                    (orquestacion de la ronda)
+├── linea-1-<slug>.md            (brief autocontenido linea 1)
+├── linea-2-<slug>.md            (brief autocontenido linea 2)
+├── ...
+├── linea-N-<slug>.md            (brief autocontenido linea N)
+└── prompt-asignacion.md         (plantilla + invocaciones por linea)
+```
+
+Reporte breve al operador al cerrar:
+
+- Tabla de N lineas con titulo, HU eje, riesgo y archivo dominio nuevo.
+- Orden de merge sugerido con rationale en una linea.
+- Metricas esperadas post-ronda (tests, smoke, build) si el repo las define.
+- Confirmacion de regla "no tocar HANDOFF" cumplida.

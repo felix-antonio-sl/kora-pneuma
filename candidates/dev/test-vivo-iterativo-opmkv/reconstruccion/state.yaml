@@ -1,0 +1,21 @@
+id: urn:dev:artefacto:test-vivo-iterativo-opmkv
+kind: skill
+namespace: dev
+name: test-vivo-iterativo-opmkv
+candidate: reconstruccion
+base: c65d12b82d4a7142af05858f7137ee0417bbc9348230b077dd9493152d8c9d1e
+base_revision: c65d12b82d4a7142af05858f7137ee0417bbc9348230b077dd9493152d8c9d1e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: e6bab4ad3272b7aa87726349e36742bac27985578ce8f1435bcb89528639e102
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+revision: e6bab4ad3272b7aa87726349e36742bac27985578ce8f1435bcb89528639e102
+previous_revision: c65d12b82d4a7142af05858f7137ee0417bbc9348230b077dd9493152d8c9d1e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/test-vivo-iterativo-opmkv
+displaced_path: /home/felix/kora-pneuma/candidates/dev/test-vivo-iterativo-opmkv/reconstruccion/displaced-a19de2b1a05940348b4e33930a9f9a60
+admitted_at: '2026-09-13T19:31:24+00:00'

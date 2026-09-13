@@ -183,6 +183,15 @@ sin utilidad diferencial ni superioridad sobre Dori (comparación con Dori no
 ejecutada). Instalaciones personales `current`, sin cambios ni recuperación,
 sin tocar GTD protegido ni otros perfiles.
 
+Las dos especialidades de proyecto quedaron admitidas e instaladas en Codex,
+su destino prometido sin ampliar a Hermes: `lineas-paralelas` y
+`test-vivo-iterativo-opmkv` (dos revisiones concretas). Sesiones nuevas
+acreditaron partición proporcional sin coerción y clasificación contra
+evidencia con informe ajeno intacto, en fixtures sintéticos Codex Sol/high;
+sin browser vivo certificado ni utilidad diferencial. Instalación personal
+`current` sin cambios ni recuperación; los originales retirados del bundle
+siguen preservados en fuentes y versiones.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

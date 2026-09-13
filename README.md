@@ -85,7 +85,14 @@ duplicarlo), con carga y conducta acreditadas en fixtures sintéticos —Hermes
 Sol/high y Codex Sol sin esfuerzo declarado (casos previos con el default del
 perfil)—, comparación de fuentes contra vigente y sin-producto, y Allan
 provisional sin superioridad afirmada sobre Dori. Instalaciones personales
-`current` sin cambios ni recuperación pendiente. El resto de la colección sigue
+`current` sin cambios ni recuperación pendiente. Las dos especialidades de
+proyecto quedaron admitidas e instaladas en Codex (su destino prometido, sin
+ampliar a Hermes): `lineas-paralelas` (partición con ownership y convergencia,
+entrega mínima suficiente) y `test-vivo-iterativo-opmkv` (auditoría in-vivo
+con clasificación contra evidencia e informe ajeno intocable), con conducta
+acreditada en fixtures sintéticos Codex Sol/high —sin browser vivo certificado
+ni utilidad diferencial—. Instalación personal `current`, originales
+preservados en fuentes. El resto de la colección sigue
 en ejecución; estos lotes no lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
