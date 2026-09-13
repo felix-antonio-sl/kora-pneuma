@@ -550,6 +550,13 @@ class HermesAdapter:
     async def _dispatch(self, job, route, intent):
         self._validation(job)
         self._same_route(route, intent)
+        # Claim the single global native slot durably BEFORE any remote
+        # effect. The network stays outside the storage transaction; if the
+        # slot is taken, return without creating a second remote run. The
+        # claim survives uncertainty and restarts via the persisted intent.
+        claimed = self.control.claim_dispatch(job['id'])
+        if claimed.get('status') != 'claimed':
+            return self._uncertain(job['id'], claimed.get('error', 'native_slot_busy'))
         self._state(job['id'], delivery='sending')
         if intent['durable']:
             body = intent['body']

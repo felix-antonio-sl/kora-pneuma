@@ -324,6 +324,11 @@ class ExecutionControl:
                 'recovery_runtime_seconds', 'max_job_runtime_seconds', 'max_retries', 'max_descendants', 'max_active')
         if any(key not in config or not _number(config[key]) for key in keys):
             raise ValueError('execution_disabled')
+        # max_active bounds admitted reservations (budget/active intents,
+        # including deferred children), NOT native executions: the native slot
+        # stays single-global (one_native_active) even with max_active=2. A
+        # second reservation waits (deferred/uncertain + reconcile) instead of
+        # a second simultaneous inference. Both values remain admissible.
         if config['max_active'] not in (1, 2) or any(int(config[k]) != config[k] for k in ('max_retries', 'max_descendants', 'max_active')):
             raise ValueError('invalid_limits')
         if self._daily():
@@ -1173,6 +1178,59 @@ class ExecutionControl:
             (native["provider"], native["host"], native["profile"], native["id"])).fetchone()
         if row and row["id"] != job["id"]:
             raise ValueError("native_identity_already_accounted")
+
+    def claim_dispatch(self, job_id):
+        """Durably claim the single global native slot before any remote effect.
+
+        Pure storage transaction: no network inside. On success the run is
+        `dispatching` (or already was, with no native identity yet: duplicate),
+        so a later remote creation cannot collide with another execution.
+        Uncertainty keeps the claim: only terminality, STOP handling or an
+        explicit reconciled failure releases it. Returns a structured receipt,
+        never a raw SQL error.
+        """
+        with self.store.transaction():
+            try:
+                self._require_migrated()
+                run = self._run_row(job_id)
+                if run is None:
+                    raise ValueError("job_not_found")
+                try:
+                    detail = json.loads(run["detail_json"]) if run["detail_json"] else {}
+                except ValueError:
+                    detail = {}
+                if detail.get("delivery") == "deferred":
+                    raise ValueError("dispatch_deferred")
+                if run["state"] in self.RUN_TERMINAL:
+                    raise ValueError("terminal_job")
+                if detail.get("stop_requested") or run["state"] == "stop_requested":
+                    raise ValueError("stop_requested")
+                if run["native_provider"] is not None or run["native_id"] is not None:
+                    cycle = self._cycle_row(run["cycle_id"])
+                    return {"status": "claimed", "job": self._job_from_rows(cycle, run), "duplicate": True}
+                if run["state"] in ("dispatching", "uncertain"):
+                    cycle = self._cycle_row(run["cycle_id"])
+                    return {"status": "claimed", "job": self._job_from_rows(cycle, run), "duplicate": True}
+                if run["state"] != "reserved":
+                    raise ValueError("slot_not_claimable")
+                now_iso = self._clock().isoformat()
+                try:
+                    self.store.db.execute(
+                        "UPDATE runs SET state='dispatching', started_at=COALESCE(started_at,?) WHERE id=?",
+                        (now_iso, job_id))
+                except sqlite3.IntegrityError as exc:
+                    if "one_native_active" in str(exc).lower():
+                        raise ValueError("native_slot_busy")
+                    raise
+                if run["state"] == "reserved":
+                    cycle = self._cycle_row(run["cycle_id"])
+                    if cycle and cycle["state"] in ("ready", "waiting", "paused"):
+                        self.store.db.execute("UPDATE work_cycles SET state='running' WHERE id=?", (cycle["id"],))
+                run2 = self._run_row(job_id)
+                cycle2 = self._cycle_row(run2["cycle_id"])
+                return {"status": "claimed", "job": self._job_from_rows(cycle2, run2)}
+            except (ValueError, KeyError) as error:
+                return {"status": "rejected", "error": str(error)}
 
     def record_dispatch(self, job_id, native):
         with self.store.transaction():
