@@ -37,6 +37,7 @@ resources:
 - runtime/gtd_felix/orchestration.py
 - runtime/gtd_felix/service.py
 - runtime/gtd_felix/recovery_bundle.py
+- runtime/gtd_felix/source_attachments.py
 - runtime/gtd_felix/source_evaluation.py
 - runtime/gtd_felix/source_monitor.py
 - runtime/gtd_felix/source_sync.py

@@ -1,4 +1,5 @@
 """Authenticated local transport; only the serving process opens the store."""
+import asyncio
 from contextlib import contextmanager
 import fcntl
 import hmac
@@ -201,6 +202,45 @@ def create_app(service, control, config):
         if not readable(request, result):
             result = None
         return web.json_response(result if result else {'status': 'rejected', 'error': 'item_not_found'}, status=200 if result else 404)
+
+    async def source_attachment(request):
+        from .source_attachments import read_attachment
+        actor = request[ACTOR]
+        role = service.actor_role(actor)
+        job_id = request.headers.get('X-GTD-Job-ID', '')
+        def active():
+            if role == 'owner':
+                return True
+            job = control.get_job(job_id) if role == 'principal' else None
+            return bool(job and job['actor'] == actor and job['capability'] == 'prepare_private'
+                        and control.validate(job_id, 'prepare_private')['allowed'])
+        if not active():
+            return web.json_response({'status':'rejected','error':'active_principal_job_required'}, status=403)
+        allowed = {'attachment_index', 'sheet_index', 'row_offset', 'row_limit'}
+        if set(request.query) - allowed or any(len(request.query.getall(k)) != 1 for k in request.query):
+            raise ValueError('invalid_attachment_arguments')
+        values = {k:int(v) for k,v in request.query.items()}
+        version = int(request.match_info['version'])
+        item = service.get_item(request.match_info['item_id'])
+        if not item or not readable(request, item):
+            return web.json_response({'status':'rejected','error':'item_not_found'}, status=404)
+        try:
+            result = await asyncio.to_thread(read_attachment, service.store, item, version, **values)
+        except Exception as exc:
+            codes = {'source_version_changed','selected_gmail_source_required','invalid_attachment_arguments',
+                'source_original_mismatch','attachment_not_found','attachment_format_unsupported',
+                'attachment_size_limit','attachment_archive_limit','attachment_xml_unsupported',
+                'attachment_sheet_not_found','attachment_sheet_unsupported','attachment_row_not_found',
+                'attachment_cell_invalid','attachment_string_invalid','attachment_mime_invalid',
+                'attachment_sheet_invalid','attachment_row_invalid'}
+            code = exc.args[0] if type(exc) is ValueError and len(exc.args) == 1 and type(exc.args[0]) is str else None
+            return web.json_response({'status':'rejected','error':code if code in codes else 'attachment_parse_failed'}, status=409)
+        current = service.get_item(item['id'])
+        if not active() or request.transport is None or request.transport.is_closing():
+            return web.json_response({'status':'rejected','error':'attachment_read_cancelled'}, status=409)
+        if not current or current['version'] != version:
+            return web.json_response({'status':'rejected','error':'source_version_changed'}, status=409)
+        return web.json_response(result)
 
     async def capture(request):
         values = await body(request)
@@ -465,6 +505,7 @@ def create_app(service, control, config):
     app.add_routes([web.get('/health', health), web.get('/v1/capabilities', capabilities),
         web.post('/v1/source-evaluation/{operation}', source_evaluation),
         web.get('/v1/items', items), web.get('/v1/items/{item_id}', item),
+        web.get('/v1/source-attachments/{item_id}/{version}', source_attachment),
         web.post('/v1/captures', capture), web.post('/v1/commands', command),
         web.post('/v1/agent/command', command), web.post('/v1/agent/dispatch', dispatch), web.get('/v1/choose', choose),
         web.get('/v1/effects', effect_read), web.get('/v1/effects/{effect_id}', effect_read),

@@ -42,13 +42,70 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
             max_cost_usd=4, max_runtime_seconds=200, max_retries=0, max_descendants=1)
         self.job = self.control.reserve('gtd-felix', 'reserve', self.request)['job_id']
         config = dict(data_dir=str(self.root / 'data'), actors={'owner': 'felix', 'principal': 'gtd-felix', 'executors': ['history-worker']},
-            api_tokens={OWNER: 'felix', PRINCIPAL: 'gtd-felix'})
+            api_tokens={OWNER: 'felix', PRINCIPAL: 'gtd-felix', 'synthetic-executor-token':'history-worker'})
         self.runner = web.AppRunner(create_app(self.service, self.control, config), access_log=None)
         await self.runner.setup()
         site = web.TCPSite(self.runner, '127.0.0.1', 0)
         await site.start()
         self.url = 'http://127.0.0.1:' + str(site._server.sockets[0].getsockname()[1])
         self.client = MCPClient(self.url, PRINCIPAL)
+
+    async def test_attachment_read_is_exact_source_and_active_job_bound(self):
+        from test_source_attachments import selected_source
+        source = selected_source(self.service)
+        arguments = {'view':'source_attachment','item_id':source['id'],'version':source['version']}
+        rejected = await self.client.call('gtd_read', arguments)
+        self.assertEqual('active_principal_job_required', rejected['error'])
+        owner = await MCPClient(self.url,OWNER).call('gtd_read',arguments)
+        self.assertEqual(2,len(owner['attachments']))
+        executor = await MCPClient(self.url,'synthetic-executor-token').call('gtd_read',{**arguments,'job_id':self.job})
+        self.assertEqual('active_principal_job_required',executor['error'])
+        manifest = await self.client.call('gtd_read', {**arguments,'job_id':self.job})
+        self.assertEqual(source['original']['sha256'],manifest['original_sha256'])
+        self.assertNotIn('SYNTHETIC_ONLY',json.dumps(manifest))
+        page = await self.client.call('gtd_read', {**arguments,'job_id':self.job,'attachment_index':0,'row_limit':1})
+        self.assertEqual('Responsable',page['table']['rows'][0]['cells'][0]['value'])
+        self.assertEqual(1,page['table']['next_row_offset'])
+        rejected = await self.client.call('gtd_read', {**arguments,'job_id':self.job,'attachment_index':1})
+        self.assertEqual('attachment_format_unsupported',rejected['error'])
+
+    async def test_attachment_stop_during_parse_discards_content(self):
+        from test_source_attachments import selected_source
+        from gtd_felix.source_attachments import read_attachment
+        source=selected_source(self.service)
+        def stop(*args,**kwargs):
+            result=read_attachment(*args,**kwargs)
+            self.control.request_stop('felix','stop-during-attachment',self.job)
+            return result
+        with patch('gtd_felix.source_attachments.read_attachment',side_effect=stop):
+            result=await self.client.call('gtd_read',{'view':'source_attachment','item_id':source['id'],
+                'version':source['version'],'job_id':self.job,'attachment_index':0})
+        self.assertEqual('attachment_read_cancelled',result['error'])
+        self.assertNotIn('SYNTHETIC_ONLY',json.dumps(result))
+
+    async def test_attachment_changed_source_during_parse_discards_content(self):
+        from test_source_attachments import selected_source
+        from gtd_felix.source_attachments import read_attachment
+        source=selected_source(self.service)
+        def change(*args,**kwargs):
+            result=read_attachment(*args,**kwargs)
+            receipt=self.service.execute('felix',{'operation_id':'change-attachment-source','action':'edit',
+                'item_id':source['id'],'expected_version':source['version'],'fields':{'notes':'Source revised'}})
+            self.assertEqual('applied',receipt['status'])
+            return result
+        with patch('gtd_felix.source_attachments.read_attachment',side_effect=change):
+            result=await self.client.call('gtd_read',{'view':'source_attachment','item_id':source['id'],
+                'version':source['version'],'job_id':self.job,'attachment_index':0})
+        self.assertEqual('source_version_changed',result['error'])
+        self.assertNotIn('SYNTHETIC_ONLY',json.dumps(result))
+
+    async def test_attachment_parse_error_does_not_return_private_exception(self):
+        from test_source_attachments import selected_source
+        source=selected_source(self.service)
+        with patch('gtd_felix.source_attachments.read_attachment',side_effect=ValueError('SYNTHETIC_PRIVATE_EXCEPTION')):
+            result=await self.client.call('gtd_read',{'view':'source_attachment','item_id':source['id'],
+                'version':source['version'],'job_id':self.job,'attachment_index':0})
+        self.assertEqual({'status':'rejected','error':'attachment_parse_failed'},result)
 
     async def test_item_presentation_retains_evidence_and_full_authoritative_access(self):
         current = self.service.execute('felix', self.command('meaning-for-assessment',
