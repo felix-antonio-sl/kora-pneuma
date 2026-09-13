@@ -23,6 +23,7 @@ resources:
 - runtime/gtd_felix/domain.py
 - runtime/gtd_felix/effect_monitor.py
 - runtime/gtd_felix/effects.py
+- runtime/gtd_felix/gmail_bridge.py
 - runtime/gtd_felix/gmail_effects.py
 - runtime/gtd_felix/google_sources.py
 - runtime/gtd_felix/google_transport.py
@@ -35,6 +36,7 @@ resources:
 - runtime/gtd_felix/orchestration.py
 - runtime/gtd_felix/service.py
 - runtime/gtd_felix/recovery_bundle.py
+- runtime/gtd_felix/source_evaluation.py
 - runtime/gtd_felix/source_monitor.py
 - runtime/gtd_felix/source_sync.py
 - runtime/gtd_felix/store.py

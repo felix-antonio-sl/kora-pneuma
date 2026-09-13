@@ -121,6 +121,8 @@ def create_app(service, control, config):
     from .effect_monitor import EffectMonitor
     effects = ExternalEffects(service)
     effect_worker = EffectMonitor(service, effects, monitor, config.get('external_effects'))
+    from .source_evaluation import SourceEvaluation
+    selection = SourceEvaluation(service, control, monitor, config)
     tokens = dict(config['api_tokens'])
 
     @web.middleware
@@ -163,6 +165,17 @@ def create_app(service, control, config):
         if not job:
             return False
         return control.validate_target(job_id, actor, item['id'], job['capability'])['allowed']
+
+    async def source_evaluation(request):
+        value = await body(request)
+        if request.match_info['operation'] == 'validate':
+            return web.json_response(selection.validate(request[ACTOR], value))
+        if request.match_info['operation'] != 'run' or set(value) != {'source_id'}:
+            raise ValueError('invalid_source_evaluation_request')
+        alive = lambda: request.transport is not None and not request.transport.is_closing()
+        result = await selection.run(request[ACTOR], request.headers.get('X-GTD-Job-ID'),
+            value['source_id'], alive=alive)
+        return web.json_response(result)
 
     async def capabilities(request):
         role = service.actor_role(request[ACTOR])
@@ -450,6 +463,7 @@ def create_app(service, control, config):
         return web.Response(body=data, content_type='application/zip', headers={'Content-Disposition': 'attachment; filename="gtd-snapshot.zip"'})
 
     app.add_routes([web.get('/health', health), web.get('/v1/capabilities', capabilities),
+        web.post('/v1/source-evaluation/{operation}', source_evaluation),
         web.get('/v1/items', items), web.get('/v1/items/{item_id}', item),
         web.post('/v1/captures', capture), web.post('/v1/commands', command),
         web.post('/v1/agent/command', command), web.post('/v1/agent/dispatch', dispatch), web.get('/v1/choose', choose),

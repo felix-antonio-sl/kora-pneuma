@@ -99,7 +99,7 @@ class SourceMonitor:
                         'scope_fingerprint': binding, 'configured': True, 'configured_at': now(),
                         'stale_after_seconds': config['stale_after_seconds'], 'health': 'not_read',
                         'enumeration': 'not_read', 'originals_complete': False, 'projection': 'not_read',
-                        'pending_reads': 0, 'coverage_at': None, 'last_pass_at': None, 'last_success_at': None,
+                        'pending_reads': 0, 'semantic_review': info.get('coverage_contract', {}).get('semantic_review'), 'coverage_at': None, 'last_pass_at': None, 'last_success_at': None,
                         'last_error': None, 'retry_after_seconds': None, 'consecutive_failures': 0})
 
     async def read_agenda(self, account_alias, *, start, end, timezone, calendar_ids=None):
@@ -144,6 +144,7 @@ class SourceMonitor:
             summary.update(last_pass_at=now(), health='degraded' if error else info['health'],
                 enumeration=state.get('coverage', 'not_read'), projection=state.get('projection', 'not_read'),
                 originals_complete=bool(info['originals_complete']), pending_reads=len(info['pending_reads']),
+                semantic_review=info.get('coverage_contract', {}).get('semantic_review'),
                 coverage_at=state.get('coverage_completed_at'), projection_at=state.get('projection_completed_at'),
                 coverage_started_at=state.get('coverage_started_at'), last_error=error,
                 retry_after_seconds=transport.get('retry_after_seconds'))
@@ -162,6 +163,9 @@ class SourceMonitor:
             transport = self.transports[alias]
             error = None
             try:
+                if adapter.config[source_id].get('scope') == 'selective_since':
+                    # No refresh is claimed without an actual job-bound pass.
+                    return next(x for x in self.inspect()['sources'] if x['source_id'] == source_id)
                 if transport.authenticated_account is None:
                     await transport.connect()
                 info = await adapter.synchronize(source_id)
@@ -176,6 +180,30 @@ class SourceMonitor:
                 status = transport.inspect().get('last_http_status')
                 error = 'http_' + str(status) if status in {401,403,429} else 'source_read_failed'
                 info = adapter.inspect(source_id)
+            self._save(source_id, info, error=error)
+            return next(x for x in self.inspect()['sources'] if x['source_id'] == source_id)
+
+    async def evaluate_once(self, source_id, evaluator, projection_guard=None):
+        """Only a job-bound caller supplies this evaluator; shared adapters stay inert."""
+        if self._closed or source_id not in self.sources:
+            raise ValueError('source_monitor_closed_or_unknown')
+        async with self._locks[source_id]:
+            alias, shared = self.sources[source_id]
+            transport = self.transports[alias]
+            adapter = GoogleSources(SourceSync(self.service), transport, shared.config, evaluator=evaluator, projection_guard=projection_guard)
+            error = None
+            try:
+                if transport.authenticated_account is None:
+                    await transport.connect()
+                info = await adapter.synchronize(source_id)
+                if info['health'] == 'degraded':
+                    error = 'selection_incomplete'
+            except asyncio.CancelledError:
+                self._save(source_id, adapter.inspect(source_id), error='selection_interrupted')
+                raise
+            except Exception:
+                info = adapter.inspect(source_id)
+                error = 'selection_unavailable'
             self._save(source_id, info, error=error)
             return next(x for x in self.inspect()['sources'] if x['source_id'] == source_id)
 

@@ -92,6 +92,18 @@ no invalida lo ya guardado.
    conservando aparte compromisos y decisiones aún pendientes. Procesar una fuente
    no satisface por sí solo lo que esa fuente pide. No crees tareas administrativas
    decorativas ni reclasifiques compromisos ya aclarados para reducir su alcance.
+   Si la precisión llegó como captura vinculada, el job vigente del destino puede
+   usar esa fuente humana admitida como `intent_basis`: ID de la captura vinculada
+   y texto completo literal vigente. No tiene que ser el ID del destino. Comprueba
+   las fuentes del job y usa la versión actual devuelta por cada comando. Un rechazo
+   registrado en un turno anterior es evidencia histórica: contrasta la capacidad
+   vigente antes de darlo por impedimento actual. Una pregunta propia ya resuelta
+   se despeja mediante `plan`, y se continúa en el mismo job.
+   Una vez claro el encargo, pasa de `clarify` a consultar las fuentes pertinentes y
+   `put_material` en ese turno. Un plan que promete preparar el mapa no cumple la
+   petición de prepararlo. Produce el mapa con hechos respaldados, pendientes y
+   próximos pasos utilizables; señala qué frente queda limitado por una fuente
+   ausente sin inventar antecedentes ni impedir el avance de los demás.
 5. Conserva tipos: captura, entrada propuesta, posibilidad, referencia, acción,
    proyecto, calendario, espera, responsabilidad continua y material preparado.
    Activo, esperando, pausado, satisfecho y retirado expresan estados diferentes.

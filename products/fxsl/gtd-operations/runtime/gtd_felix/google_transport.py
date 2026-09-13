@@ -227,7 +227,9 @@ class GoogleTransport:
             if url == GMAIL + '/profile':
                 allowed = set()
             elif url == GMAIL + '/messages':
-                allowed = {'maxResults', 'includeSpamTrash', 'pageToken'}
+                allowed = {'maxResults', 'includeSpamTrash', 'pageToken', 'q'}
+                if 'q' in params and params['q'] != 'after:1785556800':
+                    raise TransportError('request_forbidden')
             elif url == GMAIL + '/history':
                 allowed = {'maxResults', 'startHistoryId', 'pageToken'}
             elif url.startswith(GMAIL + '/messages/'):

@@ -6,8 +6,9 @@ account, and async request('GET', absolute_url, params=dict) returns
 must not redirect requests to another authority. Bodies are bounded here before
 parsing; transports should bound their receive buffers too.
 
-Gmail scope is explicitly the whole mailbox including Spam/Trash, not arbitrary
-search or label filters. Original JSON response bytes retain RAW MIME/attachments; text projection does not interpret
+Gmail supports legacy whole-mailbox scope and explicit selective_since scope
+from epoch 1785556800. Selection requires an injected ephemeral evaluator;
+only selected revisions retain originals. No arbitrary search or label selectors. Original JSON response bytes retain RAW MIME/attachments; text projection does not interpret
 attachments, HTML, or remote content. Calendar sync preserves raw masters and
 exceptions (singleEvents=false), without expanding recurrence or bounding time.
 """
@@ -20,6 +21,7 @@ from email.parser import BytesParser
 import hashlib
 from html.parser import HTMLParser
 import json
+import inspect
 from urllib.parse import quote
 import uuid
 
@@ -88,8 +90,10 @@ def _string(value):
 
 
 class GoogleSources:
-    def __init__(self, sync, transport, config):
+    def __init__(self, sync, transport, config, *, evaluator=None, projection_guard=None):
         self.sync, self.store, self.transport = sync, sync.store, transport
+        self.evaluator = evaluator
+        self.projection_guard = projection_guard
         self.config = copy.deepcopy(config)
         self._locks = {}
         _require(isinstance(config, dict) and config, 'source_config_required')
@@ -99,10 +103,12 @@ class GoogleSources:
     def _source(self, source_id):
         _require(source_id in self.config and _string(source_id), 'unknown_source')
         cfg = self.config[source_id]
-        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit'}
+        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit', 'since_epoch'}
         _require(isinstance(cfg, dict) and not set(cfg) - allowed, 'unsupported_source_filter')
         _require(cfg.get('provider') in {'gmail', 'calendar'} and _string(cfg.get('account')), 'explicit_account_required')
-        _require(cfg.get('scope') == ('whole_mailbox' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions'), 'explicit_coverage_scope_required')
+        selective = cfg['provider'] == 'gmail' and cfg.get('scope') == 'selective_since'
+        _require(selective or cfg.get('scope') == ('whole_mailbox' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions'), 'explicit_coverage_scope_required')
+        _require(cfg.get('since_epoch') == 1785556800 if selective else 'since_epoch' not in cfg, 'explicit_since_scope_required')
         calendar = cfg.get('calendar_id')
         _require(cfg['provider'] != 'calendar' or _string(calendar) and calendar != 'primary', 'concrete_calendar_required')
         _require(cfg['provider'] != 'gmail' or calendar is None, 'gmail_calendar_mismatch')
@@ -114,6 +120,8 @@ class GoogleSources:
         params = {'maxResults': cfg.get('page_size', 100)}
         if cfg['provider'] == 'gmail':
             params['includeSpamTrash'] = 'true'
+            if selective:
+                params['q'] = 'after:' + str(cfg['since_epoch'])
         else:
             params.update(singleEvents='false', showDeleted='true')
         partition = {'provider': cfg['provider'], 'account': cfg['account'],
@@ -143,9 +151,11 @@ class GoogleSources:
         return {'partition': partition, 'effective_parameters': params, 'health': health,
             'originals_complete': not pending and bool(state) and state['coverage'] == 'complete',
             'pending_reads': copy.deepcopy(pending),
-            'coverage_contract': {'scope': 'whole_mailbox_including_spam_trash' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions',
-                'interval': None, 'recurrence_expanded': False, 'attachments_interpreted': False,
-                'semantic_review': 'not_evaluated'},
+            'coverage_contract': {'scope': 'selective_since_including_spam_trash' if cfg.get('scope') == 'selective_since' else 'whole_mailbox_including_spam_trash' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions',
+                'interval': {'since_epoch': cfg['since_epoch'], 'timezone': 'America/Santiago'} if cfg.get('scope') == 'selective_since' else None, 'recurrence_expanded': False, 'attachments_interpreted': False,
+                'semantic_review': ('evaluated' if health == 'complete' else 'pending' if pending or state else 'not_evaluated') if cfg.get('scope') == 'selective_since' else 'not_evaluated',
+                'retention': 'selected_originals_only' if cfg.get('scope') == 'selective_since' else 'all_originals',
+                'history_continuity': 'lost_rebuilt_scope' if (adapter or {}).get('continuity_lost_at') else 'not_lost_observed'},
             'adapter': adapter, 'sync': state}
 
     async def _get(self, cfg, url, params):
@@ -219,6 +229,8 @@ class GoogleSources:
         return 'https://mail.google.com/mail/u/' + quote(cfg['account'], safe='') + '/#all/' + quote(identity, safe='')
 
     async def _read_message(self, cfg, identity, adapter):
+        if cfg.get('scope') == 'selective_since':
+            return await self._read_selective_message(cfg, identity, adapter)
         try:
             message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format':'raw'})
             obj = self._gmail_object(message, identity)
@@ -237,6 +249,75 @@ class GoogleSources:
             pending.pop('resolving_revision', None)
             return dict(external_id=identity, revision='unread-observation:' + _hash([identity, pending['observed_at'], pending['reason']]), status='degraded',
                         text=None, original=None, sha256=None, url=self._mail_url(cfg, identity))
+
+    def _unretained_message(self, cfg, identity, revision, adapter):
+        record = self.sync._load(self.sync._object_key(adapter['partition'], identity))
+        if record and record.get('item_id'):
+            return dict(external_id=identity, revision=revision, status='degraded',
+                text=None, original=None, sha256=None, url=self._mail_url(cfg, identity))
+        return None
+
+    async def _read_selective_message(self, cfg, identity, adapter):
+        partition = adapter['partition']
+        pending = adapter.setdefault('pending_reads', {}).setdefault(identity,
+            {'external_id': identity, 'revision': None, 'observed_at': _now(), 'attempts': 0})
+        pending.update(attempts=pending['attempts'] + 1, last_attempt_at=_now(), reason='evaluation_pending')
+        pending.pop('resolving_revision', None)
+        pending['revision'] = None
+        self._save(partition, adapter)  # obligation precedes network/evaluator and cursor
+        try:
+            message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'raw'})
+            _require(message.get('id') == identity and _string(message.get('historyId'))
+                and _string(message.get('internalDate')) and message['internalDate'].isdigit(), 'message_metadata_missing')
+            revision = 'message:' + message['historyId'] + ':' + hashlib.sha256(message.original).hexdigest()
+            pending['revision'] = revision
+            self._save(partition, adapter)
+            key = _hash([identity, revision])
+            decisions = adapter.setdefault('decisions', {})
+            decision = decisions.get(key)
+            if int(message['internalDate']) < cfg['since_epoch'] * 1000:
+                decision = {'classification': 'noise', 'reason_code': 'outside_scope'}
+            elif decision is None or decision['classification'] == 'uncertain':
+                _require(callable(self.evaluator), 'evaluator_unavailable')
+                obj = self._gmail_object(message, identity)
+                # Caller owns model budget and no-retention transport. This adapter
+                # never persists evaluator input, free-form rationale or transcript.
+                try:
+                    result = self.evaluator({'external_id': identity, 'revision': revision,
+                        'text': obj['text'], 'original': obj['original'], 'mime_type': obj['mime_type']})
+                    if inspect.isawaitable(result):
+                        result = await result
+                except Exception:
+                    raise SourceError('evaluation_unavailable') from None
+                _require(isinstance(result, dict) and set(result) == {'classification', 'reason_code'}
+                    and result['classification'] in {'selected', 'noise', 'uncertain'}
+                    and result['reason_code'] in {'gtd_relevant', 'non_actionable', 'needs_review', 'evaluation_unavailable'},
+                    'invalid_evaluation')
+                _require(result['reason_code'] in ({'gtd_relevant'} if result['classification'] == 'selected'
+                    else {'non_actionable'} if result['classification'] == 'noise'
+                    else {'needs_review', 'evaluation_unavailable'}), 'invalid_evaluation')
+                decision = dict(result)
+            decisions[key] = {**decision, 'external_id': identity, 'revision': revision}
+            adapter.setdefault('current_decisions', {})[identity] = key
+            if decision['classification'] == 'uncertain':
+                pending['reason'] = decision['reason_code']
+                self._save(partition, adapter)
+                return self._unretained_message(cfg, identity, 'unassessed:' + revision, adapter)
+            if decision['classification'] == 'noise':
+                del adapter['pending_reads'][identity]
+                self._save(partition, adapter)
+                return self._unretained_message(cfg, identity, 'not-selected:' + revision, adapter)
+            obj = self._gmail_object(message, identity)
+            pending['resolving_revision'] = obj['revision']
+            self._save(partition, adapter)
+            return obj
+        except (SourceError, OSError, asyncio.TimeoutError):
+            pending['reason'] = 'evaluation_unavailable'
+            pending.pop('resolving_revision', None)
+            self._save(partition, adapter)
+            revision = ('unassessed:' + pending['revision'] if pending.get('revision') else
+                        'unread:' + _hash([identity, pending['observed_at']]))
+            return self._unretained_message(cfg, identity, revision, adapter)
 
     def _clear_projected_reads(self, partition, adapter, state):
         if state and state['projection'] == 'current' and not state['pending']:
@@ -260,6 +341,8 @@ class GoogleSources:
                 raise SourceError('cursor_expired')
         else:
             query['includeSpamTrash'] = 'true'
+            if 'q' in params:
+                query['q'] = params['q']
             status, body = await self._get(cfg, base + '/messages', query)
         _require(status == 200, 'http_' + str(status))
         changed, deleted = {}, {}
@@ -294,8 +377,17 @@ class GoogleSources:
                 changed[message['id']] = True
         objects = []
         for identity in changed:
-            objects.append(await self._read_message(cfg, identity, adapter))
+            obj = await self._read_message(cfg, identity, adapter)
+            if obj is not None:
+                objects.append(obj)
         for identity, revision in deleted.items():
+            if cfg.get('scope') == 'selective_since':
+                if identity not in adapter.get('current_decisions', {}) and identity not in adapter.get('pending_reads', {}):
+                    continue  # history deletion alone cannot establish the date scope
+                key = _hash([identity, 'deleted:' + revision])
+                adapter.setdefault('decisions', {})[key] = {'external_id': identity, 'revision': 'deleted:' + revision,
+                    'classification': 'deleted', 'reason_code': 'source_deleted'}
+                adapter.setdefault('current_decisions', {})[identity] = key
             if identity in adapter.get('pending_reads', {}):
                 adapter['pending_reads'][identity]['resolving_revision'] = 'deleted:' + revision
             objects.append(dict(external_id=identity, revision='deleted:' + revision, status='deleted',
@@ -305,7 +397,7 @@ class GoogleSources:
         _require(next_token is None or _string(next_token), 'invalid_next_page_token')
         cursor = body.get('historyId') if incremental else adapter['baseline_history_id']
         _require(next_token is not None or _string(cursor), 'final_cursor_missing')
-        return objects, next_token, None if next_token is not None else cursor
+        return objects, next_token, None if next_token is not None else cursor, set(changed) | set(deleted)
 
     async def _calendar_page(self, cfg, params, cycle, adapter):
         query = dict(params)
@@ -339,7 +431,7 @@ class GoogleSources:
         _require(next_token is None or _string(next_token), 'invalid_next_page_token')
         cursor = body.get('nextSyncToken')
         _require(next_token is None and _string(cursor) or next_token is not None and cursor is None, 'final_cursor_missing')
-        return objects, next_token, cursor
+        return objects, next_token, cursor, {obj['external_id'] for obj in objects}
 
     async def synchronize(self, source_id):
         cfg, params, partition = self._source(source_id)
@@ -350,9 +442,12 @@ class GoogleSources:
         adapter = self._load(partition)
         cycle_id = adapter.get('cycle_id') if adapter and adapter.get('active') else None
         try:
+            _require(cfg.get('scope') != 'selective_since' or callable(self.evaluator), 'evaluator_unavailable')
             _require(getattr(self.transport, 'authenticated_account', None) == cfg['account'], 'credential_account_mismatch')
             state = self.sync.inspect(partition)
             if state and state['pending']:
+                if self.projection_guard is not None:
+                    self.projection_guard()
                 state = self.sync.recover(partition)
                 if state['projection'] == 'blocked':
                     return self.inspect(source_id)
@@ -362,6 +457,8 @@ class GoogleSources:
                 # Recovery first: a completed durable page is never fetched again.
                 if state is None or cycle_id not in state['cycles']:
                     self.sync.begin(partition, cycle_id, adapter['mode'])
+                if self.projection_guard is not None:
+                    self.projection_guard()
                 state = self.sync.recover(partition)
                 if state['cycles'][cycle_id]['status'] == 'complete':
                     adapter.update(active=False, status='complete', completed_at=_now())
@@ -376,8 +473,12 @@ class GoogleSources:
                     baseline = profile['historyId']
                 cycle_id = uuid.uuid4().hex
                 pending_reads = (adapter or {}).get('pending_reads', {})
+                previous = adapter or {}
                 adapter = {'pending_reads':pending_reads, 'cycle_id': cycle_id, 'mode': mode, 'active': True,
-                    'verified_account': cfg['account'], 'started_at': _now(), 'baseline_history_id': baseline}
+                    'verified_account': cfg['account'], 'started_at': _now(), 'baseline_history_id': baseline,
+                    **{key: previous[key] for key in ('decisions', 'current_decisions', 'continuity_lost_at') if key in previous}}
+                if cfg.get('scope') == 'selective_since':
+                    adapter['partition'] = partition
                 self._save(partition, adapter)
                 self.sync.begin(partition, cycle_id, mode)
             retried = []
@@ -385,7 +486,9 @@ class GoogleSources:
                 pending = adapter.get('pending_reads', {})
                 oldest = sorted(pending, key=lambda identity: (pending[identity].get('last_attempt_at', pending[identity]['observed_at']), identity))
                 for identity in oldest[:cfg.get('pending_retry_limit', 10)]:
-                    retried.append(await self._read_message(cfg, identity, adapter))
+                    obj = await self._read_message(cfg, identity, adapter)
+                    if obj is not None:
+                        retried.append(obj)
                 self._save(partition, adapter)
             for _ in range(cfg.get('max_pages', 100)):
                 state = self.sync.inspect(partition)
@@ -393,9 +496,9 @@ class GoogleSources:
                 if state['projection'] == 'blocked':
                     return self.inspect(source_id)
                 loader = self._gmail_page if cfg['provider'] == 'gmail' else self._calendar_page
-                objects, next_token, cursor = await loader(cfg, params, cycle, adapter)
-                # A later explicit history deletion wins over an earlier retry.
-                current_ids = {obj['external_id'] for obj in objects}
+                objects, next_token, cursor, current_ids = await loader(cfg, params, cycle, adapter)
+                # Every later observation supersedes an earlier retry, including
+                # noise/uncertain observations that intentionally retain no body.
                 objects = [obj for obj in retried if obj['external_id'] not in current_ids] + objects
                 retried = []
                 # Read failures/resolution intent precede page commit, so a cut
@@ -404,6 +507,8 @@ class GoogleSources:
                 request_token = cycle['next_page_token']
                 page = {'page_id': _hash([cycle_id, request_token]), 'request_token': request_token,
                     'next_page_token': next_token, 'cursor': cursor, 'objects': objects}
+                if self.projection_guard is not None:
+                    self.projection_guard()
                 state = self.sync.apply_page(partition, cycle_id, page)
                 self._clear_projected_reads(partition, adapter, state)
                 if state['projection'] == 'blocked':
@@ -427,5 +532,7 @@ class GoogleSources:
                     self.sync.degrade(partition, cycle_id, code)
             adapter = adapter or {'active': False}
             adapter.update(active=False, error=code, degraded_at=_now())
+            if code == 'cursor_expired':
+                adapter['continuity_lost_at'] = _now()
             self._save(partition, adapter)
             return self.inspect(source_id)

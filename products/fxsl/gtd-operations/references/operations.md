@@ -22,7 +22,7 @@ mensajes. Confirma con `tools/list` qué herramientas ofrece la realización act
 
 | Herramienta | Entrada y efecto |
 |---|---|
-| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`, `page_size` (20 por defecto, máximo 50) y `cursor`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Consulta estado o calcula sin crear compromisos. |
+| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `source_evaluation`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`, `page_size` (20 por defecto, máximo 50) y `cursor`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Para `source_evaluation`, `source_id` y `job_id` obligatorios: incorpora selectivamente una tanda bajo el job vigente. Las demás vistas consultan o calculan sin crear compromisos. |
 | `gtd_command` | `job_id` y `command`: `operation_id`, `action`, `item_id`, `expected_version`, `fields`. `review` no exige asunto/versión. Aplica un comando bajo el encargo vigente y conserva progreso ligado a ese job. |
 | `gtd_dispatch` | `job_id`, `operation_id`, `request`. Reserva y encola un hijo durable dentro del ámbito y presupuesto del encargo padre. Recibo reservado/diferido no demuestra ejecución ni resultado. |
 
@@ -962,3 +962,90 @@ Para una pregunta propia del principal ya respondida, `plan` puede registrar
 `decision_needed=false` y `decision_question=""` antes de `clarify` hacia un asunto
 existente, en el mismo job y usando la versión devuelta. No se aplica a preguntas
 o posición del dueño. Evita repetir la consulta humana por un guard técnico.
+
+## Gmail selectivo desde agosto de 2026
+
+La configuración nueva usa `provider=gmail`, cuenta explícita,
+`scope=selective_since` y `since_epoch=1785556800`: 2026-08-01 00:00
+America/Santiago. La enumeración inicial y cada reconstrucción usan exclusivamente
+`q=after:1785556800`, incluyendo Spam/Trash, sin excluir etiquetas. History continúa
+incrementalmente y cada mensaje leído contrasta `internalDate` con ese instante.
+La configuración histórica `whole_mailbox` conserva compatibilidad, pero no es la
+selección autorizada para esta incorporación. Calendarios mantienen su contrato.
+
+El coordinador construye `GoogleSources(sync, transport, config, evaluator=callback)`.
+Sin callback configurado, la fuente selectiva falla cerrada antes de acceder a red.
+El callback puede ser síncrono o async y recibe únicamente en memoria:
+`external_id`, `revision`, `text` (metadata y proyección textual MIME/HTML visible),
+`original` (bytes de respuesta RAW Gmail) y `mime_type`. También recibe boletines:
+las etiquetas no deciden relevancia. Adjuntos y HTML no se ejecutan ni se interpretan
+más allá de la proyección textual ya disponible.
+
+La respuesta debe contener exactamente `classification` y `reason_code`:
+
+| classification | reason_code permitido |
+|---|---|
+| selected | gtd_relevant |
+| noise | non_actionable |
+| uncertain | needs_review o evaluation_unavailable |
+
+No se aceptan explicaciones libres, snippets ni transcripciones. El coordinador
+posee la única reserva/presupuesto y debe envolver el callback con el runtime
+acotado, sus límites y una comprobación de no retención, incluida su ruta de error.
+Este adaptador no inicia modelos ni acredita cómo conserva datos un callback
+externo. El texto y bytes entrantes no se guardan en el adapter ni transporte.
+
+Antes de evaluar, se conserva una obligación con identidad y revisión exacta; el
+cursor sólo avanza después de conservar las decisiones/obligaciones y confirmar
+la página de SourceSync. Sólo `selected` entrega contenido a SourceSync para
+original y proyección. `noise` conserva identidad/revisión y códigos mínimos;
+`uncertain` o fallo conserva obligación pendiente y salud degradada, recuperable
+tras reinicio incluso si el cursor ya avanzó. Las decisiones terminales sobre la
+misma identidad/revisión se reutilizan; cambiar el callback no las reevalúa
+silenciosamente. Las decisiones por revisión y `current_decisions` permiten
+contrastar selección, estado actual y retención histórica.
+
+Si una revisión antes seleccionada pasa a ruido, incertidumbre o error de lectura,
+no se guarda el cuerpo nuevo ni se retira un asunto humano. La nueva observación
+degrada la fuente previa e invalida sus bases dependientes; incertidumbre/error
+conservan además la obligación pendiente. Una observación de la página prevalece
+sobre un retry anterior aunque no produzca una proyección de cuerpo. Se incorpora sólo evidencia de revisión no conservada,
+con disponibilidad degradada y hash de contenido ausente. El servicio conserva
+su referencia al original anterior y el historial: ese original no acredita el
+contenido de la revisión nueva. Una eliminación conocida conserva sólo identidad
+y revisión de eliminación; una eliminación de History sin identidad previamente
+inventariada no acredita pertenencia al ámbito temporal.
+
+History vencido marca pérdida de continuidad; la próxima sincronización reconstruye
+el ámbito acotado. `history_continuity=lost_rebuilt_scope` permanece explícito aunque
+la enumeración nueva termine. Cobertura completa de páginas no acredita evaluación
+resuelta: obligaciones inciertas mantienen `health=degraded` y revisión semántica
+pendiente. `originals_complete` se interpreta bajo retención de seleccionados, nunca
+como copia completa del buzón. No habilitar esta fuente hasta integrar y comprobar
+el callback y su no retención efectiva bajo la reserva de ejecución vigente.
+
+
+## Evaluación de Gmail dentro del principal
+
+`gtd_read(view="source_evaluation", source_id="<id de cobertura>", job_id="<job vigente>")`
+realiza una tanda de selección, no una lectura pura. Está disponible sólo con
+configuración habilitada, fuente selectiva acotada y job nativo del principal
+vigente bajo suscripción diaria. Consulta antes `source_coverage`; usa el ID
+configurado, no inventes otra cuenta ni amplíes su fecha inicial. El período de
+antecedentes solicitado para un asunto no modifica el ámbito autorizado de Gmail.
+
+Cada llamada admite hasta cinco mensajes de página y cinco reintentos, con límite
+conjunto de veinte segundos. Devuelve conteos, cobertura y uso, sin cuerpos
+rechazados. Un resultado parcial exige conservar la cobertura pendiente; no prueba
+que no existan antecedentes. Consulta después el índice paginado y detalles de
+fuentes seleccionadas pertinentes, vinculando sus versiones al material preparado.
+
+El servicio entrega al puente local un nonce en memoria ligado a job, run y digest
+del mensaje. El puente sólo acepta el principal nativo activo; usa su proveedor y
+credencial en memoria, sin resolver una ruta alternativa. El helper no tiene tools,
+transcripciones ni memoria; su salida es una clasificación cerrada. El launcher
+exige la versión Hermes comprobada. Pausa, desconexión o vencimiento invalidan la
+lectura, el resultado y la proyección, incluso al recuperar una decisión cacheada.
+El tiempo del helper ya está incluido en el tiempo de pared del padre: no se suma
+otra reserva ni se afirma que sus tokens sean gratuitos. El poller no inicia esta
+inferencia por su cuenta ni renueva artificialmente la cobertura de Gmail.
