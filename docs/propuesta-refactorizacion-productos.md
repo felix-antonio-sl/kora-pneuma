@@ -208,6 +208,25 @@ promesa universal). Carga Codex Dori parcial 1–840/978, sólo alcance
 conceptual. Instalaciones personales `current`, sin cambios ni recuperación,
 sin tocar GTD protegido, otros perfiles ni config ajena.
 
+El lote de diseño quedó admitido e instalado en Codex y Hermes:
+`diseno-producto-integrado`, `design`, `ux-design`, `ux-research-design-ai`,
+`steve-jobs`, `director-diseno-producto` y `diseno-ui-clinica-web-movil`
+(siete revisiones concretas, métodos antes que agentes; director tras el
+método integrado). Sesiones nuevas acreditaron carga y conducta en fixtures
+sintéticos Sol/high en ambos destinos (16/16): research sin hallazgos
+inventados; auditoría UX con criterio WCAG 2.2 versionado y evidencia sin
+conformidad global; crítica Jobs con principios por nombre y recuperación
+preservada; design SPEC_ONLY sin build/runtime afirmados; integrado y director
+con DESIGN_ERROR fundado ante contexto insuficiente;
+clínica sintética con excepción documentada y phi-boundary sin repetir
+contenido; vecina directa sin activación. Hermes research requirió timeout de
+transporte documentado (`HERMES_API_CALL_STALE_TIMEOUT=240`), sin cambiar caso
+ni producto. Los 4 KB Jobs (canon + 3 lentes) siguen aprobados como lente
+consultable, sin biografía ni evidencia. Instalaciones personales `current`,
+sin cambios ni recuperación; consumidor compartido `test-vivo-iterativo-opmkv`
+reconciliado. Sin fusión decidida: 7 especialidades conservadas, sin utilidad
+diferencial afirmada.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:ux-design
+kind: skill
+namespace: kora
+name: ux-design
+candidate: reconstruccion
+base: e82f9484c9e44899a4dbc38398462ded10007c7442338b58cd30bd8b08c155e8
+base_revision: e82f9484c9e44899a4dbc38398462ded10007c7442338b58cd30bd8b08c155e8
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 22975685d3a75e07b8c979c676397d9d6b3b978199302457ab2eb886fe1b0f20
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 22975685d3a75e07b8c979c676397d9d6b3b978199302457ab2eb886fe1b0f20
+previous_revision: e82f9484c9e44899a4dbc38398462ded10007c7442338b58cd30bd8b08c155e8
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/ux-design
+displaced_path: /home/felix/kora-pneuma/candidates/kora/ux-design/reconstruccion/displaced-85d0b936332646c39cce5adacbfbd228
+admitted_at: '2026-09-13T22:05:47+00:00'

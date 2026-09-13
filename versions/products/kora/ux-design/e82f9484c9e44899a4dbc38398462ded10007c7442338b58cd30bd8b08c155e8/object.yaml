@@ -1,0 +1,73 @@
+id: urn:kora:artefacto:ux-design
+kind: skill
+name: ux-design
+description: Evalua y mejora la experiencia de usuario aplicando heuristicas de Nielsen,
+  flujos de tarea, accesibilidad WCAG 2.2 AA, arquitectura de informacion y patrones
+  UX institucionales. Usar al auditar UX, disenar formularios, mejorar navegacion
+  o revisar accesibilidad.
+content: content.md
+targets:
+- codex
+requires: []
+relations:
+  componible:
+  - urn:dev:artefacto:design
+  - urn:dev:artefacto:steve-jobs
+provenance:
+  source_path: artefactos/skills/kora/ux-design/SKILL.md
+  source_sha256: f7c3586d26bd7d27d9dd6a010e44183461d12622ef40d17ce6c16b17edaa9b62
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:kora:artefacto:ux-design
+
+    nombre: ux-design
+
+    version: 1.0.1
+
+    estado: activo
+
+    descripcion: "Evalua y mejora la experiencia de usuario aplicando heuristicas
+    de Nielsen, flujos de tarea, accesibilidad WCAG 2.2 AA, arquitectura de informacion
+    y patrones UX institucionales. Usar al auditar UX, disenar formularios, mejorar
+    navegacion o revisar accesibilidad."
+
+    fuente: "Migrado de la bestia (~/kora) artifacts/skills/kora/ux-design/SKILL.md
+    v1.0.1 (sha256:c52c436ed4febe7c3fab00eeafb9ab4a4a9a1d9551085088e10d8e65deb05379)
+    el 2026-06-22 (regimen migrar-o-omitir). Frontmatter _manifest/extensions.kora/atlas/artefacto.{perfil,interfaz}
+    anidado -> shape plano ley/2; vector bestia [2,0,1,0,1] y sigma [1,2,2,1,0] preservados
+    (legales para habilidad/disciplina). Conocimiento bestia (urn:tde:kb:guia-calidad-web,
+    recomendaciones-diseno-servicios-estado, guia-voz-y-tono) OMITIDO: no encarna
+    en el censo pneuma. Distincion con graphic-design/frontend-design (no migradas)
+    reescrita hacia design (urn:dev:artefacto:design) y steve-jobs (urn:dev:artefacto:steve-jobs),
+    que SI resuelven. Componible declarada: design (forma visual) y steve-jobs (gusto),
+    ambos resuelven en pneuma y steve-jobs ya deriva a esta skill para el audit generico."
+
+    autor: FS
+
+    creado: 2026-04-23
+
+    lang: es
+
+    tags: [ux, usabilidad, accesibilidad, wcag, heuristicas-nielsen, arquitectura-informacion,
+    disciplina]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [1, 2, 2, 1, 0]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [auditar, disenar, validar-wcag, entregar]
+
+    componible: [urn:dev:artefacto:design, urn:dev:artefacto:steve-jobs]
+
+    ---
+
+    '

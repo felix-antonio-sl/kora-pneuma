@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:ux-research-design-ai
+kind: agent
+namespace: dev
+name: ux-research-design-ai
+candidate: reconstruccion
+base: b05a0b054f8e241b49719d95166447f8696fad8f2489cf7c0a159cc45fa78836
+base_revision: b05a0b054f8e241b49719d95166447f8696fad8f2489cf7c0a159cc45fa78836
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 23c6fed4ac1b61e19a975b090761ddcbc669f2a6d3ba705316499b8f19233798
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 23c6fed4ac1b61e19a975b090761ddcbc669f2a6d3ba705316499b8f19233798
+previous_revision: b05a0b054f8e241b49719d95166447f8696fad8f2489cf7c0a159cc45fa78836
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/ux-research-design-ai
+displaced_path: /home/felix/kora-pneuma/candidates/dev/ux-research-design-ai/reconstruccion/displaced-2b34127921f94726b6a2f7267432fab0
+admitted_at: '2026-09-13T22:06:04+00:00'

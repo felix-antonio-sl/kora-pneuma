@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:steve-jobs
+kind: agent
+namespace: dev
+name: steve-jobs
+candidate: reconstruccion
+base: f06bbaf6b5f6b8ef0a82449ec57da9ee08b75b3786197688fac5d54543853fba
+base_revision: f06bbaf6b5f6b8ef0a82449ec57da9ee08b75b3786197688fac5d54543853fba
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: fbcdf4bbbd3c8e5c1910324318aa396ddd182301129ff6c32c527557f956b1e2
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: fbcdf4bbbd3c8e5c1910324318aa396ddd182301129ff6c32c527557f956b1e2
+previous_revision: f06bbaf6b5f6b8ef0a82449ec57da9ee08b75b3786197688fac5d54543853fba
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/steve-jobs
+displaced_path: /home/felix/kora-pneuma/candidates/dev/steve-jobs/reconstruccion/displaced-39ab40d97db14f5687903ccde199d91d
+admitted_at: '2026-09-13T22:06:07+00:00'

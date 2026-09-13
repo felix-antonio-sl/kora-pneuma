@@ -99,8 +99,19 @@ ambos destinos: `modelamiento-opm`, `cat-thinking`, `mente-omega`,
 destinos y envoltura Hermes compacta que conserva identidades, paths,
 condiciones y ruteo (SOUL Dori personal 65.223; presupuesto 65.280 comprobado
 sólo con Sol/ventana 272.000, sin promesa universal). Instalaciones personales
-`current` sin cambios ni recuperación pendiente. El resto de la colección sigue
-en ejecución; estos lotes no lo validan.
+`current` sin cambios ni recuperación pendiente. El lote de diseño quedó admitido
+e instalado en ambos destinos: `diseno-producto-integrado` (método),
+`design` (materialización SPEC_ONLY), `ux-design` (auditoría con criterio y
+evidencia), `ux-research-design-ai` (agente: protocolo sin hallazgos inventados),
+`steve-jobs` (agente: crítica con principios por nombre, recuperación
+preservada), `director-diseno-producto` (agente: propuesta no probada como
+pendiente) y `diseno-ui-clinica-web-movil` (datos sintéticos, excepción
+documentada, phi-boundary), con conducta acreditada en fixtures sintéticos
+Sol/high en ambos destinos (16/16; Hermes research con timeout de transporte
+documentado) y 4 KB Jobs aprobados como lente consultable. Instalaciones
+personales `current` sin cambios ni recuperación pendiente. La colección queda
+cerrada; estos lotes no validan utilidad diferencial, eficacia clínica ni
+biblioteca completa.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

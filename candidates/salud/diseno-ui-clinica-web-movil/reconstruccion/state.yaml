@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:diseno-ui-clinica-web-movil
+kind: skill
+namespace: salud
+name: diseno-ui-clinica-web-movil
+candidate: reconstruccion
+base: 2d0042d1fd91d274eab4e46d3154ebecc1abb12aaec57068a23aab30540542e4
+base_revision: 2d0042d1fd91d274eab4e46d3154ebecc1abb12aaec57068a23aab30540542e4
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: e386baa67a54b94769202f8803f1897b8bab5baf999eb6dc76f40986f8c8c2ce
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: e386baa67a54b94769202f8803f1897b8bab5baf999eb6dc76f40986f8c8c2ce
+previous_revision: 2d0042d1fd91d274eab4e46d3154ebecc1abb12aaec57068a23aab30540542e4
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/diseno-ui-clinica-web-movil
+displaced_path: /home/felix/kora-pneuma/candidates/salud/diseno-ui-clinica-web-movil/reconstruccion/displaced-d0964c8297584e68bc63921ee71de934
+admitted_at: '2026-09-13T22:06:19+00:00'

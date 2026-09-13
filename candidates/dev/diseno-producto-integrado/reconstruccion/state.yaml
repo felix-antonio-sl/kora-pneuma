@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:diseno-producto-integrado
+kind: skill
+namespace: dev
+name: diseno-producto-integrado
+candidate: reconstruccion
+base: fc34985e35aeb64b089defeb05284a08c8714d0cbd86213820272c755d3e7c74
+base_revision: fc34985e35aeb64b089defeb05284a08c8714d0cbd86213820272c755d3e7c74
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: eeea20beb6ac0b4ab2dfd5702c70d4f3cbfc55fd50930f096f065835e3fdc8c1
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: eeea20beb6ac0b4ab2dfd5702c70d4f3cbfc55fd50930f096f065835e3fdc8c1
+previous_revision: fc34985e35aeb64b089defeb05284a08c8714d0cbd86213820272c755d3e7c74
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/diseno-producto-integrado
+displaced_path: /home/felix/kora-pneuma/candidates/dev/diseno-producto-integrado/reconstruccion/displaced-5539b322ff3a47bf813a6ad284a1e129
+admitted_at: '2026-09-13T22:05:58+00:00'

@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:design
+kind: skill
+namespace: dev
+name: design
+candidate: reconstruccion
+base: fae47c892b351a4ec26ac186d751c85f8bba1cef0404549316c1ddba3e51cff1
+base_revision: fae47c892b351a4ec26ac186d751c85f8bba1cef0404549316c1ddba3e51cff1
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 57062b49ad321a8c9bb4b6bcc8d73a9a2dd551c8668883fc04a93d88ceb71d8e
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 57062b49ad321a8c9bb4b6bcc8d73a9a2dd551c8668883fc04a93d88ceb71d8e
+previous_revision: fae47c892b351a4ec26ac186d751c85f8bba1cef0404549316c1ddba3e51cff1
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/design
+displaced_path: /home/felix/kora-pneuma/candidates/dev/design/reconstruccion/displaced-a6fffe0f21f74fb893763a1b0032335a
+admitted_at: '2026-09-13T22:05:55+00:00'

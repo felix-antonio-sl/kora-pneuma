@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:director-diseno-producto
+kind: agent
+namespace: dev
+name: director-diseno-producto
+candidate: reconstruccion
+base: 34a2c86da3229cfc9fd9fbd0a1f90472c5e52cfef6c5f85178cee134c008f1df
+base_revision: 34a2c86da3229cfc9fd9fbd0a1f90472c5e52cfef6c5f85178cee134c008f1df
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: c462b7030632c53da8360a7783cb6e43237769e4bb7f5dc7c7b9a2e5773a3499
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: c462b7030632c53da8360a7783cb6e43237769e4bb7f5dc7c7b9a2e5773a3499
+previous_revision: 34a2c86da3229cfc9fd9fbd0a1f90472c5e52cfef6c5f85178cee134c008f1df
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/director-diseno-producto
+displaced_path: /home/felix/kora-pneuma/candidates/dev/director-diseno-producto/reconstruccion/displaced-01a85403579d485caf2d7b20de7618a7
+admitted_at: '2026-09-13T22:06:16+00:00'
