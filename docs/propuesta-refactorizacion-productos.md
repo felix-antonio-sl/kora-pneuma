@@ -1,6 +1,6 @@
 # Reconstrucción de productos KORA
 
-Fecha: 2026-09-13. **Propuesta de arquitectura y migración; no implementada.**
+Fecha: 2026-09-13. **Arquitectura candidata; reconstrucción en ejecución.**
 Base de maquinaria: `695e058f105ad597cd3f85d17da3ac025e7b2ac0`, más las
 ediciones locales preexistentes examinadas. Este documento conserva una decisión
 propuesta y su fundamento; no gobierna la operación vigente ni mantiene un
@@ -16,6 +16,19 @@ auditoría para ejecutar el primer lote. El texto del goal sólo confiere su
 autoridad cuando Félix lo use como encargo.
 
 ## Dictamen
+
+Estado de ejecución 2026-09-13: se admitió el primer lote de KORA por revisiones
+concretas, conservando nombres e identidades: `kora`, `autoria-kora`,
+`koraficacion`, `koraficacion-integral`, `auditoria-artefactos-kora` e
+`instalacion-kora`. Autoría incorpora persona como recurso opcional; evaluación
+incorpora exposición. Las identidades de origen permanecen activas hasta
+comprobar sus migraciones. Se revisaron siete referencias operacionales por el
+ciclo editorial existente; la guía anterior conserva su identidad como entrada
+a `docs/operacion.md` y su versión previa como historia. Una revisión independiente
+contrastó contenido, bases y procedencia; los casos de conducta nativa y la
+instalación personal siguen pendientes. Esto no valida el resto de la colección
+ni la biblioteca. Las decisiones y casos propuestos abajo conservan su función
+como entrada de ejecución.
 
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
@@ -788,8 +801,8 @@ cada conjunto funcional con el conocimiento y los consumidores que necesita,
 anteponiendo dependencias a paralelismo. El mapa de migración y los casos de este
 documento evitan reconstruir decisiones o inventar otro backlog.
 
-**KORA todavía no ha absorbido íntegramente esta propuesta.** La comprobación
-focal del 2026-09-13 encontró que su manifiesto conserva la composición anterior
+**Diagnóstico de partida, anterior al primer lote admitido.** La comprobación
+focal del 2026-09-13 encontró que su manifiesto conservaba la composición anterior
 y que `autoria-kora` aún indica actualizar editando la fuente directamente,
 mientras `docs/operacion.md` documenta candidatas con `revise`, `review` y `admit`.
 El agente ya contiene criterios útiles de proporcionalidad y autoridad; eso no

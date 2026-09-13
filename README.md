@@ -55,7 +55,10 @@ El saneamiento de la maquinaria tiene sus recorridos comprobados con casos
 sintéticos; ese resultado no valida los contenidos, métodos o utilidad de los
 productos. La [propuesta de reconstrucción](docs/propuesta-refactorizacion-productos.md)
 reúne el diagnóstico, la arquitectura candidata, la migración y el goal preparado
-para ejecutar esa etapa. La reconstrucción de productos aún no está implementada.
+para ejecutar esa etapa. El primer lote de KORA está admitido: autoría,
+transformación, evaluación y realización, con siete referencias operacionales
+revisadas. La comprobación de conducta en sesiones nuevas y el resto de la
+colección siguen en ejecución; la admisión no los da por validados.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

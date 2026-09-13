@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:auditoria-artefactos-kora
+kind: skill
+namespace: kora
+name: auditoria-artefactos-kora
+candidate: reconstruccion
+base: 27ae923e3af940bb0cdb75fe9463de3139b817044fe83452b742bb882cd4945a
+base_revision: 27ae923e3af940bb0cdb75fe9463de3139b817044fe83452b742bb882cd4945a
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: cdc44336bd3101dd030210f77e7ae97d5a5fb395b17ac9c25474570aca461df2
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: cdc44336bd3101dd030210f77e7ae97d5a5fb395b17ac9c25474570aca461df2
+previous_revision: 27ae923e3af940bb0cdb75fe9463de3139b817044fe83452b742bb882cd4945a
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/auditoria-artefactos-kora
+displaced_path: /home/felix/kora-pneuma/candidates/kora/auditoria-artefactos-kora/reconstruccion/displaced-ff471cc7dc334953b0ba706cd3d1a274
+admitted_at: '2026-09-13T03:10:24+00:00'

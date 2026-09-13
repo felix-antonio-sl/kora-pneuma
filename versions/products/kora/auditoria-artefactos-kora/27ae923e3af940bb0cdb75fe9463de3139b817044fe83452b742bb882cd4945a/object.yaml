@@ -1,0 +1,18 @@
+id: urn:kora:artefacto:auditoria-artefactos-kora
+kind: skill
+name: auditoria-artefactos-kora
+description: Evalúa si un agente o skill existente aporta valor, conserva su función
+  y puede mantenerse; ejecuta la remediación autorizada.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:artefacto:autoria-kora
+- urn:kora:artefacto:instalacion-kora
+provenance:
+  previous: archive/previous/kora/auditoria-artefactos-kora
+  date: '2026-09-05'
+  authority: archive/reconstruction/MANDATO.md
+  change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
+    completo recuperable en previous.

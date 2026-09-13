@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:instalacion-kora
+kind: skill
+namespace: kora
+name: instalacion-kora
+candidate: reconstruccion
+base: ca48580ecbefecff7b7f2b3fe95f7dd6425604f254d007fa3d180192177af49a
+base_revision: ca48580ecbefecff7b7f2b3fe95f7dd6425604f254d007fa3d180192177af49a
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 918067401c1530852477fefc241f96148692def8885e8db826b930dd2fc29cac
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 918067401c1530852477fefc241f96148692def8885e8db826b930dd2fc29cac
+previous_revision: ca48580ecbefecff7b7f2b3fe95f7dd6425604f254d007fa3d180192177af49a
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/instalacion-kora
+displaced_path: /home/felix/kora-pneuma/candidates/kora/instalacion-kora/reconstruccion/displaced-a16dc1f8902d4b7da85a7f63a5cdccce
+admitted_at: '2026-09-13T03:10:18+00:00'

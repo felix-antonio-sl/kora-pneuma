@@ -136,7 +136,9 @@ publicación; los binarios requieren una representación comparable identificada
 
 ## Autoría de agentes y skills
 
-Usa `autoria-kora` para preparar la conducta y las capacidades necesarias.
+Usa `autoria-kora` para preparar la conducta y las capacidades necesarias. Su
+recurso `references/persona.md` conduce la voz y el criterio cuando aportan al
+agente; no requiere una persona independiente para autorar una skill.
 `create skill` y `create agent` reciben namespace, nombre, `--id`, `--description`
 y `--body`, con la misma forma del ejemplo anterior. Conservan una candidata,
 validan los destinos declarados y admiten la fuente en
@@ -246,6 +248,13 @@ reconciliación explícita; no elimina sus instalaciones nativas. `remove`, en
 cambio, actúa sobre los archivos administrados del home seleccionado.
 
 ## Instalar o actualizar
+
+`auditoria-artefactos-kora` evalúa un producto desde su consumidor y caso;
+incluye el recorrido de exposición del conocimiento. Distingue integridad
+mecánica, fidelidad, carga nativa, conducta, utilidad y efectos. Para afirmar
+utilidad diferencial compara candidata, vigente y asistencia sin producto cuando
+esa comparación permita decidir. Una lectura o un `check` no sustituyen una
+sesión nueva que cargue y use las instrucciones en el runtime prometido.
 
 Con Codex o Hermes disponibles, instala KORA y sus skills necesarias en el
 destino que uses:

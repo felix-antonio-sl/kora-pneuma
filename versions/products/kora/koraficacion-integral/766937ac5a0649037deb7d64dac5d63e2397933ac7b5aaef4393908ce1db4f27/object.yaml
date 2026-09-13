@@ -1,0 +1,10 @@
+id: urn:kora:artefacto:koraficacion-integral
+kind: skill
+name: koraficacion-integral
+description: Procedimiento integral por defecto al koraficar cualquier fuente para
+  agentes LLM; conserva todo su contenido sustantivo con economía, separa soporte y
+  procedencia, coteja significado y permite reparación y reanudación idempotente.
+content: content.md
+targets:
+- codex
+- hermes

@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:koraficacion
+kind: skill
+namespace: kora
+name: koraficacion
+candidate: reconstruccion
+base: efaf91bf61818be1da17199b07f5e910799d1c36516225a98f883f2897e148f6
+base_revision: efaf91bf61818be1da17199b07f5e910799d1c36516225a98f883f2897e148f6
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 0b9ab593a1d5701a9e93b6ab8103d94f76ce243f687bca9ff4d85b680da9dc9c
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 0b9ab593a1d5701a9e93b6ab8103d94f76ce243f687bca9ff4d85b680da9dc9c
+previous_revision: efaf91bf61818be1da17199b07f5e910799d1c36516225a98f883f2897e148f6
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/koraficacion
+displaced_path: /home/felix/kora-pneuma/candidates/kora/koraficacion/reconstruccion/displaced-44f0afb0797b4775b1e1177db2bd3990
+admitted_at: '2026-09-13T03:10:31+00:00'

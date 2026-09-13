@@ -1,0 +1,16 @@
+id: urn:kora:artefacto:koraficacion
+kind: skill
+name: koraficacion
+description: Korafica cualquier fuente con compresión integral de su contenido sustantivo,
+  cotejo y procedencia recuperable; prepara y publica referencias KORA con la autoridad del encargo.
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:artefacto:koraficacion-integral
+- urn:kora:kb:frontera-fuentes-tecnicas
+provenance:
+  date: '2026-09-05'
+  authority: archive/reconstruction/MANDATO.md
+  origin: Autoría nueva para operar la reconstrucción independiente.

@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:autoria-kora
+kind: skill
+namespace: kora
+name: autoria-kora
+candidate: reconstruccion
+base: 2933fa0e5b781c3b222d71931c8fee57105625fad84dedad0a3b0b6a6310a343
+base_revision: 2933fa0e5b781c3b222d71931c8fee57105625fad84dedad0a3b0b6a6310a343
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f70d0b03ed0ac7e051cec020132d3ea0fdc2b8f2dcc3bdddf8805136d989b296
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f70d0b03ed0ac7e051cec020132d3ea0fdc2b8f2dcc3bdddf8805136d989b296
+previous_revision: 2933fa0e5b781c3b222d71931c8fee57105625fad84dedad0a3b0b6a6310a343
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/autoria-kora
+displaced_path: /home/felix/kora-pneuma/candidates/kora/autoria-kora/reconstruccion/displaced-f9fdb2b905a24568bcd7a3550b79410e
+admitted_at: '2026-09-13T03:10:21+00:00'

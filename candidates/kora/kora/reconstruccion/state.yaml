@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:kora
+kind: agent
+namespace: kora
+name: kora
+candidate: reconstruccion
+base: 6e2662109528863203e254b833b3ed550325f16e157814d0cda47dc257d408c8
+base_revision: 6e2662109528863203e254b833b3ed550325f16e157814d0cda47dc257d408c8
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: ef7f85c6cbb97b8ac4dbd6e310aba9ec2806760ff9ec44fc7112dd6a4d87da29
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: ef7f85c6cbb97b8ac4dbd6e310aba9ec2806760ff9ec44fc7112dd6a4d87da29
+previous_revision: 6e2662109528863203e254b833b3ed550325f16e157814d0cda47dc257d408c8
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/kora
+displaced_path: /home/felix/kora-pneuma/candidates/kora/kora/reconstruccion/displaced-a873f4c7737b445eb47d19e885b3c1cd
+admitted_at: '2026-09-13T03:10:34+00:00'
