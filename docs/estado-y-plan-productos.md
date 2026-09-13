@@ -11,23 +11,29 @@ conserva diagnóstico y evidencias por lote, sin gobernar el siguiente paso.
 ## Línea de estado publicada
 
 **Contratos reconstruidos y admitidos, maquinaria comprobada, instalaciones
-personales coherentes, dos reparaciones de Diseño admitidas por ciclos KORA
-completos y utilidad comparada en casos discriminantes; conformidad parcial en
-cobertura viva (seis agentes sin sesión en este ciclo) y economía de tokens
-aún no medida.** No corresponde declarar terminada la misión de reconstruir
-mejorando los productos: lo pendiente conserva ese estatus y no se suma a la
-afirmación de mejora completa.
+personales coherentes, cuatro reparaciones de Diseño admitidas por ciclos KORA
+completos, transformación integral demostrada en instancia sintética con
+medición completa y cobertura viva por promesa y superficie con un vacío
+declarado; conformidad parcial en seis agentes sin sesión en este ciclo.**
+Tres veredictos distintos sin contradicción: (a) cierre técnico de lo
+ejecutado —defectos materiales resueltos, instalaciones coherentes,
+publicación cerrada—; (b) conformidad parcial del alcance —lo no evaluado
+conserva ese estatus y no se suma a la mejora—; (c) aceptación personal
+recibida como incremento válido con conformidad parcial el 2026-09-14, con la
+aceptación final del plan pendiente de Félix. No corresponde declarar
+terminada la misión: lo pendiente conserva ese estatus.
 
-El corte de fuentes es `c5336b1` en pneuma/master y `9af3696` en
-knowledge/main. Los commits `5dd3e3b` y `c5336b1` admiten las reparaciones de
-`diseno-producto-integrado` (revisión `b2fe5158`) y `director-diseno-producto`
-(revisión `7f96bf6b`); no cambian el resto de las fuentes activas. Las historias
+El corte de fuentes es `49d9292` en pneuma/master y `9af3696` en
+knowledge/main. Los commits `2e225cd` y `49d9292` admiten la evidencia
+proporcional en `diseno-producto-integrado` (revisión `21e671cb`) y la
+tricotomía estática/ejecución/corroboración en `director-diseno-producto`
+(revisión `63058f56`); no cambian el resto de las fuentes activas. Las historias
 conservadas por `f827636` y `03d4a5f` siguen disponibles sin cambios.
 
 | Parte | Hecho comprobado o antecedente identificado | Límite / pendiente |
 |---|---|---|
 | Colección | 61 fuentes activas: 16 agentes y 45 skills. 58 declaran ambos destinos; 3 sólo Codex. | Cantidad descriptiva, sin cuota de reducción. `codex-route` se conserva; los otros 60 están integrados en lotes de reconstrucción. |
-| Lotes | KORA operativo, ingeniería, salud, GTD general, compatibilidad, organización, especialidades de proyecto, modelado y Diseño están admitidos y confirmados en Git. Diseño suma dos reparaciones admitidas en `5dd3e3b` y `c5336b1`. | Admisión y documentación de ensayos no equivalen a utilidad general demostrada; los recorridos de este corte cubren sus casos, no todo el corpus. |
+| Lotes | KORA operativo, ingeniería, salud, GTD general, compatibilidad, organización, especialidades de proyecto, modelado y Diseño están admitidos y confirmados en Git. Diseño suma cuatro reparaciones admitidas (`5dd3e3b`, `c5336b1`, `2e225cd`, `49d9292`). | Admisión y documentación de ensayos no equivalen a utilidad general demostrada; los recorridos de este corte cubren sus casos, no todo el corpus. |
 | Maquinaria | `check`: 523 activos, 18 archivados, 0 incidencias. Suite ejecutada en este corte: 251 pruebas, OK. | No acredita fidelidad de toda la biblioteca, carga de todos los cuerpos o utilidad. |
 | Codex personal | 61 instancias gestionadas en alcance: fuente y dependencias `current`, incluida la reparación de Diseño instalada. | Estado material más sesiones vivas de este corte (retoma, rutas de Diseño, gemelos, niveles, OPM, autoría, claridad); no equivale a conducta futura. |
 | Hermes personal | 62 instancias en alcance `current` (58 productos y 4 instancias adicionales de skills en perfiles); `gtd-felix` ausente excluido por encargo. Sin cambios nativos ni recuperación pendiente. | Carga verificada por instalación, render y presupuestos SOUL 16/16; uso vivo sólo por canario sintético. La cifra anterior de 33 pendientes queda reconciliada. |
@@ -47,16 +53,57 @@ existente; no son una fuente operativa nueva.
 |---|---|
 | Integridad mecánica | PASS en el catálogo actual y 251 pruebas de maquinaria; verificación focal de las 12 versiones preservadas. |
 | Fidelidad semántica | Revisiones y correcciones documentadas por lote. Hay tensiones focales aún examinables; no se releyeron todos los cuerpos para este corte. |
-| Carga nativa | Sesiones vivas de este corte en Codex (activación directa de skills) más presupuestos SOUL Hermes 16/16 completos con mapas intactos. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
-| Conducta | Casos sintéticos de los lotes más 16 sesiones vivas de este corte: retoma del gate reparado (2), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1) y claridad agente/método (2). Sin actos clínicos, institucionales ni envíos. |
-| Utilidad | Dos reparaciones admitidas por defectos demostrados; gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Economía de tokens: `NOT_MEASURED` (sin contador); costos de sesión observados en recibos. |
-| Efectos | Fuentes admitidas y publicadas (`5dd3e3b`, `c5336b1`); instalaciones personales coherentes en ambos destinos (Codex 61, Hermes 62 en alcance). Conocimiento sintético de prueba en biblioteca temporal, nunca en la personal. |
+| Carga nativa | Sesiones vivas de este corte en Codex (activación directa de skills) más presupuestos SOUL Hermes 16/16 completos con mapas intactos y una sesión viva del director en Hermes con instalación temporal desde fuente. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
+| Conducta | Casos sintéticos de los lotes más sesiones vivas de este corte: retomas del gate reparado (3, incluida tricotomía con ejecución real observada), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1), claridad agente/método (2) y director en Hermes con JSON exacto. Sin actos clínicos, institucionales ni envíos. |
+| Utilidad | Cuatro reparaciones admitidas por defectos demostrados; evidencia proporcional flexibilizada por tarea (una afirmación admite cita directa; el packet de la ruta A conserva su valor por decisión, rechazos y deuda, no por existir); gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Transformación integral: instancia sintética con medición completa (o200k_base, tiktoken 0.14.0 en venv temporal): fuente 138 → contenido 110 → candidata 84 tokens; compresión de contenido 23,64 %, total 39,13 %; control negativo PASSED con dos pérdidas genuinas reparadas. No valida el procedimiento en general ni la publicación sintética equivale a validación. |
+| Efectos | Fuentes admitidas y publicadas (`5dd3e3b`, `c5336b1`, `2e225cd`, `49d9292`); instalaciones personales coherentes en ambos destinos (Codex 61, Hermes 62 en alcance). Conocimiento sintético de prueba en biblioteca temporal, nunca en la personal. |
 
 La cobertura se apoya en los dictámenes por lote de la propuesta anterior y en
 la ejecución mecánica de este corte. Los recibos temporales son evidencia
 auxiliar: antes de reutilizar una afirmación decisiva se comprueba que existan y
 correspondan al caso, revisiones y entorno. Si faltan, se declara la limitación;
 no se reconstruyen logs ni se repiten campañas enteras para llenar un archivo.
+
+### Cobertura por promesa y superficie (2026-09-14)
+
+`PASS`/`FAIL` observados; `PRIOR` reutiliza el lote admitido sin repetirlo;
+`NOT_RUN` conserva estatus sin sumarse a la mejora. Superficies: `CX-D`
+skill directa Codex, `CX-R` rol TOML Codex, `H-P` perfil Hermes, `H-S`
+skill Hermes.
+
+| Promesa y producto | CX-D | CX-R | H-P | H-S | Base |
+|---|---|---|---|---|---|
+| Gate de evidencia reparado (skill+método) | PASS (3 sesiones) | — | — | PASS (skill_view + JSON exacto) | Instalación + render ambos |
+| Director reparado (tricotomía) | PASS (2 sesiones) | Instalado, invocación no ejercida | PASS (SOUL + JSON exacto, sol/high, 2 llamadas) | — | soul-budgets 16/16 |
+| Gemelos + métodos propietarios | PASS (3 sesiones, retoma incluida) | — | Instalado | Instalado | Lote salud + soul-budgets |
+| Niveles micro/meso/macro | PASS (3 sesiones) | — | Instalado | Instalado | Lote salud |
+| OPM experto + vecino | PASS (2 sesiones) | — | Instalado | Instalado | Lote modelado |
+| agent-architect, david-allen, gtd-flow | PASS (3 sesiones; agente/método inconclusa) | — | Instalado | Instalado | Lotes respectivos |
+| `steve-jobs`, `ux-research-design-ai`, `allan-kelly`, `dov-dori`, agente `kora` | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN | PRIOR (lotes admitidos) |
+| `fugaz` | NOT_RUN (frontera: delegación sólo Codex, OpenCode retiene) | PRIOR | Instalado | Instalado | Fuente + lote ingeniería |
+| Transformación integral (instancia sintética) | PASS (helper + lectura R1 5/5 + control PASSED + medición) | — | PRIOR (sesión 09-13: helper + publicación ficticia) | — | Tests + recibo `226ee3c7` |
+
+Un canario genérico o un SOUL admisible no se usan como conducta de otro
+producto: la fila del director en Hermes es sesión viva propia con la fuente
+reparada. No se abrió campaña por agente: sólo se probó el vacío material
+(conducta Hermes de lo reparado) y los frentes discriminantes del plan.
+
+### Registro durable mínimo del caso integral
+
+Fuente sintética (sha256 `02747567…a7cd9430`): regla viernes hábil semanal;
+negación en festivos; condición viernes festivo → jueves hábil anterior;
+excepción con prevalencia del operador; tabla A 72 h sin frío, B 24 h sin
+frío, C 12 h con frío. Procedimiento `koraficacion-integral` con helper
+(`init/next/submit/reopen/build`, encoding `o200k_base`): inventario de 5
+unidades y 5 preguntas, revisión `same_context`, reapertura por dos pérdidas
+genuinas halladas en cotejo (`de entrega`, ausencia overstated), bloqueo
+`TOKEN_REGRESSION` resuelto con representación densa, revisión global con
+control negativo `PASSED` (alteración jueves→miércoles detectada con efecto).
+Artefacto (sha256 `226ee3c7…5aaf`): cuatro frases denses con criterio literal.
+Medición: 138 → 110 → 84 tokens; contenido −23,64 %, total −39,13 %.
+Lectura independiente R1 5/5 sobre v1; v3 cubierta por re-revisión (límite
+declarado); q05 muestra inferencia del lector marcada como tal, sin regla
+inventada. Esto acredita la instancia, no el procedimiento en general.
 
 ### Reproducir y mantener el corte
 
@@ -391,10 +438,10 @@ interrupción, sólo `HANDOFF.md` temporal conserva el siguiente paso.
   propiedad, revisión y recuperación porque incluso un usuario puede tener dos
   procesos y ediciones que no deben perderse.
 
-**Siguiente movimiento (tras la ejecución 2026-09-14 de los incrementos 1–6):**
+**Siguiente movimiento (tras la ejecución 2026-09-14 y sus cuatro correcciones):**
 sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
 `dov-dori` y el agente `kora` cuando un caso discriminante las requiera
-(`fugaz` conserva su frontera Codex declarada); medir economía de tokens cuando
-exista contador compatible; y la aceptación personal de Félix sobre las
-reparaciones y el dictamen, que se distingue del juicio técnico del ejecutor.
+(`fugaz` conserva su frontera Codex declarada); economía de tokens medida en
+la instancia integral, pendiente en el resto; y la aceptación final de Félix,
+distinguida del cierre técnico y de la conformidad parcial ya recibida.
 No hace falta otra auditoría general ni una especificación nueva para continuar.
