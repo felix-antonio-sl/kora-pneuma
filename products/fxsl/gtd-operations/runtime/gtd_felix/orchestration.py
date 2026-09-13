@@ -567,7 +567,7 @@ class OrchestrationWorker:
                 self.control._load().get('attention_displacements', {}).values())
             if not validity['allowed'] and not own_terminal and not technical_family:
                 # Request identifies the family; native stop still needs a poll.
-                self.control.request_stop(job.get('requested_by', self.config['actor']), 'gtd-invalid-stop:' + job_id, job_id)
+                self.control.request_stop(job.get('requested_by') or self.config.get('actor'), 'gtd-invalid-stop:' + job_id, job_id)
                 try:
                     await self.hermes.stop(job_id)
                 except Exception:

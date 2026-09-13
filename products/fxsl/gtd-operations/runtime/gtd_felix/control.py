@@ -151,6 +151,16 @@ class ExecutionControl:
         if run["native_provider"] and run["native_profile"] and run["native_id"]:
             native = {"provider": run["native_provider"], "host": run["native_host"] or "localhost",
                       "profile": run["native_profile"], "id": run["native_id"]}
+            # Preserve provider-specific identity facets (e.g. Codex
+            # thread_id) kept in the mutable detail projection. Columns stay
+            # authoritative for the indexed quadruple; extras round-trip so a
+            # later observation with the identical full identity is not
+            # misread as native_identity_changed.
+            stored = detail.get("native")
+            if isinstance(stored, dict):
+                for key, value in stored.items():
+                    if key not in native:
+                        native[key] = copy.deepcopy(value)
         # Legacy terminal/delivery derived for compat; authoritative state is
         # runs.state / runs.integration.
         terminal = run["state"] in self.RUN_TERMINAL
@@ -1245,6 +1255,9 @@ class ExecutionControl:
                 # Recording an already dispatched effect remains possible after revocation.
                 detail = json.loads(run["detail_json"]) if run["detail_json"] else {}
                 detail["delivery"] = "acknowledged"
+                # Keep the full provider identity (facets beyond the indexed
+                # quadruple) so later observations compare equal.
+                detail["native"] = copy.deepcopy(native)
                 # State: reserved -> dispatching (takes the global slot;
                 # one_native_active partial index guards single execution).
                 new_state = "dispatching" if run["state"] == "reserved" else run["state"]
@@ -1347,6 +1360,7 @@ class ExecutionControl:
             new_state = "completed"
         delivery = "uncertain" if status in {"uncertain", "not_found"} else "acknowledged"
         detail["delivery"] = delivery
+        detail["native"] = copy.deepcopy(native)
         # Monotonic cumulative consumption: never sum accumulated polls twice.
         # Unknown cost stays NULL in the column; charged detail stays
         # conservative for budget without inventing zero.

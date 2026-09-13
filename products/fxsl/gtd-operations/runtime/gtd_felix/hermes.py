@@ -524,6 +524,10 @@ class HermesAdapter:
                     state = self._get('hermes:state:' + job_id) or {}
                     if state.get('native_id'):
                         return {'status': 'already_submitted', 'job_id': job_id, 'native_id': state['native_id']}
+                    if state.get('never_sent'):
+                        # A previous attempt never reached the provider (no
+                        # slot): reconcile-style first send, not a blind retry.
+                        return await self._first_send(job, route, old, durable)
                     return self._uncertain(job_id, 'dispatch_receipt_missing_reconcile')
                 limits = self._validation(job)
                 discovery = await self.discover(job['bot_id'])
@@ -547,17 +551,31 @@ class HermesAdapter:
                     return self._reject_no_effect(job_id, 'preflight_transport_failed')
                 return self._uncertain(job_id, 'native_transport_uncertain')
 
+    async def _first_send(self, job, route, intent, durable_check):
+        # Shared first-send tail: revalidate, reclaim the slot and perform the
+        # initial remote creation. Used when the adapter durably knows nothing
+        # was ever sent (never_sent), from submit retries and reconciliations.
+        # durable_check mirrors each caller's strictness (submit uses its
+        # durable flag; reconcile keeps its historical relaxed check).
+        self._validation(job)
+        discovery = await self.discover(job['bot_id'])
+        self._check_limits(route, discovery, self._validation(job), durable_check)
+        return await self._dispatch(job, route, intent)
+
     async def _dispatch(self, job, route, intent):
         self._validation(job)
         self._same_route(route, intent)
         # Claim the single global native slot durably BEFORE any remote
         # effect. The network stays outside the storage transaction; if the
-        # slot is taken, return without creating a second remote run. The
-        # claim survives uncertainty and restarts via the persisted intent.
+        # slot is taken, persist never_sent (nothing reached the provider) and
+        # return without creating a second remote run. The claim and the flag
+        # survive uncertainty and restarts via the persisted intent/state.
         claimed = self.control.claim_dispatch(job['id'])
         if claimed.get('status') != 'claimed':
-            return self._uncertain(job['id'], claimed.get('error', 'native_slot_busy'))
-        self._state(job['id'], delivery='sending')
+            out = self._uncertain(job['id'], claimed.get('error', 'native_slot_busy'))
+            self._state(job['id'], never_sent=True)
+            return out
+        self._state(job['id'], delivery='sending', never_sent=False)
         if intent['durable']:
             body = intent['body']
             args = ['kanban', 'create', body['title'], '--body', body['body'], '--created-by', body['created_by'],
@@ -729,6 +747,17 @@ class HermesAdapter:
                 if state.get('native_id'):
                     return await self._poll(job_id)
                 if intent['durable']:
+                    if (state.get('never_sent') and not state.get('native_id')
+                            and not self._get('hermes:no-dispatch:' + job_id)):
+                        # Durably never sent (slot was busy): this is a first
+                        # send, not a recovery. Revalidate, reclaim and create
+                        # once the slot is free; an uncertain send without
+                        # receipt keeps the inventory path below, never a blind
+                        # recreation.
+                        result = await self._first_send(job, route, intent, False)
+                        if result.get('status') == 'submitted':
+                            return await self._poll(job_id)
+                        return result
                     matches = []
                     for extra in ([], ['--archived']):
                         tasks = await self._cli(route, ['kanban', 'list', '--json', *extra])
