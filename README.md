@@ -51,10 +51,11 @@ acredita fidelidad del conocimiento, utilidad diferencial de un agente ni
 conducta futura. Un recibo `current` compara la realización; el conocimiento
 consultado por una referencia viva puede cambiar sin reinstalar el agente.
 
-El saneamiento actual se limita a la maquinaria y sus recorridos operativos.
-La revisión de contenidos, métodos y utilidad de agentes, skills y conocimientos
-corresponde a una etapa posterior. Las pruebas de la maquinaria usan casos
-sintéticos; su resultado no valida aquellos artefactos.
+El saneamiento de la maquinaria tiene sus recorridos comprobados con casos
+sintéticos; ese resultado no valida los contenidos, métodos o utilidad de los
+productos. La [propuesta de reconstrucción](docs/propuesta-refactorizacion-productos.md)
+reúne el diagnóstico, la arquitectura candidata, la migración y el goal preparado
+para ejecutar esa etapa. La reconstrucción de productos aún no está implementada.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).
