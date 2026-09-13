@@ -68,6 +68,9 @@ class AgendaApplicationTests(unittest.IsolatedAsyncioTestCase):
                 return response.status,await response.json()
     def metadata(self):return self.service.store.db.execute('SELECT key,value FROM metadata ORDER BY key').fetchall()
     async def test_default_multicalendar_pagination_and_coverage_unchanged(self):
+        from gtd_felix.source_monitor import coverage
+        inventory = coverage(self.service)['sources']
+        self.assertEqual(next(s['account_alias'] for s in inventory if s['source_id'] == 'calendar'), 'selected + alias')
         self.transport.pages[(CAL1,None)]={'items':[],'nextPageToken':'second'}
         self.transport.pages[(CAL1,'second')]={'items':[{'id':'day','start':{'date':'2026-03-29'},'end':{'date':'2026-03-30'}}],'timeZone':'Europe/Berlin'}
         before=self.metadata();status,result=await self.get(token='owner')

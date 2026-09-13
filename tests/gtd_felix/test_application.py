@@ -32,6 +32,20 @@ def config(root, port=0):
 
 
 class HTTPTests(unittest.IsolatedAsyncioTestCase):
+    async def test_source_provider_shorthand_and_invalid_shape(self):
+        mail = self.service.capture('felix', 'mail-source', 'Synthetic mail', source={'provider': 'gmail'})['item']
+        self.service.capture('felix', 'calendar-source', 'Synthetic appointment', source={'provider': 'calendar'})
+        for source in ('gmail', {'provider': 'gmail'}):
+            async with self.session.get(self.url + '/v1/items', params={'filters': json.dumps({'source': source})},
+                    headers={'Authorization': 'Bearer ' + PRINCIPAL}) as response:
+                self.assertEqual(response.status, 200)
+                self.assertEqual([item['id'] for item in await response.json()], [mail['id']])
+        for source in (None, [], 7, ''):
+            async with self.session.get(self.url + '/v1/items', params={'filters': json.dumps({'source': source})},
+                    headers={'Authorization': 'Bearer ' + PRINCIPAL}) as response:
+                self.assertEqual(response.status, 400)
+                self.assertEqual((await response.json())['status'], 'rejected')
+
     async def asyncSetUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.config = config(self.temp.name)

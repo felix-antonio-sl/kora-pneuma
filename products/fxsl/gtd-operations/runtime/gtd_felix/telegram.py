@@ -166,11 +166,43 @@ class TelegramAdapter:
                 self._tasks[key] = asyncio.create_task(self._return_pending())
         self._tasks = {key: task for key, task in self._tasks.items() if not task.done()}
 
-    def _notification_receipt(self, event, status, reason=None):
+    def _question_return_basis(self, event):
+        """Durable question/context, never inferred from native_reply wording."""
+        with self.service.store.lock:
+            item = self.service.get_item(event['payload'].get('item_id'))
+            if (not item or not item.get('decision_needed')
+                    or not isinstance(item.get('decision_question'), str)
+                    or not item['decision_question'].strip()):
+                return None
+            routes = self.service.routed_human_sources(item)
+            sources = [route['source_item_id'] for route in routes]
+            latest = {material['id']: material for material in self.service.materials(item['id'])}
+            materials = sorted({digest({key: value for key, value in material.items()
+                if key not in {'id', 'version', 'created_at'}}) for material in latest.values()})
+            # Status/meaning changes are useful even when produced by the principal.
+            values = {key: item.get(key) for key in self.service.MEANING | {
+                'status', 'due_at', 'review_at', 'decision_at', 'decision_needed', 'decision_question'}}
+            assessment = (item.get('assessments') or [{}])[-1]
+            assessment = {key: assessment[key] for key in {
+                'actor', 'satisfied', 'evidence', 'gap', 'material_id', 'material_version',
+                'source_versions', 'mandate_id'} if key in assessment}
+            return digest({'item_id': item['id'], 'values': values, 'materials': materials,
+                'assessment': assessment, 'result_gap': item.get('result_gap'),
+                'inputs': self.service.work_input_basis(item['id'], sources),
+                'routed_sources': [(r['source_item_id'], r['source_version'], r['source_revision']) for r in routes]})
+
+    def _question_return_key(self, event):
+        return 'telegram-question-return:' + digest([self.config.account, self.config.chat_id,
+            self.config.owner_user_id, event['payload'].get('item_id')])
+
+    def _notification_receipt(self, event, status, reason=None, *, question_basis=None):
         # This receipt is transport state; it never changes the notification's
         # original payload or asserts that the underlying GTD result is done.
         key = 'telegram-delivery:' + digest([self.config.account, event['event_key']])
         with self.service.store.transaction() as db:
+            if status == 'confirmed' and question_basis is not None:
+                self.service._set_meta(self._question_return_key(event), {
+                    'basis': question_basis, 'event_key': event['event_key']})
             db.execute('INSERT OR REPLACE INTO metadata VALUES(?,?)', (key, json.dumps({
                 'event_key': event['event_key'], 'account': self.config.account,
                 'chat_id': self.config.chat_id, 'request_event_key': self._notification_request.get(),
@@ -280,7 +312,8 @@ class TelegramAdapter:
 
     async def _deliver_notification(self, event, *, automatic=False):
         key = event['event_key']
-        async with self._notification_locks.setdefault(key, asyncio.Lock()):
+        async with self._notification_locks.setdefault(
+                'item:' + str(event['payload'].get('item_id', key)), asyncio.Lock()):
             # Both the command and the automatic worker can hold old snapshots.
             with self.service.store.lock:
                 row = self.service.store.db.execute('SELECT status FROM events WHERE event_key=?', (key,)).fetchone()
@@ -311,6 +344,12 @@ class TelegramAdapter:
                     and intent.get('status') != 'confirmed' for intent in intents):
                 return False
             chunks = self._notification_content(event)
+            question_basis = self._question_return_basis(event)
+            with self.service.store.lock:
+                delivered = self.service._meta(self._question_return_key(event), {})
+            if automatic and question_basis is not None and delivered.get('basis') == question_basis:
+                self._notification_receipt(event, 'suppressed', 'question_already_delivered')
+                return False
             for index, chunk in enumerate(chunks):
                 # Earlier sends yield to other work. Revalidate before each new
                 # effect; a correction during a multipart delivery stops the rest.
@@ -328,7 +367,7 @@ class TelegramAdapter:
                 if not isinstance(response, dict) or not response.get('message_id'):
                     self._notification_receipt(event, 'uncertain', 'notification_delivery_uncertain')
                     return True
-            self._notification_receipt(event, 'confirmed')
+            self._notification_receipt(event, 'confirmed', question_basis=question_basis)
             return True
         except asyncio.CancelledError:
             raise

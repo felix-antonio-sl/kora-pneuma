@@ -451,6 +451,12 @@ class GTDService(GTDDomain):
         allowed = {"kind", "status", "open", "available", "text", "project_id", "responsibility_id", "ids", "context", "executor", "source"}
         if not isinstance(filters, dict) or set(filters) - allowed:
             raise ValueError("invalid_filters")
+        if "source" in filters:
+            source = filters["source"]
+            if isinstance(source, str) and source.strip():
+                filters = {**filters, "source": {"provider": source}}
+            elif not isinstance(source, dict):
+                raise ValueError("invalid_source_filter")
         with self.store.lock:
             items = [json.loads(row[0]) for row in self.store.db.execute("SELECT document FROM items ORDER BY rowid")]
         by_id = {item["id"]: item for item in items}

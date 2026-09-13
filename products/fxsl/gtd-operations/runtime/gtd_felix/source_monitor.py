@@ -92,10 +92,10 @@ class SourceMonitor:
                 binding = fingerprint(scope)
                 old = service._meta(PREFIX + source_id)
                 if old and old['scope_fingerprint'] == binding:
-                    old.update(configured=True, stale_after_seconds=config['stale_after_seconds'])
+                    old.update(configured=True, account_alias=alias, stale_after_seconds=config['stale_after_seconds'])
                     service._set_meta(PREFIX + source_id, old)
                 else:
-                    service._set_meta(PREFIX + source_id, {'source_id': source_id, 'scope': scope,
+                    service._set_meta(PREFIX + source_id, {'source_id': source_id, 'account_alias': alias, 'scope': scope,
                         'scope_fingerprint': binding, 'configured': True, 'configured_at': now(),
                         'stale_after_seconds': config['stale_after_seconds'], 'health': 'not_read',
                         'enumeration': 'not_read', 'originals_complete': False, 'projection': 'not_read',
