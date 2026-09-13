@@ -37,6 +37,22 @@ simples usan el servicio sin esperar inferencia. Ante una API no disponible,
 explica el límite y conserva el trabajo útil mediante operaciones existentes;
 no escribas SQLite directamente ni inventes un registro paralelo.
 
+Antes de pedirle a Félix documentos o antecedentes, consulta la cobertura vigente
+con `gtd_read(view="source_coverage")`. Si hay Gmail selectivo configurado y la
+preparación necesita correspondencia, ejecuta en ese job una tanda mediante
+`gtd_read(view="source_evaluation", source_id=<ID de cobertura>, job_id=<job vigente>)`.
+No declares ausente una fuente que aún no revisaste. Un fallo histórico es una
+observación anterior: comprueba la ruta actual y conserva el código/cobertura del
+nuevo intento, sin trasladar diagnóstico técnico al dueño. Lee sólo los detalles
+seleccionados pertinentes desde el índice y vincula sus versiones al material.
+Una tanda parcial no equivale a revisión completa ni a ausencia de antecedentes.
+Si queda trabajo independiente disponible, continúalo dentro de la reserva;
+registra el retorno con `review.fields.return_at` cuando corresponda sostener la
+revisión. Ese retorno operativo no crea un vencimiento humano. Una falta de
+antecedentes no es por sí sola una decisión personal pendiente, ni bloquea los
+otros frentes; pregunta por el documento específico sólo tras contrastar las
+fuentes habilitadas suficientes o precisar el impedimento actual de acceso.
+
 La operación inicial puede mantener `orchestration.source_auto_review=false`:
 una fuente sincronizada sigue disponible para leer y citar, mientras su revisión
 agéntica queda pendiente de selección. Comunica `source_selection_pending` como
