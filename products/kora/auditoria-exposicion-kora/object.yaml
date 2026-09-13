@@ -2,16 +2,27 @@ id: urn:kora:artefacto:auditoria-exposicion-kora
 kind: skill
 name: auditoria-exposicion-kora
 description: Audita si el conocimiento requerido por un consumidor resuelve, llega
-  a su realización y se usa en un recorrido real.
+  a su realización y se usa, aplicando solo los planos necesarios del método integrado.
 content: content.md
 targets:
 - codex
 - hermes
 requires:
-- urn:kora:artefacto:instalacion-kora
+- urn:kora:artefacto:auditoria-artefactos-kora
+resources:
+- references/caso-verificacion.md
 provenance:
   previous: archive/previous/kora/auditoria-exposicion-kora
   date: '2026-09-05'
   authority: archive/reconstruction/MANDATO.md
   change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
     completo recuperable en previous.
+  reconstruction:
+    date: '2026-09-13'
+    basis:
+    - docs/propuesta-refactorizacion-productos.md
+    - Comparación focal autorizada de acceso especializado e integración KORA.
+    integrated_method: products/kora/auditoria-artefactos-kora
+    decision: Conserva el disparador y nombre nativo de la auditoría de exposición;
+      auditoria-artefactos-kora mantiene el método y esta entrada selecciona únicamente
+      los planos necesarios para el caso.

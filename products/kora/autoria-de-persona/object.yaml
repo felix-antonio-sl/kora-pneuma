@@ -1,18 +1,27 @@
 id: urn:kora:artefacto:autoria-de-persona
 kind: skill
 name: autoria-de-persona
-description: 'Usar al crear o reparar la personalidad de un agente: convierte propósito,
-  criterio y voz en conducta observable.'
+description: 'Usar al crear o reparar específicamente la persona de un agente: conserva
+  la entrada directa y aplica la ruta canónica de persona de autoria-kora.'
 content: content.md
 targets:
 - codex
 - hermes
 requires:
-- urn:kora:kb:cat-contrato-ingenieria-agentica
 - urn:kora:artefacto:autoria-kora
+resources:
+- references/caso-verificacion.md
 provenance:
   previous: archive/previous/kora/autoria-de-persona
   date: '2026-09-05'
   authority: archive/reconstruction/MANDATO.md
   change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
     completo recuperable en previous.
+  reconstruction:
+    date: '2026-09-13'
+    basis:
+    - docs/propuesta-refactorizacion-productos.md
+    - Comparación focal autorizada de acceso especializado e integración KORA.
+    integrated_method: products/kora/autoria-kora/references/persona.md
+    decision: Conserva el disparador y nombre nativo de la especialidad; autoria-kora
+      mantiene el único método de persona y la responsabilidad por el contrato completo.

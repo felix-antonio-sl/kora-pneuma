@@ -2,17 +2,26 @@ id: urn:dev:artefacto:agent-architect
 kind: agent
 name: agent-architect
 description: Diseña y escribe agentes y skills desde su propósito, contrato observable
-  y capacidades efectivas de Codex y Hermes.
+  y capacidades efectivas de Codex y Hermes, usando los métodos canónicos de KORA
+  sin prometer selección o carga del runtime.
 content: content.md
 targets:
 - codex
 - hermes
 requires:
 - urn:kora:artefacto:autoria-kora
-- urn:kora:artefacto:autoria-de-persona
+resources: []
 provenance:
   previous: archive/previous/dev/agent-architect
   date: '2026-09-05'
   authority: archive/reconstruction/MANDATO.md
   change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
     completo recuperable en previous.
+  reconstruction:
+    date: '2026-09-13'
+    basis:
+    - docs/propuesta-refactorizacion-productos.md
+    - Comparación focal autorizada de acceso especializado e integración KORA.
+    decision: Conserva la identidad y responsabilidad estrecha de arquitectura de
+      agentes; delega el procedimiento a autoria-kora y su ruta opcional de persona,
+      sin una dependencia separada ni promesas derivadas del archivo nativo.

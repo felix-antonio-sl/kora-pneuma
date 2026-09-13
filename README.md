@@ -67,7 +67,18 @@ autorizada, revisión vacía y no activación vecina. El lote sanitario incorpor
 18 productos, incluidos los gemelos de Dirección Técnica HODOM y Jefatura de
 Telemedicina, con seis referencias revisadas y siete casos sintéticos por
 destino. Sus instalaciones están actualizadas; no se ejecutaron actos clínicos
-ni institucionales. El resto de la colección sigue en ejecución; estos lotes no
+ni institucionales. El lote GTD general también está admitido e instalado en ambos
+destinos: `david-allen`, `gtd-flow` con sus cuatro referencias y
+`memorizacion-espaciada` con sus reglas de formulación. Cinco casos sintéticos
+por runtime en sesiones nuevas acreditaron claridad, retención con excepción,
+espera como responsabilidad ajena y no activación vecina; los oráculos de
+formato se reevaluaron posthoc sin repetir inferencia. Los tres accesos
+especializados KORA se conservan como identidades propias en ambos destinos:
+`agent-architect`, `autoria-de-persona` y `auditoria-exposicion-kora`, con su
+caso de verificación cada uno; retirar y aliasar no redirige la identidad
+nativa y no se afirma utilidad diferencial. Las seis instalaciones personales
+quedaron `current` en ambos destinos, sin dependencia efectiva del servicio
+excluido gtd-felix. El resto de la colección sigue en ejecución; estos lotes no
 lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).

@@ -153,6 +153,21 @@ quedaron con `handle: null`, pendientes de resolución fuente. Los otros trece
 resultados se conservaron; Codex ya distinguía esos estados. La instalación no
 modificó configuraciones, credenciales, servicios ni GTD protegido.
 
+El lote GTD general y los tres accesos especializados KORA están admitidos e
+instalados en Codex y Hermes: `david-allen`, `gtd-flow` con sus cuatro
+referencias, `memorizacion-espaciada` con sus reglas, `agent-architect`,
+`autoria-de-persona` y `auditoria-exposicion-kora` con su caso de verificación
+cada uno. Seis revisiones concretas admitidas por el ciclo existente; `check`
+sin incidencias con 523 objetos y 463 referencias. Cinco casos sintéticos por
+destino en sesiones nuevas acreditaron claridad, retención con excepción,
+persona, exposición y no activación vecina en ambos runtimes; los oráculos de
+formato se reevaluaron posthoc sin repetir inferencia y las fuentes
+conservadas corresponden a los hashes del recibo. Los accesos KORA se
+conservan como identidades propias porque retirar y aliasar no redirige la
+identidad nativa; no se afirma utilidad diferencial. Las seis instalaciones
+personales quedaron `current` en ambos destinos, sin cambios pendientes ni
+recuperación, y sin dependencia efectiva del servicio excluido gtd-felix.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**
