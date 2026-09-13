@@ -127,6 +127,7 @@ class SourceEvaluation:
         self.busy = True
         deadline = self.clock() + min(20, max(0, limits['max_runtime_seconds'] - job['observed_runtime_seconds'] - 2))
         counts = dict(selected=0, noise=0, uncertain=0)
+        selected_revisions = set()
         total_usage = dict(input_tokens=0, output_tokens=0)
         calls = 0
         call_id = uuid4().hex
@@ -164,6 +165,8 @@ class SourceEvaluation:
                     raise asyncio.CancelledError()
                 decision = self._result(result)
                 counts[decision['classification']] += 1
+                if decision['classification'] == 'selected':
+                    selected_revisions.add((payload['external_id'], payload['revision']))
                 for key, value in result['usage'].items():
                     total_usage[key] = None if value is None or total_usage[key] is None else total_usage[key] + value
                 with self.service.store.transaction():
@@ -196,8 +199,25 @@ class SourceEvaluation:
                 raise ValueError('selection_time_unavailable')
             info = await asyncio.wait_for(self.monitor.evaluate_once(source_id, evaluate, projection_guard), timeout=seconds)
             projection_guard()
+            selected_sources = []
+            partition = adapter.inspect(source_id)['partition']
+            for item in self.service.query({'source': partition}):
+                source = item['source']
+                if (item.get('status') == 'withdrawn' or source.get('availability') != 'present'
+                        or (source['external_id'], source['revision']) not in selected_revisions):
+                    continue
+                # Only already projected selected sources cross this boundary;
+                # never include discarded bodies or fall back to raw source text.
+                subject = ''
+                try:
+                    subject = json.loads(item.get('text', '').split('\n', 1)[0]).get('headers', {}).get('Subject', '')
+                except (ValueError, AttributeError, TypeError):
+                    pass
+                selected_sources.append({'item_id': item['id'], 'version': item['version'],
+                    'subject': subject[:160] if isinstance(subject, str) else ''})
             return {'status': 'evaluated' if info.get('health') == 'complete' else 'partial',
                     'source_id': source_id, 'counts': counts, 'usage': total_usage,
+                    'selected_sources': selected_sources,
                     'coverage': {k: info.get(k) for k in ('health', 'enumeration', 'projection', 'pending_reads', 'priority')},
                     'time_accounting': 'included_in_parent_wall_time'}
         except (asyncio.TimeoutError, asyncio.CancelledError):

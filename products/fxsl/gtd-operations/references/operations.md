@@ -1047,8 +1047,13 @@ configurado, no inventes otra cuenta ni amplíes su fecha inicial. El período d
 antecedentes solicitado para un asunto no modifica el ámbito autorizado de Gmail.
 
 Cada llamada admite hasta cinco mensajes de página y cinco reintentos, con límite
-conjunto de veinte segundos. Devuelve conteos, cobertura y uso, sin cuerpos
-rechazados. Un resultado parcial exige conservar la cobertura pendiente; no prueba
+conjunto de veinte segundos. Devuelve conteos, cobertura, uso y `selected_sources`
+de los correos recién seleccionados y ya incorporados: `item_id`, `version` y asunto
+acotado. No devuelve cuerpos rechazados. Lee esos IDs con `gtd_read(view="item")`
+y aprovecha sus antecedentes antes de abrir otra tanda o afirmar que faltan fuentes.
+Una referencia sólo se entrega si su revisión seleccionada sigue presente y vigente;
+las decisiones reutilizadas pueden producir conteos cero y lista vacía.
+Un resultado parcial exige conservar la cobertura pendiente; no prueba
 que no existan antecedentes. Consulta después el índice paginado y detalles de
 fuentes seleccionadas pertinentes, vinculando sus versiones al material preparado.
 

@@ -80,6 +80,9 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
         rows = self.service.query({'source': {'provider': 'gmail'}})
         self.assertEqual(1, len(rows))
         self.assertIn('PRIVATE_BODY_selected', rows[0]['text'])
+        self.assertEqual([{'item_id': rows[0]['id'], 'version': rows[0]['version'],
+                           'subject': 'External assignment'}], result['selected_sources'])
+        self.assertNotIn('PRIVATE_BODY', json.dumps(result['selected_sources']))
         metadata = [row[0] for row in self.service.store.db.execute(
             "SELECT value FROM metadata WHERE key LIKE 'source-evaluation:%'")]
         self.assertNotIn('PRIVATE_BODY', json.dumps(metadata))
