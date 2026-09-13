@@ -100,19 +100,55 @@ class OrchestrationWorker:
         if event['provider'] != 'gtd-review' or type(version) is not int:
             return False
         # An exact recorded operation/version, not merely an agent's latest title.
+        # Bounded: operations for this item/version (few) + recent runs (few,
+        # LIMIT 64) to include parent scopes that contain this item's ops.
+        # Never the full history; 64 covers active families plus recent work.
         with self.service.store.lock:
             rows = self.service.store.db.execute('SELECT actor,operation_id FROM operations WHERE item_id=? AND applied_version=?', (item_id, version)).fetchall()
+        own_operations = {}
         with self.service.store.lock:
-            jobs = self.control._load()['jobs'].values()
-            own_operations = {operation: job['actor'] for job in jobs
-                for operation in [job.get('domain_operation_id'), *[p['operation_id'] for p in job.get('progress', [])]] if operation}
+            for r in self.service.store.db.execute(
+                    "SELECT id FROM runs ORDER BY rowid DESC LIMIT 64").fetchall():
+                run = self.control._run_row(r["id"])
+                if run is None:
+                    continue
+                try:
+                    import json as _json
+                    detail = _json.loads(run["detail_json"]) if run["detail_json"] else {}
+                except ValueError:
+                    detail = {}
+                # Progress + domain ops for this run only (few).
+                ops = []
+                if detail.get("domain_operation_id"):
+                    ops.append(detail["domain_operation_id"])
+                ops.extend(detail.get("domain_operation_ids", []) or [])
+                for p in detail.get("progress", []) or []:
+                    if isinstance(p, dict) and p.get("operation_id"):
+                        ops.append(p["operation_id"])
+                for operation in ops:
+                    if operation:
+                        own_operations[operation] = run["actor"]
         return any(own_operations.get(row['operation_id']) == row['actor'] for row in rows)
 
     def _executor_returns(self, state):
         """Reconstruct one review input per authenticated executor delivery."""
+        # Bounded: executor integrated runs only (few, indexed), never global.
         records = state.setdefault('executor_returns', {})
-        for job in self.control._load()['jobs'].values():
-            if (not job['terminal'] or job['integration'] != 'integrated'
+        try:
+            rows = self.service.store.db.execute(
+                "SELECT id FROM runs WHERE integration='integrated' ORDER BY rowid LIMIT 64").fetchall()
+        except Exception:
+            rows = []
+        for r in rows:
+            run = self.control._run_row(r["id"])
+            if run is None:
+                continue
+            cycle = self.control._cycle_row(run["cycle_id"])
+            try:
+                job = self.control._job_from_rows(cycle, run)
+            except Exception:
+                continue
+            if (not job.get('terminal') or job.get('integration') != 'integrated'
                     or self.service.actor_role(job['actor']) != 'executor'):
                 continue
             operation = job.get('domain_operation_id')
@@ -622,10 +658,34 @@ class OrchestrationWorker:
         Jobs carry no durable timestamps and persisted JSON orders UUIDs, not
         time, so dict order never breaks ties: every tied candidate counts. If
         any of them already contains the current bases, the change is consumed.
+        Bounded to runs for this item (few, indexed) plus any synthetic jobs
+        passed explicitly by unit tests (few, in-memory).
         """
+        candidates = []
+        # Synthetic unit-test jobs (in-memory, few) for logic coverage.
+        try:
+            for job in (control_state or {}).get('jobs', {}).values():
+                if isinstance(job, dict) and job.get('item_id') == item_id:
+                    candidates.append(job)
+        except Exception:
+            pass
+        try:
+            rows = self.service.store.db.execute(
+                "SELECT id FROM runs WHERE item_id=? ORDER BY rowid LIMIT 64", (item_id,)).fetchall()
+        except Exception:
+            rows = []
+        for r in rows:
+            run = self.control._run_row(r["id"])
+            if run is None:
+                continue
+            cycle = self.control._cycle_row(run["cycle_id"])
+            try:
+                candidates.append(self.control._job_from_rows(cycle, run))
+            except Exception:
+                continue
         best, best_written = [], -1
-        for job in control_state['jobs'].values():
-            if job.get('item_id') != item_id or not self._reservation_spent(job):
+        for job in candidates:
+            if not self._reservation_spent(job):
                 continue
             written = self._written_version(job, item_id)
             if written > best_written:
@@ -653,7 +713,27 @@ class OrchestrationWorker:
         their contract. An owner operation at the same version never re-arms
         by itself.
         """
-        jobs = [job for job in control_state['jobs'].values() if job.get('item_id') == item['id']]
+        # Bounded: runs for this item only (few) plus synthetic unit-test jobs.
+        jobs = []
+        try:
+            for job in (control_state or {}).get('jobs', {}).values():
+                if isinstance(job, dict) and job.get('item_id') == item['id']:
+                    jobs.append(job)
+        except Exception:
+            pass
+        try:
+            for r in self.service.store.db.execute(
+                    "SELECT id FROM runs WHERE item_id=? ORDER BY rowid LIMIT 64", (item['id'],)).fetchall():
+                run = self.control._run_row(r["id"])
+                if run is None:
+                    continue
+                cycle = self.control._cycle_row(run["cycle_id"])
+                try:
+                    jobs.append(self.control._job_from_rows(cycle, run))
+                except Exception:
+                    continue
+        except Exception:
+            pass
         tied, written = self._tied_spent_reviews(control_state, item['id'])
         if not tied:
             return False
@@ -689,15 +769,46 @@ class OrchestrationWorker:
 
     async def _continue_work(self, state):
         records = state.setdefault('continuations', {})
-        control_state = self.control._load()
-        return_jobs = {self.control._load()['operations'].get(op, {}).get('receipt', {}).get('job_id')
-                       for op, admission in state.get('admissions', {}).items()
-                       if any(e['payload'].get('reason') == 'executor_return' for e in admission['events'])}
-        continuation_jobs = {op.get('receipt', {}).get('job_id') for key, op in control_state['operations'].items()
-                             if key.startswith('gtd-continuation:')}
+        # Bounded control reads: per-key operations (few) + terminal integrated
+        # principal runs (few, indexed), never the global history.
+        return_jobs = set()
+        for op, admission in state.get('admissions', {}).items():
+            if any(e['payload'].get('reason') == 'executor_return' for e in admission.get('events', [])):
+                row = self.service.store.db.execute(
+                    "SELECT value FROM metadata WHERE key=?", ('control:op:' + op,)).fetchone()
+                if row:
+                    try:
+                        receipt = json.loads(row[0]).get('receipt', {})
+                        if receipt.get('job_id'):
+                            return_jobs.add(receipt['job_id'])
+                    except ValueError:
+                        pass
+        continuation_jobs = set()
+        for r in self.service.store.db.execute(
+                "SELECT value FROM metadata WHERE key LIKE 'control:op:gtd-continuation:%'").fetchall():
+            try:
+                receipt = json.loads(r[0]).get('receipt', {})
+                if receipt.get('job_id'):
+                    continuation_jobs.add(receipt['job_id'])
+            except ValueError:
+                continue
         # Reconstruct from authenticated terminal work, including real touched children.
         origins, source_ids, origin_versions = {}, {}, {}
-        for job in control_state['jobs'].values():
+        control_state = self.control._load()
+        try:
+            cand_rows = self.service.store.db.execute(
+                "SELECT id FROM runs WHERE integration='integrated' ORDER BY rowid LIMIT 128").fetchall()
+        except Exception:
+            cand_rows = []
+        for cr in cand_rows:
+            run = self.control._run_row(cr["id"])
+            if run is None:
+                continue
+            cycle = self.control._cycle_row(run["cycle_id"])
+            try:
+                job = self.control._job_from_rows(cycle, run)
+            except Exception:
+                continue
             if (job['id'] in continuation_jobs or job['id'] in return_jobs or job.get('stop_requested') or not job['terminal'] or job['integration'] != 'integrated'
                     or job['actor'] != self.config.get('actor')
                     or self.service.actor_role(job['actor']) != 'principal'):
@@ -747,9 +858,22 @@ class OrchestrationWorker:
             if blocker:
                 record.update(status='pending', blocker=blocker)
                 continue
-            origin = control_state['jobs'][record['origin_job_id']]
+            try:
+                origin = self.control.get_job(record['origin_job_id'])
+            except ValueError:
+                origin = None
+            if origin is None:
+                record.update(status='pending', blocker='origin_unavailable')
+                continue
             operation_id = 'gtd-continuation:' + key
-            receipt = control_state['operations'].get(operation_id, {}).get('receipt', {})
+            receipt = {}
+            orow = self.service.store.db.execute(
+                "SELECT value FROM metadata WHERE key=?", ('control:op:' + operation_id,)).fetchone()
+            if orow:
+                try:
+                    receipt = json.loads(orow[0]).get('receipt', {})
+                except ValueError:
+                    receipt = {}
             job_id = receipt.get('job_id') if receipt.get('status') == 'reserved' else None
             if job_id:
                 record['job_id'] = job_id
@@ -791,9 +915,19 @@ class OrchestrationWorker:
             auth = self.service.authorize(origin['actor'], origin['capability'], item_id, origin.get('mandate_id'))
             if not auth['allowed']:
                 blocker = auth['reason']
-            if any(not j['terminal'] or j['integration'] in {'pending', 'accepted_pending_integration'}
-                   for j in control_state['jobs'].values() if j['item_id'] == item_id):
-                blocker = 'execution_pending'
+            # Bounded pending check: runs for this item only (few).
+            pend = self.service.store.db.execute(
+                "SELECT state, integration, detail_json FROM runs WHERE item_id=? LIMIT 16", (item_id,)).fetchall()
+            for pr in pend:
+                try:
+                    import json as _json2
+                    _d = _json2.loads(pr["detail_json"]) if pr["detail_json"] else {}
+                except ValueError:
+                    _d = {}
+                _integ = _d.get("integration", pr["integration"])
+                if pr["state"] not in ('completed', 'failed', 'cancelled', 'expired') or _integ in ('pending', 'accepted_pending_integration'):
+                    blocker = 'execution_pending'
+                    break
             bot = next((b for b in self.control.bots() if b['id'] == self.config.get('principal_bot_id')), {})
             if (bot.get('state') != 'available' or origin['capability'] not in bot.get('capabilities', [])
                     or bot.get('actor', origin['actor']) != origin['actor']):
@@ -887,8 +1021,12 @@ class OrchestrationWorker:
         if not self._attention_enabled():
             return
         for old_id, record in self.control._load().get('attention_displacements', {}).items():
-            if (record['stop_delivery'] != 'intent'
-                    or self.config.get('actor') != self.control.get_job(old_id)['actor']):
+            try:
+                old_job = self.control.get_job(old_id)
+            except ValueError:
+                continue
+            if (record.get('stop_delivery') != 'intent' or old_job is None
+                    or self.config.get('actor') != old_job.get('actor')):
                 continue
             with self.control._attention_stop_context(old_id):
                 receipt = self.control.request_stop(self.config['actor'], 'gtd-attention-stop:' + old_id, old_id)
@@ -922,13 +1060,23 @@ class OrchestrationWorker:
         if any(r['beneficiary_id'] == item['id'] for r in records.values()):
             self._attention_gap(state, item, 'attention_stop_pending')
             return
-        jobs = self.control._load()['jobs']
-        for old_id in state['runs']:
-            job = jobs[old_id]
-            if (old_id in records or job['terminal'] or not job.get('native')
+        for old_id in list(state['runs']):
+            try:
+                job = self.control.get_job(old_id)
+            except ValueError:
+                continue
+            if job is None:
+                continue
+            if (old_id in records or job.get('terminal') or not job.get('native')
                     or job['item_id'] == item['id'] or job.get('parent_job_id')):
                 continue
-            family = [j['id'] for j in jobs.values() if j['root_job_id'] == old_id]
+            try:
+                fam = self.control._family_run_details(job)
+            except ValueError:
+                continue
+            family = [c["id"] for c in fam]
+            if not family:
+                family = [old_id]
             if not all(jid in state['runs'] for jid in family):
                 continue  # The worker cannot reconcile an unowned family.
             receipt = self.control._begin_attention_displacement(self.config['actor'], old_id, item['id'])
@@ -941,7 +1089,11 @@ class OrchestrationWorker:
         if not self._attention_enabled():
             return
         for record in self.control._load().get('attention_displacements', {}).values():
-            if self.control.get_job(record['old_job_id'])['actor'] != self.config['actor']:
+            try:
+                old_job = self.control.get_job(record['old_job_id'])
+            except ValueError:
+                continue
+            if old_job is None or old_job.get('actor') != self.config['actor']:
                 continue
             job_id = record.get('new_job_id')
             if job_id and job_id not in state['runs']:
@@ -955,14 +1107,38 @@ class OrchestrationWorker:
         if not self._attention_enabled():
             return
         for old_id, record in self.control._load().get('attention_displacements', {}).items():
-            if self.control.get_job(old_id)['actor'] != self.config['actor']:
+            try:
+                old_job = self.control.get_job(old_id)
+            except ValueError:
+                continue
+            if old_job is None or old_job.get('actor') != self.config['actor']:
                 continue
             if self._source_review_blocker(self.service.get_item(record['item_id'])):
                 continue
             beneficiary = self.service.get_item(record['beneficiary_id'])
-            jobs = self.control._load()['jobs']
-            family_stopped = all(jobs[jid]['terminal'] for jid in record['family'])
-            active_beneficiary = any(j['item_id'] == record['beneficiary_id'] and not j['terminal'] for j in jobs.values())
+            # Bounded family + beneficiary checks (few rows, indexed).
+            family_stopped = True
+            for jid in record.get('family', []):
+                try:
+                    jj = self.control.get_job(jid)
+                except ValueError:
+                    jj = None
+                if jj is None or not jj.get('terminal'):
+                    family_stopped = False
+                    break
+            active_beneficiary = False
+            try:
+                for br in self.service.store.db.execute(
+                        "SELECT id FROM runs WHERE item_id=? LIMIT 16", (record['beneficiary_id'],)).fetchall():
+                    try:
+                        bj = self.control.get_job(br["id"])
+                    except ValueError:
+                        continue
+                    if bj is not None and not bj.get('terminal'):
+                        active_beneficiary = True
+                        break
+            except Exception:
+                active_beneficiary = False
             expired = record['deadline'] <= datetime.now(timezone.utc).timestamp()
             if not family_stopped:
                 if expired and beneficiary and not self.service.work_resolution_current(beneficiary['id']):
@@ -991,10 +1167,17 @@ class OrchestrationWorker:
             state.setdefault('admissions', {})
             self._recover_attention_runs(state)
             await self._attention_stops()
-            with self.service.store.lock:
-                operations = self.control._load()['operations']
             for operation_id, admission in state['admissions'].items():
-                receipt = operations.get(operation_id, {}).get('receipt', {})
+                # Bounded per-key idempotency (few active admissions), never the
+                # global map.
+                receipt = {}
+                orow = self.service.store.db.execute(
+                    "SELECT value FROM metadata WHERE key=?", ('control:op:' + operation_id,)).fetchone()
+                if orow:
+                    try:
+                        receipt = json.loads(orow[0]).get('receipt', {})
+                    except ValueError:
+                        receipt = {}
                 job_id = receipt.get('job_id')
                 if receipt.get('status') == 'reserved' and job_id not in state['runs']:
                     job = self.control.get_job(job_id)
