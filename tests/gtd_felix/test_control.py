@@ -919,6 +919,82 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(self.service.get_item(child['id'])['commitment'], 'proposed')
         self.assertEqual(self.service.get_item(child['id'])['status'], 'active')
 
+    def test_pre_migration_rejection_preserves_legacy_state(self):
+        # I1: a mutating operation refused before the migration cut must leave
+        # legacy jobs, idempotency map and backups untouched, and must not
+        # store its rejection (the same operation stays retryable post-cut).
+        with self.service.store.transaction():
+            state = self.control._load()
+            state["jobs"] = {"legacy-job": {"id": "legacy-job"}}
+            self.service.store.db.execute("INSERT OR REPLACE INTO metadata VALUES(?,?)",
+                (self.control.KEY, json.dumps(state)))
+        receipt = self.control.reserve("gtd-felix", "pre-migration", self.request())
+        self.assertEqual(receipt["status"], "rejected", receipt)
+        self.assertEqual(receipt["error"], "migration_required")
+        after = self.control._load()
+        self.assertEqual(len(after.get("jobs", {})), 1)
+        self.assertIsNone(self.service.store.db.execute(
+            "SELECT 1 FROM metadata WHERE key=?", (self.control.LEGACY_STATE_BACKUP,)).fetchone())
+        self.assertIsNone(self.service.store.db.execute(
+            "SELECT 1 FROM metadata WHERE key=?",
+            (self.control._control_op_key("pre-migration"),)).fetchone())
+
+    def test_deferred_child_validate_reports_own_subtree_limits(self):
+        # I1: a child's effective limits come from its own subtree only; the
+        # root family's accounting stays separate (adapters enforce these).
+        root, child = self.deferred_contribution()
+        self.finish(root)
+        self.assertEqual(self.control.activate_deferred(child)["status"], "activated")
+        valid = self.control.validate(child, "local_work")
+        self.assertTrue(valid["allowed"], valid)
+        self.assertEqual(valid["limits"]["max_runtime_seconds"], 50)
+        self.assertEqual(valid["limits"]["max_cost_usd"], 1)
+        self.assertEqual(valid["limits"]["max_descendants"], 0)
+
+    def test_repeated_event_cause_returns_duplicate_cause_without_partial_cycle(self):
+        # I1: repeating a cause (same gtd-event identity, new attempt suffix)
+        # after its work finished is a structured domain rejection, never raw
+        # SQL, and never a half-written cycle without its run.
+        cycles_before = self.service.store.db.execute("SELECT COUNT(*) FROM work_cycles").fetchone()[0]
+        root = self.reserve("gtd-event:cause:1")
+        self.finish(root)
+        receipt = self.control.reserve("gtd-felix", "gtd-event:cause:2", self.request())
+        self.assertEqual(receipt["status"], "rejected", receipt)
+        self.assertEqual(receipt["error"], "duplicate_cause")
+        self.assertEqual(receipt["operation_id"], "gtd-event:cause:2")
+        cycles_after = self.service.store.db.execute("SELECT COUNT(*) FROM work_cycles").fetchone()[0]
+        self.assertEqual(cycles_after, cycles_before + 1)
+        self.assertEqual(
+            self.service.store.db.execute("SELECT COUNT(*) FROM runs").fetchone()[0], 1)
+
+    def test_spent_review_found_beyond_sixty_four_row_history(self):
+        # I1: spent-review consultation is complete past any row cap: with 64
+        # non-exhausted runs plus one exhausted review, the guard still finds it.
+        from gtd_felix.orchestration import OrchestrationWorker
+        for n in range(65):
+            jid = self.reserve(f"history-{n}")
+            self.finish(jid, runtime_seconds=200 if n == 64 else 1, cost_usd=0)
+        worker = OrchestrationWorker(self.service, self.control, None, {})
+        spent, _ = worker._tied_spent_reviews(self.control._load(), self.item["id"])
+        self.assertEqual(len(spent), 1)
+
+    def test_rejected_observation_commits_no_rows_and_keeps_reserved_slot(self):
+        # I1: an observation rejected by the global native exclusion leaves no
+        # partial observation row and keeps the run reserved (still retryable).
+        first = self.reserve("first")
+        self.control.record_dispatch(first, self.native(first))
+        derived = self.service.execute("felix", dict(operation_id="derive-second", action="derive",
+            item_id=self.item["id"], expected_version=self.item["version"], fields={"kind": "action",
+            "title": "Second", "capability": "local_work", "mandate_id": self.mandate}))["item"]
+        second = self.reserve("second", item_id=derived["id"], expected_version=derived["version"])
+        receipt = self.control.observe(second, self.observation(
+            second, native_status="running", terminal=False, runtime_seconds=1, cost_usd=0))
+        self.assertEqual(receipt["status"], "rejected", receipt)
+        self.assertEqual(receipt["error"], "concurrency_exhausted")
+        self.assertEqual(self.service.store.db.execute(
+            "SELECT COUNT(*) FROM run_observations WHERE run_id=?", (second,)).fetchone()[0], 0)
+        self.assertEqual(self.control._run_row(second)["state"], "reserved")
+
     def test_private_root_descendant_guard_is_an_explicit_trusted_option(self):
         job, source = self.private_job()
         derived = self.service.execute('gtd-felix', dict(operation_id='flag-child', action='derive', item_id=source['id'], expected_version=source['version'],
