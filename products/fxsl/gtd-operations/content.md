@@ -287,3 +287,21 @@ buzones ni historiales sensibles. Un perfil no demuestra aislamiento. No borres
 una captura única por antigüedad. Un borrado permanente claramente ordenado usa
 alcance concreto y reporta copias fuera de control; ambigüedad material requiere
 aclaración. Nunca reimportes ni reejecutes algo porque se borró su relato.
+
+## Consultar sin perder contexto por volumen
+
+`gtd_read(view="items")` devuelve siempre un índice compacto paginado, no cuerpos
+de asuntos ni mensajes originales. Empieza con filtros pertinentes (`text`, `kind`
+o `source`); conserva filtros y page_size y recorre `next_cursor` hasta null cuando
+necesites cobertura completa. El valor por defecto es 20 y el máximo 50. Abre
+`gtd_read(view="item", item_id=...)` sólo para los detalles exactos necesarios.
+Si el snapshot cambió, comienza otra consulta; no sumes páginas de snapshots
+distintos ni afirmes cobertura total mientras quede cursor. No dependas de un
+archivo de respuesta truncada generado por el runtime.
+
+Si una captura mantiene una pregunta propia del principal ya resuelta por el
+contexto humano, registra primero `plan` con `decision_needed=false` y
+`decision_question=""`, y luego `clarify destination=existing` dentro del mismo
+job, leyendo la versión devuelta. No cierres el job ni repitas la pregunta por ese
+guard técnico. Esto sólo aplica a la pregunta del principal: conserva preguntas,
+correcciones y decisiones del dueño; no las despejes automáticamente.

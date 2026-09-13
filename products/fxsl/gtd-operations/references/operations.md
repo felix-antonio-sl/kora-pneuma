@@ -22,7 +22,7 @@ mensajes. Confirma con `tools/list` qué herramientas ofrece la realización act
 
 | Herramienta | Entrada y efecto |
 |---|---|
-| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Consulta estado o calcula sin crear compromisos. |
+| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`, `page_size` (20 por defecto, máximo 50) y `cursor`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Consulta estado o calcula sin crear compromisos. |
 | `gtd_command` | `job_id` y `command`: `operation_id`, `action`, `item_id`, `expected_version`, `fields`. `review` no exige asunto/versión. Aplica un comando bajo el encargo vigente y conserva progreso ligado a ese job. |
 | `gtd_dispatch` | `job_id`, `operation_id`, `request`. Reserva y encola un hijo durable dentro del ámbito y presupuesto del encargo padre. Recibo reservado/diferido no demuestra ejecución ni resultado. |
 
@@ -939,3 +939,26 @@ el título o pregunta del asunto. El orquestador conserva el texto completo sin
 truncarlo a 4.000 caracteres ni duplicarlo en payload.text. El transporte divide
 mensajes bajo su límite existente de 65.536 bytes; si excede ese límite, conserva
 la devolución pendiente y comunica la necesidad de otro transporte.
+
+## Índice MCP de asuntos
+
+`gtd_read(view="items", filters={...}, page_size=20, cursor=null)` devuelve un
+objeto con `items`, `total`, `offset`, `returned`, `page_size`, `snapshot` y
+`next_cursor`. Cada entrada contiene sólo id, versión, título hasta 160 caracteres
+con `title_truncated`, kind/status, provider y due_at/review_at acotados;
+`truncated_fields` identifica otros recortes. No incluye texto, mensaje original,
+bases ni cuerpos de material. El detalle exacto continúa en `view=item` por ID.
+
+Primero filtra usando `text`, `kind` o `source` según la consulta; el HTTP autorizado
+aplica esos filtros antes de paginar. Continúa con los mismos filtros, job y
+page_size usando cada `next_cursor`, hasta null. El cursor vincula filtros, página
+y snapshot ordenado de IDs/versiones; rechaza formato inválido y cambios del
+snapshot. Una lectura posterior requiere empezar de nuevo si cambió el conjunto.
+El total cubre sólo los registros autorizados y filtrados, no promete acceso al
+resto del corpus. HTTP `/v1/items` conserva su formato y permisos anteriores; el
+índice se construye en MCP y nunca convierte un error HTTP en una página exitosa.
+
+Para una pregunta propia del principal ya respondida, `plan` puede registrar
+`decision_needed=false` y `decision_question=""` antes de `clarify` hacia un asunto
+existente, en el mismo job y usando la versión devuelta. No se aplica a preguntas
+o posición del dueño. Evita repetir la consulta humana por un guard técnico.
