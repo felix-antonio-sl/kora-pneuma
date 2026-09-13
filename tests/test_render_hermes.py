@@ -122,6 +122,61 @@ class HermesRenderTests(unittest.TestCase):
             catalog = Catalog(self.root)
             render(catalog, catalog.get(agent))
 
+    def test_compact_source_note_keeps_identities_paths_and_conditions(self):
+        shared = "el entregable requiere la regla cubierta por esta fuente"
+        kb_a = self.product("test", "rule-a", "knowledge", "Regla A.\n")
+        kb_b = self.product("test", "rule-b", "knowledge", "Regla B.\n")
+        kb_c = self.product("test", "other", "knowledge", "Otro dato.\n")
+        skill = self.product("test", "helper", "skill", "Ayuda.\n")
+        body = "# Asesor compacto\n\nCuerpo íntegro verificable.\n"
+        agent = self.product("test", "advisor", "agent", body, [
+            {"id": kb_a, "kind": "knowledge", "condition": shared},
+            {"id": kb_b, "kind": "knowledge", "condition": shared},
+            {"id": kb_c, "kind": "knowledge", "condition": "la pregunta pide el otro dato"},
+            {"id": skill, "kind": "product"},
+            kb_c,
+            {"id": "cap:browser", "kind": "capability", "condition": "el encargo autoriza navegación"},
+        ])
+        catalog = Catalog(self.root)
+        files = render(catalog, catalog.get(agent))
+        soul = files[".hermes/profiles/advisor/SOUL.md"].data.decode("utf-8")
+        self.assertIn(body, soul)
+        catalog_check = Catalog(self.root)
+        for identity in (kb_a, kb_b, kb_c):
+            path = str(catalog_check.get(identity).content_path.absolute())
+            self.assertIn(f"- `{identity}` → `{path}`", soul)
+        self.assertEqual(soul.count(shared), 1)
+        self.assertIn(f"`{kb_a}`, `{kb_b}`", soul)
+        self.assertIn("la pregunta pide el otro dato", soul)
+        self.assertIn(f"skill nativa `helper` (`skill_view`)", soul)
+        browser_lines = [l for l in soul.splitlines() if "cap:browser" in l]
+        self.assertEqual(len(browser_lines), 1)
+        self.assertIn("Recorrido no disponible (cuando el encargo autoriza navegación)", browser_lines[0])
+        self.assertEqual(soul.count(" → `"), 3)
+        self.assertEqual(soul.count("sus recursos relativos se resuelven"), 1)
+        self.assertIn(str(catalog_check.get(agent).content_path.resolve()), soul)
+
+    def test_compact_source_note_keeps_alias_routing_with_condition(self):
+        kb = self.product("test", "target", "knowledge", "Destino.\n")
+        alias = "urn:test:artefacto:old-name"
+        (self.root / "aliases.yaml").write_text(
+            yaml.safe_dump({alias: kb}), encoding="utf-8")
+        body = "# Asesor alias\n\nCuerpo.\n"
+        agent = self.product("test", "advisor", "agent", body, [
+            {"id": alias, "kind": "knowledge", "condition": "el encargo cita el nombre antiguo"},
+        ])
+        catalog = Catalog(self.root)
+        files = render(catalog, catalog.get(agent))
+        soul = files[".hermes/profiles/advisor/SOUL.md"].data.decode("utf-8")
+        path = str(catalog.get(kb).content_path.absolute())
+        self.assertIn(f"- `{kb}` → `{path}`", soul)
+        path_rows = [l for l in soul.splitlines() if l.startswith("- `")]
+        self.assertTrue(all(not l.startswith(f"- `{alias}`") for l in path_rows))
+        alias_lines = [l for l in soul.splitlines() if alias in l]
+        self.assertEqual(len(alias_lines), 1)
+        self.assertIn(f"`{alias}` → `{kb}`", alias_lines[0])
+        self.assertIn("el encargo cita el nombre antiguo", alias_lines[0])
+
     def test_files_parse_with_installed_hermes(self):
         hermes = Path(os.environ.get("HERMES_SOURCE", Path.home() / ".hermes/hermes-agent"))
         interpreter = hermes / "venv/bin/python"

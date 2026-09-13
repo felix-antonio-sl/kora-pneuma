@@ -44,24 +44,93 @@ def _source_note(catalog: Catalog, product: Product, dependencies: list[Product]
             "", "Los recursos propios del agente se conservan bajo "
             "`$HERMES_HOME/resources/`, con la estructura relativa de la fuente.",
         ])
+    by_identity: dict[str, list[dict]] = {}
+    for edge in catalog.explain(product, "hermes")["edges"]:
+        if edge["status"] == "not_applicable":
+            continue
+        key = edge.get("resolved_id") or edge["target"]
+        by_identity.setdefault(key, []).append(edge)
+    emitted: set[str] = set()
+    known = {dependency.id for dependency in dependencies}
     if dependencies:
-        lines.extend(["", "Dependencias disponibles:", ""])
+        lines.extend([
+            "", "Dependencias disponibles:", "",
+            "Cada conocimiento se lee por su path exacto cuando el encargo lo requiere; "
+            "sus recursos relativos se resuelven desde el directorio del archivo. "
+            "Cada skill nativa se carga con `skill_view` cuando corresponda a la tarea.", "",
+        ])
+    grouped: dict[tuple[bool, str], list[str]] = {}
+    order: list[tuple[bool, str]] = []
+    extras: list[str] = []
+
+    def note_routing(edge: dict) -> str:
+        resolved = edge.get("resolved_id") or edge["target"]
+        if resolved != edge["target"]:
+            return f" Resuelve a `{resolved}`."
+        return ""
+
+    def register(edge: dict, identity: str) -> None:
+        if edge["status"] == "unavailable":
+            scope = f"cuando {edge['condition']}" if edge.get("condition") else "necesidad obligatoria"
+            text = (f"- Recorrido no disponible ({scope}): `{edge['target']}`. "
+                    f"{edge.get('error', 'Depende de otro recorrido no disponible')}. "
+                    f"Detén ese recorrido hasta satisfacer su necesidad.{note_routing(edge)}")
+            if text not in emitted:
+                emitted.add(text)
+                extras.append(text)
+            return
+        is_capability = edge.get("kind") == "capability"
+        condition = edge.get("condition")
+        # Las capacidades disponibles sólo llegan si el llamador las declara en
+        # explain(); render() no lo hace, pero se conservan igual que el baseline.
+        if condition:
+            resolved = edge.get("resolved_id") or edge["target"]
+            display = f"`{identity}`" if identity == resolved else f"`{identity}` → `{resolved}`"
+            key = (is_capability, condition)
+            if key not in grouped:
+                grouped[key] = []
+                order.append(key)
+            if display not in grouped[key]:
+                grouped[key].append(display)
+        elif is_capability:
+            text = (f"- Capacidad `{edge['target']}` declarada por el llamador para esta preparación. "
+                    "Su uso conserva los permisos efectivos del runtime y del encargo."
+                    f"{note_routing(edge)}")
+            if text not in emitted:
+                emitted.add(text)
+                extras.append(text)
+
     for dependency in dependencies:
         if dependency.kind == "skill":
-            lines.append(
-                f"- `{dependency.id}`: carga la skill nativa `{dependency.name}` "
-                "con `skill_view` cuando corresponda a la tarea."
-            )
+            head = (f"- `{dependency.id}`: skill nativa `{dependency.name}` "
+                    "(`skill_view`)")
         elif dependency.kind == "knowledge":
-            lines.append(
-                f"- `{dependency.id}`: lee `{dependency.content_path.absolute()}` "
-                "cuando necesites ese conocimiento; sus recursos relativos se resuelven "
-                "desde el directorio del archivo."
-            )
+            head = f"- `{dependency.id}` → `{dependency.content_path.absolute()}`"
         else:
             raise KoraError(f"Tipo de dependencia no realizable en Hermes: {dependency.kind}")
+        if head not in emitted:
+            emitted.add(head)
+            lines.append(head)
+        for edge in by_identity.get(dependency.id, []):
+            register(edge, edge["target"])
+    for identity, group in by_identity.items():
+        if identity in known:
+            continue
+        for edge in group:
+            register(edge, edge["target"])
+    lines.extend(extras)
+    if order:
+        lines.extend(["", "Condiciones: úsalo únicamente cuando ese caso corresponda al encargo.", ""])
+        for is_capability, condition in order:
+            urns = ", ".join(grouped[(is_capability, condition)])
+            text = f"- Para {condition}: {urns}."
+            if is_capability:
+                text += (" Capacidad declarada por el llamador; su uso conserva los permisos "
+                         "efectivos del runtime y del encargo.")
+            if text not in emitted:
+                emitted.add(text)
+                lines.append(text)
     lines += resolver_note(catalog, dependencies)
-    lines += availability_note(catalog, product, "hermes")
     return "\n".join(lines) + "\n"
 
 

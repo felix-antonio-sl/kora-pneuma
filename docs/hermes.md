@@ -135,6 +135,21 @@ contempla. Su salida distingue los tres escenarios:
 python3 scripts/probe_hermes.py --soul-budgets --catalog-root .
 ```
 
+### Envoltura compacta de dependencias (2026-09-13)
+
+El render Hermes emite una tabla única identidad→path exacto con condiciones
+agrupadas por texto idéntico (alias→canónica explícito; indisponibles y
+capacidades como el baseline; localizador absoluto de fuente, comando `resolve`
+con `--root/--knowledge-root` y nota legacy conservados). Medido con
+`openai-codex/gpt-5.6-sol`, esfuerzo `high`: ventana resuelta 272.000 → cap
+65.280; SOUL de `dov-dori` 65.239 (cuerpo 59.360 íntegro; margen 41). Vale sólo
+para esa ventana/modelo, sin promesa universal: si una instalación real cambia
+la longitud, se recomprueba el ensamblado. Comprobación:
+
+```sh
+python3 -m unittest tests.test_render_hermes
+```
+
 El renderer conserva el cuerpo y el mapa como están: no se reproduce pérdida en
 la ruta actual. Si cambia modelo o presupuesto, se vuelve a medir; una pérdida
 reproducida exige ajustar el cap nativo del operador o una entrada breve que
