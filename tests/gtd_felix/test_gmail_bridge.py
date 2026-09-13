@@ -161,6 +161,27 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.context.envelope['credentials']['model'], 'gpt-5.6-luna')
         self.assertEqual(self.context.envelope['credentials']['provider'], 'openai-codex')
         self.assert_closed()
+    async def test_deepseek_route_keeps_exact_credentials(self):
+        self.parent.provider = 'opencode-go'
+        self.parent.model = 'deepseek-v4.1-flash'
+        self.parent.api_mode = 'chat_completions'
+        result = await self.call()
+        self.assertEqual(result['classification'], 'selected')
+        self.assertEqual(self.context.envelope['credentials']['model'], 'deepseek-v4.1-flash')
+        self.assertEqual(self.context.envelope['credentials']['provider'], 'opencode-go')
+        self.assertEqual(self.context.envelope['credentials']['api_mode'], 'chat_completions')
+        self.assert_closed()
+    def test_route_effort_pins_max_without_silent_fallback(self):
+        self.assertEqual('low', bridge._route_effort('openai-codex', 'codex_responses', 'gpt-6-astra'))
+        self.assertEqual('max', bridge._route_effort('openai-codex', 'codex_responses', 'gpt-5.6-luna'))
+        self.assertEqual('max', bridge._route_effort('opencode-go', 'chat_completions', 'deepseek-v4.1-flash'))
+        for provider, api_mode, model in [
+                ('openai-codex', 'codex_responses', 'other'),
+                ('opencode-go', 'chat_completions', 'deepseek-v4-flash'),
+                ('opencode-go', 'codex_responses', 'deepseek-v4.1-flash'),
+                ('openai-codex', 'chat_completions', 'deepseek-v4.1-flash')]:
+            with self.assertRaisesRegex(ValueError, '^provider_mismatch$'):
+                bridge._route_effort(provider, api_mode, model)
     async def test_child_failure_keeps_only_closed_code_and_releases_helper(self):
         for supplied, expected in [('helper_turn_failed', 'helper_turn_failed'),
                 ('helper_incomplete_result', 'helper_incomplete_result'),

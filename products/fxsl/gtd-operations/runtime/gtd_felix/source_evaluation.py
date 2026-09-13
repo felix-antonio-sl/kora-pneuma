@@ -23,6 +23,20 @@ BRIDGE_ERRORS = frozenset({'invalid_request', 'helper_busy', 'inactive_parent', 
     'bridge_value_error', 'bridge_internal_error', 'helper_turn_failed',
     'helper_incomplete_result', 'helper_invalid_result', 'helper_write_denied'})
 
+_ALLOWED_ROUTES = frozenset({
+    ('openai-codex', 'gpt-6-astra'),
+    ('openai-codex', 'gpt-5.6-luna'),
+    ('opencode-go', 'deepseek-v4.1-flash'),
+})
+
+
+def _route_allowed(route):
+    """Admitted (provider, model) pairs; anything else fails closed."""
+    try:
+        return (route.get('provider'), route.get('model')) in _ALLOWED_ROUTES
+    except AttributeError:
+        return False
+
 
 class SourceEvaluation:
     def __init__(self, service, control, monitor, config, *, bridge=None, clock=time.monotonic):
@@ -73,7 +87,7 @@ class SourceEvaluation:
         if (parsed.scheme != 'http' or not ipaddress.ip_address(parsed.hostname).is_loopback
                 or parsed.username or parsed.password or parsed.query or parsed.fragment):
             raise ValueError('local_bridge_required')
-        if route.get('provider') != 'openai-codex' or route.get('model') not in {'gpt-6-astra', 'gpt-5.6-luna'}:
+        if not _route_allowed(route):
             raise ValueError('configured_subscription_required')
         token = os.environ.get(route.get('api_key_env', ''))
         if not token:

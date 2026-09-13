@@ -91,12 +91,25 @@ def validate_payload(payload):
     return payload
 
 
+_ROUTE_EFFORTS = {
+    ("openai-codex", "codex_responses", "gpt-6-astra"): "low",
+    ("openai-codex", "codex_responses", "gpt-5.6-luna"): "max",
+    ("opencode-go", "chat_completions", "deepseek-v4.1-flash"): "max",
+}
+
+
+def _route_effort(provider, api_mode, model):
+    """Pinned reasoning effort per admitted route; anything else fails closed."""
+    try:
+        return _ROUTE_EFFORTS[(provider, api_mode, model)]
+    except (KeyError, TypeError):
+        raise ValueError("provider_mismatch")
+
+
 def route_credentials(parent):
     result = {key: getattr(parent, key, None)
               for key in ("provider", "model", "api_mode", "api_key", "base_url")}
-    if (result["provider"] != "openai-codex" or result["api_mode"] != "codex_responses"
-            or result["model"] not in {"gpt-6-astra", "gpt-5.6-luna"}):
-        raise ValueError("provider_mismatch")
+    _route_effort(result["provider"], result["api_mode"], result["model"])
     if not all(isinstance(result[key], str) and result[key] for key in ("api_key", "base_url")):
         raise ValueError("provider_mismatch")
     return result
@@ -182,7 +195,8 @@ def _deny_writes(event, args):
 def _infer(credentials, text):
     _disable_child_extensions()
     from run_agent import AIAgent
-    agent = AIAgent(**credentials, reasoning_config={"effort": "max" if credentials['model'] == 'gpt-5.6-luna' else "low"},
+    agent = AIAgent(**credentials, reasoning_config={"effort": _route_effort(
+        credentials["provider"], credentials["api_mode"], credentials["model"])},
                     enabled_toolsets=[], session_db=None, save_trajectories=False,
                     skip_memory=True, skip_background_review=True, skip_context_files=True,
                     max_iterations=1, max_tokens=512, quiet_mode=True,

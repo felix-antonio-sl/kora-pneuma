@@ -219,6 +219,16 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
             self.evaluation._result({'classification': 'noise', 'reason_code': 'non_actionable',
                 'usage': {'input_tokens': 'body', 'output_tokens': 1}, 'duration_seconds': 1})
 
+    def test_route_gate_admits_deepseek_and_rejects_near_miss(self):
+        from gtd_felix.source_evaluation import _route_allowed
+        self.assertTrue(_route_allowed({'provider': 'opencode-go', 'model': 'deepseek-v4.1-flash'}))
+        self.assertTrue(_route_allowed({'provider': 'openai-codex', 'model': 'gpt-5.6-luna'}))
+        self.assertTrue(_route_allowed({'provider': 'openai-codex', 'model': 'gpt-6-astra'}))
+        self.assertFalse(_route_allowed({'provider': 'opencode-go', 'model': 'deepseek-v4-flash'}))
+        self.assertFalse(_route_allowed({'provider': 'openai-codex', 'model': 'deepseek-v4.1-flash'}))
+        self.assertFalse(_route_allowed({}))
+        self.assertFalse(_route_allowed(None))
+
     async def test_mcp_to_authenticated_http_uses_same_parent_without_bodies(self):
         from aiohttp import web, ClientSession
         from gtd_felix.application import create_app
