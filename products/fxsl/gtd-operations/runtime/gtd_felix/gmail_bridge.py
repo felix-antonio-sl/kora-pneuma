@@ -37,6 +37,17 @@ classification y reason_code. Pares permitidos: selected/gtd_relevant,
 noise/non_actionable, uncertain/needs_review. No incluyas citas ni explicación."""
 
 
+def _prepare_import_path():
+    """Script mode must not expose sibling mcp.py as Hermes's top-level mcp SDK."""
+    package_dir = Path(__file__).resolve().parent
+    sys.path[:] = [entry for entry in sys.path if Path(entry or os.getcwd()).resolve() != package_dir]
+    # Keep the package importable for multiprocessing spawn without exposing its siblings.
+    for directory in (package_dir.parent, HERMES_ROOT):
+        value = str(directory)
+        if value not in sys.path:
+            sys.path.insert(0, value)
+
+
 def evidence_digest(payload):
     evidence = {key: payload[key] for key in ("text", "external_id", "revision")}
     return hashlib.sha256(json.dumps(evidence, sort_keys=True, separators=(",", ":"),
@@ -162,7 +173,7 @@ def _child(pipe):
         os.environ.update(keep)
         try:
             envelope = pipe.recv()
-            sys.path.insert(0, str(HERMES_ROOT))
+            _prepare_import_path()
             result = _infer(envelope["credentials"], envelope["text"])
             result["duration_seconds"] = min(time.monotonic() - started, MAX_SECONDS)
             pipe.send(result)
@@ -313,7 +324,7 @@ def main():
                                 text=True, check=False)
         if result.returncode or result.stdout.strip() != expected:
             raise SystemExit("gmail_bridge_runtime_mismatch")
-    sys.path.insert(0, str(HERMES_ROOT))
+    _prepare_import_path()
     from gateway.platforms.api_server import APIServerAdapter
     install_route(APIServerAdapter)
     from hermes_cli.main import main as hermes_main

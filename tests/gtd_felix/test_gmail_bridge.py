@@ -246,6 +246,30 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
                 process.close()
                 pipe.close()
 
+    def test_absolute_launcher_does_not_shadow_mcp_sdk(self):
+        import subprocess
+        hermes_python = bridge.HERMES_ROOT / 'venv/bin/python'
+        if not hermes_python.is_file():
+            self.skipTest('Pinned Hermes environment unavailable')
+        script = """
+import importlib.util, pathlib, runpy, sys
+path = pathlib.Path(sys.argv[1])
+sys.path.insert(0, str(path.parent))
+namespace = runpy.run_path(str(path), run_name='bridge_test')
+assert importlib.util.find_spec('mcp').origin == str(path.parent / 'mcp.py')
+namespace['_prepare_import_path']()
+import mcp
+assert pathlib.Path(mcp.__file__).name == '__init__.py'
+assert hasattr(mcp, 'StdioServerParameters')
+from tools import mcp_tool
+assert hasattr(mcp_tool, 'StdioServerParameters')
+print('installed_mcp_sdk_resolved')
+"""
+        result = subprocess.run([str(hermes_python), '-B', '-c', script, bridge.__file__],
+                                capture_output=True, text=True, timeout=20)
+        self.assertEqual(0, result.returncode, 'MCP SDK import regression')
+        self.assertIn('installed_mcp_sdk_resolved', result.stdout)
+
     def test_launcher_rejects_profile_and_unverified_runtime(self):
         with patch.dict('os.environ', {'HERMES_HOME': '/other'}):
             with self.assertRaisesRegex(SystemExit, 'profile_mismatch'):
