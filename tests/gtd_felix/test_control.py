@@ -1016,6 +1016,18 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(
             self.control.claim_dispatch("missing")["error"], "job_not_found")
 
+    def test_native_identity_preserves_provider_facets(self):
+        # I1: provider-specific identity facets (e.g. Codex thread_id) round-trip
+        # through the table projection; repeating the identical full identity
+        # in a later observation is not a native_identity_changed.
+        job = self.reserve()
+        full = dict(self.native(job), thread_id=job)
+        self.assertEqual(self.control.record_dispatch(job, full)["status"], "recorded")
+        self.assertEqual(self.control.get_job(job)["native"], full)
+        receipt = self.control.observe(job, self.observation(job, native_identity=full))
+        self.assertEqual(receipt["status"], "recorded", receipt)
+        self.assertEqual(self.control.get_job(job)["native"], full)
+
     def test_private_root_descendant_guard_is_an_explicit_trusted_option(self):
         job, source = self.private_job()
         derived = self.service.execute('gtd-felix', dict(operation_id='flag-child', action='derive', item_id=source['id'], expected_version=source['version'],

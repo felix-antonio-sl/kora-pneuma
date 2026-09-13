@@ -604,6 +604,95 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self._provider_creates()), 2)
         self.assertIsNotNone(self.control.get_job(root)['native'])
 
+    async def _durable_pair(self):
+        # Two durable-capable reservations on distinct items (one open cycle
+        # per item): the first dispatches, the second waits without sending.
+        root = self.reserve()
+        derived = self.service.execute('felix', dict(operation_id='derive-durable-second', action='derive',
+            item_id=self.item['id'], expected_version=self.item['version'], fields={'kind': 'action',
+            'title': 'Durable second', 'capability': 'prepare_private'}))['item']
+        req = dict(item_id=derived['id'], expected_version=derived['version'], capability='prepare_private',
+            mandate_id=None, bot_id='fixture', purpose='Second', scope='Test',
+            max_cost_usd=2, max_runtime_seconds=60, max_retries=0, max_descendants=0)
+        child = self.control.reserve('gtd-felix', 'second', req)['job_id']
+        return root, child
+
+    async def test_durable_never_sent_recovers_after_slot_frees(self):
+        root, child = await self._durable_pair()
+        self.assertEqual((await self.adapter.submit(root, 'First', durable=True))['status'], 'submitted')
+        second = await self.adapter.submit(child, 'Second', durable=True)
+        self.assertEqual(second['status'], 'uncertain', second)
+        self.assertEqual(second['error'], 'native_slot_busy')
+        self.assertEqual(len(self.cards), 1)
+        done = self.control.observe(root, dict(
+            native_identity=self.control.get_job(root)['native'], native_status='completed',
+            terminal=True, runtime_seconds=5, cost_usd=None, evidence_reference='fixture://done'))
+        self.assertEqual(done['status'], 'recorded', done)
+        # The adapter durably knew nothing was ever sent, so reconciliation
+        # performs the first send now instead of searching for a receipt.
+        retried = await self.adapter.reconcile(child)
+        self.assertEqual(retried['native_status'], 'completed', retried)
+        self.assertTrue(retried['terminal'], retried)
+        self.assertEqual(len(self.cards), 2)
+        self.assertEqual(self._local_native_active(), 0)
+        self.assertEqual(self.control.get_job(child)['native']['id'], 't_1')
+
+    async def test_durable_never_sent_survives_restart_before_first_send(self):
+        root, child = await self._durable_pair()
+        self.assertEqual((await self.adapter.submit(root, 'First', durable=True))['status'], 'submitted')
+        waiting = await self.adapter.submit(child, 'Second', durable=True)
+        self.assertEqual(waiting['status'], 'uncertain', waiting)
+        done = self.control.observe(root, dict(
+            native_identity=self.control.get_job(root)['native'], native_status='completed',
+            terminal=True, runtime_seconds=5, cost_usd=None, evidence_reference='fixture://done'))
+        self.assertEqual(done['status'], 'recorded', done)
+        self.restart()
+        retried = await self.adapter.reconcile(child)
+        self.assertEqual(retried['native_status'], 'completed', retried)
+        self.assertEqual(len(self.cards), 2)
+
+    async def test_durable_never_sent_stop_blocks_first_send(self):
+        root, child = await self._durable_pair()
+        self.assertEqual((await self.adapter.submit(root, 'First', durable=True))['status'], 'submitted')
+        waiting = await self.adapter.submit(child, 'Second', durable=True)
+        self.assertEqual(waiting['status'], 'uncertain', waiting)
+        stopped = self.control.request_stop('felix', 'stop-never-sent', child)
+        self.assertEqual(stopped['status'], 'stop_requested', stopped)
+        done = self.control.observe(root, dict(
+            native_identity=self.control.get_job(root)['native'], native_status='completed',
+            terminal=True, runtime_seconds=5, cost_usd=None, evidence_reference='fixture://done'))
+        self.assertEqual(done['status'], 'recorded', done)
+        # STOP wins over the pending first send: no remote creation.
+        held = await self.adapter.reconcile(child)
+        self.assertEqual(held['status'], 'uncertain', held)
+        self.assertEqual(len(self.cards), 1)
+        self.assertTrue(self.control.get_job(child)['stop_requested'])
+        self.assertFalse(self.control.get_job(child)['terminal'])
+
+    async def test_durable_uncertain_send_never_recreates_blindly(self):
+        # The claim succeeded and the CLI failed: the provider may or may not
+        # hold the card, so reconciliation searches the inventory instead of
+        # creating again. With nothing there it stays uncertain, no new call.
+        root = self.reserve()
+        real_cli = self.adapter._cli
+        async def failing_create(route, args, json_output=True, text_output=False):
+            if list(args[:2]) == ['kanban', 'create']:
+                raise asyncio.TimeoutError()
+            return await real_cli(route, args, json_output=json_output, text_output=text_output)
+        self.adapter._cli = failing_create
+        try:
+            lost = await self.adapter.submit(root, 'First', durable=True)
+        finally:
+            self.adapter._cli = real_cli
+        self.assertEqual(lost['status'], 'uncertain', lost)
+        self.assertEqual(self.cards, {})
+        creates = len([c for c in self.cli_calls if len(c) > 2 and c[2] == 'create'])
+        held = await self.adapter.reconcile(root)
+        self.assertEqual(held['status'], 'uncertain', held)
+        self.assertEqual(held['error'], 'kanban_receipt_not_uniquely_recovered')
+        self.assertEqual(len([c for c in self.cli_calls if len(c) > 2 and c[2] == 'create']), creates)
+        self.assertEqual(self.cards, {})
+
     async def test_uncertain_execution_keeps_slot_until_reconciled(self):
         root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
         child = self.control.reserve('gtd-felix', 'child', self._family_request(
