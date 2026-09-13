@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:apoyo-decision-sanitaria
+kind: skill
+namespace: salud
+name: apoyo-decision-sanitaria
+candidate: reconstruccion
+base: 8ef9b7964b85795e33d9d74d4e6e47fbf4d5de808b643bc324495c0f798b4c6e
+base_revision: 8ef9b7964b85795e33d9d74d4e6e47fbf4d5de808b643bc324495c0f798b4c6e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 21c20889ecd2f628740d735a00a20b0f9b79baf3c3d53e38f13190e7dae65b23
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 21c20889ecd2f628740d735a00a20b0f9b79baf3c3d53e38f13190e7dae65b23
+previous_revision: 8ef9b7964b85795e33d9d74d4e6e47fbf4d5de808b643bc324495c0f798b4c6e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/apoyo-decision-sanitaria
+displaced_path: /home/felix/kora-pneuma/candidates/salud/apoyo-decision-sanitaria/reconstruccion/displaced-f4b8e6815b0b4cd2bcab0146c42dff75
+admitted_at: '2026-09-13T04:58:14+00:00'

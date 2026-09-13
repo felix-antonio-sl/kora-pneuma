@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:vigilancia-epidemiologica
+kind: skill
+namespace: salud
+name: vigilancia-epidemiologica
+candidate: reconstruccion
+base: 13d6af2e0cdcacf6b6ce90d55bfaf08903bf4fa08369c1d6ce534dffa298c2ba
+base_revision: 13d6af2e0cdcacf6b6ce90d55bfaf08903bf4fa08369c1d6ce534dffa298c2ba
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: c9faa14068933b1ff4e888e509af37c13a4c32723552b9e20b583fd97dc76fb5
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: c9faa14068933b1ff4e888e509af37c13a4c32723552b9e20b583fd97dc76fb5
+previous_revision: 13d6af2e0cdcacf6b6ce90d55bfaf08903bf4fa08369c1d6ce534dffa298c2ba
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/vigilancia-epidemiologica
+displaced_path: /home/felix/kora-pneuma/candidates/salud/vigilancia-epidemiologica/reconstruccion/displaced-07d2492588824a69991da00de77cf9bc
+admitted_at: '2026-09-13T04:58:56+00:00'

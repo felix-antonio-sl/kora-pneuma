@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:seguridad-informacion-salud
+kind: skill
+namespace: salud
+name: seguridad-informacion-salud
+candidate: reconstruccion
+base: e684f132e6e9d44a56e57f69a8e126241d9d65b047ee80cac8fc2ca5868a0c36
+base_revision: e684f132e6e9d44a56e57f69a8e126241d9d65b047ee80cac8fc2ca5868a0c36
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 2713f6def5743f945597ed4d55048f2976c3a3934a835fa0889e848eb2a9dd3b
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 2713f6def5743f945597ed4d55048f2976c3a3934a835fa0889e848eb2a9dd3b
+previous_revision: e684f132e6e9d44a56e57f69a8e126241d9d65b047ee80cac8fc2ca5868a0c36
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/seguridad-informacion-salud
+displaced_path: /home/felix/kora-pneuma/candidates/salud/seguridad-informacion-salud/reconstruccion/displaced-70c56c9595bb4e3491589d83fb5ea22c
+admitted_at: '2026-09-13T04:58:53+00:00'

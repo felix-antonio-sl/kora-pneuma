@@ -1,0 +1,89 @@
+id: urn:salud:artefacto:apoyo-decision-sanitaria
+kind: skill
+name: apoyo-decision-sanitaria
+description: Produce artefactos de apoyo a decision sanitaria (gap map, risk map,
+  analisis de red, dashboard, policy brief, escenarios y plan de implementacion) fundados
+  en analisis de sistemas/redes, con anatomia operable por artefacto.
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:salubrista
+- urn:salud:kb:gestion-redes-general
+- urn:salud:kb:gestion-redes-unidades
+- urn:salud:kb:gestion-redes-urgencias
+- urn:salud:kb:health-systems-science-operativa
+- urn:salud:kb:management-engineering-ext-capacidad
+- urn:salud:kb:gestion-redes-herramientas
+- urn:salud:kb:hodom-operacional-indicadores
+relations:
+  reemplaza:
+  - urn:salud:artefacto:analista-redes
+  - urn:salud:artefacto:constructor-tableros
+  conocimiento:
+  - urn:salud:kb:salubrista
+  - urn:salud:kb:gestion-redes-general
+  - urn:salud:kb:gestion-redes-unidades
+  - urn:salud:kb:gestion-redes-urgencias
+  - urn:salud:kb:health-systems-science-operativa
+  - urn:salud:kb:management-engineering-ext-capacidad
+  - urn:salud:kb:gestion-redes-herramientas
+  - urn:salud:kb:hodom-operacional-indicadores
+provenance:
+  source_path: artefactos/skills/salud/apoyo-decision-sanitaria/SKILL.md
+  source_sha256: 88230a42da081261ac875b0c88af9bdf3f4e132b07a828f9fcacd70814f03971
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:apoyo-decision-sanitaria
+
+    nombre: apoyo-decision-sanitaria
+
+    version: 1.1.0
+
+    estado: activo
+
+    reemplaza: [urn:salud:artefacto:analista-redes, urn:salud:artefacto:constructor-tableros]
+
+    descripcion: "Produce artefactos de apoyo a decision sanitaria (gap map, risk
+    map, analisis de red, dashboard, policy brief, escenarios y plan de implementacion)
+    fundados en analisis de sistemas/redes, con anatomia operable por artefacto."
+
+    fuente: "Fusion de analista-redes + constructor-tableros (skills debiles, evaluacion
+    2026-06-22), inyectando metodo operable; consolida analisis de red + produccion
+    de artefactos de decision. Version 1.1.0 (2026-07-17): absorbe el unico valor
+    no redundante de la skill fleet-local implementation-planner antes de retirarla:
+    factibilidad, responsables, secuencia preparacion-piloto-escalamiento-estabilizacion,
+    gestion del cambio, indicadores y gates avanzar/mantener/corregir/rollback."
+
+    autor: FS
+
+    creado: 2026-06-22
+
+    lang: es
+
+    tags: [salud, redes-asistenciales, decision-support, gap-map, risk-map, dashboards,
+    policy-brief, escenarios, implementacion]
+
+    vector: [2, 0, 2, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Write, Edit, Grep]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [encuadrar, analizar-red, construir-artefacto, declarar-limites]
+
+    conocimiento: [urn:salud:kb:salubrista, urn:salud:kb:gestion-redes-general, urn:salud:kb:gestion-redes-unidades,
+    urn:salud:kb:gestion-redes-urgencias, urn:salud:kb:health-systems-science-operativa,
+    urn:salud:kb:management-engineering-ext-capacidad, urn:salud:kb:gestion-redes-herramientas,
+    urn:salud:kb:hodom-operacional-indicadores]
+
+    ---
+
+    '

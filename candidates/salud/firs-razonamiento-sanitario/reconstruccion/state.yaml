@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:firs-razonamiento-sanitario
+kind: skill
+namespace: salud
+name: firs-razonamiento-sanitario
+candidate: reconstruccion
+base: 645805f1a63a6655dc89acde81edd029b1a48141b81186d75624bc90215bdc57
+base_revision: 645805f1a63a6655dc89acde81edd029b1a48141b81186d75624bc90215bdc57
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 726741d3ae2eeb7fe1c7979a3c69dd5949b38e360467efef7c84ca1ebc619028
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 726741d3ae2eeb7fe1c7979a3c69dd5949b38e360467efef7c84ca1ebc619028
+previous_revision: 645805f1a63a6655dc89acde81edd029b1a48141b81186d75624bc90215bdc57
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/firs-razonamiento-sanitario
+displaced_path: /home/felix/kora-pneuma/candidates/salud/firs-razonamiento-sanitario/reconstruccion/displaced-b6bce4d0e6d04bf38c27f4ee870842d0
+admitted_at: '2026-09-13T04:58:35+00:00'

@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:auditor-calidad-hospitalizacion
+kind: skill
+namespace: salud
+name: auditor-calidad-hospitalizacion
+candidate: reconstruccion
+base: 15cf3f49097a17f83cbeae80170fb8d311b8e93f0876e5175d0d135f67f1dd03
+base_revision: 15cf3f49097a17f83cbeae80170fb8d311b8e93f0876e5175d0d135f67f1dd03
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 35cbdd10ca9e990423f3868447a2daeaaec27b7ec06cbc5455fa56ec149693cc
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 35cbdd10ca9e990423f3868447a2daeaaec27b7ec06cbc5455fa56ec149693cc
+previous_revision: 15cf3f49097a17f83cbeae80170fb8d311b8e93f0876e5175d0d135f67f1dd03
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/auditor-calidad-hospitalizacion
+displaced_path: /home/felix/kora-pneuma/candidates/salud/auditor-calidad-hospitalizacion/reconstruccion/displaced-83afb3d68d1546eca1b075e407a372de
+admitted_at: '2026-09-13T04:58:24+00:00'

@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:hospitalizacion-domiciliaria
+kind: skill
+namespace: salud
+name: hospitalizacion-domiciliaria
+candidate: reconstruccion
+base: ebe3cee592281851360df917639e392b939ef7a7a43edb8761e929e7508e72e2
+base_revision: ebe3cee592281851360df917639e392b939ef7a7a43edb8761e929e7508e72e2
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 3d36b2169640684b0fa3f0bd117c665bc5de7572bed599a180cd981247d73283
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 3d36b2169640684b0fa3f0bd117c665bc5de7572bed599a180cd981247d73283
+previous_revision: ebe3cee592281851360df917639e392b939ef7a7a43edb8761e929e7508e72e2
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/hospitalizacion-domiciliaria
+displaced_path: /home/felix/kora-pneuma/candidates/salud/hospitalizacion-domiciliaria/reconstruccion/displaced-bce102bfacc2425791d7d6007be5b54a
+admitted_at: '2026-09-13T04:58:42+00:00'

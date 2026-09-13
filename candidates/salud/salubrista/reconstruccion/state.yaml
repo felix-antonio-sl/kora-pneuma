@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:salubrista
+kind: agent
+namespace: salud
+name: salubrista
+candidate: reconstruccion
+base: 7124e9d938fffb4c006e747b2a1b5bc4219fb183e57a15d7d19fdcd1125cc439
+base_revision: 7124e9d938fffb4c006e747b2a1b5bc4219fb183e57a15d7d19fdcd1125cc439
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 7f4b86ef05b7d58efa027026a3dc09ad96948f0adab2c490d877eb401ca4a4cc
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 7f4b86ef05b7d58efa027026a3dc09ad96948f0adab2c490d877eb401ca4a4cc
+previous_revision: 7124e9d938fffb4c006e747b2a1b5bc4219fb183e57a15d7d19fdcd1125cc439
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/salubrista
+displaced_path: /home/felix/kora-pneuma/candidates/salud/salubrista/reconstruccion/displaced-f16d508de83a4f9ba52e36894f8a1b3a
+admitted_at: '2026-09-13T04:59:12+00:00'

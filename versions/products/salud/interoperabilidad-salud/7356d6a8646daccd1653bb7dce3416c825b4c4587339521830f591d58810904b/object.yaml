@@ -1,0 +1,86 @@
+id: urn:salud:artefacto:interoperabilidad-salud
+kind: skill
+name: interoperabilidad-salud
+description: 'Especialista en interoperabilidad de sistemas de salud: HL7 FHIR R4,
+  perfiles Core CL Chile, SNOMED CT, EMPI, HIE, arquitectura MINSAL. Guia implementacion,
+  validacion de conformidad, brechas.'
+content: content.md
+targets:
+- codex
+requires:
+- urn:salud:kb:informatica-medica-indice
+- urn:salud:kb:informatica-medica-normativa-chilena
+- urn:salud:kb:informatica-medica-ia
+- urn:salud:kb:informatica-medica-salud-digital
+- urn:salud:kb:estandares-it-indice
+- urn:salud:kb:estandares-it-core-cl
+- urn:salud:kb:estandares-it-snomed-ct
+- urn:salud:kb:estandares-it-receta-electronica
+relations:
+  conocimiento:
+  - urn:salud:kb:informatica-medica-indice
+  - urn:salud:kb:informatica-medica-normativa-chilena
+  - urn:salud:kb:informatica-medica-ia
+  - urn:salud:kb:informatica-medica-salud-digital
+  - urn:salud:kb:estandares-it-indice
+  - urn:salud:kb:estandares-it-core-cl
+  - urn:salud:kb:estandares-it-snomed-ct
+  - urn:salud:kb:estandares-it-receta-electronica
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:seguridad-informacion-salud
+provenance:
+  source_path: artefactos/skills/salud/interoperabilidad-salud/SKILL.md
+  source_sha256: 8143def9ab05f79aac98254ba7d0aea04fd4c6f032175e4ff26b2a3f335d7605
+  legacy_state: activo
+  legacy_header: '---
+
+    urn: urn:salud:artefacto:interoperabilidad-salud
+
+    nombre: interoperabilidad-salud
+
+    version: 1.1.0
+
+    estado: activo
+
+    descripcion: "Especialista en interoperabilidad de sistemas de salud: HL7 FHIR
+    R4, perfiles Core CL Chile, SNOMED CT, EMPI, HIE, arquitectura MINSAL. Guia implementacion,
+    validacion de conformidad, brechas."
+
+    fuente: "Sublimada el 2026-06-12 desde la bestia artifacts/skills/salud/interoperabilidad-salud/SKILL.md
+    v1.0.1 (sha256:9a2564b74750ff7faf1dbf0fafed0404a7b112c20439f7cc3938b8ab07b8ec81);
+    payload YAML vertido a cuerpo Markdown (consolidacion salud, bump minor). Omitido
+    con razon: target openclaw (no realizado, GENESIS seccion 4)."
+
+    autor: FS
+
+    creado: 2026-05-07
+
+    lang: es
+
+    tags: [salud, interoperabilidad, fhir, snomed-ct, core-cl, hie, empi]
+
+    vector: [2, 0, 1, 0, 1]
+
+    sigma: [2, 1, 3, 2, 1]
+
+    arnes: disciplina
+
+    forma: habilidad
+
+    herramientas: [Read, Grep, Glob]
+
+    targets: [claude-code, codex, opencode]
+
+    estados: [encuadrar, diagnosticar, disenar, validar, emitir-especificacion]
+
+    conocimiento: [urn:salud:kb:informatica-medica-indice, urn:salud:kb:informatica-medica-normativa-chilena,
+    urn:salud:kb:informatica-medica-ia, urn:salud:kb:informatica-medica-salud-digital,
+    urn:salud:kb:estandares-it-indice, urn:salud:kb:estandares-it-core-cl, urn:salud:kb:estandares-it-snomed-ct,
+    urn:salud:kb:estandares-it-receta-electronica]
+
+    componible: [urn:salud:artefacto:salubrista, urn:salud:artefacto:seguridad-informacion-salud]
+
+    ---
+
+    '

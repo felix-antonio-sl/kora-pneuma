@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:jefe-telemedicina-hsc
+kind: agent
+namespace: salud
+name: jefe-telemedicina-hsc
+candidate: reconstruccion
+base: null
+base_revision: null
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 920db5146cf65bb3b17a22c079f474750709c6f1b1249059c479091ee994f46a
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 920db5146cf65bb3b17a22c079f474750709c6f1b1249059c479091ee994f46a
+previous_revision: null
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/jefe-telemedicina-hsc
+displaced_path: null
+admitted_at: '2026-09-13T04:59:04+00:00'

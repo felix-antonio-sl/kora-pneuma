@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:conducir-decisiones-hodom
+kind: skill
+namespace: salud
+name: conducir-decisiones-hodom
+candidate: reconstruccion
+base: fd85fd99a3c3a10f688adeedc0f5fd377a37a51de1f97744d245282b61af7f15
+base_revision: fd85fd99a3c3a10f688adeedc0f5fd377a37a51de1f97744d245282b61af7f15
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f4f81f072a438794b2e3ad51f740009b10a9920ffed77ce2d5601a11f25c3df1
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f4f81f072a438794b2e3ad51f740009b10a9920ffed77ce2d5601a11f25c3df1
+previous_revision: fd85fd99a3c3a10f688adeedc0f5fd377a37a51de1f97744d245282b61af7f15
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/conducir-decisiones-hodom
+displaced_path: /home/felix/kora-pneuma/candidates/salud/conducir-decisiones-hodom/reconstruccion/displaced-de126f8ced0f468b9c8c9c50c5e813cf
+admitted_at: '2026-09-13T04:58:28+00:00'

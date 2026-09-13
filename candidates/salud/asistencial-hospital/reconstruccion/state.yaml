@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:asistencial-hospital
+kind: skill
+namespace: salud
+name: asistencial-hospital
+candidate: reconstruccion
+base: 0af46f457c6b56897ba6aa6408c9f1591d7ad343a40123f4992902b2567e58f7
+base_revision: 0af46f457c6b56897ba6aa6408c9f1591d7ad343a40123f4992902b2567e58f7
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 0f827639d149e4bb78e310c1091d64ee360669589428f205927542d82e016c74
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 0f827639d149e4bb78e310c1091d64ee360669589428f205927542d82e016c74
+previous_revision: 0af46f457c6b56897ba6aa6408c9f1591d7ad343a40123f4992902b2567e58f7
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/asistencial-hospital
+displaced_path: /home/felix/kora-pneuma/candidates/salud/asistencial-hospital/reconstruccion/displaced-c638f53518164fff983f63ec98599c36
+admitted_at: '2026-09-13T04:58:21+00:00'

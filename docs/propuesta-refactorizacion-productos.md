@@ -99,6 +99,60 @@ nativos pendientes ni recuperación. Los casos acreditan conducta sintética;
 la instalación personal acredita correspondencia con la fuente, no conducta
 nueva observada en esos perfiles.
 
+El lote sanitario está admitido e instalado en Codex y Hermes: cinco agentes
+(`medico-hospitalista`, `urgenciologo`, `salubrista`, `director-tecnico-hodom` y
+el nuevo `jefe-telemedicina-hsc`) y trece métodos (`asistencial-hospital`,
+`asistencial-hodom`, `reporte-diario-hodom`, `hospitalista`,
+`hospitalizacion-domiciliaria`, `apoyo-decision-sanitaria`,
+`auditor-calidad-hospitalizacion`, `vigilancia-epidemiologica`,
+`interoperabilidad-salud`, `seguridad-informacion-salud`,
+`conducir-decisiones-hodom`, el nuevo `conducir-telemedicina-hsc` y
+`firs-razonamiento-sanitario`). Se conserva acceso directo a especialidades:
+la conducción institucional, la atención individual y la gestión de red tienen
+objetos y autoridades diferentes. El diseño de interfaz clínica pertenece al
+lote de diseño y no queda validado por este cierre.
+
+Los gemelos institucionales sostienen responsabilidades, decisiones y compromisos
+en el cuaderno propietario; distinguen la titularidad de Félix, la delegación
+del encargo y la capacidad efectiva de herramientas. Una revisión independiente
+contrastó esos cuatro productos contra las fuentes institucionales. No se
+modificaron `hd-dt`, `tm-hsc`, HSC ni cuadernos reales. La reparación conserva
+SOAP, reconciliación inequívoca de medicación, continuidad, estados de adquisición,
+selección HODOM situada, métodos meso y fuentes completas. Retira la estabilidad
+universal de 24 horas, la identificación por apariencia, diagnósticos causales
+por indicadores aislados y la activación automática de memorias o perfiles.
+
+Se publicaron seis revisiones editoriales de conocimiento: glosario HODOM,
+invariante de capacidad, indicadores, management engineering p03, índice
+normativo HSC y umbrales clínicos de hospitalización. El cotejo del DS1 conserva
+sus artículos y separa obligaciones de diseños locales; los indicadores siguen
+siendo una serie histórica sin base mensual primaria recuperada ni causalidad
+acreditada. NICE NG225 fundamenta retirar la tabla que convertía estratos de
+riesgo en decisiones universales de disposición. Halm y las guías NAC consultadas
+no justifican extender una regla de alta a todas las patologías; las condiciones
+de duración antibiótica se distinguen de alta. Se conservaron fuentes exactas,
+versiones previas, lagunas y estatus del resto. Esto no aprueba protocolos
+clínicos ni revalida toda la biblioteca.
+
+| Dimensión sanitaria | Evidencia y límite |
+|---|---|
+| Mecánica | 18 revisiones concretas admitidas; `check` sin incidencias, 524 objetos y 463 referencias; 16 pruebas de realizadores. Historia y recursos preservados. |
+| Semántica | Cotejo de cuerpos, recursos y seis revisiones de conocimiento; distinción de responsabilidades y fuentes. No revisión clínica integral de las demás referencias. |
+| Carga | Sesiones nuevas Sol/high: activación directa Codex y SOUL/`skill_view` Hermes, con biblioteca mínima pública. Los casos ejercieron nueve productos directamente y sus dependencias; materialización del resto no se llama ejercicio individual. |
+| Conducta | Siete casos por destino: alta situada y boarding, identidad de medicación, indicadores sin causalidad, responsabilidad DT, producción sin doble conteo en Telemedicina, adquisición selectiva del reporte y tarea vecina sin métodos. |
+| Utilidad | Sin comparación diferencial general; no se atribuye superioridad sobre asistencia sin producto. |
+| Efectos | Instalación personal focal de los 18, `current` en ambos destinos, sin cambios nativos pendientes ni recuperación. Los ensayos sólo prepararon planes sintéticos; no produjeron un DOCX clínico, envíos ni actos institucionales. |
+
+Se conservaron los resultados brutos de la campaña. La revisión posthoc corrigió
+oráculos de etiquetas, campos estructurados y espacio exterior del SOUL, sin
+repetir inferencia. El perfil médico completo cabía en el límite efectivo de
+Hermes: 21.320 caracteres frente a 65.280 para Sol en esa invocación. Una revisión
+manual sí detectó un defecto material: el plan Hermes del reporte trató IDs
+censales como handles. Se aclaró la fuente y se repitió sólo ese caso: ambos IDs
+quedaron con `handle: null`, pendientes de resolución fuente. Los otros trece
+resultados se conservaron; Codex ya distinguía esos estados. La instalación no
+modificó configuraciones, credenciales, servicios ni GTD protegido.
+
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
 coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**

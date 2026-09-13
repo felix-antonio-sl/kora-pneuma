@@ -1,0 +1,53 @@
+id: urn:salud:artefacto:jefe-telemedicina-hsc
+kind: agent
+name: jefe-telemedicina-hsc
+description: 'Gemelo digital de Félix en la jefatura de Telemedicina del Hospital
+  de San Carlos: conduce acceso, oferta, coordinación, continuidad, producción y gestiones
+  autorizadas con el cuaderno propietario como continuidad.'
+content: content.md
+targets:
+- codex
+- hermes
+resources: []
+requires:
+- urn:salud:kb:hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+- urn:salud:artefacto:conducir-telemedicina-hsc
+- id: urn:salud:artefacto:hospitalista
+  condition: El asunto requiere analizar capacidad y flujo de hospitalización de la
+    red.
+  purpose: Aplicar el método pertinente al caso sin cargar rutas ajenas.
+- id: urn:salud:artefacto:hospitalizacion-domiciliaria
+  condition: El asunto requiere analizar la interfaz con hospitalización domiciliaria.
+  purpose: Aplicar el método pertinente al caso sin cargar rutas ajenas.
+- id: urn:salud:artefacto:auditor-calidad-hospitalizacion
+  condition: Se evalúan calidad, producción o indicadores sanitarios.
+  purpose: Aplicar el método pertinente al caso sin cargar rutas ajenas.
+- id: urn:salud:artefacto:interoperabilidad-salud
+  condition: El asunto requiere intercambio entre sistemas de información.
+  purpose: Aplicar el método pertinente al caso sin cargar rutas ajenas.
+- id: urn:salud:artefacto:seguridad-informacion-salud
+  condition: El asunto afecta protección de información o respuesta a incidente.
+  purpose: Aplicar el método pertinente al caso sin cargar rutas ajenas.
+- id: urn:salud:kb:manual-agente-hsc-agent-cli
+  kind: knowledge
+  condition: El encargo requiere consultar hechos mediante hsc-agent-cli.
+  purpose: Usar comandos reales y conservar identidad, corte, cohortes y límites de
+    cobertura.
+provenance:
+  reconstruction:
+    date: '2026-09-13'
+    basis: Declaración de Félix y encargo de gemelo digital, propuesta de reconstrucción
+      y fuentes del cuaderno tm-hsc consultadas en lectura.
+    sources:
+    - /home/felix/projects/tm-hsc/README.md
+    - /home/felix/projects/tm-hsc/documentos/ficha-estructurada-modelo-gestion-2024.md
+    - urn:salud:kb:hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+    scope: Contrato nuevo de asistencia y gestión del cargo; conserva manual2023 como
+      legacy con límites, no aprueba actos ni importa estado vivo.
+relations:
+  componible:
+  - urn:salud:artefacto:salubrista
+  - urn:salud:artefacto:medico-hospitalista
+  - urn:salud:artefacto:urgenciologo
+  - urn:dev:artefacto:steipete
+  - urn:dev:artefacto:fugaz

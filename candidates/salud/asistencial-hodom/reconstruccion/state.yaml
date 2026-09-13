@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:asistencial-hodom
+kind: skill
+namespace: salud
+name: asistencial-hodom
+candidate: reconstruccion
+base: 4cc8b2ac9e569ee4e2ec1306faa95fd5b1793e627552bd30f9d96ce8e85b174e
+base_revision: 4cc8b2ac9e569ee4e2ec1306faa95fd5b1793e627552bd30f9d96ce8e85b174e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f5fed8e97e433f1f66aa36fa6a593d7b4158c3437911dee4d2f75b11b9b8d41f
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f5fed8e97e433f1f66aa36fa6a593d7b4158c3437911dee4d2f75b11b9b8d41f
+previous_revision: 4cc8b2ac9e569ee4e2ec1306faa95fd5b1793e627552bd30f9d96ce8e85b174e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/asistencial-hodom
+displaced_path: /home/felix/kora-pneuma/candidates/salud/asistencial-hodom/reconstruccion/displaced-5fe46bd5ac114df685d3130b91cf531d
+admitted_at: '2026-09-13T04:58:18+00:00'

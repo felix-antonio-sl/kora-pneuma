@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:interoperabilidad-salud
+kind: skill
+namespace: salud
+name: interoperabilidad-salud
+candidate: reconstruccion
+base: 7356d6a8646daccd1653bb7dce3416c825b4c4587339521830f591d58810904b
+base_revision: 7356d6a8646daccd1653bb7dce3416c825b4c4587339521830f591d58810904b
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 514ad884fbc134d21ade32eb7973548bd60e3c55481c74c00368eaf775ccc2c0
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 514ad884fbc134d21ade32eb7973548bd60e3c55481c74c00368eaf775ccc2c0
+previous_revision: 7356d6a8646daccd1653bb7dce3416c825b4c4587339521830f591d58810904b
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/interoperabilidad-salud
+displaced_path: /home/felix/kora-pneuma/candidates/salud/interoperabilidad-salud/reconstruccion/displaced-1c98491a3b8e460ca0188afe5e74444e
+admitted_at: '2026-09-13T04:58:46+00:00'

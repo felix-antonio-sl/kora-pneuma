@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:conducir-telemedicina-hsc
+kind: skill
+namespace: salud
+name: conducir-telemedicina-hsc
+candidate: reconstruccion
+base: null
+base_revision: null
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: e0a610189629a3552950245c6f287b58b65bc3d6929a29f2dfbde0f367b156d0
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: e0a610189629a3552950245c6f287b58b65bc3d6929a29f2dfbde0f367b156d0
+previous_revision: null
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/conducir-telemedicina-hsc
+displaced_path: null
+admitted_at: '2026-09-13T04:58:31+00:00'

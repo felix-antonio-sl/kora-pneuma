@@ -1,0 +1,29 @@
+id: urn:salud:artefacto:conducir-telemedicina-hsc
+kind: skill
+name: conducir-telemedicina-hsc
+description: Usar para conducir decisiones o gestiones de acceso, oferta, agenda,
+  coordinación, continuidad, calidad y producción de Telemedicina HSC; distingue modalidades,
+  responsables y cierre del acto solicitado.
+content: content.md
+targets:
+- codex
+- hermes
+resources: []
+requires:
+- urn:salud:kb:hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+- id: urn:salud:kb:manual-agente-hsc-agent-cli
+  kind: knowledge
+  condition: El encargo requiere consultar hechos mediante hsc-agent-cli.
+  purpose: Usar comandos reales y conservar identidad, corte, cohortes y límites de
+    cobertura.
+provenance:
+  reconstruction:
+    date: '2026-09-13'
+    basis: Declaración de Félix y encargo de gemelo digital, propuesta de reconstrucción
+      y fuentes del cuaderno tm-hsc consultadas en lectura.
+    sources:
+    - /home/felix/projects/tm-hsc/README.md
+    - /home/felix/projects/tm-hsc/documentos/ficha-estructurada-modelo-gestion-2024.md
+    - urn:salud:kb:hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023
+    scope: Contrato nuevo de asistencia y gestión del cargo; conserva manual2023 como
+      legacy con límites, no aprueba actos ni importa estado vivo.

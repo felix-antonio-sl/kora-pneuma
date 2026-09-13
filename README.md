@@ -63,8 +63,12 @@ personales gestionadas están actualizadas. El rol delegado Codex no quedó
 acreditado. El lote de ingeniería también está admitido e instalado en ambos
 destinos: diez productos con sus especialidades accesibles, y cuatro casos
 sintéticos por runtime que acreditan diagnóstico provisional, continuidad
-autorizada, revisión vacía y no activación vecina. El resto de la colección
-sigue en ejecución; estos lotes no lo validan.
+autorizada, revisión vacía y no activación vecina. El lote sanitario incorpora
+18 productos, incluidos los gemelos de Dirección Técnica HODOM y Jefatura de
+Telemedicina, con seis referencias revisadas y siete casos sintéticos por
+destino. Sus instalaciones están actualizadas; no se ejecutaron actos clínicos
+ni institucionales. El resto de la colección sigue en ejecución; estos lotes no
+lo validan.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

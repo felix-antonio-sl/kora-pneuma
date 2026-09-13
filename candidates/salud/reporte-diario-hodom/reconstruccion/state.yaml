@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:reporte-diario-hodom
+kind: skill
+namespace: salud
+name: reporte-diario-hodom
+candidate: reconstruccion
+base: 5830109cf4cc4e94016a3599a3a1ab45df20177b862bde1394bca7d119bb731b
+base_revision: 5830109cf4cc4e94016a3599a3a1ab45df20177b862bde1394bca7d119bb731b
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: cb4e8d2742bb5fa7fad8c30a7e17fc427307f1fd0edf9b50c60fa248088a8600
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: cb4e8d2742bb5fa7fad8c30a7e17fc427307f1fd0edf9b50c60fa248088a8600
+previous_revision: 5830109cf4cc4e94016a3599a3a1ab45df20177b862bde1394bca7d119bb731b
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/reporte-diario-hodom
+displaced_path: /home/felix/kora-pneuma/candidates/salud/reporte-diario-hodom/reconstruccion/displaced-cc3eb9f3aa33441a805457ced3497c02
+admitted_at: '2026-09-13T04:58:49+00:00'

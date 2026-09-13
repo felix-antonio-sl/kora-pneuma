@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:director-tecnico-hodom
+kind: agent
+namespace: salud
+name: director-tecnico-hodom
+candidate: reconstruccion
+base: 5d730f0c0ab21ea3ccf724a8ce7c67beb9981c4b4851ae80f926ddf88d621989
+base_revision: 5d730f0c0ab21ea3ccf724a8ce7c67beb9981c4b4851ae80f926ddf88d621989
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 13f1e7841f52344b78f26fd05a4dd724cd38bf072c3a4c41d36ee3792c4fe861
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 13f1e7841f52344b78f26fd05a4dd724cd38bf072c3a4c41d36ee3792c4fe861
+previous_revision: 5d730f0c0ab21ea3ccf724a8ce7c67beb9981c4b4851ae80f926ddf88d621989
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/director-tecnico-hodom
+displaced_path: /home/felix/kora-pneuma/candidates/salud/director-tecnico-hodom/reconstruccion/displaced-dcdf2f55bef04e75a04251f4f1fe154a
+admitted_at: '2026-09-13T04:59:00+00:00'

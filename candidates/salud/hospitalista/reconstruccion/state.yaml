@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:hospitalista
+kind: skill
+namespace: salud
+name: hospitalista
+candidate: reconstruccion
+base: f6c86e0d8e6c9e643a073605deba74e0198640da1726cfcfffcda84459fc801d
+base_revision: f6c86e0d8e6c9e643a073605deba74e0198640da1726cfcfffcda84459fc801d
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 22aeb2f29b600d7087c2b396bb7f108037e0ead10ae531ecb0b21ecf77b527b2
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 22aeb2f29b600d7087c2b396bb7f108037e0ead10ae531ecb0b21ecf77b527b2
+previous_revision: f6c86e0d8e6c9e643a073605deba74e0198640da1726cfcfffcda84459fc801d
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/hospitalista
+displaced_path: /home/felix/kora-pneuma/candidates/salud/hospitalista/reconstruccion/displaced-0d41f05444b842fbac8c2517608394ee
+admitted_at: '2026-09-13T04:58:39+00:00'

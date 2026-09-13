@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:medico-hospitalista
+kind: agent
+namespace: salud
+name: medico-hospitalista
+candidate: reconstruccion
+base: 46743934c5c8e9d1857fe0f8a94e686116c3fe6eed68cb3d9c63ad4716ef45f4
+base_revision: 46743934c5c8e9d1857fe0f8a94e686116c3fe6eed68cb3d9c63ad4716ef45f4
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 9f53d0499cb1a614506407525ba8c2fef6740e67e6c9170f95c59b4922ea85ff
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 9f53d0499cb1a614506407525ba8c2fef6740e67e6c9170f95c59b4922ea85ff
+previous_revision: 46743934c5c8e9d1857fe0f8a94e686116c3fe6eed68cb3d9c63ad4716ef45f4
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/medico-hospitalista
+displaced_path: /home/felix/kora-pneuma/candidates/salud/medico-hospitalista/reconstruccion/displaced-8b8e906d2de54fa8a628878c9ab57d42
+admitted_at: '2026-09-13T04:59:08+00:00'

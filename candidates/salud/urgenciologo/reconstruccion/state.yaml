@@ -1,0 +1,22 @@
+id: urn:salud:artefacto:urgenciologo
+kind: agent
+namespace: salud
+name: urgenciologo
+candidate: reconstruccion
+base: 0fe756ab8365a5baa72d47f7fbfa9f1b240540e65d328f3a9303a9f480fc7daa
+base_revision: 0fe756ab8365a5baa72d47f7fbfa9f1b240540e65d328f3a9303a9f480fc7daa
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: a694509e437ec21b1178f65dc8f1ec19ec6ee90f2385ffff0024cc7cbf42c32a
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: a694509e437ec21b1178f65dc8f1ec19ec6ee90f2385ffff0024cc7cbf42c32a
+previous_revision: 0fe756ab8365a5baa72d47f7fbfa9f1b240540e65d328f3a9303a9f480fc7daa
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/salud/urgenciologo
+displaced_path: /home/felix/kora-pneuma/candidates/salud/urgenciologo/reconstruccion/displaced-d0d37af42a3841289515e03f69144833
+admitted_at: '2026-09-13T04:59:16+00:00'
