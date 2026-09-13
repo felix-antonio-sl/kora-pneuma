@@ -107,6 +107,17 @@ recorridos. Renovar toda la biblioteca heredada sería otro encargo. El límite 
 explicita por capacidad: conservar un conocimiento `legacy` no lo hace inválido,
 pero tampoco acredita una revisión editorial nueva o economía óptima de tokens.
 
+La renovación editorial fue selectiva: referencias operacionales KORA, cierre
+de ingeniería, conocimiento sanitario y lentes Jobs. El cierre de este plan no
+debe presentarse como renovación integral de la biblioteca. Tampoco se excluye
+de revisión un conocimiento necesario sólo porque sea heredado: cada recorrido
+debe examinar el contenido que sustenta sus decisiones, no únicamente comprobar
+que su URN resuelve. Se prioriza lo que determina una acción, presenta una
+contradicción o ha quedado desactualizado; se conserva lo suficiente y se
+recompone lo defectuoso mediante el ciclo editorial existente. El dictamen
+identifica las referencias revisadas y los límites del resto, sin inventario
+paralelo ni promoción masiva de `legacy`.
+
 ## Descomposición estructural con cat-thinking
 
 La pregunta reformulada es: **¿qué debe conservar cada transformación y qué
@@ -195,6 +206,13 @@ sólo si un defecto reproducido impide la operación. No cambiar configuración
 global ni actualizar Hermes/Codex por rutina. Las 33 diferencias del corte son
 un punto de partida, no una lista fija que prevalezca sobre el estado real.
 
+Separar diferencias de realización de defectos de contenido: el cambio de
+envoltura Hermes de `3e52279` explica actualizaciones pendientes sin implicar
+que cada cuerpo esté roto. Contrastar los efectos actuales antes de atribuirles
+esa causa. Una diferencia sólo de envoltura no justifica reautoría del producto
+ni una campaña conductual por instancia; sí exige conservar rutas, condiciones,
+recursos y carga efectiva donde el cambio pueda afectarlos.
+
 **Aceptación:** todas las instancias en alcance seleccionadas y sus consumidores
 materiales quedan `current`, sin recuperación pendiente, o con conflicto
 protegido concreto aislado. Contrastar el ensamblaje afectado; el tamaño de
@@ -261,6 +279,21 @@ el trabajo de los incrementos anteriores. No son campañas por archivo.
 | Dori y OPM, con métodos y recursos expertos | Consulta técnica que necesite contenido sustantivo o tardío y un recurso especializado, más el caso vecino que no necesita OPM. | Acceso efectivo al conocimiento decisivo, resultado técnico contrastable y proporcionalidad. Separar corrección formal, premisa de dominio y ejecución de herramienta; no prometer roundtrip no ejecutado. |
 | Steipete, Fugaz y acceso agent-architect | Reparación y comprobación real del propio ciclo KORA; autoría por acceso especializado frente al método directo. | Trabajo integrado, conservación de autoridad y cierre sobre candidato correcto. No duplicar los ensayos de los incrementos 2–3. |
 | David Allen, Allan Kelly y métodos de claridad/organización | Compromiso personal o célula sintética con responsabilidades cruzadas y una decisión pendiente concreta. | Claridad y siguiente acción útiles, sin apropiarse del trabajo ajeno ni imponer registros. Comparar acceso agente con método suficiente; GTD protegido excluido. |
+
+En los gemelos, elegir un caso que requiera realmente
+`conducir-decisiones-hodom` y `conducir-telemedicina-hsc`, respectivamente, y
+observar su carga y aplicación, además de la conducta del agente. Los ensayos
+sanitarios previos no acreditan por sí solos esas dos skills: el recibo agregado
+declara cobertura por casos, no ejercicio individual de todos los productos.
+La evaluación histórica aportada por Félix señala que los casos de los gemelos
+no exigieron cargar esos métodos; antes de reutilizar esa evidencia, comprobar
+las trazas pertinentes. Resolver esta brecha dentro del recorrido de continuidad,
+sin dos campañas adicionales por archivo.
+
+La retoma debe reconocer una decisión posterior desde el mismo asunto y
+preservar la separación de autoridades de ambos cargos. Instalar un perfil no
+crea memoria persistente ni seguimiento autónomo. No añadir un servicio de
+seguimiento para hacer pasar un caso de continuidad entre sesiones.
 
 **Cobertura:** los frentes, junto con KORA y Diseño, incluyen las 16 identidades
 de agente activas. No exigen 16 campañas aisladas: se reutiliza evidencia sólo
