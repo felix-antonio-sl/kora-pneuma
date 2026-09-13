@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:diseno-producto-integrado
+kind: skill
+namespace: dev
+name: diseno-producto-integrado
+candidate: evidencia-proporcional
+base: b2fe515846e7ddac350cf4fed08131e57aa6a5fc0d9729ad1a160e62e97d0473
+base_revision: b2fe515846e7ddac350cf4fed08131e57aa6a5fc0d9729ad1a160e62e97d0473
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 21e671cb1b23b122dc45c16b441b2e408c41c1a2f8cfbf4dbb5a4ef606fd1c85
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 21e671cb1b23b122dc45c16b441b2e408c41c1a2f8cfbf4dbb5a4ef606fd1c85
+previous_revision: b2fe515846e7ddac350cf4fed08131e57aa6a5fc0d9729ad1a160e62e97d0473
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/diseno-producto-integrado
+displaced_path: /home/felix/kora-pneuma/candidates/dev/diseno-producto-integrado/evidencia-proporcional/displaced-99ba6bfcc5984a47acce8be00388db52
+admitted_at: '2026-09-13T23:25:25+00:00'
