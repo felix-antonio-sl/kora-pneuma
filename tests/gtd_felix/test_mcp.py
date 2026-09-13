@@ -15,7 +15,7 @@ import aiohttp
 from aiohttp import web
 from gtd_felix.application import create_app
 from gtd_felix.control import ExecutionControl
-from gtd_felix.mcp import MCPClient, TOOLS, instructions
+from gtd_felix.mcp import MCPClient, TOOLS, instructions, handle
 from gtd_felix.service import GTDService
 
 OWNER, PRINCIPAL = 'synthetic-owner-token', 'synthetic-principal-token'
@@ -49,6 +49,25 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
         await site.start()
         self.url = 'http://127.0.0.1:' + str(site._server.sockets[0].getsockname()[1])
         self.client = MCPClient(self.url, PRINCIPAL)
+
+    async def test_misnested_material_command_gets_safe_repair_then_persists(self):
+        material = self.command('repair-material', action='put_material', fields={'content': 'SYNTHETIC_PRIVATE_MATERIAL'})
+        malformed = {k:v for k,v in material.items() if k not in {'operation_id', 'item_id'}}
+        for arguments, code in [
+                ({'job_id': self.job, 'operation_id': 'repair-material', 'command': malformed}, 'invalid_command_envelope'),
+                ({'job_id': self.job, 'command': malformed}, 'command_operation_id_required'),
+                ({'job_id': self.job, 'command': {**malformed, 'operation_id': 'repair-material'}}, 'command_item_id_required')]:
+            result = await handle({'jsonrpc':'2.0','id':1,'method':'tools/call',
+                'params':{'name':'gtd_command','arguments':arguments}}, self.client)
+            receipt = json.loads(result['result']['content'][0]['text'])
+            self.assertEqual(code, receipt['error'])
+            self.assertIn('command', receipt['hint'])
+            self.assertNotIn('SYNTHETIC_PRIVATE_MATERIAL', json.dumps(receipt))
+            self.assertEqual(self.item['version'], self.service.get_item(self.item['id'])['version'])
+        result = await handle({'jsonrpc':'2.0','id':2,'method':'tools/call',
+            'params':{'name':'gtd_command','arguments':{'job_id':self.job,'command':material}}}, self.client)
+        self.assertFalse(result['result']['isError'], result)
+        self.assertEqual(self.item['version']+1, self.service.get_item(self.item['id'])['version'])
 
     async def test_source_coverage_keeps_three_tools_and_reads_http(self):
         self.assertEqual(len(TOOLS),3)

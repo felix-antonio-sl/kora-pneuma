@@ -210,7 +210,7 @@ TOOLS = [
          'account_alias':STRING,'start':STRING,'end':STRING,'timezone':STRING,'calendar_ids':{'type':'array','items':STRING,'minItems':1,'uniqueItems':True},
          'source_id': STRING, 'effect_id': STRING, 'item_id': STRING, 'material_id': STRING, 'version': {'type': 'integer', 'minimum': 1}, 'job_id': STRING, 'filters': {'type': 'object'}, 'page_size': {'type': 'integer', 'minimum': 1, 'maximum': 50, 'default': 20}, 'cursor': {'type': ['string', 'null'], 'maxLength': 1024}, 'context': {'type': 'object'},
          'reference': {'enum': ['SKILL.md', 'references/operations.md']}, 'offset': {'type': 'integer', 'minimum': 0}, 'calculation': CALCULATION}, ['view'])},
-    {'name': 'gtd_command', 'description': 'Apply one idempotent domain command under this live job. Read current item/version first. A material is not a completed commitment; assess_result requires explicit criterion and evidence. apply_human_instruction applies an already explicit direct owner correction (proposed possibility title/text only) or pause under the destination job and routed source revision; quote/provenance do not prove linguistic understanding. Ambiguity needs a pertinent question; a query only reads. Owner meaning remains protected. edit may correct completion_criteria or waiting_for only on eligible principal-created descendants under their active mandate, before human adoption; waiting_for requires a waiting item.',
+    {'name': 'gtd_command', 'description': 'Apply one idempotent domain command under this live job. Envelope: {job_id, command: {operation_id, action, item_id, expected_version, fields}}. operation_id belongs INSIDE command, never beside job_id. Read current item/version first. A material is not a completed commitment; assess_result requires explicit criterion and evidence. apply_human_instruction applies an already explicit direct owner correction (proposed possibility title/text only) or pause under the destination job and routed source revision; quote/provenance do not prove linguistic understanding. Ambiguity needs a pertinent question; a query only reads. Owner meaning remains protected. edit may correct completion_criteria or waiting_for only on eligible principal-created descendants under their active mandate, before human adoption; waiting_for requires a waiting item.',
      'inputSchema': obj({'job_id': STRING, 'command': COMMAND, 'effect_control': {'enum': list(EFFECT_REQUESTS)}, 'request': {'type': 'object'}})},
     {'name': 'gtd_dispatch', 'description': 'Reserve and enqueue durable specialist work within this job scope and shared budget. Does not wait for inference. A deferred receipt is not evidence that work ran.',
      'inputSchema': obj({'job_id': STRING, 'operation_id': STRING, 'request': REQUEST}, ['job_id', 'operation_id', 'request'])},
@@ -323,6 +323,17 @@ def item_index(items, arguments, job_id=None):
             'detail_view': 'item'}
 
 
+COMMAND_HINTS = {
+    'invalid_command_envelope': 'Use only job_id and command at the top level. Put operation_id inside command.',
+    'command_operation_id_required': 'Set command.operation_id to a stable nonempty operation ID; retain it when retrying.',
+    'command_item_id_required': 'Set command.item_id to the exact item ID whose current version you read.',
+}
+
+
+class CommandInputError(ValueError):
+    pass
+
+
 class MCPClient:
     def __init__(self, url=None, token=None, *, instruction_root=None):
         self.url = url or os.environ.get('GTD_API_URL', 'http://127.0.0.1:8765')
@@ -408,12 +419,19 @@ class MCPClient:
             method, path = 'POST', '/v1/effects/' + arguments['effect_control']
         elif name in {'gtd_command', 'gtd_dispatch'}:
             if name == 'gtd_command' and set(arguments) - {'job_id', 'command'}:
-                raise ValueError('invalid_command_fields')
+                raise CommandInputError('invalid_command_envelope')
             if not isinstance(job_id, str) or not job_id:
                 raise ValueError('job_required')
             method = 'POST'
             path = '/v1/agent/' + ('command' if name == 'gtd_command' else 'dispatch')
             payload = arguments['command'] if name == 'gtd_command' else {k: arguments[k] for k in ('operation_id', 'request')}
+            if name == 'gtd_command':
+                if not isinstance(payload, dict):
+                    raise CommandInputError('invalid_command_envelope')
+                if not isinstance(payload.get('operation_id'), str) or not payload['operation_id']:
+                    raise CommandInputError('command_operation_id_required')
+                if payload.get('action') != 'review' and (not isinstance(payload.get('item_id'), str) or not payload['item_id']):
+                    raise CommandInputError('command_item_id_required')
         else:
             raise ValueError('unknown_tool')
         headers = {'Authorization': 'Bearer ' + self.token}
@@ -452,6 +470,12 @@ async def handle(message, client):
                 value = await client.call(params['name'], params.get('arguments', {}))
                 failed = isinstance(value, dict) and value.get('status') in {'rejected', 'conflict', 'uncertain'}
                 result = {'content': [{'type': 'text', 'text': json.dumps(value, ensure_ascii=False)}], 'isError': failed}
+            except CommandInputError as error:
+                code = error.args[0] if error.args and type(error.args[0]) is str else None
+                if code not in COMMAND_HINTS:
+                    code = 'invalid_command_envelope'
+                result = {'content': [{'type': 'text', 'text': json.dumps({
+                    'status': 'rejected', 'error': code, 'hint': COMMAND_HINTS[code]})}], 'isError': True}
             except (CalculationError, ItemIndexError) as error:
                 result = {'content': [{'type': 'text', 'text': json.dumps({'status': 'rejected', 'error': str(error)})}], 'isError': True}
             except (ValueError, KeyError, TypeError, OSError, aiohttp.ClientError, asyncio.TimeoutError):
