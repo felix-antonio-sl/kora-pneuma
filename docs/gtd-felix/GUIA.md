@@ -487,8 +487,10 @@ esas condiciones y mantiene la red fuera de la transacción. Fuentes primarias:
 
 - `runs.native_host` añadida. Los adaptadores Hermes/Codex exigen identidad
   provider+host+profile+id; el triple del borrador pierde procedencia y permite
-  colisión entre hosts. La unicidad pasa a la cuaterna. Evidencia: 32/32
-  identidades nativas preservadas en la migración.
+  colisión entre hosts. La unicidad pasa a la cuaterna. Las columnas mandan en
+  la cuaterna; las facetas propias del proveedor (p. ej. `thread_id` de Codex)
+  viajan en `detail_json.native` para que la comparación de identidad siga
+  exacta. Evidencia: 32/32 identidades nativas preservadas en la migración.
 - `run_observations.observed_at` anulable para filas migradas. Los 866
   observaciones históricas no traen tiempos durables y el orden UUID no es
   cronología; inventarlos violaría la regla de no deducir tiempos. El servicio

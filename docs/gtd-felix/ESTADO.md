@@ -85,13 +85,13 @@ en ~22 ms y el estado activo en 7.663 bytes.
   orquestación 138 B vs 3.531.798 B; `get_job` 0,4 ms, `pending` 0,1 ms,
   `budget` ~20 ms; con 532 runs el presupuesto sigue ~29 ms y el estado en
   7.663 B; recorridos por asunto/actor/integración paginados sin tope).
-- `test_control` 69/69 PASS (64 + 5 regresiones nuevas que fallan en `1f6ebe0`:
-  4 fallos + 1 error comprobados por estante); `test_daily_budget` 17/17 PASS;
-  `test_spent_continuation` 7/7 PASS; `test_orchestration` 62/62 PASS;
+- `test_control` 70/70 PASS (64 + 6 regresiones que fallan sin su fix: 5 de la
+  primera revisión más identidad de facetas nativas); `test_daily_budget` 17/17
+  PASS; `test_spent_continuation` 7/7 PASS; `test_orchestration` 62/62 PASS;
   `test_core`+`test_gtd`+`test_source_evaluation` 76/76 PASS (las 6 fallidas de
   fuentes citadas en el corte anterior ya no reproducen en este candidato;
-  su capa completa se resuelve en I3). Total focal con Hermes y claim: 274/274
-  PASS (94 control/diaria/gasto + 42 Hermes + 138 orquestación/núcleo/fuentes).
+  su capa completa se resuelve en I3). Paquete anterior: 274/274 PASS con claim
+  HTTP (94 control/diaria/gasto + 42 Hermes + 138 orquestación/núcleo/fuentes).
 - Cierre de integración I1 (revisión 2026-09-14, paquete 2): la plaza nativa se
   reclama durable y atómicamente (`control.claim_dispatch`) ANTES del efecto
   remoto, con la red fuera de la transacción; el segundo despacho no crea otro
@@ -103,12 +103,23 @@ en ~22 ms y el estado activo en 7.663 bytes.
   admitido: acota reservas, no ejecuciones; la plaza nativa sigue única global.
   El fallo Hermes heredado era regresión de I1 mal clasificada, ahora corregida:
   el test espera padre e hijo secuenciales y pasa.
-- Suite del adaptador Hermes 42/42 PASS (6 pruebas nuevas + test heredado
-  adaptado al contrato secuencial; 7 de 8 fallan sobre `b3cc45b` por estante, la
-  restante guarda incertidumbre y pasa en ambos). `test_adapters` (Codex, 1 fallo
-  + 1 error) y su par fallan idénticos con y sin estas correcciones (estante
-  sobre `b3cc45b`): preexistentes fuera de la frontera Hermes, visibles y no
-  ocultos; pertenecen a encargo propio.
+- Suite del adaptador Hermes 46/46 PASS (10 pruebas nuevas + test heredado
+  adaptado al contrato secuencial; 8 fallan sobre `b3cc45b` por estante y 3
+  guardas pasan en ambos). Durable nunca-enviado se recupera por
+  reconciliación tras liberar la plaza (HTTP y Kanban, con reinicio y STOP);
+  el envío incierto nunca se recrea a ciegas (inventario Kanban o misma
+  `Idempotency-Key` HTTP).
+- Compatibilidad de adaptadores cerrada: `test_adapters` 7/7 PASS. Los 2 casos
+  eran regresiones de I1, no deuda externa: la proyección a tablas perdía
+  facetas de identidad nativa (`thread_id` de Codex) y `observe` rechazaba la
+  terminalidad con `native_identity_changed`; el recorrido del ejecutor quedaba
+  sin terminal y el descarte por corrección humana estrellaba un `KeyError`
+  latente. Corregido con identidad completa en `detail_json.native` (columnas
+  mandan en la cuaterna) más una regresión directa; ambos fallan sin el fix.
+  `test_mcp` y `test_application` pasan con ellos.
+- Total integrado actual: 338/338 PASS (102 control/diaria/gasto/adaptadores +
+  236 Hermes/orquestación/núcleo/fuentes/mcp/aplicación, medidos por módulo:
+  71+17+7+7 y 46+62+17+47+12+23+29). KORA `check` ok (523/18).
 - Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
   autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
   incertidumbre y delegación, STOP/corrección/invalidación, reinicio y
