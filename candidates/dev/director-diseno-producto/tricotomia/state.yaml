@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:director-diseno-producto
+kind: agent
+namespace: dev
+name: director-diseno-producto
+candidate: tricotomia
+base: 7f96bf6ba36c796bc21d76d375a6afdc95283a13f02e1f9f712f91f380e1bfda
+base_revision: 7f96bf6ba36c796bc21d76d375a6afdc95283a13f02e1f9f712f91f380e1bfda
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 63058f56206cd46229a8b2e7074328052aa8a225fd258d2a314d005e68b2adb4
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 63058f56206cd46229a8b2e7074328052aa8a225fd258d2a314d005e68b2adb4
+previous_revision: 7f96bf6ba36c796bc21d76d375a6afdc95283a13f02e1f9f712f91f380e1bfda
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/director-diseno-producto
+displaced_path: /home/felix/kora-pneuma/candidates/dev/director-diseno-producto/tricotomia/displaced-80ad44e3d18b4c35bad5a950a539993c
+admitted_at: '2026-09-13T23:25:27+00:00'
