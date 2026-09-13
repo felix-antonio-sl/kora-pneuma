@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:auditoria-exposicion-kora
+kind: skill
+namespace: kora
+name: auditoria-exposicion-kora
+candidate: reconstruccion
+base: 4e57f033a7bc076f2f4f18ac4dbe573d743f6c723131d79d67ae2e5442853cc5
+base_revision: 4e57f033a7bc076f2f4f18ac4dbe573d743f6c723131d79d67ae2e5442853cc5
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 222574b82b97441b5250f4d035ed675e4027ca9ec616f00ca68d7d3bc86ebf14
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 222574b82b97441b5250f4d035ed675e4027ca9ec616f00ca68d7d3bc86ebf14
+previous_revision: 4e57f033a7bc076f2f4f18ac4dbe573d743f6c723131d79d67ae2e5442853cc5
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/auditoria-exposicion-kora
+displaced_path: /home/felix/kora-pneuma/candidates/kora/auditoria-exposicion-kora/reconstruccion/displaced-48cc8f5fe4e24255b3e454d52cb0e7ae
+admitted_at: '2026-09-13T05:04:05+00:00'

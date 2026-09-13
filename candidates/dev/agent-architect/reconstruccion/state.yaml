@@ -1,0 +1,22 @@
+id: urn:dev:artefacto:agent-architect
+kind: agent
+namespace: dev
+name: agent-architect
+candidate: reconstruccion
+base: c791a05e3af8c69ee5dc8a819f022de0059533164b99e71f9ec819a1b826f58e
+base_revision: c791a05e3af8c69ee5dc8a819f022de0059533164b99e71f9ec819a1b826f58e
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 81823c3973042a5f02052e963a0dca7fa159c6e4cdc76a2a918db3b7a0467c54
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 81823c3973042a5f02052e963a0dca7fa159c6e4cdc76a2a918db3b7a0467c54
+previous_revision: c791a05e3af8c69ee5dc8a819f022de0059533164b99e71f9ec819a1b826f58e
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/dev/agent-architect
+displaced_path: /home/felix/kora-pneuma/candidates/dev/agent-architect/reconstruccion/displaced-c9f0894e58d44c47a9750d66605d670d
+admitted_at: '2026-09-13T05:04:09+00:00'

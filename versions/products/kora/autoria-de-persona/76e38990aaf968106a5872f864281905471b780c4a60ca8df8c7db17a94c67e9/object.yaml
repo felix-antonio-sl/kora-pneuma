@@ -1,0 +1,18 @@
+id: urn:kora:artefacto:autoria-de-persona
+kind: skill
+name: autoria-de-persona
+description: 'Usar al crear o reparar la personalidad de un agente: convierte propósito,
+  criterio y voz en conducta observable.'
+content: content.md
+targets:
+- codex
+- hermes
+requires:
+- urn:kora:kb:cat-contrato-ingenieria-agentica
+- urn:kora:artefacto:autoria-kora
+provenance:
+  previous: archive/previous/kora/autoria-de-persona
+  date: '2026-09-05'
+  authority: archive/reconstruction/MANDATO.md
+  change: Reconstrucción de maquinaria desde funciones y superficies actuales; original
+    completo recuperable en previous.

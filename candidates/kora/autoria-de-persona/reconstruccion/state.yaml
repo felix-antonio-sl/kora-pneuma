@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:autoria-de-persona
+kind: skill
+namespace: kora
+name: autoria-de-persona
+candidate: reconstruccion
+base: 76e38990aaf968106a5872f864281905471b780c4a60ca8df8c7db17a94c67e9
+base_revision: 76e38990aaf968106a5872f864281905471b780c4a60ca8df8c7db17a94c67e9
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 5ebd06cd6da1b63d863f8b1335c24c188b9bf2c7beba6fdf625f11cb54dc064c
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 5ebd06cd6da1b63d863f8b1335c24c188b9bf2c7beba6fdf625f11cb54dc064c
+previous_revision: 76e38990aaf968106a5872f864281905471b780c4a60ca8df8c7db17a94c67e9
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/autoria-de-persona
+displaced_path: /home/felix/kora-pneuma/candidates/kora/autoria-de-persona/reconstruccion/displaced-2f92510e506e464790d490a8dcb04ab8
+admitted_at: '2026-09-13T05:04:02+00:00'
