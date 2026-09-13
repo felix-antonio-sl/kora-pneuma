@@ -54,10 +54,18 @@ class ExecutionControl:
         return {"jobs": {}, "bots": {}, "operations": {}, "config": None}
 
     def _save(self, state):
-        # Never persist jobs or the legacy operations map in the active blob.
-        # Jobs live in work_cycles/runs/run_observations; control idempotency
-        # lives in per-operation keys (see _control_op_get/_control_op_put).
-        # This keeps active reads bounded (KB, not MB).
+        # Never persist jobs or the legacy operations map in the active blob
+        # once tables are authoritative. Jobs live in
+        # work_cycles/runs/run_observations; control idempotency lives in
+        # per-operation keys (see _control_op_get/_control_op_put). This keeps
+        # active reads bounded (KB, not MB).
+        # Defense in depth: while the database is still pre-migration (legacy
+        # jobs present, tables empty), write the state unchanged so a stray
+        # save can never strip the legacy collections. Mutating entry points
+        # additionally refuse pre-migration work without any writes.
+        if self._legacy_has_jobs() and not self._tables_have_runs():
+            self.store.db.execute("INSERT OR REPLACE INTO metadata VALUES(?,?)", (self.KEY, _json(state)))
+            return
         slim = {k: v for k, v in state.items() if k not in ("jobs", "operations")}
         # Keep an empty operations map for backward-compatible readers that
         # expect the key; authoritative idempotency is per-key.
@@ -206,21 +214,37 @@ class ExecutionControl:
             job["human_instruction_source_ids"] = copy.deepcopy(admission["human_instruction_source_ids"])
         return job
 
-    def _all_run_ids_in_period(self, period_id, limit=10000):
-        rows = self.store.db.execute(
-            "SELECT id FROM runs WHERE budget_period_id=? ORDER BY rowid LIMIT ?", (period_id, limit)).fetchall()
-        return [r["id"] for r in rows]
+    def _iter_run_ids(self, where, params=(), chunk=200):
+        # Complete paginated walk with bounded per-round memory (keyset on
+        # rowid). Arbitrary LIMIT cutoffs silently drop candidates (e.g. an
+        # exhausted review past 64 historical rows); pagination preserves them
+        # all. Callers add selective WHERE filters (item, actor, integration)
+        # so each round stays small and the walk stays complete.
+        last = 0
+        while True:
+            rows = self.store.db.execute(
+                f"SELECT rowid, id FROM runs WHERE ({where}) AND rowid>? "
+                f"ORDER BY rowid LIMIT ?", (*params, last, chunk)).fetchall()
+            if not rows:
+                return
+            for r in rows:
+                last = r["rowid"]
+                yield r["id"]
 
-    def _active_run_rows(self, limit=16):
-        # Bounded active-work projection: only non-terminal or pending-
-        # integration rows, never the full history. Callers must not decode
-        # detail_json for budgeting; numeric columns suffice.
+    def _iter_run_ids_by_item(self, item_id, chunk=200):
+        return self._iter_run_ids("item_id=?", (item_id,), chunk)
+
+    def _active_run_rows(self):
+        # Complete active-work projection: non-terminal or pending-integration
+        # rows. The set stays small by protocol (single global native slot,
+        # max_active admissions, deferred bounded per family), so no LIMIT
+        # truncation is applied; every active run must be visible.
         return self.store.db.execute(
             "SELECT id, cycle_id, item_id, actor, parent_run_id, state, integration, "
             "native_provider, native_host, native_profile, native_id, budget_period_id, "
             "reserved_seconds, observed_seconds, cost_usd FROM runs "
             "WHERE state NOT IN ('completed','failed','cancelled','expired') OR integration='pending' "
-            "ORDER BY rowid LIMIT ?", (limit,)).fetchall()
+            "ORDER BY rowid").fetchall()
 
     def _operation(self, actor, operation_id, action, payload, fn):
         if not isinstance(operation_id, str) or not operation_id:
@@ -230,6 +254,13 @@ class ExecutionControl:
         except (ValueError, TypeError):
             return {"status": "rejected", "error": "invalid_json_payload"}
         with self.store.transaction():
+            # Preserve the legacy state intact until a successful migration
+            # cut. Pre-migration mutating operations are rejected without any
+            # writes: no state cleanup, no per-key receipts (so the same
+            # operation_id stays retryable after migration).
+            if self._legacy_has_jobs() and not self._tables_have_runs():
+                return {"status": "rejected", "error": "migration_required",
+                        "operation_id": operation_id}
             # Bounded idempotency: single-key lookup, never the global map.
             old = self._control_op_get(operation_id)
             if old:
@@ -489,8 +520,10 @@ class ExecutionControl:
         # Active count: non-terminal, non-deferred (deferred lives in detail).
         # Terminal pending-integration is NOT active (matches legacy
         # not-terminal check); pending() separately includes it for integration.
+        # No LIMIT: the live set stays small by protocol (single native slot,
+        # max_active admissions), and truncating it would undercount budget.
         active_rows = self.store.db.execute(
-            "SELECT id FROM runs WHERE state NOT IN ('completed','failed','cancelled','expired') LIMIT 16").fetchall()
+            "SELECT id FROM runs WHERE state NOT IN ('completed','failed','cancelled','expired')").fetchall()
         for r in active_rows:
             full = self._run_row(r["id"])
             if full is None:
@@ -675,10 +708,12 @@ class ExecutionControl:
         # Bounded overrun check: only live/uncertain rows in this period (few),
         # never the full history. Unknown cost never becomes zero: only
         # numeric overruns block; NULL stays conservative via charged detail.
+        # No LIMIT: every live run in scope must be checked; the live set
+        # stays small by protocol (single native slot, max_active admissions).
         if self._daily():
             over_rows = self.store.db.execute(
                 "SELECT observed_seconds, reserved_seconds, detail_json, budget_period_id FROM runs "
-                "WHERE state NOT IN ('completed','failed','cancelled','expired') AND budget_period_id=? LIMIT 16",
+                "WHERE state NOT IN ('completed','failed','cancelled','expired') AND budget_period_id=?",
                 (job["budget_period_id"],)).fetchall()
             for r in over_rows:
                 try:
@@ -691,7 +726,7 @@ class ExecutionControl:
         else:
             over_rows = self.store.db.execute(
                 "SELECT observed_seconds, reserved_seconds, cost_usd, detail_json FROM runs "
-                "WHERE state NOT IN ('completed','failed','cancelled','expired') LIMIT 16").fetchall()
+                "WHERE state NOT IN ('completed','failed','cancelled','expired')").fetchall()
             for r in over_rows:
                 try:
                     d = json.loads(r["detail_json"]) if r["detail_json"] else {}
@@ -793,60 +828,84 @@ class ExecutionControl:
                      "capability": job["capability"], "mandate_id": job.get("mandate_id"),
                      "bot_id": job["bot_id"], "operation_id": operation_id}
         now_iso = self._clock().isoformat()
-        if job["parent_job_id"]:
-            # Same-item child: new attempt in the same authorized cycle, no new
-            # quota. Cross-item child: new child cycle with assignment from the
-            # parent family (parent_cycle_id), same budget period as root.
-            if job["item_id"] == parent["item_id"]:
-                cycle_id = parent_cycle_id = prow["cycle_id"]
-                # Enforce attempts limit on the shared cycle (bounded count).
-                crow = self._cycle_row(cycle_id)
-                runs_in_cycle = self.store.db.execute(
-                    "SELECT COUNT(*) FROM runs WHERE cycle_id=?", (cycle_id,)).fetchone()[0]
-                if runs_in_cycle >= (crow["attempts_limit"] if crow else 1):
-                    # Fall through to descendants check already done; attempts
-                    # exhaustion surfaces as descendants_exhausted for compat.
-                    pass
-                cycle_state = crow["state"] if crow else "running"
-                # Keep the cycle running while the new attempt is reserved.
-                if cycle_state in ("ready", "waiting", "paused"):
+        # Cycle + run persist as one atomic unit: a savepoint rolls back a
+        # half-written admission (e.g. cycle without run) when a uniqueness
+        # contract rejects it, so the outer transaction never commits partial
+        # control state.
+        self.store.db.execute("SAVEPOINT reserve_unit")
+        try:
+            if job["parent_job_id"]:
+                # Same-item child: new attempt in the same authorized cycle, no new
+                # quota. Cross-item child: new child cycle with assignment from the
+                # parent family (parent_cycle_id), same budget period as root.
+                if job["item_id"] == parent["item_id"]:
+                    cycle_id = parent_cycle_id = prow["cycle_id"]
+                    # Enforce attempts limit on the shared cycle (bounded count).
+                    crow = self._cycle_row(cycle_id)
+                    runs_in_cycle = self.store.db.execute(
+                        "SELECT COUNT(*) FROM runs WHERE cycle_id=?", (cycle_id,)).fetchone()[0]
+                    if runs_in_cycle >= (crow["attempts_limit"] if crow else 1):
+                        # Fall through to descendants check already done; attempts
+                        # exhaustion surfaces as descendants_exhausted for compat.
+                        pass
+                    cycle_state = crow["state"] if crow else "running"
+                    # Keep the cycle running while the new attempt is reserved.
+                    if cycle_state in ("ready", "waiting", "paused"):
+                        self.store.db.execute(
+                            "UPDATE work_cycles SET state='running' WHERE id=?", (cycle_id,))
+                else:
+                    cycle_id = uuid.uuid4().hex
+                    parent_cycle_id = prow["cycle_id"]
+                    # Prevent kinship cycles (bounded walk, families are tiny).
+                    seen = {cycle_id}
+                    cur = parent_cycle_id
+                    while cur:
+                        if cur in seen:
+                            raise ValueError("cycle_kinship_violation")
+                        seen.add(cur)
+                        prow2 = self._cycle_row(cur)
+                        cur = prow2["parent_cycle_id"] if prow2 and prow2["parent_cycle_id"] else None
                     self.store.db.execute(
-                        "UPDATE work_cycles SET state='running' WHERE id=?", (cycle_id,))
+                        "INSERT INTO work_cycles(id,item_id,trigger_key,input_fingerprint,purpose,"
+                        "authority_json,state,allowance_seconds,attempts_limit,wake_json,"
+                        "predecessor_id,parent_cycle_id,budget_period_id,created_at,closed_at,detail_json) "
+                        "VALUES(?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?)",
+                        (cycle_id, job["item_id"], "op:"+operation_id+":child:"+run_id, input_fp, job["purpose"],
+                         _json(authority), "running", float(job["max_runtime_seconds"]),
+                         int(job["max_retries"])+1 if isinstance(job.get("max_retries"), int) else 1, None,
+                         None, parent_cycle_id, job["budget_period_id"], now_iso, None,
+                         _json({"origin": "child", "parent_run_id": job["parent_job_id"],
+                                "root_run_id": job["root_job_id"], "operation_id": operation_id})))
             else:
                 cycle_id = uuid.uuid4().hex
-                parent_cycle_id = prow["cycle_id"]
-                # Prevent kinship cycles (bounded walk, families are tiny).
-                seen = {cycle_id}
-                cur = parent_cycle_id
-                while cur:
-                    if cur in seen:
-                        raise ValueError("cycle_kinship_violation")
-                    seen.add(cur)
-                    prow2 = self._cycle_row(cur)
-                    cur = prow2["parent_cycle_id"] if prow2 and prow2["parent_cycle_id"] else None
                 self.store.db.execute(
                     "INSERT INTO work_cycles(id,item_id,trigger_key,input_fingerprint,purpose,"
                     "authority_json,state,allowance_seconds,attempts_limit,wake_json,"
                     "predecessor_id,parent_cycle_id,budget_period_id,created_at,closed_at,detail_json) "
                     "VALUES(?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?)",
-                    (cycle_id, job["item_id"], "op:"+operation_id+":child:"+run_id, input_fp, job["purpose"],
+                    (cycle_id, job["item_id"], trigger_key, input_fp, job["purpose"],
                      _json(authority), "running", float(job["max_runtime_seconds"]),
                      int(job["max_retries"])+1 if isinstance(job.get("max_retries"), int) else 1, None,
-                     None, parent_cycle_id, job["budget_period_id"], now_iso, None,
-                     _json({"origin": "child", "parent_run_id": job["parent_job_id"],
-                            "root_run_id": job["root_job_id"], "operation_id": operation_id})))
-        else:
-            cycle_id = uuid.uuid4().hex
-            self.store.db.execute(
-                "INSERT INTO work_cycles(id,item_id,trigger_key,input_fingerprint,purpose,"
-                "authority_json,state,allowance_seconds,attempts_limit,wake_json,"
-                "predecessor_id,parent_cycle_id,budget_period_id,created_at,closed_at,detail_json) "
-                "VALUES(?,?,?,?,?,?,?, ?,?,?, ?,?,?,?,?,?)",
-                (cycle_id, job["item_id"], trigger_key, input_fp, job["purpose"],
-                 _json(authority), "running", float(job["max_runtime_seconds"]),
-                 int(job["max_retries"])+1 if isinstance(job.get("max_retries"), int) else 1, None,
-                 None, None, job["budget_period_id"], now_iso, None,
-                 _json({"origin": "root", "operation_id": operation_id})))
+                     None, None, job["budget_period_id"], now_iso, None,
+                     _json({"origin": "root", "operation_id": operation_id})))
+        except sqlite3.IntegrityError as exc:
+            self.store.db.execute("ROLLBACK TO reserve_unit")
+            self.store.db.execute("RELEASE reserve_unit")
+            msg = str(exc).lower()
+            if "one_open_cycle_per_item" in msg:
+                raise ValueError("purpose_already_active")
+            if "trigger_key" in msg:
+                # Repeating a cause never re-admits the same work. If an open
+                # cycle for the subject still exists, report it as active
+                # work; otherwise report the duplicate cause itself.
+                open_same = self.store.db.execute(
+                    "SELECT 1 FROM work_cycles WHERE item_id=? AND state IN "
+                    "('ready','running','paused','recovery_required') LIMIT 1",
+                    (job["item_id"],)).fetchone()
+                if open_same:
+                    raise ValueError("purpose_already_active")
+                raise ValueError("duplicate_cause")
+            raise
         admission = {"requested_by": job["requested_by"], "capability": job["capability"],
                      "mandate_id": job.get("mandate_id"), "bot_id": job["bot_id"],
                      "expected_version": job["expected_version"],
@@ -882,12 +941,24 @@ class ExecutionControl:
                  job["budget_period_id"], float(job["max_runtime_seconds"]), 0, None,
                  now_iso, None, None))
         except sqlite3.IntegrityError as exc:
-            # One-open-cycle and trigger uniqueness are SQLite-guarded; map to
-            # the legacy contract errors for compatibility.
+            # Revert the cycle row above with the run: half-written admissions
+            # never persist. SQLite guards stay the backstop; service maps them
+            # to domain rejections.
+            self.store.db.execute("ROLLBACK TO reserve_unit")
+            self.store.db.execute("RELEASE reserve_unit")
             msg = str(exc).lower()
-            if "one_open_cycle_per_item" in msg or "trigger_key" in msg:
+            if "one_open_cycle_per_item" in msg:
                 raise ValueError("purpose_already_active")
+            if "trigger_key" in msg:
+                open_same = self.store.db.execute(
+                    "SELECT 1 FROM work_cycles WHERE item_id=? AND state IN "
+                    "('ready','running','paused','recovery_required') LIMIT 1",
+                    (job["item_id"],)).fetchone()
+                if open_same:
+                    raise ValueError("purpose_already_active")
+                raise ValueError("duplicate_cause")
             raise
+        self.store.db.execute("RELEASE reserve_unit")
         # Persist small-state config change atomically with the rows above.
         self._save(state)
         # Return the legacy-shaped receipt for command/version compatibility.
@@ -940,14 +1011,13 @@ class ExecutionControl:
                 'max_cost_usd', 'max_runtime_seconds', 'max_retries', 'max_descendants',
                 'delivery', 'stop_requested', 'terminal', 'native', 'integration', 'integration_error',
                 'terminal_resolution', 'domain_operation_id', 'charged_cost_usd', 'observed_runtime_seconds')
-            # Bounded: only runs whose item is in the visible scope (few IDs),
-            # never the global history. Visible is typically 1-3 items.
+            # Complete per-item walks (paginated): only runs whose item is in
+            # the visible scope (typically 1-3 items), never the global
+            # history, and never truncated by an arbitrary LIMIT.
             result = []
             for target in sorted(visible):
-                rows = self.store.db.execute(
-                    "SELECT id FROM runs WHERE item_id=? ORDER BY rowid LIMIT 64", (target,)).fetchall()
-                for r in rows:
-                    run = self._run_row(r["id"])
+                for rid in self._iter_run_ids_by_item(target):
+                    run = self._run_row(rid)
                     if run is None:
                         continue
                     cycle = self._cycle_row(run["cycle_id"])
@@ -960,8 +1030,9 @@ class ExecutionControl:
             return result
 
     def pending(self):
-        # Bounded active projection: at most a handful of rows (max_active +
-        # uncertain/deferred few), never the full history.
+        # Active projection without LIMIT truncation: the live set stays small
+        # by protocol (single global native slot, max_active admissions,
+        # deferred bounded per family), and every live run must be visible.
         with self.store.lock:
             try:
                 self._require_migrated()
@@ -969,7 +1040,7 @@ class ExecutionControl:
                 if self._legacy_has_jobs():
                     raise
                 return []
-            rows = self._active_run_rows(limit=16)
+            rows = self._active_run_rows()
             out = []
             for r in rows:
                 run = self._run_row(r["id"])
@@ -991,13 +1062,15 @@ class ExecutionControl:
                 self._vigent(state, job, capability)
                 if job["delivery"] == "deferred":
                     raise ValueError("dispatch_deferred")
-                # Bounded children fetch: family is tiny (max_descendants).
-                fam = self._family_run_details(job)
-                children = [c for c in fam if c["id"] != job_id]
+                # Bounded subtree fetch: only assignments below this attempt
+                # count against its limits. The root family's total stays in
+                # _budget/parent-allocation checks, never subtracted twice here.
+                subtree = self._subtree_run_details(job_id)
+                descendants = [c for c in subtree if c["id"] != job_id]
                 limits = {}
                 for key in ("max_cost_usd", "max_runtime_seconds"):
-                    limits[key] = job[key] - sum(c.get(key, 0) for c in children)
-                limits.update(cost_control=not self._daily(), max_retries=job["max_retries"], max_descendants=job["max_descendants"] - len(children))
+                    limits[key] = job[key] - sum(c.get(key, 0) for c in descendants)
+                limits.update(cost_control=not self._daily(), max_retries=job["max_retries"], max_descendants=job["max_descendants"] - len(descendants))
                 return {"allowed": True, "reason": None, "limits": limits,
                         "current_version": self.service.get_item(job["item_id"])["version"]}
             except (ValueError, KeyError) as error:
@@ -1048,6 +1121,41 @@ class ExecutionControl:
                         "parent_job_id": self._run_row(rr["id"])["parent_run_id"] if self._run_row(rr["id"]) else None})
         # Enrich parent ids without extra large decodes (single-row lookups above
         # already bounded; families are tiny so this stays bounded).
+        return out
+
+    def _subtree_run_details(self, job_id):
+        # Bounded descendant walk from one run via parent_run_id (families are
+        # tiny: max_descendants per config). Returns the run itself plus its
+        # subtree with assignment fields, for per-attempt limit accounting.
+        # Root-level accounting stays separate (see validate/_budget).
+        seen = {job_id}
+        queue = [job_id]
+        ids = []
+        while queue:
+            current = queue.pop(0)
+            ids.append(current)
+            for r in self.store.db.execute(
+                    "SELECT id FROM runs WHERE parent_run_id=?", (current,)).fetchall():
+                if r["id"] not in seen:
+                    seen.add(r["id"])
+                    queue.append(r["id"])
+                if len(seen) > 64:
+                    break
+            if len(seen) > 64:
+                break
+        out = []
+        for rid in ids:
+            row = self._run_row(rid)
+            if row is None:
+                continue
+            try:
+                d = json.loads(row["detail_json"]) if row["detail_json"] else {}
+            except ValueError:
+                d = {}
+            out.append({"id": rid, "max_cost_usd": d.get("max_cost_usd", 0),
+                        "max_runtime_seconds": d.get("max_runtime_seconds", 0),
+                        "max_descendants": d.get("max_descendants", 0),
+                        "parent_job_id": row["parent_run_id"]})
         return out
 
     def _native(self, state, job, native):
@@ -1144,10 +1252,15 @@ class ExecutionControl:
         if observation["runtime_seconds"] < observed_prev:
             raise ValueError("runtime_regressed")
         # Correlated observation row: seq monotonic per run, receipt immutable.
+        # The insert and the run/cycle updates below form one atomic unit: a
+        # savepoint rolls everything back if a later constraint (global native
+        # exclusion, native uniqueness) rejects the observation, so a rejected
+        # receipt never leaves a partial observation row behind.
         seq_row = self.store.db.execute(
             "SELECT COALESCE(MAX(seq),0) FROM run_observations WHERE run_id=?", (job_id,)).fetchone()
         seq = (seq_row[0] or 0) + 1
         now_iso = self._clock().isoformat()
+        self.store.db.execute("SAVEPOINT observe_unit")
         # observed_at is required for new rows (migrated rows may carry NULL
         # with provenance); service enforces, SQLite allows NULL for history.
         self.store.db.execute(
@@ -1211,26 +1324,33 @@ class ExecutionControl:
                 (native["provider"], native["host"], native["profile"], native["id"],
                  new_state, new_integration, _json(detail), new_observed, new_cost_col,
                  new_state, now_iso if terminal else None, job_id))
+            # Cycle follows terminality (bounded single-row); integration stays
+            # pending for completed until accept/integrate proves it. Completed
+            # moves to waiting (frees the one-open slot for a successor with new
+            # cause, but does not autorenew budget); failed/cancelled abandons.
+            if cycle:
+                if new_state in ("failed", "cancelled", "expired"):
+                    self.store.db.execute("UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=?",
+                        (now_iso, cycle["id"]))
+                elif new_state == "completed":
+                    self.store.db.execute("UPDATE work_cycles SET state='waiting' WHERE id=?", (cycle["id"],))
+                elif new_state == "uncertain":
+                    # Keep running; uncertain keeps the slot, never frees it.
+                    pass
         except sqlite3.IntegrityError as exc:
+            # Revert the whole observation unit: a rejected receipt must never
+            # leave a partial observation row behind. External-effect evidence,
+            # if any, is not silently kept; the caller must reconcile identity,
+            # consumption and uncertain state explicitly before retrying.
+            self.store.db.execute("ROLLBACK TO observe_unit")
+            self.store.db.execute("RELEASE observe_unit")
             msg = str(exc).lower()
             if "one_native_active" in msg:
                 raise ValueError("concurrency_exhausted")
             if "unique" in msg:
                 raise ValueError("native_identity_already_accounted")
             raise
-        # Cycle follows terminality (bounded single-row); integration stays
-        # pending for completed until accept/integrate proves it. Completed
-        # moves to waiting (frees the one-open slot for a successor with new
-        # cause, but does not autorenew budget); failed/cancelled abandons.
-        if cycle:
-            if new_state in ("failed", "cancelled", "expired"):
-                self.store.db.execute("UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=?",
-                    (now_iso, cycle["id"]))
-            elif new_state == "completed":
-                self.store.db.execute("UPDATE work_cycles SET state='waiting' WHERE id=?", (cycle["id"],))
-            elif new_state == "uncertain":
-                # Keep running; uncertain keeps the slot, never frees it.
-                pass
+        self.store.db.execute("RELEASE observe_unit")
         run2 = self._run_row(job_id)
         cycle2 = self._cycle_row(run2["cycle_id"])
         job2 = self._job_from_rows(cycle2, run2)
