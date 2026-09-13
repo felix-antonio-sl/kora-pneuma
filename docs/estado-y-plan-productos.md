@@ -10,22 +10,27 @@ conserva diagnóstico y evidencias por lote, sin gobernar el siguiente paso.
 
 ## Línea de estado publicada
 
-**Contratos reconstruidos y admitidos, maquinaria comprobada, conducta sintética
-acotada; integración personal incompleta y mejora de utilidad parcialmente
-demostrada.** No corresponde declarar terminada la misión de reconstruir
-mejorando los productos, ni volver a empezar su autoría.
+**Contratos reconstruidos y admitidos, maquinaria comprobada, instalaciones
+personales coherentes, dos reparaciones de Diseño admitidas por ciclos KORA
+completos y utilidad comparada en casos discriminantes; conformidad parcial en
+cobertura viva (seis agentes sin sesión en este ciclo) y economía de tokens
+aún no medida.** No corresponde declarar terminada la misión de reconstruir
+mejorando los productos: lo pendiente conserva ese estatus y no se suma a la
+afirmación de mejora completa.
 
-El corte de fuentes es `a494e9c` en pneuma/master y `9af3696` en
-knowledge/main. Los commits `f827636` y `03d4a5f` añaden a Git la historia ya
-existente de seis productos; no cambian las fuentes activas del corte.
+El corte de fuentes es `c5336b1` en pneuma/master y `9af3696` en
+knowledge/main. Los commits `5dd3e3b` y `c5336b1` admiten las reparaciones de
+`diseno-producto-integrado` (revisión `b2fe5158`) y `director-diseno-producto`
+(revisión `7f96bf6b`); no cambian el resto de las fuentes activas. Las historias
+conservadas por `f827636` y `03d4a5f` siguen disponibles sin cambios.
 
 | Parte | Hecho comprobado o antecedente identificado | Límite / pendiente |
 |---|---|---|
 | Colección | 61 fuentes activas: 16 agentes y 45 skills. 58 declaran ambos destinos; 3 sólo Codex. | Cantidad descriptiva, sin cuota de reducción. `codex-route` se conserva; los otros 60 están integrados en lotes de reconstrucción. |
-| Lotes | KORA operativo, ingeniería, salud, GTD general, compatibilidad, organización, especialidades de proyecto, modelado y Diseño están admitidos y confirmados en Git. Diseño cerró en `a494e9c`. | Admisión y documentación de ensayos no equivalen a utilidad personal demostrada. |
+| Lotes | KORA operativo, ingeniería, salud, GTD general, compatibilidad, organización, especialidades de proyecto, modelado y Diseño están admitidos y confirmados en Git. Diseño suma dos reparaciones admitidas en `5dd3e3b` y `c5336b1`. | Admisión y documentación de ensayos no equivalen a utilidad general demostrada; los recorridos de este corte cubren sus casos, no todo el corpus. |
 | Maquinaria | `check`: 523 activos, 18 archivados, 0 incidencias. Suite ejecutada en este corte: 251 pruebas, OK. | No acredita fidelidad de toda la biblioteca, carga de todos los cuerpos o utilidad. |
-| Codex personal | 61 instancias gestionadas en alcance: fuente y dependencias `current`. | Estado material; no es observación de sesiones personales. |
-| Hermes personal | 62 instancias en alcance: 58 productos y 4 instancias adicionales de skills en perfiles. 29 `current`; 33 con fuente cambiada, de las cuales 14 también tienen dependencias cambiadas. | Falta reconciliar. No hay cambios nativos detectados ni recuperación pendiente. La cifra anterior de 40 ha quedado superada. |
+| Codex personal | 61 instancias gestionadas en alcance: fuente y dependencias `current`, incluida la reparación de Diseño instalada. | Estado material más sesiones vivas de este corte (retoma, rutas de Diseño, gemelos, niveles, OPM, autoría, claridad); no equivale a conducta futura. |
+| Hermes personal | 62 instancias en alcance `current` (58 productos y 4 instancias adicionales de skills en perfiles); `gtd-felix` ausente excluido por encargo. Sin cambios nativos ni recuperación pendiente. | Carga verificada por instalación, render y presupuestos SOUL 16/16; uso vivo sólo por canario sintético. La cifra anterior de 33 pendientes queda reconciliada. |
 | Conservación | Se incorporan candidatas admitidas y 12 versiones de los seis productos GTD/compatibilidad. Candidata, fuente activa y revisión registrada coinciden en los seis. | Se verificaron estas versiones con el verificador nativo; no se auditó toda la historia ni se atribuye aprobación nueva. |
 | Biblioteca | Sigue en `9af3696`; incluye cuatro referencias Jobs publicadas y revisiones anteriores conservadas. | El corpus general heredado conserva su estatus. No se declara reconstruido, íntegramente revisado ni optimizado en tokens. |
 | Git | El corte de fuentes estaba publicado y en paridad 0/0 tras fetch. La línea de estado y conservación se publica con este incremento. | Los cambios locales archivados OpenClaw y material privado en knowledge quedan fuera; `.hermes/` local se conserva. Paridad Git no implica igualdad del workspace completo con el remoto. |
@@ -42,10 +47,10 @@ existente; no son una fuente operativa nueva.
 |---|---|
 | Integridad mecánica | PASS en el catálogo actual y 251 pruebas de maquinaria; verificación focal de las 12 versiones preservadas. |
 | Fidelidad semántica | Revisiones y correcciones documentadas por lote. Hay tensiones focales aún examinables; no se releyeron todos los cuerpos para este corte. |
-| Carga nativa | Evidencia histórica de sesiones nuevas sobre casos y configuraciones concretas. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
-| Conducta | Casos sintéticos de los lotes documentados. Diseño registra 16/16, pero `SPEC_ONLY` y errores fundados ante contexto insuficiente no acreditan todo el recorrido positivo de diseño y materialización. No se repitió inferencia en este corte. |
-| Utilidad | Correcciones concretas y capacidades conservadas. Comparación de esfuerzo, errores, resultado y costo frente a alternativas simples mayormente pendiente; no equivale a inutilidad demostrada. |
-| Efectos | Fuentes admitidas y publicadas; instalaciones focales previas. El estado actual identifica 33 realizaciones Hermes pendientes. No se realizaron actos clínicos, institucionales ni envíos. |
+| Carga nativa | Sesiones vivas de este corte en Codex (activación directa de skills) más presupuestos SOUL Hermes 16/16 completos con mapas intactos. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
+| Conducta | Casos sintéticos de los lotes más 16 sesiones vivas de este corte: retoma del gate reparado (2), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1) y claridad agente/método (2). Sin actos clínicos, institucionales ni envíos. |
+| Utilidad | Dos reparaciones admitidas por defectos demostrados; gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Economía de tokens: `NOT_MEASURED` (sin contador); costos de sesión observados en recibos. |
+| Efectos | Fuentes admitidas y publicadas (`5dd3e3b`, `c5336b1`); instalaciones personales coherentes en ambos destinos (Codex 61, Hermes 62 en alcance). Conocimiento sintético de prueba en biblioteca temporal, nunca en la personal. |
 
 La cobertura se apoya en los dictámenes por lote de la propuesta anterior y en
 la ejecución mecánica de este corte. Los recibos temporales son evidencia
@@ -74,13 +79,22 @@ dictamen cuando cambie una conclusión material; Git conserva el corte anterior.
    conducta acotada y utilidad comparada son afirmaciones diferentes.
 3. Mantener el núcleo, la biblioteca separada, las fuentes agnósticas y los dos
    adaptadores. No hay evidencia que justifique una nueva plataforma.
-4. La reconciliación personal es el primer incremento del plan posterior;
-   este corte no cambia instalaciones para hacer que la fotografía salga verde.
+4. La reconciliación personal era el primer incremento del plan posterior;
+   quedó ejecutada el 2026-09-14 sin reinstalación ciega (planes dry-run por
+   destino, 66 actualizaciones Hermes, cero conflictos, protegidos intactos).
 5. `gtd-felix`/`gtd-operations`, sus dependencias protegidas, los espacios
    institucionales y los datos privados conservan las exclusiones del encargo.
    Un solo usuario no elimina errores, interrupciones o procesos concurrentes;
    sí elimina la necesidad de diseñar tenants, roles empresariales o servicios
    de coordinación sin consumidor.
+6. Forma final 2026-09-14: ninguna fusión, simplificación o retiro justificado
+   por los resultados; las separaciones ejercidas (gemelos, niveles, director /
+   método, agentes de claridad) mostraron diferencias o quedaron inconclusas y
+   se conservan provisionalmente sin afirmar ventajas no medidas. Sin alias
+   nuevos: un alias no probaría invocación nativa. Lectura pendiente menor y
+   documentada: `director-diseno-producto` §Salida mínima item 8 admite
+   "EVIDENCE_LEDGER" como sección de evidencia numerada inline, según el gate
+   reparado; se reabre sólo ante divergencia observada.
 
 ## Estado al que queremos llegar
 
@@ -377,7 +391,10 @@ interrupción, sólo `HANDOFF.md` temporal conserva el siguiente paso.
   propiedad, revisión y recuperación porque incluso un usuario puede tener dos
   procesos y ediciones que no deben perderse.
 
-**Siguiente movimiento de implementación:** ejecutar el incremento 1 con planes
-actuales y exclusiones comprobadas. Preparar después el caso compartido 2–3;
-su resultado decide las primeras correcciones de producto. No hace falta otra
-auditoría general ni una especificación nueva para comenzar.
+**Siguiente movimiento (tras la ejecución 2026-09-14 de los incrementos 1–6):**
+sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
+`dov-dori` y el agente `kora` cuando un caso discriminante las requiera
+(`fugaz` conserva su frontera Codex declarada); medir economía de tokens cuando
+exista contador compatible; y la aceptación personal de Félix sobre las
+reparaciones y el dictamen, que se distingue del juicio técnico del ejecutor.
+No hace falta otra auditoría general ni una especificación nueva para continuar.

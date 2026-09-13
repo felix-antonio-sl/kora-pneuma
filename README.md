@@ -53,7 +53,7 @@ consultado por una referencia viva puede cambiar sin reinstalar el agente.
 
 El [estado y plan de productos](docs/estado-y-plan-productos.md) fija el corte
 vigente del 2026-09-14: contratos reconstruidos y admitidos, integración personal
-pendiente y utilidad parcialmente demostrada. Conserva la evidencia, las
+coherente y utilidad demostrada en recorridos con límites declarados. Conserva la evidencia, las
 brechas y el plan por recorridos completos para Félix, único usuario y
 desarrollador de este host.
 
