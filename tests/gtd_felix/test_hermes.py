@@ -460,22 +460,167 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(any(r[0] == 'POST' for r in self.requests))
         self.assertIsNone(self.adapter._get('hermes:intent:' + job_id))
 
-    async def test_stop_registered_family_exact_ids(self):
+    def _family_request(self, purpose, **changes):
         request = dict(item_id=self.item['id'], expected_version=self.item['version'], capability='prepare_private',
-            mandate_id=None, bot_id='fixture', purpose='Parent', scope='Synthetic family', max_cost_usd=4,
+            mandate_id=None, bot_id='fixture', purpose=purpose, scope='Synthetic family', max_cost_usd=4,
             max_runtime_seconds=120, max_retries=0, max_descendants=1)
-        root = self.control.reserve('gtd-felix', 'parent', request)['job_id']
-        child = self.control.reserve('gtd-felix', 'child', dict(request, purpose='Child', parent_job_id=root,
-            max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))['job_id']
+        return dict(request, **changes)
+
+    def _local_native_active(self):
+        return self.service.store.db.execute(
+            "SELECT COUNT(*) FROM runs WHERE state IN ('dispatching','running','stop_requested','uncertain')").fetchone()[0]
+
+    def _provider_creates(self):
+        return [r for r in self.requests if r[0] == 'POST' and r[1] == '/v1/runs']
+
+    async def test_stop_registered_family_exact_ids(self):
+        # Single global native slot: parent and child execute sequentially, and
+        # STOP addresses each admitted identity exactly once.
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        child = self.control.reserve('gtd-felix', 'child', self._family_request(
+            'Child', parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))['job_id']
         self.run_status = 'running'
         self.assertEqual((await self.adapter.submit(root, 'Parent'))['status'], 'submitted')
-        self.assertEqual((await self.adapter.submit(child, 'Child'))['status'], 'submitted')
+        blocked = await self.adapter.submit(child, 'Child')
+        self.assertEqual(blocked['status'], 'uncertain', blocked)
+        self.assertEqual(blocked['error'], 'native_slot_busy')
+        self.assertEqual(len(self._provider_creates()), 1)
+        # STOP reaches exactly the admitted identities: the running parent
+        # gets a remote stop; the reserved child only records the local stop
+        # flag without any remote call. Neither becomes terminal, and a
+        # stopped slot stays occupied until terminality is observed.
         stopped = await self.adapter.stop(root)
         self.assertEqual(len(stopped['children']), 1)
-        ids = {self.control.get_job(identity)['native']['id'] for identity in (root, child)}
-        self.assertEqual({r[1].split('/')[-2] for r in self.requests if r[1].endswith('/stop')}, ids)
+        parent_native = self.control.get_job(root)['native']['id']
+        self.assertEqual(
+            {r[1].split('/')[-2] for r in self.requests if r[1].endswith('/stop')}, {parent_native})
         self.assertTrue(all(self.control.get_job(identity)['stop_requested'] for identity in (root, child)))
         self.assertFalse(any(self.control.get_job(identity)['terminal'] for identity in (root, child)))
+        self.assertEqual(self._local_native_active(), 1)
+        again = await self.adapter.submit(child, 'Child')
+        self.assertEqual(again['status'], 'uncertain', again)
+        self.assertEqual(len(self._provider_creates()), 1)
+
+    async def test_child_executes_after_parent_terminal_with_own_assignment(self):
+        # Sequential family execution under one slot: while the parent runs,
+        # the child creates nothing remotely; once the parent is terminal, a
+        # reconcile dispatches the child with its own assignment (60 s / cost
+        # 2) without ever exceeding one local execution.
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        child = self.control.reserve('gtd-felix', 'child', self._family_request(
+            'Child', parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))['job_id']
+        self.run_status = 'running'
+        self.assertEqual((await self.adapter.submit(root, 'Parent'))['status'], 'submitted')
+        waiting = await self.adapter.submit(child, 'Child')
+        self.assertEqual(waiting['status'], 'uncertain', waiting)
+        self.assertEqual(waiting['error'], 'native_slot_busy')
+        self.assertEqual(len(self._provider_creates()), 1)
+        terminal = {'native_identity': self.control.get_job(root)['native'], 'native_status': 'completed',
+            'terminal': True, 'runtime_seconds': 5, 'cost_usd': None, 'evidence_reference': 'fixture://done'}
+        self.assertEqual(self.control.observe(root, terminal)['status'], 'recorded')
+        self.assertEqual(self._local_native_active(), 0)
+        retried = await self.adapter.reconcile(child)
+        self.assertEqual(retried['native_status'], 'running', retried)
+        self.assertEqual(len(self._provider_creates()), 2)
+        self.assertEqual(len(self.runs), 2)
+        self.assertEqual(self._local_native_active(), 1)
+        child_limits = self.control.validate(child, 'prepare_private')
+        self.assertTrue(child_limits['allowed'], child_limits)
+        self.assertEqual(child_limits['limits']['max_runtime_seconds'], 60)
+        self.assertEqual(child_limits['limits']['max_cost_usd'], 2)
+
+    async def test_second_dispatch_holds_slot_without_remote_create(self):
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        child = self.control.reserve('gtd-felix', 'child', self._family_request(
+            'Child', parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))['job_id']
+        self.run_status = 'running'
+        self.assertEqual((await self.adapter.submit(root, 'Parent'))['status'], 'submitted')
+        second = await self.adapter.submit(child, 'Child')
+        self.assertEqual(second['status'], 'uncertain', second)
+        self.assertEqual(second['error'], 'native_slot_busy')
+        # No second remote creation and no leaked adapter-side identity.
+        self.assertEqual(len(self._provider_creates()), 1)
+        self.assertEqual(len(self.runs), 1)
+        self.assertEqual(self._local_native_active(), 1)
+        self.assertEqual(self.control._run_row(child)['state'], 'reserved')
+        self.assertIsNone(self.control.get_job(child)['native'])
+        self.assertIsNone((self.adapter._get('hermes:state:' + child) or {}).get('native_id'))
+
+    async def test_concurrent_dispatch_creates_single_remote_run(self):
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        derived = self.service.execute('felix', dict(operation_id='derive-second', action='derive',
+            item_id=self.item['id'], expected_version=self.item['version'], fields={'kind': 'action',
+            'title': 'Second', 'capability': 'prepare_private'}))['item']
+        second = self.control.reserve('gtd-felix', 'second', self._family_request(
+            'Second', item_id=derived['id'], expected_version=derived['version']))['job_id']
+        self.run_status = 'running'
+        first, other = await asyncio.gather(
+            self.adapter.submit(root, 'Parent'), self.adapter.submit(second, 'Second'))
+        self.assertEqual({first['status'], other['status']}, {'submitted', 'uncertain'})
+        self.assertEqual(len(self._provider_creates()), 1)
+        self.assertEqual(len(self.runs), 1)
+        self.assertEqual(self._local_native_active(), 1)
+
+    async def test_claim_survives_restart_between_claim_and_post(self):
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        self.run_status = 'running'
+        real_http = self.adapter._http
+        async def failing_post(route, method, path, body=None, idempotency_key=None):
+            if method == 'POST' and path == '/v1/runs':
+                raise asyncio.TimeoutError()
+            return await real_http(route, method, path, body, idempotency_key)
+        self.adapter._http = failing_post
+        try:
+            lost = await self.adapter.submit(root, 'Parent')
+        finally:
+            self.adapter._http = real_http
+        self.assertEqual(lost['status'], 'uncertain', lost)
+        # The claim is held durably despite the lost receipt: no remote run,
+        # slot still taken, intent persisted for reconciliation.
+        self.assertEqual(len(self._provider_creates()), 0)
+        self.assertEqual(self.control._run_row(root)['state'], 'dispatching')
+        self.assertEqual(self._local_native_active(), 1)
+        self.restart()
+        reconciled = await self.adapter.reconcile(root)
+        self.assertEqual(reconciled['status'], 'observed', reconciled)
+        self.assertEqual(len(self._provider_creates()), 1)
+        self.assertEqual(len(self.runs), 1)
+        self.assertIsNotNone(self.control.get_job(root)['native'])
+
+    async def test_restart_between_post_and_receipt_reuses_idempotency_key(self):
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        self.run_status = 'running'
+        self.assertEqual((await self.adapter.submit(root, 'Parent'))['status'], 'submitted')
+        self.assertEqual(len(self.runs), 1)
+        # Lose only the adapter-side receipt; the intent and the provider run
+        # (keyed by job_id) survive. Reconciling must not create a second run.
+        with self.service.store.transaction() as db:
+            db.execute("DELETE FROM metadata WHERE key=?", ('hermes:state:' + root,))
+        recovered = await self.adapter.reconcile(root)
+        self.assertEqual(recovered['status'], 'observed', recovered)
+        # The retry re-POSTs under the same Idempotency-Key; the provider
+        # answers with the single existing run instead of creating another.
+        self.assertEqual(len(self.runs), 1)
+        self.assertEqual(len(self._provider_creates()), 2)
+        self.assertIsNotNone(self.control.get_job(root)['native'])
+
+    async def test_uncertain_execution_keeps_slot_until_reconciled(self):
+        root = self.control.reserve('gtd-felix', 'parent', self._family_request('Parent'))['job_id']
+        child = self.control.reserve('gtd-felix', 'child', self._family_request(
+            'Child', parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))['job_id']
+        self.run_status = 'running'
+        self.assertEqual((await self.adapter.submit(root, 'Parent'))['status'], 'submitted')
+        self.status_http = 500
+        try:
+            self.assertEqual((await self.adapter.poll(root))['status'], 'uncertain')
+        finally:
+            self.status_http = 200
+        # Uncertainty is not detention proof: the slot stays occupied and the
+        # second dispatch still creates nothing remotely.
+        self.assertEqual(self._local_native_active(), 1)
+        waiting = await self.adapter.submit(child, 'Child')
+        self.assertEqual(waiting['status'], 'uncertain', waiting)
+        self.assertEqual(len(self._provider_creates()), 1)
 
     async def test_same_kanban_home_is_rejected_without_effect(self):
         job_id = self.reserve()

@@ -995,6 +995,27 @@ class ControlTest(unittest.TestCase):
             "SELECT COUNT(*) FROM run_observations WHERE run_id=?", (second,)).fetchone()[0], 0)
         self.assertEqual(self.control._run_row(second)["state"], "reserved")
 
+    def test_dispatch_claim_is_atomic_idempotent_and_exclusive(self):
+        # I1: the native slot is claimed durably before any remote effect.
+        first = self.reserve()
+        claimed = self.control.claim_dispatch(first)
+        self.assertEqual(claimed["status"], "claimed", claimed)
+        self.assertNotIn("duplicate", claimed)
+        again = self.control.claim_dispatch(first)
+        self.assertEqual(again["status"], "claimed", again)
+        self.assertTrue(again.get("duplicate"))
+        derived = self.service.execute("felix", dict(operation_id="claim-second-derive", action="derive",
+            item_id=self.item["id"], expected_version=self.item["version"], fields={"kind": "action",
+            "title": "Claim second", "capability": "local_work", "mandate_id": self.mandate}))["item"]
+        second = self.reserve("second", item_id=derived["id"], expected_version=derived["version"])
+        busy = self.control.claim_dispatch(second)
+        self.assertEqual(busy["status"], "rejected", busy)
+        self.assertEqual(busy["error"], "native_slot_busy")
+        self.finish(first)
+        self.assertEqual(self.control.claim_dispatch(second)["status"], "claimed")
+        self.assertEqual(
+            self.control.claim_dispatch("missing")["error"], "job_not_found")
+
     def test_private_root_descendant_guard_is_an_explicit_trusted_option(self):
         job, source = self.private_job()
         derived = self.service.execute('gtd-felix', dict(operation_id='flag-child', action='derive', item_id=source['id'], expected_version=source['version'],
