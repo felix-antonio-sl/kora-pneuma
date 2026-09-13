@@ -250,6 +250,14 @@ class OrchestrationWorker:
     def _pending_routed_intents(self, item):
         return self.service.pending_routed_intents(item)
 
+    def _routed_instruction_sources(self, item, actor, capability, mandate_id):
+        """Snapshot current routed evidence within this admission's authority."""
+        targets = [item, *[candidate for candidate in self.service.query()
+            if self.control._descendant_path(candidate['id'], item['id'])
+            and self.service.authorize(actor, capability, candidate['id'], mandate_id)['allowed']]]
+        return list(dict.fromkeys(evidence['source_item_id'] for target in targets
+            for evidence in self.service.routed_human_sources(target)))
+
     def _recent_human_context(self, item, job):
         """Bounded same-conversation evidence; never extends command scope."""
         def direct(entry):
@@ -717,6 +725,10 @@ class OrchestrationWorker:
                 'mandate_id': origin.get('mandate_id'), 'capability': origin['capability'],
                 'bot_id': self.config['principal_bot_id'], 'purpose': 'Evaluar y resolver trabajo autorizado pendiente',
                 'scope': origin['scope'] + ' Lee material y fuentes actuales; registra evaluación, brecha o retorno explícito. No amplíes autoridad.'}
+            instruction_sources = self._routed_instruction_sources(
+                item, origin['actor'], origin['capability'], origin.get('mandate_id'))
+            if instruction_sources:
+                request['human_instruction_source_ids'] = instruction_sources
             # Existing admissions recover a crash after reserve without another job.
             record['return_values'] = {field: item.get(field) for field in ('review_at', 'decision_at', 'starts_at')}
             state['admissions'][operation_id] = {'events': [], 'item': item}
@@ -1023,12 +1035,8 @@ class OrchestrationWorker:
                 instruction_sources = [e['payload'].get('source_capture_id') for e in events
                     if e['payload'].get('reason') == 'routed_human_instruction'
                     and isinstance(e['payload'].get('source_capture_id'), str)]
-                context_targets = [item, *[candidate for candidate in self.service.query()
-                    if self.control._descendant_path(candidate['id'], item_id)
-                    and self.service.authorize(self.config['actor'], capability, candidate['id'], mandate_id)['allowed']]]
                 instruction_sources = list(dict.fromkeys([*instruction_sources,
-                    *[evidence['source_item_id'] for target in context_targets
-                      for evidence in self.service.routed_human_sources(target)]]))
+                    *self._routed_instruction_sources(item, self.config['actor'], capability, mandate_id)]))
                 if instruction_sources:
                     request['human_instruction_source_ids'] = instruction_sources
                 budget = self.control.budget()

@@ -261,6 +261,50 @@ class RoutedIntentRecoveryTests(unittest.IsolatedAsyncioTestCase):
     asyncSetUp = orchestration_fixtures.OrchestrationTests.asyncSetUp
     asyncTearDown = orchestration_fixtures.OrchestrationTests.asyncTearDown
 
+    async def test_owner_reopen_continuation_admits_current_routed_sources(self):
+        source = self.previous_route()
+        orchestration_fixtures.OrchestrationTests.make_private_action(self)
+        item = self.service.get_item(self.item['id'])
+        review = self.service.execute('felix', {'operation_id': 'initial-private-review',
+            'action': 'request_review', 'item_id': item['id'],
+            'expected_version': item['version'], 'fields': {}})
+        self.assertEqual('applied', review['status'], review)
+        self.native.complete_criterion = True
+        await self.worker.tick()
+        await self.worker.tick()
+        item = self.service.get_item(item['id'])
+        self.assertEqual('done', item['status'])
+        origin = self.control.get_job(self.native.submissions[-1]['job_id'])
+        self.assertIn(source['id'], origin['human_instruction_source_ids'])
+        reopened = self.service.execute('felix', {'operation_id': 'owner-reopen-private',
+            'action': 'reopen', 'item_id': item['id'], 'expected_version': item['version']})
+        self.assertEqual('applied', reopened['status'], reopened)
+        self.native.no_progress = True
+        self.worker = OrchestrationWorker(self.service, self.control, self.native, self.config)
+        await self.worker.tick()
+        job = self.control.get_job(self.native.submissions[-1]['job_id'])
+        self.assertNotEqual(origin['id'], job['id'])
+        self.assertIn(source['id'], job.get('human_instruction_source_ids', []))
+        self.assertEqual(self.control._basis(source['id']), job['source_bases'][source['id']])
+        self.assertTrue(self.control.validate_target(job['id'], 'gtd-felix', item['id'],
+            'prepare_private')['allowed'])
+        self.assertIn(source['text'], self.native.submissions[-1]['prompt'])
+        self.assertEqual(2, len(self.native.submissions))
+        planned = await self.client.call('gtd_command', {'job_id': job['id'], 'command': {
+            'operation_id': 'reopened-job-plan', 'action': 'plan', 'item_id': item['id'],
+            'expected_version': reopened['item']['version'],
+            'fields': {'plan_steps': ['Review the original human direction before preparing']}}})
+        self.assertEqual('applied', planned['status'], planned)
+        later = self.service.capture('felix', 'later-reopened-reply', 'Wait for my corrected scope.',
+            source={'provider': 'telegram'})['item']
+        routed = self.service.execute('gtd-felix', {'operation_id': 'route-after-reopened-admission',
+            'action': 'clarify', 'item_id': later['id'], 'expected_version': later['version'],
+            'fields': {'destination': 'existing', 'target_item_id': item['id'], 'reason': 'Later reply',
+                'intent_basis': {'source_item_id': later['id'], 'quote': later['text']}}})
+        self.assertEqual('applied', routed['status'], routed)
+        self.assertEqual('routed_intent_set_stale', self.control.validate_target(
+            job['id'], 'gtd-felix', item['id'], 'prepare_private')['reason'])
+
     def previous_route(self):
         source = self.service.capture('felix', 'routed-reply', 'Prepare a private map of current work.',
             source={'provider': 'telegram'})['item']
