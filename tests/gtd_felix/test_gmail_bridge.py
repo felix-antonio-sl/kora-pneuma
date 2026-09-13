@@ -160,6 +160,86 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, 'evaluation_cancelled'):
             await self.call(short)
         self.assert_closed()
+    async def test_validation_wait_keeps_stop_and_disconnect_responsive(self):
+        for mode in ('stop', 'disconnect'):
+            self.setUp()
+            waiting = asyncio.Event()
+            joined = asyncio.Event()
+            async def slow(binding):
+                waiting.set()
+                try:
+                    await asyncio.sleep(10)
+                    return 10
+                finally:
+                    joined.set()
+            task = asyncio.create_task(self.call(slow))
+            await waiting.wait()
+            if mode == 'stop':
+                self.parent.is_interrupted = True
+            else:
+                self.request.transport = None
+            with self.assertRaisesRegex(ValueError, 'evaluation_cancelled'):
+                await asyncio.wait_for(task, .5)
+            self.assertTrue(joined.is_set())
+            self.assertFalse(hasattr(self.context, 'process'))
+            self.assertFalse(bridge._BUSY)
+
+    async def test_stop_during_child_revalidation_joins_both_tasks(self):
+        waiting = asyncio.Event()
+        joined = asyncio.Event()
+        calls = 0
+        async def slow_second(binding):
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                return 10
+            waiting.set()
+            try:
+                await asyncio.sleep(10)
+                return 10
+            finally:
+                joined.set()
+        task = asyncio.create_task(self.call(slow_second))
+        await waiting.wait()
+        self.parent.is_interrupted = True
+        with self.assertRaisesRegex(ValueError, 'evaluation_cancelled'):
+            await asyncio.wait_for(task, .5)
+        self.assertTrue(joined.is_set())
+        self.assert_closed()
+
+    async def test_initial_validation_is_inside_absolute_deadline(self):
+        joined = asyncio.Event()
+        async def slow(binding):
+            try:
+                await asyncio.sleep(10)
+                return 20
+            finally:
+                joined.set()
+        with patch.object(bridge, 'MAX_SECONDS', .08):
+            with self.assertRaisesRegex(ValueError, 'evaluation_cancelled'):
+                await asyncio.wait_for(self.call(slow), .5)
+        self.assertTrue(joined.is_set())
+        self.assertFalse(hasattr(self.context, 'process'))
+        self.assertFalse(bridge._BUSY)
+
+    async def test_http_validation_delay_and_timeout_have_distinct_results(self):
+        from aiohttp import web
+        from aiohttp.test_utils import TestServer
+        async def handler(request):
+            self.assertEqual('Bearer stub-token', request.headers['Authorization'])
+            await asyncio.sleep(1.2)
+            return web.json_response({'allowed': True, 'remaining_seconds': 17})
+        app = web.Application()
+        app.router.add_post('/v1/source-evaluation/validate', handler)
+        async with TestServer(app) as server:
+            with patch.dict('os.environ', {'GTD_API_URL': str(server.make_url('/')).rstrip('/'),
+                                          'GTD_API_TOKEN': 'stub-token'}):
+                self.assertEqual(17, await bridge.service_validate({'job_id': 'stub'}))
+                with patch.object(bridge, 'VALIDATION_TIMEOUT_SECONDS', .02):
+                    with self.assertRaisesRegex(ValueError, '^validation_timeout$'):
+                        await bridge.service_validate({'job_id': 'stub'})
+        self.assertEqual('validation_timeout', bridge.error_code(ValueError('validation_timeout')))
+
     def test_closed_output_never_quotes_model_error(self):
         for raw in (MARKER, {'classification': 'noise', 'reason_code': MARKER},
                     {'classification':'noise','reason_code':'non_actionable','text':MARKER}):

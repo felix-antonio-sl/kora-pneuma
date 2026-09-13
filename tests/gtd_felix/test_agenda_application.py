@@ -97,10 +97,10 @@ class AgendaApplicationTests(unittest.IsolatedAsyncioTestCase):
     async def test_mcp_three_tools_and_cli_escaping_repeated_calendar(self):
         self.assertEqual(len(TOOLS),3)
         client=MCPClient(self.url,'synthetic-principal-token')
-        result=await client.call('gtd_read',{'view':'agenda',**self.params,'calendar_ids':[CAL2]})
+        result=await client.call('gtd_read',{'view':'agenda',**self.params,'calendar_ids':[CAL2],'job_id':'current-read-context'})
         self.assertEqual(result['calendar_ids'],[CAL2])
         before=len(self.transport.calls)
-        for change in ({'job_id':'extra'},{'calendar_ids':[]},{'calendar_ids':[CAL1,CAL1]}):
+        for change in ({'unknown':'extra'},{'calendar_ids':[]},{'calendar_ids':[CAL1,CAL1]}):
             with self.assertRaises(ValueError):await client.call('gtd_read',{'view':'agenda',**self.params,**change})
         self.assertEqual(len(self.transport.calls),before)
         process=await asyncio.create_subprocess_exec(sys.executable,'-B','-m','gtd_felix','--url',self.url,'agenda',

@@ -23,6 +23,7 @@ HERMES_ROOT = Path("/home/felix/.hermes/hermes-agent")
 PROFILE_HOME = Path("/home/felix/.hermes/profiles/gtd-felix")
 MAX_TEXT_BYTES = 200_000
 MAX_SECONDS = 20.0
+VALIDATION_TIMEOUT_SECONDS = 6.0
 _ALLOWED = {("selected", "gtd_relevant"), ("noise", "non_actionable"),
             ("uncertain", "needs_review"), ("uncertain", "evaluation_unavailable")}
 _REQUEST_KEYS = {"job_id", "run_id", "evaluation_id", "text", "external_id", "revision"}
@@ -38,7 +39,8 @@ noise/non_actionable, uncertain/needs_review. No incluyas citas ni explicación.
 
 
 _ERROR_CODES = frozenset({"invalid_request", "provider_mismatch", "helper_busy",
-    "inactive_parent", "evaluation_not_active", "evaluation_cancelled", "helper_failed"})
+    "inactive_parent", "evaluation_not_active", "evaluation_cancelled", "helper_failed",
+    "validation_timeout"})
 
 
 def error_code(exc):
@@ -207,7 +209,7 @@ async def service_validate(binding):
     if not url or not token:
         return 0.0
     try:
-        async with ClientSession(timeout=ClientTimeout(total=1.0)) as session:
+        async with ClientSession(timeout=ClientTimeout(total=VALIDATION_TIMEOUT_SECONDS, ceil_threshold=10.0)) as session:
             async with session.post(url + "/v1/source-evaluation/validate", json=binding,
                                     headers={"Authorization": "Bearer " + token}) as response:
                 if response.status != 200:
@@ -217,6 +219,8 @@ async def service_validate(binding):
                 if value.get("allowed") is not True or type(seconds) not in (int, float):
                     return 0.0
                 return min(float(seconds), MAX_SECONDS) if math.isfinite(seconds) and seconds > 0 else 0.0
+    except asyncio.TimeoutError:
+        raise ValueError("validation_timeout") from None
     except Exception:
         return 0.0
 
@@ -233,6 +237,7 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
     binding = {key: payload[key] for key in ("job_id", "run_id", "evaluation_id")}
     binding["digest"] = evidence_digest(payload)
     started = time.monotonic()
+    deadline = started + MAX_SECONDS
     process = pipe = peer = None
     _BUSY = True
     try:
@@ -244,10 +249,25 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
             return (not interrupted and transport is not None and not transport.is_closing()
                     and adapter._active_run_agents.get(payload["run_id"]) is parent
                     and route_credentials(parent) == credentials)
-        remaining = await validator(binding)
+        async def checked_validation():
+            # HTTP may wait several seconds; parent cancellation must stay responsive.
+            task = asyncio.create_task(validator(binding))
+            try:
+                while True:
+                    if not active() or time.monotonic() >= deadline:
+                        raise ValueError("evaluation_cancelled")
+                    if task.done():
+                        return task.result()
+                    await asyncio.wait({task}, timeout=min(0.05, max(0, deadline - time.monotonic())))
+            finally:
+                if not task.done():
+                    task.cancel()
+                await asyncio.gather(task, return_exceptions=True)
+
+        remaining = await checked_validation()
         if not active() or remaining <= 0:
             raise ValueError("evaluation_not_active")
-        deadline = min(started + MAX_SECONDS, time.monotonic() + remaining)
+        deadline = min(deadline, time.monotonic() + remaining)
         ctx = context or multiprocessing.get_context("spawn")
         pipe, peer = ctx.Pipe(duplex=True)
         process = ctx.Process(target=_child, args=(peer,), daemon=True)
@@ -264,7 +284,7 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
                 if not active() or now >= deadline:
                     raise ValueError("evaluation_cancelled")
                 if now >= next_check:
-                    remaining = await validator(binding)
+                    remaining = await checked_validation()
                     if remaining <= 0 or not active():
                         raise ValueError("evaluation_not_active")
                     deadline = min(deadline, time.monotonic() + remaining)
@@ -273,7 +293,7 @@ async def evaluate(adapter, request, payload, *, validator=service_validate, con
                     sending.result()
                 if pipe.poll():
                     result = pipe.recv()
-                    if not active() or await validator(binding) <= 0 or time.monotonic() >= deadline:
+                    if not active() or await checked_validation() <= 0 or time.monotonic() >= deadline:
                         raise ValueError("evaluation_not_active")
                     return closed_result({key: result.get(key) for key in ("classification", "reason_code")},
                                          result.get("usage"), time.monotonic() - started)

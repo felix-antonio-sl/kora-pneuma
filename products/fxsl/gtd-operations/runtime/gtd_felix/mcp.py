@@ -360,7 +360,7 @@ class MCPClient:
                 path = '/v1/effects' + ('/' + quote(arguments['effect_id'], safe='') if view == 'effect' else '')
             elif view == 'agenda':
                 required={'view','account_alias','start','end','timezone'}
-                if (not required<=set(arguments) or set(arguments)-required-{'calendar_ids'}
+                if (not required<=set(arguments) or set(arguments)-required-{'calendar_ids','job_id'}
                         or any(not isinstance(arguments[k],str) or not arguments[k] for k in required)):
                     raise ValueError('invalid_agenda_fields')
                 ids=arguments.get('calendar_ids')
