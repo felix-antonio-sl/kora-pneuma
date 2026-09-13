@@ -54,8 +54,8 @@ existente; no son una fuente operativa nueva.
 | Integridad mecánica | PASS en el catálogo actual y 251 pruebas de maquinaria; verificación focal de las 12 versiones preservadas. |
 | Fidelidad semántica | Revisiones y correcciones documentadas por lote. Hay tensiones focales aún examinables; no se releyeron todos los cuerpos para este corte. |
 | Carga nativa | Sesiones vivas de este corte en Codex (activación directa de skills) más presupuestos SOUL Hermes 16/16 completos con mapas intactos y una sesión viva del director en Hermes con instalación temporal desde fuente. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
-| Conducta | Casos sintéticos de los lotes más sesiones vivas de este corte: retomas del gate reparado (3, incluida tricotomía con ejecución real observada), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1), claridad agente/método (2) y director en Hermes con JSON exacto. Sin actos clínicos, institucionales ni envíos. |
-| Utilidad | Cuatro reparaciones admitidas por defectos demostrados; evidencia proporcional flexibilizada por tarea (una afirmación admite cita directa; el packet de la ruta A conserva su valor por decisión, rechazos y deuda, no por existir); gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Transformación integral: instancia sintética con medición completa (o200k_base, tiktoken 0.14.0 en venv temporal): fuente 138 → contenido 110 → candidata 84 tokens; compresión de contenido 23,64 %, total 39,13 %; control negativo PASSED con dos pérdidas genuinas reparadas. No valida el procedimiento en general ni la publicación sintética equivale a validación. |
+| Conducta | Casos sintéticos de los lotes más sesiones vivas de este corte: retomas del gate reparado (3, incluida tricotomía con ejecución real observada), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1), claridad agente/método (2) y director en Hermes (carga + conformidad formal con prompt prescriptivo; caso neutro sin respuesta del harness, ver impedimento). Sin actos clínicos, institucionales ni envíos. La evaluación técnica de estas sesiones es juicio del ejecutor (Codex como integrador incluido) y no constituye aceptación personal de Félix. |
+| Utilidad | Cuatro reparaciones admitidas por defectos demostrados; evidencia proporcional flexibilizada por tarea (una afirmación admite cita directa; el packet de la ruta A conserva su valor por decisión, rechazos y deuda, no por existir); gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Transformación integral: instancia sintética con medición completa (o200k_base, tiktoken 0.14.0 en venv temporal). Fallo v3 conservado como evidencia: “mismo criterio si ese jueves es festivo” desanclaba “hábil inmediato anterior” del jueves y habilitó inferir miércoles (lectura R3b); no se clasificó como mera inferencia del lector. Reparación v4 desde la fuente sin resolver ni ampliar: criterio con ancla al jueves + marca “la fuente no ejemplifica el caso de jueves festivo”. Re-cotejo (excepción y relaciones intactas), re-medición (138 → 110 → 87 tokens; contenido −20,91 %, total −36,96 %, artefacto `a66a284e`) y lectura independiente R-v4 sobre el texto final exacto: q01–q04 correctas, q05 correctamente indeterminada sin día inventado; la tensión excepción/negación (día del operador en festivo) es de la fuente, se conserva sin resolver y no es defecto. Control negativo PASSED conservado (no depende del cambio). No valida el procedimiento en general ni la publicación sintética equivale a validación. |
 | Efectos | Fuentes admitidas y publicadas (`5dd3e3b`, `c5336b1`, `2e225cd`, `49d9292`); instalaciones personales coherentes en ambos destinos (Codex 61, Hermes 62 en alcance). Conocimiento sintético de prueba en biblioteca temporal, nunca en la personal. |
 
 La cobertura se apoya en los dictámenes por lote de la propuesta anterior y en
@@ -74,19 +74,29 @@ skill Hermes.
 | Promesa y producto | CX-D | CX-R | H-P | H-S | Base |
 |---|---|---|---|---|---|
 | Gate de evidencia reparado (skill+método) | PASS (3 sesiones) | — | — | PASS (skill_view + JSON exacto) | Instalación + render ambos |
-| Director reparado (tricotomía) | PASS (2 sesiones) | Instalado, invocación no ejercida | PASS (SOUL + JSON exacto, sol/high, 2 llamadas) | — | soul-budgets 16/16 |
+| Director reparado (tricotomía) | PASS (2 sesiones) | Instalado, invocación no ejercida | Carga PASS + conformidad formal PASS con prompt prescriptivo; conducta neutra ABSENT con causa (impedimento) | — | soul-budgets 16/16 |
 | Gemelos + métodos propietarios | PASS (3 sesiones, retoma incluida) | — | Instalado | Instalado | Lote salud + soul-budgets |
 | Niveles micro/meso/macro | PASS (3 sesiones) | — | Instalado | Instalado | Lote salud |
 | OPM experto + vecino | PASS (2 sesiones) | — | Instalado | Instalado | Lote modelado |
 | agent-architect, david-allen, gtd-flow | PASS (3 sesiones; agente/método inconclusa) | — | Instalado | Instalado | Lotes respectivos |
 | `steve-jobs`, `ux-research-design-ai`, `allan-kelly`, `dov-dori`, agente `kora` | NOT_RUN | NOT_RUN | NOT_RUN | NOT_RUN | PRIOR (lotes admitidos) |
 | `fugaz` | NOT_RUN (frontera: delegación sólo Codex, OpenCode retiene) | PRIOR | Instalado | Instalado | Fuente + lote ingeniería |
-| Transformación integral (instancia sintética) | PASS (helper + lectura R1 5/5 + control PASSED + medición) | — | PRIOR (sesión 09-13: helper + publicación ficticia) | — | Tests + recibo `226ee3c7` |
+| Transformación integral (instancia sintética) | PASS (helper + lectura R1 5/5 + control PASSED + medición; v3 fallida y reparada, R-v4 sobre texto final) | — | PRIOR (sesión 09-13: helper + publicación ficticia) | — | Tests + recibo `a66a284e` |
 
 Un canario genérico o un SOUL admisible no se usan como conducta de otro
-producto: la fila del director en Hermes es sesión viva propia con la fuente
-reparada. No se abrió campaña por agente: sólo se probó el vacío material
-(conducta Hermes de lo reparado) y los frentes discriminantes del plan.
+producto. La conformidad formal Hermes del director (JSON exacto con prompt
+que indicaba formas) vale como carga + conformidad, no como prueba conductual
+pura. El caso neutro se repitió 5 veces (3 formulaciones con `sol/high` y una
+con `astra/max`): carga PASS siempre (`skill_view` + `read_file` con cuerpos),
+respuesta final ausente siempre → conducta ABSENT con causa, no FAIL. La causa
+no es observable en los recibos (2 llamadas API, sin mensaje final); no es
+específica de modelo ni esfuerzo. Impedimento material concreto: el harness
+`--live` con catálogo externo no entrega la respuesta final ante insumos
+neutrales; resolverlo exige exponer el mensaje final del runner o una vía no
+persistente equivalente, fuera del alcance de este ajuste. En Codex la
+conducta libre sí se observó (E9 colgado rechazado, tricotomía con ejecución
+real); la elección libre de forma directa simple (tarea 1 del micro2, que la
+prescribía) queda como observación de conformidad, no de elección.
 
 ### Registro durable mínimo del caso integral
 
@@ -99,11 +109,16 @@ unidades y 5 preguntas, revisión `same_context`, reapertura por dos pérdidas
 genuinas halladas en cotejo (`de entrega`, ausencia overstated), bloqueo
 `TOKEN_REGRESSION` resuelto con representación densa, revisión global con
 control negativo `PASSED` (alteración jueves→miércoles detectada con efecto).
-Artefacto (sha256 `226ee3c7…5aaf`): cuatro frases denses con criterio literal.
-Medición: 138 → 110 → 84 tokens; contenido −23,64 %, total −39,13 %.
-Lectura independiente R1 5/5 sobre v1; v3 cubierta por re-revisión (límite
-declarado); q05 muestra inferencia del lector marcada como tal, sin regla
-inventada. Esto acredita la instancia, no el procedimiento en general.
+Artefacto final v4 (sha256 `a66a284e…5aaf`): cuatro frases con el criterio
+anclado al jueves y el borde marcado como no ejemplificado, sin regla añadida
+ni cómputo invitado. Medición: 138 → 110 → 87 tokens; contenido −20,91 %,
+total −36,96 %. Lectura independiente R1 5/5 sobre v1; R-v4 sobre el texto
+final exacto: q01–q04 correctas, q05 indeterminada sin día inventado; la
+interacción excepción/negación es tensión de la fuente y se conserva sin
+resolver. El fallo v3 (artefacto `226ee3c7`, “mismo criterio”, lectura R3b con
+miércoles) queda conservado en el historial del helper y aquí como evidencia
+del defecto y su reparación. Esto acredita la instancia, no el procedimiento
+en general.
 
 ### Reproducir y mantener el corte
 
@@ -438,10 +453,12 @@ interrupción, sólo `HANDOFF.md` temporal conserva el siguiente paso.
   propiedad, revisión y recuperación porque incluso un usuario puede tener dos
   procesos y ediciones que no deben perderse.
 
-**Siguiente movimiento (tras la ejecución 2026-09-14 y sus cuatro correcciones):**
-sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
-`dov-dori` y el agente `kora` cuando un caso discriminante las requiera
-(`fugaz` conserva su frontera Codex declarada); economía de tokens medida en
-la instancia integral, pendiente en el resto; y la aceptación final de Félix,
-distinguida del cierre técnico y de la conformidad parcial ya recibida.
+**Siguiente movimiento (tras los ajustes focales de fidelidad y Hermes):**
+el caso conductual Hermes neutro queda bloqueado por el impedimento descrito
+(harness sin respuesta final); resolverlo exige exponer el mensaje final del
+runner o una vía no persistente equivalente, sin nueva campaña por agente.
+Sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
+`dov-dori` y el agente `kora` sólo cuando un caso discriminante las requiera.
+La aceptación final de Félix sigue distinguida del cierre técnico, de la
+conformidad parcial recibida y de toda evaluación técnica del ejecutor.
 No hace falta otra auditoría general ni una especificación nueva para continuar.
