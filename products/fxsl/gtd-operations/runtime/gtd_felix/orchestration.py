@@ -100,47 +100,59 @@ class OrchestrationWorker:
         if event['provider'] != 'gtd-review' or type(version) is not int:
             return False
         # An exact recorded operation/version, not merely an agent's latest title.
-        # Bounded: operations for this item/version (few) + recent runs (few,
-        # LIMIT 64) to include parent scopes that contain this item's ops.
-        # Never the full history; 64 covers active families plus recent work.
+        # Complete but scoped: operations for this item/version (few) plus the
+        # runs whose scope may contain this item's ops, i.e. runs for the item
+        # itself and its ancestors (parent_id chain, bounded depth), each
+        # walked with pagination so no candidate is silently dropped.
         with self.service.store.lock:
             rows = self.service.store.db.execute('SELECT actor,operation_id FROM operations WHERE item_id=? AND applied_version=?', (item_id, version)).fetchall()
+        scope_items = [item_id]
+        seen_items = {item_id}
+        node = self.service.get_item(item_id)
+        while node and node.get('parent_id') and node['parent_id'] not in seen_items:
+            scope_items.append(node['parent_id'])
+            seen_items.add(node['parent_id'])
+            if len(scope_items) > 16:
+                break
+            node = self.service.get_item(node['parent_id'])
         own_operations = {}
         with self.service.store.lock:
-            for r in self.service.store.db.execute(
-                    "SELECT id FROM runs ORDER BY rowid DESC LIMIT 64").fetchall():
-                run = self.control._run_row(r["id"])
-                if run is None:
-                    continue
-                try:
-                    import json as _json
-                    detail = _json.loads(run["detail_json"]) if run["detail_json"] else {}
-                except ValueError:
-                    detail = {}
-                # Progress + domain ops for this run only (few).
-                ops = []
-                if detail.get("domain_operation_id"):
-                    ops.append(detail["domain_operation_id"])
-                ops.extend(detail.get("domain_operation_ids", []) or [])
-                for p in detail.get("progress", []) or []:
-                    if isinstance(p, dict) and p.get("operation_id"):
-                        ops.append(p["operation_id"])
-                for operation in ops:
-                    if operation:
-                        own_operations[operation] = run["actor"]
+            for scope_item in scope_items:
+                for rid in self.control._iter_run_ids_by_item(scope_item):
+                    run = self.control._run_row(rid)
+                    if run is None:
+                        continue
+                    try:
+                        import json as _json
+                        detail = _json.loads(run["detail_json"]) if run["detail_json"] else {}
+                    except ValueError:
+                        detail = {}
+                    # Progress + domain ops for this run only (few).
+                    ops = []
+                    if detail.get("domain_operation_id"):
+                        ops.append(detail["domain_operation_id"])
+                    ops.extend(detail.get("domain_operation_ids", []) or [])
+                    for p in detail.get("progress", []) or []:
+                        if isinstance(p, dict) and p.get("operation_id"):
+                            ops.append(p["operation_id"])
+                    for operation in ops:
+                        if operation:
+                            own_operations[operation] = run["actor"]
         return any(own_operations.get(row['operation_id']) == row['actor'] for row in rows)
 
     def _executor_returns(self, state):
         """Reconstruct one review input per authenticated executor delivery."""
-        # Bounded: executor integrated runs only (few, indexed), never global.
+        # Complete paginated walk over integrated runs excluding owner and
+        # principal actors (executor deliveries only), never truncated.
         records = state.setdefault('executor_returns', {})
-        try:
-            rows = self.service.store.db.execute(
-                "SELECT id FROM runs WHERE integration='integrated' ORDER BY rowid LIMIT 64").fetchall()
-        except Exception:
-            rows = []
-        for r in rows:
-            run = self.control._run_row(r["id"])
+        clauses, params = ["integration='integrated'"], []
+        for excluded in (self.service.owner_actor, self.config.get('actor')):
+            if isinstance(excluded, str) and excluded:
+                clauses.append("actor != ?")
+                params.append(excluded)
+        id_iter = self.control._iter_run_ids(" AND ".join(clauses), tuple(params))
+        for rid in id_iter:
+            run = self.control._run_row(rid)
             if run is None:
                 continue
             cycle = self.control._cycle_row(run["cycle_id"])
@@ -669,13 +681,10 @@ class OrchestrationWorker:
                     candidates.append(job)
         except Exception:
             pass
-        try:
-            rows = self.service.store.db.execute(
-                "SELECT id FROM runs WHERE item_id=? ORDER BY rowid LIMIT 64", (item_id,)).fetchall()
-        except Exception:
-            rows = []
-        for r in rows:
-            run = self.control._run_row(r["id"])
+        # Complete paginated walk: every spent review for the item counts,
+        # however far back in history it sits.
+        for rid in self.control._iter_run_ids_by_item(item_id):
+            run = self.control._run_row(rid)
             if run is None:
                 continue
             cycle = self.control._cycle_row(run["cycle_id"])
@@ -713,7 +722,8 @@ class OrchestrationWorker:
         their contract. An owner operation at the same version never re-arms
         by itself.
         """
-        # Bounded: runs for this item only (few) plus synthetic unit-test jobs.
+        # Complete scope: runs for this item (paginated, never truncated)
+        # plus synthetic unit-test jobs.
         jobs = []
         try:
             for job in (control_state or {}).get('jobs', {}).values():
@@ -721,19 +731,15 @@ class OrchestrationWorker:
                     jobs.append(job)
         except Exception:
             pass
-        try:
-            for r in self.service.store.db.execute(
-                    "SELECT id FROM runs WHERE item_id=? ORDER BY rowid LIMIT 64", (item['id'],)).fetchall():
-                run = self.control._run_row(r["id"])
-                if run is None:
-                    continue
-                cycle = self.control._cycle_row(run["cycle_id"])
-                try:
-                    jobs.append(self.control._job_from_rows(cycle, run))
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        for rid in self.control._iter_run_ids_by_item(item['id']):
+            run = self.control._run_row(rid)
+            if run is None:
+                continue
+            cycle = self.control._cycle_row(run["cycle_id"])
+            try:
+                jobs.append(self.control._job_from_rows(cycle, run))
+            except Exception:
+                continue
         tied, written = self._tied_spent_reviews(control_state, item['id'])
         if not tied:
             return False
@@ -793,15 +799,18 @@ class OrchestrationWorker:
             except ValueError:
                 continue
         # Reconstruct from authenticated terminal work, including real touched children.
+        # Complete paginated walk over this principal's integrated runs: every
+        # authentic origin counts, however far back it sits.
         origins, source_ids, origin_versions = {}, {}, {}
         control_state = self.control._load()
-        try:
-            cand_rows = self.service.store.db.execute(
-                "SELECT id FROM runs WHERE integration='integrated' ORDER BY rowid LIMIT 128").fetchall()
-        except Exception:
-            cand_rows = []
-        for cr in cand_rows:
-            run = self.control._run_row(cr["id"])
+        actor = self.config.get('actor')
+        if isinstance(actor, str) and actor:
+            id_iter = self.control._iter_run_ids(
+                "integration='integrated' AND actor=?", (actor,))
+        else:
+            id_iter = self.control._iter_run_ids("integration='integrated'")
+        for rid in id_iter:
+            run = self.control._run_row(rid)
             if run is None:
                 continue
             cycle = self.control._cycle_row(run["cycle_id"])
@@ -915,19 +924,18 @@ class OrchestrationWorker:
             auth = self.service.authorize(origin['actor'], origin['capability'], item_id, origin.get('mandate_id'))
             if not auth['allowed']:
                 blocker = auth['reason']
-            # Bounded pending check: runs for this item only (few).
+            # Existence check pushed into SQL: any run for this item whose
+            # native side is not terminal or whose logical integration is
+            # still pending (compat intermediates included). LIMIT 1 is exact
+            # here because only existence matters, never a candidate list.
             pend = self.service.store.db.execute(
-                "SELECT state, integration, detail_json FROM runs WHERE item_id=? LIMIT 16", (item_id,)).fetchall()
-            for pr in pend:
-                try:
-                    import json as _json2
-                    _d = _json2.loads(pr["detail_json"]) if pr["detail_json"] else {}
-                except ValueError:
-                    _d = {}
-                _integ = _d.get("integration", pr["integration"])
-                if pr["state"] not in ('completed', 'failed', 'cancelled', 'expired') or _integ in ('pending', 'accepted_pending_integration'):
-                    blocker = 'execution_pending'
-                    break
+                "SELECT 1 FROM runs WHERE item_id=? AND (state NOT IN "
+                "('completed','failed','cancelled','expired') OR COALESCE("
+                "json_extract(detail_json,'$.integration'),integration) IN "
+                "('pending','accepted_pending_integration')) LIMIT 1",
+                (item_id,)).fetchone()
+            if pend:
+                blocker = 'execution_pending'
             bot = next((b for b in self.control.bots() if b['id'] == self.config.get('principal_bot_id')), {})
             if (bot.get('state') != 'available' or origin['capability'] not in bot.get('capabilities', [])
                     or bot.get('actor', origin['actor']) != origin['actor']):
@@ -1126,17 +1134,13 @@ class OrchestrationWorker:
                 if jj is None or not jj.get('terminal'):
                     family_stopped = False
                     break
-            active_beneficiary = False
+            # Existence check: any non-terminal run for the beneficiary item.
+            # LIMIT 1 is exact here because only existence matters.
             try:
-                for br in self.service.store.db.execute(
-                        "SELECT id FROM runs WHERE item_id=? LIMIT 16", (record['beneficiary_id'],)).fetchall():
-                    try:
-                        bj = self.control.get_job(br["id"])
-                    except ValueError:
-                        continue
-                    if bj is not None and not bj.get('terminal'):
-                        active_beneficiary = True
-                        break
+                active_beneficiary = bool(self.service.store.db.execute(
+                    "SELECT 1 FROM runs WHERE item_id=? AND state NOT IN "
+                    "('completed','failed','cancelled','expired') LIMIT 1",
+                    (record['beneficiary_id'],)).fetchone())
             except Exception:
                 active_beneficiary = False
             expired = record['deadline'] <= datetime.now(timezone.utc).timestamp()
