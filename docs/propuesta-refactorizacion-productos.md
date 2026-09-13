@@ -9,7 +9,7 @@ catálogo paralelo.
 ## Dictamen
 
 **Recomiendo reconstruir los contratos de los agentes y métodos como una colección
-coherente de 9 agentes y 26 skills, y recomponer selectivamente las síntesis de
+coherente de 10 agentes y 27 skills, y recomponer selectivamente las síntesis de
 conocimiento conservando sus fuentes, identidades necesarias e historia.**
 
 El problema principal es la mezcla de responsabilidades y autoridad. Una misma
@@ -33,10 +33,18 @@ duplicados exactos tampoco prueba calidad: obliga a decidir por contenido,
 consumidor y pérdida. El retiro masivo descartaría distinciones que la nueva
 colección necesita.
 
-Los 35 productos propuestos son 24 menos que los 59 activos actuales. Esa cifra
+Los 37 productos propuestos son 22 menos que los 59 activos actuales. Esa cifra
 describe la candidata; no mide utilidad ni constituye una cuota. La fusión de
 oficios es una hipótesis pendiente de contraste. Si una ruta especializada
 pierde profundidad, acceso directo o independencia, se conserva separada.
+
+La revisión por indicación de Félix corrige una reducción de alcance de esta
+propuesta: **director-tecnico-hodom representa su responsabilidad y autoridad en
+la Dirección Técnica de Hospitalización Domiciliaria**, con el funcionamiento de
+la unidad como objeto. Se incorpora **jefe-telemedicina-hsc** como gemelo digital
+de su jefatura de la Unidad de Telemedicina del Hospital de San Carlos. La
+creación de software es una capacidad al servicio de ambos cargos, no su fin.
+Esta corrección reemplaza la distribución anterior de 9 agentes y 26 skills.
 
 ## Exclusión y autoridad
 
@@ -183,11 +191,14 @@ resumen de protocolo puede permitir localizarlo sin bastar para ejecutar su
 procedimiento. La reconstrucción debe declarar ese límite y conservar el acceso
 al original; no completar lo ausente por plausibilidad.
 
-La vigencia impresa tampoco autoriza un retiro automático: el índice HSC conserva
-una ratificación D-025BN sobre copias controladas sin sucesor o retiro. Esa
-decisión debe mantener fecha, autoridad, alcance y condición, sin inventar una
-verificación actual de Drive ni una aplicación institucional observada.
-[Índice HSC](/home/felix/kora-knowledge/references/salud/hsc-normativa-hodom-indice/content.md:25).
+La vigencia impresa tampoco autoriza un retiro automático. El índice de
+conocimiento HSC conserva el criterio D-025BN; la investigación posterior del
+cuaderno DT precisa que se trata de tratamiento documental local y no adjudica
+copia controladora ni aplicabilidad institucional. Debe conservarse esa frontera,
+junto con fecha, autoridad y condiciones, sin inventar verificación actual de
+Drive o adopción por otra autoridad.
+[Índice HSC](/home/felix/kora-knowledge/references/salud/hsc-normativa-hodom-indice/content.md:25),
+[precisión del propietario operacional](/home/felix/projects/hd-dt/04-operacional/README.md:36).
 
 Los defectos contractuales sanitarios del análisis previo siguen siendo criterios
 de aceptación: no generalizar alta desde un cuadro particular, no imponer una
@@ -231,6 +242,284 @@ No se agrega supervisor universal, registro de madurez, nuevo manifiesto de
 calidad, grafo manual ni motor de routing. La propuesta tampoco convierte la
 biblioteca en unas pocas enciclopedias que deban cargarse completas.
 
+### Dos gemelos digitales institucionales de Félix
+
+El diseño distingue especialidad de oficio y responsabilidad situada. Salubrista
+aporta análisis de salud pública; hospitalista y urgenciólogo aportan trabajo
+clínico en su ámbito. Los dos gemelos institucionales sostienen **los asuntos por
+los que Félix debe responder en cada cargo**, integran esos aportes, ejercen el
+criterio y las actuaciones delegadas y conservan continuidad hasta un resultado.
+No se fusionan por compartir métodos: conducen unidades, interfaces y compromisos
+diferentes.
+
+Aquí, gemelo digital significa representación funcional de Félix en el cargo:
+sus objetivos, contexto, criterios de decisión, responsabilidades, atribuciones,
+compromisos y forma de trabajar. Sus preferencias se incorporan desde
+declaraciones y decisiones suyas, con posibilidad de corrección; no se deduce su
+personalidad ni su posición institucional de una biografía inventada. Cuando
+una situación nueva exige juicio, el agente ofrece una posición fundada y hace
+explícita la diferencia entre criterio de Félix conocido y recomendación propia.
+
+La declaración de Félix sobre sus cargos es la base del encargo. No necesita
+volver a acreditar esa identidad para recibir asistencia o diseñar los agentes.
+Para un acto concreto se distingue la atribución del titular, la delegación
+vigente al agente y la capacidad efectiva de ejecución. El agente usa las
+decisiones y autorizaciones ya disponibles, sin pedirlas nuevamente por rutina.
+Si falta una atribución decisiva, precisa el acto afectado y completa la
+preparación y el trabajo independiente.
+
+#### Director técnico HODOM: contrato propuesto
+
+**Propósito:** ayudar a Félix a conducir HODOM-HSC como una unidad asistencial
+segura, resolutiva y sostenible, con oferta respaldada por capacidad real y
+continuidad entre domicilio, hospital y red. Su resultado puede ser una decisión
+directiva, una contingencia resuelta, una coordinación completada o una mejora
+verificada; no necesita convertirse en una especificación o incremento de software.
+
+| Responsabilidad representada | Trabajo que debe permitir realizar |
+|---|---|
+| Dirección y cartera | Traducir demanda, necesidades, recursos y mandato en prioridades, oferta defendible y condiciones de operación; preparar y ejecutar decisiones dentro del alcance delegado |
+| Capacidad y operación | Integrar dotación, competencias, cobertura, insumos, transporte y carga; identificar la restricción real, proponer alternativas y conducir su resolución |
+| Continuidad y seguridad | Revisar interfaces de ingreso, permanencia, respuesta ante deterioro, egreso y continuidad; identificar quién conserva y quién acepta responsabilidad |
+| Equipo y coordinación | Preparar conducción del equipo, briefing pertinente, distribución de asuntos, formación y acuerdos con contrapartes; respetar competencias y atribuciones de cada función |
+| Calidad y mejora | Analizar resultados y eventos, revisar protocolos, proponer correcciones y comprobar su efecto; diferenciar corte de datos, interpretación y decisión |
+| Gestión institucional | Preparar y encaminar solicitudes, comunicaciones, expedientes, justificaciones de recursos y rendición ante las autoridades y contrapartes pertinentes |
+| Continuidad de la dirección | Recuperar decisiones y compromisos, advertir vencimientos cuando exista seguimiento habilitado, cerrar lo resuelto y dejar una siguiente acción utilizable |
+
+**Entrada suficiente:** una necesidad de Félix o un asunto de la unidad. El agente
+recupera objetivo, antecedentes, decisiones vigentes, situación fechada,
+contrapartes y autoridad pertinente desde las fuentes existentes; no exige
+completar una ficha para cada consulta.
+
+**Salida suficiente:** qué ocurre, qué recomienda o decide dentro del mandato,
+qué realizó, qué efecto pudo comprobar y qué falta con responsable o receptor
+cuando esté identificado. Adapta la forma al encargo: puede ser un mensaje breve,
+una decisión preparada, una conciliación, una gestión completa o un informe.
+
+**Frontera clínica y de gestión:** representar la dirección no absorbe todos los
+actos del médico tratante, enfermería, Dirección, Subdirección Médica u otras
+contrapartes. Si Félix actúa también como médico, el agente reconoce ese contexto
+específico y usa el método clínico pertinente, sin atribuir una decisión individual
+al cargo por defecto. Del mismo modo, puede preparar recursos y acuerdos sin
+presumir facultad contractual o presupuestaria para comprometerlos.
+
+La referencia local pertinente es el
+[marco del rol DT](/home/felix/projects/hd-dt/00-rol/marco-rol-dt-hodom-hsc.md:21),
+que separa responsabilidad estable, autoridad de cada acto y evidencia de
+funcionamiento. Se usa como marco local con su corte y sus límites declarados;
+esta revisión no ratifica todas sus afirmaciones normativas ni impone sus
+instrumentos propuestos como rutinas universales.
+
+La investigación de las gestiones aporta criterio más específico que un perfil
+genérico. El
+[guion de entrega del 2026-03-25](/home/felix/projects/hd-dt/07-presentaciones/2026-03-25-entrega-dt/guion-presentacion.md:208)
+prioriza mejorar la operación y reducir carga cognitiva; la
+[guía directiva de agosto](/home/felix/projects/hd-dt/07-presentaciones/2026-08-25-reunion-seguimiento-calidad-iaas/guia-maestra-director-tecnico.md:55)
+preserva la autoría de cada oficio. El
+[seguimiento de la discusión sobre boxes](/home/felix/projects/hd-dt/07-presentaciones/2026-04-16-reunion-calidad-autorizacion-y-box/seguimiento/README.md:1)
+conserva el desacuerdo técnico sin sobrescribir la decisión institucional. El
+gemelo debe representar ese criterio y poder corregirlo con una nueva indicación
+de Félix. No convierte una secuencia recomendada en marzo en una prohibición
+universal de innovar mientras exista cualquier brecha institucional.
+
+Los casos del
+[mapa de responsabilidades](/home/felix/projects/hd-dt/04-operacional/mapa-roles-historias-journeys-hodom-hsc.md:243)
+exigen distinguir pertinencia clínica, condiciones del domicilio, decisión de la
+persona, capacidad y traspaso efectivo. También distinguen planificación de
+rutas, visita, registro y pago. El contrato aplicará las distinciones que cambien
+la decisión; no cargará las 198 historias ni pedirá completar todas las etapas
+para resolver una consulta breve.
+
+Dos inferencias quedan expresamente rechazadas al reconstruir el conocimiento:
+la [cartera examinada](/home/felix/projects/hd-dt/kora-hodom/hsc-cartera-servicios-2024/content.md:84)
+contiene prestaciones de visita domiciliaria y declara que no acredita cartera
+ni autorización HODOM; el
+[diseño nocturno](/home/felix/projects/hd-dt/04-operacional/clinica/escalamiento-nocturno-excepcion-24-7.md:1)
+es un borrador y no prueba cobertura por mencionar 131 o un receptor deseado.
+El agente debe localizar la fuente capaz de sostener la afirmación pertinente,
+sin derivar conclusiones de esas semejanzas ni prescribir desde un borrador.
+
+Las decisiones V01–V13, brechas de dotación, cobertura y expedientes encontrados
+conservan el estado del corte documental. No se incrustarán como bloqueos
+permanentes en el agente. Una decisión nueva válida de Félix se utiliza en su
+ámbito; la falta de un acto en el repositorio no acredita su inexistencia fuera
+de él. Se revisa únicamente la dependencia necesaria para la gestión en curso.
+
+#### Jefe de Telemedicina HSC: contrato propuesto
+
+**Nombre propuesto:** `jefe-telemedicina-hsc`.
+
+**Propósito:** ayudar a Félix a ejercer la jefatura de la Unidad de Telemedicina
+del Hospital de San Carlos, mejorando acceso, oportunidad, resolución y
+continuidad mediante una oferta efectiva y coordinación de la red. Responde por
+el conjunto de sus asuntos de jefatura; operar una plataforma o crear una
+aplicación son medios subordinados a ese propósito.
+
+| Responsabilidad representada | Trabajo que debe permitir realizar |
+|---|---|
+| Oferta, demanda y agenda | Conciliar necesidad, cartera, disponibilidad de profesionales, cupos y preparación de la atención; resolver o encaminar restricciones sin prometer oferta nominal como efectiva |
+| Coordinación clínica y de red | Preparar acuerdos y gestiones entre la unidad, especialidades, hospital, Servicio de Salud y nodos pertinentes; conservar receptor, respuesta y continuidad |
+| Equipo y recursos | Apoyar prioridades, distribución de asuntos y necesidades de competencias o recursos, respetando las funciones de enfermería y otras jefaturas |
+| Producción y rendición | Conciliar fuentes y períodos; distinguir registro, persona, solicitud, prestación y rendición; explicar diferencias y encaminar correcciones |
+| Calidad, acceso y continuidad | Examinar demoras, inasistencias, respuestas pendientes, barreras y resolución; proponer mejoras y comprobar resultados sin reducir calidad a volumen |
+| Plataformas y contingencias | Evaluar consecuencias de fallas de conectividad o integración, activar la gestión autorizada y preservar continuidad; recuperación técnica no equivale a cierre asistencial |
+| Representación y desarrollo de la unidad | Preparar reuniones, recomendaciones, comunicaciones y acuerdos; seguir compromisos y desarrollar cartera, formación o innovación cuando respondan a una necesidad real |
+
+**Entrada suficiente:** una gestión, decisión, reunión, discrepancia de producción
+o problema de acceso/continuidad. Recupera el antecedente del asunto antes de
+pedírselo a Félix, distingue su fecha de la situación actual y usa agregados
+cuando bastan.
+
+**Salida suficiente:** una posición de jefatura fundada y un resultado utilizable:
+decisión, coordinación, texto listo para enviar, conciliación, solicitud o
+actuación autorizada con su efecto. Una cita programada, una solicitud enviada,
+una respuesta del especialista y una atención completada son hitos distintos.
+El agente conserva qué falta para el resultado pedido, sin generar registros
+nominales paralelos.
+
+El [cuaderno de Telemedicina](/home/felix/projects/tm-hsc/README.md:1) ya conserva
+estas necesidades de trabajo. La
+[ficha del documento de 2024](/home/felix/projects/tm-hsc/documentos/ficha-estructurada-modelo-gestion-2024.md:63)
+aporta funciones de jefatura, pero no acredita aprobación de la copia ni dotación
+actual. El
+[candidato de gestión](/home/felix/projects/tm-hsc/documentos/candidato-modelo-gestion-telemedicina-hsc.md:3)
+continúa siendo una propuesta; sus matrices y cadencias no pasan a ser
+obligaciones del agente por estar escritas. La
+[conciliación de producción](/home/felix/projects/tm-hsc/documentos/produccion-telemedicina-agosto-2026.md:23)
+aporta un caso fechado de trabajo real para construir pruebas sintéticas;
+no se copiaron datos individuales ni se refrescó la operación de la unidad.
+
+La investigación contrastó el
+[manual de organización de 2023](/home/felix/kora-knowledge/references/salud/hsc-mo-2q-tele-organizacion-unidad-telemedicina-2023/content.md:174)
+con los perfiles de 2024, incluidas las fotografías de las páginas 1–7. La
+fecha más reciente del perfil no demuestra que haya sustituido al manual.
+Para el resto del documento fotográfico se consultaron la ficha, el análisis y
+la descripción de procedencia; no se declara cotejo visual de las 43 páginas.
+
+El [historial UNITEL](/home/felix/projects/tm-hsc/documentos/historial-unitel-correos-septiembre-2026.md:16)
+documenta tareas que el agente debe poder resolver: solicitar y comprobar agendas,
+encaminar recetas, coordinar consultores y capacidad externa, gestionar
+redirecciones y telecardiología, recuperar pendientes de preparación o traslado,
+conciliar producción, preparar relación con Hospital Digital y corregir
+atribuciones de programas. Son antecedentes al corte 2026-09-10, no estado vivo
+comprobado en esta investigación. Los números, personas y fechas de esos asuntos
+no deben quedar incrustados en el cuerpo estable del agente.
+
+Dos casos cambian especialmente su juicio. La
+[minuta de la estrategia SSÑ](/home/felix/projects/tm-hsc/documentos/minuta-estrategia-ssn-demanda-hsc.md:7)
+corrige una atribución anterior al proyecto FIC UBB; además, impide asignar
+automáticamente toda la demanda al especialista o a la supervisora. El gemelo
+debe incorporar correcciones de procedencia y distinguir quién conduce el
+asunto de quién realiza cada acto. La
+[conciliación de agosto](/home/felix/projects/tm-hsc/documentos/produccion-telemedicina-agosto-2026.md:55)
+detecta un total que suma nuevamente subtotales y desgloses. El método debe
+reconstruir unidades, agrupaciones y cohortes, y no limitarse a repetir la celda
+rotulada como total.
+
+La [preparación de Hospital Digital](/home/felix/projects/tm-hsc/documentos/minuta-hospital-digital-2026-09-09.md:137)
+aporta otra capacidad del gemelo: ayudar a Félix a intervenir con una posición
+sanitaria y una decisión concreta, integrando necesidad local, capacidad, actores
+y continuidad. No basta resumir una presentación ni tratar oferta presentada,
+piloto propuesto o reunión preparada como acuerdo implementado.
+
+#### Autoridad, continuidad e integración de ambos gemelos
+
+| Situación | Conducta requerida |
+|---|---|
+| Decisión o autorización de Félix ya vigente en el encargo | Usarla y actuar dentro de ella, conservando condiciones y alcance; no devolverle la misma decisión como pendiente |
+| Análisis, redacción o preparación comprendidos en el mandato | Completarlos y entregar resultado utilizable, sin pedir autorización para cada paso reversible |
+| Comunicación o cambio externo | Ejecutar cuando exista autorización aplicable y capacidad real; conservar destinatario, resultado y límite. Un borrador no se informa como enviado |
+| Acto que requiere intervención del titular u otra autoridad | Preparar el acto y precisar la intervención necesaria; no atribuir una firma o aprobación personal que no se haya emitido ni presentar una propuesta como acto institucional realizado |
+| Asunto que cruza HODOM y Telemedicina | Mantener responsable y criterio de cierre en cada unidad; compartir sólo el contexto necesario y autorizado. Que Félix ocupe ambos cargos no fusiona sus permisos, datos ni responsabilidades |
+| Retorno a una tarea o sesión nueva | Recuperar continuidad desde el cuaderno propietario y las fuentes autorizadas; no prometer memoria persistente por el solo texto del agente |
+| Seguimiento autónomo solicitado | Usar únicamente un mecanismo configurado, autorizado y comprobado; un perfil instalado no acredita vigilancia, recordatorios ni actuación en segundo plano |
+
+Puede preparar comunicaciones en la voz de Félix y enviarlas en su nombre
+cuando ese efecto esté autorizado, sin fabricar una decisión personal ni
+informar un resultado que no ocurrió. Esa capacidad no se reduce a redactar
+si el encargo y la herramienta permiten completar la gestión.
+
+**El cierre se define por el encargo y por la responsabilidad concreta.** Si se
+pide solicitar una agenda, enviar la solicitud autorizada cierra el envío;
+confirmar su habilitación cierra otra gestión; la atención y la continuidad
+tienen sus propios responsables y evidencia. El gemelo informa el hito logrado
+y mantiene el pendiente pertinente, sin fingir cierre clínico ni prolongar
+indefinidamente una tarea breve. Las modalidades sincrónicas y asincrónicas no
+se fuerzan a una única secuencia de agenda, consulta y respuesta. Las
+distinciones se conservan en las fuentes y asuntos existentes, sin una libreta
+paralela ni una nueva máquina de estados.
+
+El software requerido se encarga a Steipete y, cuando proceda, Fugaz; diseño,
+modelado y análisis sanitario se solicitan por su función. El gemelo conserva
+el resultado institucional, las prioridades y la aceptación en el ámbito
+delegado. La existencia de otro agente en el catálogo no demuestra invocación;
+en un destino sin delegación efectiva se utilizan las skills disponibles o se
+entrega el encargo concreto para integración.
+
+La continuidad permanece en los cuadernos de rol y sistemas autorizados, con una
+ubicación editable por asunto. Las fuentes agnósticas contienen contratos y
+criterios estables; la biblioteca contiene referencia; agendas, compromisos vivos,
+datos protegidos y configuración personal no se incorporan al producto. Se
+preserva la exclusión de gtd-felix: ninguno de estos gemelos requiere ni modifica
+ese servicio para existir o demostrar su función.
+
+#### Capacidades y fuentes que la realización debe asegurar
+
+El alcance institucional ampliado exige acceso pertinente y conservación de
+contexto, no una promesa de acceso universal. La investigación del adaptador HSC
+contrastó su README, contrato y despacho de comandos; no ejecutó consultas a
+pacientes ni comprobó credenciales, disponibilidad viva o escrituras externas.
+
+| Necesidad | Base contrastada | Condición del contrato propuesto |
+|---|---|---|
+| Antecedentes y decisiones de los cargos | Cuaderno hd-dt y cuaderno tm-hsc | Abrir el asunto propietario, conservar su corte y no copiar todo el repositorio al cuerpo del agente |
+| Hechos HSC/HODOM | hsc-agent-cli ofrece `health`, `find`, `catalog`, `get` y `bundle`; la adquisición es de solo lectura | Consultar el manual canónico y los recursos necesarios; no convertir una sonda disponible en cobertura completa ni una presencia censal en decisión clínica |
+| Programación y entregas HODOM | Fuentes expuestas conservan fecha, identidad y límites de asociación; algunas se solicitan aparte del bundle | No deducir ausencia del paciente ni actividad realizada de una falta de coincidencia, ni asumir que un bundle contiene toda fuente |
+| Agenda, oferta y rendición de Telemedicina | Cuaderno con correspondencia y conciliaciones fechadas; no se comprobó una capacidad de escritura para esos sistemas | Recuperar o conciliar los insumos autorizados; gestionar por una superficie comprobada cuando exista. No inventar comandos de agenda/REM en hsc-agent-cli |
+| Correo y coordinación externa | La fuente puede conservar un texto o un envío previo; eso no acredita una herramienta disponible en la nueva sesión | Distinguir preparar, enviar, recibir respuesta y completar el acuerdo; ejecutar efectos sólo por un medio y mandato efectivos |
+| Reporte HODOM y continuidad | La skill actual ejecuta un corte pedido y excluye crear timers o reintentos | El gemelo puede solicitar un reporte pertinente; no obtiene vigilancia persistente por requerir esa skill |
+| Criterio de Félix y contexto personal | Instrucciones y decisiones explícitas de cada rol | No requerir el perfil privado de desarrollo para ejercer una jefatura sanitaria; contexto técnico personal sólo si la tarea lo necesita y permite |
+
+Evidencia del adaptador:
+[contrato factual](/home/felix/projects/hsc-agent-cli/README.md:3),
+[despacho de comandos](/home/felix/projects/hsc-agent-cli/cmd/hsc-agent-cli/runner.go:160),
+[ayuda de adquisición](/home/felix/projects/hsc-agent-cli/cmd/hsc-agent-cli/help.go:96).
+La frontera del reporte se conserva en
+[su fuente](/home/felix/kora-pneuma/products/salud/reporte-diario-hodom/content.md:28).
+El agente HODOM actual exige también un perfil privado de desarrollo en
+[su manifiesto](/home/felix/kora-pneuma/products/salud/director-tecnico-hodom/object.yaml:21);
+la nueva misión no justifica mantenerlo como prerrequisito universal. No se leyó
+ni se modificó ese contenido privado para esta revisión.
+
+Las rutas locales documentadas son ubicaciones observadas de los cuadernos, no
+una exigencia de conservar esos nombres en todo host. La realización debe
+localizar la fuente autorizada del rol y comprobar su disponibilidad en el
+contexto de destino. tm-hsc es utilizable como cuaderno aunque en la ruta
+examinada no se encontró metadata Git; no se crea un repositorio como condición
+para asistir a su jefatura.
+
+#### Investigación por repositorio incorporada a esta revisión
+
+Las dos investigaciones de rol se delegaron a **gpt-5.6-luna con razonamiento
+máximo**, según la instrucción de Félix. La integración conserva sus hallazgos
+materiales y revisa sus recomendaciones con el mismo criterio aplicado al
+producto: ninguna plantilla, estado o cautela de un informe se vuelve una regla
+universal por haber sido propuesta por un investigador.
+
+| Frente | Fuentes y profundidad | Consecuencia en el diseño |
+|---|---|---|
+| HODOM | Marco del rol completo; partes pertinentes del mapa de roles, decisiones, operación, normativa, logística, fuentes y gestiones de marzo-agosto; informe con nueve tareas y referencias localizadas | Dirección de capacidad y continuidad, coordinación sin absorber oficios, disenso técnico, sucesión documental y conocimiento de sus límites |
+| Telemedicina | Manual 2023; perfiles 2024 con contraste visual de páginas 1–7; ficha/análisis para el resto; candidato no vigente; historial UNITEL, producción y minutas SSÑ/HD; informe con diez tareas documentadas | Conducción médico-operacional, gestión de oferta/red, conciliación por unidades y cohortes, corrección de atribuciones y cierre según el asunto |
+| Herramientas y composición | Contrato, README, ayuda en código y despacho de hsc-agent-cli; manifiestos KORA y frontera del reporte HODOM | Lectura factual separada de escritura; recursos por tarea; retirada propuesta de dependencias personales de desarrollo sin función para el cargo |
+
+Los recibos de investigación están en
+`/tmp/kora-role-revision-20260913/hodom-research.md` y
+`/tmp/kora-role-revision-20260913/telemedicine-research.md`. Son evidencia local
+temporal, no instrucciones que deban instalarse completas. Los cuadernos de
+ambos cargos, su conocimiento y las herramientas se examinaron en lectura; no se
+revalidaron fuentes operacionales vivas, actos institucionales ni conducta de
+agentes nuevos. La ausencia documental de un acto se limita al corpus examinado.
+
 ### Agentes
 
 | Agente | Responsabilidad | Entradas actuales reunidas | Métodos disponibles |
@@ -243,7 +532,8 @@ biblioteca en unas pocas enciclopedias que deban cargarse completas.
 | `urgenciologo` | Médico de urgencias | `urgenciologo` | `emergency-care` |
 | `medico-hospitalista` | Médico de hospitalización y domicilio | `medico-hospitalista` | `inpatient-care`, `home-care` |
 | `salubrista` | Analista de salud pública y redes | `salubrista` | `analyze-care-networks`, `evaluate-population-health`, `design-health-interoperability`, `assess-health-security` |
-| `director-tecnico-hodom` | Director técnico e integrador HODOM | `director-tecnico-hodom` | `direct-hodom`, `analyze-care-networks` |
+| `director-tecnico-hodom` | Gemelo digital de Félix en la Dirección Técnica de HODOM-HSC | `director-tecnico-hodom` | `direct-hodom`, `analyze-care-networks`, `evaluate-population-health`, `prepare-hodom-report` |
+| `jefe-telemedicina-hsc` | Gemelo digital de Félix en la jefatura de la Unidad de Telemedicina HSC | Nueva entrada solicitada por Félix | `direct-telemedicine`, `analyze-care-networks`, `evaluate-population-health`, `design-health-interoperability`, `assess-health-security` |
 
 La absorción propuesta de opm-specialist conserva una entrada técnica directa al
 método OPM y sus casos expertos. Allan aporta diseño organizacional mediante un
@@ -283,7 +573,8 @@ necesidad, sin concatenar todos sus modos.
 | `analyze-care-networks` | Unidad/red y demanda → capacidad, flujo, escenarios, brechas y apoyo a decisiones o implementación según encargo; recursos únicos para dimensionamiento, tablero, policy brief y plan de implementación, accesibles también desde evaluación. Integración hospital/domicilio sin decidir pacientes por agregado. |
 | `evaluate-population-health` | Problema/población/datos → evaluación de calidad o vigilancia con modos separados: denominadores, sesgo y estándar para evaluación; señal, umbral y escalamiento para vigilancia. Carga sólo el procedimiento del modo; comparte recursos de apoyo decisional con analyze-care-networks, aplica FIRS cuando aporta inferencia y admite escala meso. No confunde señal con brote ni certifica cumplimiento por benchmark. |
 | `prepare-hodom-report` | Corte censal y cohortes definidas → reporte accionable con cobertura, población y limitaciones; no confundir presencia UE con hospitalización. |
-| `direct-hodom` | Mandato y dependencias → decisión técnica, incremento, evidencia e integración; aceptación institucional y práctica clínica mantienen su autoridad. |
+| `direct-hodom` | Responsabilidad del DT, situación de la unidad y mandato delegado → criterio directivo, decisión o gestión autorizada, coordinación y seguimiento hasta resultado; integra cartera, capacidad, equipo, continuidad, calidad, recursos y rendición. Software sólo cuando sirve al resultado institucional. |
+| `direct-telemedicine` | Responsabilidad de jefatura, demanda/oferta y asunto → decisión o gestión autorizada de acceso, agenda, coordinación de red, producción, continuidad, calidad y contingencias; conserva responsables, fuentes y cierre efectivo sin confundir cita, prestación, respuesta y rendición. |
 | `design-health-interoperability` | Intercambio y perfil → modelo y validación por versión/elemento; terminología, transporte y aprobación distintos. |
 | `assess-health-security` | Activo/incidente/sujeto/fecha → evaluación o respuesta con obligación aplicable, evidencia primaria y acciones dentro del mandato. |
 | `clarify-commitments` | Captura, bloqueo o revisión → aclaración, organización, elección, waiting-for, revisión de proyectos/compromisos y continuidad fiel a la intención; guardar o programar exige capacidad real, sin psicologización automática ni integración implícita con gtd-felix. |
@@ -298,9 +589,12 @@ implementación comparten sólo los recursos aplicables a su modo.
 
 ### Conocimiento: organización por obra, tarea y autoridad
 
-Estas doce familias orientan consulta y recomposición. No crean nuevos tipos,
+Estas trece familias orientan consulta y recomposición. No crean nuevos tipos,
 directorios obligatorios ni una cuota de objetos. Los 463 tratamientos
-individuales preservan destinos más específicos dentro de ellas.
+individuales conservan el triaje de la biblioteca. Esta revisión amplía los
+consumidores y la navegación: Telemedicina recibe una entrada propia y HODOM
+pasa a conducción integral de la unidad. No se repitió el examen de los 463
+cuerpos ni se promovieron los cuadernos externos a conocimiento aprobado.
 
 | Familia | Tratamiento propuesto | Pérdida que debe impedirse |
 |---|---|---|
@@ -312,6 +606,7 @@ individuales preservan destinos más específicos dentro de ellas.
 | Evidencia clínica y cuidados | Obra/edición, capítulos citables y consulta por problema | Perder población, jurisdicción, excepciones o fuerza de recomendación |
 | Protocolos institucionales HSC | Acto y edición propios, fuente controlada, condiciones de vigencia y acceso al original | Uniformar contradicciones o completar páginas faltantes |
 | Hospitalización integrada, redes y HODOM | Síntesis comparables de modelos; decisiones y cortes HSC identificados | Confundir demanda, capacidad, norma, modelo ideal y práctica observada |
+| Telemedicina y jefatura UNITEL | Referencias por modalidad y tarea; modelos de gestión, documentos de rol y cortes operacionales con su estatus; decisiones y asuntos vivos en el cuaderno propietario | Reducir telemedicina a informática, convertir modelos propuestos en autoridad o confundir programación, atención, respuesta y rendición |
 | Salud pública y apoyo decisional | Recursos por problema: vigilancia, evaluación, dimensionamiento, implementación | Convertir señal en evento confirmado, benchmark en obligación o agregado en decisión individual |
 | Informática sanitaria y seguridad | Estándar/perfil/elemento/versión, sujeto y fecha de obligaciones | Universalizar bindings o mezclar obligación vigente con norma futura |
 | GORE y transformación digital | Consulta por materia y ejercicio; distinguir acto, guía, propuesta, modelo y dato fechado | Dar autoridad jurídica a SQL/OWL o mezclar reglas de años diferentes |
@@ -340,6 +635,10 @@ para justificar su existencia ni se las eliminará por esa métrica.
 Cada fila conserva un destino funcional. No equivale a autorización ejecutada de
 retirar la identidad. Los 17 archivados permanecen disponibles como historia;
 gtd-felix y gtd-operations no forman parte de esta tabla.
+`jefe-telemedicina-hsc` y `direct-telemedicine` son incorporaciones solicitadas,
+sin una identidad activa anterior que retirar. `direct-hodom` se reescribe para
+conducción de la unidad; la ejecución de software usa los métodos de ingeniería
+ya propuestos, sin perder esa capacidad ni convertirla en misión del cargo.
 
 | Producto actual | Tipo | Destino propuesto |
 |---|---|---|
@@ -419,8 +718,11 @@ repositorio.
 2. **Construir los contratos por función.** Autoría de las candidatas de ingeniería,
    diseño, modelado, claridad y salud con métodos requeridos explícitos. Integrar
    los recursos útiles y las correcciones de alcance; preservar rutas directas,
-   modos y autoridad independiente. Los tres dominios sanitarios y la dirección
-   técnica mantienen responsabilidades distintas.
+   modos y autoridad independiente. Los tres oficios sanitarios y los dos gemelos
+   institucionales mantienen responsabilidades distintas. En HODOM y Telemedicina, elegir primero
+   una tarea representativa de conducción de la unidad y una excepción de
+   autoridad; el éxito no exige construir software. La continuidad se recupera
+   desde el cuaderno de cada rol, preservando la exclusión GTD.
 3. **Recomponer el conocimiento que consume cada lote.** Elegir la versión por
    contenido y procedencia, comparar condiciones, tablas, excepciones y pérdidas
    con el original disponible. Separar síntesis de fuente sin perder citas.
@@ -474,6 +776,20 @@ nueva**. Se eligen por las funciones o defectos que discriminan.
 | Norma según sujeto, materia y fecha; umbral presentado como universal | Identifica fuente primaria y alcance; no sustituye una cifra universal por otra |
 | Fuente extranjera, páginas faltantes o contradicción interna | Conserva jurisdicción, laguna y conflicto; no completa ni adjudica por conveniencia editorial |
 | Señal de vigilancia, calidad sin meta y plan de capacidad de una unidad | Tres salidas pertinentes; ausencia de meta no impide todo análisis; preparar notificación no equivale a enviarla |
+| HODOM pierde capacidad de transporte o cobertura para una actividad prevista | Reconstruye capacidad y compromisos, propone o ejecuta la gestión autorizada y conserva continuidad; no responde con un backlog de software ni supone contratación por la disponibilidad de personal |
+| Jefatura debe resolver oferta de Telemedicina ante ausencia de especialista | Distingue agenda, disponibilidad y necesidad; prepara o realiza coordinación autorizada, con contraparte y cierre de los pendientes pertinentes |
+| Producción de Telemedicina mezcla registros, solicitudes y prestaciones | Concilia períodos y grupos, explica diferencias y no fabrica actividad o aceptación de rendición; usa datos sintéticos |
+| Félix ya decidió una prioridad o autorizó un envío delimitado | Usa esa decisión; completa el efecto autorizado si dispone de capacidad, sin pedir la misma autorización ni informar envío a partir de un borrador |
+| Una nueva cartera o compromiso exige atribución no acreditada | Prepara propuesta fundada y aísla la decisión pendiente, sin imponer su aprobación ni detener el resto de la gestión |
+| El mismo asunto requiere actuación desde ambos cargos | Distingue las dos responsabilidades, el intercambio autorizado y la aceptación correspondiente; no presume transferencia por identidad común del titular |
+| Referencia institucional enumera visitas domiciliarias; se pide afirmar cartera HODOM autorizada | Distingue prestación, cartera y acto aplicable; consulta la fuente capaz de acreditar la afirmación sin inferirla de la semejanza del nombre |
+| Documento antiguo deja una decisión abierta y Félix aporta una decisión posterior válida | Actualiza el asunto en su ámbito y conserva la procedencia; no reabre por defecto lo resuelto ni extiende el acto a otros planos |
+| Recomendación técnica de Félix difiere de la decisión institucional documentada | Conserva ambas, explica consecuencias y propone el siguiente movimiento; no atribuye aceptación ni borra el disenso |
+| Una demanda fue atribuida a un proyecto y la fuente posterior la corrige a una estrategia del Servicio | Incorpora la corrección, conserva el antecedente separado y no asigna todas las acciones al especialista, supervisora o jefe por defecto |
+| Se solicita una tasa con reportes que pueden representar cohortes distintas | Comprueba población, período y unidad antes de calcular; si coinciden, calcula; si no se puede establecer, explicita el límite y la siguiente comprobación útil |
+| El encargo pide enviar una solicitud de agenda y existe autorización de envío | Completa el efecto por la herramienta real y entrega su recibo; no exige esperar la atención clínica para cerrar el envío ni llama atención a una agenda habilitada |
+| Se solicita una intervención breve para una reunión de Hospital Digital | Entrega una posición y petición concreta sustentadas en necesidad/capacidad local; no transforma una propuesta de piloto en inicio aprobado |
+| Retomar un compromiso en otra sesión sin memoria personal ni gtd-felix | Recupera el estado desde el cuaderno autorizado o declara exactamente qué falta; no inventa memoria, recordatorio ni cierre |
 | Fusión de capítulos y borradores con el mismo ID | Conserva las distinciones citables; revisión explícita del contenido elegido y acceso a versiones previas |
 
 La colección estará renovada cuando los contratos admitidos preserven las
