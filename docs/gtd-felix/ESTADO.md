@@ -99,10 +99,28 @@ La guía y el estado anteriores se conservaron en
 Las rutas históricas de GUIA/ESTADO apuntan a estos dos archivos versionados,
 sin otra copia activa. El estado personal detallado sigue en el servicio.
 
-## Siguiente trabajo autorizado
+## Diseño y próximo incremento
 
-Tras publicar esta línea de base: decidir estructura de datos, contratos de UX y
-control, comparar alternativas y definir una secuencia de incrementos verificables
-hasta C6 en GUIA.md. No empezar otra campaña de parches de síntomas ni nuevas
-inferencias del bot para este trabajo de diseño. No se ha cambiado el alcance
-original ni diferido G7 por omisión.
+Línea de base documental `9541abf` publicada antes del rediseño. GUIA.md contiene
+ahora la decisión de evolución selectiva, modelo de datos, DDL de referencia,
+contratos de UX/control, migración y plan I1–I5. Es un **diseño decidido**, no una
+migración aplicada ni otra versión instalada. El runtime de este corte sigue en
+`01086a3`; no hubo inferencias ni cambios de configuración/servicios en este encargo.
+
+Siguiente implementación: **I1 · ciclo e intento explícitos**, empezando por el
+ensayo de extracción/migración sobre la exportación privada. Entrada: código de
+base y contratos de GUIA §6–7. Salida: presupuesto causal, admisión inmutable,
+consulta acotada y recuperación sin pérdida de IDs, autoría o efectos. No iniciar
+I2–I5 como proyectos independientes ni reescribir todos los módulos de una vez.
+
+Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
+actual en SQLite 3.45.1 en memoria, con datos sintéticos. Incluye FK, identidad de
+fuentes, material/evaluación del mismo asunto, causa única, plaza nativa retenida
+ante incertidumbre y deduplicación de entregas. Recibo y script reproducible en
+la carpeta privada de este corte: `design-validation.json`, `validate-design.py`.
+DDL SHA-256 `77b1a446bdc9a1f5824cc67c0d3070b9fb6001118ef2141f33a57a01782a8edc`.
+
+Esto **no acredita** migración real, invariantes que corresponden al servicio,
+rendimiento, conducta LLM ni aceptación. Cada incremento requiere sus pruebas y
+ensayo de realización según GUIA. La comprobación KORA de la línea de base pasó
+sin incidencias (523 activos, 18 archivados); no sustituye validación del producto.
