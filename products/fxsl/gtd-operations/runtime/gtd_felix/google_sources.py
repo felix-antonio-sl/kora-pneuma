@@ -124,6 +124,8 @@ def _priority_token(priority, phase, token):
 
 
 def _priority_position(priority, token):
+    if 'topics_entry_token' in priority and token == priority['topics_entry_token']:
+        return 'topics', {'index': 0, 'cursors': [None] * len(priority['terms'])}
     if token == priority['entry_token']:
         return 'priority', None
     _require(isinstance(token, str) and token.startswith(_PRIORITY_TOKEN_PREFIX), 'invalid_priority_page_state')
@@ -132,10 +134,33 @@ def _priority_position(priority, token):
     except (ValueError, binascii.Error, UnicodeError):
         raise SourceError('invalid_priority_page_state') from None
     _require(isinstance(data, dict) and set(data) == {'generation', 'phase', 'google_token'}
-        and data['generation'] == priority['generation'] and data['phase'] in {'priority', 'global'}
-        and (data['google_token'] is None or _string(data['google_token'])), 'invalid_priority_page_state')
+        and data['generation'] == priority['generation'] and data['phase'] in {'priority', 'global', 'topics'},
+        'invalid_priority_page_state')
+    position = data['google_token']
+    if data['phase'] == 'topics':
+        _require('topics_entry_token' in priority and isinstance(position, dict)
+            and set(position) == {'index', 'cursors'} and type(position['index']) is int
+            and isinstance(position['cursors'], list) and len(position['cursors']) == len(priority['terms'])
+            and 0 <= position['index'] < len(position['cursors'])
+            and all(value is None or value is False or _string(value) for value in position['cursors'])
+            and position['cursors'][position['index']] is not False, 'invalid_priority_page_state')
+    else:
+        _require(position is None or _string(position), 'invalid_priority_page_state')
     _require(_priority_token(priority, data['phase'], data['google_token']) == token, 'invalid_priority_page_state')
     return data['phase'], data['google_token']
+
+
+def _next_topic(priority, position, next_token):
+    """Page advancement is encoded in the committed page, never mutable side state."""
+    position = copy.deepcopy(position)
+    current = position['index']
+    position['cursors'][current] = False if next_token is None else next_token
+    for distance in range(1, len(position['cursors']) + 1):
+        index = (current + distance) % len(position['cursors'])
+        if position['cursors'][index] is not False:
+            position['index'] = index
+            return _priority_token(priority, 'topics', position)
+    return _priority_token(priority, 'global', priority['entry_token'])
 
 
 class GoogleSources:
@@ -152,7 +177,7 @@ class GoogleSources:
     def _source(self, source_id):
         _require(source_id in self.config and _string(source_id), 'unknown_source')
         cfg = self.config[source_id]
-        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit', 'since_epoch', 'priority_terms'}
+        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit', 'since_epoch', 'priority_terms', 'priority_strategy'}
         _require(isinstance(cfg, dict) and not set(cfg) - allowed, 'unsupported_source_filter')
         _require(cfg.get('provider') in {'gmail', 'calendar'} and _string(cfg.get('account')), 'explicit_account_required')
         selective = cfg['provider'] == 'gmail' and cfg.get('scope') == 'selective_since'
@@ -161,6 +186,9 @@ class GoogleSources:
         if 'priority_terms' in cfg:
             _require(selective, 'priority_requires_selective_scope')
             priority_query(cfg['priority_terms'])
+        if 'priority_strategy' in cfg:
+            _require(selective and bool(cfg.get('priority_terms'))
+                and cfg['priority_strategy'] in ('combined', 'round_robin'), 'invalid_priority_strategy')
         calendar = cfg.get('calendar_id')
         _require(cfg['provider'] != 'calendar' or _string(calendar) and calendar != 'primary', 'concrete_calendar_required')
         _require(cfg['provider'] != 'gmail' or calendar is None, 'gmail_calendar_mismatch')
@@ -201,14 +229,19 @@ class GoogleSources:
         pending = (adapter or {}).get('pending_reads', {})
         priority = (adapter or {}).get('priority')
         phase = None
+        position = None
         if priority and state and adapter.get('cycle_id') in state['cycles']:
             cycle = state['cycles'][adapter['cycle_id']]
-            phase = 'complete' if cycle['status'] == 'complete' else _priority_position(priority, cycle['next_page_token'])[0]
+            if cycle['status'] == 'complete':
+                phase = 'complete'
+            else:
+                phase, position = _priority_position(priority, cycle['next_page_token'])
         health = 'degraded' if pending or (adapter or {}).get('error') or state and state['coverage'] in {'degraded','rebuild_required'} else 'complete' if state and state['coverage'] == 'complete' and state['projection'] == 'current' else 'in_progress'
         return {'partition': partition, 'effective_parameters': params, 'health': health,
             'originals_complete': not pending and bool(state) and state['coverage'] == 'complete',
             'pending_reads': copy.deepcopy(pending),
             'priority': {'phase': phase, 'terms': copy.deepcopy(priority['terms']) if priority else [],
+                'next_term': priority['terms'][position['index']] if phase == 'topics' else None,
                 'global_backfill_pending': bool(priority and phase != 'complete')},
             'coverage_contract': {'scope': 'selective_since_including_spam_trash' if cfg.get('scope') == 'selective_since' else 'whole_mailbox_including_spam_trash' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions',
                 'interval': {'since_epoch': cfg['since_epoch'], 'timezone': 'America/Santiago'} if cfg.get('scope') == 'selective_since' else None, 'recurrence_expanded': False, 'attachments_interpreted': False,
@@ -393,6 +426,9 @@ class GoogleSources:
         phase = None
         if priority:
             phase, token = _priority_position(priority, token)
+        topic_position = token if phase == 'topics' else None
+        if topic_position is not None:
+            token = topic_position['cursors'][topic_position['index']]
         query = {'maxResults': params['maxResults']}
         if token is not None:
             query['pageToken'] = token
@@ -405,7 +441,8 @@ class GoogleSources:
         else:
             query['includeSpamTrash'] = 'true'
             if 'q' in params:
-                query['q'] = priority_query(priority['terms']) if phase == 'priority' else params['q']
+                query['q'] = (priority_query([priority['terms'][topic_position['index']]]) if phase == 'topics'
+                    else priority_query(priority['terms']) if phase == 'priority' else params['q'])
             status, body = await self._get(cfg, base + '/messages', query)
         _require(status == 200, 'http_' + str(status))
         changed, deleted = {}, {}
@@ -459,7 +496,9 @@ class GoogleSources:
         next_token = body.get('nextPageToken')
         _require(next_token is None or _string(next_token), 'invalid_next_page_token')
         if priority:
-            if phase == 'priority':
+            if phase == 'topics':
+                next_token = _next_topic(priority, topic_position, next_token)
+            elif phase == 'priority':
                 next_token = (_priority_token(priority, 'priority', next_token) if next_token is not None
                     else _priority_token(priority, 'global', priority['entry_token']))
             elif next_token is not None:
@@ -512,6 +551,8 @@ class GoogleSources:
         cycle_id = adapter.get('cycle_id') if adapter and adapter.get('active') else None
         if cycle_id and adapter.get('priority'):
             _require(cfg.get('priority_terms', []) == adapter['priority']['terms'], 'priority_terms_changed_active_cycle')
+            _require('topics_entry_token' not in adapter['priority']
+                or cfg.get('priority_strategy', 'combined') == 'round_robin', 'priority_strategy_changed_active_cycle')
         try:
             _require(cfg.get('scope') != 'selective_since' or callable(self.evaluator), 'evaluator_unavailable')
             _require(getattr(self.transport, 'authenticated_account', None) == cfg['account'], 'credential_account_mismatch')
@@ -560,8 +601,16 @@ class GoogleSources:
                     'entry_token': cycle['next_page_token'],
                     'generation': _hash([cycle_id, cycle['next_page_token'], cfg['priority_terms']])}
                 self._save(partition, adapter)  # freeze terms/resume point BEFORE the first priority read
+            priority = adapter.get('priority')
+            if (priority and cfg.get('priority_strategy') == 'round_robin'
+                    and 'topics_entry_token' not in priority
+                    and _priority_position(priority, cycle['next_page_token'])[0] == 'priority'):
+                # Migrate an unfinished combined search without changing partition,
+                # cycle, global resume point, or previously evaluated revisions.
+                priority['topics_entry_token'] = cycle['next_page_token']
+                self._save(partition, adapter)
             priority_active = bool(adapter.get('priority') and
-                _priority_position(adapter['priority'], cycle['next_page_token'])[0] == 'priority')
+                _priority_position(adapter['priority'], cycle['next_page_token'])[0] in {'priority', 'topics'})
             retried = []
             if cfg['provider'] == 'gmail' and not priority_active:
                 pending = adapter.get('pending_reads', {})

@@ -1071,6 +1071,27 @@ pertinencia: se aplica el mismo evaluador. Durante un ciclo activo los términos
 quedan fijados; cambiarlos o desactivarlos devuelve `priority_terms_changed_active_cycle`
 sin modificar el cursor. Una revisión incremental posterior no repite la prioridad.
 
+`priority_strategy="round_robin"` alterna una página por término antes de volver
+al primero, omitiendo términos ya agotados. Expone fase `topics` y `next_term`;
+conserva cada cursor en la página durable, también tras interrupción. Evita que
+muchos correos recientes de un frente posterguen indefinidamente los otros. Al
+agotarse todos los términos retoma el cursor global conservado; la cobertura
+continúa parcial hasta terminar ese recorrido y resolver lecturas pendientes.
+Una búsqueda combinada activa puede pasar a esta estrategia sin cambiar fuente,
+ciclo, fecha ni cursor global. Recorre los términos desde su primera página y
+reutiliza decisiones sobre revisiones iguales, sin nuevas inferencias por ellas.
+La estrategia anterior `combined` permanece como default de compatibilidad.
+Una vez iniciada la rotación, cambiarla durante el ciclo se rechaza sin avanzar
+el cursor. Versiones previas del runtime no interpretan los cursores de rotación:
+para regresar a ellas se requiere el checkpoint coherente anterior, no sólo
+rollback de archivos.
+
+En un encargo con varios frentes, utiliza `next_term` para avanzar por los que
+aún necesitan antecedentes, dentro del tiempo disponible. Una tanda con cero
+clasificaciones nuevas puede haber reutilizado decisiones previas o agotado un
+término; no significa ausencia de antecedentes en los demás. No repitas lecturas
+de una plantilla sin cambios para suplir un frente todavía no consultado.
+
 
 ### Adjuntos de fuentes Gmail seleccionadas
 

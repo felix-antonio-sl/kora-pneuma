@@ -429,3 +429,82 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         final = await self.adapter.synchronize('mail')
         self.assertEqual('40', final['sync']['cursor'])
         self.assertEqual('lost_rebuilt_scope', final['coverage_contract']['history_continuity'])
+
+    def topic_page(self, term, messages, *, token=None, next_token=None):
+        from gtd_felix.google_sources import priority_query
+        query = {'maxResults': 2, 'includeSpamTrash': 'true', 'q': priority_query([term])}
+        if token:
+            query['pageToken'] = token
+        body = {'messages': [{'id': identity} for identity in messages]}
+        if next_token:
+            body['nextPageToken'] = next_token
+        self.transport.add(fixtures.GMAIL + '/messages', query, body)
+        for identity in messages:
+            self.transport.add(fixtures.GMAIL + '/messages/' + identity, {'format': 'raw'},
+                fixtures.raw_message(identity, labels=['CATEGORY_PROMOTIONS']))
+
+    async def test_topic_rotation_reaches_second_front_before_first_is_exhausted(self):
+        self.enable_priority(['Telemedicina', 'HODOM'])
+        self.config['mail']['priority_strategy'] = 'round_robin'
+        self.restart(); self.profile()
+        self.topic_page('Telemedicina', ['tm'], next_token='tm-two')
+        first = await self.adapter.synchronize('mail')
+        self.assertEqual('topics', first['priority']['phase'])
+        self.assertEqual('HODOM', first['priority']['next_term'])
+        self.assertFalse(first['sync']['cursor_valid'])
+        self.restart(); self.topic_page('HODOM', ['hd'])
+        await self.adapter.synchronize('mail')
+        self.restart(); self.topic_page('Telemedicina', ['tm2'], token='tm-two')
+        third = await self.adapter.synchronize('mail')
+        self.assertEqual('global', third['priority']['phase'])
+        self.assertEqual(['tm', 'hd', 'tm2'], self.evaluated)
+        self.page(['tm', 'hd'])
+        last = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', last['health'])
+        self.assertEqual(['tm', 'hd', 'tm2'], self.evaluated)
+
+    async def test_topic_rotation_migrates_combined_cycle_preserving_global_resume(self):
+        self.config['mail']['max_pages'] = 1
+        self.restart(); self.profile(); self.page(['first'], next_token='global-two')
+        initial = await self.adapter.synchronize('mail')
+        self.enable_priority(['Telemedicina', 'HODOM'])
+        self.priority_page(['tm'], next_token='combined-two')
+        combined = await self.adapter.synchronize('mail')
+        self.config['mail']['priority_strategy'] = 'round_robin'; self.restart()
+        self.topic_page('Telemedicina', ['tm'])
+        await self.adapter.synchronize('mail')
+        self.restart(); self.topic_page('HODOM', ['hd'])
+        topics = await self.adapter.synchronize('mail')
+        self.assertEqual(initial['partition'], topics['partition'])
+        self.assertEqual(initial['adapter']['cycle_id'], topics['adapter']['cycle_id'])
+        self.assertEqual('global-two', topics['adapter']['priority']['entry_token'])
+        self.assertEqual(combined['sync']['cycles'][combined['adapter']['cycle_id']]['next_page_token'],
+                         topics['adapter']['priority']['topics_entry_token'])
+        self.page(['last'], token='global-two')
+        final = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', final['health'])
+        self.assertEqual(['first', 'tm', 'hd', 'last'], self.evaluated)
+
+    async def test_topic_rotation_crash_after_page_commit_and_strategy_change_guard(self):
+        from unittest.mock import patch
+        from gtd_felix.google_sources import SourceError
+        self.enable_priority(['Telemedicina', 'HODOM'])
+        self.config['mail']['priority_strategy'] = 'round_robin'
+        self.restart(); self.profile(); self.topic_page('Telemedicina', ['tm'], next_token='tm-two')
+        apply_page = self.adapter.sync.apply_page
+        def crash(*args):
+            apply_page(*args)
+            raise SystemExit('synthetic-crash')
+        with patch.object(self.adapter.sync, 'apply_page', side_effect=crash):
+            with self.assertRaises(SystemExit):
+                await self.adapter.synchronize('mail')
+        before = self.adapter.inspect('mail')['sync']
+        self.config['mail']['priority_strategy'] = 'combined'; self.restart()
+        with self.assertRaisesRegex(SourceError, '^priority_strategy_changed_active_cycle$'):
+            await self.adapter.synchronize('mail')
+        self.assertEqual(before, self.adapter.inspect('mail')['sync'])
+        self.config['mail']['priority_strategy'] = 'round_robin'; self.restart()
+        self.topic_page('HODOM', ['hd'])
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('Telemedicina', result['priority']['next_term'])
+        self.assertEqual(['tm', 'hd'], self.evaluated)
