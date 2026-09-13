@@ -153,6 +153,14 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn('PRIVATE_CREDENTIAL', repr(self.context.process.kwargs))
         self.assertEqual('PRIVATE_CREDENTIAL', self.context.envelope['credentials']['api_key'])
         self.assert_closed()
+
+    async def test_luna_parent_keeps_exact_subscription_route(self):
+        self.parent.model = 'gpt-5.6-luna'
+        result = await self.call()
+        self.assertEqual(result['classification'], 'selected')
+        self.assertEqual(self.context.envelope['credentials']['model'], 'gpt-5.6-luna')
+        self.assertEqual(self.context.envelope['credentials']['provider'], 'openai-codex')
+        self.assert_closed()
     async def test_provider_mismatch_before_child_or_validation(self):
         self.parent.model = 'other'
         with self.assertRaisesRegex(ValueError, '^provider_mismatch$'):

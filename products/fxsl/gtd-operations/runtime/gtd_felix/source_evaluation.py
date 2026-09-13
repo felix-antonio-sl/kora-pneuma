@@ -72,7 +72,7 @@ class SourceEvaluation:
         if (parsed.scheme != 'http' or not ipaddress.ip_address(parsed.hostname).is_loopback
                 or parsed.username or parsed.password or parsed.query or parsed.fragment):
             raise ValueError('local_bridge_required')
-        if route.get('provider') != 'openai-codex' or route.get('model') != 'gpt-6-astra':
+        if route.get('provider') != 'openai-codex' or route.get('model') not in {'gpt-6-astra', 'gpt-5.6-luna'}:
             raise ValueError('configured_subscription_required')
         token = os.environ.get(route.get('api_key_env', ''))
         if not token:

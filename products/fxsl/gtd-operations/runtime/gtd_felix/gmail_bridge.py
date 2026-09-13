@@ -89,8 +89,8 @@ def validate_payload(payload):
 def route_credentials(parent):
     result = {key: getattr(parent, key, None)
               for key in ("provider", "model", "api_mode", "api_key", "base_url")}
-    if (result["provider"], result["model"], result["api_mode"]) != (
-            "openai-codex", "gpt-6-astra", "codex_responses"):
+    if (result["provider"] != "openai-codex" or result["api_mode"] != "codex_responses"
+            or result["model"] not in {"gpt-6-astra", "gpt-5.6-luna"}):
         raise ValueError("provider_mismatch")
     if not all(isinstance(result[key], str) and result[key] for key in ("api_key", "base_url")):
         raise ValueError("provider_mismatch")
@@ -159,7 +159,7 @@ def _deny_writes(event, args):
 def _infer(credentials, text):
     _disable_child_extensions()
     from run_agent import AIAgent
-    agent = AIAgent(**credentials, reasoning_config={"effort": "low"},
+    agent = AIAgent(**credentials, reasoning_config={"effort": "max" if credentials['model'] == 'gpt-5.6-luna' else "low"},
                     enabled_toolsets=[], session_db=None, save_trajectories=False,
                     skip_memory=True, skip_background_review=True, skip_context_files=True,
                     max_iterations=1, max_tokens=512, quiet_mode=True,
