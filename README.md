@@ -51,6 +51,12 @@ acredita fidelidad del conocimiento, utilidad diferencial de un agente ni
 conducta futura. Un recibo `current` compara la realización; el conocimiento
 consultado por una referencia viva puede cambiar sin reinstalar el agente.
 
+El [estado y plan de productos](docs/estado-y-plan-productos.md) fija el corte
+vigente del 2026-09-14: contratos reconstruidos, integración personal pendiente
+y utilidad parcialmente demostrada. Los cierres por lote resumidos a
+continuación conservan su alcance histórico; no certifican el estado instalado
+actual de toda la colección.
+
 El saneamiento de la maquinaria tiene sus recorridos comprobados con casos
 sintéticos; ese resultado no valida los contenidos, métodos o utilidad de los
 productos. La [propuesta de reconstrucción](docs/propuesta-refactorizacion-productos.md)
@@ -110,8 +116,8 @@ documentada, phi-boundary), con conducta acreditada en fixtures sintéticos
 Sol/high en ambos destinos (16/16; Hermes research con timeout de transporte
 documentado) y 4 KB Jobs aprobados como lente consultable. Instalaciones
 personales `current` sin cambios ni recuperación pendiente. La colección queda
-cerrada; estos lotes no validan utilidad diferencial, eficacia clínica ni
-biblioteca completa.
+admitida por lotes, con reconciliación Hermes y evaluación de utilidad pendientes;
+estos lotes no validan utilidad diferencial, eficacia clínica ni biblioteca completa.
 
 - [Guía de operación y comprobaciones](docs/operacion.md).
 - [Instrucciones para trabajar en este repositorio](AGENTS.md).

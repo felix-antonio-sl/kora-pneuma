@@ -1,12 +1,15 @@
 # Reconstrucción de productos KORA
 
-Fecha: 2026-09-13. **Arquitectura candidata; reconstrucción en ejecución.**
+Fecha: 2026-09-13. **Antecedente de diseño y evidencia de la reconstrucción.**
+El [estado y plan de productos](estado-y-plan-productos.md) gobierna la
+continuación desde el corte 2026-09-14. Los dictámenes siguientes corresponden
+a sus lotes y fechas; no son consultas del estado instalado actual.
 Base de maquinaria: `695e058f105ad597cd3f85d17da3ac025e7b2ac0`, más las
 ediciones locales preexistentes examinadas. Este documento conserva una decisión
 propuesta y su fundamento; no gobierna la operación vigente ni mantiene un
 catálogo paralelo.
 
-**Entrada para implementar:** el [goal al final](#goal-de-reconstrucción) reúne
+**Entrada histórica:** el [goal al final](#goal-de-reconstrucción) reúne
 el mandato propuesto. La arquitectura, el mapa de los 59 productos y los casos
 de este documento son su fundamento suficiente para comenzar; los informes
 temporales son evidencia auxiliar, no un prerrequisito. Consulta después las
@@ -1024,8 +1027,10 @@ se agrega una contraprueba sólo cuando una nueva composición abre una duda rea
 
 ## Casos que decidirán si la propuesta merece reemplazar lo actual
 
-Todos los casos siguientes están **propuestos, no ejecutados para la colección
-nueva**. Se eligen por las funciones o defectos que discriminan.
+Los casos siguientes se formularon como propuestas antes de ejecutar los lotes.
+Los dictámenes anteriores registran la cobertura obtenida; esta lista no
+declara todos ejecutados ni todos pendientes. Se reutilizan por la función o
+defecto que discriminan, según el plan vigente.
 
 | Caso | Resultado necesario |
 |---|---|
@@ -1063,9 +1068,9 @@ nueva**. Se eligen por las funciones o defectos que discriminan.
 La colección estará renovada cuando los contratos admitidos preserven las
 funciones necesarias, sus realizaciones independientes carguen lo que prometen y
 los casos pertinentes muestren conducta suficiente. La utilidad diferencial sólo
-se afirmará donde exista comparación. El dictamen actual es **arquitectura
-candidata suficientemente concretada; reconstrucción y validación de productos
-pendientes**, con integridad mecánica comprobada en el corpus disponible.
+se afirmará donde exista comparación. Este era el criterio de llegada de la
+propuesta; el dictamen actual está en el estado y plan de productos enlazado
+al comienzo, y distingue lo admitido de la integración y utilidad pendientes.
 
 ## Goal de reconstrucción
 
