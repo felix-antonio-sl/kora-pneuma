@@ -6,7 +6,7 @@ from pathlib import Path
 import sqlite3
 import threading
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 MIGRATION_1 = (
     "CREATE TABLE items(id TEXT PRIMARY KEY, document TEXT NOT NULL, field_versions TEXT NOT NULL)",
     "CREATE TABLE operations(operation_id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, actor TEXT NOT NULL, receipt TEXT NOT NULL, item_id TEXT, before_patch TEXT, after_patch TEXT, applied_version INTEGER, created_at TEXT NOT NULL)",
@@ -16,6 +16,68 @@ MIGRATION_1 = (
     "CREATE TABLE cursors(provider TEXT NOT NULL, account TEXT NOT NULL, cursor TEXT NOT NULL, PRIMARY KEY(provider,account))",
     "CREATE TABLE originals(digest TEXT PRIMARY KEY, size INTEGER NOT NULL, relative_path TEXT NOT NULL UNIQUE)",
     "CREATE TABLE metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL)",
+)
+# I1: work_cycles / runs / run_observations as authoritative control.
+# Reference DDL is GUIA section 6; adjustments vs that text are documented in
+# GUIA itself: runs.native_host preserves the full native identity required by
+# hermes/codex adapters (provider+host+profile+id); run_observations.observed_at
+# is nullable for migrated rows without durable timestamps (service requires it
+# for new rows); runs.detail_json / work_cycles.detail_json carry the mutable
+# legacy projection (bases, progress, route, delivery) transitional to bounded
+# per-row reads without decoding the global JSON history.
+MIGRATION_2 = (
+    """CREATE TABLE work_cycles (
+  id TEXT NOT NULL PRIMARY KEY, item_id TEXT NOT NULL REFERENCES items(id),
+  trigger_key TEXT NOT NULL UNIQUE,
+  input_fingerprint TEXT NOT NULL, purpose TEXT NOT NULL,
+  authority_json TEXT NOT NULL CHECK(json_valid(authority_json)),
+  state TEXT NOT NULL CHECK(state IN
+    ('ready','running','waiting','paused','resolved','abandoned','recovery_required')),
+  allowance_seconds REAL NOT NULL CHECK(allowance_seconds > 0),
+  attempts_limit INTEGER NOT NULL CHECK(attempts_limit > 0),
+  wake_json TEXT CHECK(wake_json IS NULL OR json_valid(wake_json)),
+  predecessor_id TEXT REFERENCES work_cycles(id),
+  parent_cycle_id TEXT REFERENCES work_cycles(id),
+  budget_period_id TEXT NOT NULL,
+  created_at TEXT, closed_at TEXT,
+  detail_json TEXT NOT NULL DEFAULT '{}' CHECK(json_valid(detail_json)),
+  UNIQUE(id, item_id)
+)""",
+    "CREATE INDEX cycles_ready ON work_cycles(state, item_id)",
+    """CREATE UNIQUE INDEX one_open_cycle_per_item ON work_cycles(item_id)
+  WHERE state IN ('ready','running','paused','recovery_required')""",
+    """CREATE TABLE runs (
+  id TEXT NOT NULL PRIMARY KEY, cycle_id TEXT NOT NULL,
+  item_id TEXT NOT NULL, actor TEXT NOT NULL, parent_run_id TEXT REFERENCES runs(id),
+  state TEXT NOT NULL CHECK(state IN
+    ('reserved','dispatching','running','waiting_child','stop_requested','uncertain',
+     'completed','failed','cancelled','expired')),
+  integration TEXT NOT NULL CHECK(integration IN ('pending','integrated','discarded')),
+  admission_json TEXT NOT NULL CHECK(json_valid(admission_json)),
+  detail_json TEXT NOT NULL CHECK(json_valid(detail_json)),
+  native_provider TEXT, native_host TEXT, native_profile TEXT, native_id TEXT,
+  budget_period_id TEXT NOT NULL, reserved_seconds REAL NOT NULL CHECK(reserved_seconds > 0),
+  observed_seconds REAL NOT NULL DEFAULT 0 CHECK(observed_seconds >= 0),
+  cost_usd REAL CHECK(cost_usd IS NULL OR cost_usd >= 0),
+  admitted_at TEXT, started_at TEXT, ended_at TEXT,
+  FOREIGN KEY(cycle_id, item_id) REFERENCES work_cycles(id, item_id),
+  UNIQUE(native_provider, native_host, native_profile, native_id)
+)""",
+    "CREATE INDEX runs_cycle ON runs(cycle_id, state)",
+    "CREATE INDEX runs_period ON runs(budget_period_id, cycle_id)",
+    "CREATE INDEX runs_active ON runs(state, integration)",
+    "CREATE INDEX runs_item ON runs(item_id, state)",
+    """CREATE UNIQUE INDEX one_native_active ON runs((1))
+  WHERE state IN ('dispatching','running','stop_requested','uncertain')""",
+    """CREATE TABLE run_observations (
+  run_id TEXT NOT NULL REFERENCES runs(id), seq INTEGER NOT NULL CHECK(seq > 0),
+  observed_at TEXT, native_state TEXT NOT NULL,
+  runtime_seconds REAL NOT NULL CHECK(runtime_seconds >= 0),
+  cost_usd REAL CHECK(cost_usd IS NULL OR cost_usd >= 0),
+  receipt_json TEXT NOT NULL CHECK(json_valid(receipt_json)),
+  PRIMARY KEY(run_id, seq)
+)""",
+    "CREATE INDEX observations_run ON run_observations(run_id, seq)",
 )
 
 
@@ -79,7 +141,13 @@ class Store:
                 if version == 0:
                     for statement in MIGRATION_1:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=1")
+                    for statement in MIGRATION_2:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=2")
+                elif version == 1:
+                    for statement in MIGRATION_2:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=2")
             self.db.execute("PRAGMA journal_mode=WAL")
             self.db.execute("PRAGMA synchronous=FULL")
             for suffix in ("", "-wal", "-shm"):
