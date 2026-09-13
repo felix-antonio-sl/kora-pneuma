@@ -85,11 +85,30 @@ class DailyBudgetTest(unittest.TestCase):
         self.assertEqual(len(self.control._load()['periods']), 2)
         self.assertEqual(len(self.control.get_job(job)['observations']), 2)
 
-    def test_current_overrun_blocks_but_next_day_can_return(self):
+    def test_live_overrun_blocks_until_confirmed_terminal_then_charges_actual(self):
         self.daily()
         job = self.reserve()
-        self.finish(job, runtime_seconds=201)
-        self.assertEqual(self.control.reserve('gtd-felix', 'blocked', self.request())['error'], 'observed_budget_overrun')
+        for status in ('running', 'uncertain', 'not_found'):
+            self.finish(job, native_status=status, terminal=False, runtime_seconds=201)
+            self.assertEqual(self.control.reserve('gtd-felix', 'blocked-' + status,
+                self.request())['error'], 'observed_budget_overrun')
+        self.finish(job, native_status='cancelled', runtime_seconds=217)
+        restarted = ExecutionControl(self.service, self.config, clock=lambda: self.now)
+        self.assertEqual(restarted.budget()['committed_runtime_seconds'], 217)
+        self.assertEqual(restarted.budget()['remaining_runtime_seconds'], 6983)
+        receipt = restarted.reserve('gtd-felix', 'after-terminal', self.request())
+        self.assertEqual(receipt['status'], 'reserved', receipt)
+        self.assertEqual(len(restarted.get_job(job)['observations']), 4)
+        self.assertFalse(restarted.validate(job, 'local_work')['allowed'])
+
+    def test_terminal_overrun_never_restores_consumed_daily_allowance(self):
+        self.daily()
+        job = self.reserve()
+        self.finish(job, runtime_seconds=7201)
+        self.assertEqual(self.control.budget()['committed_runtime_seconds'], 7201)
+        self.assertEqual(self.control.budget()['remaining_runtime_seconds'], 0)
+        self.assertEqual(self.control.reserve('gtd-felix', 'exhausted-overrun',
+            self.request())['error'], 'budget_exhausted')
         self.now += timedelta(days=1)
         self.reserve('tomorrow')
 

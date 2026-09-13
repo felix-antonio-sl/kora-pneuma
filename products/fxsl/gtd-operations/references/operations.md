@@ -429,8 +429,12 @@ Comunica el saldo en minutos y, al agotarse, «Guardado. Puedo continuar cuando
 se renueve el tiempo diario», con la hora local de `returns_at`; si hay trabajo
 incierto, explica que primero necesita reconciliación. `runtime_enforcement`
 es `cooperative`: el límite gobierna admisión y siguientes acciones, no promete
-un corte físico exacto de una llamada en vuelo. Captura, consulta y conservación
-siguen disponibles sin LLM.
+un corte físico exacto de una llamada en vuelo. Un sobreconsumo de una ejecución
+activa o incierta impide otra admisión. Una vez comprobada su terminación, se
+carga íntegramente el tiempo observado y el saldo diario restante puede usarse;
+no se perdona consumo ni se rehabilita el job terminado. El modo fijo conserva
+su bloqueo por sobreconsumo. Captura, consulta y conservación siguen disponibles
+sin LLM.
 
 Para una petición con ventana breve, conserva `decision_at` con zona y `priority`
 en la interpretación de la captura humana directa, junto con su `intent_basis`.

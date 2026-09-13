@@ -350,8 +350,12 @@ class ExecutionControl:
         job["progress"] = []
         self._vigent(state, job, job["capability"])
         budget = self._budget(state)
+        # A confirmed terminal daily job has already charged its full observed
+        # duration in _budget. Its cooperative overrun must not freeze the rest
+        # of the day. Live/uncertain jobs still block, and fixed policy is unchanged.
         if any(((not self._daily() and j["charged_cost_usd"] > j["max_cost_usd"]) or j["observed_runtime_seconds"] > j["max_runtime_seconds"])
-               and (not self._daily() or j.get("budget_period_id") == job["budget_period_id"]) for j in state["jobs"].values()):
+               and (not self._daily() or (j.get("budget_period_id") == job["budget_period_id"]
+                    and not j["terminal"])) for j in state["jobs"].values()):
             raise ValueError("observed_budget_overrun")
         if budget["active"] >= config["max_active"]:
             if request.get("defer_when_busy") is True and job["parent_job_id"]:
