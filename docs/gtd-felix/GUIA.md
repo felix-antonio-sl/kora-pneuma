@@ -483,6 +483,38 @@ esas condiciones y mantiene la red fuera de la transacción. Fuentes primarias:
 [índices parciales](https://www.sqlite.org/partialindex.html),
 [transacciones](https://www.sqlite.org/lang_transaction.html).
 
+### Ajustes I1 al DDL (2026-09-14, con evidencia en ESTADO.md)
+
+- `runs.native_host` añadida. Los adaptadores Hermes/Codex exigen identidad
+  provider+host+profile+id; el triple del borrador pierde procedencia y permite
+  colisión entre hosts. La unicidad pasa a la cuaterna. Evidencia: 32/32
+  identidades nativas preservadas en la migración.
+- `run_observations.observed_at` anulable para filas migradas. Los 866
+  observaciones históricas no traen tiempos durables y el orden UUID no es
+  cronología; inventarlos violaría la regla de no deducir tiempos. El servicio
+  exige tiempo para filas nuevas. Evidencia: 866/866 observaciones migradas con
+  `observed_at` nulo y recibo íntegro.
+- `runs.detail_json` y `work_cycles.detail_json` como proyección mutable
+  acotada por fila (bases, progreso, ruta, entrega). `admission_json` nunca se
+  reescribe; el progreso se referencia por `operations`. Evita decodificar el
+  historial global: estado activo 7.663 bytes frente a 4.734.704 bytes del
+  agregado, orquestación activa 138 bytes frente a 3.531.798 bytes.
+- `trigger_key` causa: `gtd-event:<identidad>` sin sufijo de intento,
+  `op:<operation_id>` para reservas manuales, `migrated:<job_id>` para historia.
+  Repetir la causa no readmite; la idempotencia por `operation_id` se conserva
+  en claves `control:op:<id>` acotadas.
+- Un ciclo abierto por asunto (`one_open_cycle_per_item`) y una ejecución
+  nativa global (`one_native_active`, incluye `uncertain`). Dos propósitos
+  concurrentes sobre el mismo asunto ya no se admiten; el hijo sobre el mismo
+  asunto es otro intento del mismo ciclo, sobre otro asunto es ciclo hijo con
+  `parent_cycle_id` y asignación del padre. Evidencia: pruebas de propósito
+  activo y concurrencia actualizadas a asuntos distintos.
+- `no_domain_progress` y `accepted_pending_integration` se conservan en
+  `detail_json` para compatibilidad de comandos/recibos; la columna usa el
+  ternario `pending/integrated/discarded`. Ciclo `completed` pasa a `waiting`
+  (libera la unicidad para un sucesor con causa nueva sin autorrenovar
+  presupuesto); `failed/cancelled/expired` pasan a `abandoned`.
+
 ### Consultas y proyección de contexto
 
 Operaciones frecuentes: asuntos abiertos paginados; último material/evaluación

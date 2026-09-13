@@ -1,6 +1,6 @@
 # GTD de Félix · línea de estado actual
 
-Corte **2026-09-13 21:27 UTC**. Este archivo es la única fuente del estado del
+Corte **2026-09-14 UTC**. Este archivo es la única fuente del estado del
 proyecto; [GUIA.md](GUIA.md) conserva requisitos y plan. Las decisiones posteriores
 no se convierten en implementación por aparecer en la guía. Spec, diseño y runtime
 se comprueban por separado. El historial superado queda en el archivo privado;
@@ -9,10 +9,10 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 ## Veredicto de producto
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
-C1 operativo; C2–C6 abiertos. El goal no está completado. La petición vigente es
-fijar esta base y repensar datos, UX, control y camino de cierre para un usuario,
-un host y un desarrollador. La dirección arquitectónica queda en la sesión
-actual de Codex; no se inicia implementación del rediseño por documentarlo.
+C1 operativo; C2–C6 abiertos. I1 implementado como candidato integrado y
+verificable en aislamiento; no instalado en vivo ni aceptado en producción.
+La dirección arquitectónica e integración las conserva Codex; Hermes sigue como
+runtime del bot. Este encargo se ejecutó en OpenCode según lo asignado.
 
 El último recorrido real reutilizó un material existente, registró una evaluación
 insatisfecha y confirmó la devolución por Telegram en 192,3 s sobre 240 s
@@ -24,15 +24,14 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | commit `01086a3b9fb72e2c2aae228732ea53946d8fa6fe`, rama `fxai/gtd-felix-20260911`, publicado en origin |
-| Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` |
-| Archivo focal | `orchestration.py`: SHA-256 `27f17a17e4c751046863d946875f87ffc431ea11385b8a6472016ad1c18be7b1`, fuente e instalado coinciden |
-| Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada |
-| Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados. No equivalen a cuota de Codex ni factura |
+| Fuente ejecutable | candidato I1 sobre `0fbc18e`, rama `fxai/gtd-felix-20260911`, sin publicar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
+| Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` (sin cambios; instalación viva posterior) |
+| Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
+| Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
 | Runtime del bot | Hermes, `deepseek-v4.1-flash`, `opencode-go`, `max` configurado; aplicación efectiva del esfuerzo por el proveedor no demostrada |
-| Construcción | sesión Hermes existente con `muse-spark-1.3-contributor`, bajo dirección/revisión de Codex; xhigh solicitado, no demostrado por este corte |
+| Construcción | OpenCode con `muse-spark-1.3-contributor` para I1, bajo dirección de Codex; sin inferencias pagadas del bot para invariantes (pruebas locales deterministas) |
 | Delegación del producto | cero ejecutores configurados; G7 nativo mínimo no acreditado |
-| Esquema | SQLite `user_version=1`, inspeccionado en copia aislada de la exportación del servicio, nunca abriendo la base viva |
+| Esquema | SQLite `user_version=2` en candidato (migración I1); base `user_version=1` verificada por hash. Base viva nunca abierta directamente |
 
 Fuente y realización KORA siguen separadas de configuración, credenciales,
 memoria, datos y estado nativo de Hermes. Este corte documental no reinstala ni
@@ -44,43 +43,57 @@ se preservan; no se agregan masivamente al commit.
 | Subsistema | Implementado/observado | Límite relevante |
 |---|---|---|
 | Dominio y captura | API y comandos versionados; originales, operaciones, autoría y controles sin LLM | Interpretación contextual y UX no acreditadas en recorrido completo |
-| Datos | 6 tablas: `items`, `operations`, `events`, `cursors`, `originals`, `metadata`; WAL, transacciones y originales por hash | Items documentales y varios controles durables en JSON; integridad semántica depende del servicio |
-| Ejecución | admisión, presupuesto, identidad nativa, observación, integración, stop y reconciliación | Control y orquestación mantienen estados JSON globales; cronología de agotamientos no explícita en jobs históricos |
-| Fuentes | agenda conectada; Gmail readonly, ámbito autorizado desde 2026-08-01; fuentes seleccionadas usadas en material real | Cobertura parcial/degradada; selección global e incrementalidad/retención completas aún por acreditar |
-| Resultados | materiales versionados, evaluación separada, entrega automática y deduplicación | Material válido no significa resultado suficiente; nueva regla de prosa no prueba utilidad |
+| Datos | 9 tablas: 6 base + `work_cycles`, `runs`, `run_observations`; WAL, FK por conexión, `BEGIN IMMEDIATE`, originales por hash | `items.document`/`field_versions` conservan agregado humano; materiales/evaluaciones/entregas/fuentes se migran en I2–I3 |
+| Ejecución | ciclo autorizado separado de intento nativo; admisión inmutable, consumo monotónico, terminalidad/integración separadas, STOP, pausa, reconciliación, presupuesto familiar | Orquestación activa en claves pequeñas; historial global congelado como `*:legacy:v1` sólo para consulta/idempotencia/recuperación |
+| Fuentes | agenda conectada; Gmail readonly, ámbito autorizado desde 2026-08-01; fuentes seleccionadas usadas en material real | Cobertura parcial/degradada; selección global e incrementalidad/retención completas aún por acreditar (I3) |
+| Resultados | materiales versionados, evaluación separada, entrega automática y deduplicación | Material válido no significa resultado suficiente; nueva regla de prosa no prueba utilidad (I2) |
 | Efectos | ledger de propuestas, autorización, despacho y observación existente | No habilita escritura general en Google; reconciliación final pendiente de C5 |
-| Recuperación | exportaciones coherentes, reinicios y restauraciones aisladas históricas | Restore y rollback de la entrega final completa aún no cerrados |
+| Recuperación | exportación coherente, migración ensayada en copia aislada, rollback con replay por identidad (capturas preservadas, sin repetir efectos) | Restore/rollback final sobre la entrega completa se cierra en I5; instalación viva posterior |
 
-Magnitud de la copia: 32 jobs; serialización JSON de `execution:state` ≈4,94 MB y
-`execution:orchestration` ≈3,71 MB (medida con `json.dumps`, no tamaño en disco).
-`control._load/_save` y `orchestration._state/_save` leen/escriben esos agregados.
-**Inferencia:** esta representación acopla historial y trabajo activo y dificulta
-consultas acotadas. No se atribuye causalmente toda latencia a ese factor sin medir.
+Magnitud de la copia: 32 jobs; serialización JSON de `execution:state` 4.734.704
+bytes y `execution:orchestration` 3.531.798 bytes en base. Tras I1 en copia
+aislada: estado activo 7.663 bytes, orquestación activa 138 bytes; 32 ciclos,
+32 runs, 866 observaciones, 118 idempotencias `control:op:*` preservadas.
+Lecturas activas (`budget`, `pending`, `get_job`, `validate`) por clave/fila sin
+decodificar el historial. Con historia ampliada a 532 runs el presupuesto sigue
+en ~22 ms y el estado activo en 7.663 bytes.
 
 ## Evidencia y brechas de cierre
 
 | Criterio | Estado | Condición que falta |
 |---|---|---|
-| C1 continuidad | Operativo | Conservar captura, identidad, presupuesto y recuperación ante cambios |
-| C2 recorrido humano | Parcial | Preparación útil, corrección material, pausa durante trabajo y regreso; variante libre, consultas/lotes y G7 mínimo |
-| C3 fuentes | Parcial | Cobertura pertinente incremental, retención mínima incluidas transcripciones, cursores/revisión/reinicio y cambios dependientes |
-| C4 retorno cotidiano | Parcial | Utilidad y carga humana, acceso a material, oportunidad, silencio y pausa comprobados en canal real |
-| C5 recuperabilidad | Parcial | Restore, rollback, configuración/dependencias y reconciliación de la revisión final |
+| C1 continuidad | Operativo | Conservar captura, identidad, presupuesto y recuperación ante cambios (I1 lo preserva en migración; instalación viva posterior) |
+| C2 recorrido humano | Parcial | Preparación útil, corrección material, pausa durante trabajo y regreso; variante libre, consultas/lotes y G7 mínimo (I2) |
+| C3 fuentes | Parcial | Cobertura pertinente incremental, retención mínima incluidas transcripciones, cursores/revisión/reinicio y cambios dependientes (I3) |
+| C4 retorno cotidiano | Parcial | Utilidad y carga humana, acceso a material, oportunidad, silencio y pausa comprobados en canal real (I4) |
+| C5 recuperabilidad | Parcial | Restore, rollback, configuración/dependencias y reconciliación de la revisión final (I5; I1 deja migración/rollback ensayados) |
 | C6 aceptación | Abierto | Usuario reconoce utilidad en asuntos propios tras el recorrido; no inferirla de entrega ni de silencio |
 
-- `test_spent_continuation`: 7/7 en candidata; base anterior 5 fallos + 2 skips.
-- `test_orchestration`: 62/62 en el cambio funcional anterior y 62/62 en la
-  primera candidata de devolución. El último ajuste de texto tuvo validación de
-  sintaxis/revisión; **no una campaña conductual nueva**.
-- Suite focal de 102: 5 fallos + 1 error iguales en base y candidata de la guarda.
-  Todos en `test_source_evaluation`: pausa durante evaluación (`reason` ausente),
-  uso desconocido frente a cero en dos fallos de helper/bridge, y tres casos de
-  evaluación/proyección/cached retry. Su clasificación como problema de fixture
-  es una hipótesis pendiente de resolución; no están excusados por ser anteriores.
+- I1 migración: PASS semántico (0 diferencias en IDs, nativas, versiones,
+  períodos, 866/866 observaciones; tablas dominio intactas 261/325/396/1/298;
+  presupuesto migrado 2.262,4 s y período `daily:...:2026-09-13` idénticos al
+  recibo; 118/118 idempotencias preservadas).
+- I1 lecturas acotadas: PASS (estado 7.663 B vs 4.734.704 B; orquestación 138 B
+  vs 3.531.798 B; `get_job` 0,4 ms, `pending` 0,1 ms, `budget` ~20 ms; con 532
+  runs el presupuesto sigue ~22 ms y el estado en 7.663 B).
+- `test_control` 64/64 PASS; `test_daily_budget` 17/17 PASS;
+  `test_spent_continuation` 7/7 PASS; `test_orchestration` 62/62 PASS;
+  `test_core`+`test_gtd`+`test_source_evaluation` 76/76 PASS (las 6 fallidas de
+  fuentes citadas en el corte anterior ya no reproducen en este candidato;
+  su capa completa se resuelve en I3).
+- Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
+  autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
+  incertidumbre y delegación, STOP/corrección/invalidación, reinicio y
+  reconciliación de identidades, compatibilidad de comandos/versiones/recibos).
+  Prueba sintética no acredita proveedor ni aceptación humana.
+- Código viejo rechaza esquema nuevo (`newer_schema`); rollback ensayado con una
+  captura posterior preservada (262 vs 261 asuntos) sin repetir efectos externos.
+- KORA `check` PASS (523 activos, 18 archivados, sin incidencias) con
+  `--knowledge-root`; no sustituye validación del producto.
 - Guarda de agotamiento: comprobada en pruebas aisladas. El job real de 192 s
   terminó antes del límite y **no ejercitó esa rama**.
 - Contrato de devolución de `01086a3`: instalado; efecto sobre calidad **NOT_RUN**.
-- Recuperación de la entrega final y aceptación humana: **NOT_RUN/pendientes**.
+- Producción aceptada: **NOT_RUN**. I1 no declara producción aceptada.
 
 ## Línea de base reproducible y evidencia privada
 
@@ -101,17 +114,23 @@ sin otra copia activa. El estado personal detallado sigue en el servicio.
 
 ## Diseño y próximo incremento
 
-Línea de base documental `9541abf` publicada antes del rediseño. GUIA.md contiene
-ahora la decisión de evolución selectiva, modelo de datos, DDL de referencia,
-contratos de UX/control, migración y plan I1–I5. Es un **diseño decidido**, no una
-migración aplicada ni otra versión instalada. El runtime de este corte sigue en
-`01086a3`; no hubo inferencias ni cambios de configuración/servicios en este encargo.
+I1 implementado en este candidato (no instalado): `store` v2 con
+`work_cycles`/`runs`/`run_observations`, `control` y `orchestration` sobre tablas
+con lecturas acotadas, migración con comparación semántica y rollback con replay
+por identidad. Detalle y decisiones en GUIA §§6–7 y en este archivo. No iniciar
+I2–I5 por anticipado salvo dependencia mínima justificada.
 
-Siguiente implementación: **I1 · ciclo e intento explícitos**, empezando por el
-ensayo de extracción/migración sobre la exportación privada. Entrada: código de
-base y contratos de GUIA §6–7. Salida: presupuesto causal, admisión inmutable,
-consulta acotada y recuperación sin pérdida de IDs, autoría o efectos. No iniciar
-I2–I5 como proyectos independientes ni reescribir todos los módulos de una vez.
+Límites de I1: materiales, evaluaciones, entregas y fuentes se migran en sus
+incrementos; `items.document`/`field_versions` conservan el agregado humano.
+Doble escritura permanente eliminada: tablas + blobs activos pequeños son la
+única autoridad tras el corte; `*:legacy:v1` queda congelado para consulta,
+idempotencia y recuperación. Directorios `candidates/` y `versions/` preservados.
+
+Siguiente: **I2 · conversación, material y devolución** sobre I1, con fuentes ya
+disponibles y sin reescribir todos los módulos. Instalación viva y publicación
+remota del candidato I1 quedan como pasos posteriores identificados (detener
+procesos, cero trabajos en vuelo o incertidumbre reconciliada, aplicar migración
+y cambio de lector/escritor como una entrega, ensayar restore/rollback final).
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
 actual en SQLite 3.45.1 en memoria, con datos sintéticos. Incluye FK, identidad de
@@ -120,7 +139,6 @@ ante incertidumbre y deduplicación de entregas. Recibo y script reproducible en
 la carpeta privada de este corte: `design-validation.json`, `validate-design.py`.
 DDL SHA-256 `77b1a446bdc9a1f5824cc67c0d3070b9fb6001118ef2141f33a57a01782a8edc`.
 
-Esto **no acredita** migración real, invariantes que corresponden al servicio,
-rendimiento, conducta LLM ni aceptación. Cada incremento requiere sus pruebas y
-ensayo de realización según GUIA. La comprobación KORA de la línea de base pasó
+Esto **no acredita** conducta LLM ni aceptación. Cada incremento requiere sus pruebas y
+ensayo de realización según GUIA. La comprobación KORA de este candidato pasó
 sin incidencias (523 activos, 18 archivados); no sustituye validación del producto.
