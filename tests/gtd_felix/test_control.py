@@ -249,7 +249,7 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(material['status'], 'applied', material)
         self.assertEqual(self.control.record_integration(child, material)['status'], 'integrated')
         self.assertEqual(self.control.get_job(child)['item_bases'], original)
-        self.assertEqual(len(self.control._load()['jobs']), 2)
+        self.assertEqual(self.service.store.db.execute('SELECT COUNT(*) FROM runs').fetchone()[0], 2)
 
     def test_same_child_coordination_preserves_material_present_at_reservation(self):
         root, child = self.deferred_contribution(prior_material=True)
@@ -404,7 +404,7 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(self.control.request_stop('felix','direct-stop',child)['job'], result['job'])
         self.assertEqual(self.control.get_job(child)['observations'], [])
         self.assertEqual(self.control.get_job(child)['charged_cost_usd'], 0)
-        self.assertEqual(len(self.control._load()['jobs']), 2)
+        self.assertEqual(self.service.store.db.execute('SELECT COUNT(*) FROM runs').fetchone()[0], 2)
 
     def test_deferred_transient_and_uncertain_run_do_not_release_reservation(self):
         root, child = self.deferred_contribution()
@@ -427,8 +427,17 @@ class ControlTest(unittest.TestCase):
         self.reserve()
         conflict = self.control.reserve("gtd-felix", "reserve", self.request(scope="Other"))
         self.assertEqual(conflict["error"], "idempotency_conflict")
+        # I1: one open cycle per item, so concurrent admissions race on distinct
+        # derived items for the last global slot (max_active=2).
+        derived = []
+        for n in range(2):
+            derived.append(self.service.execute('felix', dict(operation_id=f'concurrent-derive-{n}', action='derive',
+                item_id=self.item['id'], expected_version=self.service.get_item(self.item['id'])['version'],
+                fields={'kind': 'action', 'title': f'concurrent-{n}', 'capability': 'local_work',
+                        'mandate_id': self.mandate}))['item'])
         with ThreadPoolExecutor(2) as pool:
-            results = list(pool.map(lambda n: self.control.reserve("gtd-felix", f"concurrent{n}", self.request(purpose=f"purpose{n}")), range(2)))
+            results = list(pool.map(lambda n: self.control.reserve("gtd-felix", f"concurrent{n}",
+                self.request(item_id=derived[n]['id'], expected_version=derived[n]['version'], purpose=f"purpose{n}")), range(2)))
         self.assertEqual(sum(r["status"] == "reserved" for r in results), 1)
         self.assertEqual(self.control.budget()["active"], 2)
         self.assertEqual(self.control.budget()["remaining_cost_usd"], 0)
@@ -509,7 +518,12 @@ class ControlTest(unittest.TestCase):
 
     def test_native_identity_cannot_double_count_across_jobs(self):
         first = self.reserve()
-        second = self.reserve("second", purpose="second")
+        # I1: one open cycle per item, so the second run uses a derived item
+        # in the same mandate scope to test cross-run native uniqueness.
+        derived = self.service.execute('felix', dict(operation_id='native-second-derive', action='derive',
+            item_id=self.item['id'], expected_version=self.item['version'], fields={'kind': 'action',
+            'title': 'native-second', 'capability': 'local_work', 'mandate_id': self.mandate}))['item']
+        second = self.reserve("second", item_id=derived['id'], expected_version=derived['version'], purpose="second")
         self.control.record_dispatch(first, self.native(first))
         receipt = self.control.record_dispatch(second, self.native(first))
         self.assertEqual(receipt["error"], "native_identity_already_accounted")
@@ -763,10 +777,17 @@ class ControlTest(unittest.TestCase):
         derived = self.service.execute("felix", dict(operation_id="legacy-dependent", action="derive", item_id=self.item["id"], expected_version=self.item["version"], fields={"kind": "action", "title": "Legacy child", "capability": "local_work"}))
         child = derived["item"]
         job = self.reserve(item_id=child["id"], expected_version=child["version"])
-        with self.service.store.lock:
-            state = self.control._load()
-            state["jobs"][job].pop("source_bases")
-            self.control._save(state)
+        # I1: corrupt the bounded per-row admission+detail (not global history)
+        # to prove the service still requires the dependency basis.
+        with self.service.store.transaction():
+            import json as _json
+            row = self.service.store.db.execute("SELECT admission_json, detail_json FROM runs WHERE id=?", (job,)).fetchone()
+            admission = _json.loads(row["admission_json"])
+            detail = _json.loads(row["detail_json"])
+            admission.pop("source_bases", None)
+            detail.pop("source_bases", None)
+            self.service.store.db.execute("UPDATE runs SET admission_json=?, detail_json=? WHERE id=?",
+                (_json.dumps(admission, sort_keys=True), _json.dumps(detail, sort_keys=True), job))
         self.assertEqual(self.control.validate(job, "local_work")["reason"], "source_basis_required")
 
     def test_child_parent_text_correction_rejects_old_output_without_revoking_mandate(self):
@@ -813,9 +834,11 @@ class ControlTest(unittest.TestCase):
         job, item = self.private_job()
         self.finish(job)
         with self.service.store.transaction():
-            state = self.control._load()
-            state['jobs'][job]['progress'] = [{'operation_id': 'nonexistent', 'review': True}]
-            self.control._save(state)
+            import json as _json
+            row = self.service.store.db.execute("SELECT detail_json FROM runs WHERE id=?", (job,)).fetchone()
+            detail = _json.loads(row["detail_json"])
+            detail['progress'] = [{'operation_id': 'nonexistent', 'review': True}]
+            self.service.store.db.execute("UPDATE runs SET detail_json=? WHERE id=?", (_json.dumps(detail, sort_keys=True), job))
         self.assertEqual(self.control.acknowledge_progress(job)['error'], 'progress_receipt_not_verified')
         self.assertNotEqual(self.control.get_job(job)['integration'], 'integrated')
 

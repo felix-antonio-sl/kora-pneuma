@@ -299,16 +299,28 @@ class OrchestrationTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(self.control, 'reserve', side_effect=crashed):
             with self.assertRaisesRegex(RuntimeError, 'synthetic process interruption'):
                 await self.worker.tick()
-        jobs_before = set(self.control._load()['jobs'])
+        # I1: jobs live in runs (bounded per-row), not the global JSON blob.
+        def _run_ids():
+            return set(r["id"] for r in self.service.store.db.execute("SELECT id FROM runs").fetchall())
+        def _charged_sum():
+            total = 0.0
+            import json as _json
+            for r in self.service.store.db.execute("SELECT detail_json FROM runs").fetchall():
+                try:
+                    total += (_json.loads(r["detail_json"]) or {}).get("charged_cost_usd", 0) or 0
+                except ValueError:
+                    continue
+            return total
+        jobs_before = _run_ids()
         self.worker = OrchestrationWorker(self.service, self.control, self.native, self.config)
         for _ in range(4):
             await self.worker.tick()
         self.assertEqual(len(self.native.submissions), 2)
-        jobs_after = set(self.control._load()['jobs'])
+        jobs_after = _run_ids()
         self.assertEqual(len(jobs_after), 2)
         self.assertEqual(len(jobs_after - jobs_before), 0 if after else 1)
         self.assertEqual(self.control.budget()['active'], 0)
-        self.assertEqual(sum(j['charged_cost_usd'] for j in self.control._load()['jobs'].values()), .5)
+        self.assertEqual(_charged_sum(), .5)
 
     async def test_private_continuation_recovers_before_reserve(self):
         await self.continuation_reserve_crash(False)
@@ -516,11 +528,15 @@ class OrchestrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.service.get_item(child['id'])['status'], 'done')
         self.assertEqual(len(self.service.materials(root['id'])), 1)
         # Reconstruct the old persisted orphan, then recover without native resend.
+        # I1: orphan lives in runs (bounded per-row), not the global JSON blob.
         with self.service.store.transaction():
-            state = self.control._load()
-            state['jobs'][job_id]['integration'] = 'pending'
-            state['jobs'][job_id].pop('integration_error')
-            self.control._save(state)
+            import json as _json
+            row = self.service.store.db.execute("SELECT detail_json FROM runs WHERE id=?", (job_id,)).fetchone()
+            detail = _json.loads(row["detail_json"])
+            detail['integration'] = 'pending'
+            detail.pop('integration_error', None)
+            self.service.store.db.execute("UPDATE runs SET integration='pending', detail_json=? WHERE id=?",
+                (_json.dumps(detail, sort_keys=True), job_id))
         state = self.worker._state()
         state['runs'][job_id]['phase'] = 'done'
         state['runs'][job_id]['result_status'] = 'rejected'

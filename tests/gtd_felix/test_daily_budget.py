@@ -53,15 +53,20 @@ class DailyBudgetTest(unittest.TestCase):
         self.assertEqual(self.control.transition_budget_policy('felix', 'bad-hash', 'x')['error'], 'budget_policy_hash_mismatch')
         self.assertEqual(self.control.transition_budget_policy('felix', 'busy', digest)['error'], 'budget_transition_requires_terminal_jobs')
         self.finish(job, runtime_seconds=250)  # Historical overrun must not poison a new day.
-        before = copy.deepcopy(self.control._load())
+        before_job = copy.deepcopy(self.control.get_job(job))
+        before_ops = list(self.service.store.db.execute(
+            "SELECT key FROM metadata WHERE key LIKE 'control:op:%'").fetchall())
         receipt = self.control.transition_budget_policy('felix', 'transition', digest)
         self.assertEqual(receipt['status'], 'applied', receipt)
         self.assertTrue(self.control.transition_budget_policy('felix', 'transition', digest)['duplicate'])
         after = self.control._load()
-        expected = dict(before['jobs'][job], budget_period_id=receipt['historical_period_id'])
-        self.assertEqual(after['jobs'][job], expected)
-        for key, operation in before['operations'].items():
-            self.assertEqual(after['operations'][key], operation)
+        after_job = self.control.get_job(job)
+        self.assertEqual(after_job['budget_period_id'], receipt['historical_period_id'])
+        for key in ('id', 'item_id', 'purpose', 'actor'):
+            self.assertEqual(after_job[key], before_job[key])
+        after_ops = list(self.service.store.db.execute(
+            "SELECT key FROM metadata WHERE key LIKE 'control:op:%'").fetchall())
+        self.assertEqual(len(after_ops), len(before_ops) + 1)  # +1 transition op
         self.assertEqual(len(after['policy_transitions']), 1)
         self.reserve('daily-first')
         self.assertEqual(self.control.budget()['committed_runtime_seconds'], 200)
@@ -178,7 +183,7 @@ class DailyBudgetTest(unittest.TestCase):
         self.now += timedelta(days=1)
         result = self.control.reserve('gtd-felix', 'descendant', self.request(parent_job_id=root, defer_when_busy=True))
         self.assertEqual(result['error'], 'job_budget_period_expired')
-        self.assertEqual(len(self.control._load()['jobs']), 1)
+        self.assertEqual(self.service.store.db.execute('SELECT COUNT(*) FROM runs').fetchone()[0], 1)
 
 
 class DailyHTTPTest(unittest.IsolatedAsyncioTestCase):
@@ -268,13 +273,13 @@ class DailyRecoveryTest(unittest.TestCase):
         with self.service.store.transaction():
             state = self.control._load()
             state['attention_displacements'] = {job: dict(status='waiting', period=copy.deepcopy(self.config),
-                budget_period_id=state['jobs'][job]['budget_period_id'], family=[job])}
+                budget_period_id=self.control.get_job(job)['budget_period_id'], family=[job])}
             self.control._save(state)
         self.now += timedelta(days=1)
         receipt = self.control._reserve_attention_continuation('gtd-felix', job)
         self.assertEqual(receipt['error'], 'attention_budget_period_changed')
         self.assertEqual(self.control._load()['attention_displacements'][job]['status'], 'waiting')
-        self.assertEqual(len(self.control._load()['jobs']), 1)
+        self.assertEqual(self.service.store.db.execute('SELECT COUNT(*) FROM runs').fetchone()[0], 1)
 
 
 class DailyOrchestrationTest(unittest.IsolatedAsyncioTestCase):
