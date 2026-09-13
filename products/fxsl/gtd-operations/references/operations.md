@@ -1049,3 +1049,12 @@ lectura, el resultado y la proyección, incluso al recuperar una decisión cache
 El tiempo del helper ya está incluido en el tiempo de pared del padre: no se suma
 otra reserva ni se afirma que sus tokens sean gratuitos. El poller no inicia esta
 inferencia por su cuenta ni renueva artificialmente la cobertura de Gmail.
+
+La configuración opcional `priority_terms` ordena el backfill selectivo mediante
+frases literales acotadas, conservando la misma fuente, fecha y partición. La fase
+`priority` enlaza después con `global`, incluso si no encuentra coincidencias; sólo
+el recorrido global completo puede publicar su cursor de historia. La cobertura
+expone `priority.phase` y `global_backfill_pending`. Coincidencia no equivale a
+pertinencia: se aplica el mismo evaluador. Durante un ciclo activo los términos
+quedan fijados; cambiarlos o desactivarlos devuelve `priority_terms_changed_active_cycle`
+sin modificar el cursor. Una revisión incremental posterior no repite la prioridad.

@@ -197,7 +197,7 @@ class SourceEvaluation:
             projection_guard()
             return {'status': 'evaluated' if info.get('health') == 'complete' else 'partial',
                     'source_id': source_id, 'counts': counts, 'usage': total_usage,
-                    'coverage': {k: info.get(k) for k in ('health', 'enumeration', 'projection', 'pending_reads')},
+                    'coverage': {k: info.get(k) for k in ('health', 'enumeration', 'projection', 'pending_reads', 'priority')},
                     'time_accounting': 'included_in_parent_wall_time'}
         except (asyncio.TimeoutError, asyncio.CancelledError):
             return {'status': 'partial', 'source_id': source_id, 'counts': counts,

@@ -10,6 +10,8 @@ from urllib.parse import quote
 
 import aiohttp
 
+from .google_sources import canonical_gmail_query
+
 GMAIL = 'https://gmail.googleapis.com/gmail/v1/users/me'
 OIDC = 'https://openidconnect.googleapis.com/v1/userinfo'
 TOKEN = 'https://oauth2.googleapis.com/token'
@@ -228,7 +230,7 @@ class GoogleTransport:
                 allowed = set()
             elif url == GMAIL + '/messages':
                 allowed = {'maxResults', 'includeSpamTrash', 'pageToken', 'q'}
-                if 'q' in params and params['q'] != 'after:1785556800':
+                if 'q' in params and not canonical_gmail_query(params['q']):
                     raise TransportError('request_forbidden')
             elif url == GMAIL + '/history':
                 allowed = {'maxResults', 'startHistoryId', 'pageToken'}

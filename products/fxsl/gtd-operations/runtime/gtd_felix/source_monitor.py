@@ -145,6 +145,7 @@ class SourceMonitor:
                 enumeration=state.get('coverage', 'not_read'), projection=state.get('projection', 'not_read'),
                 originals_complete=bool(info['originals_complete']), pending_reads=len(info['pending_reads']),
                 semantic_review=info.get('coverage_contract', {}).get('semantic_review'),
+                priority=copy.deepcopy(info.get('priority')),
                 coverage_at=state.get('coverage_completed_at'), projection_at=state.get('projection_completed_at'),
                 coverage_started_at=state.get('coverage_started_at'), last_error=error,
                 retry_after_seconds=transport.get('retry_after_seconds'))

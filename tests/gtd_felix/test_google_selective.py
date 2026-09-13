@@ -305,3 +305,127 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('m1', result['pending_reads'])
         self.assertIsNone(result['pending_reads']['m1']['revision'])
         self.assertEqual(1, self.service.store.db.execute('SELECT count(*) FROM originals').fetchone()[0])
+
+    def enable_priority(self, terms=None):
+        self.config['mail'].update(priority_terms=terms or ['Asistencia', 'Telemedicina', 'HODOM'], max_pages=1)
+        self.adapter = GoogleSources(SourceSync(self.service), self.transport, self.config, evaluator=self.evaluate)
+
+    def priority_page(self, messages, *, token=None, next_token=None):
+        from gtd_felix.google_sources import priority_query
+        query = {'maxResults': 2, 'includeSpamTrash': 'true', 'q': priority_query(self.config['mail']['priority_terms'])}
+        if token:
+            query['pageToken'] = token
+        body = {'messages': [{'id': identity} for identity in messages]}
+        if next_token:
+            body['nextPageToken'] = next_token
+        self.transport.add(fixtures.GMAIL + '/messages', query, body)
+        for identity in messages:
+            self.transport.add(fixtures.GMAIL + '/messages/' + identity, {'format': 'raw'},
+                fixtures.raw_message(identity, labels=['CATEGORY_PROMOTIONS']))
+
+    async def test_priority_pages_restart_global_scope_and_revision_dedup(self):
+        partition = self.adapter.inspect('mail')['partition']
+        self.enable_priority()
+        self.assertEqual(partition, self.adapter.inspect('mail')['partition'])
+        self.answers['relevant'] = 'selected'
+        self.profile(); self.priority_page(['relevant'], next_token='priority-two')
+        first = await self.adapter.synchronize('mail')
+        self.assertEqual('priority', first['priority']['phase'])
+        self.assertTrue(first['priority']['global_backfill_pending'])
+        self.assertIsNone(first['sync']['cursor'])
+        self.assertEqual('present', self.service.query()[0]['source']['availability'])
+        self.restart(); self.priority_page(['noise'], token='priority-two')
+        second = await self.adapter.synchronize('mail')
+        self.assertEqual('global', second['priority']['phase'])
+        self.assertNotEqual('complete', second['health'])
+        self.assertIsNone(second['sync']['cursor'])
+        self.restart(); self.page(['relevant', 'noise'])
+        final = await self.adapter.synchronize('mail')
+        self.assertEqual('10', final['sync']['cursor'])
+        self.assertEqual('complete', final['priority']['phase'])
+        self.assertEqual(['relevant', 'noise'], self.evaluated)
+        self.assertEqual(1, len(self.service.query()))
+        self.profile('20'); self.history('10', end='20')
+        incremental = await self.adapter.synchronize('mail')
+        self.assertEqual('20', incremental['sync']['cursor'])
+        self.assertEqual(['relevant', 'noise'], self.evaluated)
+
+    async def test_priority_can_preempt_started_backfill_without_losing_global_page(self):
+        self.config['mail']['max_pages'] = 1
+        self.restart(); self.profile(); self.page(['first'], next_token='global-two')
+        initial = await self.adapter.synchronize('mail')
+        cycle_id = initial['adapter']['cycle_id']
+        self.enable_priority(); self.priority_page(['priority'])
+        priority = await self.adapter.synchronize('mail')
+        self.assertEqual(cycle_id, priority['adapter']['cycle_id'])
+        self.assertEqual('global', priority['priority']['phase'])
+        self.restart(); self.page(['last'], token='global-two')
+        final = await self.adapter.synchronize('mail')
+        self.assertEqual('10', final['sync']['cursor'])
+        self.assertEqual(['first', 'priority', 'last'], self.evaluated)
+
+    async def test_priority_term_change_rejected_without_cursor_or_cycle_mutation(self):
+        from gtd_felix.google_sources import SourceError
+        self.enable_priority(); self.profile(); self.priority_page([])
+        before = await self.adapter.synchronize('mail')
+        for terms in ([], ['Other']):
+            self.config['mail']['priority_terms'] = terms
+            self.restart()
+            with self.assertRaisesRegex(SourceError, '^priority_terms_changed_active_cycle$'):
+                await self.adapter.synchronize('mail')
+            self.assertEqual(before['sync'], self.adapter.inspect('mail')['sync'])
+        self.config['mail']['priority_terms'] = ['Asistencia', 'Telemedicina', 'HODOM']
+        self.restart(); self.page([])
+        self.assertEqual('complete', (await self.adapter.synchronize('mail'))['health'])
+
+    async def test_priority_page_commit_crash_resumes_global_not_priority(self):
+        from unittest.mock import patch
+        self.enable_priority(); self.profile(); self.priority_page(['m1'])
+        apply_page = self.adapter.sync.apply_page
+        def crash(*args):
+            apply_page(*args)
+            raise SystemExit('synthetic-crash')
+        with patch.object(self.adapter.sync, 'apply_page', side_effect=crash):
+            with self.assertRaises(SystemExit):
+                await self.adapter.synchronize('mail')
+        self.restart(); self.page(['m1'])
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('10', result['sync']['cursor'])
+        self.assertEqual(['m1'], self.evaluated)
+
+    async def test_priority_uncertain_debt_survives_then_global_revision_changes(self):
+        self.enable_priority(); self.answers['m1'] = 'uncertain'
+        self.profile(); self.priority_page(['m1'])
+        first = await self.adapter.synchronize('mail')
+        self.assertIn('m1', first['pending_reads'])
+        self.assertEqual('degraded', first['health'])
+        self.assertEqual(0, self.service.store.db.execute('SELECT count(*) FROM originals').fetchone()[0])
+        self.restart(); self.answers['m1'] = 'selected'
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            fixtures.raw_message('m1', labels=['CATEGORY_PROMOTIONS']))
+        self.page(['m1'])
+        final = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', final['health'])
+        self.assertEqual(['m1', 'm1'], self.evaluated)
+        self.profile('20'); self.answers['m1'] = 'noise'; self.history('10', ['m1'], end='20')
+        changed = await self.adapter.synchronize('mail')
+        self.assertEqual('20', changed['sync']['cursor'])
+        self.assertEqual('degraded', self.service.query()[0]['source']['availability'])
+        self.assertEqual(1, self.service.store.db.execute('SELECT count(*) FROM originals').fetchone()[0])
+
+    async def test_expired_history_rebuild_retains_scope_and_priority_is_not_complete(self):
+        self.enable_priority(); self.profile(); self.priority_page([])
+        await self.adapter.synchronize('mail'); self.page([])
+        await self.adapter.synchronize('mail')
+        self.profile('30'); self.history('10', status=404)
+        expired = await self.adapter.synchronize('mail')
+        self.assertFalse(expired['sync']['cursor_valid'])
+        self.profile('40'); self.priority_page([])
+        priority = await self.adapter.synchronize('mail')
+        self.assertEqual('rebuild', priority['adapter']['mode'])
+        self.assertNotEqual('complete', priority['health'])
+        self.assertFalse(priority['sync']['cursor_valid'])
+        self.page([])
+        final = await self.adapter.synchronize('mail')
+        self.assertEqual('40', final['sync']['cursor'])
+        self.assertEqual('lost_rebuilt_scope', final['coverage_contract']['history_continuity'])

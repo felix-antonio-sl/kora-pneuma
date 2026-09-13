@@ -208,5 +208,22 @@ class GoogleTransportTest(unittest.IsolatedAsyncioTestCase):
         await oidc.request('GET','https://www.googleapis.com/calendar/v3/calendars/cal%40example.invalid/events')
         self.assertEqual(oidc.inspect()['verified_capabilities'],['calendar_read'])
 
+    async def test_priority_query_only_canonical_literals_inside_fixed_date(self):
+        from gtd_felix.google_sources import priority_query, SourceError
+        await self.connect()
+        query = priority_query(['Asistencia', 'Telemedicina HSC', 'HODOM'])
+        self.step({'messages': []})
+        await self.transport.request('GET', GMAIL + '/messages', params={'q': query})
+        count = len(self.calls)
+        for text in ['after:0 {"HODOM"}', 'after:1785556800 OR HODOM',
+                     'after:1785556800 {"after:0"}', 'after:1785556800 {"HODOM"} OR older:2020',
+                     'after:1785556800 {"HODOM" "HODOM"}']:
+            with self.assertRaises(TransportError):
+                await self.transport.request('GET', GMAIL + '/messages', params={'q': text})
+        for terms in [['from:someone'], ['x" OR y'], ['x\\y'], [' x'], ['a'] * 13]:
+            with self.assertRaises(SourceError):
+                priority_query(terms)
+        self.assertEqual(count, len(self.calls))
+
 
 if __name__=='__main__': unittest.main()

@@ -22,6 +22,7 @@ import hashlib
 from html.parser import HTMLParser
 import json
 import inspect
+import re
 from urllib.parse import quote
 import uuid
 
@@ -89,6 +90,54 @@ def _string(value):
     return isinstance(value, str) and bool(value)
 
 
+_GMAIL_SCOPE_QUERY = 'after:1785556800'
+_PRIORITY_TOKEN_PREFIX = 'gtd-priority-v1:'
+
+
+def priority_query(terms):
+    """Only bounded literal phrases; no caller-controlled Gmail operators/escapes."""
+    _require(isinstance(terms, list) and len(terms) <= 12, 'invalid_priority_terms')
+    for term in terms:
+        _require(isinstance(term, str) and 0 < len(term) <= 80
+            and term == ' '.join(term.split())
+            and all(char.isalnum() or char == ' ' for char in term), 'invalid_priority_terms')
+    _require(len({term.casefold() for term in terms}) == len(terms), 'invalid_priority_terms')
+    return _GMAIL_SCOPE_QUERY + (' {' + ' '.join('"' + term + '"' for term in terms) + '}' if terms else '')
+
+
+def canonical_gmail_query(query):
+    if query == _GMAIL_SCOPE_QUERY:
+        return True
+    prefix = _GMAIL_SCOPE_QUERY + ' {'
+    if not isinstance(query, str) or not query.startswith(prefix) or not query.endswith('}'):
+        return False
+    terms = re.findall(r'"([^"\n]+)"', query[len(prefix):-1])
+    try:
+        return bool(terms) and priority_query(terms) == query
+    except SourceError:
+        return False
+
+
+def _priority_token(priority, phase, token):
+    data = {'generation': priority['generation'], 'phase': phase, 'google_token': token}
+    return _PRIORITY_TOKEN_PREFIX + base64.urlsafe_b64encode(_json(data).encode()).decode()
+
+
+def _priority_position(priority, token):
+    if token == priority['entry_token']:
+        return 'priority', None
+    _require(isinstance(token, str) and token.startswith(_PRIORITY_TOKEN_PREFIX), 'invalid_priority_page_state')
+    try:
+        data = json.loads(base64.urlsafe_b64decode(token[len(_PRIORITY_TOKEN_PREFIX):]))
+    except (ValueError, binascii.Error, UnicodeError):
+        raise SourceError('invalid_priority_page_state') from None
+    _require(isinstance(data, dict) and set(data) == {'generation', 'phase', 'google_token'}
+        and data['generation'] == priority['generation'] and data['phase'] in {'priority', 'global'}
+        and (data['google_token'] is None or _string(data['google_token'])), 'invalid_priority_page_state')
+    _require(_priority_token(priority, data['phase'], data['google_token']) == token, 'invalid_priority_page_state')
+    return data['phase'], data['google_token']
+
+
 class GoogleSources:
     def __init__(self, sync, transport, config, *, evaluator=None, projection_guard=None):
         self.sync, self.store, self.transport = sync, sync.store, transport
@@ -103,12 +152,15 @@ class GoogleSources:
     def _source(self, source_id):
         _require(source_id in self.config and _string(source_id), 'unknown_source')
         cfg = self.config[source_id]
-        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit', 'since_epoch'}
+        allowed = {'provider', 'account', 'calendar_id', 'scope', 'page_size', 'max_pages', 'max_response_bytes', 'request_timeout_seconds', 'pending_retry_limit', 'since_epoch', 'priority_terms'}
         _require(isinstance(cfg, dict) and not set(cfg) - allowed, 'unsupported_source_filter')
         _require(cfg.get('provider') in {'gmail', 'calendar'} and _string(cfg.get('account')), 'explicit_account_required')
         selective = cfg['provider'] == 'gmail' and cfg.get('scope') == 'selective_since'
         _require(selective or cfg.get('scope') == ('whole_mailbox' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions'), 'explicit_coverage_scope_required')
         _require(cfg.get('since_epoch') == 1785556800 if selective else 'since_epoch' not in cfg, 'explicit_since_scope_required')
+        if 'priority_terms' in cfg:
+            _require(selective, 'priority_requires_selective_scope')
+            priority_query(cfg['priority_terms'])
         calendar = cfg.get('calendar_id')
         _require(cfg['provider'] != 'calendar' or _string(calendar) and calendar != 'primary', 'concrete_calendar_required')
         _require(cfg['provider'] != 'gmail' or calendar is None, 'gmail_calendar_mismatch')
@@ -147,10 +199,17 @@ class GoogleSources:
         adapter = self._load(partition)
         state = self.sync.inspect(partition)
         pending = (adapter or {}).get('pending_reads', {})
+        priority = (adapter or {}).get('priority')
+        phase = None
+        if priority and state and adapter.get('cycle_id') in state['cycles']:
+            cycle = state['cycles'][adapter['cycle_id']]
+            phase = 'complete' if cycle['status'] == 'complete' else _priority_position(priority, cycle['next_page_token'])[0]
         health = 'degraded' if pending or (adapter or {}).get('error') or state and state['coverage'] in {'degraded','rebuild_required'} else 'complete' if state and state['coverage'] == 'complete' and state['projection'] == 'current' else 'in_progress'
         return {'partition': partition, 'effective_parameters': params, 'health': health,
             'originals_complete': not pending and bool(state) and state['coverage'] == 'complete',
             'pending_reads': copy.deepcopy(pending),
+            'priority': {'phase': phase, 'terms': copy.deepcopy(priority['terms']) if priority else [],
+                'global_backfill_pending': bool(priority and phase != 'complete')},
             'coverage_contract': {'scope': 'selective_since_including_spam_trash' if cfg.get('scope') == 'selective_since' else 'whole_mailbox_including_spam_trash' if cfg['provider'] == 'gmail' else 'calendar_masters_and_exceptions',
                 'interval': {'since_epoch': cfg['since_epoch'], 'timezone': 'America/Santiago'} if cfg.get('scope') == 'selective_since' else None, 'recurrence_expanded': False, 'attachments_interpreted': False,
                 'semantic_review': ('evaluated' if health == 'complete' else 'pending' if pending or state else 'not_evaluated') if cfg.get('scope') == 'selective_since' else 'not_evaluated',
@@ -330,6 +389,10 @@ class GoogleSources:
     async def _gmail_page(self, cfg, params, cycle, adapter):
         base = 'https://gmail.googleapis.com/gmail/v1/users/me'
         token = cycle['next_page_token']
+        priority = adapter.get('priority') if cycle['mode'] != 'incremental' else None
+        phase = None
+        if priority:
+            phase, token = _priority_position(priority, token)
         query = {'maxResults': params['maxResults']}
         if token is not None:
             query['pageToken'] = token
@@ -342,7 +405,7 @@ class GoogleSources:
         else:
             query['includeSpamTrash'] = 'true'
             if 'q' in params:
-                query['q'] = params['q']
+                query['q'] = priority_query(priority['terms']) if phase == 'priority' else params['q']
             status, body = await self._get(cfg, base + '/messages', query)
         _require(status == 200, 'http_' + str(status))
         changed, deleted = {}, {}
@@ -395,6 +458,12 @@ class GoogleSources:
                 url='https://mail.google.com/mail/u/' + quote(cfg['account'], safe='') + '/#all/' + quote(identity, safe='')))
         next_token = body.get('nextPageToken')
         _require(next_token is None or _string(next_token), 'invalid_next_page_token')
+        if priority:
+            if phase == 'priority':
+                next_token = (_priority_token(priority, 'priority', next_token) if next_token is not None
+                    else _priority_token(priority, 'global', priority['entry_token']))
+            elif next_token is not None:
+                next_token = _priority_token(priority, 'global', next_token)
         cursor = body.get('historyId') if incremental else adapter['baseline_history_id']
         _require(next_token is not None or _string(cursor), 'final_cursor_missing')
         return objects, next_token, None if next_token is not None else cursor, set(changed) | set(deleted)
@@ -441,6 +510,8 @@ class GoogleSources:
     async def _synchronize(self, source_id, cfg, params, partition):
         adapter = self._load(partition)
         cycle_id = adapter.get('cycle_id') if adapter and adapter.get('active') else None
+        if cycle_id and adapter.get('priority'):
+            _require(cfg.get('priority_terms', []) == adapter['priority']['terms'], 'priority_terms_changed_active_cycle')
         try:
             _require(cfg.get('scope') != 'selective_since' or callable(self.evaluator), 'evaluator_unavailable')
             _require(getattr(self.transport, 'authenticated_account', None) == cfg['account'], 'credential_account_mismatch')
@@ -481,8 +552,18 @@ class GoogleSources:
                     adapter['partition'] = partition
                 self._save(partition, adapter)
                 self.sync.begin(partition, cycle_id, mode)
+            state = self.sync.inspect(partition)
+            cycle = state['cycles'][cycle_id]
+            if (cfg.get('priority_terms') and cycle['mode'] in {'full', 'rebuild'}
+                    and not adapter.get('priority')):
+                adapter['priority'] = {'terms': copy.deepcopy(cfg['priority_terms']),
+                    'entry_token': cycle['next_page_token'],
+                    'generation': _hash([cycle_id, cycle['next_page_token'], cfg['priority_terms']])}
+                self._save(partition, adapter)  # freeze terms/resume point BEFORE the first priority read
+            priority_active = bool(adapter.get('priority') and
+                _priority_position(adapter['priority'], cycle['next_page_token'])[0] == 'priority')
             retried = []
-            if cfg['provider'] == 'gmail':
+            if cfg['provider'] == 'gmail' and not priority_active:
                 pending = adapter.get('pending_reads', {})
                 oldest = sorted(pending, key=lambda identity: (pending[identity].get('last_attempt_at', pending[identity]['observed_at']), identity))
                 for identity in oldest[:cfg.get('pending_retry_limit', 10)]:
