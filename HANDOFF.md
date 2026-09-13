@@ -1,7 +1,8 @@
 # Continuidad de GTD
 
-El único estado vigente está en [ESTADO.md](/home/felix/lab/gtd-agentico-2026-09-10/ESTADO.md); el contrato y el camino de cierre, en [GUIA.md](/home/felix/lab/gtd-agentico-2026-09-10/GUIA.md).
+[Estado actual y evidencia](docs/gtd-felix/ESTADO.md) · [Contrato y camino de cierre](docs/gtd-felix/GUIA.md).
 
-Para continuar desde Hermes: [instrucciones de arranque de la sesión de construcción](/home/felix/lab/gtd-agentico-2026-09-10/INICIAR-SESION.md). Esta instrucción de arranque no reanuda por sí sola el trabajo detenido ni requiere crear un goal en Codex.
-
-[Traspaso anterior conservado](/home/felix/lab/gtd-agentico-2026-09-10/archivo/2026-09-13/HANDOFF.md). Esta entrada sólo conserva el acceso desde el worktree; no mantiene otro estado.
+Son las dos fuentes vigentes del proyecto. El estado personal y los recibos de
+operación permanecen privados; las rutas históricas del host apuntan a estos
+archivos. No reconstruir el estado desde diarios ni asumir que un plan ya está
+implementado. La instrucción más reciente del usuario conserva precedencia.
