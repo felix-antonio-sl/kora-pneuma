@@ -595,6 +595,12 @@ class HermesAdapter:
         recorded = self.control.record_dispatch(job['id'], self._native(route, native_id, intent['durable']))
         if recorded.get('status') != 'recorded':
             return self._uncertain(job['id'], 'dispatch_record_rejected')
+        # Durable admission anchor: a native run was proven to exist remotely
+        # (validated native_id). Local wall time from here bounds enforcement
+        # even if the provider later stops updating its own timestamps. Never
+        # set on never_sent/uncertain paths, so nonexistent execution is never
+        # charged. Same local clock for both ends: no cross-clock skew.
+        self._state(job['id'], native_admitted_at=time.time())
         return {'status': 'submitted', 'job_id': job['id'], 'native_id': native_id}
 
     async def poll(self, job_id):
@@ -638,7 +644,7 @@ class HermesAdapter:
             self._set('hermes:artifact:' + job_id, artifact)
         return artifact
 
-    def _record_observation(self, job, route, intent, payload, status, runtime, output=None):
+    def _record_observation(self, job, route, intent, payload, status, runtime, output=None, native_runtime=None):
         terminal = status in self.TERMINAL
         native_id = (self._get('hermes:state:' + job['id']) or {})['native_id']
         native = self._native(route, native_id, intent['durable'])
@@ -650,7 +656,7 @@ class HermesAdapter:
         artifact = self._artifact(job['id'], output, payload) if terminal and output is not None else None
         evidence_key = 'hermes:observation:' + job['id'] + ':' + _hash(payload)
         observation = {'native_identity': native, 'native_status': status, 'terminal': terminal,
-            'runtime_seconds': runtime, 'cost_usd': cost, 'usage': usage,
+            'runtime_seconds': runtime, 'native_runtime_seconds': native_runtime, 'cost_usd': cost, 'usage': usage,
             'cost_telemetry': 'unknown' if cost is None else 'provider_reported', 'evidence_reference': evidence_key}
         with self.store.transaction():
             self._set(evidence_key, {'observed_at': time.time(), 'payload': payload, 'observation': observation, 'artifact': artifact})
@@ -666,14 +672,37 @@ class HermesAdapter:
         self._state(job['id'], last_result=result, delivery='observed')
         return result
 
+    def _admitted_elapsed(self, job):
+        # Local wall time since the durably proven remote admission. One-time
+        # backfill for runs admitted before this guard existed (conservative
+        # under-count, documented); afterwards the anchor never moves, so
+        # restarts/reconciles cannot reset the deadline. max(0,...) bounds a
+        # backward local clock jump; a forward jump fails safe (earlier STOP).
+        state = self._get('hermes:state:' + job['id']) or {}
+        admitted = state.get('native_admitted_at')
+        if not _number(admitted):
+            admitted = time.time()
+            self._state(job['id'], native_admitted_at=admitted)
+        return max(0.0, time.time() - admitted)
+
     def _observe_api(self, job, route, intent, payload):
         raw = payload.get('status')
         status = {'started': 'running', 'stopping': 'running', 'interrupted': 'failed'}.get(raw, raw)
         if status not in self.TERMINAL | {'queued', 'running', 'waiting'}:
             return self._uncertain(job['id'], 'unknown_native_status')
         start, finish = payload.get('created_at'), payload.get('updated_at')
-        runtime = max(0, finish - start) if _number(start) and _number(finish) else (job['max_runtime_seconds'] if status in self.TERMINAL else job.get('observed_runtime_seconds', 0))
-        return self._record_observation(job, route, intent, payload, status, runtime, payload.get('output'))
+        native_runtime = max(0, finish - start) if _number(start) and _number(finish) else None
+        if status == 'running':
+            # Provider silence (frozen updated_at) must not freeze enforcement:
+            # floor by local elapsed since proven admission. queued/waiting keep
+            # remote-derived values so unstarted execution is never charged.
+            floor = self._admitted_elapsed(job)
+            base = native_runtime if native_runtime is not None else job.get('observed_runtime_seconds', 0)
+            runtime = max(base, floor)
+        else:
+            runtime = (max(0, finish - start) if _number(start) and _number(finish)
+                       else (job['max_runtime_seconds'] if status in self.TERMINAL else job.get('observed_runtime_seconds', 0)))
+        return self._record_observation(job, route, intent, payload, status, runtime, payload.get('output'), native_runtime=native_runtime)
 
     def _observe_kanban(self, job, route, intent, payload):
         if not isinstance(payload, dict):
@@ -823,6 +852,13 @@ class HermesAdapter:
                 self._same_route(route, intent)
                 if job.get('terminal'):
                     return await self._poll(job_id)
+                key = 'hermes:stop:' + job_id
+                old = self._get(key)
+                if old and old.get('receipt'):
+                    # Durable idempotent STOP: an already requested stop is
+                    # returned verbatim, even after the limit (when validate
+                    # would refuse). One remote stop per admitted identity.
+                    return old['receipt']
                 # Stop is permitted after revocation/version changes. validate's
                 # refusal is recorded, not misread as permission to continue work.
                 validation = self.control.validate(job_id, job['capability'])
@@ -830,7 +866,6 @@ class HermesAdapter:
                 if requested.get('status') == 'rejected':
                     raise ValueError('stop_not_authorized')
                 with self.store.transaction():
-                    key = 'hermes:stop:' + job_id
                     old = self._get(key)
                     if old:
                         return old.get('receipt') or {'status': 'uncertain', 'job_id': job_id, 'error': 'stop_receipt_missing'}
