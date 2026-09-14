@@ -2020,7 +2020,26 @@ class ExecutionControl:
         """Administrative terminality, never a fabricated native observation."""
         if job.get('terminal_resolution', {}).get('kind') == 'cancelled_before_dispatch':
             return True
-        if (self.service.recovery_required or job.get('delivery') not in ({'deferred', 'intent'} if reason == 'job_budget_period_expired' else {'deferred'})
+        # A manager stop also closes a pristine STANDALONE intent reservation:
+        # no native run, observations, spend, progress or integration exists to
+        # preserve, so keeping it reserved would wedge the single global slot
+        # until the period ends with no worker able to advance it. Family
+        # members (parent_job_id set) keep the shutdown protocol and its
+        # accounting; deferred keeps its existing rule; expiry keeps intent
+        # only for its own past-period case.
+        if reason == 'job_budget_period_expired':
+            closable = {'deferred', 'intent'}
+        elif reason == 'stop_requested' and job.get('parent_job_id') is None:
+            # Standalone pristine intent only; family shutdown keeps its
+            # protocol (a root with descendants still records the native
+            # outcome, members keep family accounting) and deferred keeps
+            # its rule.
+            children = self.store.db.execute(
+                'SELECT 1 FROM runs WHERE parent_run_id=? LIMIT 1', (job['id'],)).fetchone()
+            closable = {'deferred'} if children else {'deferred', 'intent'}
+        else:
+            closable = {'deferred'}
+        if (self.service.recovery_required or job.get('delivery') not in closable
                 or job.get('terminal') or job.get('native') is not None or job.get('observations')
                 or job.get('charged_cost_usd') != 0 or job.get('observed_runtime_seconds') != 0
                 or job.get('progress') or job.get('integration') != 'pending'):

@@ -396,6 +396,22 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(self.control.activate_deferred(child)['status'], 'discarded')
         self.assertEqual(self.control.get_job(child)['integration_error'], 'stop_requested')
 
+    def test_direct_stop_closes_pristine_intent_without_worker_or_native(self):
+        # A manager-stopped intent reservation with no native run, spend,
+        # observations or progress must reach terminality within the period;
+        # otherwise the single global slot wedges with no worker able to
+        # advance it (bare admission has no orchestration run).
+        job_id = self.reserve('stop-intent')
+        result = self.control.request_stop('felix', 'direct-stop-intent', job_id)
+        self.assertTrue(result['job']['terminal'])
+        self.assertEqual(result['job']['terminal_resolution']['kind'], 'cancelled_before_dispatch')
+        self.assertIsNone(result['job']['native'])
+        self.assertEqual(result['job']['observations'], [])
+        self.assertEqual(result['job']['charged_cost_usd'], 0)
+        self.assertEqual(result['job']['integration'], 'discarded')
+        self.assertEqual(self.control.request_stop('felix', 'direct-stop-intent', job_id)['job'], result['job'])
+        self.assertNotIn(job_id, [j['id'] for j in self.control.pending()])
+
     def test_direct_stop_closes_deferred_without_worker_or_native(self):
         root, child = self.deferred_contribution()
         result = self.control.request_stop('felix','direct-stop',child)
