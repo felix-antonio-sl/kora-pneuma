@@ -241,9 +241,9 @@ class CoreTest(unittest.TestCase):
         self.assertFalse((self.root / "bad").exists())
 
     def test_migration_reopen_and_reject_future_schema(self):
-        # I1: schema is now v2 (work_cycles/runs/run_observations); old code
-        # rejects newer_schema, new code rejects future versions.
-        self.assertEqual(self.service.store.db.execute("PRAGMA user_version").fetchone()[0], 3)
+        # I3: schema is now v4 (source_entries); old code rejects
+        # newer_schema, new code rejects future versions.
+        self.assertEqual(self.service.store.db.execute("PRAGMA user_version").fetchone()[0], 4)
         self.capture()
         self.restart()
         self.assertEqual(len(self.service.query()), 1)

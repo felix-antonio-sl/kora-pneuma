@@ -1,0 +1,318 @@
+"""I3 source authority: per-revision intake/selection rows, coverage, retention."""
+import hashlib
+import json
+import sqlite3
+import tempfile
+from pathlib import Path
+import sys
+import unittest
+
+from runtime_location import RUNTIME
+sys.path.insert(0, str(RUNTIME))
+from gtd_felix.service import GTDService, migrate_i3_sources
+from gtd_felix.source_sync import SourceSync
+from gtd_felix.google_sources import GoogleSources
+from gtd_felix.source_entries import (
+    entry_id, get, pending_by_account, coverage, record_decision, prune_superseded)
+import test_google_sources as fixtures
+
+
+def entry(store, provider, account, external_id, revision):
+    row = store.db.execute(
+        'SELECT * FROM source_entries WHERE id=?',
+        (entry_id(provider, account, external_id, revision),)).fetchone()
+    return dict(row) if row else None
+
+
+class SchemaTests(unittest.TestCase):
+    def test_fresh_database_is_v4_with_source_entries(self):
+        temp = tempfile.TemporaryDirectory()
+        try:
+            service = GTDService(Path(temp.name) / 'data')
+            try:
+                self.assertEqual(
+                    service.store.db.execute('PRAGMA user_version').fetchone()[0], 4)
+                cols = [r[1] for r in service.store.db.execute(
+                    'PRAGMA table_info(source_entries)')]
+                self.assertEqual(cols, ['id', 'provider', 'account', 'external_id',
+                    'revision', 'status', 'original_digest', 'item_id',
+                    'metadata_json', 'observed_at'])
+            finally:
+                service.close()
+        finally:
+            temp.cleanup()
+
+    def test_newer_schema_is_rejected(self):
+        temp = tempfile.TemporaryDirectory()
+        try:
+            path = Path(temp.name) / 'data'
+            service = GTDService(path)
+            service.close()
+            db = sqlite3.connect(path / 'gtd.sqlite3')
+            db.execute('PRAGMA user_version=99')
+            db.commit()
+            db.close()
+            with self.assertRaises(ValueError):
+                GTDService(path)
+        finally:
+            temp.cleanup()
+
+
+class IntakeTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+        self.sync = SourceSync(self.service)
+        self.partition = dict(provider='mail-fixture', account='account-A',
+            collection='messages', scope_digest='a' * 64)
+
+    def tearDown(self):
+        self.service.close()
+        self.temp.cleanup()
+
+    def obj(self, identity='message-1', revision='r1', text='External evidence'):
+        data = text.encode()
+        return dict(external_id=identity, revision=revision, text=text, original=data,
+            sha256=hashlib.sha256(data).hexdigest(),
+            url='https://provider.invalid/object/' + identity, status='present')
+
+    def test_entry_exists_before_cursor_advances(self):
+        self.sync.begin(self.partition, 'full')
+        state = self.sync.apply_page(self.partition, 'full', dict(
+            page_id='p1', request_token=None, next_page_token='p2', cursor=None,
+            objects=[self.obj()]))
+        self.assertIsNone(state['cursor'])
+        row = entry(self.service.store, 'mail-fixture', 'account-A', 'message-1', 'r1')
+        self.assertIsNotNone(row)
+        self.assertEqual(row['status'], 'pending')
+        self.assertIsNotNone(row['item_id'])
+        self.assertEqual(row['original_digest'], hashlib.sha256(b'External evidence').hexdigest())
+        final = self.sync.apply_page(self.partition, 'full', dict(
+            page_id='p2', request_token='p2', next_page_token=None, cursor='c1', objects=[]))
+        self.assertEqual(final['cursor'], 'c1')
+        self.assertEqual(
+            entry(self.service.store, 'mail-fixture', 'account-A', 'message-1', 'r1')['item_id'],
+            final['objects']['message-1']['item_id'])
+
+    def test_pending_and_coverage_reads_are_bounded(self):
+        self.sync.begin(self.partition, 'full')
+        self.sync.apply_page(self.partition, 'full', dict(
+            page_id='p1', request_token=None, next_page_token=None, cursor='c1',
+            objects=[self.obj('m1'), self.obj('m2')]))
+        pending = pending_by_account(self.service.store, 'mail-fixture', 'account-A')
+        self.assertEqual({p['external_id'] for p in pending}, {'m1', 'm2'})
+        self.assertEqual(coverage(self.service.store, 'mail-fixture', 'account-A'), {'pending': 2})
+        self.assertEqual(pending_by_account(self.service.store, 'mail-fixture', 'other'), [])
+
+    def test_decided_status_is_never_downgraded_by_intake(self):
+        record_decision(self.service.store, provider='mail-fixture', account='account-A',
+            external_id='message-9', revision='r9', decision='noise', reason_code='non_actionable')
+        self.sync.begin(self.partition, 'full')
+        self.sync.apply_page(self.partition, 'full', dict(
+            page_id='p1', request_token=None, next_page_token=None, cursor='c1',
+            objects=[self.obj('message-9', 'r9', 'External evidence')]))
+        row = entry(self.service.store, 'mail-fixture', 'account-A', 'message-9', 'r9')
+        self.assertEqual(row['status'], 'noise')
+
+
+class MigrationTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+        self.sync = SourceSync(self.service)
+        self.partition = dict(provider='mail-fixture', account='account-A',
+            collection='messages', scope_digest='a' * 64)
+
+    def tearDown(self):
+        self.service.close()
+        self.temp.cleanup()
+
+    def _seed_legacy(self):
+        self.sync.begin(self.partition, 'full')
+        data = b'Legacy body'
+        self.sync.apply_page(self.partition, 'full', dict(
+            page_id='p1', request_token=None, next_page_token=None, cursor='c1', objects=[
+                dict(external_id='legacy-1', revision='r1', text='Legacy one', original=data,
+                     sha256=hashlib.sha256(data).hexdigest(),
+                     url='https://provider.invalid/object/legacy-1', status='present')]))
+        with self.service.store.transaction() as db:
+            db.execute("DELETE FROM source_entries")
+
+    def test_migrates_rows_once_with_decisions_and_links(self):
+        self._seed_legacy()
+        with self.service.store.transaction() as db:
+            db.execute("DELETE FROM source_entries")
+            db.execute("INSERT INTO metadata VALUES(?,?)", (
+                'source-sync:google:legacy-adapter', json.dumps({'decisions': {'any-key': {
+                    'external_id': 'legacy-1', 'revision': 'r1',
+                    'classification': 'selected', 'reason_code': 'gtd_relevant'}}})))
+        receipt = migrate_i3_sources(self.service.store)
+        self.assertEqual(receipt['migrated_source_entries'], 1, receipt)
+        row = entry(self.service.store, 'mail-fixture', 'account-A', 'legacy-1', 'r1')
+        self.assertEqual(row['status'], 'selected')
+        self.assertIsNotNone(row['item_id'])
+        self.assertEqual(json.loads(row['metadata_json'])['reason_code'], 'gtd_relevant')
+        rerun = migrate_i3_sources(self.service.store)
+        self.assertEqual(rerun.get('note'), 'already_migrated', rerun)
+
+    def test_refuses_with_active_sync_cycle(self):
+        self.sync.begin(self.partition, 'active-cycle')
+        with self.assertRaises(ValueError):
+            migrate_i3_sources(self.service.store)
+
+
+class SelectiveJourneyTests(unittest.IsolatedAsyncioTestCase):
+    async def asyncSetUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.path = Path(self.temp.name) / 'data'
+        self.service = GTDService(self.path)
+        self.transport = fixtures.Transport(self.service)
+        self.config = {'mail': {'provider': 'gmail', 'account': fixtures.ACCOUNT,
+            'scope': 'selective_since', 'since_epoch': 1785556800, 'page_size': 2}}
+        self.answers = {}
+        self.adapter = GoogleSources(SourceSync(self.service), self.transport,
+            self.config, evaluator=self.evaluate)
+
+    async def asyncTearDown(self):
+        self.service.close()
+        self.temp.cleanup()
+
+    async def evaluate(self, evidence):
+        classification = self.answers.get(evidence['external_id'], 'noise')
+        return {'classification': classification, 'reason_code': {
+            'noise': 'non_actionable', 'selected': 'gtd_relevant',
+            'uncertain': 'needs_review'}[classification]}
+
+    def profile(self, history='10'):
+        self.transport.add(fixtures.GMAIL + '/profile', {},
+            {'emailAddress': fixtures.ACCOUNT, 'historyId': history})
+
+    def page(self, messages, *, token=None, next_token=None):
+        query = {'maxResults': 2, 'includeSpamTrash': 'true', 'q': 'after:1785556800'}
+        if token:
+            query['pageToken'] = token
+        body = {'messages': [{'id': identity} for identity in messages]}
+        if next_token:
+            body['nextPageToken'] = next_token
+        self.transport.add(fixtures.GMAIL + '/messages', query, body)
+        for identity in messages:
+            self.transport.add(fixtures.GMAIL + '/messages/' + identity, {'format': 'raw'},
+                fixtures.raw_message(identity, labels=['CATEGORY_PROMOTIONS']))
+
+    def history(self, start, identities=(), *, end='20', status=200):
+        self.transport.add(fixtures.GMAIL + '/history', {'maxResults': 2, 'startHistoryId': start},
+            {'historyId': end, 'history': [{'id': end, 'messagesAdded': [{'message': {'id': i}} for i in identities]}]}, status=status)
+        for identity in identities:
+            self.transport.add(fixtures.GMAIL + '/messages/' + identity, {'format': 'raw'},
+                fixtures.raw_message(identity, history=end))
+
+    def entries(self, external_id):
+        return [dict(r) for r in self.service.store.db.execute(
+            "SELECT * FROM source_entries WHERE provider='gmail' AND external_id=? ORDER BY observed_at",
+            (external_id,)).fetchall()]
+
+    async def test_selected_projects_affair_and_revision_invalidates_only_dependents(self):
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.page(['m1'])
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', result['health'])
+        rows = self.entries('m1')
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['status'], 'selected')
+        affair = next(i for i in self.service.query()
+                      if i.get('source', {}).get('external_id') == 'm1')
+        self.assertEqual(rows[0]['item_id'], affair['id'])
+        self.assertIsNone(affair.get('waiting_for'))
+        self.assertEqual(len(self.service.query()), 1)
+        current = self.service.get_item(affair['id'])
+        affair = self.service.execute('felix', {'operation_id': 'i3-clarify', 'action': 'clarify',
+            'item_id': affair['id'], 'expected_version': current['version'],
+            'fields': {'kind': 'action', 'commitment': 'committed', 'outcome': 'Atender',
+                       'completion_criteria': 'Hecho'}})['item']
+        other = self.service.capture('felix', 'i3-other', 'Asunto ajeno')['item']
+        other = self.service.execute('felix', {'operation_id': 'i3-other-mat', 'action': 'put_material',
+            'item_id': other['id'], 'expected_version': other['version'],
+            'fields': {'content': 'Material ajeno intacto', 'title': 'Ajeno'}})['item']
+        affair = self.service.execute('felix', {'operation_id': 'i3-mat-v1', 'action': 'put_material',
+            'item_id': affair['id'], 'expected_version': affair['version'],
+            'fields': {'content': 'Preparacion v1', 'title': 'Prep',
+                       'source_versions': {affair['id']: len(affair['source_revisions'])}}})['item']
+        self.assertTrue(self.service.materials(affair['id'])[0]['valid'])
+        self.profile('20')
+        self.history('10', ['m1'], end='20')
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', result['health'])
+        rows = self.entries('m1')
+        self.assertEqual(len(rows), 2)
+        self.assertEqual({r['status'] for r in rows}, {'selected'})
+        revised = self.service.get_item(affair['id'])
+        self.assertGreater(revised['version'], affair['version'])
+        invalid = self.service.materials(affair['id'])[0]
+        self.assertFalse(invalid['valid'])
+        self.assertTrue(any(r.startswith('basis_changed') for r in invalid['invalid_reasons']))
+        intact = self.service.materials(other['id'])[0]
+        self.assertTrue(intact['valid'])
+        content = self.service.read_material(other['id'], intact['id'], intact['version'])['content']
+        self.assertIn('Material ajeno intacto', content)
+
+    async def test_noise_keeps_obligation_without_body(self):
+        self.answers['m1'] = 'noise'
+        self.profile()
+        self.page(['m1'])
+        await self.adapter.synchronize('mail')
+        rows = self.entries('m1')
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['status'], 'noise')
+        self.assertIsNone(rows[0]['item_id'])
+        self.assertEqual(self.service.query(), [])
+        blob = json.dumps([dict(r) for r in self.service.store.db.execute(
+            "SELECT key, value FROM metadata")])
+        self.assertNotIn('Read this source', blob)
+
+    async def test_failed_evaluation_keeps_retry_obligation_without_body(self):
+        async def failing(evidence):
+            raise RuntimeError('synthetic bridge down')
+        self.adapter = GoogleSources(SourceSync(self.service), self.transport,
+            self.config, evaluator=failing)
+        self.profile()
+        self.page(['m1'])
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', result['health'])
+        pending = result['adapter']['pending_reads']
+        self.assertIn('m1', pending)
+        blob = json.dumps([dict(r) for r in self.service.store.db.execute(
+            "SELECT key, value FROM metadata")])
+        self.assertNotIn('Read this source', blob)
+        self.assertNotIn('synthetic bridge down', blob)
+
+
+class RetentionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+
+    def tearDown(self):
+        self.service.close()
+        self.temp.cleanup()
+
+    def test_prune_keeps_only_referenced_revisions(self):
+        record_decision(self.service.store, provider='gmail', account='a',
+            external_id='m1', revision='r1', decision='selected')
+        record_decision(self.service.store, provider='gmail', account='a',
+            external_id='m1', revision='r2', decision='selected')
+        pruned = prune_superseded(self.service.store, provider='gmail', account='a',
+            external_id='m1', keep_revisions={'r2'})
+        self.assertEqual(pruned, 1)
+        remaining = [r[0] for r in self.service.store.db.execute(
+            "SELECT revision FROM source_entries WHERE external_id='m1'")]
+        self.assertEqual(remaining, ['r2'])
+
+    def test_prune_requires_kept_revision(self):
+        with self.assertRaises(ValueError):
+            prune_superseded(self.service.store, provider='gmail', account='a',
+                external_id='m1', keep_revisions=set())
+
+
+if __name__ == '__main__':
+    unittest.main()
