@@ -141,8 +141,11 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual('degraded', current['source']['availability'])
         self.assertEqual(old['original'], current['source_revisions'][0]['original'])
         self.assertEqual(1, self.service.store.db.execute('SELECT count(*) FROM originals').fetchone()[0])
-        key = result['adapter']['current_decisions']['m1']
-        self.assertEqual('noise', result['adapter']['decisions'][key]['classification'])
+        row = self.service.store.db.execute(
+            "SELECT status FROM source_entries WHERE provider='gmail'"
+            " AND external_id='m1' AND revision LIKE 'message:%'"
+            " ORDER BY observed_at DESC LIMIT 1").fetchone()
+        self.assertEqual('noise', row[0])
 
     async def test_unconfigured_evaluator_fails_closed_before_network(self):
         self.adapter = GoogleSources(SourceSync(self.service), self.transport, self.config)
@@ -165,8 +168,12 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         result = await self.adapter.synchronize('mail')
         self.assertEqual([], self.evaluated)
         self.assertEqual([], self.service.query())
-        decision = result['adapter']['decisions'][result['adapter']['current_decisions']['old']]
-        self.assertEqual('outside_scope', decision['reason_code'])
+        row = self.service.store.db.execute(
+            "SELECT status, metadata_json FROM source_entries WHERE provider='gmail'"
+            " AND external_id='old' ORDER BY observed_at DESC LIMIT 1").fetchone()
+        import json as _json
+        self.assertEqual('noise', row[0])
+        self.assertEqual('outside_scope', _json.loads(row[1])['reason_code'])
 
     async def test_evaluator_failure_retains_obligation_without_message_or_error_text(self):
         marker = 'SYNTHETIC_PRIVATE_NEWSLETTER_BODY_728319'
@@ -246,7 +253,10 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.history('10', ['m1'], end='20')
         result = await self.adapter.synchronize('mail')
         self.assertEqual('complete', result['health'])
-        self.assertEqual('noise', result['adapter']['decisions'][result['adapter']['current_decisions']['m1']]['classification'])
+        row = self.service.store.db.execute(
+            "SELECT status FROM source_entries WHERE provider='gmail'"
+            " AND external_id='m1' ORDER BY observed_at DESC LIMIT 1").fetchone()
+        self.assertEqual('noise', row[0])
         self.assertEqual([], self.service.query())
         self.assertEqual(0, self.service.store.db.execute('SELECT count(*) FROM originals').fetchone()[0])
         self.assertEqual({}, result['pending_reads'])

@@ -226,7 +226,6 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(removed, 1)
         second = migrate_i3_sources(self.service.store)
         self.assertEqual(second.get('note'), 'already_migrated', second)
-        self.assertEqual(second.get('skipped_pruned'), 1, second)
         self.assertIsNone(entry(
             self.service.store, 'mail-fixture', 'account-A', 'messages', 'legacy-1', 'r1'))
 
@@ -253,29 +252,16 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(row['status'], 'selected')
         self.assertEqual(json.loads(row['metadata_json'])['reason_code'], 'gtd_relevant')
 
-    def test_standalone_decision_merges_into_pending_row(self):
-        # Mixed state: new-code intake already wrote a pending row, the
-        # durable decision lands during migration instead of duplicating.
+    def test_post_cut_rerun_changes_nothing_new_decisions_use_live_path(self):
+        # After the cut, migration is a pure no-op: a decision landing in
+        # legacy adapter state is NOT picked up; the live record_decision
+        # path owns new decisions.
         self._seed_legacy()
+        first = migrate_i3_sources(self.service.store)
+        self.assertNotIn('note', first, first)
         with self.service.store.transaction() as db:
             db.execute("INSERT INTO metadata VALUES(?,?)", (
-                'source-sync:google:solo-adapter', json.dumps({'partition': {
-                    'provider': 'mail-fixture', 'account': 'account-A',
-                    'collection': 'messages', 'scope_digest': 'c' * 64},
-                    'decisions': {'k3': {
-                        'external_id': 'legacy-1', 'revision': 'r1',
-                        'classification': 'selected', 'reason_code': 'gtd_relevant'}}})))
-            db.execute("DELETE FROM source_entries WHERE 1=1")
-            # Index record without the decision visible: row stays pending.
-            db.execute("DELETE FROM metadata WHERE key='source-sync:google:solo-adapter'")
-        receipt = migrate_i3_sources(self.service.store)
-        self.assertEqual(receipt['migrated_source_entries'], 1, receipt)
-        row = entry(self.service.store, 'mail-fixture', 'account-A', 'messages', 'legacy-1', 'r1')
-        self.assertEqual(row['status'], 'pending')
-        # The decision arrives (another scope adapter) before a rerun.
-        with self.service.store.transaction() as db:
-            db.execute("INSERT INTO metadata VALUES(?,?)", (
-                'source-sync:google:solo-adapter', json.dumps({'partition': {
+                'source-sync:google:late-adapter', json.dumps({'partition': {
                     'provider': 'mail-fixture', 'account': 'account-A',
                     'collection': 'messages', 'scope_digest': 'c' * 64},
                     'decisions': {'k3': {
@@ -284,8 +270,12 @@ class MigrationTests(unittest.TestCase):
         second = migrate_i3_sources(self.service.store)
         self.assertEqual(second.get('note'), 'already_migrated', second)
         row = entry(self.service.store, 'mail-fixture', 'account-A', 'messages', 'legacy-1', 'r1')
+        self.assertEqual(row['status'], 'pending')
+        record_decision(self.service.store, provider='mail-fixture', account='account-A',
+            collection='messages', external_id='legacy-1', revision='r1',
+            decision='selected', reason_code='gtd_relevant')
+        row = entry(self.service.store, 'mail-fixture', 'account-A', 'messages', 'legacy-1', 'r1')
         self.assertEqual(row['status'], 'selected')
-        self.assertEqual(json.loads(row['metadata_json'])['reason_code'], 'gtd_relevant')
 
     def test_refuses_with_active_sync_cycle(self):
         self.sync.begin(self.partition, 'active-cycle')
@@ -391,6 +381,65 @@ class SelectiveJourneyTests(unittest.IsolatedAsyncioTestCase):
         content = self.service.read_material(other['id'], intact['id'], intact['version'])['content']
         self.assertIn('Material ajeno intacto', content)
 
+    async def test_table_rules_over_legacy_dict_without_reevaluation(self):
+        from gtd_felix.source_entries import record_decision
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.page(['m1'])
+        await self.adapter.synchronize('mail')
+        calls = []
+        async def counting(evidence):
+            calls.append(evidence['external_id'])
+            return {'classification': 'selected', 'reason_code': 'gtd_relevant'}
+        # A newer decision lands directly; the selective read must honor the
+        # table without spending another inference.
+        rows = self.entries('m1')
+        record_decision(self.service.store, provider='gmail', account='reader@example.invalid',
+            collection=rows[0]['collection'], external_id='m1', revision=rows[0]['revision'],
+            decision='noise', reason_code='non_actionable')
+        partition = self.adapter.inspect('mail')['partition']
+        adapter = self.service._meta('source-sync:google:' + __import__(
+            'hashlib').sha256(__import__('json').dumps(
+                partition, ensure_ascii=False, sort_keys=True,
+                separators=(',', ':')).encode()).hexdigest())
+        self.adapter.evaluator = counting
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            fixtures.raw_message('m1', labels=['CATEGORY_PROMOTIONS']))
+        affairs_before = len(self.service.query())
+        obj = await self.adapter._read_selective_message(
+            self.config['mail'], 'm1', adapter)
+        self.assertEqual(calls, [])
+        self.assertTrue(obj is None or obj.get('status') == 'degraded', obj)
+        self.assertEqual(len(self.service.query()), affairs_before)
+        rows = self.entries('m1')
+        decided = [r for r in rows if r['revision'].startswith('message:')]
+        self.assertTrue(decided)
+        self.assertTrue(all(r['status'] == 'noise' for r in decided))
+
+    async def test_migration_rerun_preserves_newer_decisions(self):
+        from gtd_felix.source_entries import record_decision
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.page(['m1'])
+        await self.adapter.synchronize('mail')
+        rows = self.entries('m1')
+        # Simulate the pre-cut legacy shape: index history present, no rows.
+        with self.service.store.transaction() as db:
+            db.execute("DELETE FROM source_entries")
+        first = migrate_i3_sources(self.service.store)
+        self.assertNotIn('note', first, first)
+        record_decision(self.service.store, provider='gmail', account='reader@example.invalid',
+            collection=rows[0]['collection'], external_id='m1', revision=rows[0]['revision'],
+            decision='noise', reason_code='non_actionable')
+        before = self.service._meta('migration:i3')
+        second = migrate_i3_sources(self.service.store)
+        self.assertEqual(second.get('note'), 'already_migrated', second)
+        self.assertEqual(self.service._meta('migration:i3'), before)
+        rows = self.entries('m1')
+        decided = [r for r in rows if r['revision'].startswith('message:')]
+        self.assertTrue(decided)
+        self.assertTrue(all(r['status'] == 'noise' for r in decided))
+
     async def test_noise_keeps_obligation_without_body(self):
         self.answers['m1'] = 'noise'
         self.profile()
@@ -450,6 +499,26 @@ class RetentionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             prune_superseded(self.service.store, provider='gmail', account='a',
                 collection='inbox', external_id='m1', keep_revisions=set())
+
+    def test_prune_sources_owner_only_converges_and_persists(self):
+        record_decision(self.service.store, provider='gmail', account='a',
+            collection='inbox', external_id='m8', revision='r1', decision='noise')
+        record_decision(self.service.store, provider='gmail', account='a',
+            collection='inbox', external_id='m8', revision='r2', decision='noise')
+        with self.assertRaises(ValueError):
+            self.service.prune_sources('gtd-felix')
+        receipt = self.service.prune_sources('felix')
+        self.assertEqual(receipt['pruned_rows'], 1, receipt)
+        again = self.service.prune_sources('felix')
+        self.assertEqual(again['pruned_rows'], 0, again)
+        stored = json.loads(self.service.store.db.execute(
+            "SELECT value FROM metadata WHERE key='source-entries:retention'").fetchone()[0])
+        self.assertEqual(stored['pruned_rows'], 0, stored)
+        self.service.close()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+        kept = [r[0] for r in self.service.store.db.execute(
+            "SELECT revision FROM source_entries WHERE external_id='m8'")]
+        self.assertEqual(kept, ['r2'])
 
     def test_retention_survives_restart_with_receipt(self):
         from gtd_felix.source_entries import run_retention
