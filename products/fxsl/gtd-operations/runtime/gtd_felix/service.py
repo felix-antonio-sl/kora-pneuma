@@ -448,31 +448,75 @@ class GTDService(GTDDomain):
         # Results live in tables now: undoing a material/assessment write
         # restores reference stubs in the document and prunes rows the undone
         # versions introduced, so the table stays the single authority.
+        # Pruned rows are archived under this undo so inverting the inversion
+        # (undo of an undo) restores exact rows instead of dangling stubs.
+        # Absent before the undone write stays absent (empty reads alike).
+        archive = {"materials": [], "assessments": []}
         for key, identity in (("materials", lambda stub: (stub.get("id"), stub.get("version"))),
                                 ("assessments", lambda stub: stub.get("id"))):
-            if key in changes:
-                # Absent before the undone write keeps nothing: prune every row
-                # the undone versions introduced so no orphan survives, and
-                # leave stable empty stubs (absent and empty read alike).
-                before_values = changes[key]["value"] or [] if changes[key]["present"] else []
+            if key not in changes:
+                continue
+            if changes[key]["present"]:
+                before_values = changes[key]["value"] or []
                 changes[key] = {"present": True, "value": [
                     GTDDomain._material_stub(v) if key == "materials" else GTDDomain._assessment_stub(v)
                     for v in before_values]}
-                keep = {identity(v) for v in changes[key]["value"]}
-                if key == "materials":
-                    rows = self.store.db.execute(
-                        "SELECT id, version FROM materials WHERE item_id=?", (item["id"],)).fetchall()
-                    for row in rows:
-                        if (row["id"], row["version"]) not in keep:
-                            self.store.db.execute(
-                                "DELETE FROM materials WHERE item_id=? AND id=? AND version=?",
-                                (item["id"], row["id"], row["version"]))
-                else:
-                    rows = self.store.db.execute(
-                        "SELECT id FROM assessments WHERE item_id=?", (item["id"],)).fetchall()
-                    for row in rows:
-                        if row["id"] not in keep:
-                            self.store.db.execute("DELETE FROM assessments WHERE id=?", (row["id"],))
+            else:
+                changes[key] = {"present": False}
+            keep = {identity(v) for v in changes[key]["value"]} if changes[key]["present"] else set()
+            if key == "materials":
+                rows = self.store.db.execute(
+                    "SELECT * FROM materials WHERE item_id=?", (item["id"],)).fetchall()
+                for row in rows:
+                    if (row["id"], row["version"]) not in keep:
+                        archive["materials"].append(dict(row))
+                        self.store.db.execute(
+                            "DELETE FROM materials WHERE item_id=? AND id=? AND version=?",
+                            (item["id"], row["id"], row["version"]))
+                have = {(row["id"], row["version"]) for row in self.store.db.execute(
+                    "SELECT id, version FROM materials WHERE item_id=?", (item["id"],)).fetchall()}
+                for ident in sorted(keep - have):
+                    archived = {(r["id"], r["version"]): r for r in
+                        self._meta("undo-archive:" + target_id, {}).get("materials", [])}
+                    if ident not in archived:
+                        raise ValueError("undone_result_unrecoverable")
+                    row = archived[ident]
+                    self.store.db.execute(
+                        "INSERT INTO materials(id, version, item_id, author, title, mime_type, filename,"
+                        " digest, size, basis_json, source_versions_json, mandate_id,"
+                        " source_material_json, created_at)"
+                        " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        (row["id"], row["version"], item["id"], row["author"], row["title"],
+                         row["mime_type"], row["filename"], row["digest"], row["size"],
+                         row["basis_json"], row["source_versions_json"], row["mandate_id"],
+                         row["source_material_json"], row["created_at"]))
+            else:
+                rows = self.store.db.execute(
+                    "SELECT * FROM assessments WHERE item_id=?", (item["id"],)).fetchall()
+                for row in rows:
+                    if row["id"] not in keep:
+                        archive["assessments"].append(dict(row))
+                        self.store.db.execute("DELETE FROM assessments WHERE id=?", (row["id"],))
+                have = {row["id"] for row in self.store.db.execute(
+                    "SELECT id FROM assessments WHERE item_id=?", (item["id"],)).fetchall()}
+                for ident in sorted(keep - have):
+                    archived = {r["id"]: r for r in
+                        self._meta("undo-archive:" + target_id, {}).get("assessments", [])}
+                    if ident not in archived:
+                        raise ValueError("undone_result_unrecoverable")
+                    row = archived[ident]
+                    self.store.db.execute(
+                        "INSERT INTO assessments(id, item_id, item_version, material_id, material_version,"
+                        " actor, satisfied, criterion_hash, evidence, gap, resolution_basis_json,"
+                        " material_basis_json, source_versions_json, mandate_id, created_at)"
+                        " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        (row["id"], item["id"], row["item_version"], row["material_id"],
+                         row["material_version"], row["actor"], row["satisfied"], row["criterion_hash"],
+                         row["evidence"], row["gap"], row["resolution_basis_json"],
+                         row["material_basis_json"], row["source_versions_json"], row["mandate_id"],
+                         row["created_at"]))
+        if archive["materials"] or archive["assessments"]:
+            self._set_meta("undo-archive:" + operation_id, archive)
         return self._apply(actor, operation_id, digest, item, versions, changes)
 
     def query(self, filters: dict | None = None) -> list[dict]:
