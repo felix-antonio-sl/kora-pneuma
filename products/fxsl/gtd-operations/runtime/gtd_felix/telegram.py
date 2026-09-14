@@ -241,9 +241,14 @@ class TelegramAdapter:
         return item, latest, self._notification_body(event, item, latest,
             omit_materials=omit_materials)
 
+    # Automatic heads stay short no matter how long the principal reply is;
+    # the complete return lives one tap away on Ver resultado.
+    HEAD_LIMIT = 1200
+
     def _notification_lead(self, event, *, omit_materials=frozenset()):
         # Brief head without material bodies: what is ready/decided plus where
-        # the full content lives. Never truncates a body mid-sentence.
+        # the full content lives. Capped with an explicit continuation mark so
+        # a long reply is never silently cut by the transport.
         item, latest, sections = self._notification_sections(event, omit_materials=omit_materials)
         material_count = sum(1 for m in latest.values()
             if self._material_return_identity(m) not in omit_materials)
@@ -252,7 +257,21 @@ class TelegramAdapter:
             lead += ('\n\nHay material preparado para revisar'
                      + ('.' if material_count == 1 else f' ({material_count} piezas).')
                      + ' Usa Ver resultado para leerlo completo.')
+        if len(lead) > self.HEAD_LIMIT:
+            lead = lead[:self.HEAD_LIMIT].rstrip() + '\n… (continúa en Ver resultado).'
         return lead
+
+    def _long_return_key(self, item_id):
+        return 'telegram-long-return:' + digest([self.config.account, item_id])
+
+    def _long_return(self, item):
+        # Complete return stored at summary time: principal text plus version.
+        # Only the current version reads; anything else falls back to the
+        # materials-only content or the not-available notice.
+        stored = self.service._meta(self._long_return_key(item["id"]), None)
+        if not isinstance(stored, dict) or stored.get("item_version") != item["version"]:
+            return None
+        return stored
 
     def _notification_body(self, event, item, latest, *, omit_materials=frozenset()):
         payload = event['payload']
@@ -442,6 +461,13 @@ class TelegramAdapter:
         if not self._auto_return_allowed(event):
             return False
         item_id = event['payload']['item_id']
+        payload = event['payload']
+        self.service._set_meta(self._long_return_key(item_id), {
+            'item_id': item_id, 'item_version': payload.get('version'),
+            'event_key': event['event_key'],
+            'native_reply': payload.get('native_reply') if isinstance(
+                payload.get('native_reply'), str) else None,
+            'text': payload.get('text')})
         buttons = [[self._button('Ver resultado', {'action': 'result', 'item_id': item_id}),
                     self._button('Ver asunto', {'action': 'show', 'item_id': item_id})]]
         current = self.service.get_item(item_id)
@@ -689,11 +715,15 @@ class TelegramAdapter:
             await self._send('Esta consulta requiere el acceso del propietario.')
             return
         item = self.service.get_item(item_id)
-        if not item or not self.service.materials(item_id):
+        stored = self._long_return(item) if item else None
+        if not item or (not self.service.materials(item_id) and not stored):
             await self._send('Este asunto todavía no tiene un resultado preparado.')
             return
-        event = {'payload': {'item_id': item_id, 'version': item['version'],
-                            'text': 'Resultado disponible'}}
+        payload = {'item_id': item_id, 'version': item['version'],
+                   'text': stored.get('text') or 'Resultado disponible' if stored else 'Resultado disponible'}
+        if stored and stored.get('native_reply'):
+            payload['native_reply'] = stored['native_reply']
+        event = {'payload': payload}
         try:
             chunks = self._notification_content(event)
             for chunk in chunks:
