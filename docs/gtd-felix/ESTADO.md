@@ -1,6 +1,6 @@
 # GTD de Félix · estado actual
 
-Corte **2026-09-14 ~21:20 UTC**. Este archivo describe el estado vigente;
+Corte **2026-09-14 23:50 UTC** (2026-09-15 01:50 CEST). Este archivo describe el estado vigente;
 el historial queda en Git y en recibos privados
 (`/home/felix/.local/state/gtd-felix/`). Sin datos personales ni credenciales.
 `candidates/` y `versions/` sin seguimiento se preservan.
@@ -11,33 +11,39 @@ el historial queda en Git y en recibos privados
 Rama `fxai/gtd-felix-20260911` en sync con remoto. C1 operativo; C2–C6
 abiertos. I1/I2 publicados e instalados en su momento; I3 publicado
 (`7bc1fe8`) e instalado con datos v4 y `migration:i3`. Encima van los
-parches revisados E17 (control/fronteras de error), E26 (fallback Gmail) y
-E28–E31 (vigilancia temporal del run). Aceptación humana: NOT_RUN.
+parches revisados E17 (control/fronteras de error), E26 (fallback Gmail),
+E28–E31 (vigilancia temporal del run), E45 (`incorporate_executor`) y la
+instalación E46 (migración `actor_config` + auxiliar registrado SUSPENDED
+con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
 
 ## Instalado y verificado
 
-- Runtime: 37/37 `.py` instalados idénticos a HEAD `cefcfff`, sin diferencias
-  ni archivos sin origen git. Pin Hermes `5eb99eb`, gateway estable,
-  DeepSeek v4.1 Flash / opencode-go / max, 7200 s/día America/Santiago,
-  plaza única, un escritor, receptor Telegram único.
+- Runtime: 37 `.py` instalados; 36/37 idénticos a `cefcfff` y `service.py`
+  = `f660a563` (E45) en principal y copia helper, verificado por hash
+  (recibo E46). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
+  max, 7200 s/día America/Santiago, plaza única, un escritor, receptor
+  Telegram único. Gateway helper en 51112 en marcha pero bot `helper`
+  SUSPENDED (0 runs): capacidad instalada, no habilitada.
 - Vivo (sólo lectura, periodo diario 2026-09-14 America/Santiago): salud
   `ok`, `pending` 0 no-terminal. Contabilidad observada: runtime imputado
   1881.06 s, imputación contable committed_cost_usd=6.0 USD (**no** es coste
   de proveedor medido), remaining 5318.94 s, active 0, `cost_control` false.
-- Datos (export `enc39-recuperacion/export-e39.zip`, 7 626 918 B,
-  `55e17bf8…66b7`): esquema v4, 261 asuntos / 332 operaciones / 405 eventos /
-  300 originales / 8 materiales / 12 evaluaciones / 52 entregas confirmadas /
-  39 runs / 1232 observaciones / 39 ciclos / 258 decisiones de fuente
-  (+3 standalone en el marcador); 38 registros `hermes:state:*` (solo 1 con `first_send_at`/`native_admitted_at`; el ensayo prueba conservación de estados, no recuperación de plazo incierto — esa conducta la cubren las suites temporales 156/156); outbox vacío;
-  `recovery_required` false.
-- Recuperación de esta composición, ensayada en aislamiento (E39,
-  `enc39-recuperacion/rehearse-e39.py`, runtime instalado): restore real
-  marca `recovery_required`; comando no-owner rechazado; delta exacto por PK
-  (17 filas) con originales/bytes/decisiones/marcador/entregas/anclas
-  idénticos; segunda aplicación mueve 0; replay `already_applied`;
-  `reconcile` owner real deja `reconciled`. PASS sin desvíos.
-- Guardas vigentes: suites focales 156/156 (Hermes/control/diaria/gasto) y
-  91/91 (fuentes/selección/monitor/evaluación) sobre este código.
+- Datos (export `enc46-migracion-instalacion/export-pre46.zip`, 7 642 389 B):
+  esquema v4, 261 asuntos / 332 operaciones / 39 runs / 8 materiales /
+  12 evaluaciones / 52 entregas / 258 decisiones de fuente
+  (conteos del ensayo E45 sobre export real; +3 standalone en el marcador
+  de fuentes). Sin cambios en entregas/outbox por el corte E46;
+  `recovery_required` false (servicio operativo con la config nueva).
+- Recuperación: el ensayo E39 cubrió una composición anterior y queda como
+  precedente, no como evidencia vigente. Evidencia vigente E45/E46:
+  re-export/re-restore preservando actores, snapshot previo + backups
+  `enc46-migracion-instalacion/`, migración con delta exacto y repetición
+  idéntica, procedimiento de recuperación coherente (restore propietario +
+  replay por identidad + reconcile; volver solo a `service.json` viejo NO es
+  rollback válido).
+- Guardas vigentes: suites focales 156/156 (Hermes/control/diaria/gasto),
+  91/91 (fuentes/selección/monitor/evaluación) y 6/6 retorno-interrumpido
+  (candidato E47 pendiente de revisión/instalación) sobre este código.
 - Paquete repetible: `enc39-recuperacion/paquete-composicion-actual.md`
   (instalación, recuperación, rollback coherente, límites del operador).
 
@@ -51,7 +57,9 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 
 - Minuta TM (`5869a0bb` v31): sin material del principal; recorridos E27/E32
   terminaron sin herramientas ni entrega (protección temporal sí funcionó:
-  STOP medido, slot libre).
+  STOP medido, slot libre). Comprobado en E47: esos cortes tampoco avisaron
+  al usuario (0 eventos de notificación); el aviso honesto con pausa/retome
+  existe como candidato E47 pendiente de revisión/instalación.
 - Gmail: 4 lecturas pendientes (`selection_unavailable`, degradado
   preexistente). El fallback de lectura funciona para los 2 gigantes
   probados (texto + manifiesto, adjuntos sólo referenciados); la cobertura
