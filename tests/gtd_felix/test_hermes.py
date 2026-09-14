@@ -1007,6 +1007,104 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         admitted = await self.adapter.submit(self.reserve(), 'Native lifecycle only', durable=True)
         self.assertEqual(admitted['status'], 'submitted', admitted)
 
+    async def test_stalled_running_enforces_limit_and_stop_is_durable(self):
+        # E28 repro: frozen provider timestamps (created 100, updated 102)
+        # must not freeze enforcement. Fails on base (observed stays 2,
+        # validate never fires); passes with the local admission floor.
+        job_id = self.reserve()  # max_runtime_seconds=60
+        self.run_status = "running"
+        t0 = time.time()
+        self.assertEqual((await self.adapter.submit(job_id, "Stalled work"))["status"], "submitted")
+        first = await self.adapter.poll(job_id)
+        self.assertEqual(first["native_status"], "running")
+        self.assertLess(first["observation"]["runtime_seconds"], 60)
+        self.assertEqual(first["observation"]["native_runtime_seconds"], 2)
+        self.assertIsNotNone((self.adapter._get("hermes:state:" + job_id) or {}).get("native_admitted_at"))
+        # Silence without chunks past the limit: controlled clock, no sleep.
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 125):
+            stalled = await self.adapter.poll(job_id)
+        obs = stalled["observation"]
+        self.assertGreaterEqual(obs["runtime_seconds"], 124)
+        self.assertLessEqual(obs["runtime_seconds"], 125)
+        self.assertEqual(obs["native_runtime_seconds"], 2)
+        self.assertEqual(obs["cost_telemetry"], "unknown")
+        self.assertEqual(self.control.validate(job_id, "prepare_private")["reason"], "job_runtime_exhausted")
+        with self.assertRaisesRegex(ValueError, "job_runtime_exhausted"):
+            self.adapter._validation(self.control.get_job(job_id))
+        # Durable idempotent STOP by exact admitted identity, single remote call.
+        stop1 = await self.adapter.stop(job_id)
+        self.assertEqual(stop1["status"], "stop_requested")
+        stops = [r for r in self.requests if r[0] == "POST" and r[1].endswith("/stop")]
+        self.assertEqual(1, len(stops))
+        self.assertEqual(await self.adapter.stop(job_id), stop1)
+        self.assertEqual(1, len([r for r in self.requests if r[0] == "POST" and r[1].endswith("/stop")]))
+        # No fabricated terminality: still running remotely keeps the slot.
+        still = await self.adapter.poll(job_id)
+        self.assertEqual(still["native_status"], "running")
+        self.assertFalse(self.control.get_job(job_id)["terminal"])
+        self.assertEqual(self.control.budget()["active"], 1)
+        # Terminal failure integrates as discarded without double charge.
+        self.run_status = "failed"
+        final = await self.adapter.poll(job_id)
+        self.assertTrue(final["terminal"])
+        job = self.control.get_job(job_id)
+        self.assertTrue(job["terminal"])
+        self.assertEqual(job["integration"], "discarded")
+        budget = self.control.budget()
+        self.assertEqual(budget["active"], 0)
+        self.assertLessEqual(budget["committed_runtime_seconds"], obs["runtime_seconds"] + 60)
+        self.assertEqual(len(self.runs), 1)
+
+    async def test_running_floor_survives_restart_without_resetting_deadline(self):
+        # The durable anchor (not the poll clock) owns the deadline across
+        # restarts and reconciles; no resubmission, no double run.
+        job_id = self.reserve()
+        self.run_status = "running"
+        t0 = time.time()
+        await self.adapter.submit(job_id, "Stall across restart")
+        await self.adapter.poll(job_id)
+        self.restart()
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 130):
+            stalled = await self.adapter.poll(job_id)
+        self.assertGreaterEqual(stalled["observation"]["runtime_seconds"], 129)
+        self.assertEqual(self.control.validate(job_id, "prepare_private")["reason"], "job_runtime_exhausted")
+        self.assertEqual(len(self.runs), 1)
+        self.assertEqual(1, len([r for r in self.requests if r[0] == "POST" and r[1] == "/v1/runs"]))
+
+    async def test_healthy_running_keeps_telemetry_and_never_sent_uncharged(self):
+        # Guard against false positives: under-limit running validates, and a
+        # never-sent identity carries no anchor, no charge, no remote effect.
+        job_id = self.reserve()
+        self.run_status = "running"
+        t0 = time.time()
+        await self.adapter.submit(job_id, "Healthy work")
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 10):
+            early = await self.adapter.poll(job_id)
+        self.assertEqual(early["observation"]["native_runtime_seconds"], 2)
+        self.assertGreaterEqual(early["observation"]["runtime_seconds"], 9)
+        self.assertLessEqual(early["observation"]["runtime_seconds"], 10)
+        self.assertTrue(self.control.validate(job_id, "prepare_private")["allowed"])
+        self.run_status = "completed"
+        done = await self.adapter.poll(job_id)
+        self.assertTrue(done["terminal"])
+        self.assertTrue(self.control.get_job(job_id)["terminal"])
+        other = self.service.capture("felix", "capture-never", "Other synthetic preparation")["item"]
+        def never_request(purpose, **changes):
+            req = dict(item_id=other["id"], expected_version=other["version"], capability="prepare_private",
+                mandate_id=None, bot_id="fixture", purpose=purpose, scope="Synthetic family",
+                max_cost_usd=4, max_runtime_seconds=120, max_retries=0, max_descendants=1)
+            return dict(req, **changes)
+        root = self.control.reserve("gtd-felix", "parent-never", never_request("Parent"))["job_id"]
+        child = self.control.reserve("gtd-felix", "child-never", never_request(
+            "Child", parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60,
+            max_descendants=0))["job_id"]
+        await self.adapter.submit(root, "Parent")
+        second = await self.adapter.submit(child, "Child")
+        self.assertEqual(second["error"], "native_slot_busy")
+        self.assertIsNone((self.adapter._get("hermes:state:" + child) or {}).get("native_admitted_at"))
+        self.assertEqual((await self.adapter.poll(child))["error"], "native_identity_missing")
+        self.assertEqual(self.control.get_job(child)["observed_runtime_seconds"], 0)
+
 
 if __name__ == '__main__':
     unittest.main()
