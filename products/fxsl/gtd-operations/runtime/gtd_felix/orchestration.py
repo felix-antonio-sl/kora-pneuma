@@ -51,14 +51,15 @@ class OrchestrationWorker:
         if self.config.get('source_auto_review', True) or not item:
             return None
         from .source_sync import SourceSync
+        from .source_entries import get as get_entry
         source = item.get('source') or {}
         sync = SourceSync(self.service)
         with self.service.store.lock:
-            # The object index survives scope changes and catches a removed or
-            # forged source label; it is evidence of provenance, not authority.
-            rows = self.service.store.db.execute(
-                "SELECT value FROM metadata WHERE key LIKE 'source-sync:object:%'").fetchall()
-            indexed = any(json.loads(row[0]).get('item_id') == item['id'] for row in rows)
+            # Entries answer per-affair linkage in one bounded read; the
+            # object index remains provenance archive for conflict detail.
+            indexed = bool(self.service.store.db.execute(
+                'SELECT 1 FROM source_entries WHERE item_id=? LIMIT 1',
+                (item['id'],)).fetchone())
             if not any(key in source for key in ('partition_key', 'scope_digest', 'collection')) and not indexed:
                 return None
             try:

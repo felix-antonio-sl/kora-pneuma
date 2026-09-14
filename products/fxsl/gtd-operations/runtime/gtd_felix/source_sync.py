@@ -135,6 +135,7 @@ class SourceSync:
             # Queryable intake authority mirrors every new revision; a prior
             # selection decision for the same revision is never downgraded.
             report_intake(self.store, provider=partition['provider'], account=partition['account'],
+                collection=partition['collection'],
                 external_id=external, revision=document['revision'],
                 availability=document['status'],
                 original_digest=original['sha256'] if original else None,
@@ -256,7 +257,9 @@ class SourceSync:
                     # Upsert first: rows for events written before the I3
                     # cut (or its migration) must not break projection.
                     report_intake(self.store, provider=event['partition']['provider'],
-                        account=event['partition']['account'], external_id=pending['external_id'],
+                        account=event['partition']['account'],
+                        collection=event['partition']['collection'],
+                        external_id=pending['external_id'],
                         revision=event['document']['revision'],
                         availability='present' if event['document']['status'] == 'present'
                         else event['document']['status'],
@@ -264,7 +267,9 @@ class SourceSync:
                         index_key=local['index_key'], sequence=event['sequence'],
                         observed_at=event['observed_at'])
                     report_projection(self.store, provider=event['partition']['provider'],
-                        account=event['partition']['account'], external_id=pending['external_id'],
+                        account=event['partition']['account'],
+                        collection=event['partition']['collection'],
+                        external_id=pending['external_id'],
                         revision=event['document']['revision'],
                         item_id=record['item_id'] if result['status'] != 'not_needed' else None,
                         projected=result['status'] != 'not_needed')

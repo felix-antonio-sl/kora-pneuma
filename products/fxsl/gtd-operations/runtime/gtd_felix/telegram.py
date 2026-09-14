@@ -753,13 +753,12 @@ class TelegramAdapter:
         selected = selected or []
         if view not in {'affairs', 'sources', 'all'}:
             raise TelegramError('telegram_invalid_list_view')
-        # SourceSync's durable object index establishes provenance even after
+        # Linked source affairs come from the queryable authority, even after
         # a source revision or human edit changes the item's current metadata.
         with self.service.store.lock:
             rows = self.service.store.db.execute(
-                "SELECT value FROM metadata WHERE key LIKE 'source-sync:object:%'").fetchall()
-        source_ids = {record['item_id'] for row in rows
-                      if (record := json.loads(row[0])).get('item_id')}
+                'SELECT DISTINCT item_id FROM source_entries WHERE item_id IS NOT NULL').fetchall()
+        source_ids = {row[0] for row in rows}
         all_items = self.service.query()
         selected_sources = {source_id for item in all_items if item['kind'] != 'capture'
                             for source_id in item.get('source_versions', {})}

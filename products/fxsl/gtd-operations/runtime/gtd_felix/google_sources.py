@@ -394,6 +394,7 @@ class GoogleSources:
             # Queryable selection authority mirrors the durable decision;
             # bodies never cross here (classification + reason only).
             record_decision(self.store, provider='gmail', account=cfg['account'],
+                collection=partition['collection'],
                 external_id=identity, revision=revision,
                 decision=decision['classification'],
                 reason_code=decision.get('reason_code'))

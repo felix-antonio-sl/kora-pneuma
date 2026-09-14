@@ -876,13 +876,15 @@ def migrate_i2_results(store):
 def migrate_i3_sources(store):
     """I3 cut: per-revision intake/selection rows move to source_entries, once.
 
-    Derives one row per index-record version event, overlaying durable
-    selective decisions and the projected affair of the latest revision.
-    Refuses with active sync cycles (ValueError('active_sync_present')) so no
-    intake races the cut; unrepresentable rows abort instead of dropping data.
-    Re-running is a no-op returning already_migrated. Returns a receipt dict.
+    Inventories every index-record version event AND every standalone durable
+    decision (noise/uncertain without projected object), each with its full
+    provider/account/collection scope. Refuses with active sync cycles
+    (ValueError('active_sync_present')) so no intake races the cut;
+    unrepresentable rows abort instead of dropping data. Pruned row ids stay
+    archived: reruns migrate only genuinely new facts and never resurrect.
+    A rerun with nothing new reports already_migrated. Returns a receipt.
     """
-    from .source_entries import entry_id
+    from .source_entries import entry_id, _pruned_archive
     with store.transaction():
         for (key,) in store.db.execute(
                 "SELECT key FROM metadata WHERE key LIKE 'source-sync:%'"
@@ -891,20 +893,85 @@ def migrate_i3_sources(store):
                 "SELECT value FROM metadata WHERE key=?", (key,)).fetchone()[0])
             if isinstance(state, dict) and state.get("active_cycle") is not None:
                 raise ValueError("active_sync_present")
+        archived = _pruned_archive(store)
+        # Standalone decisions keep the scope of the adapter that stored them.
+        # One revision seen under several scopes shares one entry: strongest
+        # decision wins the inventory (selected > uncertain > noise), so the
+        # cut never depends on metadata scan order.
+        rank = {"selected": 3, "uncertain": 2, "noise": 1}
         decisions = {}
-        for (key,) in store.db.execute(
-                "SELECT key FROM metadata WHERE key LIKE 'source-sync:google:%'"):
+        adapter_keys = sorted(row[0] for row in store.db.execute(
+            "SELECT key FROM metadata WHERE key LIKE 'source-sync:google:%'"))
+        for key in adapter_keys:
             adapter = json.loads(store.db.execute(
                 "SELECT value FROM metadata WHERE key=?", (key,)).fetchone()[0])
-            if isinstance(adapter, dict):
-                for choice in (adapter.get("decisions") or {}).values():
-                    if isinstance(choice, dict) and choice.get("external_id") and choice.get("revision"):
-                        decisions[(choice["external_id"], choice["revision"])] = choice
+            if not isinstance(adapter, dict):
+                continue
+            scope = (adapter.get("partition") or {})
+            for choice in (adapter.get("decisions") or {}).values():
+                if (isinstance(choice, dict) and choice.get("external_id")
+                        and choice.get("revision")
+                        and choice.get("classification") in rank):
+                    full = (scope.get("provider"), scope.get("account"),
+                            scope.get("collection"), choice["external_id"],
+                            choice["revision"])
+                    if rank[choice["classification"]] >= rank.get(
+                            decisions.get(full, {}).get("classification"), 0):
+                        decisions[full] = choice
         index_keys = [row[0] for row in store.db.execute(
             "SELECT key FROM metadata WHERE key LIKE 'source-sync:object:%'")]
-        if not index_keys:
-            return {"note": "already_migrated"}
-        migrated = skipped_existing = 0
+        migrated = skipped_existing = skipped_pruned = standalone = merged_scope = 0
+        # One revision observed under several scopes shares one entry (scope
+        # is not identity): a selection in any scope wins, with precedence
+        # selected > uncertain > noise > pending, and the first affair link
+        # fills a missing one. Availability follows the same precedence.
+        precedence = {"selected": 4, "uncertain": 3, "noise": 2, "pending": 1,
+                      "unavailable": 1, "deleted": 1}
+
+        def insert(provider, account, collection, external_id, revision, status,
+                   digest, item_id, metadata, observed):
+            nonlocal migrated, skipped_existing, skipped_pruned, merged_scope
+            row_id = entry_id(provider, account, collection, external_id, revision)
+            if row_id in archived:
+                skipped_pruned += 1
+                return
+            current = store.db.execute(
+                "SELECT status, original_digest, item_id, metadata_json FROM source_entries"
+                " WHERE id=?", (row_id,)).fetchone()
+            if current is not None:
+                skipped_existing += 1
+                updates, params = [], []
+                if precedence.get(status, 0) > precedence.get(current["status"], 0):
+                    updates.append("status=?")
+                    params.append(status)
+                    merged_scope += 1
+                if current["original_digest"] is None and digest is not None:
+                    updates.append("original_digest=?")
+                    params.append(digest)
+                if current["item_id"] is None and item_id is not None:
+                    updates.append("item_id=?")
+                    params.append(item_id)
+                stored_meta = json.loads(current["metadata_json"])
+                if metadata.get("reason_code") and not stored_meta.get("reason_code"):
+                    stored_meta["reason_code"] = metadata["reason_code"]
+                    updates.append("metadata_json=?")
+                    params.append(encode(stored_meta))
+                if updates:
+                    params.append(row_id)
+                    store.db.execute(
+                        "UPDATE source_entries SET " + ", ".join(updates) + " WHERE id=?",
+                        params)
+                return
+            if not isinstance(observed, str) or not observed:
+                raise ValueError(f"unrepresentable_source:{external_id}")
+            store.db.execute(
+                "INSERT INTO source_entries(id, provider, account, collection, external_id,"
+                " revision, status, original_digest, item_id, metadata_json, observed_at)"
+                " VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                (row_id, provider, account, collection, external_id, revision, status,
+                 digest, item_id, encode(metadata), observed))
+            migrated += 1
+
         for index_key in index_keys:
             record = json.loads(store.db.execute(
                 "SELECT value FROM metadata WHERE key=?", (index_key,)).fetchone()[0])
@@ -912,11 +979,13 @@ def migrate_i3_sources(store):
                 partition = event.get("partition") or {}
                 provider = partition.get("provider")
                 account = partition.get("account")
+                collection = partition.get("collection")
                 external_id = record.get("external_id")
                 document = event.get("document") or {}
                 revision = document.get("revision")
                 if (not isinstance(provider, str) or not provider
                         or not isinstance(account, str) or not account
+                        or not isinstance(collection, str) or not collection
                         or not isinstance(external_id, str) or not external_id
                         or not isinstance(revision, str) or not revision):
                     raise ValueError(f"unrepresentable_source:{external_id}")
@@ -927,11 +996,9 @@ def migrate_i3_sources(store):
                 if digest is not None and not store.db.execute(
                         "SELECT 1 FROM originals WHERE digest=?", (digest,)).fetchone():
                     raise ValueError(f"source_original_missing:{external_id}")
-                choice = decisions.get((external_id, revision))
-                if choice is not None and choice.get("classification") in {
-                        "selected", "noise", "uncertain"}:
-                    status = choice["classification"]
-                    reason = choice.get("reason_code")
+                choice = decisions.get((provider, account, collection, external_id, revision))
+                if choice is not None:
+                    status, reason = choice["classification"], choice.get("reason_code")
                 else:
                     status = {"present": "pending", "deleted": "deleted",
                               "degraded": "unavailable"}[document["status"]]
@@ -943,26 +1010,53 @@ def migrate_i3_sources(store):
                             "scope": "migrated"}
                 if reason is not None:
                     metadata["reason_code"] = reason
-                observed_at = event.get("observed_at")
-                if not isinstance(observed_at, str) or not observed_at:
-                    raise ValueError(f"unrepresentable_source:{external_id}")
-                row_id = entry_id(provider, account, external_id, revision)
-                if store.db.execute(
-                        "SELECT 1 FROM source_entries WHERE id=?", (row_id,)).fetchone():
-                    skipped_existing += 1
-                    continue
-                store.db.execute(
-                    "INSERT INTO source_entries(id, provider, account, external_id, revision,"
-                    " status, original_digest, item_id, metadata_json, observed_at)"
-                    " VALUES(?,?,?,?,?,?,?,?,?,?)",
-                    (row_id, provider, account, external_id, revision, status, digest,
-                     record.get("item_id") if is_latest else None,
-                     encode(metadata), observed_at))
-                migrated += 1
+                insert(provider, account, collection, external_id, revision, status,
+                       digest, record.get("item_id") if is_latest else None, metadata,
+                       event.get("observed_at"))
+        # Standalone decisions: durable selections without any projected object.
+        for (provider, account, collection, external_id, revision), choice in sorted(decisions.items()):
+            if (not isinstance(provider, str) or not provider
+                    or not isinstance(account, str) or not account
+                    or not isinstance(collection, str) or not collection):
+                raise ValueError(f"unrepresentable_decision_scope:{external_id}")
+            row_id = entry_id(provider, account, collection, external_id, revision)
+            if row_id in archived:
+                skipped_pruned += 1
+                continue
+            current = store.db.execute(
+                "SELECT status, metadata_json FROM source_entries WHERE id=?",
+                (row_id,)).fetchone()
+            if current is not None:
+                skipped_existing += 1
+                if precedence.get(choice["classification"], 0) > precedence.get(current["status"], 0):
+                    metadata = json.loads(current["metadata_json"])
+                    if choice.get("reason_code"):
+                        metadata["reason_code"] = choice["reason_code"]
+                    store.db.execute(
+                        "UPDATE source_entries SET status=?, metadata_json=? WHERE id=?",
+                        (choice["classification"], encode(metadata), row_id))
+                    merged_scope += 1
+                continue
+            # Standalone decisions never recorded their decision time;
+            # NULL marks unknown (new rows always carry time instead).
+            observed = choice.get("decided_at") or choice.get("observed_at")
+            store.db.execute(
+                "INSERT INTO source_entries(id, provider, account, collection, external_id,"
+                " revision, status, original_digest, item_id, metadata_json, observed_at)"
+                " VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                (row_id, provider, account, collection, external_id, revision,
+                 choice["classification"], None, None,
+                 encode({"reason_code": choice.get("reason_code"),
+                         "scope": "migrated-standalone-decision"}), observed))
+            migrated += 1
+            standalone += 1
         if migrated == 0:
-            return {"note": "already_migrated", "skipped_existing": skipped_existing}
+            return {"note": "already_migrated", "skipped_existing": skipped_existing,
+                    "skipped_pruned": skipped_pruned}
         receipt = {"schema": 4, "migrated_source_entries": migrated,
-                   "skipped_existing": skipped_existing,
+                   "skipped_existing": skipped_existing, "skipped_pruned": skipped_pruned,
+                   "merged_scope": merged_scope,
+                   "standalone_decisions": standalone,
                    "at": datetime.now(timezone.utc).isoformat()}
         store.db.execute("INSERT OR REPLACE INTO metadata VALUES('migration:i3',?)", (encode(receipt),))
         return receipt
