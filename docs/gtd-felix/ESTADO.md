@@ -26,7 +26,7 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | candidato I2 `b23cd01` (5 commits sobre I1 publicado `9896336`), rama `fxai/gtd-felix-20260911`, sin publicar y sin instalar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
+| Fuente ejecutable | candidato I2 `c90d37b` (13 commits sobre I1 publicado `9896336`: 5 de recorrido/devolución, 4 del encargo 1 y 4 del encargo 2), rama `fxai/gtd-felix-20260911`, sin publicar y sin instalar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
 | Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` según recibo de base 2026-09-13 (última observación; salud viva no reconsultada en este corte) |
 | Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
 | Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
