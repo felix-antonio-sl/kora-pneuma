@@ -424,3 +424,19 @@ material en entradas opencode/opencode-go; session header como diferencia
 explícita no afirmada como causa. E33/E34 precisados (observado/inferido/
 sin medir). La eventual única petición externa requiere orden explícita.
 C2 NOT_RUN, sin inferencias en E35.
+
+## E36 · sonda verificada offline, sin petición externa (2026-09-14)
+
+Sonda privada `enc34-transporte/sonda.py` endurecida (fuera del producto):
+marcador exclusivo atómico O_EXCL previo al efecto (concurrencia real ⇒ 1
+POST; marcador ilegible ⇒ no enviar); deadline total con hijo supervisado y
+escalada TERM→KILL probada (incluye stub que ignora TERM); traza pasiva real
+con nombres+tiempos (TCP/TLS/envío/headers) sin payloads, DNS desconocido;
+`sent` sólo tras send_request_body completo; primer byte también en error;
+sanitizer en code/type/message probado con FIXTURE-SECRETO real en todos los
+campos; prefijo error y buffer SSE acotados exactos; recibo siempre escrito.
+Selftest local 16/16 en ~10 s (sin 90 s reales, sin red externa).
+Comando: `/home/felix/.hermes/hermes-agent/venv/bin/python -B sonda.py
+--selftest` (httpx 0.28.1). Fallo de invocación con otro venv sin httpx fue
+error de entorno ajeno, no regresión. E33/E34 precisados: 401 en código no
+universaliza; causa del 400 E34 desconocida. C2 NOT_RUN, sin inferencias.
