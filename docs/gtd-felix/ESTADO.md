@@ -26,14 +26,14 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | candidato I1 sobre `0fbc18e`, rama `fxai/gtd-felix-20260911`, sin publicar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
-| Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` (sin cambios; instalación viva posterior) |
+| Fuente ejecutable | candidato I2 `b23cd01` (5 commits sobre I1 publicado `9896336`), rama `fxai/gtd-felix-20260911`, sin publicar y sin instalar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
+| Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` según recibo de base 2026-09-13 (última observación; salud viva no reconsultada en este corte) |
 | Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
 | Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
 | Runtime del bot | Hermes, `deepseek-v4.1-flash`, `opencode-go`, `max` configurado; aplicación efectiva del esfuerzo por el proveedor no demostrada |
 | Construcción | OpenCode con `muse-spark-1.3-contributor` para I1, bajo dirección de Codex; sin inferencias pagadas del bot para invariantes (pruebas locales deterministas) |
 | Delegación del producto | cero ejecutores configurados; G7 nativo mínimo no acreditado |
-| Esquema | SQLite `user_version=2` en candidato (migración I1); base `user_version=1` verificada por hash. Base viva nunca abierta directamente |
+| Esquema | candidato SQLite `user_version=3` (migraciones I1+I2; I1 publicado corresponde a v2); base exportada `user_version=1` verificada por hash `09a38058…ee2424`. Base viva nunca abierta directamente |
 
 Fuente y realización KORA siguen separadas de configuración, credenciales,
 memoria, datos y estado nativo de Hermes. Este corte documental no reinstala ni
