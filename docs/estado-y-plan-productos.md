@@ -114,6 +114,17 @@ del producto ni refutación de la evidencia Codex (tareas distintas, ejecución
 real). Futuros casos neutros deben fijar la lectura mundo/enunciado sin
 filtrar reglas.
 
+Caso único de uso para cerrar la duda sobre atribución (ficha pública de un
+módulo ficticio, criterio prefijado por escrito antes de ejecutar, sin
+clasificaciones ni respuestas indicadas): PASS en los cinco puntos —“40
+equipos”, “a la mitad” y “99,9 %” atribuidos al proveedor sin elevarlos;
+versión publicada 2.3.1 (observada) con la discrepancia del brief señalada;
+capacidades con evidencia citada; `run-check.sh` ejecutado de verdad con su
+límite declarado (sólo `echo`); log del proveedor atribuido sin apropiación.
+La discrepancia del neutro5 se conserva como historia de otro rincón
+sólo-literal; este caso no la convierte retrospectivamente en PASS ni cambia
+el producto, y no hay más rondas de variantes.
+
 ### Registro durable mínimo del caso integral
 
 Fuente sintética (sha256 `02747567…a7cd9430`): regla viernes hábil semanal;
