@@ -350,11 +350,9 @@ class TelegramAdapter:
             if self.service.recovery_required:
                 self._notification_receipt(event, 'pending', 'telegram_reconciliation_required')
                 return
-            with self.service.store.lock:
-                intents = [json.loads(row[0]) for row in self.service.store.db.execute(
-                    "SELECT value FROM metadata WHERE key LIKE 'telegram-outbox:%'")]
+            intents = self._outbox_intents()
             if event.get('error') == 'notification_delivery_uncertain' or any(
-                    intent.get('event') == key and intent.get('account') == self.config.account
+                    intent.get('event') == key
                     and intent.get('status') != 'confirmed' for intent in intents):
                 return False
             with self.service.store.lock:
@@ -467,6 +465,41 @@ class TelegramAdapter:
         finally:
             self._outbound_context.reset(context_token)
 
+    def _delivery_id(self, identity):
+        return 'tg:' + digest([self.config.account, identity])
+
+    def _delivery_event_item(self, event_key):
+        row = self.service.store.db.execute(
+            'SELECT payload FROM events WHERE event_key=?', (event_key,)).fetchone()
+        if not row:
+            return None, None
+        try:
+            payload = json.loads(row[0])
+        except ValueError:
+            return None, None
+        item_id = payload.get('item_id')
+        version = payload.get('version')
+        if not isinstance(item_id, str) or not self.service.get_item(item_id):
+            return None, None
+        return item_id, version if type(version) is int and version > 0 else None
+
+    def _outbox_intents(self):
+        # Single authoritative read of send intents; scoped per account, with
+        # only the columns each caller needs (never full history decode).
+        with self.service.store.lock:
+            rows = self.service.store.db.execute(
+                "SELECT state, payload_json FROM deliveries WHERE channel='telegram'"
+                " AND target_key=?", (self.config.account,)).fetchall()
+        intents = []
+        for row in rows:
+            try:
+                payload = json.loads(row["payload_json"])
+            except ValueError:
+                continue
+            intents.append({'event': payload.get('event'), 'account': self.config.account,
+                            'status': row["state"]})
+        return intents
+
     async def _call(self, method, payload):
         if method in {'sendMessage', 'answerCallbackQuery'} and getattr(self.service, 'recovery_required', False):
             raise TelegramError('telegram_reconciliation_required')
@@ -479,32 +512,47 @@ class TelegramAdapter:
         else:
             identity = [context[0], context[1]]
             context[1] += 1
-        key = 'telegram-outbox:' + digest([self.config.account, identity])
+        key = self._delivery_id(identity)
         store = self.service.store
         with store.transaction():
-            row = store.db.execute('SELECT value FROM metadata WHERE key=?', (key,)).fetchone()
+            row = store.db.execute(
+                'SELECT state, segments_json FROM deliveries WHERE id=?', (key,)).fetchone()
             if row:
-                intent = json.loads(row[0])
-                # Preserve the original output even if replay sees newer domain state.
-                return intent.get('response', {}) if intent['status'] == 'confirmed' else {}
-            intent = {'status': 'pending', 'account': self.config.account,
-                      'event': identity[0], 'ordinal': identity[1], 'method': method,
-                      'payload': payload}
-            store.db.execute('INSERT INTO metadata(key,value) VALUES(?,?)', (key, json.dumps(intent)))
+                if row["state"] == 'confirmed':
+                    try:
+                        segments = json.loads(row["segments_json"])
+                    except ValueError:
+                        segments = []
+                    # Preserve the original output even if replay sees newer domain state.
+                    for segment in segments:
+                        if "response" in segment:
+                            return segment['response']
+                return {}
+            item_id, item_version = self._delivery_event_item(identity[0])
+            store.db.execute(
+                'INSERT INTO deliveries(id, item_id, item_version, channel, target_key, semantic_key,'
+                ' state, payload_json, segments_json, created_at, retry_at, confirmed_at)'
+                ' VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+                (key, item_id, item_version, 'telegram', self.config.account,
+                 str(identity[0]) + ':' + str(identity[1]), 'pending',
+                 json.dumps({'method': method, 'payload': payload, 'event': identity[0],
+                             'ordinal': identity[1], 'account': self.config.account}),
+                 '[]', datetime.now().isoformat(), None, None))
         # A durable dispatch marker precedes the network call. A crash here is
         # conservatively uncertain: Telegram supplies no sendMessage idempotency.
-        intent['status'] = 'uncertain'
         with store.transaction():
-            store.db.execute('UPDATE metadata SET value=? WHERE key=?', (json.dumps(intent), key))
+            store.db.execute("UPDATE deliveries SET state='uncertain' WHERE id=?", (key,))
         try:
             response = await self.client.call(method, payload)
         except asyncio.CancelledError:
             raise
         except Exception:
             return {}
-        intent['status'], intent['response'] = 'confirmed', response
         with store.transaction():
-            store.db.execute('UPDATE metadata SET value=? WHERE key=?', (json.dumps(intent), key))
+            store.db.execute("UPDATE deliveries SET state='confirmed', segments_json=?, confirmed_at=?"
+                             " WHERE id=?",
+                             (json.dumps([{'status': 'confirmed', 'response': response}]),
+                              datetime.now().isoformat(), key))
         return response
 
     async def _send(self, text, **kwargs):
@@ -571,7 +619,7 @@ class TelegramAdapter:
             if (item['status'] in {'active', 'waiting'} and
                     (item['kind'] == 'waiting' or item['status'] == 'waiting') and item.get('waiting_for')):
                 lines.append('En espera de: ' + excerpt(item['waiting_for']))
-            for field, label in (('review_at', 'Revisar'), ('decision_at', 'Decidir')):
+            for field, label in (('review_at', 'Revisar'), ('decision_at', 'Decidir'), ('due_at', 'Límite')):
                 if item.get(field):
                     lines.append(label + ': ' + excerpt(item[field]))
         if more:
@@ -918,11 +966,8 @@ class TelegramAdapter:
                 return True
             # Select by durable event identity, not a mutable page offset.
             # Blocked returns remain pending but do not consume delivery slots.
-            with self.service.store.lock:
-                outbox = [json.loads(row[0]) for row in self.service.store.db.execute(
-                    "SELECT value FROM metadata WHERE key LIKE 'telegram-outbox:%'")]
-            uncertain = {intent['event'] for intent in outbox
-                if intent.get('account') == self.config.account and intent.get('status') != 'confirmed'}
+            uncertain = {intent['event'] for intent in self._outbox_intents()
+                if intent.get('status') != 'confirmed'}
             request_token = self._notification_request.set(key)
             attempted, suppressed = 0, 0
             try:

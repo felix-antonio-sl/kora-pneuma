@@ -171,12 +171,16 @@ class OrchestrationWorker:
                 continue
             receipt = json.loads(row['receipt'])
             before, after = json.loads(row['before_patch'] or '{}'), json.loads(row['after_patch'] or '{}')
-            previous = {(m['id'], m['version']) for m in (before.get('materials', {}).get('value') or [])}
+            def _identity(ref):
+                return (ref.get('id'), ref.get('version'),
+                        ref.get('original', {}).get('sha256') or ref.get('digest'))
+            previous = {_identity(m) for m in (before.get('materials', {}).get('value') or [])}
             delivered = [m for m in (after.get('materials', {}).get('value') or [])
-                         if (m['id'], m['version']) not in previous and m['author'] == job['actor']]
+                         if _identity(m) not in previous and m.get('author') == job['actor']]
             if receipt.get('status') != 'applied' or len(delivered) != 1:
                 continue
             material = delivered[0]
+            material_sha256 = material.get('original', {}).get('sha256') or material.get('digest')
             # Delivery receipt and reserved ancestry fix the original destination.
             # Current classification must never redirect a not-yet-recorded return.
             item = receipt.get('item', {})
@@ -201,7 +205,7 @@ class OrchestrationWorker:
             if record is None:
                 payload = {'item_id': target['id'], 'reason': 'executor_return', 'job_id': job['id'],
                     'material_item_id': job['item_id'], 'material_id': material['id'],
-                    'material_version': material['version'], 'material_sha256': material['original']['sha256'],
+                    'material_version': material['version'], 'material_sha256': material_sha256,
                     'domain_operation_id': operation}
                 event = self.service.ingest_event({'provider': 'gtd-review', 'account': 'local',
                     'external_id': 'executor-return:' + job['id'], 'revision': operation, 'payload': payload})
@@ -210,7 +214,7 @@ class OrchestrationWorker:
                 record = records[job['id']] = {'event_key': event['event_key'], 'payload': payload}
             current = next((m for m in self.service.materials(job['item_id'])
                             if m['id'] == material['id'] and m['version'] == material['version']
-                            and m['original']['sha256'] == material['original']['sha256']), None)
+                            and m['original']['sha256'] == material_sha256), None)
             target = self.service.get_item(record['payload']['item_id'])
             record['blocker'] = ('parent_changed' if not ancestry_current else
                 'material_invalid' if not current or not current['valid'] else
@@ -244,7 +248,7 @@ class OrchestrationWorker:
         for entry in review.get('returns', []):
             item = self.service.get_item(entry['item_id'])
             if item and item['status'] not in {'done', 'withdrawn'}:
-                for field in ('review_at', 'decision_at'):
+                for field in ('review_at', 'decision_at', 'due_at'):
                     self._temporal_return(item, field, entry.get(field), stamp)
         last_review = review.get('last_review') or {}
         if last_review.get('return_at'):
@@ -961,7 +965,7 @@ class OrchestrationWorker:
             if instruction_sources:
                 request['human_instruction_source_ids'] = instruction_sources
             # Existing admissions recover a crash after reserve without another job.
-            record['return_values'] = {field: item.get(field) for field in ('review_at', 'decision_at', 'starts_at')}
+            record['return_values'] = {field: item.get(field) for field in ('review_at', 'decision_at', 'starts_at', 'due_at')}
             state['admissions'][operation_id] = {'events': [], 'item': item}
             self._save(state)
             receipt = self.control.reserve(origin['actor'], operation_id, request)

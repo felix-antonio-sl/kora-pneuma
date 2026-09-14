@@ -135,14 +135,23 @@ def load_snapshot(path, expected_sha):
             'files': files, 'exported_at': manifest['exported_at']}
 
 
+def _digest_of(material):
+    """Content identity across representations: full originals pre-cut,
+    reference stubs post-cut. Never invents bytes, only resolves them."""
+    original = material.get('original') or {}
+    sha256 = original.get('sha256') or material.get('digest')
+    path = original.get('path') or ('originals/' + sha256 if sha256 else None)
+    return sha256, path
+
+
 def material_content(snapshot, item):
     """Only verified original bytes of the latest version, never model claims."""
     latest = {m['id']: m for m in item.get('materials', [])}
     result = []
     for material in latest.values():
-        blob = material['original']
-        content = snapshot['files'].get(blob['path'])
-        if content is None or sha(content) != blob['sha256']:
+        sha256, path = _digest_of(material)
+        content = snapshot['files'].get(path) if path else None
+        if content is None or sha(content) != sha256:
             continue
         result.append((material, content.decode('utf-8', errors='replace')))
     return result
@@ -250,8 +259,8 @@ def evaluate_snapshots(case_id, before, after, evidence):
         and o['receipt']['item'].get('text') == intervention.get('fields', {}).get('text')), None)
     def exact_material(material, observed):
         return (material.get('id') == observed.get('id') and material.get('version') == observed.get('version')
-            and material.get('original', {}).get('sha256') == observed.get('original', {}).get('sha256')
-            and bool(material.get('original', {}).get('sha256')))
+            and _digest_of(material)[0] == observed.get('original', {}).get('sha256')
+            and bool(_digest_of(material)[0]))
     def post_correction_operation(operation, target_id):
         result = operation['receipt'].get('item', {})
         return bool(correction and operation['operation_id'] in progress_ids and result.get('id') == target_id
@@ -523,7 +532,7 @@ def evaluate_snapshots(case_id, before, after, evidence):
                 and result.get('version') == job['validated_version'] + 1
                 and artifact.get('job_id') == job['id']
                 and any(m.get('author') == job['actor'] and m.get('mandate_id') == job.get('mandate_id')
-                and m.get('original', {}).get('sha256') == artifact.get('sha256')
+                and _digest_of(m)[0] == artifact.get('sha256')
                 and any(exact_material(m, observed) and observed.get('valid')
                     for observed in material_observations.get(job['item_id'], []))
                 for m, content in material_content(after, op['receipt'].get('item', {}))))
@@ -578,9 +587,9 @@ def evaluate_snapshots(case_id, before, after, evidence):
         returns = [(obj, material) for obj in scoped for material, content in material_content(after, obj)
             if returns_json(content) and current_material(obj, material)]
         pairs = [(total, pending) for _, total in totals for _, pending in returns
-            if total['id'] != pending['id'] and total['original']['sha256'] != pending['original']['sha256']]
+            if total['id'] != pending['id'] and _digest_of(total)[0] != _digest_of(pending)[0]]
         check('separate_current_returns_artifact', bool(pairs))
-        deliverable_hashes = {m['original']['sha256'] for pair in pairs for m in pair}
+        deliverable_hashes = {_digest_of(m)[0] for pair in pairs for m in pair}
         def contributed(child):
             if not child.get('mandate_id') or child.get('commitment') != 'committed':
                 return False
@@ -589,7 +598,7 @@ def evaluate_snapshots(case_id, before, after, evidence):
                 and o['receipt']['item'].get('version') == 1
                 and o['receipt']['item'].get('mandate_id') == child['mandate_id'] for o in operations)
             return created and any(current_material(child, material)
-                and material['original']['sha256'] in deliverable_hashes
+                and _digest_of(material)[0] in deliverable_hashes
                 and any(o['operation_id'] in progress_ids and o['receipt'].get('item', {}).get('id') == child['id']
                     and any(exact_material(material, recorded) for recorded in o['receipt']['item'].get('materials', []))
                     for o in operations) for material, _ in material_content(after, child))
@@ -740,7 +749,7 @@ def evaluate_snapshots(case_id, before, after, evidence):
                         r.get('job_id') in {j['id'] for j in native}
                         and r.get('item_id') == obj['id'] and r.get('material_id') == material['id']
                         and r.get('version') == material['version'] and r.get('valid') is True
-                        and r.get('sha256') == material['original']['sha256'] for r in reads):
+                        and r.get('sha256') == _digest_of(material)[0] for r in reads):
                     continue
                 return True
             return False
