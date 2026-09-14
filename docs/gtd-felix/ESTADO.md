@@ -400,3 +400,13 @@ sin entregas duplicadas. Consumo 252.4 s (committed 1628.7→1881.1, remaining
 Tramo del fallo: primera respuesta del proveedor ausente 252 s (0 chunks, 0
 herramientas incl. `source_evaluation`; misma firma que ca99 a 600 s). La
 guarda NO falló; no hubo reintento. C2/minuta/aceptación: NOT_RUN.
+
+## E34 · transporte medido: relay vivo, stalls específicos de payload (2026-09-14)
+
+Sonda mínima (POST relay, DeepSeek, effort max, 23 chars, cero tools):
+traza completa <1 s y 400 determinista de validación (sin header de sesión
+del agente). Conectividad/protocolo/capa vivos ESE momento; stalls de
+252/600 s con 0 eventos fueron específicos de payloads 12–18k + tools, no
+caída general. Exceso declarado: 2 peticiones en vez de 1 (2ª por relectura),
+<1 s c/u, 0 tokens, fuera del contador GTD. Sin defecto repo ⇒ sin
+candidato. E33 precisado (no reescrito). C2 NOT_RUN.
