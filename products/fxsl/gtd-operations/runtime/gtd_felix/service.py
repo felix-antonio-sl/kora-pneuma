@@ -553,10 +553,12 @@ class GTDService(GTDDomain):
     def prune_sources(self, actor: str) -> dict:
         """Explicit source-retention maintenance: owner only, no provider calls.
 
-        Keeps pending obligations, the latest projected revision per object and
-        cited bytes; archives pruned ids so migration never resurrects them.
-        Safe on a stopped service and across restarts (receipt converges).
-        Raises ValueError for any other actor.
+        Keeps pending obligations, cited bytes, the latest projected revision
+        with bytes per object and the latest decided verdict per object, so
+        maintenance never forces re-inference; transport traces without bytes
+        go once a verdict is kept. Archives pruned ids so migration never
+        resurrects them. Safe on a stopped service and across restarts
+        (receipt converges). Raises ValueError for any other actor.
         """
         if actor != self.owner_actor:
             raise ValueError("owner_prune_only")
@@ -901,6 +903,8 @@ def migrate_i3_sources(store):
     with store.transaction():
         # Durable single cut: a completed migration never re-reads legacy nor
         # mutates anything; later decisions live in the table, not here.
+        # The receipt is written even when zero rows move, so the cut marker
+        # itself is durable.
         if store.db.execute(
                 "SELECT 1 FROM metadata WHERE key='migration:i3'").fetchone():
             return {"note": "already_migrated"}
@@ -1068,9 +1072,8 @@ def migrate_i3_sources(store):
                          "scope": "migrated-standalone-decision"}), observed))
             migrated += 1
             standalone += 1
-        if migrated == 0:
-            return {"note": "already_migrated", "migrated_source_entries": 0,
-                    "skipped_existing": skipped_existing, "skipped_pruned": skipped_pruned}
+        # The cut marker persists even with zero moved rows (empty cut is
+        # still a cut); later calls take the early no-op branch above.
         receipt = {"schema": 4, "migrated_source_entries": migrated,
                    "skipped_existing": skipped_existing, "skipped_pruned": skipped_pruned,
                    "merged_scope": merged_scope,

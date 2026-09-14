@@ -353,13 +353,19 @@ class GoogleSources:
 
     def _stored_decision(self, cfg, partition, adapter, identity, revision):
         # The table is the selection authority. A decision persisted by
-        # older code in the adapter dict is adopted once, then the table
-        # rules; nothing consults the dict afterwards.
+        # older code in the adapter dict is adopted once and only before the
+        # migration cut; after the cut the archive is never reread, so pruned
+        # rows and post-cut verdicts stay exactly as left.
         row = get_entry(self.store, 'gmail', cfg['account'], partition['collection'],
                         identity, revision)
         if row is not None and row['status'] in DECIDED:
             return {'classification': row['status'],
                     'reason_code': json.loads(row['metadata_json']).get('reason_code')}
+        with self.store.lock:
+            cut = self.store.db.execute(
+                "SELECT 1 FROM metadata WHERE key='migration:i3'").fetchone()
+        if cut is not None:
+            return None
         legacy = (adapter.get('decisions') or {}).get(_hash([identity, revision]))
         if (isinstance(legacy, dict) and legacy.get('classification') in DECIDED
                 and legacy.get('external_id') == identity and legacy.get('revision') == revision):

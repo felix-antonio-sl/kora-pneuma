@@ -193,15 +193,22 @@ def prune_superseded(store, *, provider, account, external_id, keep_revisions, c
         return len(pruned)
 
 
+DECIDED_KEEP = frozenset({'selected', 'noise', 'uncertain'})
+
+
 def run_retention(store):
     """Effective retention pass with an honest keep policy.
 
     Keeps, per object: every pending row (live obligations are never pruned),
-    the latest row (by intake sequence, else by observed time), and every row
-    whose bytes are still cited. Rows with neither sequence nor time stay
-    (unknown order is never invented). Pruned ids join the durable archive so
-    migration never resurrects them. One transaction; the receipt persists
-    (reruns converge to zero).
+    every row whose bytes are still cited, the latest projected row with bytes
+    (intake sequence order), and the latest decided row (decision time order)
+    so the current verdict is never re-inferred. Sequence and decision time
+    are never compared across families; rows with unknown order stay.
+    Transport traces without bytes (unavailable/deleted, no digest) are never
+    projections: they go once the object keeps a decided row carrying the
+    verdict, and stay as sole traces otherwise. Pruned ids join the durable
+    archive so migration never resurrects them. One transaction; the receipt
+    persists (reruns converge to zero).
     """
     with store.transaction():
         cited = set()
@@ -214,22 +221,24 @@ def run_retention(store):
             for stub in item.get("materials", []) or []:
                 if stub.get("digest"):
                     cited.add(stub["digest"])
+
+        def sequence(row):
+            try:
+                value = json.loads(row["metadata_json"]).get("sequence")
+            except (ValueError, TypeError):
+                value = None
+            return value if isinstance(value, int) else None
+
+        def decided_time(row):
+            if row["status"] not in DECIDED_KEEP:
+                return None
+            observed = row["observed_at"]
+            return observed if isinstance(observed, str) and observed else None
+
         groups = store.db.execute(
             "SELECT provider, account, collection, external_id FROM source_entries"
             " GROUP BY provider, account, collection, external_id").fetchall()
         pruned_total, objects = 0, 0
-
-        def order_key(row):
-            try:
-                sequence = json.loads(row["metadata_json"]).get("sequence")
-            except (ValueError, TypeError):
-                sequence = None
-            if isinstance(sequence, int):
-                return (1, sequence, "")
-            if isinstance(row["observed_at"], str) and row["observed_at"]:
-                return (1, 0, row["observed_at"])
-            return (0, 0, "")
-
         for group in groups:
             rows = [dict(r) for r in store.db.execute(
                 "SELECT * FROM source_entries"
@@ -239,15 +248,34 @@ def run_retention(store):
             if len(rows) < 2:
                 continue
             objects += 1
-            known = [r for r in rows if order_key(r)[0] == 1]
-            latest = max(known, key=order_key) if known and len(known) == len(rows) else None
+            keep = set()
             for row in rows:
                 if row["status"] == "pending" or row["original_digest"] in cited:
+                    keep.add(row["id"])
+            projected = [r for r in rows
+                         if r["original_digest"] is not None
+                         and json.loads(r["metadata_json"]).get("projection") == "applied"
+                         and sequence(r) is not None]
+            if projected:
+                keep.add(max(projected, key=sequence)["id"])
+            timed = [(r, decided_time(r)) for r in rows]
+            timed = [(r, moment) for r, moment in timed if moment is not None]
+            if timed:
+                keep.add(max(timed, key=lambda pair: pair[1])[0]["id"])
+            # Tombstones (no bytes) go only when the object keeps a decided
+            # row carrying the verdict; anything else stays, including
+            # unknown-order rows and sole traces of a revision.
+            decided_kept = any(
+                r["id"] in keep and r["status"] in DECIDED_KEEP for r in rows)
+            for row in rows:
+                if row["id"] in keep:
                     continue
-                if latest is not None and row["id"] == latest["id"]:
+                if row["original_digest"] is None and row["status"] in {
+                        "unavailable", "deleted"}:
+                    if not decided_kept:
+                        continue
+                elif sequence(row) is None and decided_time(row) is None:
                     continue
-                if latest is None:
-                    continue  # unknown order: keep rather than invent recency
                 store.db.execute("DELETE FROM source_entries WHERE id=?", (row["id"],))
                 pruned_total += 1
                 _archive_pruned(store, [row["id"]])
