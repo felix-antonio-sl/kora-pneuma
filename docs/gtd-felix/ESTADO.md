@@ -231,7 +231,7 @@ pedido; undo con archivo y restauración exacta. Recorrido cubierto con
 fixtures y verificado en vivo tras reapertura (trabajo legítimo
 completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
-Siguiente: **I3 · fuentes** como candidato en corrección (identidad con colección, fusión ingesta-decisión, migración total con archivo, retención operativa; ensayo sobre export real con 0 diferencias), con recorrido humano
+Siguiente: **I3 · fuentes** como candidato en cierre de corte efectivo (autoridad de selección en tabla con adopción única de legacy, migración de una sola vez con marcador durable, retención por `prune_sources` del servicio; ensayo sobre export real con 0 diferencias), con recorrido humano
 listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
