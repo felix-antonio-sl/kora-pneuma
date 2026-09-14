@@ -12,10 +12,12 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 C1 operativo; C2–C6 abiertos. I1 publicado en origen (`9896336` verificado en
 remoto). I2 publicado (`65f543e`), instalado sobre datos migrados v3 y reabierto
 operativo con reconcile real; runtime y documentación van por separado
-(docs `9449e08` y posteriores), aceptación humana NOT_RUN. I3 como candidato
-corregido `7bc1fe8` (publicado, sin instalar: retención conserva borrado real e
-indisponibilidad genuina y sólo poda trazas sintéticas cubiertas; paquete de
-realización preparado con bundle, ensayo sobre snapshot vivo y plan de corte). La dirección
+(docs `9449e08` y posteriores), aceptación humana NOT_RUN. I3 publicado e
+instalado (`7bc1fe8`, bundle de 37 archivos verificado; datos migrados v3→v4
+con `migration:i3`, retención que distingue disponibilidad vigente de traza
+sintética) y reabierto operativo con reconcile real; Gmail selectivo sigue
+degradado preexistente (4 lecturas pendientes, sin éxito completo), calendarios
+al día. La dirección
 arquitectónica e integración las conserva Codex; Hermes sigue como runtime del
 bot. Este encargo se ejecutó en OpenCode según lo asignado, sin llamadas LLM
 pagadas ni envíos reales.
@@ -30,8 +32,8 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | I2 `65f543e` publicado, instalado y reabierto operativo (bot disponible para recorrido; aceptación pendiente); rama `fxai/gtd-felix-20260911` en sync; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
-| Producto instalado | runtime `65f543e` (36 archivos idénticos al bundle) sobre datos migrados v3, en mantenimiento técnico sin workers (salud/lecturas ok, mutadoras 403, `recovery_required=true`); unidades systemd detenidas; revisión anterior `fc1e17d…` respaldada con manifiesto |
+| Fuente ejecutable | I3 `7bc1fe8` publicado, instalado (datos v4) y reabierto operativo (bot disponible para recorrido; aceptación pendiente); rama `fxai/gtd-felix-20260911` en sync; base documental `9541abf`/`0fbc18e`, código base `01086a3`; I2 `65f543e` respaldado como conjunto previo |
+| Producto instalado | runtime I3 `7bc1fe8` (37 archivos idénticos al bundle) sobre datos migrados v4 con `migration:i3`; `recovery_required` reconciliado antes de arrancar; unidades `gtd-felix` y gateway en marcha, un escritor, receptor Telegram único; conjunto v3 + runtime I2 previos respaldados sin modificar |
 | Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
 | Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
 | Runtime del bot | Hermes, `deepseek-v4.1-flash`, `opencode-go`, `max` configurado; aplicación efectiva del esfuerzo por el proveedor no demostrada |
@@ -234,12 +236,9 @@ pedido; undo con archivo y restauración exacta. Recorrido cubierto con
 fixtures y verificado en vivo tras reapertura (trabajo legítimo
 completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
-Siguiente: decidir instalación de **I3 · fuentes** `7bc1fe8` ya publicado
-(autoridad de selección en tabla con adopción única de legacy, migración de una
-sola vez con marcador durable, retención por `prune_sources` que distingue
-disponibilidad vigente de traza sintética; ensayo sobre snapshot vivo con
-0 diferencias y recuperación v4 ensayada), con recorrido humano
-listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
+Siguiente: **I4/G7** sobre I3 instalado (primera sincronía o retorno
+legítimo aún por observar; sin actividad sintética para probarlo), con recorrido
+humano listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
