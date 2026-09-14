@@ -909,7 +909,10 @@ class ExecutionControl:
             self.store.db.execute("ROLLBACK TO reserve_unit")
             self.store.db.execute("RELEASE reserve_unit")
             msg = str(exc).lower()
-            if "one_open_cycle_per_item" in msg:
+            if "one_open_cycle_per_item" in msg or "work_cycles.item_id" in msg:
+                # SQLite reports table.column, never the partial-index name; an
+                # unmapped IntegrityError here used to escape reserve and stall
+                # every orchestration tick silently.
                 raise ValueError("purpose_already_active")
             if "trigger_key" in msg:
                 # Repeating a cause never re-admits the same work. If an open
@@ -964,7 +967,10 @@ class ExecutionControl:
             self.store.db.execute("ROLLBACK TO reserve_unit")
             self.store.db.execute("RELEASE reserve_unit")
             msg = str(exc).lower()
-            if "one_open_cycle_per_item" in msg:
+            if "one_open_cycle_per_item" in msg or "work_cycles.item_id" in msg:
+                # SQLite reports table.column, never the partial-index name; an
+                # unmapped IntegrityError here used to escape reserve and stall
+                # every orchestration tick silently.
                 raise ValueError("purpose_already_active")
             if "trigger_key" in msg:
                 open_same = self.store.db.execute(
@@ -2016,9 +2022,25 @@ class ExecutionControl:
                     return False
         return bool(rows)
 
+    def _close_abandoned_cycle(self, job_id):
+        """Close the job's cycle when administrative discard ends it.
+
+        A terminally discarded run must not orphan an open cycle: the partial
+        unique index would block every later admission for the matter, and the
+        orphan never closes by itself. Idempotent: already closed cycles are
+        untouched. Also heals cycles orphaned by older code on re-stop.
+        """
+        row = self.store.db.execute('SELECT cycle_id FROM runs WHERE id=?', (job_id,)).fetchone()
+        if row:
+            self.store.db.execute(
+                "UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=? AND state IN "
+                "('ready','running','paused','recovery_required')",
+                (self._clock().isoformat(), row[0]))
+
     def _resolve_undispatched(self, state, job, reason):
         """Administrative terminality, never a fabricated native observation."""
         if job.get('terminal_resolution', {}).get('kind') == 'cancelled_before_dispatch':
+            self._close_abandoned_cycle(job['id'])
             return True
         # A manager stop also closes a pristine STANDALONE intent reservation:
         # no native run, observations, spend, progress or integration exists to
@@ -2064,6 +2086,7 @@ class ExecutionControl:
             terminal_resolution={'kind':'cancelled_before_dispatch', 'reason':reason,
                 'at':datetime.now(timezone.utc).isoformat(), 'parent_job_id':job.get('parent_job_id'),
                 'item_id':job['item_id'], 'return_status':'needs_replanning', 'native_effect':'not_dispatched'})
+        self._close_abandoned_cycle(job['id'])
         return True
 
     def _descendant_path(self, item_id, root_id):
