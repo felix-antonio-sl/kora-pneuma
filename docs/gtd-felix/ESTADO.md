@@ -118,8 +118,9 @@ en ~22 ms y el estado activo en 7.663 bytes.
   mandan en la cuaterna) más una regresión directa; ambos fallan sin el fix.
   `test_mcp` y `test_application` pasan con ellos.
 - Total integrado actual: 338/338 PASS (102 control/diaria/gasto/adaptadores +
-  236 Hermes/orquestación/núcleo/fuentes/mcp/aplicación, medidos por módulo:
-  71+17+7+7 y 46+62+17+47+12+23+29). KORA `check` ok (523/18).
+  236   Hermes/orquestación/núcleo/fuentes/mcp/aplicación, medidos por módulo:
+  71+17+7+7 y 46+62+17+47+12+23+29). KORA `check` revalidado aquí con
+  `--knowledge-root /home/felix/kora-knowledge`: ok (523/18).
 - Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
   autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
   incertidumbre y delegación, STOP/corrección/invalidación, reinicio y
@@ -127,8 +128,13 @@ en ~22 ms y el estado activo en 7.663 bytes.
   Prueba sintética no acredita proveedor ni aceptación humana.
 - Código viejo rechaza esquema nuevo (`newer_schema`); rollback ensayado con una
   captura posterior preservada (262 vs 261 asuntos) sin repetir efectos externos.
-- KORA `check` PASS (523 activos, 18 archivados, sin incidencias) con
-  `--knowledge-root`; no sustituye validación del producto.
+- KORA `check` revalidado en este checkout: `python3 kora_cli.py
+  --knowledge-root /home/felix/kora-knowledge check` (CPython 3.12.3 del
+  sistema, sin venv) devuelve `ok:true`, 523 activos, 18 archivados, 0
+  incidencias, 463 verificaciones de referencia. Sin el flag falla con
+  `Biblioteca de conocimiento ausente` (exit 1) porque el enlace `knowledge`
+  apunta a `../kora-knowledge`, ausente junto a esta raíz; no es un fallo del
+  candidato. No sustituye validación del producto.
 - Guarda de agotamiento: comprobada en pruebas aisladas. El job real de 192 s
   terminó antes del límite y **no ejercitó esa rama**.
 - Contrato de devolución de `01086a3`: instalado; efecto sobre calidad **NOT_RUN**.
@@ -185,5 +191,7 @@ la carpeta privada de este corte: `design-validation.json`, `validate-design.py`
 DDL SHA-256 `77b1a446bdc9a1f5824cc67c0d3070b9fb6001118ef2141f33a57a01782a8edc`.
 
 Esto **no acredita** conducta LLM ni aceptación. Cada incremento requiere sus pruebas y
-ensayo de realización según GUIA. La comprobación KORA de este candidato pasó
-sin incidencias (523 activos, 18 archivados); no sustituye validación del producto.
+ensayo de realización según GUIA. La comprobación KORA se revalidó en este
+checkout con `python3 kora_cli.py --knowledge-root /home/felix/kora-knowledge
+check` (ok, 523 activos, 18 archivados, sin incidencias); no sustituye
+validación del producto.
