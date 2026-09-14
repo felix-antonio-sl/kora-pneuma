@@ -27,7 +27,7 @@ E28–E31 (vigilancia temporal del run). Aceptación humana: NOT_RUN.
   `55e17bf8…66b7`): esquema v4, 261 asuntos / 332 operaciones / 405 eventos /
   300 originales / 8 materiales / 12 evaluaciones / 52 entregas confirmadas /
   39 runs / 1232 observaciones / 39 ciclos / 258 decisiones de fuente
-  (+3 standalone en el marcador); 38 anclas `hermes:state:*`; outbox vacío;
+  (+3 standalone en el marcador); 38 registros `hermes:state:*` (solo 1 con `first_send_at`/`native_admitted_at`; el ensayo prueba conservación de estados, no recuperación de plazo incierto — esa conducta la cubren las suites temporales 156/156); outbox vacío;
   `recovery_required` false.
 - Recuperación de esta composición, ensayada en aislamiento (E39,
   `enc39-recuperacion/rehearse-e39.py`, runtime instalado): restore real
@@ -84,10 +84,10 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | No implementado como producto | Capacidad: solicitud→aceptación→entrega→evaluación con un ejecutor acotado (GUIA §9). Existe `request_review` + workers/orquestación; falta el primer recorrido real. No confundir con la delegación entre tareas Codex usada en este proyecto |
+| G7 delegar | Implementado y ensayado en aislamiento (E40) | Camino: turno nativo del padre → `gtd_dispatch` (MCP/HTTP) → reserva familiar con `parent_job_id` → hijo `deferred` hasta terminalidad del padre → material versionado → integración → evaluación del principal bajo mandato del owner. Recorrido mínimo PASS en `enc40-delegacion/` (2 envíos secuenciales, 0 reenvíos tras reinicio, plaza libre, sin doble cargo). `request_review` no es delegación. Falta: alta del ejecutor (configuración: `register_bot` + mandato + admisión) y primer recorrido vivo, bloqueado por inferencia sin salida |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
-bloqueado hoy por inferencia sin salida, no por runtime. I5 = este paquete +
+bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
 aceptación. Próximo recorrido humano (sólo cuando la inferencia vuelva a
 producir salida; no solicitarlo ahora): pedir al bot el estado de un asunto
 propio y una preparación acotada; dirección observará material, cobertura y
