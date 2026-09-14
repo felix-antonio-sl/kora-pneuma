@@ -85,7 +85,7 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Candidato E45 en revision (sin push/instalar); principal intacto | Operacion offline incorporate_executor (service.py) solo-aditiva con recibo durable: 10 focales + ensayo sobre export real (261 asuntos, reconcile, delta exacto, re-export/re-restore) PASS. E44 perfil/board inactivos preservados con huellas. Siguiente decision: realizar migracion y corte E44 corregido. Vivo util NOT_RUN |
+| G7 delegar | Instalado-suspendido y verificado (E46); util pendiente | Migracion actor_config con recibo durable + config helper + bot SUSPENDED + gateway propio 51112 (capabilities/toolsets/MCP/guard PASS sin inferencia). Principal sano, delta presupuestario cero, helper 0 runs. Siguiente decision: habilitar recorrido con via de inferencia util. Vivo util NOT_RUN |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
 bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
