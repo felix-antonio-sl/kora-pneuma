@@ -224,7 +224,9 @@ class TelegramAdapter:
                 ('done' if status == 'confirmed' else 'ignored' if status == 'suppressed' else 'pending',
                  reason, event['event_key']))
 
-    def _notification_content(self, event, *, omit_materials=frozenset()):
+    def _notification_sections(self, event, *, omit_materials=frozenset()):
+        # Validated lead + material sections; the single source for both the
+        # full chunked content and the brief summary of GUIA section 8.
         payload = event['payload']
         item = self.service.get_item(payload.get('item_id'))
         if not item or item['version'] != payload.get('version'):
@@ -236,6 +238,24 @@ class TelegramAdapter:
             latest[material['id']] = material
         if any(not m.get('valid') for m in latest.values()):
             raise TelegramError('notification_material_invalid')
+        return item, latest, self._notification_body(event, item, latest,
+            omit_materials=omit_materials)
+
+    def _notification_lead(self, event, *, omit_materials=frozenset()):
+        # Brief head without material bodies: what is ready/decided plus where
+        # the full content lives. Never truncates a body mid-sentence.
+        item, latest, sections = self._notification_sections(event, omit_materials=omit_materials)
+        material_count = sum(1 for m in latest.values()
+            if self._material_return_identity(m) not in omit_materials)
+        lead = sections[0]
+        if material_count:
+            lead += ('\n\nHay material preparado para revisar'
+                     + ('.' if material_count == 1 else f' ({material_count} piezas).')
+                     + ' Usa Ver resultado para leerlo completo.')
+        return lead
+
+    def _notification_body(self, event, item, latest, *, omit_materials=frozenset()):
+        payload = event['payload']
         native_reply = payload.get('native_reply')
         has_reply = isinstance(native_reply, str) and bool(native_reply.strip())
         summary = native_reply.strip() if has_reply else str(payload.get('text') or item['title'])
@@ -277,6 +297,10 @@ class TelegramAdapter:
             except UnicodeDecodeError:
                 raise TelegramError('notification_text_transport_required') from None
             sections.append(material['title'] + '\n' + text)
+        return sections
+
+    def _notification_content(self, event, *, omit_materials=frozenset()):
+        item, latest, sections = self._notification_sections(event, omit_materials=omit_materials)
         text = '\n\n'.join(sections)
         if len(text.encode()) > 65536:
             raise TelegramError('notification_transport_limit')
@@ -367,6 +391,11 @@ class TelegramAdapter:
             if automatic and question_basis is not None and delivered.get('basis') == question_basis:
                 self._notification_receipt(event, 'suppressed', 'question_already_delivered')
                 return False
+            # Long returns (5+ chunks) arrive as a brief head with the full
+            # content one tap away; shorter multipart keeps inline per-segment
+            # delivery with pause/resume without repeats (pinned regressions).
+            if automatic and len(chunks) > 4:
+                return await self._deliver_long_summary(event, question_basis, omitted)
             for index, chunk in enumerate(chunks):
                 # Earlier sends yield to other work. Revalidate before each new
                 # effect; a correction during a multipart delivery stops the rest.
@@ -402,6 +431,31 @@ class TelegramAdapter:
                 pass
         finally:
             self._outbound_context.reset(token)
+
+    async def _deliver_long_summary(self, event, question_basis, omit_materials):
+        # GUIA section 8: a long automatic return arrives as a brief head; the
+        # full content stays one tap away on Ver resultado (show_result sends
+        # the complete chunks on request). Single send with the same
+        # revalidation and uncertainty rules as full chunks; materials are NOT
+        # marked delivered so the full text keeps its meaning.
+        self._notification_content(event, omit_materials=omit_materials)
+        if not self._auto_return_allowed(event):
+            return False
+        item_id = event['payload']['item_id']
+        buttons = [[self._button('Ver resultado', {'action': 'result', 'item_id': item_id}),
+                    self._button('Ver asunto', {'action': 'show', 'item_id': item_id})]]
+        current = self.service.get_item(item_id)
+        if current and current['status'] not in {'done', 'withdrawn', 'paused'}:
+            buttons[0].append(self._button('Pausar este asunto', {'action': 'pause',
+                'item_id': item_id, 'expected_version': event['payload']['version']}))
+        response = await self._send(self._notification_lead(event, omit_materials=omit_materials),
+                                    reply_markup={'inline_keyboard': buttons})
+        if not isinstance(response, dict) or not response.get('message_id'):
+            self._notification_receipt(event, 'uncertain', 'notification_delivery_uncertain')
+            return True
+        self._notification_receipt(event, 'confirmed', question_basis=question_basis,
+                                   material_keys=())
+        return True
 
     async def process_pending(self):
         """One bounded retry pass; useful for recovery and deterministic tests."""
@@ -484,12 +538,13 @@ class TelegramAdapter:
         return item_id, version if type(version) is int and version > 0 else None
 
     def _outbox_intents(self):
-        # Single authoritative read of send intents; scoped per account, with
-        # only the columns each caller needs (never full history decode).
+        # Single authoritative read of live send intents; scoped per account
+        # and unfinished state, with only the columns each caller needs
+        # (confirmed history is never decoded here).
         with self.service.store.lock:
             rows = self.service.store.db.execute(
                 "SELECT state, payload_json FROM deliveries WHERE channel='telegram'"
-                " AND target_key=?", (self.config.account,)).fetchall()
+                " AND target_key=? AND state != 'confirmed'", (self.config.account,)).fetchall()
         intents = []
         for row in rows:
             try:
