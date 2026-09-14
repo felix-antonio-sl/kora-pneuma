@@ -325,7 +325,8 @@ y `validate` nunca alcanzó `job_runtime_exhausted` (límite 240); el fallo
 terminal registró 600.36 s. Fallo de proveedor y defecto de protección
 coexistieron; el reporte E27 sólo probaba lo primero.
 
-Candidato (hermes.py, sin instalar): ancla durable `native_admitted_at` al
+Candidato E28 (hermes.py, sin instalar; CORREGIDO en E29: el valor era el instante de
+recuperación y renovaba el plazo ante envío incierto — ver E29): ancla durable `native_admitted_at` al
 acknowledge del dispatch (sólo con run nativo probado; nunca en
 never_sent/incierto); piso local para estado `running` en `_observe_api`
 (`max(telemetría nativa, ahora - ancla)`), con separación
@@ -338,3 +339,20 @@ seguro; coste sigue NULL (sin invención monetaria). Regresiones: 3 en
 `test_hermes` (stall+STOP durable, supervivencia a reinicio, sano+never_sent);
 fallan en base, pasan en candidato. Focales: hermes+control+daily 144 OK,
 spent+codex_probe 22 OK. C2/minuta/aceptación: NOT_RUN.
+
+## E29 · candidato: plazo ante recuperación + política de espera (sin instalar)
+
+P1: la recuperación de un envío incierto sin recibo renovaba el ancla
+(repro E29: timeout post-creación + reconcile a t0+125 ⇒ observed 2,
+límite intacto). Causa: sólo never_sent prueba ausencia de envío; incierto
+no. Fix: el ancla conserva el PRIMER intento (`intent.created_at` durable)
+cuando ya hubo envío posible, y usa ahora sólo tras marca never_sent; un
+ancla existente jamás se sobrescribe. never_sent sigue sin ancla/cargo.
+P2 (política autorizada): la cota cuenta vida admitida incluida espera
+post-admisión; queued/waiting reportan telemetría pura (transición probada:
+queued 120 s ⇒ 2, running ⇒ ~121 + exhausted). El contador diario consume la
+misma cota (declarado, no inferencia medida). P3: `_advance` real llega solo
+al STOP durable post-límite (margen declarado: un poll; 1 POST stop, sin
+re-admisión al mismo propósito, plaza conservada sin terminalidad
+fabricada). Regresiones E29: P1 falla en e731c26 y pasa; P2/P3 fijan conducta.
+Focales vecinas: hermes+control+daily+spent 154 OK. C2/minuta: NOT_RUN.
