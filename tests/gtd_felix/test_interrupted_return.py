@@ -163,7 +163,8 @@ class WorkerEmissionTests(unittest.IsolatedAsyncioTestCase):
         payload = event['payload']
         self.assertEqual(payload['item_id'], self.item['id'])
         self.assertEqual(payload['version'], self.service.get_item(self.item['id'])['version'])
-        self.assertIn('No conseguí preparar nada', payload['text'])
+        self.assertIn('No conseguí completar la preparación', payload['text'])
+        self.assertIn('no dejó material nuevo', payload['text'])
         self.assertIn(self.item['title'], payload['text'])
         self.assertNotIn(job_id, payload['text'])
         for banned in ('USD', 'segundos', 'Traceback', 'stack'):
@@ -177,6 +178,54 @@ class WorkerEmissionTests(unittest.IsolatedAsyncioTestCase):
             await self.worker.tick()
         self.assertEqual(1, len(self.interrupted()))
 
+    async def test_director_probe_p1_human_stop_at_limit_stays_silent(self):
+        # Sonda P1 de direccion: STOP humano con tiempo sobre el cupo no avisa.
+        for _ in range(6):
+            await self.worker.tick()
+            if self.native.submissions:
+                break
+        self.assertEqual(1, len(self.native.submissions))
+        self.native.observed_runtime = 252
+        job_id = self.native.submissions[0]['job_id']
+        stop = self.control.request_stop('felix', 'director-human-stop', job_id)
+        self.assertTrue(self.control.get_job(job_id)['stop_requested'], stop)
+        self.native.runs[job_id]['status'] = 'cancelled'
+        for _ in range(12):
+            await self.worker.tick()
+        job = self.control.get_job(job_id)
+        self.assertTrue(job['terminal'])
+        self.assertEqual(self.interrupted(), [])
+
+    async def test_director_probe_p2_partial_draft_is_named(self):
+        # Sonda P2 de direccion: material del intento no es "nada" ni "anterior".
+        for _ in range(6):
+            await self.worker.tick()
+            if self.native.submissions:
+                break
+        self.assertEqual(1, len(self.native.submissions))
+        job_id = self.native.submissions[0]['job_id']
+        job = self.control.get_job(job_id)
+        put = await self.client.call('gtd_command', {'job_id': job_id, 'command': {
+            'operation_id': job_id + ':partial', 'action': 'put_material',
+            'item_id': job['item_id'],
+            'expected_version': self.service.get_item(job['item_id'])['version'],
+            'fields': {'content': 'Borrador parcial guardado por este intento',
+                       'mandate_id': job['mandate_id']}}})
+        self.assertEqual(put['status'], 'applied', put)
+        event = None
+        for _ in range(15):
+            await self.worker.tick()
+            found = self.interrupted()
+            if found:
+                event = found[0]
+                break
+        self.assertIsNotNone(event, 'partial draft produced no notice')
+        text = event['payload']['text']
+        self.assertIn('borrador parcial', text)
+        self.assertNotIn('No conseguí preparar nada', text)
+        self.assertNotIn('anterior', text)
+        self.assertNotIn(job_id, text)
+
     async def test_user_stop_stays_silent(self):
         for _ in range(6):
             await self.worker.tick()
@@ -186,7 +235,7 @@ class WorkerEmissionTests(unittest.IsolatedAsyncioTestCase):
         self.native.observed_runtime = 5
         job_id = self.native.submissions[0]['job_id']
         stop = self.control.request_stop('felix', 'user-stop:1', job_id)
-        self.assertTrue(stop['job']['terminal'] or True, stop)
+        self.assertTrue(self.control.get_job(job_id)['stop_requested'], stop)
         self.native.runs[job_id]['status'] = 'cancelled'
         for _ in range(10):
             await self.worker.tick()
@@ -261,7 +310,7 @@ class DeliveryTests(unittest.IsolatedAsyncioTestCase):
         await self.adapter._deliver_notification(event, automatic=True)
         self.assertEqual(1, len(self.http.sent))
         sent = self.http.sent[-1]
-        self.assertIn('No conseguí preparar nada', sent['text'])
+        self.assertIn('No conseguí completar la preparación', sent['text'])
         self.assertNotIn(job_id, sent['text'])
         buttons = [b for row in sent['reply_markup']['inline_keyboard'] for b in row]
         self.assertTrue(any(b['text'] == 'Ver asunto' for b in buttons))
@@ -282,6 +331,51 @@ class DeliveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn(self.item['title'], self.http.sent[-1]['text'])
         await self.adapter._callback({'id': 'ux-pause', 'data': controls['Pausar este asunto']})
         self.assertEqual(self.service.get_item(self.item['id'])['status'], 'paused')
+
+    async def test_pause_between_decision_and_delivery_suppresses(self):
+        event, _ = self.interrupted_event(operation='int-job-pause')
+        paused = self.service.execute('felix', {'operation_id': 'int-pause-late', 'action': 'pause',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'], 'fields': {}})
+        self.assertEqual(paused['status'], 'applied', paused)
+        await self.adapter._deliver_notification(event, automatic=True)
+        self.assertEqual(0, len(self.http.sent))
+
+    async def test_partial_and_prior_materials_are_distinguished(self):
+        other = self.service.execute('felix', {'operation_id': 'int-mand2', 'action': 'grant_mandate',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'scope_item_id': self.item['id'], 'capabilities': ['prepare_private'],
+                       'actors': ['gtd-felix'], 'completion_criteria': 'x'}})
+        self.assertEqual(other['status'], 'applied', other)
+        old = self.service.execute('gtd-felix', {'operation_id': 'int-old-mat', 'action': 'put_material',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'content': 'Minuta anterior ya conservada',
+                       'mandate_id': self.mandate_id}})
+        self.assertEqual(old['status'], 'applied', old)
+        job_id = open_job(self.service, self.control, self.item, other['mandate']['id'],
+                          bot_id='int-bot-2', operation='int-reserve-2')
+        job = self.control.get_job(job_id)
+        put = self.service.execute('gtd-felix', {'operation_id': job_id + ':partial2', 'action': 'put_material',
+            'item_id': job['item_id'],
+            'expected_version': self.service.get_item(job['item_id'])['version'],
+            'fields': {'content': 'Borrador parcial de este segundo intento',
+                       'mandate_id': other['mandate']['id']}})
+        self.assertEqual(put['status'], 'applied', put)
+        self.control.request_stop('gtd-felix', 'gtd-invalid-stop:' + job_id, job_id)
+        observe_terminal_cancelled(self.control, job_id)
+        self.mini._notify_interrupted(job_id)
+        events = [e for e in self.service.pending_events('gtd-notification', 'local')
+                  if e['payload'].get('kind') == 'interrupted']
+        self.assertEqual(1, len(events))
+        await self.adapter._deliver_notification(events[0], automatic=True)
+        self.assertEqual(1, len(self.http.sent))
+        text = self.http.sent[-1]['text']
+        self.assertIn('borrador parcial', text)
+        self.assertIn('conserva 1 material anterior', text)
+        self.assertNotIn('Borrador parcial de este segundo intento', text)
+        self.assertNotIn('Minuta anterior ya conservada', text)
 
     async def test_prior_material_is_named_not_attached(self):
         put = self.service.execute('gtd-felix', {'operation_id': 'int-mat', 'action': 'put_material',

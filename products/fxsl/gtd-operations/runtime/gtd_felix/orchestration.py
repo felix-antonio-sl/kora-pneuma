@@ -519,40 +519,70 @@ class OrchestrationWorker:
         self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
             'external_id': job_id, 'revision': '1', 'payload': payload})
 
+    def _attempt_material_ids(self, job):
+        # Materials this attempt verifiably left: same item, same author,
+        # same mandate when the job carries one, created inside the run
+        # window. No table links a material to its job, so this is the
+        # explicit provenance rule; a discarded run never implies zero writes.
+        run = self.control._run_row(job['id'])
+        admitted = run['admitted_at'] if run else None
+        ended = run['ended_at'] if run else None
+        out = []
+        for material in self.service.materials(job['item_id']):
+            if not material.get('valid'):
+                continue
+            if material.get('author') != job['actor']:
+                continue
+            if job.get('mandate_id') and material.get('mandate_id') != job['mandate_id']:
+                continue
+            created = material.get('created_at') or ''
+            if admitted and created < admitted:
+                continue
+            if ended and created > ended:
+                continue
+            out.append(material['id'])
+        return out
+
     def _notify_interrupted(self, job_id):
-        # One honest return for a guard-stopped attempt that left no domain
-        # progress: the user learns nothing was achieved, keeps the item and
-        # its context, and can pause or resume explicitly. Deliberately narrow:
-        # only a guard-initiated stop (durable gtd-invalid-stop receipt) on a
-        # discarded run notifies; user-requested stops and paused/withdrawn
-        # items stay silent. ingest_event dedupes reprocessing by identity.
+        # One honest return for a guard-stopped attempt without verified
+        # result: the user learns the preparation did not complete, keeps the
+        # item with its history and materials, and can pause or resume
+        # explicitly. Deliberately narrow: only a guard first-stop (durable
+        # gtd-invalid-stop receipt, never re-sealed over a user stop) with the
+        # observed runtime at the allowance notifies; user-requested stops and
+        # paused/withdrawn items stay silent. A partial draft is named as
+        # unverified advance, never as result; prior materials are named as
+        # conserved, never attached. ingest_event dedupes reprocessing.
         job = self.control.get_job(job_id)
         if job.get('integration') != 'discarded':
             return
         if not self.control._control_op_get('gtd-invalid-stop:' + job_id):
             return
-        # Limit cancellation, not a user stop the worker echoed afterwards:
-        # the observed runtime must have reached the job allowance. A user
-        # stop on a healthy run leaves small observations, so it stays silent
-        # even though the next tick also files a guard stop.
         if not (job.get('observed_runtime_seconds', 0) >= job.get('max_runtime_seconds', float('inf'))):
             return
         item = self.service.get_item(job['item_id'])
         if not item or item['status'] in {'done', 'withdrawn', 'paused'}:
             return
-        prior = len(self.service.materials(item['id']))
-        if prior:
-            tail = (' El asunto conserva %d material anterior; este intento no añadió ninguno.'
-                    % prior if prior == 1 else
-                    ' El asunto conserva %d materiales anteriores; este intento no añadió ninguno.' % prior)
+        mine = self._attempt_material_ids(job)
+        prior = [m['id'] for m in self.service.materials(item['id']) if m['id'] not in mine]
+        parts = ['No conseguí completar la preparación de ' + item['title'] + '.']
+        if mine:
+            parts.append('Este intento dejó un borrador parcial guardado, sin verificar: no es un resultado. Puedes verlo en el asunto.'
+                         if len(mine) == 1 else
+                         'Este intento dejó %d borradores parciales guardados, sin verificar: no son un resultado. Puedes verlos en el asunto.' % len(mine))
         else:
-            tail = ' El asunto sigue intacto, sin material nuevo.'
-        text = ('No conseguí preparar nada en este intento: ' + item['title'] + '.' + tail
-                + ' Puedes verlo, retomarlo o pausarlo cuando quieras.')
+            parts.append('Este intento no dejó material nuevo.')
+        if prior:
+            parts.append('El asunto conserva 1 material anterior.'
+                         if len(prior) == 1 else
+                         'El asunto conserva %d materiales anteriores.' % len(prior))
+        else:
+            parts.append('El asunto conserva su estado e historial.')
+        parts.append('Puedes verlo, retomarlo o pausarlo cuando quieras.')
         self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
             'external_id': job_id, 'revision': '1',
             'payload': {'item_id': item['id'], 'version': item['version'], 'job_id': job_id,
-                        'kind': 'interrupted', 'text': text, 'delivery': 'pending'}})
+                        'kind': 'interrupted', 'text': ' '.join(parts), 'delivery': 'pending'}})
 
     async def _advance(self, state, job_id):
         run = state['runs'][job_id]
@@ -607,7 +637,12 @@ class OrchestrationWorker:
                 self.control._load().get('attention_displacements', {}).values())
             if not validity['allowed'] and not own_terminal and not technical_family:
                 # Request identifies the family; native stop still needs a poll.
-                self.control.request_stop(job.get('requested_by') or self.config.get('actor'), 'gtd-invalid-stop:' + job_id, job_id)
+                if not job.get('stop_requested'):
+                    # First stop decision keeps its cause: a prior user stop
+                    # must not be re-sealed as a guard stop, or causality for
+                    # any later return would be rewritten. The native signal
+                    # below still goes out so the slot never leaks.
+                    self.control.request_stop(job.get('requested_by') or self.config.get('actor'), 'gtd-invalid-stop:' + job_id, job_id)
                 try:
                     await self.hermes.stop(job_id)
                 except Exception:
