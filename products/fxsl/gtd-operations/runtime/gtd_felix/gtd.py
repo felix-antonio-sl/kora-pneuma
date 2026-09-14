@@ -638,8 +638,7 @@ class GTDDomain:
             raise ValueError("invalid_material")
         self._require(actor, "prepare_private", item, fields.get("mandate_id", item.get("mandate_id")))
         material_id = fields.get("material_id") or uuid.uuid4().hex
-        history = list(item.get("materials", []))
-        previous = [m for m in history if m["id"] == material_id]
+        previous = self._raw_materials(item["id"], material_id)
         if previous and previous[-1]["author"] == self.owner_actor and actor != self.owner_actor:
             raise ValueError("human_material_protected")
         if fields.get("material_id") and not previous:
@@ -702,16 +701,116 @@ class GTDDomain:
             material['basis'][item['id']] = self._basis(item['id'])
             material['source_versions'] = {**copied.get('source_versions', {}), **sources}
             material['source_material'] = {**ref, 'author': copied['author'], 'created_at': copied['created_at']}
-        history.append(material)
-        return self._apply_updates(actor, command["operation_id"], digest, item, versions, {"materials": history})
+        self._insert_material_row(item["id"], material)
+        # Receipts, patches and the stored document all carry reference stubs;
+        # full rows live only in materials. Readers resolve content by digest.
+        history = [self._material_stub(entry) for entry in self._raw_materials(item["id"])]
+        receipt = self._apply_updates(actor, command["operation_id"], digest, item, versions, {"materials": history})
+        self._store_result_stubs(item["id"])
+        return receipt
+
+    def _store_result_stubs(self, item_id):
+        # Derive the document projection from the authoritative rows, in the
+        # same transaction as the write that triggered it. Never invents rows.
+        # Absent stays absent: like before the cut, arrays appear only once
+        # they hold references, so receipts and stored documents keep the
+        # same shape.
+        document, _ = self._item(item_id)
+        if document is None:
+            return
+        document = dict(document)
+        stubs = [self._material_stub(material) for material in self._raw_materials(item_id)]
+        if stubs:
+            document["materials"] = stubs
+        else:
+            document.pop("materials", None)
+        assess = [self._assessment_stub(assessment) for assessment in self._assessment_rows(item_id)]
+        if assess:
+            document["assessments"] = assess
+        else:
+            document.pop("assessments", None)
+        self.store.db.execute("UPDATE items SET document=? WHERE id=?", (encode(document), item_id))
+
+    @staticmethod
+    def _material_stub(material):
+        # Reference projection kept in the item document. Identity, authorship
+        # and judgment stay readable; base snapshots live in materials rows.
+        # Idempotent: an existing stub (no base snapshots) passes through.
+        if "basis" not in material and "original" not in material:
+            return dict(material)
+        stub = {"id": material["id"], "version": material["version"],
+                "author": material["author"], "title": material.get("title"),
+                "digest": material["original"]["sha256"], "size": material["original"]["size"],
+                "mime_type": material["original"].get("mime_type"), "created_at": material.get("created_at")}
+        # Mandate scope and copy provenance are identity (who/what/when),
+        # not base snapshots.
+        if material.get("mandate_id") is not None:
+            stub["mandate_id"] = material["mandate_id"]
+        if isinstance(material.get("source_material"), dict):
+            stub["source_material"] = dict(material["source_material"])
+        return stub
+
+    def _material_stubs(self, item_id):
+        return [self._material_stub(material) for material in self._raw_materials(item_id)]
+
+    def _insert_material_row(self, item_id, material):
+        original = material["original"]
+        self.store.db.execute(
+            "INSERT INTO materials(id, version, item_id, author, title, mime_type, filename,"
+            " digest, size, basis_json, source_versions_json, mandate_id, source_material_json, created_at)"
+            " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (material["id"], material["version"], item_id, material["author"],
+             material.get("title", "Material preparado"),
+             original.get("mime_type", "text/plain; charset=utf-8"),
+             original.get("filename", "material.txt"),
+             original["sha256"], original["size"],
+             encode(material.get("basis", {})), encode(material.get("source_versions", {})),
+             material.get("mandate_id"),
+             encode(material["source_material"]) if material.get("source_material") else None,
+             material.get("created_at")))
+
+    def _material_row(self, item_id, material_id, version):
+        row = self.store.db.execute(
+            "SELECT * FROM materials WHERE item_id=? AND id=? AND version=?",
+            (item_id, material_id, version)).fetchone()
+        return self._material_dict(row) if row else None
+
+    @staticmethod
+    def _material_dict(row):
+        material = {"id": row["id"], "version": row["version"], "author": row["author"],
+            "title": row["title"], "created_at": row["created_at"],
+            "basis": json.loads(row["basis_json"]),
+            "source_versions": json.loads(row["source_versions_json"]),
+            "mandate_id": row["mandate_id"],
+            "original": {"path": f"originals/{row['digest']}", "sha256": row["digest"],
+                         "size": row["size"], "filename": row["filename"], "mime_type": row["mime_type"]}}
+        if row["source_material_json"]:
+            material["source_material"] = json.loads(row["source_material_json"])
+        return material
+
+    def _raw_materials(self, item_id, material_id=None):
+        # Full table rows without validity flags: the shape historical
+        # material_basis snapshots and admission bases already carry. Ordered
+        # by insertion (rowid): document arrays were append-ordered and UUID
+        # order must never stand in for chronology.
+        if material_id is not None:
+            rows = self.store.db.execute(
+                "SELECT * FROM materials WHERE item_id=? AND id=? ORDER BY version",
+                (item_id, material_id)).fetchall()
+        else:
+            rows = self.store.db.execute(
+                "SELECT * FROM materials WHERE item_id=? ORDER BY rowid",
+                (item_id,)).fetchall()
+        return [self._material_dict(row) for row in rows]
 
     def _material_invalid_reasons(self, item_id, material, visited=frozenset()):
         identity = (item_id, material['id'], material['version'])
         if identity in visited or len(visited) >= 64:
             return ['source_material_chain_invalid']
-        item = self._item(item_id)[0]
-        history = (item or {}).get('materials', [])
-        latest = max((m['version'] for m in history if m['id'] == material['id']), default=0)
+        row = self.store.db.execute(
+            "SELECT MAX(version) FROM materials WHERE item_id=? AND id=?",
+            (item_id, material['id'])).fetchone()
+        latest = row[0] or 0
         reasons = ['basis_changed:' + sid for sid, basis in material['basis'].items() if self._basis(sid) != basis]
         if material['version'] != latest:
             reasons.append('material_superseded')
@@ -720,9 +819,7 @@ class GTDDomain:
             reasons.append('mandate_revoked')
         reference = material.get('source_material')
         if reference:
-            origin = self._item(reference['item_id'])[0]
-            source = next((m for m in (origin or {}).get('materials', [])
-                if m['id'] == reference['material_id'] and m['version'] == reference['version']), None)
+            source = self._material_row(reference['item_id'], reference['material_id'], reference['version'])
             if (source is None or source['original']['sha256'] != reference['sha256']
                     or self._material_invalid_reasons(reference['item_id'], source, visited | {identity})):
                 reasons.append('source_material_not_current')
@@ -730,14 +827,62 @@ class GTDDomain:
 
     def materials(self, item_id):
         with self.store.lock:
-            item = self._item(item_id)[0]
-            if not item:
+            if self._item(item_id)[0] is None:
                 return []
-            result = []
-            for material in item.get("materials", []):
-                reasons = self._material_invalid_reasons(item_id, material)
-                result.append({**material, "valid": not reasons, "invalid_reasons": reasons})
-            return result
+            return [{**material, "valid": not (reasons := self._material_invalid_reasons(item_id, material)),
+                     "invalid_reasons": reasons}
+                    for material in self._raw_materials(item_id)]
+
+    def _assessment_rows(self, item_id):
+        rows = self.store.db.execute(
+            "SELECT * FROM assessments WHERE item_id=? ORDER BY created_at, rowid",
+            (item_id,)).fetchall()
+        return [self._assessment_dict(row) for row in rows]
+
+    def assessments(self, item_id):
+        """Full assessment rows by identity; the item document keeps stubs."""
+        with self.store.lock:
+            return self._assessment_rows(item_id)
+
+    @staticmethod
+    def _assessment_dict(row):
+        # Keys absent at write time stay absent (NULL columns are omitted), so
+        # table reads reproduce the stored receipt shape exactly.
+        assessment = {"id": row["id"], "item_version": row["item_version"],
+            "actor": row["actor"], "satisfied": bool(row["satisfied"]),
+            "criterion_hash": row["criterion_hash"], "evidence": row["evidence"],
+            "source_versions": json.loads(row["source_versions_json"]),
+            "assessed_at": row["created_at"],
+            "resolution_basis": json.loads(row["resolution_basis_json"]),
+            "material_basis": json.loads(row["material_basis_json"])}
+        if row["mandate_id"] is not None:
+            assessment["mandate_id"] = row["mandate_id"]
+        if row["material_id"] is not None:
+            assessment["material_id"] = row["material_id"]
+            assessment["material_version"] = row["material_version"]
+        if row["gap"] is not None:
+            assessment["gap"] = row["gap"]
+        return assessment
+
+    @staticmethod
+    def _assessment_stub(assessment):
+        # Reference projection kept in the item document: everything but the
+        # material_basis snapshot, which duplicates the materials collection
+        # per assessment and lives in assessment rows. The verdict context
+        # (resolution_basis) stays readable so composed views keep evidence.
+        # Idempotent: an existing stub passes through unchanged. Explicit None
+        # optionals read the same as absent keys (NULL columns are omitted).
+        return {key: value for key, value in assessment.items()
+                if key != "material_basis" and value is not None}
+
+    @staticmethod
+    def _stub_view(item):
+        # Normalize either representation era to reference stubs so a stored
+        # receipt and the current document compare on identity and judgment.
+        view = dict(item)
+        view["materials"] = [GTDDomain._material_stub(m) for m in item.get("materials", [])]
+        view["assessments"] = [GTDDomain._assessment_stub(a) for a in item.get("assessments", [])]
+        return view
 
     def read_material(self, item_id, material_id, version):
         """Read one UTF-8 original (maximum 256 KiB), without changing validity."""
@@ -819,13 +964,31 @@ class GTDDomain:
                 raise ValueError("material_stale_or_missing")
         if fields["satisfied"] and any(self._item(dep)[0].get("status") != "done" for dep in item.get("depends_on", [])):
             raise ValueError("dependencies_incomplete")
-        assessment = {**fields, "actor": actor, "assessed_at": now(), "item_version": item["version"],
+        assessment = {**fields, "id": fingerprint([item["id"], now(), fields.get("evidence", "")]),
+            "actor": actor, "assessed_at": now(), "item_version": item["version"],
+            "criterion_hash": fingerprint(fields.get("evidence", "")),
+            "source_versions": fields.get("source_versions", {}),
             "resolution_basis": self.work_input_basis(item["id"], fields.get("source_versions", {})),
-            "material_basis": item.get("materials", [])}
-        updates = {"assessments": [*item.get("assessments", []), assessment], "result_gap": None if fields["satisfied"] else fields.get("gap", "criterion_not_met")}
+            "material_basis": self._raw_materials(item["id"])}
+        previous = self._assessment_rows(item["id"])
+        self.store.db.execute(
+            "INSERT INTO assessments(id, item_id, item_version, material_id, material_version,"
+            " actor, satisfied, criterion_hash, evidence, gap, resolution_basis_json,"
+            " material_basis_json, source_versions_json, mandate_id, created_at)"
+            " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (assessment["id"], item["id"], item["version"], fields.get("material_id"),
+             fields.get("material_version"), actor, 1 if fields["satisfied"] else 0,
+             assessment["criterion_hash"], fields["evidence"], fields.get("gap"),
+             encode(assessment["resolution_basis"]), encode(assessment["material_basis"]),
+             encode(fields.get("source_versions", {})), fields.get("mandate_id", item.get("mandate_id")),
+             assessment["assessed_at"]))
+        full = [self._assessment_stub(entry) for entry in [*previous, assessment]]
+        updates = {"assessments": full, "result_gap": None if fields["satisfied"] else fields.get("gap", "criterion_not_met")}
         if fields["satisfied"]:
             updates.update(status="done", completed_at=now())
-        return self._apply_updates(actor, command["operation_id"], digest, item, versions, updates)
+        receipt = self._apply_updates(actor, command["operation_id"], digest, item, versions, updates)
+        self._store_result_stubs(item["id"])
+        return receipt
 
     @staticmethod
     def _instant(value):
@@ -883,11 +1046,12 @@ class GTDDomain:
                 basis[sid] = {'source': item.get('source', {}), 'revisions': item.get('source_revisions', []),
                     'human': {k: v for k, v in fields.items() if v.get('actor') == self.owner_actor
                         and k not in {'notes', 'coverage', 'version', 'updated_at', 'assessments', 'result_gap'}},
-                    'human_materials': [m for m in item.get('materials', []) if m.get('author') == self.owner_actor]}
+                    'human_materials': [m for m in self._raw_materials(sid) if m.get('author') == self.owner_actor]}
                 if include_evidence or sid != item_id or fields.get('source_versions', {}).get('actor') == self.owner_actor:
                     pending.extend(item.get('source_versions', {}))
                 if include_evidence:
-                    for evidence in [*item.get('materials', []), *item.get('assessments', [])]:
+                    for evidence in [*self._raw_materials(sid),
+                                     *(a for a in self.assessments(sid))]:
                         pending.extend(evidence.get('source_versions', {}))
                         pending.extend(evidence.get('basis', {}))
                 if include_evidence or sid != item_id or fields.get('depends_on', {}).get('actor') == self.owner_actor:
@@ -900,7 +1064,7 @@ class GTDDomain:
         item = self.get_item(item_id)
         if not item or item['status'] in {'done', 'withdrawn'}:
             return True
-        assessments = item.get('assessments', [])
+        assessments = self.assessments(item_id)
         if not assessments:
             return False
         assessment = assessments[-1]
@@ -911,7 +1075,7 @@ class GTDDomain:
                 return False
         if 'resolution_basis' in assessment:
             return (assessment['resolution_basis'] == self.work_input_basis(item_id)
-                    and assessment.get('material_basis', []) == item.get('materials', []))
+                    and assessment.get('material_basis', []) == self._raw_materials(item_id))
         # Historical receipts retain their explicit evidence, not inferred freshness.
         sources = self.work_input_basis(item_id)
         for sid, basis in sources.items():
@@ -927,7 +1091,7 @@ class GTDDomain:
                     (sid, self.owner_actor, assessment.get('assessed_at', ''))).fetchall()
                 if any((self.MEANING | {'text', 'source'}).intersection(json.loads(row[0] or '{}')) for row in changes):
                     return False
-        return not any(m.get('created_at', '') > assessment.get('assessed_at', '') for m in item.get('materials', []))
+        return not any(m.get('created_at', '') > assessment.get('assessed_at', '') for m in self._raw_materials(item_id))
 
     def external_source_coverage(self):
         from .source_monitor import coverage
@@ -972,7 +1136,7 @@ class GTDDomain:
             return {"views": {kind: [i["id"] for i in open_items if i["kind"] == kind] for kind in sorted(KINDS)},
                 "gaps": gaps, "invalid_materials": invalid, "operational_gaps": operational, "human_decisions": decisions,
                 "paused_items": [i["id"] for i in open_items if i["status"] in {"paused", "postponed"}],
-                "returns": [{"item_id": i["id"], "review_at": i.get("review_at"), "decision_at": i.get("decision_at")} for i in open_items if i.get("review_at") or i.get("decision_at")],
+                "returns": [{"item_id": i["id"], "review_at": i.get("review_at"), "decision_at": i.get("decision_at"), "due_at": i.get("due_at")} for i in open_items if i.get("review_at") or i.get("decision_at") or i.get("due_at")],
                 "attention": attention, "last_review": self._meta("last_review"),
                 "external_sources": external["sources"], "external_sources_current": external["external_sources_current"],
                 "external_sources_applicable": external["external_sources_applicable"], "configured_source_count": external["configured_count"],

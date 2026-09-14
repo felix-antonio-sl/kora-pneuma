@@ -14,6 +14,8 @@ import math
 import sqlite3
 import uuid
 
+from .gtd import GTDDomain
+
 
 def _json(value):
     return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
@@ -1834,8 +1836,8 @@ class ExecutionControl:
                 raise ValueError("unresolved_execution")
             # Uncertain delivery lives in detail for completed-uncertain edge?
             # New uncertain runs are already caught above via state.
-            outbox = self.store.db.execute("SELECT value FROM metadata WHERE key LIKE 'telegram-outbox:%'").fetchall()
-            if any(json.loads(row[0]).get("status") != "confirmed" for row in outbox):
+            if self.store.db.execute(
+                    "SELECT 1 FROM deliveries WHERE state != 'confirmed' LIMIT 1").fetchone():
                 raise ValueError("unresolved_output")
             from .effects import ExternalEffects
             if ExternalEffects(self.service).pending():
@@ -1914,9 +1916,19 @@ class ExecutionControl:
 
     def _basis_values(self, item):
         values = {k: v for k, v in item.items() if k not in self._COMPATIBLE and k != "materials"}
-        human_materials = [m for m in item.get("materials", []) if m.get("author") == self.service.owner_actor]
+        # Normalize to reference stubs: receipts keep full result arrays while
+        # stored documents and admission snapshots keep stubs; both shapes must
+        # compare on identity and authorship, never on raw representation.
+        human_materials = [GTDDomain._material_stub(m) for m in item.get("materials", [])
+                           if m.get("author") == self.service.owner_actor]
         if human_materials:
             values["materials"] = human_materials
+        # Absent and empty read the same: items created before result tables
+        # carry no arrays while normalized documents carry empty ones.
+        if values.get("assessments"):
+            values["assessments"] = [GTDDomain._assessment_stub(a) for a in values["assessments"]]
+        else:
+            values.pop("assessments", None)
         return values
 
     def _basis(self, item_id):
@@ -2153,7 +2165,9 @@ class ExecutionControl:
                     detail.setdefault("progress", []).append({"operation_id": operation_id, "review": True})
                 else:
                     current = self.service.get_item(item["id"])
-                    if current != item or row["item_id"] != item["id"] or type(previous_version) is not int:
+                    # Receipts keep full result arrays while stored documents
+                    # keep stubs; compare the reference views, not raw shapes.
+                    if GTDDomain._stub_view(current or {}) != GTDDomain._stub_view(item) or row["item_id"] != item["id"] or type(previous_version) is not int:
                         raise ValueError("progress_version_mismatch")
                     bases = detail.setdefault("item_bases", copy.deepcopy(job.get("item_bases", {})))
                     after = json.loads(row["after_patch"] or "{}")
@@ -2312,7 +2326,7 @@ class ExecutionControl:
                 if not row or row['actor'] != job['actor']:
                     return None
                 receipt, after = json.loads(row['receipt']), json.loads(row['after_patch'] or '{}')
-                if receipt.get('status') == 'applied' and receipt.get('item') == item and (
+                if receipt.get('status') == 'applied' and GTDDomain._stub_view(receipt.get('item') or {}) == GTDDomain._stub_view(item) and (
                         'assessments' in after or ('clarification' in after and (item.get('clarification', {}).get('destination') == 'discard'
                         or (item.get('clarification', {}).get('destination') == 'existing'
                             and item.get('clarification', {}).get('resolution') == 'routed')))):
