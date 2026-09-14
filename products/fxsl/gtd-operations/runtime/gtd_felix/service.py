@@ -450,11 +450,14 @@ class GTDService(GTDDomain):
         # versions introduced, so the table stays the single authority.
         for key, identity in (("materials", lambda stub: (stub.get("id"), stub.get("version"))),
                                 ("assessments", lambda stub: stub.get("id"))):
-            if key in changes and changes[key]["present"]:
-                values = changes[key]["value"] or []
+            if key in changes:
+                # Absent before the undone write keeps nothing: prune every row
+                # the undone versions introduced so no orphan survives, and
+                # leave stable empty stubs (absent and empty read alike).
+                before_values = changes[key]["value"] or [] if changes[key]["present"] else []
                 changes[key] = {"present": True, "value": [
                     GTDDomain._material_stub(v) if key == "materials" else GTDDomain._assessment_stub(v)
-                    for v in values]}
+                    for v in before_values]}
                 keep = {identity(v) for v in changes[key]["value"]}
                 if key == "materials":
                     rows = self.store.db.execute(
