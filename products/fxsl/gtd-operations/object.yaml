@@ -40,6 +40,7 @@ resources:
 - runtime/gtd_felix/source_attachments.py
 - runtime/gtd_felix/source_evaluation.py
 - runtime/gtd_felix/source_entries.py
+- runtime/gtd_felix/source_error_codes.py
 - runtime/gtd_felix/source_monitor.py
 - runtime/gtd_felix/source_sync.py
 - runtime/gtd_felix/store.py
