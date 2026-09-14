@@ -579,7 +579,13 @@ class HermesAdapter:
             out = self._uncertain(job['id'], claimed.get('error', 'native_slot_busy'))
             self._state(job['id'], never_sent=True)
             return out
-        self._state(job['id'], delivery='sending', never_sent=False)
+        sending = {'delivery': 'sending', 'never_sent': False}
+        if pre_claim.get('first_send_at') is None and pre_claim.get('native_admitted_at') is None:
+            # Durable instant of the effective first attempt, written BEFORE
+            # the network operation: if the ack is lost, recovery still knows
+            # when this run may have started. Set once; reconciles keep it.
+            sending['first_send_at'] = time.time()
+        self._state(job['id'], **sending)
         if intent['durable']:
             body = intent['body']
             args = ['kanban', 'create', body['title'], '--body', body['body'], '--created-by', body['created_by'],
@@ -601,19 +607,16 @@ class HermesAdapter:
             return self._uncertain(job['id'], 'dispatch_record_rejected')
         # Durable admission anchor, set only once a native run is proven to
         # exist remotely (validated native_id): no observation of execution is
-        # ever invented before that proof. Value is the FIRST attempt, never
-        # the recovery instant, so reconciling an existing run cannot renew
-        # the deadline: a never_sent mark proves nothing was ever posted
-        # (admission starts now), while an uncertain send without receipt may
-        # already have created the run (conservative bound from the durable
-        # intent creation). Same local clock for both ends: no cross-clock
-        # skew. An existing anchor is never overwritten.
+        # ever invented before that proof. Value is the durably recorded
+        # FIRST attempt (written pre-network above), never the recovery
+        # instant and never a stale intent timestamp: reconciling an existing
+        # run cannot renew the deadline, and a never_sent wait contributes
+        # nothing (first_send_at starts at the real first POST). Same local
+        # clock for both ends: no cross-clock skew. An existing anchor is
+        # never overwritten.
         if pre_claim.get('native_admitted_at') is None:
-            if pre_claim.get('never_sent'):
-                anchor = time.time()
-            else:
-                first = (self._get('hermes:intent:' + job['id']) or {}).get('created_at')
-                anchor = first if _number(first) else time.time()
+            first = (self._get('hermes:state:' + job['id']) or {}).get('first_send_at')
+            anchor = first if _number(first) else time.time()
             self._state(job['id'], native_admitted_at=anchor)
         return {'status': 'submitted', 'job_id': job['id'], 'native_id': native_id}
 
