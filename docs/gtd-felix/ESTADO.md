@@ -12,7 +12,10 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 C1 operativo; C2–C6 abiertos. I1 publicado en origen (`9896336` verificado en
 remoto). I2 publicado (`65f543e`), instalado sobre datos migrados v3 y reabierto
 operativo con reconcile real; runtime y documentación van por separado
-(docs `9449e08` y posteriores), aceptación humana NOT_RUN. La dirección
+(docs `9449e08` y posteriores), aceptación humana NOT_RUN. I3 como candidato
+corregido `7bc1fe8` (publicado, sin instalar: retención conserva borrado real e
+indisponibilidad genuina y sólo poda trazas sintéticas cubiertas; paquete de
+realización preparado con bundle, ensayo sobre snapshot vivo y plan de corte). La dirección
 arquitectónica e integración las conserva Codex; Hermes sigue como runtime del
 bot. Este encargo se ejecutó en OpenCode según lo asignado, sin llamadas LLM
 pagadas ni envíos reales.
@@ -231,7 +234,11 @@ pedido; undo con archivo y restauración exacta. Recorrido cubierto con
 fixtures y verificado en vivo tras reapertura (trabajo legítimo
 completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
-Siguiente: **I3 · fuentes** como candidato en cierre de corte efectivo (autoridad de selección en tabla con adopción única de legacy, migración de una sola vez con marcador durable, retención por `prune_sources` del servicio; ensayo sobre export real con 0 diferencias), con recorrido humano
+Siguiente: decidir instalación de **I3 · fuentes** `7bc1fe8` ya publicado
+(autoridad de selección en tabla con adopción única de legacy, migración de una
+sola vez con marcador durable, retención por `prune_sources` que distingue
+disponibilidad vigente de traza sintética; ensayo sobre snapshot vivo con
+0 diferencias y recuperación v4 ensayada), con recorrido humano
 listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
