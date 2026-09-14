@@ -84,7 +84,7 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Paquete E43 revisable (28/28 en copias), NO instalado | Fronteras E42 corregidas: composicion exacta con huellas (no 4 booleanos), board/db propios con _guard_verified real PASS, cadena token unica, intent previo + stop solo-gateway + huellas antes de borrar; payload SUSPENDED sin grant/dispatch. E41 y recorrido aislado se conservan; E42 queda sustituido (limites en reporte-43). Propuesta: instalar perfil+config+bot SUSPENDED sin LLM bajo orden aparte. Falta orden e inferencia disponible |
+| G7 delegar | Instalacion E44 NO completada; principal recuperado intacto | Paquete E43 valido en archivos; el vivo rechaza el ejecutor nuevo (pin actor_config en DB, sin via de producto; migracion no autorizada). Corte revertido por procedimiento: servicio/gateway sanos, helper 0 runs, perfil/board inactivos preservados. Siguiente decision: via para el actor ejecutor. Vivo util NOT_RUN |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
 bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
