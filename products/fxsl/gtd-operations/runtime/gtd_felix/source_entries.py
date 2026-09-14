@@ -195,6 +195,18 @@ def prune_superseded(store, *, provider, account, external_id, keep_revisions, c
 
 DECIDED_KEEP = frozenset({'selected', 'noise', 'uncertain'})
 
+# Synthetic per-revision traces: their meaning is covered exactly when the
+# underlying revision's own row stays retained. Anything else without bytes
+# (deleted:, genuine unavailable, unread:) is provider evidence, not a trace.
+SYNTHETIC_TRACE_PREFIXES = ("not-selected:", "unassessed:")
+
+
+def _trace_underlying(revision):
+    for prefix in SYNTHETIC_TRACE_PREFIXES:
+        if revision.startswith(prefix):
+            return revision[len(prefix):]
+    return None
+
 
 def run_retention(store):
     """Effective retention pass with an honest keep policy.
@@ -205,10 +217,12 @@ def run_retention(store):
     so the current verdict is never re-inferred. Sequence and decision time
     are never compared across families; rows with unknown order stay.
     Transport traces without bytes (unavailable/deleted, no digest) are never
-    projections: they go once the object keeps a decided row carrying the
-    verdict, and stay as sole traces otherwise. Pruned ids join the durable
-    archive so migration never resurrects them. One transaction; the receipt
-    persists (reruns converge to zero).
+    projections. A selection verdict never substitutes posterior provider
+    evidence, so only a synthetic trace (not-selected:/unassessed:) whose
+    underlying revision stays retained is covered and goes; real availability
+    evidence (deleted:, genuine unavailable) is always kept. Pruned ids join
+    the durable archive so migration never resurrects them. One transaction;
+    the receipt persists (reruns converge to zero).
     """
     with store.transaction():
         cited = set()
@@ -262,17 +276,20 @@ def run_retention(store):
             timed = [(r, moment) for r, moment in timed if moment is not None]
             if timed:
                 keep.add(max(timed, key=lambda pair: pair[1])[0]["id"])
-            # Tombstones (no bytes) go only when the object keeps a decided
-            # row carrying the verdict; anything else stays, including
-            # unknown-order rows and sole traces of a revision.
-            decided_kept = any(
-                r["id"] in keep and r["status"] in DECIDED_KEEP for r in rows)
+            # Vigente vs historial is decided here per object, by observed
+            # order only (never by id/hash): kept rows are the live state,
+            # the rest is history eligible for pruning when covered.
+            kept_revisions = {r["revision"] for r in rows if r["id"] in keep}
             for row in rows:
                 if row["id"] in keep:
                     continue
                 if row["original_digest"] is None and row["status"] in {
                         "unavailable", "deleted"}:
-                    if not decided_kept:
+                    # Only a synthetic trace whose underlying revision stays
+                    # retained is covered; anything else (real deletion or
+                    # genuine unavailability) is current availability evidence.
+                    underlying = _trace_underlying(row["revision"])
+                    if underlying is None or underlying not in kept_revisions:
                         continue
                 elif sequence(row) is None and decided_time(row) is None:
                     continue

@@ -555,8 +555,9 @@ class GTDService(GTDDomain):
 
         Keeps pending obligations, cited bytes, the latest projected revision
         with bytes per object and the latest decided verdict per object, so
-        maintenance never forces re-inference; transport traces without bytes
-        go once a verdict is kept. Archives pruned ids so migration never
+        maintenance never forces re-inference; real availability evidence
+        (deletion, genuine unavailability) is always kept and only synthetic
+        traces covered by a retained revision go. Archives pruned ids so migration never
         resurrects them. Safe on a stopped service and across restarts
         (receipt converges). Raises ValueError for any other actor.
         """
