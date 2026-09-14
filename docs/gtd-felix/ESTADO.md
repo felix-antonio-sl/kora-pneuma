@@ -26,7 +26,7 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | candidato I2 `c90d37b` (13 commits sobre I1 publicado `9896336`: 5 de recorrido/devolución, 4 del encargo 1 y 4 del encargo 2), rama `fxai/gtd-felix-20260911`, sin publicar y sin instalar; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
+| Fuente ejecutable | I2 `65f543e` publicado en origen (13 commits sobre I1 `9896336`), rama `fxai/gtd-felix-20260911` en sync; sin instalar en vivo; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
 | Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` según recibo de base 2026-09-13 (última observación; salud viva no reconsultada en este corte) |
 | Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
 | Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
@@ -138,6 +138,15 @@ en ~22 ms y el estado activo en 7.663 bytes.
   atención/codex-local/recorridos/instrucción y 19 en gmail/google/nativo;
   fuera del contrato I2 y sin regresiones nuevas. Fuentes (I3) y Codex en
   producción (no activado) quedan pendientes.
+- Realización preparada 2026-09-14 (sin instalar): export actual
+  `b298c3…7a24f3` con manifiesto propio (esquema v1, 261/396); migración
+  reensayada sobre ese origen con 0 diferencias (32/32/866/118 y 8/11/50/0);
+  restore/rollback reensayado con captura posterior preservada por identidad y
+  rechazo `newer_schema` del código instalado ante v3; release
+  `release-65f543e.tgz` (`2ca0d6…ee59`) y plan con migración offline explícita
+  (no hay comando CLI de migración de datos). Instalación viva observada ese
+  día: salud ok, cero pendientes, período fresco con 7.200 s. Recorrido humano
+  y producción siguen NOT_RUN.
 - Migración I2 ensayada sobre la exportación privada (hash verificado
   `09a38058…ee2424`): 8 materiales, 11 evaluaciones, 50 envíos, 0 omitidos;
   0 diferencias semánticas (filas contra arreglos históricos, IDs nativas,
