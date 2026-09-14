@@ -84,7 +84,7 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Paquete E42 ensayado (36/36), listo para decision, NO instalado | Auxiliar distinto probado (E41); aplicar/revertir endurecidos y ensayados sobre copias (idempotencia, parciales, auth MCP, suspendido, adaptador); perfil efectivo en destino aislado con discover compatible; `local_work` minimo por contrato. Propuesta: instalar perfil+config+bot SUSPENDED sin LLM; habilitar recorrido bajo orden aparte. E41 dry-run no era validacion completa. Falta orden e inferencia disponible |
+| G7 delegar | Paquete E43 revisable (28/28 en copias), NO instalado | Fronteras E42 corregidas: composicion exacta con huellas (no 4 booleanos), board/db propios con _guard_verified real PASS, cadena token unica, intent previo + stop solo-gateway + huellas antes de borrar; payload SUSPENDED sin grant/dispatch. E41 y recorrido aislado se conservan; E42 queda sustituido (limites en reporte-43). Propuesta: instalar perfil+config+bot SUSPENDED sin LLM bajo orden aparte. Falta orden e inferencia disponible |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
 bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
