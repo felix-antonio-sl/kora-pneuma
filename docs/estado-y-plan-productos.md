@@ -54,7 +54,7 @@ existente; no son una fuente operativa nueva.
 | Integridad mecánica | PASS en el catálogo actual y 251 pruebas de maquinaria; verificación focal de las 12 versiones preservadas. |
 | Fidelidad semántica | Revisiones y correcciones documentadas por lote. Hay tensiones focales aún examinables; no se releyeron todos los cuerpos para este corte. |
 | Carga nativa | Sesiones vivas de este corte en Codex (activación directa de skills) más presupuestos SOUL Hermes 16/16 completos con mapas intactos y una sesión viva del director en Hermes con instalación temporal desde fuente. KORA mediante skill directa Codex y SOUL Hermes; rol personalizado KORA no acreditado en su campaña. Dori Codex sólo lectura parcial observada; Hermes con margen estrecho bajo Sol/272K. |
-| Conducta | Casos sintéticos de los lotes más sesiones vivas de este corte: retomas del gate reparado (3, incluida tricotomía con ejecución real observada), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1), claridad agente/método (2) y director en Hermes (carga + conformidad formal con prompt prescriptivo; caso neutro sin respuesta del harness, ver impedimento). Sin actos clínicos, institucionales ni envíos. La evaluación técnica de estas sesiones es juicio del ejecutor (Codex como integrador incluido) y no constituye aceptación personal de Félix. |
+| Conducta | Casos sintéticos de los lotes más sesiones vivas de este corte: retomas del gate reparado (3, incluida tricotomía con ejecución real observada), rutas de Diseño A/B, gemelos (3 con retoma), niveles micro/meso/macro (3), OPM experto y vecino (2), agent-architect (1), claridad agente/método (2) y director en Hermes (carga PASS; juicio conductual neutro abajo). Sin actos clínicos, institucionales ni envíos. La evaluación técnica de estas sesiones es juicio del ejecutor (Codex como integrador incluido) y no constituye aceptación personal de Félix. |
 | Utilidad | Cuatro reparaciones admitidas por defectos demostrados; evidencia proporcional flexibilizada por tarea (una afirmación admite cita directa; el packet de la ruta A conserva su valor por decisión, rechazos y deuda, no por existir); gemelos con métodos propietarios cargados y aplicados; comparación director+método frente a método directo (empate funcional, aporte en trazabilidad, costo ~2x/1,7x); david-allen frente a gtd-flow inconclusa (se conserva sin afirmar ventaja). Transformación integral: instancia sintética con medición completa (o200k_base, tiktoken 0.14.0 en venv temporal). Fallo v3 conservado como evidencia: “mismo criterio si ese jueves es festivo” desanclaba “hábil inmediato anterior” del jueves y habilitó inferir miércoles (lectura R3b); no se clasificó como mera inferencia del lector. Reparación v4 desde la fuente sin resolver ni ampliar: criterio con ancla al jueves + marca “la fuente no ejemplifica el caso de jueves festivo”. Re-cotejo (excepción y relaciones intactas), re-medición (138 → 110 → 87 tokens; contenido −20,91 %, total −36,96 %, artefacto `a66a284e`) y lectura independiente R-v4 sobre el texto final exacto: q01–q04 correctas, q05 correctamente indeterminada sin día inventado; la tensión excepción/negación (día del operador en festivo) es de la fuente, se conserva sin resolver y no es defecto. Control negativo PASSED conservado (no depende del cambio). No valida el procedimiento en general ni la publicación sintética equivale a validación. |
 | Efectos | Fuentes admitidas y publicadas (`5dd3e3b`, `c5336b1`, `2e225cd`, `49d9292`); instalaciones personales coherentes en ambos destinos (Codex 61, Hermes 62 en alcance). Conocimiento sintético de prueba en biblioteca temporal, nunca en la personal. |
 
@@ -74,7 +74,7 @@ skill Hermes.
 | Promesa y producto | CX-D | CX-R | H-P | H-S | Base |
 |---|---|---|---|---|---|
 | Gate de evidencia reparado (skill+método) | PASS (3 sesiones) | — | — | PASS (skill_view + JSON exacto) | Instalación + render ambos |
-| Director reparado (tricotomía) | PASS (2 sesiones) | Instalado, invocación no ejercida | Carga PASS + conformidad formal PASS con prompt prescriptivo; conducta neutra ABSENT con causa (impedimento) | — | soul-budgets 16/16 |
+| Director reparado (tricotomía) | PASS (2 sesiones) | Instalado, invocación no ejercida | Carga PASS; formato PASS; juicio conductual neutro FAIL acotado (1 sesión, ver nota) | — | soul-budgets 16/16 |
 | Gemelos + métodos propietarios | PASS (3 sesiones, retoma incluida) | — | Instalado | Instalado | Lote salud + soul-budgets |
 | Niveles micro/meso/macro | PASS (3 sesiones) | — | Instalado | Instalado | Lote salud |
 | OPM experto + vecino | PASS (2 sesiones) | — | Instalado | Instalado | Lote modelado |
@@ -84,19 +84,35 @@ skill Hermes.
 | Transformación integral (instancia sintética) | PASS (helper + lectura R1 5/5 + control PASSED + medición; v3 fallida y reparada, R-v4 sobre texto final) | — | PRIOR (sesión 09-13: helper + publicación ficticia) | — | Tests + recibo `a66a284e` |
 
 Un canario genérico o un SOUL admisible no se usan como conducta de otro
-producto. La conformidad formal Hermes del director (JSON exacto con prompt
-que indicaba formas) vale como carga + conformidad, no como prueba conductual
-pura. El caso neutro se repitió 5 veces (3 formulaciones con `sol/high` y una
-con `astra/max`): carga PASS siempre (`skill_view` + `read_file` con cuerpos),
-respuesta final ausente siempre → conducta ABSENT con causa, no FAIL. La causa
-no es observable en los recibos (2 llamadas API, sin mensaje final); no es
-específica de modelo ni esfuerzo. Impedimento material concreto: el harness
-`--live` con catálogo externo no entrega la respuesta final ante insumos
-neutrales; resolverlo exige exponer el mensaje final del runner o una vía no
-persistente equivalente, fuera del alcance de este ajuste. En Codex la
-conducta libre sí se observó (E9 colgado rechazado, tricotomía con ejecución
-real); la elección libre de forma directa simple (tarea 1 del micro2, que la
-prescribía) queda como observación de conformidad, no de elección.
+producto. La conformidad formal Hermes del director con prompt prescriptivo
+(JSON exacto) vale como carga + conformidad, no como prueba conductual pura.
+
+Diagnóstico corregido del caso neutro (sustituye al impedimento declarado
+antes, que se conserva aquí como fallo del ejecutor): sí hubo respuestas JSON
+parseadas en los 3 intentos neutros —lo prueban sus `unexpected_answer_fields`
+(`hermes-neutro3.json`: 4 campos; `hermes-neutro4.json` y
+`hermes-neutro-max.json`: 6 campos)—, pero sus valores se perdieron con los
+homes temporales y el recibo sólo proyecta `answer` a las claves del
+`expected-file` (que contenía sólo `_nota`): de ahí `{"_nota": null}`. El
+fallo fue triple y mío: leí `.get('final_response')` ausente como respuesta
+ausente sin comprobar las claves del recibo, ignoré `unexpected_answer_fields`
+presentes desde el primer recibo y declaré impedimento del harness sin causa
+observable. El impedimento estaba en el contrato y la salida del comprobador
+(`scripts/probe_hermes.py`, líneas 1214–1229), no demostrado en Hermes.
+
+Repetición neutra única con proyección corregida (mismo prompt, `sol/high`,
+`expected` con las 6 claves en nulo —el modelo nunca lo ve—): disponibilidad
+PASS, formato PASS (JSON con las 6 claves). Juicio post-hoc contra el criterio
+fijado antes de ejecutar —(i) sin citas colgadas y verificado trazable; (ii)
+`huso_v` distinto de verificado con alcance externo—: (i) PASS (sin `[E#]`,
+fuente literal identificada); (ii) FAIL (`huso_v` = verificado sobre uso real
+sin corroboración, aunque el fundamento niega esa corroboración). Conducta:
+FAIL acotado a 1 sesión en rincón sólo-literal. La cláusula `SPEC_ONLY` ya
+excluye hechos del mundo como adopción del verificado, así que no hay cambio
+de texto: es no-conformidad conductual estrecha (etiqueta/alcance), no laguna
+del producto ni refutación de la evidencia Codex (tareas distintas, ejecución
+real). Futuros casos neutros deben fijar la lectura mundo/enunciado sin
+filtrar reglas.
 
 ### Registro durable mínimo del caso integral
 
@@ -453,11 +469,9 @@ interrupción, sólo `HANDOFF.md` temporal conserva el siguiente paso.
   propiedad, revisión y recuperación porque incluso un usuario puede tener dos
   procesos y ediciones que no deben perderse.
 
-**Siguiente movimiento (tras los ajustes focales de fidelidad y Hermes):**
-el caso conductual Hermes neutro queda bloqueado por el impedimento descrito
-(harness sin respuesta final); resolverlo exige exponer el mensaje final del
-runner o una vía no persistente equivalente, sin nueva campaña por agente.
-Sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
+**Siguiente movimiento (tras el ajuste focal Hermes/integral):**
+el juicio conductual neutro quedó rendido (FAIL acotado, sin cambio de texto);
+sesiones vivas para `steve-jobs`, `ux-research-design-ai`, `allan-kelly`,
 `dov-dori` y el agente `kora` sólo cuando un caso discriminante las requiera.
 La aceptación final de Félix sigue distinguida del cierre técnico, de la
 conformidad parcial recibida y de toda evaluación técnica del ejecutor.
