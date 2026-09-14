@@ -11,17 +11,13 @@ from uuid import uuid4
 
 import aiohttp
 
+from .source_error_codes import BRIDGE_ERRORS
+
 
 def digest_message(message):
     return hashlib.sha256(json.dumps({k: message[k] for k in ('text', 'external_id', 'revision')},
         sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
 
-
-BRIDGE_ERRORS = frozenset({'invalid_request', 'helper_busy', 'inactive_parent', 'provider_mismatch',
-    'helper_monitor_unavailable', 'helper_cleanup_pending', 'validation_timeout', 'evaluation_not_active', 'evaluation_cancelled', 'helper_failed', 'evaluation_unavailable', 'unauthorized',
-    'bridge_timeout_error', 'bridge_attribute_error', 'bridge_type_error', 'bridge_os_error',
-    'bridge_value_error', 'bridge_internal_error', 'helper_turn_failed',
-    'helper_incomplete_result', 'helper_invalid_result', 'helper_write_denied'})
 
 _ALLOWED_ROUTES = frozenset({
     ('openai-codex', 'gpt-6-astra'),

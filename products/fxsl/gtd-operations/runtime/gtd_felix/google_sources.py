@@ -27,6 +27,7 @@ from urllib.parse import quote
 import uuid
 
 from .source_entries import get as get_entry, record_decision
+from .source_error_codes import sanitize_adapter_error
 from .source_sync import _hash, _json, _now
 DECIDED = frozenset({'selected', 'noise', 'uncertain'})
 
@@ -682,9 +683,11 @@ class GoogleSources:
             self._save(partition, adapter)
             return self.inspect(source_id)
         except (SourceError, OSError, asyncio.TimeoutError, ValueError) as exc:
-            code = str(exc) if isinstance(exc, (ValueError, SourceError)) else 'transport_unavailable'
-            # Error values are bounded validation codes; do not retain response bodies.
-            code = code if len(code) < 100 and code.replace('_','').isalnum() else 'source_unavailable'
+            raw = str(exc) if isinstance(exc, (ValueError, SourceError)) else 'transport_unavailable'
+            # Closed frontier: only domain literals (incl. bounded http_<status>)
+            # propagate to sync.degrade and durable adapter state; anything else
+            # (transport/model text, tokens, tracebacks) becomes fixed generic.
+            code = sanitize_adapter_error(raw)
             state = self.sync.inspect(partition)
             if cycle_id and state and state['active_cycle'] == cycle_id:
                 if code == 'cursor_expired':

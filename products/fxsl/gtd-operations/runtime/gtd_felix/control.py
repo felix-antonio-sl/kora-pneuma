@@ -1410,8 +1410,15 @@ class ExecutionControl:
             # cause, but does not autorenew budget); failed/cancelled abandons.
             if cycle:
                 if new_state in ("failed", "cancelled", "expired"):
-                    self.store.db.execute("UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=?",
-                        (now_iso, cycle["id"]))
+                    # Shared same-item cycle: another non-terminal attempt
+                    # still needs it; the current row is already terminal here.
+                    still_open = self.store.db.execute(
+                        "SELECT 1 FROM runs WHERE cycle_id=? AND state NOT IN "
+                        "('completed','failed','cancelled','expired') LIMIT 1",
+                        (cycle["id"],)).fetchone()
+                    if not still_open:
+                        self.store.db.execute("UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=?",
+                            (now_iso, cycle["id"]))
                 elif new_state == "completed":
                     self.store.db.execute("UPDATE work_cycles SET state='waiting' WHERE id=?", (cycle["id"],))
                 elif new_state == "uncertain":
@@ -2029,13 +2036,26 @@ class ExecutionControl:
         unique index would block every later admission for the matter, and the
         orphan never closes by itself. Idempotent: already closed cycles are
         untouched. Also heals cycles orphaned by older code on re-stop.
+
+        A cycle is shared by same-item attempts: never close it while another
+        run in the same cycle still needs it (any non-terminal run state).
+        The closing job itself is transactionally terminal (its DB row is
+        still pre-terminal when this runs), so it is excluded from the guard.
         """
         row = self.store.db.execute('SELECT cycle_id FROM runs WHERE id=?', (job_id,)).fetchone()
-        if row:
-            self.store.db.execute(
-                "UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=? AND state IN "
-                "('ready','running','paused','recovery_required')",
-                (self._clock().isoformat(), row[0]))
+        if not row:
+            return
+        cycle_id = row[0]
+        sibling = self.store.db.execute(
+            "SELECT 1 FROM runs WHERE cycle_id=? AND id!=? AND state NOT IN "
+            "('completed','failed','cancelled','expired') LIMIT 1",
+            (cycle_id, job_id)).fetchone()
+        if sibling:
+            return
+        self.store.db.execute(
+            "UPDATE work_cycles SET state='abandoned', closed_at=? WHERE id=? AND state IN "
+            "('ready','running','paused','recovery_required')",
+            (self._clock().isoformat(), cycle_id))
 
     def _resolve_undispatched(self, state, job, reason):
         """Administrative terminality, never a fabricated native observation."""

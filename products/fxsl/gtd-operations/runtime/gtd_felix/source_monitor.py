@@ -7,53 +7,13 @@ from types import SimpleNamespace
 from .domain import fingerprint, now
 from .google_sources import GoogleSources
 from .google_transport import GoogleTransport
-from .source_evaluation import BRIDGE_ERRORS
+from .source_error_codes import (
+    BRIDGE_ERRORS,
+    SUMMARY_ERRORS,
+    SYNC_ERRORS,
+    summary_error as _summary_error,
+)
 from .source_sync import SourceSync
-
-# Closed summary vocabulary. Curated 2026-09-14 from the _require literal
-# sites and the explicit assignments on the synchronize path; every member is
-# a domain literal, never runtime text. Extend deliberately when a new literal
-# code is added on that path. Unknown shapes fall back to generic: a future
-# legitimate code degrades to 'selection_incomplete' (safe) until listed.
-# Never build this set from exception text at runtime.
-SYNC_ERRORS = frozenset({
-    'concrete_calendar_required', 'credential_account_mismatch', 'cycle_id_reused',
-    'cycle_in_progress', 'cycle_not_active', 'degradation_reason_required',
-    'evaluator_unavailable', 'event_revision_missing', 'event_too_large',
-    'explicit_account_required', 'explicit_coverage_scope_required',
-    'explicit_since_scope_required', 'external_provider_required',
-    'final_cursor_missing', 'final_cursor_required', 'full_or_rebuild_required',
-    'gmail_calendar_mismatch', 'gmail_profile_mismatch', 'history_message_id_missing',
-    'invalid_cycle', 'invalid_evaluation', 'invalid_event', 'invalid_event_list',
-    'invalid_external_object', 'invalid_external_status', 'invalid_history',
-    'invalid_http_response', 'invalid_message_list', 'invalid_mime_type',
-    'invalid_next_page_token', 'invalid_page', 'invalid_page_token',
-    'invalid_partition', 'invalid_priority_page_state', 'invalid_priority_strategy',
-    'invalid_priority_terms', 'invalid_response_shape', 'invalid_scope_digest',
-    'invalid_source_content', 'invalid_source_limit', 'invalid_source_url',
-    'message_identity_or_raw_missing', 'message_metadata_missing',
-    'message_text_too_large', 'message_too_large', 'mime_parse_degraded',
-    'page_id_reused', 'page_token_cycle', 'priority_requires_selective_scope',
-    'priority_strategy_changed_active_cycle', 'priority_terms_changed_active_cycle',
-    'projection_recovery_required', 'response_too_large', 'revision_content_conflict',
-    'source_config_required', 'source_hash_mismatch', 'source_too_large',
-    'stable_identity_required', 'stored_original_corrupt', 'tombstone_content_mismatch',
-    'unexpected_page_token', 'unknown_cycle', 'unknown_partition', 'unknown_source',
-    'unsupported_source_filter', 'cursor_expired', 'transport_unavailable',
-    'source_unavailable', 'selection_incomplete', 'selection_interrupted',
-})
-# The bridge crosses HTTP as 'bridge_<code>'; both forms are admitted so a
-# prefixed failure name is never mistaken for foreign text.
-SUMMARY_ERRORS = (BRIDGE_ERRORS
-                  | {'bridge_' + code for code in BRIDGE_ERRORS
-                     if not code.startswith('bridge_')}
-                  | SYNC_ERRORS)
-
-
-def _summary_error(info):
-    """Map adapter state to the durable summary error: whitelist or generic."""
-    code = (info.get('adapter') or {}).get('error')
-    return code if isinstance(code, str) and code in SUMMARY_ERRORS else 'selection_incomplete'
 
 PREFIX = 'source-monitor:'
 
