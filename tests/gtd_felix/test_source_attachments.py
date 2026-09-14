@@ -143,5 +143,74 @@ class SourceAttachmentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'attachment_content_not_retained'):
             read_attachment(self.service.store, item, item['version'], attachment_index=0)
 
+    def test_full_id_mismatch_rejected_before_manifest(self):
+        import test_google_sources as fixtures
+        full = fixtures.full_message('actual-id')
+        raw = json.dumps(full).encode()
+        digest = hashlib.sha256(raw).hexdigest()
+        item = self.service.capture('felix', 'full-mismatch', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'different-id',
+                    'sha256': digest},
+            original=raw, filename='source.bin', mime_type='application/json')['item']
+        with self.assertRaisesRegex(ValueError, 'source_original_mismatch'):
+            read_attachment(self.service.store, item, item['version'])
+
+    def test_full_index_existence_before_content_refusal(self):
+        import test_google_sources as fixtures
+        full = fixtures.full_message('full-mail')
+        raw = json.dumps(full).encode()
+        digest = hashlib.sha256(raw).hexdigest()
+        item = self.service.capture('felix', 'full-index', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'full-mail',
+                    'sha256': digest},
+            original=raw, filename='source.bin', mime_type='application/json')['item']
+        result = read_attachment(self.service.store, item, item['version'])
+        self.assertIn('attachment_id', result['attachments'][0])
+        self.assertIn('part_id', result['attachments'][0])
+        with self.assertRaisesRegex(ValueError, 'attachment_not_found'):
+            read_attachment(self.service.store, item, item['version'], attachment_index=5)
+        with self.assertRaisesRegex(ValueError, 'attachment_content_not_retained'):
+            read_attachment(self.service.store, item, item['version'], attachment_index=0)
+
+    def test_full_inline_bytes_distinguished_from_referenced(self):
+        import base64
+        import test_google_sources as fixtures
+        # Supported inline XLSX with bytes present is served, not refused.
+        wb = workbook()
+        b64 = base64.urlsafe_b64encode(wb).decode().rstrip('=')
+        full = fixtures.full_message('inline-mail', attachments=())
+        full['payload']['parts'] = [
+            {'mimeType': 'text/plain', 'filename': '', 'headers': [],
+             'body': {'size': 2, 'data': base64.urlsafe_b64encode(b'hi').decode().rstrip('=')}},
+            {'mimeType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+             'filename': 'inline.xlsx', 'headers': [], 'partId': '1',
+             'body': {'size': len(wb), 'data': b64}}]
+        raw = json.dumps(full).encode()
+        digest = hashlib.sha256(raw).hexdigest()
+        item = self.service.capture('felix', 'full-inline', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'inline-mail',
+                    'sha256': digest},
+            original=raw, filename='source.bin', mime_type='application/json')['item']
+        manifest = read_attachment(self.service.store, item, item['version'])
+        self.assertTrue(manifest['attachments'][0]['body_present'])
+        content = read_attachment(self.service.store, item, item['version'], attachment_index=0)
+        self.assertIn('table', content)
+        self.assertEqual('full', content.get('representation'))
+        # Inline bytes present but unsupported format report format_unsupported.
+        full2 = fixtures.full_message('inline2', attachments=())
+        full2['payload']['parts'] = [
+            {'mimeType': 'text/plain', 'filename': '', 'headers': [],
+             'body': {'size': 2, 'data': base64.urlsafe_b64encode(b'hi').decode().rstrip('=')}},
+            {'mimeType': 'application/pdf', 'filename': 'doc.pdf', 'headers': [], 'partId': '2',
+             'body': {'size': 3, 'data': base64.urlsafe_b64encode(b'abc').decode().rstrip('=')}}]
+        raw2 = json.dumps(full2).encode()
+        digest2 = hashlib.sha256(raw2).hexdigest()
+        item2 = self.service.capture('felix', 'full-inline2', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'inline2',
+                    'sha256': digest2},
+            original=raw2, filename='source.bin', mime_type='application/json')['item']
+        with self.assertRaisesRegex(ValueError, 'attachment_format_unsupported'):
+            read_attachment(self.service.store, item2, item2['version'], attachment_index=0)
+
 
 if __name__=='__main__': unittest.main()
