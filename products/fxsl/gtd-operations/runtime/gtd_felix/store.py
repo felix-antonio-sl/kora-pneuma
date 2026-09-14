@@ -6,7 +6,7 @@ from pathlib import Path
 import sqlite3
 import threading
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 MIGRATION_1 = (
     "CREATE TABLE items(id TEXT PRIMARY KEY, document TEXT NOT NULL, field_versions TEXT NOT NULL)",
     "CREATE TABLE operations(operation_id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, actor TEXT NOT NULL, receipt TEXT NOT NULL, item_id TEXT, before_patch TEXT, after_patch TEXT, applied_version INTEGER, created_at TEXT NOT NULL)",
@@ -79,6 +79,61 @@ MIGRATION_2 = (
 )""",
     "CREATE INDEX observations_run ON run_observations(run_id, seq)",
 )
+# I2: materials / assessments / deliveries as the single authoritative
+# representation. Reference DDL is GUIA section 6; adjustments are documented
+# in GUIA: assessment ids are deterministic digests of durable fields (legacy
+# records carried none); criterion_hash derives from the assessment evidence;
+# created_at/retry_at/confirmed_at on deliveries are nullable because migrated
+# outbox intents carry no durable timestamps (inventing them is forbidden);
+# deliveries.item_id/item_version are nullable for transient UI sends without
+# an item obligation; deliveries_target index serves the per-account scans.
+MIGRATION_3 = (
+    """CREATE TABLE materials (
+  id TEXT NOT NULL, version INTEGER NOT NULL CHECK(version > 0),
+  item_id TEXT NOT NULL REFERENCES items(id),
+  author TEXT NOT NULL, title TEXT NOT NULL,
+  mime_type TEXT NOT NULL, filename TEXT NOT NULL,
+  digest TEXT NOT NULL REFERENCES originals(digest),
+  size INTEGER NOT NULL CHECK(size >= 0),
+  basis_json TEXT NOT NULL CHECK(json_valid(basis_json)),
+  source_versions_json TEXT NOT NULL CHECK(json_valid(source_versions_json)),
+  mandate_id TEXT,
+  source_material_json TEXT CHECK(source_material_json IS NULL OR json_valid(source_material_json)),
+  created_at TEXT NOT NULL,
+  PRIMARY KEY(id, version),
+  UNIQUE(id, version, item_id)
+)""",
+    "CREATE INDEX materials_item ON materials(item_id, id, version)",
+    """CREATE TABLE assessments (
+  id TEXT NOT NULL PRIMARY KEY, item_id TEXT NOT NULL REFERENCES items(id),
+  item_version INTEGER NOT NULL CHECK(item_version > 0),
+  material_id TEXT, material_version INTEGER,
+  actor TEXT NOT NULL, satisfied INTEGER NOT NULL CHECK(satisfied IN (0,1)),
+  criterion_hash TEXT NOT NULL, evidence TEXT NOT NULL, gap TEXT,
+  resolution_basis_json TEXT NOT NULL CHECK(json_valid(resolution_basis_json)),
+  material_basis_json TEXT NOT NULL CHECK(json_valid(material_basis_json)),
+  source_versions_json TEXT NOT NULL CHECK(json_valid(source_versions_json)),
+  mandate_id TEXT,
+  created_at TEXT NOT NULL,
+  CHECK((material_id IS NULL) = (material_version IS NULL)),
+  FOREIGN KEY(material_id, material_version, item_id)
+    REFERENCES materials(id, version, item_id)
+)""",
+    "CREATE INDEX assessments_item ON assessments(item_id, created_at, id)",
+    """CREATE TABLE deliveries (
+  id TEXT NOT NULL PRIMARY KEY, item_id TEXT REFERENCES items(id),
+  item_version INTEGER CHECK(item_version IS NULL OR item_version > 0),
+  channel TEXT NOT NULL, target_key TEXT NOT NULL, semantic_key TEXT NOT NULL,
+  state TEXT NOT NULL CHECK(state IN
+    ('pending','sending','confirmed','suppressed','uncertain','failed')),
+  payload_json TEXT NOT NULL CHECK(json_valid(payload_json)),
+  segments_json TEXT NOT NULL CHECK(json_valid(segments_json)),
+  created_at TEXT, retry_at TEXT, confirmed_at TEXT,
+  UNIQUE(channel, target_key, semantic_key)
+)""",
+    "CREATE INDEX deliveries_pending ON deliveries(state, retry_at)",
+    "CREATE INDEX deliveries_target ON deliveries(channel, target_key, state)",
+)
 
 
 def private_dir(path):
@@ -143,11 +198,19 @@ class Store:
                         self.db.execute(statement)
                     for statement in MIGRATION_2:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=2")
+                    for statement in MIGRATION_3:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=3")
                 elif version == 1:
                     for statement in MIGRATION_2:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=2")
+                    for statement in MIGRATION_3:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=3")
+                elif version == 2:
+                    for statement in MIGRATION_3:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=3")
             self.db.execute("PRAGMA journal_mode=WAL")
             self.db.execute("PRAGMA synchronous=FULL")
             for suffix in ("", "-wal", "-shm"):

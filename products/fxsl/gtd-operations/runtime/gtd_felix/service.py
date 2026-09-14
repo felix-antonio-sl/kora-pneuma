@@ -8,6 +8,7 @@ undo, including intervening changes that happen to restore the same value.
 import hashlib
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 import sqlite3
 import stat
@@ -444,6 +445,31 @@ class GTDService(GTDDomain):
         if restored:
             validate_fields(restored)
             self._validate_relations(item, restored)
+        # Results live in tables now: undoing a material/assessment write
+        # restores reference stubs in the document and prunes rows the undone
+        # versions introduced, so the table stays the single authority.
+        for key, identity in (("materials", lambda stub: (stub.get("id"), stub.get("version"))),
+                                ("assessments", lambda stub: stub.get("id"))):
+            if key in changes and changes[key]["present"]:
+                values = changes[key]["value"] or []
+                changes[key] = {"present": True, "value": [
+                    GTDDomain._material_stub(v) if key == "materials" else GTDDomain._assessment_stub(v)
+                    for v in values]}
+                keep = {identity(v) for v in changes[key]["value"]}
+                if key == "materials":
+                    rows = self.store.db.execute(
+                        "SELECT id, version FROM materials WHERE item_id=?", (item["id"],)).fetchall()
+                    for row in rows:
+                        if (row["id"], row["version"]) not in keep:
+                            self.store.db.execute(
+                                "DELETE FROM materials WHERE item_id=? AND id=? AND version=?",
+                                (item["id"], row["id"], row["version"]))
+                else:
+                    rows = self.store.db.execute(
+                        "SELECT id FROM assessments WHERE item_id=?", (item["id"],)).fetchall()
+                    for row in rows:
+                        if row["id"] not in keep:
+                            self.store.db.execute("DELETE FROM assessments WHERE id=?", (row["id"],))
         return self._apply(actor, operation_id, digest, item, versions, changes)
 
     def query(self, filters: dict | None = None) -> list[dict]:
@@ -632,3 +658,169 @@ class GTDService(GTDDomain):
 
     def close(self) -> None:
         self.store.close()
+
+
+def migrate_i2_results(store):
+    """I2 cut: materials/assessments/outbox-intents move to tables, once.
+
+    Items keep reference stubs (identity, authorship, judgment); base snapshots
+    live in rows. Outbox send-intents become deliveries rows; transient UI sends
+    without an events row are counted as skipped (they carry no delivery
+    obligation: a retry regenerates them). Legacy outbox keys are removed; the
+    small per-event/per-key markers (delivery/material/question receipts) stay
+    as deduplication state. Processes must be stopped with zero live runs;
+    otherwise ValueError('active_work_present'). Unrepresentable rows abort the
+    cut instead of dropping data. Returns a receipt dict (also stored).
+    """
+    with store.transaction():
+        live = store.db.execute(
+            "SELECT 1 FROM runs WHERE state NOT IN ('completed','failed','cancelled','expired')"
+            " LIMIT 1").fetchone()
+        if live:
+            raise ValueError("active_work_present")
+        full_arrays = 0
+        for (document,) in store.db.execute("SELECT document FROM items"):
+            item = json.loads(document)
+            if any(isinstance(m, dict) and "basis" in m for m in item.get("materials", [])):
+                full_arrays += 1
+            if any(isinstance(a, dict) and "material_basis" in a for a in item.get("assessments", [])):
+                full_arrays += 1
+        outbox_keys = [row[0] for row in store.db.execute(
+            "SELECT key FROM metadata WHERE key LIKE 'telegram-outbox:%'")]
+        if not full_arrays and not outbox_keys:
+            # Steady state (or fresh database): references everywhere, table
+            # rows written by the service itself. Re-running is a no-op.
+            return {"note": "already_migrated"}
+        migrated_materials = migrated_assessments = migrated_deliveries = 0
+        skipped_transient = 0
+        for item_id, document in [(row[0], json.loads(row[1]))
+                                 for row in store.db.execute("SELECT id, document FROM items")]:
+            changed = False
+            history = document.get("materials", [])
+            if any(isinstance(m, dict) and "basis" in m for m in history):
+                stubs = []
+                for material in history:
+                    for key in ("id", "author", "title", "created_at"):
+                        if not isinstance(material.get(key), str) or not material[key]:
+                            raise ValueError(f"unrepresentable_material:{item_id}")
+                    if type(material.get("version")) is not int or material["version"] < 1:
+                        raise ValueError(f"unrepresentable_material:{item_id}")
+                    original = material.get("original") or {}
+                    digest = original.get("sha256", "")
+                    if len(digest) != 64 or not isinstance(original.get("size"), int):
+                        raise ValueError(f"unrepresentable_material:{item_id}")
+                    if not store.db.execute(
+                            "SELECT 1 FROM originals WHERE digest=?", (digest,)).fetchone():
+                        raise ValueError(f"material_original_missing:{item_id}")
+                    if not isinstance(material.get("basis"), dict) or not isinstance(
+                            material.get("source_versions"), dict):
+                        raise ValueError(f"unrepresentable_material:{item_id}")
+                    store.db.execute(
+                        "INSERT INTO materials(id, version, item_id, author, title, mime_type, filename,"
+                        " digest, size, basis_json, source_versions_json, mandate_id,"
+                        " source_material_json, created_at)"
+                        " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        (material["id"], material["version"], item_id, material["author"],
+                         material.get("title", "Material preparado"),
+                         original.get("mime_type", "text/plain; charset=utf-8"),
+                         original.get("filename", "material.txt"), digest, original["size"],
+                         encode(material["basis"]), encode(material["source_versions"]),
+                         material.get("mandate_id"),
+                         encode(material["source_material"]) if material.get("source_material") else None,
+                         material["created_at"]))
+                    migrated_materials += 1
+                    stubs.append(GTDDomain._material_stub(material))
+                document["materials"] = stubs
+                changed = True
+            recorded = document.get("assessments", [])
+            if any(isinstance(a, dict) and "material_basis" in a for a in recorded):
+                stubs = []
+                for assessment in recorded:
+                    if not isinstance(assessment.get("evidence"), str) or not assessment["evidence"].strip():
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    if type(assessment.get("satisfied")) is not bool:
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    if type(assessment.get("item_version")) is not int or assessment["item_version"] < 1:
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    if not isinstance(assessment.get("assessed_at"), str):
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    if not isinstance(assessment.get("resolution_basis"), dict) or not isinstance(
+                            assessment.get("material_basis"), list):
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    material_id = assessment.get("material_id")
+                    material_version = assessment.get("material_version")
+                    if (material_id is None) != (material_version is None):
+                        raise ValueError(f"unrepresentable_assessment:{item_id}")
+                    derived_id = hashlib.sha256("|".join(
+                        [item_id, assessment["assessed_at"], assessment["evidence"]]).encode()).hexdigest()
+                    try:
+                        store.db.execute(
+                            "INSERT INTO assessments(id, item_id, item_version, material_id, material_version,"
+                            " actor, satisfied, criterion_hash, evidence, gap, resolution_basis_json,"
+                            " material_basis_json, source_versions_json, mandate_id, created_at)"
+                            " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            (derived_id, item_id, assessment["item_version"], material_id,
+                             material_version, assessment.get("actor", ""),
+                             1 if assessment["satisfied"] else 0,
+                             hashlib.sha256(assessment["evidence"].encode()).hexdigest(),
+                             assessment["evidence"], assessment.get("gap"),
+                             encode(assessment["resolution_basis"]),
+                             encode(assessment["material_basis"]),
+                             encode(assessment.get("source_versions", {})),
+                             assessment.get("mandate_id"), assessment["assessed_at"]))
+                    except sqlite3.IntegrityError as exc:
+                        raise ValueError(f"unrepresentable_assessment:{item_id}:{exc}") from exc
+                    migrated_assessments += 1
+                    stubs.append(GTDDomain._assessment_stub(
+                        {"id": derived_id, **assessment,
+                         "criterion_hash": hashlib.sha256(assessment["evidence"].encode()).hexdigest(),
+                         "assessed_at": assessment["assessed_at"]}))
+                document["assessments"] = stubs
+                changed = True
+            if changed:
+                store.db.execute("UPDATE items SET document=? WHERE id=?", (encode(document), item_id))
+        for key in outbox_keys:
+            intent = json.loads(store.db.execute(
+                "SELECT value FROM metadata WHERE key=?", (key,)).fetchone()[0])
+            if intent.get("status") not in {"pending", "uncertain", "confirmed"}:
+                raise ValueError(f"unrepresentable_delivery:{key}")
+            event = store.db.execute(
+                "SELECT payload FROM events WHERE event_key=?", (intent.get("event"),)).fetchone()
+            event_payload = json.loads(event[0]) if event else None
+            item_id = (event_payload or {}).get("item_id")
+            if item_id is not None and not store.db.execute(
+                    "SELECT 1 FROM items WHERE id=?", (item_id,)).fetchone():
+                item_id = None
+            if event is None:
+                skipped_transient += 1
+                store.db.execute("DELETE FROM metadata WHERE key=?", (key,))
+                continue
+            item_version = (event_payload or {}).get("version")
+            if type(item_version) is not int or item_version < 1:
+                item_version = None
+            if item_id is None:
+                item_version = None
+            state = {"pending": "pending", "uncertain": "uncertain", "confirmed": "confirmed"}[intent["status"]]
+            # The stored response keeps its JSON shape (dict for sends,
+            # boolean for callback answers); rollback replays it verbatim.
+            segments = [] if "response" not in intent else [{"status": intent["status"], "response": intent["response"]}]
+            store.db.execute(
+                "INSERT INTO deliveries(id, item_id, item_version, channel, target_key, semantic_key,"
+                " state, payload_json, segments_json, created_at, retry_at, confirmed_at)"
+                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                ("tg:" + key.split(":", 1)[1], item_id, item_version, "telegram",
+                 intent.get("account", ""),
+                 str(intent.get("event")) + ":" + str(intent.get("ordinal")),
+                 state, encode({"method": intent.get("method"), "payload": intent.get("payload"),
+                                "event": intent.get("event"), "ordinal": intent.get("ordinal"),
+                                "account": intent.get("account")}),
+                 encode(segments), None, None, None))
+            migrated_deliveries += 1
+            store.db.execute("DELETE FROM metadata WHERE key=?", (key,))
+        receipt = {"schema": 3, "migrated_materials": migrated_materials,
+                   "migrated_assessments": migrated_assessments,
+                   "migrated_deliveries": migrated_deliveries,
+                   "skipped_transient_sends": skipped_transient,
+                   "at": datetime.now(timezone.utc).isoformat()}
+        store.db.execute("INSERT OR REPLACE INTO metadata VALUES('migration:i2',?)", (encode(receipt),))
+        return receipt
