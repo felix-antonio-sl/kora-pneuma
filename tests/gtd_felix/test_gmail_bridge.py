@@ -544,5 +544,158 @@ print('installed_mcp_sdk_resolved')
                 bridge.main()
 
 
+class BridgeContractTests(unittest.TestCase):
+    """Hermetic contract of gmail_bridge against the PINNED Hermes revision.
+
+    Reads files at HERMES_COMMIT via git (never the working tree, never an
+    import), so drift is detected before deployment. If the bridge patches a
+    symbol that no longer exists or is no longer called, isolation silently
+    weakens: these tests fail closed instead.
+    """
+    import ast as _ast
+    import subprocess as _subprocess
+
+    PIN = bridge.HERMES_COMMIT
+    PATHS = {
+        "plugins": "hermes_cli/plugins.py",
+        "lifecycle": "hermes_cli/lifecycle.py",
+        "agent_init": "agent/agent_init.py",
+        "relay": "agent/relay_runtime.py",
+        "agent": "run_agent.py",
+        "api_server": "gateway/platforms/api_server.py",
+        "main": "hermes_cli/main.py",
+    }
+
+    @classmethod
+    def _tree(cls):
+        root = bridge.HERMES_ROOT
+        if not (root / ".git").is_dir():
+            raise unittest.SkipTest("Hermes checkout unavailable")
+        proc = cls._subprocess.run(
+            ["git", "-C", str(root), "cat-file", "-t", cls.PIN],
+            capture_output=True, text=True, timeout=20)
+        if proc.returncode or proc.stdout.strip() != "commit":
+            raise unittest.SkipTest("Pinned Hermes revision not present locally")
+        return root
+
+    @classmethod
+    def _source(cls, key):
+        root = cls._tree()
+        proc = cls._subprocess.run(
+            ["git", "-C", str(root), "show", "%s:%s" % (cls.PIN, cls.PATHS[key])],
+            capture_output=True, text=True, timeout=20)
+        assert proc.returncode == 0, key
+        return cls._ast.parse(proc.stdout)
+
+    @staticmethod
+    def _functions(tree):
+        A = BridgeContractTests._ast
+        return {node.name for node in tree.body
+                if isinstance(node, (A.FunctionDef, A.AsyncFunctionDef))}
+
+    @staticmethod
+    def _classes(tree):
+        A = BridgeContractTests._ast
+        return {node.name: node for node in tree.body if isinstance(node, A.ClassDef)}
+
+    @staticmethod
+    def _methods(class_node):
+        A = BridgeContractTests._ast
+        return {node.name: node for node in class_node.body
+                if isinstance(node, (A.FunctionDef, A.AsyncFunctionDef))}
+
+    def test_pin_is_full_sha(self):
+        self.assertRegex(self.PIN, "^[0-9a-f]{40}$")
+
+    def test_plugin_patch_points_exist(self):
+        tree = self._source("plugins")
+        manager = self._classes(tree).get("PluginManager")
+        self.assertIsNotNone(manager)
+        self.assertIn("discover_and_load", self._methods(manager))
+        module_functions = self._functions(tree)
+        for name in ("discover_plugins", "start_background_plugin_discovery",
+                     "invoke_hook", "has_hook", "iter_hook_callbacks",
+                     "invoke_middleware", "has_middleware"):
+            self.assertIn(name, module_functions, name)
+
+    def test_lifecycle_patch_points_exist(self):
+        module_functions = self._functions(self._source("lifecycle"))
+        for name in ("invoke_hook", "has_hook", "finalize_session"):
+            self.assertIn(name, module_functions, name)
+
+    def test_context_engine_patch_point_is_live(self):
+        tree = self._source("agent_init")
+        self.assertIn("_select_context_engine", self._functions(tree))
+        calls = [node for node in self._ast.walk(tree)
+                 if isinstance(node, self._ast.Call)
+                 and getattr(node.func, "id", "") == "_select_context_engine"]
+        self.assertTrue(calls, "patch point defined but never called")
+
+    def test_relay_patch_points_exist(self):
+        tree = self._source("relay")
+        names = {node.name for node in self._ast.walk(tree)
+                 if isinstance(node, self._ast.ClassDef)}
+        hosts = [n for n in names if "HOST_REGISTRY" in n or "Registry" in n]
+        self.assertTrue(hosts, "no host registry class")
+        by_name = {node.name: node for node in self._ast.walk(tree)
+                   if isinstance(node, self._ast.ClassDef)}
+        self.assertTrue(any("for_profile" in self._methods(by_name[n]) for n in hosts))
+        self.assertIn("relay_instrumentation_enabled", self._functions(tree))
+        assigns = [node for node in tree.body
+                   if isinstance(node, self._ast.Assign)
+                   and any(getattr(target, "id", "") == "SESSION_COORDINATOR"
+                           for target in node.targets)]
+        self.assertTrue(assigns, "SESSION_COORDINATOR missing")
+        coordinator = by_name.get("RelaySessionCoordinator")
+        self.assertIsNotNone(coordinator)
+        self.assertIn("begin_turn", self._methods(coordinator))
+
+    def test_agent_constructor_accepts_bridge_kwargs(self):
+        tree = self._source("agent")
+        agent = self._classes(tree).get("AIAgent")
+        self.assertIsNotNone(agent)
+        init = self._methods(agent).get("__init__")
+        self.assertIsNotNone(init)
+        params = {arg.arg for arg in init.args.args + init.args.kwonlyargs}
+        for name in ("provider", "model", "api_mode", "api_key", "base_url",
+                     "reasoning_config", "enabled_toolsets", "session_db",
+                     "save_trajectories", "skip_memory", "skip_background_review",
+                     "skip_context_files", "max_iterations", "max_tokens",
+                     "quiet_mode", "fallback_model", "credential_pool",
+                     "run_budget_seconds"):
+            self.assertIn(name, params, name)
+
+    def test_agent_conversation_surface_exists(self):
+        tree = self._source("agent")
+        agent = self._classes(tree)["AIAgent"]
+        methods = self._methods(agent)
+        self.assertIn("close", methods)
+        if "run_conversation" in methods:
+            return
+        bases = [getattr(base, "id", "") for base in agent.bases
+                 if isinstance(base, self._ast.Name)]
+        self.assertIn("TurnFacadeMixin", bases)
+        proc = self._subprocess.run(
+            ["git", "-C", str(self._tree()), "show",
+             "%s:agent/turn_facade.py" % self.PIN],
+            capture_output=True, text=True, timeout=20)
+        self.assertEqual(proc.returncode, 0)
+        facade = self._classes(self._ast.parse(proc.stdout)).get("TurnFacadeMixin")
+        self.assertIsNotNone(facade)
+        self.assertIn("run_conversation", self._methods(facade))
+
+    def test_gateway_route_table_shape(self):
+        tree = self._source("api_server")
+        adapter = self._classes(tree).get("APIServerAdapter")
+        self.assertIsNotNone(adapter)
+        table = self._methods(adapter).get("_http_route_table")
+        self.assertIsNotNone(table)
+        self.assertTrue(table.args.args, "route table takes no adapter")
+
+    def test_gateway_main_exists(self):
+        self.assertIn("main", self._functions(self._source("main")))
+
+
+
 if __name__ == '__main__':
     unittest.main()
