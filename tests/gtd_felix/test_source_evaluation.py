@@ -243,6 +243,24 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual('selection_incomplete', _summary_error(info), repr(hostile))
         self.assertEqual('selection_incomplete', _summary_error({}))
 
+    async def test_unknown_transport_error_through_evaluate_once_has_no_marker(self):
+        # P2 evaluate_once path: transport ValueError unknown must stay out
+        # of the dump and summaries; the run degrades closed, not silently.
+        self.messages(['m1'])
+        async def boom(*args, **kwargs):
+            raise ValueError('PRIVATE_MODEL_TRACEBACK')
+        transport = self.monitor.transports['selected']
+        with patch.object(transport, 'request', side_effect=boom):
+            result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual('partial', result['status'])
+        self.assertEqual({'selected': 0, 'noise': 0, 'uncertain': 0}, result['counts'])
+        dump = "\n".join(self.service.store.db.iterdump())
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', dump)
+        summaries = [s for s in self.monitor.inspect()['sources'] if s['source_id'] == 'mail']
+        self.assertEqual(1, len(summaries))
+        self.assertEqual('degraded', summaries[0]['health'])
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', json.dumps(summaries))
+
     async def test_monitor_summary_names_incomplete_selection_with_receipt_code(self):
         # Message-level bridge failures stay pending reads; the summary says
         # selection_incomplete while the per-message receipt keeps the closed

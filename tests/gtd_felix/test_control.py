@@ -405,6 +405,89 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(receipt['status'], 'rejected', receipt)
         self.assertEqual(receipt['error'], 'purpose_already_active')
 
+    def test_stop_shared_same_item_cycle_keeps_active_parent(self):
+        # P1 exact probe: same-item child shares the parent cycle. Stopping
+        # only the child must discard the child while the non-terminal parent
+        # keeps its unit of work running.
+        self.config['max_active'] = 1
+        self.control = ExecutionControl(self.service, self.config)
+        root = self.reserve('review-root')
+        child = self.control.reserve('gtd-felix', 'review-child', self.request(
+            parent_job_id=root, purpose='child', defer_when_busy=True,
+            max_cost_usd=1, max_runtime_seconds=50, max_descendants=0))['job_id']
+        root_cycle = self.service.store.db.execute(
+            'SELECT cycle_id FROM runs WHERE id=?', (root,)).fetchone()[0]
+        child_cycle = self.service.store.db.execute(
+            'SELECT cycle_id FROM runs WHERE id=?', (child,)).fetchone()[0]
+        self.assertEqual(root_cycle, child_cycle)
+        result = self.control.request_stop('felix', 'review-stop-child', child)
+        self.assertTrue(result['job']['terminal'])
+        self.assertFalse(self.control.get_job(root)['terminal'])
+        state = self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=?', (root_cycle,)).fetchone()[0]
+        self.assertEqual('running', state)
+
+    def test_uncertain_sibling_keeps_shared_cycle(self):
+        # An uncertain attempt still needs the shared cycle: stopping a
+        # pristine sibling must not abandon it nor force reinference.
+        self.config['max_active'] = 1
+        self.control = ExecutionControl(self.service, self.config)
+        root = self.reserve('uncertain-root')
+        child = self.control.reserve('gtd-felix', 'uncertain-child', self.request(
+            parent_job_id=root, purpose='child', defer_when_busy=True,
+            max_cost_usd=1, max_runtime_seconds=50, max_descendants=0))['job_id']
+        observed = self.control.observe(root, self.observation(
+            root, native_status='uncertain', terminal=False, cost_usd=None))
+        self.assertEqual('recorded', observed['status'])
+        self.assertEqual('uncertain', self.control.get_job(root)['delivery'])
+        result = self.control.request_stop('felix', 'uncertain-stop-child', child)
+        self.assertTrue(result['job']['terminal'])
+        cycle = self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=(SELECT cycle_id FROM runs WHERE id=?)',
+            (root,)).fetchone()[0]
+        self.assertEqual('running', cycle)
+        self.assertEqual('uncertain', self.control.get_job(root)['delivery'])
+
+    def test_family_completion_leaves_no_orphan_cycle(self):
+        # Stopping the child keeps the shared cycle; resolving the parent
+        # afterwards closes it exactly once with no running orphan left.
+        self.config['max_active'] = 1
+        self.control = ExecutionControl(self.service, self.config)
+        root = self.reserve('family-root')
+        child = self.control.reserve('gtd-felix', 'family-child', self.request(
+            parent_job_id=root, purpose='child', defer_when_busy=True,
+            max_cost_usd=1, max_runtime_seconds=50, max_descendants=0))['job_id']
+        self.control.request_stop('felix', 'family-stop-child', child)
+        cycle_id = self.service.store.db.execute(
+            'SELECT cycle_id FROM runs WHERE id=?', (root,)).fetchone()[0]
+        self.assertEqual('running', self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=?', (cycle_id,)).fetchone()[0])
+        finished = self.control.observe(root, self.observation(root, native_status='cancelled'))
+        self.assertEqual('recorded', finished['status'])
+        self.assertTrue(self.control.get_job(root)['terminal'])
+        self.assertEqual('abandoned', self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=?', (cycle_id,)).fetchone()[0])
+        remaining = self.service.store.db.execute(
+            "SELECT COUNT(*) FROM runs WHERE cycle_id=? AND state NOT IN "
+            "('completed','failed','cancelled','expired')", (cycle_id,)).fetchone()[0]
+        self.assertEqual(0, remaining)
+
+    def test_blocked_then_eligible_admission_does_not_stall_worker(self):
+        # The SQLite open-cycle guard must surface as a contained
+        # purpose_already_active rejection so a blocked matter never aborts
+        # the admission loop for the next eligible matter.
+        first = self.reserve('first-open')
+        blocked = self.control.reserve('gtd-felix', 'second-open', self.request())
+        self.assertEqual('rejected', blocked['status'])
+        self.assertEqual('purpose_already_active', blocked['error'])
+        derived = self.service.execute('gtd-felix', dict(
+            operation_id='stall-sibling', action='derive', item_id=self.item['id'],
+            expected_version=self.item['version'], fields={'kind': 'action', 'title': 'eligible',
+            'capability': 'local_work', 'mandate_id': self.mandate}))['item']
+        eligible = self.control.reserve('gtd-felix', 'eligible-open', self.request(
+            item_id=derived['id'], expected_version=derived['version']))
+        self.assertEqual('reserved', eligible['status'], eligible)
+
     def test_direct_stop_closes_pristine_intent_without_worker_or_native(self):
         # A manager-stopped intent reservation with no native run, spend,
         # observations or progress must reach terminality within the period;

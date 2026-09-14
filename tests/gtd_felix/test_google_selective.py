@@ -495,6 +495,32 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual('complete', final['health'])
         self.assertEqual(['first', 'tm', 'hd', 'last'], self.evaluated)
 
+    async def test_unknown_transport_value_error_is_generic_without_marker(self):
+        # P2: unknown transport/validation ValueError must not persist as a
+        # marker. Closed frontier maps it to source_unavailable before
+        # sync.degrade/_save; dump+restart carry no foreign text, while
+        # legitimate codes and cursor_expired keep working.
+        from unittest.mock import patch
+        self.profile(); self.page(['m1'])
+        async def boom(*args, **kwargs):
+            raise ValueError('PRIVATE_MODEL_TRACEBACK')
+        with patch.object(self.transport, 'request', side_effect=boom):
+            info = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', info['health'])
+        self.assertEqual('source_unavailable', info['adapter']['error'])
+        dump = "\n".join(self.service.store.db.iterdump())
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', dump)
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', json.dumps(info))
+        self.restart()
+        dump2 = "\n".join(self.service.store.db.iterdump())
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', dump2)
+        # Legitimate codes still propagate; cursor_expired still resets cursor.
+        from gtd_felix.source_error_codes import sanitize_adapter_error
+        self.assertEqual('invalid_message_list', sanitize_adapter_error('invalid_message_list'))
+        self.assertEqual('cursor_expired', sanitize_adapter_error('cursor_expired'))
+        self.assertEqual('http_429', sanitize_adapter_error('http_429'))
+        self.assertEqual('source_unavailable', sanitize_adapter_error('PRIVATE_MODEL_TRACEBACK'))
+
     async def test_topic_rotation_crash_after_page_commit_and_strategy_change_guard(self):
         from unittest.mock import patch
         from gtd_felix.google_sources import SourceError
