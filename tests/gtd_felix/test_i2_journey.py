@@ -385,6 +385,119 @@ class MigrationI2Tests(unittest.TestCase):
             migrate_i2_results(self.service.store)
 
 
+class UndoRedoTests(unittest.TestCase):
+    """Inverting an undo restores exact rows, never dangling stubs."""
+
+    def setUp(self):
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _action(self, tag):
+        capture = self.service.capture("felix", f"i2-redo-{tag}", "Sonda")["item"]
+        return self.service.execute("felix", {"operation_id": f"i2-redo-{tag}-clarify", "action": "clarify",
+            "item_id": capture["id"], "expected_version": capture["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "O",
+                       "completion_criteria": "C"}})["item"]
+
+    def _do(self, item, operation, action, fields):
+        receipt = self.service.execute("felix", {"operation_id": operation, "action": action,
+            "item_id": item["id"], "expected_version": item["version"], "fields": fields})
+        self.assertEqual(receipt["status"], "applied", receipt)
+        return self.service.get_item(item["id"])
+
+    def test_undo_of_undo_restores_readable_material(self):
+        item = self._action("rr1")
+        item = self._do(item, "i2-rr1-put", "put_material",
+                        {"content": "Contenido conservable", "title": "Material"})
+        original = self.service.materials(item["id"])[-1]
+        item = self._do(item, "i2-rr1-undo", "undo", {"operation_id": "i2-rr1-put"})
+        self.assertEqual(self.service.materials(item["id"]), [])
+        item = self._do(item, "i2-rr1-redo", "undo", {"operation_id": "i2-rr1-undo"})
+        live = self.service.materials(item["id"])
+        self.assertEqual([(m["id"], m["version"]) for m in live], [(original["id"], 1)])
+        self.assertEqual(live[0]["original"]["sha256"], original["original"]["sha256"])
+        read = self.service.read_material(item["id"], original["id"], 1)
+        self.assertIn("Contenido conservable", read["content"])
+
+    def test_redo_then_undo_again_prunes_without_resurrecting(self):
+        item = self._action("cyc")
+        item = self._do(item, "i2-cyc-put", "put_material",
+                        {"content": "v1", "title": "T"})
+        item = self._do(item, "i2-cyc-undo", "undo", {"operation_id": "i2-cyc-put"})
+        item = self._do(item, "i2-cyc-redo", "undo", {"operation_id": "i2-cyc-undo"})
+        self.assertEqual(len(self.service.materials(item["id"])), 1)
+        item = self._do(item, "i2-cyc-undo2", "undo", {"operation_id": "i2-cyc-redo"})
+        self.assertEqual(self.service.materials(item["id"]), [])
+        self.assertNotIn("materials", self.service.get_item(item["id"]))
+
+    def test_redo_survives_restart(self):
+        item = self._action("rst")
+        item = self._do(item, "i2-rst-put", "put_material",
+                        {"content": "Durable", "title": "T"})
+        item = self._do(item, "i2-rst-undo", "undo", {"operation_id": "i2-rst-put"})
+        self.fixture.restart()
+        self.service = self.fixture.service
+        self.adapter = self.fixture.adapter
+        item = self.service.get_item(item["id"])
+        item = self._do(item, "i2-rst-redo", "undo", {"operation_id": "i2-rst-undo"})
+        live = self.service.materials(item["id"])
+        self.assertEqual(len(live), 1)
+        self.assertEqual(live[0]["original"]["sha256"],
+                         self.service.materials(item["id"])[0]["original"]["sha256"])
+
+
+class RecentHumanContextTests(unittest.TestCase):
+    """Boundary: the evidence handed to the native worker after a reply.
+
+    Same-chat messages, replies and prior affairs are preserved as evidence
+    with durable identity; selection uses account/chat/date/message order,
+    never wording similarity, and grants no command authority.
+    """
+
+    def setUp(self):
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+        self.adapter = self.fixture.adapter
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _tg(self, message_id, text, date=100, **extra):
+        return {"message_id": message_id, "date": date, "chat": {"id": 9},
+                "from": {"id": 7}, "text": text, **extra}
+
+    def test_reply_and_continuation_reach_worker_as_bounded_evidence(self):
+        run(self.adapter._message(self._tg(7401, "Poner al día Telemedicina"), "ev-7401"))
+        # Reply to a devolution: quoted text travels as evidence, not as a merge order.
+        run(self.adapter._message(self._tg(7402, "Agrega el turno noche", date=200,
+            reply_to_message={"message_id": 7500, "text": "Devolución: mapa listo"}), "ev-7402"))
+        # Same wording elsewhere is another entry, never deduped by similarity.
+        run(self.adapter._message(self._tg(7403, "Poner al día Telemedicina", date=300), "ev-7403"))
+        # Another chat never leaks into this conversation.
+        run(self.adapter._message(dict(self._tg(7404, "Poner al día Telemedicina", date=400),
+                                       chat={"id": 77}), "ev-7404"))
+        worker = OrchestrationWorker(self.service, None, None, {"timezone": "America/Santiago"})
+        anchor = next(i for i in self.service.query() if i.get("source", {}).get("message_id") == 7403)
+        job = {"human_instruction_source_ids": [i["id"] for i in self.service.query()
+               if i.get("source", {}).get("chat_id") == 9]}
+        entries = worker._recent_human_context(anchor, job)
+        by_message = {e["message_id"]: e for e in entries}
+        # The anchor affair itself is the subject (context['item']); strictly
+        # prior same-chat messages arrive as evidence, including the reply.
+        self.assertEqual(set(by_message), {7401, 7402})
+        self.assertEqual(by_message[7402]["reply_to_message_id"], 7500)
+        self.assertIn("mapa listo", by_message[7402]["reply_to_text"])
+        self.assertLessEqual(len(entries), 12)
+        for entry in entries:
+            for forbidden in ("command", "authority", "allowed", "action"):
+                self.assertNotIn(forbidden, entry)
+
+
 class OutboxScopeTests(unittest.TestCase):
     """_outbox_intents reads live intents only, never confirmed history."""
 
@@ -462,6 +575,44 @@ class LongSummaryTests(unittest.TestCase):
         joined = "\n".join(m["text"] for m in self.fixture.http.sent[sent_before + 1:])
         self.assertIn(body[:200], joined)
         self.assertIn(body[-200:], joined)
+
+    def test_long_principal_reply_arrives_bounded_with_full_on_demand(self):
+        item, body = self._long_item()
+        marker = "DECISION_FINAL_NO_DEBE_PERDERSE"
+        key = self.fixture.notification(item)
+        event = next(e for e in self.service.pending_events("gtd-notification", "local")
+                     if e["event_key"] == key)
+        event["payload"]["native_reply"] = ("Explicación relevante del resultado. " * 300) + marker
+        sent_before = len(self.fixture.http.sent)
+        self.assertTrue(run(self.adapter._deliver_notification(event, automatic=True)))
+        fresh = self.fixture.http.sent[sent_before:]
+        self.assertEqual(len(fresh), 1)
+        self.assertLess(len(fresh[0]["text"]), 4096)
+        self.assertNotIn(marker, fresh[0]["text"])
+        run(self.adapter.show_result(item["id"]))
+        joined = "\n".join(m["text"] for m in self.fixture.http.sent[sent_before + 1:])
+        self.assertIn(marker, joined)
+        self.assertIn(body[-200:], joined)
+
+    def test_long_reply_without_material_stays_reachable(self):
+        capture = self.service.capture("felix", "i2-sum-nomat", "Pregunta larga")["item"]
+        item = self.service.execute("felix", {"operation_id": "i2-sum-nomat-clarify", "action": "clarify",
+            "item_id": capture["id"], "expected_version": capture["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "Responder",
+                       "completion_criteria": "Respuesta dada"}})["item"]
+        marker = "RESPUESTA_FINAL_SIN_MATERIAL"
+        key = self.fixture.notification(item)
+        event = next(e for e in self.service.pending_events("gtd-notification", "local")
+                     if e["event_key"] == key)
+        event["payload"]["native_reply"] = ("Respuesta extensa del principal. " * 300) + marker
+        sent_before = len(self.fixture.http.sent)
+        self.assertTrue(run(self.adapter._deliver_notification(event, automatic=True)))
+        fresh = self.fixture.http.sent[sent_before:]
+        self.assertEqual(len(fresh), 1)
+        self.assertLess(len(fresh[0]["text"]), 4096)
+        run(self.adapter.show_result(item["id"]))
+        joined = "\n".join(m["text"] for m in self.fixture.http.sent[sent_before + 1:])
+        self.assertIn(marker, joined)
 
     def test_short_notification_still_arrives_inline(self):
         capture = self.service.capture("felix", "i2-sum-short", "Nota breve")["item"]
@@ -583,7 +734,8 @@ class UndoPruneTests(unittest.TestCase):
             "fields": {"operation_id": "i2-undo-first-mat"}})
         self.assertEqual(receipt["status"], "applied", receipt)
         self.assertEqual(self.service.materials(item["id"]), [])
-        self.assertEqual(self.service.get_item(item["id"]).get("materials"), [])
+        # Faithful inversion: absent before the undone write stays absent.
+        self.assertNotIn("materials", self.service.get_item(item["id"]))
 
     def test_undo_of_second_version_keeps_first(self):
         item = self._action("second")
