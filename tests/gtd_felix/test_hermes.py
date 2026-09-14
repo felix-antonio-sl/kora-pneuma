@@ -1245,6 +1245,37 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.control.get_job(child)["stop_requested"])
         self.assertFalse(self.control.get_job(child)["terminal"])
 
+    async def test_interruption_between_writes_keeps_first_send_deadline(self):
+        # E31: crash between the ack writes (anchor lost, first_send_at and
+        # remote identity persisted) must backfill from first_send_at, not
+        # now. Fails on cbb3850 (observed 2, validate allowed).
+        job_id = self.reserve()  # max_runtime_seconds=60
+        self.run_status = "running"
+        t0 = time.time()
+        real_state = self.adapter._state
+        def flaky_state(jid, **updates):
+            if "native_admitted_at" in updates:
+                raise OSError("injected-interruption")
+            return real_state(jid, **updates)
+        with patch.object(self.adapter, "_state", side_effect=flaky_state):
+            interrupted = await self.adapter.submit(job_id, "Interrupted ack")
+        self.assertEqual(interrupted["status"], "uncertain")
+        state = self.adapter._get("hermes:state:" + job_id) or {}
+        self.assertIsNotNone(state.get("native_id"))
+        self.assertIsNotNone(state.get("first_send_at"))
+        self.assertIsNone(state.get("native_admitted_at"))
+        self.assertEqual(len(self.runs), 1)
+        self.restart()
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 125):
+            recovered = await self.adapter.reconcile(job_id)
+        self.assertEqual(recovered["native_status"], "running")
+        self.assertEqual(len(self.runs), 1)
+        obs = recovered["observation"]
+        self.assertGreaterEqual(obs["runtime_seconds"], 124)
+        self.assertLessEqual(obs["runtime_seconds"], 125)
+        self.assertEqual(
+            self.control.validate(job_id, "prepare_private")["reason"], "job_runtime_exhausted")
+
 
 if __name__ == '__main__':
     unittest.main()
