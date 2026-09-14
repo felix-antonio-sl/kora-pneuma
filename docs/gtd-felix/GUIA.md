@@ -344,15 +344,15 @@ incremental puede repartir este DDL en varias versiones de esquema.
 ```sql
 CREATE TABLE source_entries (
   id TEXT NOT NULL PRIMARY KEY,
-  provider TEXT NOT NULL, account TEXT NOT NULL,
+  provider TEXT NOT NULL, account TEXT NOT NULL, collection TEXT NOT NULL,
   external_id TEXT NOT NULL, revision TEXT NOT NULL,
   status TEXT NOT NULL CHECK(status IN
     ('pending','selected','noise','uncertain','unavailable','deleted')),
   original_digest TEXT REFERENCES originals(digest),
   item_id TEXT REFERENCES items(id),
   metadata_json TEXT NOT NULL CHECK(json_valid(metadata_json)),
-  observed_at TEXT NOT NULL,
-  UNIQUE(provider, account, external_id, revision)
+  observed_at TEXT,
+  UNIQUE(provider, account, collection, external_id, revision)
 );
 CREATE INDEX source_pending ON source_entries(provider, account, status);
 CREATE TABLE materials (
@@ -457,6 +457,13 @@ polimórficas se validan en servicio; las FK cubren las relaciones concretas.
 `source_entries.item_id` es un vínculo opcional de incorporación, no la lista
 exclusiva de consumidores; materiales/evaluaciones declaran dependencias mediante
 sus bases. Una versión de fuente no cambia sólo porque el agente cite esa fuente.
+Ajustes I3 (revisión 2026-09-14, con causa probada): `collection` es columna de
+identidad porque dos colecciones de una cuenta reutilizan external_id (dos
+calendarios bastan; la unicidad sin colección mezclaba digest de una con asunto
+de otra); el `id` es digest de arreglo JSON para que ningún separador colisione
+con campos opacos; `observed_at` admite NULL sólo en decisiones migradas cuyo
+instante nunca se registró (las filas nuevas exigen tiempo, como
+`run_observations`).
 `admission_json` es inmutable: conserva entrada, permiso y asignación originales.
 Progreso propio se referencia por `operations`, sin reescribir la admisión.
 Inmutabilidad, monotonía, tiempos nuevos obligatorios, números finitos y la

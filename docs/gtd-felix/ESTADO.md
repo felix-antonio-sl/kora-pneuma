@@ -46,7 +46,7 @@ se preservan; no se agregan masivamente al commit.
 | Subsistema | Implementado/observado | Límite relevante |
 |---|---|---|
 | Dominio y captura | API y comandos versionados; originales, operaciones, autoría y controles sin LLM | Interpretación contextual y UX no acreditadas en recorrido completo |
-| Datos | 12 tablas: 9 de I1 + `materials`, `assessments`, `deliveries` (esquema v3); WAL, FK por conexión, `BEGIN IMMEDIATE`, originales por hash | `items.document` conserva agregado humano con stubs de referencia; recibos y parches usan la misma forma; fuentes se migran en I3 |
+| Datos | 13 tablas: 12 previas + `source_entries` (esquema v4, candidato I3 sin instalar); WAL, FK por conexión, `BEGIN IMMEDIATE`, originales por hash | `items.document` conserva agregado humano con stubs de referencia; recibos y parches usan la misma forma; ingesta/selección por revisión vive en `source_entries` tras el corte |
 | Ejecución | ciclo autorizado separado de intento nativo; admisión inmutable, consumo monotónico, terminalidad/integración separadas, STOP, pausa, reconciliación, presupuesto familiar | Orquestación activa en claves pequeñas; historial global congelado como `*:legacy:v1` sólo para consulta/idempotencia/recuperación |
 | Conversación y devolución (I2) | identidad por asunto ante respuestas y precisiones; corrección invalida y versiona; pausa en vuelo con regreso vigente; devolución referencia material y versión; lista/lote paginados; `due_at` como retorno autorizado | Recorrido humano real con el principal pendiente (NOT_RUN); pruebas sintéticas con fixtures, no inferencia LLM |
 | Fuentes | agenda conectada; Gmail readonly, ámbito autorizado desde 2026-08-01; fuentes seleccionadas usadas en material real | Cobertura parcial/degradada; selección global e incrementalidad/retención completas aún por acreditar (I3) |
@@ -231,7 +231,7 @@ pedido; undo con archivo y restauración exacta. Recorrido cubierto con
 fixtures y verificado en vivo tras reapertura (trabajo legítimo
 completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
-Siguiente: **I3 · fuentes** como candidato (en curso), con recorrido humano
+Siguiente: **I3 · fuentes** como candidato en corrección (identidad con colección, fusión ingesta-decisión, migración total con archivo, retención operativa; ensayo sobre export real con 0 diferencias), con recorrido humano
 listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
