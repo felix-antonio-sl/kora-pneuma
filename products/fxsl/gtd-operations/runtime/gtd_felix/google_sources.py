@@ -366,7 +366,8 @@ class GoogleSources:
             subs = part.get('parts')
             _require(subs is None or isinstance(subs, list), 'invalid_response_shape')
             if subs:
-                stack.extend((sub, depth + 1) for sub in subs)
+                for sub in reversed(subs):
+                    stack.append((sub, depth + 1))
                 continue
             mime = part.get('mimeType', '')
             body = part.get('body')
@@ -374,17 +375,24 @@ class GoogleSources:
             body = body or {}
             filename = part.get('filename') or ''
             if filename:
+                att_id = body.get('attachmentId')
+                part_id = part.get('partId')
                 attachments.append({'filename': filename, 'content_type': mime,
                     'size': body.get('size') if isinstance(body.get('size'), int) else None,
-                    'body_present': bool(body.get('data'))})
+                    'body_present': bool(body.get('data')),
+                    'attachment_id': att_id if isinstance(att_id, str) else None,
+                    'part_id': part_id if isinstance(part_id, str) else None})
                 continue
             if mime not in {'text/plain', 'text/html'}:
                 continue
             data = body.get('data')
             if not data:
-                # Text behind attachmentId or absent: referenced, not fetched
-                # in this increment; counted, never silent.
-                omitted['missing_text'] += 1
+                # Known-empty (size 0, no attachmentId) is empty content,
+                # not missing. Only referenced/absent text counts.
+                att_ref = body.get('attachmentId')
+                size_val = body.get('size')
+                if att_ref is not None or (isinstance(size_val, int) and size_val > 0):
+                    omitted['missing_text'] += 1
                 continue
             try:
                 raw = base64.b64decode(data + '=' * (-len(data) % 4), altchars=b'-_', validate=True)
@@ -405,24 +413,33 @@ class GoogleSources:
         headers = {}
         for header in payload.get('headers') or []:
             if isinstance(header, dict) and _string(header.get('name')):
-                headers[header['name']] = str(header.get('value', ''))
-        metadata['headers'] = {k: headers[k] for k in ('Subject', 'From', 'To', 'Date', 'Message-ID') if headers.get(k) is not None}
+                low = header['name'].lower()
+                if low not in headers:
+                    headers[low] = str(header.get('value', ''))
+        metadata['headers'] = {k: headers[k.lower()] for k in ('Subject', 'From', 'To', 'Date', 'Message-ID') if k.lower() in headers}
         metadata['attachments_not_interpreted'] = [
             {'filename': a['filename'], 'content_type': a['content_type']} for a in attachments]
         metadata['attachment_references'] = [
             {'filename': a['filename'], 'content_type': a['content_type'], 'size': a['size'],
-             'body_present': a['body_present']} for a in attachments]
+             'body_present': a['body_present'], 'attachment_id': a.get('attachment_id'),
+             'part_id': a.get('part_id')} for a in attachments]
         metadata['html_not_executed_or_rendered'] = True
         metadata['body_projection'] = 'plain' if parts else 'visible_html' if html_parts else 'structured_unavailable'
         metadata['representation'] = 'full'
+        metadata['missing_text'] = omitted['missing_text']
+        metadata['text_parts_retrieved'] = len(parts) + len(html_parts)
         if parts or html_parts:
             body_text = '\n'.join(parts or html_parts)
+            if omitted['missing_text']:
+                body_text += ('\n\n[Structured coverage: %d text part(s) not retrieved, '
+                              '%d attachment(s) referenced, not read.]'
+                              % (omitted['missing_text'], len(attachments)))
         elif attachments or omitted['missing_text']:
             body_text = ('[Structured full-format projection: %d attachment(s) referenced, not read; '
                          '%d text part(s) not retrieved. No text body retained.]'
                          % (len(attachments), omitted['missing_text']))
         else:
-            body_text = '[No text body in structured projection; original full response retained.]'
+            body_text = '[No text body in structured projection; original not retained unless selected.]'
         text = _json(metadata) + '\n\n' + body_text
         _require(len(text) <= 1024 * 1024, 'message_text_too_large')
         revision = 'message:' + message['historyId'] + ':' + hashlib.sha256(original).hexdigest()
@@ -511,6 +528,19 @@ class GoogleSources:
                 # representation once instead of retrying the giant raw.
                 message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'full'})
                 structured = True
+            if not structured:
+                # Second size frontier: raw fetched within transport bounds
+                # but too large for the MIME parser (message_too_large).
+                # Single structured fallback, never recursive; other semantic
+                # errors keep their closed codes without fallback.
+                try:
+                    self._gmail_object(message, identity)
+                except (SourceError, TransportError) as probe_exc:
+                    if str(probe_exc) == 'message_too_large':
+                        message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'full'})
+                        structured = True
+                    else:
+                        raise
             if structured:
                 def make_object(message, identity, _cfg=cfg):
                     return self._gmail_object_from_full(message, identity, _cfg)
@@ -528,6 +558,28 @@ class GoogleSources:
             elif decision is None or decision['classification'] == 'uncertain':
                 _require(callable(self.evaluator), 'evaluator_unavailable')
                 obj = make_object(message, identity)
+                if structured:
+                    try:
+                        _meta = json.loads(obj['text'].split('\n', 1)[0])
+                    except (ValueError, AttributeError):
+                        _meta = {}
+                    _missing = _meta.get('missing_text', 0) if isinstance(_meta, dict) else 0
+                    _proj = _meta.get('body_projection') if isinstance(_meta, dict) else None
+                    _retrieved = _meta.get('text_parts_retrieved', 1) if isinstance(_meta, dict) else 1
+                    if _proj == 'structured_unavailable' and (_missing or _retrieved == 0):
+                        # Necessary body absent behind attachmentId: cannot
+                        # consolidate noise; preserve uncertainty/obligation
+                        # without faking evaluation or recovered text.
+                        decision = {'classification': 'uncertain', 'reason_code': 'needs_review'}
+                        record_decision(self.store, provider='gmail', account=cfg['account'],
+                            collection=partition['collection'],
+                            external_id=identity, revision=revision,
+                            decision=decision['classification'],
+                            reason_code=decision.get('reason_code'))
+                        adapter.setdefault('current_decisions', {})[identity] = _hash([identity, revision])
+                        pending['reason'] = decision['reason_code']
+                        self._save(partition, adapter)
+                        return self._unretained_message(cfg, identity, 'unassessed:' + revision, adapter)
                 # Caller owns model budget and no-retention transport. This adapter
                 # never persists evaluator input, free-form rationale or transcript.
                 try:
