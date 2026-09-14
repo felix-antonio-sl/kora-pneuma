@@ -396,6 +396,15 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(self.control.activate_deferred(child)['status'], 'discarded')
         self.assertEqual(self.control.get_job(child)['integration_error'], 'stop_requested')
 
+    def test_open_cycle_collision_returns_rejection_not_raw_error(self):
+        # A second admission for a matter with an open cycle must be a
+        # contained purpose_already_active rejection: the raw sqlite error
+        # used to escape reserve and silently stall every orchestration tick.
+        first = self.reserve('first-open')
+        receipt = self.control.reserve('gtd-felix', 'second-open', self.request())
+        self.assertEqual(receipt['status'], 'rejected', receipt)
+        self.assertEqual(receipt['error'], 'purpose_already_active')
+
     def test_direct_stop_closes_pristine_intent_without_worker_or_native(self):
         # A manager-stopped intent reservation with no native run, spend,
         # observations or progress must reach terminality within the period;
@@ -411,6 +420,24 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(result['job']['integration'], 'discarded')
         self.assertEqual(self.control.request_stop('felix', 'direct-stop-intent', job_id)['job'], result['job'])
         self.assertNotIn(job_id, [j['id'] for j in self.control.pending()])
+        cycle = self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=(SELECT cycle_id FROM runs WHERE id=?)',
+            (job_id,)).fetchone()
+        self.assertEqual(cycle['state'], 'abandoned')
+
+    def test_restop_heals_cycle_orphaned_by_older_code(self):
+        job_id = self.reserve('stop-intent-orphan')
+        self.control.request_stop('felix', 'direct-stop-orphan', job_id)
+        with self.service.store.transaction():
+            self.service.store.db.execute(
+                "UPDATE work_cycles SET state='running', closed_at=NULL WHERE id="
+                "(SELECT cycle_id FROM runs WHERE id=?)", (job_id,))
+        result = self.control.request_stop('felix', 'direct-stop-orphan-again', job_id)
+        self.assertTrue(result['job']['terminal'])
+        cycle = self.service.store.db.execute(
+            'SELECT state FROM work_cycles WHERE id=(SELECT cycle_id FROM runs WHERE id=?)',
+            (job_id,)).fetchone()
+        self.assertEqual(cycle['state'], 'abandoned')
 
     def test_direct_stop_closes_deferred_without_worker_or_native(self):
         root, child = self.deferred_contribution()

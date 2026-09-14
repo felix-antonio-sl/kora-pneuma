@@ -229,6 +229,20 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(_route_allowed({}))
         self.assertFalse(_route_allowed(None))
 
+    def test_summary_whitelist_passes_closed_codes_and_blocks_sensitive_tokens(self):
+        from gtd_felix.source_monitor import _summary_error, SUMMARY_ERRORS
+        self.assertIn('bridge_helper_turn_failed', SUMMARY_ERRORS)
+        self.assertIn('invalid_message_list', SUMMARY_ERRORS)
+        self.assertIn('cursor_expired', SUMMARY_ERRORS)
+        for code in ('bridge_helper_turn_failed', 'invalid_message_list',
+                     'cursor_expired', 'transport_unavailable', 'selection_incomplete'):
+            self.assertEqual(code, _summary_error({'adapter': {'error': code}}), code)
+        for hostile in ('AKIAIOSFODNN7EXAMPLE', 'PRIVATE_MODEL_TRACEBACK', 'token_abc123',
+                        'x' * 200, '', 'has space', None, 42, {'error': 'bridge_x'}):
+            info = {'adapter': {'error': hostile}}
+            self.assertEqual('selection_incomplete', _summary_error(info), repr(hostile))
+        self.assertEqual('selection_incomplete', _summary_error({}))
+
     async def test_monitor_summary_names_incomplete_selection_with_receipt_code(self):
         # Message-level bridge failures stay pending reads; the summary says
         # selection_incomplete while the per-message receipt keeps the closed
