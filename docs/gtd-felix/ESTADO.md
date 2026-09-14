@@ -455,3 +455,18 @@ Contabilidad separada de mantenimiento (~1 s; tokens/coste desconocidos,
 fuera del contador GTD). Marcador complete bloquea reenvío. Siguiente:
 payload fiel con session como el principal (sólo privado, bajo orden
 explícita). C2/minuta/aceptación: NOT_RUN.
+
+## E38 · sesión diagnóstica propia: 200 sin evento útil (2026-09-14)
+
+Lanzador `9d4e59ca…32899` + sonda `fd5bedac…6132`, ID
+`GTD-DIR-20260914-38-ONE` (sesión UUID diagnóstica independiente, UA propio;
+sin copiar identidad viva). Un solo POST: 20:46:11–20:47:31Z, exit 0,
+`elapsed 80.003 s` (budget interior consumido, envolvente 90 intacta).
+Resultado: `status 200` (headers ~1.1 s) pero **primer byte a 12.984 s
+(14 B) y silencio posterior hasta el deadline**; `outcome deadline`, sin
+delta/evento parseado. El 400 de E37 queda superado para ESTA solicitud;
+conectividad viva ese momento/payload. Fase lenta en cuerpo/eventos, no en
+conexión — un dato, sin universales de cuota/modelo/contexto ni
+acreditación de payloads grandes/SDK. Contabilidad separada (~80 s;
+tokens/coste desconocidos, fuera del contador GTD). Marcador complete
+bloquea reenvío. C2/minuta/aceptación: NOT_RUN.
