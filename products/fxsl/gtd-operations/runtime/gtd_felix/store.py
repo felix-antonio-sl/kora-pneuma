@@ -135,22 +135,26 @@ MIGRATION_3 = (
     "CREATE INDEX deliveries_target ON deliveries(channel, target_key, state)",
 )
 # I3: source_entries as the single queryable authority for per-revision intake
-# and selection state. Reference DDL is GUIA section 6, applied without
-# adjustment: collection travels inside metadata_json (query key stays
-# provider+account), original_digest is NULL for bodyless tombstones, item_id
-# is NULL until projection links the affair.
+# and selection state. Reference DDL is GUIA section 6 as adapted there for
+# the collection collision (I3 review): collection is a first-class identity
+# column because two collections of one account reuse external ids; the id is
+# a JSON-array digest so no separator can collide with opaque fields.
+# original_digest is NULL for bodyless tombstones, item_id is NULL until
+# projection links the affair, and observed_at is NULL for migrated standalone
+# decisions whose decision time was never recorded (new rows require time,
+# mirroring run_observations.observed_at).
 MIGRATION_4 = (
     """CREATE TABLE source_entries (
   id TEXT NOT NULL PRIMARY KEY,
-  provider TEXT NOT NULL, account TEXT NOT NULL,
+  provider TEXT NOT NULL, account TEXT NOT NULL, collection TEXT NOT NULL,
   external_id TEXT NOT NULL, revision TEXT NOT NULL,
   status TEXT NOT NULL CHECK(status IN
     ('pending','selected','noise','uncertain','unavailable','deleted')),
   original_digest TEXT REFERENCES originals(digest),
   item_id TEXT REFERENCES items(id),
   metadata_json TEXT NOT NULL CHECK(json_valid(metadata_json)),
-  observed_at TEXT NOT NULL,
-  UNIQUE(provider, account, external_id, revision)
+  observed_at TEXT,
+  UNIQUE(provider, account, collection, external_id, revision)
 )""",
     "CREATE INDEX source_pending ON source_entries(provider, account, status)",
     "CREATE INDEX source_item ON source_entries(item_id)",
