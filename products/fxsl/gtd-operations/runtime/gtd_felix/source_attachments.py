@@ -141,9 +141,17 @@ def _full_manifest(item, version, original, value, attachment_index=None, sheet_
         'body_present': w['body_present'], 'size': w['size'],
         'attachment_id': w['attachment_id'], 'part_id': w['part_id']} for i, w in enumerate(walked)]
     if attachment_index is None:
+        if not walked:
+            aggregate = 'no_attachments'
+        elif all(w['body_present'] for w in walked):
+            aggregate = 'inline_present'
+        elif not any(w['body_present'] for w in walked):
+            aggregate = 'not_retained'
+        else:
+            aggregate = 'mixed'
         return {'item_id': item['id'], 'source_version': version, 'original_sha256': original['sha256'],
             'attachments': manifest, 'content_is_untrusted': True,
-            'representation': 'full', 'content': 'not_retained'}
+            'representation': 'full', 'content': aggregate}
     _require(type(attachment_index) is int and attachment_index >= 0, 'invalid_attachment_arguments')
     _require(attachment_index < len(walked), 'attachment_not_found')
     entry = walked[attachment_index]

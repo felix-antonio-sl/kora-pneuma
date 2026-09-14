@@ -564,12 +564,12 @@ class GoogleSources:
                     except (ValueError, AttributeError):
                         _meta = {}
                     _missing = _meta.get('missing_text', 0) if isinstance(_meta, dict) else 0
-                    _proj = _meta.get('body_projection') if isinstance(_meta, dict) else None
-                    _retrieved = _meta.get('text_parts_retrieved', 1) if isinstance(_meta, dict) else 1
-                    if _proj == 'structured_unavailable' and (_missing or _retrieved == 0):
-                        # Necessary body absent behind attachmentId: cannot
-                        # consolidate noise; preserve uncertainty/obligation
-                        # without faking evaluation or recovered text.
+                    if _missing:
+                        # Textual body incomplete behind attachmentId: a visible
+                        # marker does not substitute the durable guard. Any
+                        # missing_text forces uncertainty, even with other parts
+                        # available; referenced binary attachments alone (which
+                        # never count as missing_text) stay evaluable.
                         decision = {'classification': 'uncertain', 'reason_code': 'needs_review'}
                         record_decision(self.store, provider='gmail', account=cfg['account'],
                             collection=partition['collection'],
