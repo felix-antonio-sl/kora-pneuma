@@ -238,10 +238,15 @@ completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
 Siguiente: **I4/G7** sobre I3 instalado (primera sincronía o retorno
 legítimo aún por observar; sin actividad sintética para probarlo), con recorrido
-humano listo para coordinar por dirección. I4 en curso: el recorrido Gmail vive
-detenido en admisión sin run (reserva intacta detenida ocupa el slot hasta el
-corte del período; candidato local `2eb974b` con diagnóstico cerrado y cierre
-administrativo, sin instalar ni publicar hasta revisión). Fuentes selectivas ya autorizadas en
+humano listo para coordinar por dirección. I4 en curso: plaza liberada
+(`ff2a1758` terminal descartada, active 0, saldo 6955.23) con sólo control.py
+realizado; el worker de orquestación está atascado desde la sonda porque su
+ciclo huérfano en `running` hace chocar cada admisión del asunto contra el
+índice único y el mapeo muerto del mensaje escapa como error crudo que mata el
+tick en silencio (repro offline concluyente). Candidato local con cierre de
+ciclo huérfano + mapeo real + whitelist (`fbd1a90`, `49f0d81`), sin instalar
+ni publicar hasta revisión; `request_review` del asunto aplicado y pendiente
+honesto. Gmail degradado preexistente intacto. Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
