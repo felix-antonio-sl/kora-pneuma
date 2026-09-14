@@ -24,7 +24,8 @@ class SourceMaterialTests(unittest.IsolatedAsyncioTestCase):
         job=self.reserve_private_scope(seeded,old,'fresh')
         child=(await self.agent_command(job,seeded,'derive','derive',{'kind':'action','title':'Use supplied collateral','capability':'prepare_private'}))['item']
         m=seeded['materials'][0]
-        ref={'item_id':root['id'],'material_id':m['id'],'version':m['version'],'sha256':m['original']['sha256']}
+        # I2: documents carry references; identity resolves by digest.
+        ref={'item_id':root['id'],'material_id':m['id'],'version':m['version'],'sha256':m['digest']}
         return seeded,child,job,ref,payload
 
     async def test_pptx_copy_mcp_provenance_replay_and_restore(self):
@@ -103,7 +104,8 @@ class SourceMaterialTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_corrupt_original_fails_existing_reader_without_copy(self):
         root,child,job,ref,_=await self.setup_copy()
-        original=self.service.data_dir/root['materials'][0]['original']['path']
+        # I2: documents carry references; content resolves by digest.
+        original=self.service.data_dir/('originals/' + root['materials'][0]['digest'])
         original.write_bytes(b'corrupt')
         result=await self.agent_command(job,child,'corrupt-copy','put_material',{'source_material':ref})
         self.assertEqual(result['status'],'rejected',result)
@@ -125,7 +127,8 @@ class SourceMaterialTests(unittest.IsolatedAsyncioTestCase):
             'expected_version':grant['item']['version'],'fields':{**fields(pptx('Executor content')),'mandate_id':mandate}})
         self.assertEqual(provided['status'],'applied',provided)
         m=provided['item']['materials'][-1]
-        ref={'item_id':root['id'],'material_id':m['id'],'version':1,'sha256':m['original']['sha256']}
+        # I2: documents carry references; identity resolves by digest.
+        ref={'item_id':root['id'],'material_id':m['id'],'version':1,'sha256':m['digest']}
         job=self.reserve_private_scope(provided['item'],job,'principal-after-executor')
         result=await self.agent_command(job,child,'reuse-executor','put_material',{'source_material':ref})
         self.assertEqual(result['status'],'applied',result)

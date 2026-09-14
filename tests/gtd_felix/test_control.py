@@ -587,13 +587,19 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(self.control.budget()["active"], 1)
 
     def test_pending_telegram_output_blocks_restore_reconciliation(self):
+        # I2: send intents live in deliveries; a non-confirmed row blocks
+        # reconcile exactly like the legacy outbox key did.
         with self.service.store.transaction() as db:
             db.execute("INSERT INTO metadata VALUES('recovery_required', 'true')")
-            db.execute("INSERT INTO metadata VALUES('telegram-outbox:fixture', ?)", (json.dumps({"status": "uncertain", "payload": {"text": "synthetic"}}),))
+            db.execute("INSERT INTO deliveries(id, channel, target_key, semantic_key, state,"
+                       " payload_json, segments_json) VALUES(?,?,?,?,?,?,?)",
+                       ("tg:fixture", "telegram", "synthetic", "evt:fixture", "uncertain",
+                        json.dumps({"payload": {"text": "synthetic"}}), "[]"))
         self.assertEqual(self.control.reconcile("felix", "output-uncertain", [])["error"], "unresolved_output")
         self.assertTrue(self.service.recovery_required)
         with self.service.store.transaction() as db:
-            db.execute("UPDATE metadata SET value=? WHERE key='telegram-outbox:fixture'", (json.dumps({"status": "confirmed", "response": {"message_id": 42}}),))
+            db.execute("UPDATE deliveries SET state='confirmed', segments_json=? WHERE id='tg:fixture'",
+                       (json.dumps([{"status": "confirmed", "response": {"message_id": 42}}]),))
         self.assertEqual(self.control.reconcile("felix", "output-confirmed", [])["status"], "reconciled")
         self.assertFalse(self.service.recovery_required)
 

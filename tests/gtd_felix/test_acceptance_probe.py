@@ -781,12 +781,16 @@ class G7ReturnOracleTests(unittest.TestCase):
                 receipt = command('worker', 'gtd-output:child', 'put_material',
                     {'content': 'Guide uses 10-13; Lara confirmation remains pending.', 'mandate_id': mandate})
                 observed = service.materials(obj['id'])
+                # I2: receipt items carry references; the native artifact
+                # resolves the full original (identical bytes to pre-cut).
+                ref = receipt['item']['materials'][-1]
+                full_material = next(m for m in observed
+                                     if m['id'] == ref['id'] and m['version'] == ref['version'])
                 path = root / 'snapshot.zip'
                 service.export(path)
                 after = probe.load_snapshot(path, probe.sha(path.read_bytes()))
             finally:
                 service.close()
-        material = receipt['item']['materials'][-1]
         native = {'provider': 'hermes-kanban', 'id': 'card', 'profile': 'synthetic-worker'}
         payload = {'id': 'card', 'status': 'completed'}
         reference = 'hermes:observation:child:' + probe.sha(json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False).encode())
@@ -797,7 +801,8 @@ class G7ReturnOracleTests(unittest.TestCase):
         after['metadata']['execution:state'] = {'jobs': {'child': job}}
         after['metadata'][reference] = {'payload': payload,
             'observation': {'native_identity': native, 'native_status': 'completed'}}
-        after['metadata']['hermes:artifact:child'] = {**material['original'], 'job_id': 'child'}
+        after['metadata']['hermes:artifact:child'] = {**full_material['original'],
+                                                       'job_id': 'child'}
         evidence = {'aliases': {'project': obj['id']}, 'materials': {obj['id']: observed},
             'intervention': {'operation_id': 'correct', 'item_id': obj['id'],
                 'after_version': correction['item']['version'], 'fields': {'text': correction['item']['text']}}}
@@ -821,6 +826,8 @@ class G7ReturnOracleTests(unittest.TestCase):
                 job = after['metadata']['execution:state']['jobs']['child']
                 operation = next(o for o in after['operations'] if o['operation_id'] == 'gtd-output:child')
                 receipt = operation['receipt']
+                # Alias into this snapshot copy: mutation sub-cases corrupt
+                # the evaluated receipt reference itself.
                 material = receipt['item']['materials'][-1]
                 if change == 'actor': operation['actor'] = 'felix'
                 elif change == 'operation': job['domain_operation_id'] = 'correct'

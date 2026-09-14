@@ -45,7 +45,8 @@ class RefreshTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(old_attempt['status'], 'rejected')
         materials = self.service.materials(child['id'])
         self.assertFalse(materials[0]['valid'])
-        self.assertEqual(materials[0]['original'], child['materials'][0]['original'])
+        # I2: documents carry references; identity resolves by digest.
+        self.assertEqual(materials[0]['original']['sha256'], child['materials'][0]['digest'])
         fresh = await self.agent_command(job, changed['item'], 'material-r2', 'put_material', {
             'content': 'Meeting 09:30; maximum 12 people, room pending', 'material_id': materials[0]['id'], 'source_versions': {source['id']: 2}})
         self.assertEqual(fresh['status'], 'applied', fresh)

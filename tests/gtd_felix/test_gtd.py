@@ -231,12 +231,13 @@ class GTDTest(unittest.TestCase):
         self.assertNotIn('field_provenance', self.current(item))
         item = self.ok(self.cmd(item, 'put_material', {'content': 'Guía exacta: áé'}))
         material = item['materials'][0]
+        # I2: receipts carry references; content resolves by digest.
+        path = self.service.store.root / ('originals/' + material['digest'])
         read = lambda: self.service.read_material(item['id'], material['id'], 1)
         self.assertEqual(read()['content'], 'Guía exacta: áé')
         item = self.ok(self.cmd(item, 'edit', {'text': 'Changed data'}))
         self.assertFalse(read()['valid'])
         self.assertEqual(read()['content'], 'Guía exacta: áé')
-        path = self.service.store.root / material['original']['path']
         path.write_bytes(b'corrupt')
         with self.assertRaises(ValueError): read()
         path.unlink()
@@ -247,7 +248,8 @@ class GTDTest(unittest.TestCase):
     def test_material_read_rejects_added_hardlink(self):
         item = self.ok(self.cmd(self.capture(), 'put_material', {'content': 'Private bytes'}))
         material = item['materials'][0]
-        original = self.service.store.root / material['original']['path']
+        # I2: receipts carry references; content resolves by digest.
+        original = self.service.store.root / ('originals/' + material['digest'])
         (self.root / 'extra-link').hardlink_to(original)
         with self.assertRaisesRegex(ValueError, 'material_integrity_invalid'):
             self.service.read_material(item['id'], material['id'], 1)

@@ -458,7 +458,8 @@ class TelegramTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual('notification_text_transport_required', self.service.pending_events('gtd-notification', 'local')[0]['error'])
         other = self.prepared_item('CONTENIDO-NO-CORRUPTO')
         self.notification(other, 'corrupt-original')
-        path = self.service.store.root / other['materials'][0]['original']['path']
+        # I2: documents carry references; content resolves by digest.
+        path = self.service.store.root / ('originals/' + other['materials'][0]['digest'])
         path.write_bytes(b'X' * path.stat().st_size)
         await self.deliver(message(913, '/preparado'))
         self.assertFalse(any('CONTENIDO-NO-CORRUPTO' in m['text'] for m in self.http.sent))
