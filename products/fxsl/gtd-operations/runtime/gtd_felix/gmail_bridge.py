@@ -20,7 +20,7 @@ import subprocess
 import sys
 import time
 
-HERMES_COMMIT = "d595e636c83aa0b9606d4e914e1140ae9c796897"
+HERMES_COMMIT = "5eb99eb2844b22ebb723711b8e6a0bbb80bb5f04"
 HERMES_ROOT = Path("/home/felix/.hermes/hermes-agent")
 PROFILE_HOME = Path("/home/felix/.hermes/profiles/gtd-felix")
 MAX_TEXT_BYTES = 200_000
