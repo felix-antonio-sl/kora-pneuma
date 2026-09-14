@@ -387,3 +387,16 @@ post-admisión), NO telemetría de inferencia medida; el diario consume la
 misma cota. Coste proveedor desconocido (NULL, imputación conservadora).
 Backfill `ahora` queda sólo para datos antiguos sin `first_send_at`;
 queued/waiting/kanban sin piso (honesto). C2/minuta/aceptación: NOT_RUN.
+
+## E32 · protección verificada en vivo, sin minuta TM (2026-09-14)
+
+Plan v31 (foco TM primero, global como antecedente) admitió UN job `520f13`
+(native `run_8824`). La guarda E28–E31 midió cota local desde el primer poll
+(6.7 s) y pidió STOP al superar 240 (observado final 252.3 = 240 + margen de
+sondeo declarado); nativo canceló dócil, integración `discarded`, slot libre,
+sin material/assessment nuevo (v31 intacta, 8/12), Gmail igual (4 pendientes),
+sin entregas duplicadas. Consumo 252.4 s (committed 1628.7→1881.1, remaining
+5571.3→5318.9, íntegro atribuido a este job; coste NULL, imputación 1 USD).
+Tramo del fallo: primera respuesta del proveedor ausente 252 s (0 chunks, 0
+herramientas incl. `source_evaluation`; misma firma que ca99 a 600 s). La
+guarda NO falló; no hubo reintento. C2/minuta/aceptación: NOT_RUN.
