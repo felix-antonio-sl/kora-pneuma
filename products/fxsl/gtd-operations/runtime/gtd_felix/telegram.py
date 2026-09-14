@@ -353,6 +353,10 @@ class TelegramAdapter:
         payload = event['payload']
         if payload.get('kind') in {'no_domain_progress', 'routed'}:
             return False
+        if payload.get('kind') == 'interrupted':
+            # A guard-stopped attempt with no domain progress is worth one
+            # honest return; paused/attention/item guards above still apply.
+            return True
         reply = payload.get('native_reply')
         return bool((isinstance(reply, str) and reply.strip()) or self.service.materials(item['id'])
                     or (item.get('decision_needed') and item.get('decision_question')))
@@ -402,7 +406,12 @@ class TelegramAdapter:
                 latest = {m['id']: m for m in self.service.materials(event['payload'].get('item_id'))}
                 material_keys = {self._material_return_identity(m) for m in latest.values()}
                 confirmed_materials = self.service._meta(self._material_return_key(event), {}).get('materials', [])
-            omitted = frozenset(confirmed_materials) if automatic else frozenset()
+            if event['payload'].get('kind') == 'interrupted':
+                # Prior materials stay referenced by the item, never attached
+                # as if this attempt had produced them; the text names the count.
+                omitted = frozenset(self._material_return_identity(m) for m in latest.values())
+            else:
+                omitted = frozenset(confirmed_materials) if automatic else frozenset()
             chunks = self._notification_content(event, omit_materials=omitted)
             question_basis = self._question_return_basis(event)
             with self.service.store.lock:

@@ -519,6 +519,41 @@ class OrchestrationWorker:
         self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
             'external_id': job_id, 'revision': '1', 'payload': payload})
 
+    def _notify_interrupted(self, job_id):
+        # One honest return for a guard-stopped attempt that left no domain
+        # progress: the user learns nothing was achieved, keeps the item and
+        # its context, and can pause or resume explicitly. Deliberately narrow:
+        # only a guard-initiated stop (durable gtd-invalid-stop receipt) on a
+        # discarded run notifies; user-requested stops and paused/withdrawn
+        # items stay silent. ingest_event dedupes reprocessing by identity.
+        job = self.control.get_job(job_id)
+        if job.get('integration') != 'discarded':
+            return
+        if not self.control._control_op_get('gtd-invalid-stop:' + job_id):
+            return
+        # Limit cancellation, not a user stop the worker echoed afterwards:
+        # the observed runtime must have reached the job allowance. A user
+        # stop on a healthy run leaves small observations, so it stays silent
+        # even though the next tick also files a guard stop.
+        if not (job.get('observed_runtime_seconds', 0) >= job.get('max_runtime_seconds', float('inf'))):
+            return
+        item = self.service.get_item(job['item_id'])
+        if not item or item['status'] in {'done', 'withdrawn', 'paused'}:
+            return
+        prior = len(self.service.materials(item['id']))
+        if prior:
+            tail = (' El asunto conserva %d material anterior; este intento no añadió ninguno.'
+                    % prior if prior == 1 else
+                    ' El asunto conserva %d materiales anteriores; este intento no añadió ninguno.' % prior)
+        else:
+            tail = ' El asunto sigue intacto, sin material nuevo.'
+        text = ('No conseguí preparar nada en este intento: ' + item['title'] + '.' + tail
+                + ' Puedes verlo, retomarlo o pausarlo cuando quieras.')
+        self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
+            'external_id': job_id, 'revision': '1',
+            'payload': {'item_id': item['id'], 'version': item['version'], 'job_id': job_id,
+                        'kind': 'interrupted', 'text': text, 'delivery': 'pending'}})
+
     async def _advance(self, state, job_id):
         run = state['runs'][job_id]
         job = self.control.get_job(job_id)
@@ -632,6 +667,7 @@ class OrchestrationWorker:
         if job['integration'] == 'discarded':
             run['result_status'] = 'discarded'
             run['error'] = job.get('integration_error', 'native_unsuccessful')
+            self._notify_interrupted(job_id)
         elif self.control.own_terminal_progress(job_id):
             integrated = self.control.integrate_terminal_progress(job_id)
             run['result_status'] = integrated['status']
