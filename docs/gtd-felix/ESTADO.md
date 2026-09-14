@@ -26,8 +26,8 @@ la última crítica del usuario a la calidad y los controles no se da por resuel
 
 | Objeto | Evidencia del corte |
 |---|---|
-| Fuente ejecutable | I2 `65f543e` publicado en origen (13 commits sobre I1 `9896336`), rama `fxai/gtd-felix-20260911` en sync; sin instalar en vivo; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
-| Producto instalado | revisión `fc1e17d849e0b9daba3e086b01d1c3ea00315d8b2361866a4289015649917994`, transacción `a005abcd79f24683832b41d81e6ec0be` según recibo de base 2026-09-13 (última observación; salud viva no reconsultada en este corte) |
+| Fuente ejecutable | I2 `65f543e` publicado e instalado como técnico en mantenimiento (bot NO operativo); rama `fxai/gtd-felix-20260911` en sync; base documental `9541abf`/`0fbc18e`, código base `01086a3` |
+| Producto instalado | runtime `65f543e` (36 archivos idénticos al bundle) sobre datos migrados v3, en mantenimiento técnico sin workers (salud/lecturas ok, mutadoras 403, `recovery_required=true`); unidades systemd detenidas; revisión anterior `fc1e17d…` respaldada con manifiesto |
 | Salud y cola | HTTP `ok`, cero ejecuciones pendientes en consulta autenticada (recibo de base) |
 | Presupuesto | una ejecución global; 7.200 s/día civil America/Santiago; 2.262,4 s comprometidos y 4.937,6 s restantes observados en base y en migrado. No equivalen a cuota de Codex ni factura |
 | Runtime del bot | Hermes, `deepseek-v4.1-flash`, `opencode-go`, `max` configurado; aplicación efectiva del esfuerzo por el proveedor no demostrada |
