@@ -12,6 +12,7 @@ import zipfile
 
 from runtime_location import RUNTIME
 sys.path.insert(0, str(RUNTIME))
+sys.path.insert(0, str(Path(__file__).parent))
 from gtd_felix.source_attachments import spreadsheet, read_attachment
 from gtd_felix.service import GTDService
 
@@ -121,6 +122,26 @@ class SourceAttachmentTests(unittest.TestCase):
         path=self.service.store.root/self.item['original']['path']; path.write_bytes(b'x'*self.item['original']['size'])
         with self.assertRaisesRegex(ValueError,'material_integrity_invalid'):
             read_attachment(self.service.store,self.item,self.item['version'])
+
+
+    def test_full_manifest_honest_without_bytes(self):
+        import test_google_sources as fixtures
+        full = fixtures.full_message('full-mail')
+        raw = json.dumps(full).encode()
+        digest = hashlib.sha256(raw).hexdigest()
+        item = self.service.capture('felix', 'full-attachment', 'Synthetic full source',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'full-mail',
+                    'sha256': digest},
+            original=raw, filename='source.bin', mime_type='application/json')['item']
+        result = read_attachment(self.service.store, item, item['version'])
+        self.assertEqual('full', result['representation'])
+        self.assertEqual('not_retained', result['content'])
+        self.assertEqual(1, len(result['attachments']))
+        self.assertEqual('big.bin', result['attachments'][0]['filename'])
+        self.assertFalse(result['attachments'][0]['body_present'])
+        self.assertEqual(digest, result['original_sha256'])
+        with self.assertRaisesRegex(ValueError, 'attachment_content_not_retained'):
+            read_attachment(self.service.store, item, item['version'], attachment_index=0)
 
 
 if __name__=='__main__': unittest.main()

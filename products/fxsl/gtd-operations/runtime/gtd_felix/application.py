@@ -232,7 +232,7 @@ def create_app(service, control, config):
                 'attachment_size_limit','attachment_archive_limit','attachment_xml_unsupported',
                 'attachment_sheet_not_found','attachment_sheet_unsupported','attachment_row_not_found',
                 'attachment_cell_invalid','attachment_string_invalid','attachment_mime_invalid',
-                'attachment_sheet_invalid','attachment_row_invalid'}
+                'attachment_sheet_invalid','attachment_row_invalid','attachment_content_not_retained'}
             code = exc.args[0] if type(exc) is ValueError and len(exc.args) == 1 and type(exc.args[0]) is str else None
             return web.json_response({'status':'rejected','error':code if code in codes else 'attachment_parse_failed'}, status=409)
         current = service.get_item(item['id'])

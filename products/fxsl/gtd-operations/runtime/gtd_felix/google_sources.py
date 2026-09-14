@@ -320,6 +320,116 @@ class GoogleSources:
             url='https://mail.google.com/mail/u/' + quote(self.transport.authenticated_account, safe='') + '/#all/' + quote(identity, safe=''),
             mime_type='application/json')
 
+    # Structured-fallback bounds: never beyond what the transport would
+    # deliver, and text under the same shared item cap as the raw path.
+    _FULL_MAX_DEPTH = 8
+    _FULL_MAX_PARTS = 128
+
+    @staticmethod
+    def _full_charset(part):
+        for header in (part.get('headers') or []):
+            if isinstance(header, dict) and header.get('name', '').lower() == 'content-type':
+                for token in str(header.get('value', '')).split(';')[1:]:
+                    name, _, value = token.partition('=')
+                    if name.strip().lower() == 'charset':
+                        return value.strip().strip('"') or 'utf-8'
+        return 'utf-8'
+
+    def _gmail_object_from_full(self, message, identity, cfg):
+        """Structured projection of a messages.get format=full response.
+
+        Same object shape as the raw path (identity, revision from obtained
+        bytes, text envelope, exact original bytes) so selection, retention
+        and evaluation consume it unchanged. Attachments are only referenced
+        (attachmentId), never read; omitted or missing text is marked
+        explicitly, never mistaken for an empty message.
+        """
+        _require(message.get('id') == identity and _string(message.get('threadId'))
+                 and _string(message.get('historyId')), 'message_identity_or_raw_missing')
+        _require(_string(message.get('internalDate')) and message['internalDate'].isdigit()
+                 and ('labelIds' not in message or isinstance(message['labelIds'], list) and all(_string(v) for v in message['labelIds'])),
+                 'message_metadata_missing')
+        payload = message.get('payload')
+        _require(isinstance(payload, dict), 'invalid_response_shape')
+        original = message.original
+        _require(len(original) <= 4 * 1024 * 1024, 'message_too_large')
+        parts, html_parts, attachments = [], [], []
+        omitted = {'missing_text': 0, 'oversized': 0}
+        seen = [0]
+        stack = [(payload, 0)]
+        while stack:
+            part, depth = stack.pop()
+            _require(isinstance(part, dict), 'invalid_response_shape')
+            _require(depth <= self._FULL_MAX_DEPTH, 'message_too_large')
+            seen[0] += 1
+            _require(seen[0] <= self._FULL_MAX_PARTS, 'message_too_large')
+            subs = part.get('parts')
+            _require(subs is None or isinstance(subs, list), 'invalid_response_shape')
+            if subs:
+                stack.extend((sub, depth + 1) for sub in subs)
+                continue
+            mime = part.get('mimeType', '')
+            body = part.get('body')
+            _require(body is None or isinstance(body, dict), 'invalid_response_shape')
+            body = body or {}
+            filename = part.get('filename') or ''
+            if filename:
+                attachments.append({'filename': filename, 'content_type': mime,
+                    'size': body.get('size') if isinstance(body.get('size'), int) else None,
+                    'body_present': bool(body.get('data'))})
+                continue
+            if mime not in {'text/plain', 'text/html'}:
+                continue
+            data = body.get('data')
+            if not data:
+                # Text behind attachmentId or absent: referenced, not fetched
+                # in this increment; counted, never silent.
+                omitted['missing_text'] += 1
+                continue
+            try:
+                raw = base64.b64decode(data + '=' * (-len(data) % 4), altchars=b'-_', validate=True)
+            except (ValueError, binascii.Error):
+                raise SourceError('invalid_response_shape') from None
+            try:
+                content = raw.decode(self._full_charset(part))
+            except (LookupError, UnicodeError):
+                raise SourceError('mime_text_decode_degraded') from None
+            if mime == 'text/plain':
+                parts.append(content)
+            else:
+                parser = VisibleHTML(); parser.feed(content); parser.close()
+                html_parts.append(parser.text())
+        metadata = {'id': message['id'], 'threadId': message['threadId'],
+            'historyId': message['historyId'], 'internalDate': message.get('internalDate'),
+            'labelIds': message.get('labelIds')}
+        headers = {}
+        for header in payload.get('headers') or []:
+            if isinstance(header, dict) and _string(header.get('name')):
+                headers[header['name']] = str(header.get('value', ''))
+        metadata['headers'] = {k: headers[k] for k in ('Subject', 'From', 'To', 'Date', 'Message-ID') if headers.get(k) is not None}
+        metadata['attachments_not_interpreted'] = [
+            {'filename': a['filename'], 'content_type': a['content_type']} for a in attachments]
+        metadata['attachment_references'] = [
+            {'filename': a['filename'], 'content_type': a['content_type'], 'size': a['size'],
+             'body_present': a['body_present']} for a in attachments]
+        metadata['html_not_executed_or_rendered'] = True
+        metadata['body_projection'] = 'plain' if parts else 'visible_html' if html_parts else 'structured_unavailable'
+        metadata['representation'] = 'full'
+        if parts or html_parts:
+            body_text = '\n'.join(parts or html_parts)
+        elif attachments or omitted['missing_text']:
+            body_text = ('[Structured full-format projection: %d attachment(s) referenced, not read; '
+                         '%d text part(s) not retrieved. No text body retained.]'
+                         % (len(attachments), omitted['missing_text']))
+        else:
+            body_text = '[No text body in structured projection; original full response retained.]'
+        text = _json(metadata) + '\n\n' + body_text
+        _require(len(text) <= 1024 * 1024, 'message_text_too_large')
+        revision = 'message:' + message['historyId'] + ':' + hashlib.sha256(original).hexdigest()
+        return dict(external_id=identity, revision=revision, status='present',
+            text=text, original=original, sha256=hashlib.sha256(original).hexdigest(),
+            url=self._mail_url(cfg, identity), mime_type='application/json')
+
     def _mail_url(self, cfg, identity):
         return 'https://mail.google.com/mail/u/' + quote(cfg['account'], safe='') + '/#all/' + quote(identity, safe='')
 
@@ -390,7 +500,22 @@ class GoogleSources:
         pending['revision'] = None
         self._save(partition, adapter)  # obligation precedes network/evaluator and cursor
         try:
-            message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'raw'})
+            structured = False
+            try:
+                message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'raw'})
+            except (TransportError, SourceError) as exc:
+                if str(exc) != 'response_too_large':
+                    raise
+                # Explicit single fallback, raw first then structured: the raw
+                # fetch was refused by a size cap, so fetch the structured
+                # representation once instead of retrying the giant raw.
+                message = await self._ok(cfg, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/' + quote(identity, safe=''), {'format': 'full'})
+                structured = True
+            if structured:
+                def make_object(message, identity, _cfg=cfg):
+                    return self._gmail_object_from_full(message, identity, _cfg)
+            else:
+                make_object = self._gmail_object
             _require(message.get('id') == identity and _string(message.get('historyId'))
                 and _string(message.get('internalDate')) and message['internalDate'].isdigit(), 'message_metadata_missing')
             revision = 'message:' + message['historyId'] + ':' + hashlib.sha256(message.original).hexdigest()
@@ -402,7 +527,7 @@ class GoogleSources:
                 decision = {'classification': 'noise', 'reason_code': 'outside_scope'}
             elif decision is None or decision['classification'] == 'uncertain':
                 _require(callable(self.evaluator), 'evaluator_unavailable')
-                obj = self._gmail_object(message, identity)
+                obj = make_object(message, identity)
                 # Caller owns model budget and no-retention transport. This adapter
                 # never persists evaluator input, free-form rationale or transcript.
                 try:
@@ -436,7 +561,7 @@ class GoogleSources:
                 del adapter['pending_reads'][identity]
                 self._save(partition, adapter)
                 return self._unretained_message(cfg, identity, 'not-selected:' + revision, adapter)
-            obj = self._gmail_object(message, identity)
+            obj = make_object(message, identity)
             pending['resolving_revision'] = obj['revision']
             self._save(partition, adapter)
             return obj

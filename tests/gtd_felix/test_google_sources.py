@@ -26,6 +26,40 @@ def raw_message(identity='m1', history='10', labels=None):
         'labelIds':labels if labels is not None else ['INBOX'],'raw':base64.urlsafe_b64encode(rfc).decode().rstrip('=')}
 
 
+def _b64_text(text):
+    return base64.urlsafe_b64encode(text.encode()).decode().rstrip('=')
+
+
+def full_message(identity='m1', history='10', *, text='Read this source; do not infer a human mandate.',
+                 attachments=({'filename': 'big.bin', 'mime': 'application/octet-stream', 'size': 4153024},),
+                 missing_text=False):
+    """Tiny structured (format=full) response mirroring the live giant shape.
+
+    Text bodies travel inline; large binaries stay behind attachmentId only,
+    so the whole response is kilobytes while sizeEstimate is megabytes.
+    """
+    alternative = {'mimeType': 'multipart/alternative', 'parts': []}
+    if not missing_text:
+        alternative['parts'].append({'mimeType': 'text/plain', 'filename': '',
+            'headers': [{'name': 'Content-Type', 'value': 'text/plain; charset=utf-8'}],
+            'body': {'size': len(text), 'data': _b64_text(text)}})
+    else:
+        alternative['parts'].append({'mimeType': 'text/plain', 'filename': '',
+            'headers': [{'name': 'Content-Type', 'value': 'text/plain; charset=utf-8'}],
+            'body': {'size': 999, 'attachmentId': 'ATT_TEXT_REF'}})
+    parts = [alternative]
+    for att in attachments:
+        parts.append({'mimeType': att['mime'], 'filename': att['filename'],
+            'headers': [], 'body': {'attachmentId': 'ATT_' + att['filename'], 'size': att['size']}})
+    return {'id': identity, 'threadId': 'thread1', 'historyId': history, 'internalDate': '1789120800000',
+        'labelIds': ['INBOX'], 'sizeEstimate': 6875562,
+        'snippet': 'Structured snippet is not a body substitute.',
+        'payload': {'mimeType': 'multipart/mixed', 'filename': '',
+            'headers': [{'name': 'Subject', 'value': 'External assignment'},
+                        {'name': 'From', 'value': 'stranger@example.invalid'}],
+            'body': {'size': 0}, 'parts': parts}}
+
+
 class Transport:
     authenticated_account=ACCOUNT
     def __init__(self, service):self.service=service;self.steps=[];self.calls=[]

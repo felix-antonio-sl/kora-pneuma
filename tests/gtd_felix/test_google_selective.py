@@ -495,6 +495,80 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual('complete', final['health'])
         self.assertEqual(['first', 'tm', 'hd', 'last'], self.evaluated)
 
+    async def test_oversized_raw_falls_back_to_structured_and_selects(self):
+        # Live shape: raw refused by size cap, structured full carries text
+        # plus attachment references in kilobytes. The giant raw is fetched
+        # exactly once, full exactly once; the revision is stable and reused
+        # after restart without duplicating the item.
+        import hashlib, json
+        from gtd_felix.source_error_codes import TransportError
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.transport.add(fixtures.GMAIL + '/messages',
+            {'maxResults': 2, 'includeSpamTrash': 'true', 'q': 'after:1785556800'},
+            {'messages': [{'id': 'm1'}]})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('response_too_large'))
+        full = fixtures.full_message('m1')
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'}, full)
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', result['health'])
+        self.assertEqual({}, result['pending_reads'])
+        self.assertEqual(['m1'], self.evaluated)
+        raws = [c for c in self.transport.calls if c[0].endswith('/m1') and c[1] == {'format': 'raw'}]
+        fulls = [c for c in self.transport.calls if c[0].endswith('/m1') and c[1] == {'format': 'full'}]
+        self.assertEqual(1, len(raws))
+        self.assertEqual(1, len(fulls))
+        rows = self.service.query()
+        self.assertEqual(1, len(rows))
+        expect = hashlib.sha256(json.dumps(full).encode()).hexdigest()
+        self.assertEqual(expect, rows[0]['original']['sha256'])
+        self.assertEqual('message:10:' + expect, rows[0]['source']['revision'])
+        self.restart()
+        self.profile('20')
+        self.history('10', [], end='20')
+        again = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', again['health'])
+        self.assertEqual(['m1'], self.evaluated)
+        self.assertEqual(1, len(self.service.query()))
+
+    async def test_full_over_bound_keeps_pending_and_continues_batch(self):
+        # A structured response beyond the parser bounds keeps its message
+        # pending with a closed reason while the rest of the batch projects.
+        from gtd_felix.source_error_codes import TransportError
+        self.answers['m2'] = 'selected'
+        self.profile()
+        self.transport.add(fixtures.GMAIL + '/messages',
+            {'maxResults': 2, 'includeSpamTrash': 'true', 'q': 'after:1785556800'},
+            {'messages': [{'id': 'm1'}, {'id': 'm2'}]})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('response_too_large'))
+        many = [{'mimeType': 'text/plain', 'filename': '', 'body': {'size': 3, 'data': 'eA'}} for _ in range(129)]
+        big = dict(fixtures.full_message('m1'), payload={'mimeType': 'multipart/mixed', 'parts': many})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'}, big)
+        self.transport.add(fixtures.GMAIL + '/messages/m2', {'format': 'raw'},
+            fixtures.raw_message('m2'))
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', result['health'])
+        self.assertEqual('evaluation_unavailable', result['pending_reads']['m1']['reason'])
+        self.assertEqual({'m2'}, {row['source']['external_id'] for row in self.service.query()})
+
+    async def test_structured_projection_marks_coverage_honestly(self):
+        from gtd_felix.google_sources import ResponseDocument, SourceError
+        full = fixtures.full_message('m1', missing_text=True)
+        doc = ResponseDocument(full, __import__('json').dumps(full).encode())
+        obj = self.adapter._gmail_object_from_full(doc, 'm1', self.config['mail'])
+        self.assertIn('Structured full-format projection', obj['text'])
+        self.assertIn('1 attachment(s) referenced, not read', obj['text'])
+        self.assertIn('External assignment', obj['text'].split('\n', 1)[0])
+        with self.assertRaisesRegex(SourceError, '^invalid_response_shape$'):
+            self.adapter._gmail_object_from_full(
+                ResponseDocument(dict(full, payload=[]), b'{}'), 'm1', self.config['mail'])
+        empty = dict(full, payload={'mimeType': 'multipart/mixed'})
+        doc = ResponseDocument(empty, __import__('json').dumps(empty).encode())
+        obj = self.adapter._gmail_object_from_full(doc, 'm1', self.config['mail'])
+        self.assertIn('No text body in structured projection', obj['text'])
+
     async def test_transport_error_contained_per_message_and_retried(self):
         # TransportError (RuntimeError family) must not abort the pass: the
         # message stays pending with a closed reason, the adapter stays

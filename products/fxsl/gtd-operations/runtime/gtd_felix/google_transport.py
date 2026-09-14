@@ -237,7 +237,9 @@ class GoogleTransport:
                 identity = url[len(GMAIL + '/messages/'):]
                 if identity and all(x.isascii() and (x.isalnum() or x in '_-') for x in identity):
                     allowed = {'format'}
-                    if params.get('format') != 'raw':
+                    if params.get('format') not in {'raw', 'full'}:
+                        # 'full' is admitted explicitly for the oversized
+                        # structured fallback; no other format is allowed.
                         raise TransportError('request_forbidden')
         if url in {'https://www.googleapis.com/calendar/v3/calendars/' + quote(x, safe='') + '/events' for x in self.calendars}:
             allowed = {'maxResults', 'singleEvents', 'showDeleted', 'syncToken', 'pageToken'}

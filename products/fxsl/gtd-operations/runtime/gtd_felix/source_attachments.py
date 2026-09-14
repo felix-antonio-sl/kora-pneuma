@@ -98,6 +98,48 @@ def spreadsheet(data, sheet_index=0, row_offset=0, row_limit=2):
             'interpretation': 'raw_cached_values_no_formula_execution_or_date_conversion'}
 
 
+def _full_manifest(item, version, original, value, attachment_index=None):
+    """Honest manifest for a structured (format=full) retained original.
+
+    Attachment bytes behind attachmentId were never retained, so content
+    requests get a concrete refusal instead of an empty manifest or a
+    KeyError. Only the manifest (no content) is served from full sources.
+    """
+    if attachment_index is not None:
+        raise ValueError('attachment_content_not_retained')
+    source = item.get('source', {})
+    walked = []
+
+    def walk(part, depth):
+        _require(isinstance(part, dict) and depth <= 8 and len(walked) <= 64, 'attachment_mime_invalid')
+        subs = part.get('parts')
+        _require(subs is None or isinstance(subs, list), 'attachment_mime_invalid')
+        if subs:
+            for sub in subs:
+                walk(sub, depth + 1)
+            return
+        filename = part.get('filename') or ''
+        if not filename:
+            return
+        body = part.get('body') or {}
+        _require(isinstance(body, dict), 'attachment_mime_invalid')
+        walked.append({'filename': filename, 'content_type': part.get('mimeType', ''),
+            'size': body.get('size') if isinstance(body.get('size'), int) else None,
+            'body_present': bool(body.get('data'))})
+
+    payload = value.get('payload')
+    _require(isinstance(payload, dict), 'attachment_mime_invalid')
+    walk(payload, 0)
+    manifest = [{'index': i, 'filename': (w['filename'] or '')[:200],
+        'filename_truncated': len(w['filename'] or '') > 200,
+        'mime_type': (w['content_type'] or '')[:200],
+        'supported': (w['filename'] or '').lower().endswith('.xlsx'),
+        'body_present': w['body_present'], 'size': w['size']} for i, w in enumerate(walked)]
+    return {'item_id': item['id'], 'source_version': version, 'original_sha256': original['sha256'],
+        'attachments': manifest, 'content_is_untrusted': True,
+        'representation': 'full', 'content': 'not_retained'}
+
+
 def read_attachment(store, item, version, attachment_index=None, sheet_index=0, row_offset=0, row_limit=2):
     _require(type(version) is int and version >= 1 and item.get('version') == version, 'source_version_changed')
     source = item.get('source', {})
@@ -110,6 +152,8 @@ def read_attachment(store, item, version, attachment_index=None, sheet_index=0, 
     _require(source.get('sha256') == original.get('sha256'), 'source_original_mismatch')
     try:
         value = json.loads(data)
+        if 'raw' not in value and isinstance(value.get('payload'), dict):
+            return _full_manifest(item, version, original, value, attachment_index)
         _require(value.get('id') == source.get('external_id'), 'source_original_mismatch')
         raw = value['raw']
         message = BytesParser(policy=policy.default).parsebytes(base64.b64decode(raw + '=' * (-len(raw) % 4), altchars=b'-_', validate=True))
