@@ -703,7 +703,8 @@ class HermesAdapter:
         state = self._get('hermes:state:' + job['id']) or {}
         admitted = state.get('native_admitted_at')
         if not _number(admitted):
-            admitted = time.time()
+            first = state.get('first_send_at')
+            admitted = first if _number(first) else time.time()
             self._state(job['id'], native_admitted_at=admitted)
         return max(0.0, time.time() - admitted)
 
