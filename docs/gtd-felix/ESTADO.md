@@ -373,3 +373,17 @@ segmentar, sin ampliar queued/waiting). Regresión E30: falla en fae79e3
 (observed 124.93) y pasa (observed ~5 + STOP automático vía `_advance`
 real). Vecinas: hermes+control+daily+spent+codex_probe 170 OK.
 Paquete acumulado: un archivo `gtd_felix/hermes.py`. C2/minuta: NOT_RUN.
+
+## E31 · instalado hermes.py E28–E31 (ancla de primer intento + backfill)
+
+Composición instalada: `gtd_felix/hermes.py` hash
+`8327d3f6…c84242e` (= cbb3850 + reemplazo exacto revisado en
+`_admitted_elapsed`: el backfill prefiere `first_send_at` durable antes que
+ahora). Cierra la ventana de interrupción entre writes: ack perdido con
+identidad + primer envío persistidos ya no rejuvenece el plazo.
+Margen declarado: la denuncia exige el siguiente poll tras el cruce (STOP en
+el advance posterior). Lo contado es cota de vida admitida (incluye espera
+post-admisión), NO telemetría de inferencia medida; el diario consume la
+misma cota. Coste proveedor desconocido (NULL, imputación conservadora).
+Backfill `ahora` queda sólo para datos antiguos sin `first_send_at`;
+queued/waiting/kanban sin piso (honesto). C2/minuta/aceptación: NOT_RUN.
