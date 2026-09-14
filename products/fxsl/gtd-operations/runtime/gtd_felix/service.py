@@ -871,3 +871,98 @@ def migrate_i2_results(store):
                    "at": datetime.now(timezone.utc).isoformat()}
         store.db.execute("INSERT OR REPLACE INTO metadata VALUES('migration:i2',?)", (encode(receipt),))
         return receipt
+
+
+def migrate_i3_sources(store):
+    """I3 cut: per-revision intake/selection rows move to source_entries, once.
+
+    Derives one row per index-record version event, overlaying durable
+    selective decisions and the projected affair of the latest revision.
+    Refuses with active sync cycles (ValueError('active_sync_present')) so no
+    intake races the cut; unrepresentable rows abort instead of dropping data.
+    Re-running is a no-op returning already_migrated. Returns a receipt dict.
+    """
+    from .source_entries import entry_id
+    with store.transaction():
+        for (key,) in store.db.execute(
+                "SELECT key FROM metadata WHERE key LIKE 'source-sync:%'"
+                " AND key NOT LIKE 'source-sync:object:%' AND key NOT LIKE 'source-sync:google:%'"):
+            state = json.loads(store.db.execute(
+                "SELECT value FROM metadata WHERE key=?", (key,)).fetchone()[0])
+            if isinstance(state, dict) and state.get("active_cycle") is not None:
+                raise ValueError("active_sync_present")
+        decisions = {}
+        for (key,) in store.db.execute(
+                "SELECT key FROM metadata WHERE key LIKE 'source-sync:google:%'"):
+            adapter = json.loads(store.db.execute(
+                "SELECT value FROM metadata WHERE key=?", (key,)).fetchone()[0])
+            if isinstance(adapter, dict):
+                for choice in (adapter.get("decisions") or {}).values():
+                    if isinstance(choice, dict) and choice.get("external_id") and choice.get("revision"):
+                        decisions[(choice["external_id"], choice["revision"])] = choice
+        index_keys = [row[0] for row in store.db.execute(
+            "SELECT key FROM metadata WHERE key LIKE 'source-sync:object:%'")]
+        if not index_keys:
+            return {"note": "already_migrated"}
+        migrated = skipped_existing = 0
+        for index_key in index_keys:
+            record = json.loads(store.db.execute(
+                "SELECT value FROM metadata WHERE key=?", (index_key,)).fetchone()[0])
+            for event in record.get("versions", []):
+                partition = event.get("partition") or {}
+                provider = partition.get("provider")
+                account = partition.get("account")
+                external_id = record.get("external_id")
+                document = event.get("document") or {}
+                revision = document.get("revision")
+                if (not isinstance(provider, str) or not provider
+                        or not isinstance(account, str) or not account
+                        or not isinstance(external_id, str) or not external_id
+                        or not isinstance(revision, str) or not revision):
+                    raise ValueError(f"unrepresentable_source:{external_id}")
+                if document.get("status") not in {"present", "deleted", "degraded"}:
+                    raise ValueError(f"unrepresentable_source:{external_id}")
+                original = event.get("original") or {}
+                digest = original.get("sha256")
+                if digest is not None and not store.db.execute(
+                        "SELECT 1 FROM originals WHERE digest=?", (digest,)).fetchone():
+                    raise ValueError(f"source_original_missing:{external_id}")
+                choice = decisions.get((external_id, revision))
+                if choice is not None and choice.get("classification") in {
+                        "selected", "noise", "uncertain"}:
+                    status = choice["classification"]
+                    reason = choice.get("reason_code")
+                else:
+                    status = {"present": "pending", "deleted": "deleted",
+                              "degraded": "unavailable"}[document["status"]]
+                    reason = None
+                is_latest = (event == record["versions"][-1])
+                metadata = {"index_key": index_key, "sequence": event.get("sequence"),
+                            "availability": document["status"],
+                            "projection": event.get("projection", "pending"),
+                            "scope": "migrated"}
+                if reason is not None:
+                    metadata["reason_code"] = reason
+                observed_at = event.get("observed_at")
+                if not isinstance(observed_at, str) or not observed_at:
+                    raise ValueError(f"unrepresentable_source:{external_id}")
+                row_id = entry_id(provider, account, external_id, revision)
+                if store.db.execute(
+                        "SELECT 1 FROM source_entries WHERE id=?", (row_id,)).fetchone():
+                    skipped_existing += 1
+                    continue
+                store.db.execute(
+                    "INSERT INTO source_entries(id, provider, account, external_id, revision,"
+                    " status, original_digest, item_id, metadata_json, observed_at)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,?)",
+                    (row_id, provider, account, external_id, revision, status, digest,
+                     record.get("item_id") if is_latest else None,
+                     encode(metadata), observed_at))
+                migrated += 1
+        if migrated == 0:
+            return {"note": "already_migrated", "skipped_existing": skipped_existing}
+        receipt = {"schema": 4, "migrated_source_entries": migrated,
+                   "skipped_existing": skipped_existing,
+                   "at": datetime.now(timezone.utc).isoformat()}
+        store.db.execute("INSERT OR REPLACE INTO metadata VALUES('migration:i3',?)", (encode(receipt),))
+        return receipt

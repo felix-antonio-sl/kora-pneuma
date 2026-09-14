@@ -26,6 +26,7 @@ import re
 from urllib.parse import quote
 import uuid
 
+from .source_entries import record_decision
 from .source_sync import _hash, _json, _now
 
 
@@ -390,6 +391,12 @@ class GoogleSources:
                     else {'needs_review', 'evaluation_unavailable'}), 'invalid_evaluation')
                 decision = dict(result)
             decisions[key] = {**decision, 'external_id': identity, 'revision': revision}
+            # Queryable selection authority mirrors the durable decision;
+            # bodies never cross here (classification + reason only).
+            record_decision(self.store, provider='gmail', account=cfg['account'],
+                external_id=identity, revision=revision,
+                decision=decision['classification'],
+                reason_code=decision.get('reason_code'))
             adapter.setdefault('current_decisions', {})[identity] = key
             if decision['classification'] == 'uncertain':
                 pending['reason'] = decision['reason_code']

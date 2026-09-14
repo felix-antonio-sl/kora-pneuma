@@ -13,6 +13,8 @@ import json
 import re
 from urllib.parse import urlsplit
 
+from .source_entries import report_intake, report_projection
+
 
 def _now():
     return datetime.now(timezone.utc).isoformat()
@@ -130,6 +132,13 @@ class SourceSync:
                 'observed_at': observed_at, 'partition': copy.deepcopy(partition)}
             event['operation_id'] = self.PREFIX + _hash([index_key, event['sequence']])
             record['versions'].append(event)
+            # Queryable intake authority mirrors every new revision; a prior
+            # selection decision for the same revision is never downgraded.
+            report_intake(self.store, provider=partition['provider'], account=partition['account'],
+                external_id=external, revision=document['revision'],
+                availability=document['status'],
+                original_digest=original['sha256'] if original else None,
+                index_key=index_key, sequence=event['sequence'], observed_at=observed_at)
             record['revision_hashes'][document['revision']] = signature
             record['availability'] = document['status']
             self._save(index_key, record)
@@ -244,6 +253,21 @@ class SourceSync:
                         record['item_id'] = result['item']['id']
                     event.update(projection='not_needed' if result['status'] == 'not_needed' else 'applied',
                                  item_id=record['item_id'], projected_at=_now())
+                    # Upsert first: rows for events written before the I3
+                    # cut (or its migration) must not break projection.
+                    report_intake(self.store, provider=event['partition']['provider'],
+                        account=event['partition']['account'], external_id=pending['external_id'],
+                        revision=event['document']['revision'],
+                        availability='present' if event['document']['status'] == 'present'
+                        else event['document']['status'],
+                        original_digest=(event['original'] or {}).get('sha256'),
+                        index_key=local['index_key'], sequence=event['sequence'],
+                        observed_at=event['observed_at'])
+                    report_projection(self.store, provider=event['partition']['provider'],
+                        account=event['partition']['account'], external_id=pending['external_id'],
+                        revision=event['document']['revision'],
+                        item_id=record['item_id'] if result['status'] != 'not_needed' else None,
+                        projected=result['status'] != 'not_needed')
                     with self.store.transaction():
                         self._save(local['index_key'], record)
                 local['item_id'] = record['item_id']
