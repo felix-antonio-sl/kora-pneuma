@@ -565,6 +565,10 @@ class HermesAdapter:
     async def _dispatch(self, job, route, intent):
         self._validation(job)
         self._same_route(route, intent)
+        # Pre-claim snapshot for the admission anchor below: the claim itself
+        # overwrites never_sent, so the distinction (proven first send after a
+        # never-sent mark vs recovery of a possibly-sent run) must be read here.
+        pre_claim = self._get('hermes:state:' + job['id']) or {}
         # Claim the single global native slot durably BEFORE any remote
         # effect. The network stays outside the storage transaction; if the
         # slot is taken, persist never_sent (nothing reached the provider) and
@@ -595,12 +599,22 @@ class HermesAdapter:
         recorded = self.control.record_dispatch(job['id'], self._native(route, native_id, intent['durable']))
         if recorded.get('status') != 'recorded':
             return self._uncertain(job['id'], 'dispatch_record_rejected')
-        # Durable admission anchor: a native run was proven to exist remotely
-        # (validated native_id). Local wall time from here bounds enforcement
-        # even if the provider later stops updating its own timestamps. Never
-        # set on never_sent/uncertain paths, so nonexistent execution is never
-        # charged. Same local clock for both ends: no cross-clock skew.
-        self._state(job['id'], native_admitted_at=time.time())
+        # Durable admission anchor, set only once a native run is proven to
+        # exist remotely (validated native_id): no observation of execution is
+        # ever invented before that proof. Value is the FIRST attempt, never
+        # the recovery instant, so reconciling an existing run cannot renew
+        # the deadline: a never_sent mark proves nothing was ever posted
+        # (admission starts now), while an uncertain send without receipt may
+        # already have created the run (conservative bound from the durable
+        # intent creation). Same local clock for both ends: no cross-clock
+        # skew. An existing anchor is never overwritten.
+        if pre_claim.get('native_admitted_at') is None:
+            if pre_claim.get('never_sent'):
+                anchor = time.time()
+            else:
+                first = (self._get('hermes:intent:' + job['id']) or {}).get('created_at')
+                anchor = first if _number(first) else time.time()
+            self._state(job['id'], native_admitted_at=anchor)
         return {'status': 'submitted', 'job_id': job['id'], 'native_id': native_id}
 
     async def poll(self, job_id):
@@ -673,11 +687,16 @@ class HermesAdapter:
         return result
 
     def _admitted_elapsed(self, job):
-        # Local wall time since the durably proven remote admission. One-time
-        # backfill for runs admitted before this guard existed (conservative
-        # under-count, documented); afterwards the anchor never moves, so
-        # restarts/reconciles cannot reset the deadline. max(0,...) bounds a
-        # backward local clock jump; a forward jump fails safe (earlier STOP).
+        # Local wall time since the durably proven remote admission (first
+        # attempt once a native run exists). This is an admitted-lifetime
+        # bound for protection, not measured inference time: it includes any
+        # post-admission wait, while queued/waiting polls keep reporting pure
+        # remote telemetry (never charged as execution). One-time backfill for
+        # runs admitted before this guard existed (conservative under-count,
+        # documented); afterwards the anchor never moves, so restarts,
+        # reconciles and recoveries cannot reset the deadline. max(0,...)
+        # bounds a backward local clock jump; a forward jump fails safe
+        # (earlier STOP). The daily counter consumes this same bound.
         state = self._get('hermes:state:' + job['id']) or {}
         admitted = state.get('native_admitted_at')
         if not _number(admitted):
