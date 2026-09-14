@@ -6,6 +6,7 @@ prepared human run (NOT_RUN here); these tests pin the service plumbing that
 must conserve identity, scope, deadlines and precisions either way.
 """
 import asyncio
+import json
 import unittest
 import test_telegram as fixtures
 from gtd_felix.orchestration import OrchestrationWorker
@@ -382,6 +383,223 @@ class MigrationI2Tests(unittest.TestCase):
         self.assertEqual(receipt["status"], "reserved", receipt)
         with self.assertRaises(ValueError):
             migrate_i2_results(self.service.store)
+
+
+class OutboxScopeTests(unittest.TestCase):
+    """_outbox_intents reads live intents only, never confirmed history."""
+
+    def setUp(self):
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+        self.adapter = self.fixture.adapter
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _seed_delivery(self, key, state, event):
+        with self.service.store.transaction() as db:
+            db.execute(
+                "INSERT INTO deliveries(id, item_id, item_version, channel, target_key,"
+                " semantic_key, state, payload_json, segments_json, created_at, retry_at, confirmed_at)"
+                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                (key, None, None, "telegram", self.adapter.config.account,
+                 key, state,
+                 json.dumps({"method": "sendMessage", "payload": {}, "event": event,
+                             "ordinal": 0, "account": self.adapter.config.account}),
+                 "[]", None, None, None))
+
+    def test_confirmed_history_is_not_decoded_as_live_intent(self):
+        for index in range(3):
+            self._seed_delivery(f"hist-{index}", "confirmed", f"old-event-{index}")
+        self._seed_delivery("live-0", "uncertain", "live-event")
+        intents = self.adapter._outbox_intents()
+        self.assertEqual([(i["event"], i["status"]) for i in intents],
+                         [("live-event", "uncertain")])
+
+
+class LongSummaryTests(unittest.TestCase):
+    """GUIA section 8: automatic long returns arrive brief; full stays on tap."""
+
+    def setUp(self):
+        import dataclasses
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+        self.adapter = self.fixture.adapter
+        self.adapter.config = dataclasses.replace(self.adapter.config, auto_return=True)
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _long_item(self):
+        capture = self.service.capture("felix", "i2-sum-long", "Informe extenso")["item"]
+        item = self.service.execute("felix", {"operation_id": "i2-sum-clarify", "action": "clarify",
+            "item_id": capture["id"], "expected_version": capture["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "Resultado útil",
+                       "completion_criteria": "Criterio comprobable"}})["item"]
+        body = "".join(f"Hecho verificado {index:04d}. " for index in range(400))
+        item = self.service.execute("felix", {"operation_id": "i2-sum-mat", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": body, "title": "Informe"}})["item"]
+        return item, body
+
+    def test_automatic_long_notification_sends_brief_head_with_full_on_demand(self):
+        item, body = self._long_item()
+        key = self.fixture.notification(item)
+        event = next(e for e in self.service.pending_events("gtd-notification", "local")
+                     if e["event_key"] == key)
+        self.assertGreater(len(self.adapter._notification_content(event)), 2)
+        sent_before = len(self.fixture.http.sent)
+        self.assertTrue(run(self.adapter._deliver_notification(event, automatic=True)))
+        fresh = self.fixture.http.sent[sent_before:]
+        self.assertEqual(len(fresh), 1)
+        self.assertIn("Informe extenso", fresh[0]["text"])
+        self.assertNotIn(body[-200:], fresh[0]["text"])
+        buttons = [b["text"] for row in fresh[0]["reply_markup"]["inline_keyboard"] for b in row]
+        self.assertIn("Ver resultado", buttons)
+        run(self.adapter.show_result(item["id"]))
+        joined = "\n".join(m["text"] for m in self.fixture.http.sent[sent_before + 1:])
+        self.assertIn(body[:200], joined)
+        self.assertIn(body[-200:], joined)
+
+    def test_short_notification_still_arrives_inline(self):
+        capture = self.service.capture("felix", "i2-sum-short", "Nota breve")["item"]
+        item = self.service.execute("felix", {"operation_id": "i2-sum-short-clarify", "action": "clarify",
+            "item_id": capture["id"], "expected_version": capture["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "Listo",
+                       "completion_criteria": "Hecho"}})["item"]
+        item = self.service.execute("felix", {"operation_id": "i2-sum-short-mat", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": "Detalle corto.", "title": "Nota"}})["item"]
+        key = self.fixture.notification(item)
+        event = next(e for e in self.service.pending_events("gtd-notification", "local")
+                     if e["event_key"] == key)
+        self.assertLessEqual(len(self.adapter._notification_content(event)), 2)
+        sent_before = len(self.fixture.http.sent)
+        self.assertTrue(run(self.adapter._deliver_notification(event, automatic=True)))
+        fresh = self.fixture.http.sent[sent_before:]
+        self.assertEqual(len(fresh), 1)
+        self.assertIn("Detalle corto.", fresh[0]["text"])
+
+
+class TransportContinuityTests(unittest.TestCase):
+    """Capture, precision and return share one affair through the transport.
+
+    Identity comes from durable Telegram source identity and explicit reply
+    prompts, never from wording similarity. Wording choices of the principal
+    (relative dates, thread linking) stay in the prepared human run.
+    """
+
+    def setUp(self):
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+        self.adapter = self.fixture.adapter
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _tg_message(self, message_id, text, **extra):
+        return {"message_id": message_id, "date": 100, "chat": {"id": 9},
+                "from": {"id": 7}, "text": text, **extra}
+
+    def test_capture_precision_and_return_share_one_affair(self):
+        before = len(self.service.query())
+        run(self.adapter._message(self._tg_message(7201, "Poner al día Telemedicina: responsabilidades"),
+                                  "ev-7201"))
+        self.assertEqual(len(self.service.query()), before + 1)
+        item = next(i for i in self.service.query() if i.get("source", {}).get("message_id") == 7201)
+        self.assertEqual(item["source"]["provider"], "telegram")
+        # Transport retry of the same Telegram message never forks an affair.
+        run(self.adapter._message(self._tg_message(7201, "Poner al día Telemedicina: responsabilidades"),
+                                  "ev-7201-retry"))
+        self.assertEqual(len(self.service.query()), before + 1)
+        # Principal-side clarification and precisions conserve the affair.
+        item = self.service.execute("felix", {"operation_id": "i2-tc-clarify", "action": "clarify",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "Mapa vigente",
+                       "completion_criteria": "Responsables por frente"}})["item"]
+        current = self.service.get_item(item["id"])
+        item = self.service.execute("felix", {"operation_id": "i2-tc-due", "action": "edit",
+            "item_id": item["id"], "expected_version": current["version"],
+            "fields": {"due_at": LOOK_AFTER_MONDAY}})["item"]
+        self.assertEqual(self.service.get_item(item["id"])["due_at"], LOOK_AFTER_MONDAY)
+        item = self.service.execute("felix", {"operation_id": "i2-tc-mat", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": "Mapa vigente por frentes.", "title": "Mapa"}})["item"]
+        key = self.fixture.notification(item)
+        event = next(e for e in self.service.pending_events("gtd-notification", "local")
+                     if e["event_key"] == key)
+        self.assertIn("Mapa vigente por frentes.", "\n".join(self.adapter._notification_content(event)))
+
+    def test_reply_precision_applies_to_prompted_affair_only(self):
+        run(self.adapter._message(self._tg_message(7211, "Encargo con dato"), "ev-7211"))
+        item = next(i for i in self.service.query() if i.get("source", {}).get("message_id") == 7211)
+        others_before = len(self.service.query())
+        self.adapter._event("telegram-prompt", 7300,
+            {"action": "edit", "item_id": item["id"], "expected_version": item["version"]})
+        run(self.adapter._message(
+            self._tg_message(7212, "Encargo con dato corregido",
+                             reply_to_message={"message_id": 7300}), "ev-7212"))
+        self.assertEqual(len(self.service.query()), others_before)
+        self.assertEqual(self.service.get_item(item["id"])["title"], "Encargo con dato corregido")
+
+    def test_unrelated_transport_message_stays_a_separate_affair(self):
+        run(self.adapter._message(self._tg_message(7221, "Poner al día Telemedicina"), "ev-7221"))
+        count = len(self.service.query())
+        run(self.adapter._message(self._tg_message(7222, "Comprar café"), "ev-7222"))
+        self.assertEqual(len(self.service.query()), count + 1)
+        other = next(i for i in self.service.query() if i.get("source", {}).get("message_id") == 7222)
+        self.assertEqual(other["kind"], "capture")
+
+
+class UndoPruneTests(unittest.TestCase):
+    """Undoing a result write leaves no orphan rows and stable stubs."""
+
+    def setUp(self):
+        self.fixture = fixtures.TelegramTests()
+        self.fixture.setUp()
+        self.service = self.fixture.service
+
+    def tearDown(self):
+        self.fixture.tearDown()
+
+    def _action(self, tag):
+        capture = self.service.capture("felix", f"i2-undo-{tag}", "Sonda")["item"]
+        return self.service.execute("felix", {"operation_id": f"i2-undo-{tag}-clarify", "action": "clarify",
+            "item_id": capture["id"], "expected_version": capture["version"],
+            "fields": {"kind": "action", "commitment": "committed", "outcome": "O",
+                       "completion_criteria": "C"}})["item"]
+
+    def test_undo_of_first_material_prunes_row_and_keeps_empty_stubs(self):
+        item = self._action("first")
+        item = self.service.execute("felix", {"operation_id": "i2-undo-first-mat", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": "v1", "title": "T"}})["item"]
+        self.assertEqual(len(self.service.materials(item["id"])), 1)
+        receipt = self.service.execute("felix", {"operation_id": "i2-undo-first-undo", "action": "undo",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"operation_id": "i2-undo-first-mat"}})
+        self.assertEqual(receipt["status"], "applied", receipt)
+        self.assertEqual(self.service.materials(item["id"]), [])
+        self.assertEqual(self.service.get_item(item["id"]).get("materials"), [])
+
+    def test_undo_of_second_version_keeps_first(self):
+        item = self._action("second")
+        item = self.service.execute("felix", {"operation_id": "i2-undo-second-mat1", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": "v1", "title": "T"}})["item"]
+        first = self.service.materials(item["id"])[-1]
+        item = self.service.execute("felix", {"operation_id": "i2-undo-second-mat2", "action": "put_material",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"content": "v2", "title": "T", "material_id": first["id"]}})["item"]
+        receipt = self.service.execute("felix", {"operation_id": "i2-undo-second-undo", "action": "undo",
+            "item_id": item["id"], "expected_version": item["version"],
+            "fields": {"operation_id": "i2-undo-second-mat2"}})
+        self.assertEqual(receipt["status"], "applied", receipt)
+        remaining = self.service.materials(item["id"])
+        self.assertEqual([(m["id"], m["version"]) for m in remaining], [(first["id"], 1)])
 
 
 if __name__ == "__main__":
