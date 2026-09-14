@@ -264,3 +264,30 @@ ensayo de realización según GUIA. La comprobación KORA se revalidó en este
 checkout con `python3 kora_cli.py --knowledge-root /home/felix/kora-knowledge
 check` (ok, 523 activos, 18 archivados, sin incidencias); no sustituye
 validación del producto.
+
+## E26 · realizado fallback Gmail `6b97caf` (2026-09-14)
+
+Candidato vs instalado: idénticos 4/4 hashes (`google_sources`,
+`google_transport`, `source_attachments`, `application` desde `6b97caf`;
+remoto en sync tras push normal). Sin migración de datos. Config DeepSeek,
+gateway, perfil y límites intactos. Corte mínimo con un escritor; reapertura
+con salud ok, receptor único (1 proceso), gateway estable NRestarts 92,
+presupuesto idéntico antes/después (active 0, committed 1028.4 s / 4.0 USD,
+remaining 6171.6 s, período 2026-09-14), pendientes [], Gmail degraded con 4
+pendientes gigantes conocidos, calendarios complete.
+
+Lectura real con código instalado (sólo lectura, 1 raw+1 full por mensaje,
+sin modelo ni escrituras): `1a07ca…f6e` raw rehusado `response_too_large`,
+full 52 540 B plain con texto 6 373 y 4 adjuntos referenciados;
+`1a07ca…966` raw 7 791 323 B (supera tope parser 4 MiB ⇒ `message_too_large`
+en la ruta instalada) y full 34 670 B plain con texto 2 179 y 1 adjunto
+referenciado. Ambos con identidad, missing_text 0 y manifiesto coherente.
+Lectura ≠ selección/clasificación: ninguna evaluación, asunto ni material
+creado; adjuntos sólo referenciados, no leídos.
+
+TM `5869a0bb` v29: payload plan preparado y validado offline (5 pasos,
+selección de fuentes TM primera, resto del encargo preservado, procedencia
+de dirección, sin frase humana nueva), NO escrito; sin `request_review`.
+Siguiente trabajo legítimo pendiente de decisión. KORA reproducible con 1
+hallazgo preexistente ajeno (`source_error_codes.py` de E17 sin declarar en
+resources); nada de los 4 realizados. C2/aceptación humana: NOT_RUN.
