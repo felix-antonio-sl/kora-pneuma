@@ -1082,3 +1082,85 @@ def migrate_i3_sources(store):
                    "at": datetime.now(timezone.utc).isoformat()}
         store.db.execute("INSERT OR REPLACE INTO metadata VALUES('migration:i3',?)", (encode(receipt),))
         return receipt
+
+
+def incorporate_executor(store, operation_id, expected_actor_config, new_executor):
+    """Offline maintenance: add one executor identity to actor_config, once.
+
+    Startup keeps rejecting a divergent actor config (see
+    GTDDomain._configure_actors); this is the only supported path to widen
+    the executor set of an existing base. It is an explicit operator action,
+    not a startup side effect: call it with processes stopped and the base
+    opened as a bare Store (never by constructing GTDService with the new
+    config, which would raise before any change).
+
+    The change is strictly additive: owner/principal and prior executors are
+    preserved, exactly one non-empty new executor identity is appended, and
+    nothing else is touched (no items, versions, authors, mandates, sources,
+    materials, budget, runs, receipts, or prior exports). Registering the
+    identity grants no access by itself: the auxiliary still needs its own
+    token, bot registration, and mandate before it can admit work.
+
+    Preconditions (all verified before any write, in one transaction, so a
+    refused attempt leaves no changes):
+    - expected_actor_config matches the stored actor_config exactly;
+    - new_executor is a non-empty identity with no collision or role
+      reassignment against owner/principal/prior executors;
+    - no live work under the canonical control predicate (the same one as
+      ExecutionControl._active_run_rows: non-terminal run state or
+      integration='pending', which covers the completed-uncertain edge that
+      a plain state check would miss).
+
+    Idempotency: the receipt is stored under
+    maintenance:incorporate-executor:<operation_id> in the same transaction.
+    An exact repeat returns the stored receipt with no further effect; the
+    same identifier with a different request is rejected.
+    """
+    if not isinstance(operation_id, str) or not operation_id.strip():
+        raise ValueError("invalid_operation_id")
+    if (not isinstance(expected_actor_config, dict)
+            or set(expected_actor_config) != {"owner_actor", "principal_actor", "executor_actors"}
+            or not isinstance(expected_actor_config["owner_actor"], str)
+            or not expected_actor_config["owner_actor"].strip()
+            or not isinstance(expected_actor_config["principal_actor"], str)
+            or not expected_actor_config["principal_actor"].strip()
+            or not isinstance(expected_actor_config["executor_actors"], list)
+            or any(not isinstance(a, str) for a in expected_actor_config["executor_actors"])):
+        raise ValueError("invalid_expected_config")
+    request = {"expected_actor_config": expected_actor_config, "new_executor": new_executor}
+    with store.transaction():
+        key = "maintenance:incorporate-executor:" + operation_id
+        row = store.db.execute("SELECT value FROM metadata WHERE key=?", (key,)).fetchone()
+        if row:
+            prior = json.loads(row[0])
+            if prior.get("request") != request:
+                raise ValueError("operation_id_conflict")
+            return prior["receipt"]
+        current_row = store.db.execute(
+            "SELECT value FROM metadata WHERE key='actor_config'").fetchone()
+        current = json.loads(current_row[0]) if current_row else None
+        if current is None:
+            raise ValueError("actor_config_absent")
+        if current != expected_actor_config:
+            raise ValueError("actor_config_mismatch")
+        if not isinstance(new_executor, str) or not new_executor.strip():
+            raise ValueError("invalid_actor")
+        known = {expected_actor_config["owner_actor"], expected_actor_config["principal_actor"],
+                 *expected_actor_config["executor_actors"]}
+        if new_executor in known:
+            raise ValueError("actor_collision")
+        live = store.db.execute(
+            "SELECT 1 FROM runs WHERE state NOT IN ('completed','failed','cancelled','expired')"
+            " OR integration='pending' LIMIT 1").fetchone()
+        if live:
+            raise ValueError("active_work_present")
+        after = {"owner_actor": expected_actor_config["owner_actor"],
+                 "principal_actor": expected_actor_config["principal_actor"],
+                 "executor_actors": [*expected_actor_config["executor_actors"], new_executor]}
+        store.db.execute("INSERT OR REPLACE INTO metadata VALUES('actor_config',?)", (encode(after),))
+        receipt = {"status": "applied", "operation_id": operation_id,
+                   "new_executor": new_executor, "before": current, "after": after,
+                   "at": datetime.now(timezone.utc).isoformat()}
+        store.db.execute("INSERT OR REPLACE INTO metadata VALUES(?,?)",
+                         (key, encode({"request": request, "receipt": receipt})))
+        return receipt
