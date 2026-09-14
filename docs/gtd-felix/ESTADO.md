@@ -238,7 +238,10 @@ completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
 Siguiente: **I4/G7** sobre I3 instalado (primera sincronía o retorno
 legítimo aún por observar; sin actividad sintética para probarlo), con recorrido
-humano listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
+humano listo para coordinar por dirección. I4 en curso: el recorrido Gmail vive
+detenido en admisión sin run (reserva intacta detenida ocupa el slot hasta el
+corte del período; candidato local `2eb974b` con diagnóstico cerrado y cierre
+administrativo, sin instalar ni publicar hasta revisión). Fuentes selectivas ya autorizadas en
 ámbito; cobertura incremental y retención en este incremento.
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
