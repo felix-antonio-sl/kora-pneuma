@@ -53,6 +53,15 @@ SUMMARY_ERRORS = (BRIDGE_ERRORS
                   | SYNC_ERRORS)
 
 
+class TransportError(RuntimeError):
+    """Canonical transport failure type shared without import cycles.
+
+    google_transport raises it; google_sources handles it. Defined here
+    (leaf module) because google_transport already imports google_sources,
+    so google_sources cannot import it from there.
+    """
+
+
 def _is_http_status_code(code):
     """Bounded HTTP status pattern from a status int, never free text."""
     return (isinstance(code, str) and code.startswith('http_')

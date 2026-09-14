@@ -495,6 +495,47 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual('complete', final['health'])
         self.assertEqual(['first', 'tm', 'hd', 'last'], self.evaluated)
 
+    async def test_transport_error_contained_per_message_and_retried(self):
+        # TransportError (RuntimeError family) must not abort the pass: the
+        # message stays pending with a closed reason, the adapter stays
+        # error-free, and a later retry with the same identity completes
+        # exactly once (live signature: attempts+1/evaluation_pending/
+        # revision None + adapter None + monitor-only selection_unavailable).
+        from gtd_felix.source_error_codes import TransportError
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.transport.add(fixtures.GMAIL + '/messages',
+            {'maxResults': 2, 'includeSpamTrash': 'true', 'q': 'after:1785556800'},
+            {'messages': [{'id': 'm1'}]})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('http_transport_failure'))
+        first = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', first['health'])
+        self.assertIsNone(first['adapter'].get('error'))
+        self.assertEqual('evaluation_unavailable',
+            first['pending_reads']['m1']['reason'])
+        self.assertNotIn('http_transport_failure', '\n'.join(self.service.store.db.iterdump()))
+        self.profile('20')
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            fixtures.raw_message('m1'))
+        self.history('10', ['m1'], end='20')
+        second = await self.adapter.synchronize('mail')
+        self.assertEqual('complete', second['health'])
+        self.assertEqual({}, second['pending_reads'])
+        self.assertEqual({'m1'}, set(self.evaluated))
+        self.assertEqual(1, len(self.service.query()))
+
+    async def test_transport_error_at_page_level_degrades_closed(self):
+        # A page-level transport failure degrades with the closed
+        # transport_unavailable code instead of escaping the pass silently.
+        from gtd_felix.source_error_codes import TransportError
+        self.transport.add(fixtures.GMAIL + '/profile', {},
+            TransportError('http_transport_failure'))
+        info = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', info['health'])
+        self.assertEqual('transport_unavailable', info['adapter']['error'])
+        self.assertNotIn('http_transport_failure', '\n'.join(self.service.store.db.iterdump()))
+
     async def test_unknown_transport_value_error_is_generic_without_marker(self):
         # P2: unknown transport/validation ValueError must not persist as a
         # marker. Closed frontier maps it to source_unavailable before

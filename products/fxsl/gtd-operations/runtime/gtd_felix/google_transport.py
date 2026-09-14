@@ -11,14 +11,13 @@ from urllib.parse import quote
 import aiohttp
 
 from .google_sources import canonical_gmail_query
+from .source_error_codes import TransportError
 
 GMAIL = 'https://gmail.googleapis.com/gmail/v1/users/me'
 OIDC = 'https://openidconnect.googleapis.com/v1/userinfo'
 TOKEN = 'https://oauth2.googleapis.com/token'
-
-
-class TransportError(RuntimeError):
-    """Only a stable, secret-free error code crosses the transport boundary."""
+# Only a stable, secret-free error code crosses the transport boundary
+# (TransportError itself lives in source_error_codes; re-exported here).
 
 
 class GoogleTransport:

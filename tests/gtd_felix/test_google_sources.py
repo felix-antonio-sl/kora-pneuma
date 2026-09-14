@@ -174,6 +174,20 @@ class GoogleSourceTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['sync']['coverage'],'degraded')
         self.assertEqual(result['adapter']['error'],'http_429')
 
+    async def test_message_transport_error_stays_pending_without_aborting_page(self):
+        # TransportError (the transport's own RuntimeError) on a single
+        # message must degrade that read with a closed reason instead of
+        # escaping synchronize and aborting the whole pass invisibly.
+        from gtd_felix.source_error_codes import TransportError
+        self.profile()
+        self.transport.add(GMAIL + '/messages', {'maxResults': 2, 'includeSpamTrash': 'true'},
+            {'messages': [{'id': 'm1'}]})
+        self.transport.add(GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('http_transport_failure'))
+        result = await self.adapter.synchronize('mail')
+        self.assertEqual(result['sync']['cursor'], '10')
+        self.assertEqual(result['pending_reads']['m1']['reason'], 'evaluation_unavailable')
+
     async def test_message_404_is_not_inferred_as_permanent_deletion(self):
         first=await self.seed_mail();identity=first['sync']['objects']['m1']['item_id'];self.profile('20')
         self.transport.add(GMAIL+'/history',{'maxResults':2,'startHistoryId':'10'}, {'history':[{'id':'11','labelsRemoved':[{'message':{'id':'m1'}}]}],'historyId':'20'})

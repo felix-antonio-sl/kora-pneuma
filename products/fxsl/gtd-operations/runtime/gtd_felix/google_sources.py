@@ -27,7 +27,7 @@ from urllib.parse import quote
 import uuid
 
 from .source_entries import get as get_entry, record_decision
-from .source_error_codes import sanitize_adapter_error
+from .source_error_codes import sanitize_adapter_error, TransportError
 from .source_sync import _hash, _json, _now
 DECIDED = frozenset({'selected', 'noise', 'uncertain'})
 
@@ -332,15 +332,19 @@ class GoogleSources:
             if identity in adapter.get('pending_reads', {}):
                 adapter['pending_reads'][identity]['resolving_revision'] = obj['revision']
             return obj
-        except SourceError as exc:
-            if str(exc) not in {'response_too_large','message_too_large','mime_parse_degraded',
+        except (SourceError, TransportError) as exc:
+            if isinstance(exc, TransportError):
+                code = 'evaluation_unavailable'
+            elif str(exc) not in {'response_too_large','message_too_large','mime_parse_degraded',
                 'mime_text_decode_degraded','invalid_raw_message','message_text_too_large','http_404',
                 'message_metadata_missing','message_identity_or_raw_missing'}:
                 raise
+            else:
+                code = str(exc)
             stamp = _now()
             pending = adapter.setdefault('pending_reads', {}).setdefault(identity,
                 {'external_id':identity, 'observed_at':stamp, 'attempts':0})
-            pending.update(reason=str(exc), last_attempt_at=stamp, attempts=pending['attempts']+1)
+            pending.update(reason=code, last_attempt_at=stamp, attempts=pending['attempts']+1)
             pending.pop('resolving_revision', None)
             return dict(external_id=identity, revision='unread-observation:' + _hash([identity, pending['observed_at'], pending['reason']]), status='degraded',
                         text=None, original=None, sha256=None, url=self._mail_url(cfg, identity))
@@ -436,7 +440,7 @@ class GoogleSources:
             pending['resolving_revision'] = obj['revision']
             self._save(partition, adapter)
             return obj
-        except (SourceError, OSError, asyncio.TimeoutError):
+        except (SourceError, OSError, asyncio.TimeoutError, TransportError):
             pending['reason'] = 'evaluation_unavailable'
             pending.pop('resolving_revision', None)
             self._save(partition, adapter)
@@ -682,7 +686,7 @@ class GoogleSources:
             adapter.update(active=True, status='in_progress', yielded_at=_now())
             self._save(partition, adapter)
             return self.inspect(source_id)
-        except (SourceError, OSError, asyncio.TimeoutError, ValueError) as exc:
+        except (SourceError, OSError, asyncio.TimeoutError, ValueError, TransportError) as exc:
             raw = str(exc) if isinstance(exc, (ValueError, SourceError)) else 'transport_unavailable'
             # Closed frontier: only domain literals (incl. bounded http_<status>)
             # propagate to sync.degrade and durable adapter state; anything else
