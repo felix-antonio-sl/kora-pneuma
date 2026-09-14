@@ -1190,6 +1190,61 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         self.assertLessEqual(
             self.control.budget()["committed_runtime_seconds"], final["observed_runtime_seconds"] + 60)
 
+    async def test_never_sent_wait_does_not_charge_then_first_send_owns_deadline(self):
+        # E30: never_sent wait contributes nothing; the effective first send
+        # owns the deadline across ack loss + restart. Fails on fae79e3
+        # (observed ~125 from stale intent.created_at instead of ~5).
+        root = self.control.reserve("gtd-felix", "parent-30", self._family_request("Parent"))["job_id"]
+        child = self.control.reserve("gtd-felix", "child-30", self._family_request(
+            "Child", parent_job_id=root, max_cost_usd=2, max_runtime_seconds=60, max_descendants=0))["job_id"]
+        self.run_status = "running"
+        t0 = time.time()
+        self.assertEqual((await self.adapter.submit(root, "Parent"))["status"], "submitted")
+        waiting = await self.adapter.submit(child, "Child")
+        self.assertEqual(waiting["error"], "native_slot_busy")
+        self.assertIsNone((self.adapter._get("hermes:state:" + child) or {}).get("first_send_at"))
+        terminal = {"native_identity": self.control.get_job(root)["native"], "native_status": "completed",
+            "terminal": True, "runtime_seconds": 5, "cost_usd": None, "evidence_reference": "fixture://done"}
+        self.assertEqual(self.control.observe(root, terminal)["status"], "recorded")
+        # First real send of the child at t0+120 loses its ack (uncertain).
+        self.post_delay = 0.3
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 120):
+            lost = await self.adapter.reconcile(child)
+        self.assertEqual(lost["status"], "uncertain")
+        self.assertEqual(len(self.runs), 2)
+        # Recovery 5 s later reuses the same run with the first-send deadline
+        # (behavioral assertion first: base imputes ~125 here).
+        self.post_delay = 0
+        self.restart()
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 125):
+            found = await self.adapter.reconcile(child)
+        self.assertEqual(found["native_status"], "running")
+        self.assertEqual(len(self.runs), 2)
+        obs = found["observation"]
+        self.assertGreaterEqual(obs["runtime_seconds"], 4)
+        self.assertLessEqual(obs["runtime_seconds"], 6)
+        sent_at = (self.adapter._get("hermes:state:" + child) or {}).get("first_send_at")
+        self.assertIsNotNone(sent_at)
+        self.assertGreaterEqual(sent_at, t0 + 119)
+        self.assertLessEqual(sent_at, t0 + 121)
+        self.assertTrue(self.control.validate(child, "prepare_private")["allowed"])
+        # Past the real limit the same path exhausts and stops by itself.
+        from gtd_felix.orchestration import OrchestrationWorker
+        worker = OrchestrationWorker(self.service, self.control, self.adapter,
+            {"actor": "gtd-felix", "principal_bot_id": "fixture", "timezone": "America/Santiago",
+             "reservation": {"max_cost_usd": 2, "max_runtime_seconds": 60, "max_retries": 0, "max_descendants": 0}})
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 185):
+            state = worker._state()
+            state["runs"][child] = {"phase": "submitted", "event_keys": [], "prompt": "Synthetic",
+                                    "durable": False, "item": self.item}
+            worker._save(state)
+            await worker._advance(worker._state(), child)  # crossing poll
+            await worker._advance(worker._state(), child)  # STOP fires here
+        stops = [r for r in self.requests if r[0] == "POST" and r[1].endswith("/stop")]
+        self.assertEqual(1, len(stops))
+        self.assertTrue(self.control.get_job(child)["stop_requested"])
+        self.assertFalse(self.control.get_job(child)["terminal"])
+
 
 if __name__ == '__main__':
     unittest.main()
