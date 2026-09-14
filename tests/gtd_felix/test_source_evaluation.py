@@ -229,6 +229,45 @@ class SourceEvaluationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(_route_allowed({}))
         self.assertFalse(_route_allowed(None))
 
+    async def test_monitor_summary_names_incomplete_selection_with_receipt_code(self):
+        # Message-level bridge failures stay pending reads; the summary says
+        # selection_incomplete while the per-message receipt keeps the closed
+        # code. Neither retains the body.
+        self.messages(['noise'])
+        async def failed(*args):
+            raise ValueError('bridge_helper_turn_failed')
+        self.evaluation.bridge = failed
+        result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual('partial', result['status'])
+        summaries = [s for s in self.monitor.inspect()['sources'] if s['source_id'] == 'mail']
+        self.assertEqual(1, len(summaries))
+        self.assertEqual('selection_incomplete', summaries[0]['last_error'])
+        self.assertNotIn('PRIVATE_BODY', json.dumps(summaries[0]))
+        receipts = [json.loads(row[0]) for row in self.service.store.db.execute(
+            "SELECT value FROM metadata WHERE key LIKE 'source-evaluation:receipt:%'")]
+        self.assertEqual(['bridge_helper_turn_failed'], [row['error'] for row in receipts])
+        self.assertNotIn('PRIVATE_BODY', json.dumps(receipts))
+
+    async def test_monitor_summary_surfaces_transport_code(self):
+        self.profile(); self.profile(); self.step({'messages': 'notalist'})
+        result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual('partial', result['status'])
+        summaries = [s for s in self.monitor.inspect()['sources'] if s['source_id'] == 'mail']
+        self.assertEqual('invalid_message_list', summaries[0]['last_error'])
+
+    async def test_monitor_summary_hides_unknown_failures(self):
+        self.messages(['noise'])
+        async def broken(*args):
+            raise RuntimeError('PRIVATE_MODEL_TRACEBACK')
+        self.evaluation.bridge = broken
+        result = await self.evaluation.run('gtd-felix', self.job_id, 'mail')
+        self.assertEqual('partial', result['status'])
+        summaries = [s for s in self.monitor.inspect()['sources'] if s['source_id'] == 'mail']
+        self.assertEqual('selection_incomplete', summaries[0]['last_error'])
+        dump = '\n'.join(self.service.store.db.iterdump())
+        self.assertNotIn('PRIVATE_MODEL_TRACEBACK', dump)
+        self.assertNotIn('PRIVATE_BODY_noise', dump)
+
     async def test_mcp_to_authenticated_http_uses_same_parent_without_bodies(self):
         from aiohttp import web, ClientSession
         from gtd_felix.application import create_app

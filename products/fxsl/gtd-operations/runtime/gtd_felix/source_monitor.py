@@ -198,7 +198,14 @@ class SourceMonitor:
                     await transport.connect()
                 info = await adapter.synchronize(source_id)
                 if info['health'] == 'degraded':
-                    error = 'selection_incomplete'
+                    # Surface the adapter-recorded closed code (bridge, cursor,
+                    # transport) so the durable summary names the class; shapes
+                    # outside the closed code hygiene stay generic, with no
+                    # bodies or credentials ever retained here.
+                    code = (info.get('adapter') or {}).get('error')
+                    error = (code if isinstance(code, str) and len(code) < 100
+                             and code.replace('_', '').isalnum()
+                             else 'selection_incomplete')
             except asyncio.CancelledError:
                 self._save(source_id, adapter.inspect(source_id), error='selection_interrupted')
                 raise
