@@ -20,9 +20,10 @@ E28–E31 (vigilancia temporal del run). Aceptación humana: NOT_RUN.
   ni archivos sin origen git. Pin Hermes `5eb99eb`, gateway estable,
   DeepSeek v4.1 Flash / opencode-go / max, 7200 s/día America/Santiago,
   plaza única, un escritor, receptor Telegram único.
-- Vivo (sólo lectura, ~21:15 UTC): salud `ok`, `pending` 0, committed
-  1881.06 s con imputación contable 6.0 USD (**no** es coste de proveedor
-  medido), remaining 5318.94 s, `cost_control` false.
+- Vivo (sólo lectura, periodo diario 2026-09-14 America/Santiago): salud
+  `ok`, `pending` 0 no-terminal. Contabilidad observada: runtime imputado
+  1881.06 s, imputación contable committed_cost_usd=6.0 USD (**no** es coste
+  de proveedor medido), remaining 5318.94 s, active 0, `cost_control` false.
 - Datos (export `enc39-recuperacion/export-e39.zip`, 7 626 918 B,
   `55e17bf8…66b7`): esquema v4, 261 asuntos / 332 operaciones / 405 eventos /
   300 originales / 8 materiales / 12 evaluaciones / 52 entregas confirmadas /
@@ -84,7 +85,7 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Instalacion E44 NO completada; principal recuperado intacto | Paquete E43 valido en archivos; el vivo rechaza el ejecutor nuevo (pin actor_config en DB, sin via de producto; migracion no autorizada). Corte revertido por procedimiento: servicio/gateway sanos, helper 0 runs, perfil/board inactivos preservados. Siguiente decision: via para el actor ejecutor. Vivo util NOT_RUN |
+| G7 delegar | Candidato E45 en revision (sin push/instalar); principal intacto | Operacion offline incorporate_executor (service.py) solo-aditiva con recibo durable: 10 focales + ensayo sobre export real (261 asuntos, reconcile, delta exacto, re-export/re-restore) PASS. E44 perfil/board inactivos preservados con huellas. Siguiente decision: realizar migracion y corte E44 corregido. Vivo util NOT_RUN |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
 bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
