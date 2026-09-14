@@ -308,9 +308,33 @@ herramientas (sin `source_evaluation`, sin selección, sin material);
 integración `discarded`, slot/ciclo limpios (active 0), sin entregas
 duplicadas. La guarda local 240 s nunca disparó (observado ~0 s; resolución
 None, sin STOP). Gmail intacto: 4 pendientes gigantes, calendarios complete.
-Presupuesto: committed 1268.4→1628.7 s (+360.3 pared), remaining
-5931.6→5571.3 s, imputación conservadora 1 USD; coste de proveedor observado
+Presupuesto (corrección E28, historia conservada): consumo del trabajo 600.36 s
+(committed 1028.38→1628.74, remaining 6171.62→5571.26); el +360.3 del reporte
+comparaba contra la reserva abierta 1268.38 que ya incluía 240. Imputación
+conservadora 1 USD, no cobro acreditado; coste de proveedor observado
 desconocido (117/117 obs. con cost NULL). TM v30 active, sin material nuevo.
 KORA `ok:true` tras declarar `source_error_codes.py` en resources de
 gtd-operations (1 línea, sin cambio de conducta ni reinstalación).
 C2/aceptación humana y mapa global: NOT_RUN.
+
+## E28 · candidato: vigilancia temporal ante proveedor en silencio (sin instalar)
+
+Hipótesis de dirección confirmada por evidencia durable del run `ca99acbc`:
+116 polls running con `updated_at` congelado mantuvieron observed ~0.0065 s
+y `validate` nunca alcanzó `job_runtime_exhausted` (límite 240); el fallo
+terminal registró 600.36 s. Fallo de proveedor y defecto de protección
+coexistieron; el reporte E27 sólo probaba lo primero.
+
+Candidato (hermes.py, sin instalar): ancla durable `native_admitted_at` al
+acknowledge del dispatch (sólo con run nativo probado; nunca en
+never_sent/incierto); piso local para estado `running` en `_observe_api`
+(`max(telemetría nativa, ahora - ancla)`), con separación
+`native_runtime_seconds` vs `runtime_seconds`; backfill único documentado
+para runs admitidos pre-guardia; queued/waiting sin cambios; STOP
+idempotente post-límite por recibo durable (una llamada remota). Controles
+sin cambios: el call site real (`_advance`→`validate`→`gtd-invalid-stop`+stop)
+ya existía. Límites: kanban sin piso; reloj local salta-adelante falla en
+seguro; coste sigue NULL (sin invención monetaria). Regresiones: 3 en
+`test_hermes` (stall+STOP durable, supervivencia a reinicio, sano+never_sent);
+fallan en base, pasan en candidato. Focales: hermes+control+daily 144 OK,
+spent+codex_probe 22 OK. C2/minuta/aceptación: NOT_RUN.
