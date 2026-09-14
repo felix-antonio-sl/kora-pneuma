@@ -10,8 +10,9 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
 C1 operativo; C2–C6 abiertos. I1 publicado en origen (`9896336` verificado en
-remoto). I2 implementado como candidato integrado y verificable en aislamiento;
-no instalado en vivo, no publicado, aceptación humana NOT_RUN. La dirección
+remoto). I2 publicado (`65f543e`), instalado sobre datos migrados v3 y reabierto
+operativo con reconcile real; runtime y documentación van por separado
+(docs `9449e08` y posteriores), aceptación humana NOT_RUN. La dirección
 arquitectónica e integración las conserva Codex; Hermes sigue como runtime del
 bot. Este encargo se ejecutó en OpenCode según lo asignado, sin llamadas LLM
 pagadas ni envíos reales.
@@ -205,11 +206,10 @@ sin otra copia activa. El estado personal detallado sigue en el servicio.
 
 ## Diseño y próximo incremento
 
-I1 implementado en este candidato (no instalado): `store` v2 con
-`work_cycles`/`runs`/`run_observations`, `control` y `orchestration` sobre tablas
-con lecturas acotadas, migración con comparación semántica y rollback con replay
-por identidad. Detalle y decisiones en GUIA §§6–7 y en este archivo. No iniciar
-I2–I5 por anticipado salvo dependencia mínima justificada.
+I1 implementado, publicado e instalado (v2 y luego v3/v4 por I2/I3):
+`store` con `work_cycles`/`runs`/`run_observations`, `control` y `orchestration`
+sobre tablas con lecturas acotadas, migración con comparación semántica y
+rollback ensayado. Detalle y decisiones en GUIA §§6–7 y en este archivo.
 
 Límites de I1: materiales, evaluaciones, entregas y fuentes se migran en sus
 incrementos; `items.document`/`field_versions` conservan el agregado humano.
@@ -223,19 +223,17 @@ Límites reales medidos: el conjunto activo vive del protocolo (plaza nativa
 asunto más sus antecesores (cadena `parent_id` ≤16); `pending()` de dueño
 devuelve el activo completo sin paginar por ser pequeño por protocolo.
 
-I2 implementado en este candidato (no instalado, no publicado): tablas
+I2 implementado, publicado e instalado: tablas
 `materials`/`assessments`/`deliveries` como autoridad única con stubs de
 referencia en documento, recibos y parches; `due_at` como retorno autorizado;
-outbox de Telegram sobre `deliveries`. Recorrido cubierto con fixtures: tres frentes con
-plazo y precisiones, corrección que invalida, pausa con regreso vigente,
-devolución versionada, lote 15 y material completo por segmentos, todo con
-fixtures (principal humano/LLM: NOT_RUN).
+outbox de Telegram sobre `deliveries`; resumen breve con acceso completo a
+pedido; undo con archivo y restauración exacta. Recorrido cubierto con
+fixtures y verificado en vivo tras reapertura (trabajo legítimo
+completed+integrated con budget exacto). Recorrido humano/LLM: NOT_RUN.
 
-Siguiente: **recorrido humano preparado** con este candidato (ver preparación
-en el recibo de I2), luego **I3 · fuentes**. Instalación viva y publicación
-remota quedan como pasos posteriores identificados (detener procesos, cero
-trabajos en vuelo o incertidumbre reconciliada, aplicar migración y cambio de
-lector/escritor como una entrega, ensayar restore/rollback final).
+Siguiente: **I3 · fuentes** como candidato (en curso), con recorrido humano
+listo para coordinar por dirección. Fuentes selectivas ya autorizadas en
+ámbito; cobertura incremental y retención en este incremento.
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
 actual en SQLite 3.45.1 en memoria, con datos sintéticos. Incluye FK, identidad de
