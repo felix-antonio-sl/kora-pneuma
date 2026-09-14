@@ -194,47 +194,65 @@ def prune_superseded(store, *, provider, account, external_id, keep_revisions, c
 
 
 def run_retention(store):
-    """Effective retention pass: keep latest projected revision per object plus
-    revisions whose bytes are still cited; prune the rest with receipt.
+    """Effective retention pass with an honest keep policy.
 
-    Latest means greatest observed_at (ties: greatest id). Cited means the
-    row digest appears in an item source revision or a material stub. Runs in
-    one transaction; returns a persisted receipt (reruns converge to zero).
+    Keeps, per object: every pending row (live obligations are never pruned),
+    the latest row (by intake sequence, else by observed time), and every row
+    whose bytes are still cited. Rows with neither sequence nor time stay
+    (unknown order is never invented). Pruned ids join the durable archive so
+    migration never resurrects them. One transaction; the receipt persists
+    (reruns converge to zero).
     """
     with store.transaction():
         cited = set()
-        for (document,) in store.db.execute('SELECT document FROM items'):
+        for (document,) in store.db.execute("SELECT document FROM items"):
             item = json.loads(document)
-            for rev in item.get('source_revisions', []) or []:
-                digest = ((rev or {}).get('original') or {}).get('sha256')
+            for rev in item.get("source_revisions", []) or []:
+                digest = ((rev or {}).get("original") or {}).get("sha256")
                 if digest:
                     cited.add(digest)
-            for stub in item.get('materials', []) or []:
-                if stub.get('digest'):
-                    cited.add(stub['digest'])
+            for stub in item.get("materials", []) or []:
+                if stub.get("digest"):
+                    cited.add(stub["digest"])
         groups = store.db.execute(
-            'SELECT provider, account, collection, external_id FROM source_entries'
-            ' GROUP BY provider, account, collection, external_id').fetchall()
+            "SELECT provider, account, collection, external_id FROM source_entries"
+            " GROUP BY provider, account, collection, external_id").fetchall()
         pruned_total, objects = 0, 0
+
+        def order_key(row):
+            try:
+                sequence = json.loads(row["metadata_json"]).get("sequence")
+            except (ValueError, TypeError):
+                sequence = None
+            if isinstance(sequence, int):
+                return (1, sequence, "")
+            if isinstance(row["observed_at"], str) and row["observed_at"]:
+                return (1, 0, row["observed_at"])
+            return (0, 0, "")
+
         for group in groups:
-            rows = store.db.execute(
-                'SELECT id, revision, original_digest, observed_at FROM source_entries'
-                ' WHERE provider=? AND account=? AND collection=? AND external_id=?'
-                ' ORDER BY observed_at, id',
-                (group['provider'], group['account'], group['collection'],
-                 group['external_id'])).fetchall()
+            rows = [dict(r) for r in store.db.execute(
+                "SELECT * FROM source_entries"
+                " WHERE provider=? AND account=? AND collection=? AND external_id=?",
+                (group["provider"], group["account"], group["collection"],
+                 group["external_id"])).fetchall()]
             if len(rows) < 2:
                 continue
             objects += 1
-            keep = {rows[-1]['revision']}
-            keep |= {r['revision'] for r in rows if r['original_digest'] in cited}
+            known = [r for r in rows if order_key(r)[0] == 1]
+            latest = max(known, key=order_key) if known and len(known) == len(rows) else None
             for row in rows:
-                if row['revision'] not in keep:
-                    store.db.execute('DELETE FROM source_entries WHERE id=?', (row['id'],))
-                    pruned_total += 1
-                    _archive_pruned(store, [row['id']])
-        receipt = {'pruned_rows': pruned_total, 'multi_revision_objects': objects,
-                   'cited_digests': len(cited)}
-        store.db.execute('INSERT OR REPLACE INTO metadata VALUES(?,?)',
+                if row["status"] == "pending" or row["original_digest"] in cited:
+                    continue
+                if latest is not None and row["id"] == latest["id"]:
+                    continue
+                if latest is None:
+                    continue  # unknown order: keep rather than invent recency
+                store.db.execute("DELETE FROM source_entries WHERE id=?", (row["id"],))
+                pruned_total += 1
+                _archive_pruned(store, [row["id"]])
+        receipt = {"pruned_rows": pruned_total, "multi_revision_objects": objects,
+                   "cited_digests": len(cited)}
+        store.db.execute("INSERT OR REPLACE INTO metadata VALUES(?,?)",
                          (RETENTION_RECEIPT_KEY, _meta(receipt)))
         return receipt

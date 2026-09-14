@@ -26,8 +26,9 @@ import re
 from urllib.parse import quote
 import uuid
 
-from .source_entries import record_decision
+from .source_entries import get as get_entry, record_decision
 from .source_sync import _hash, _json, _now
+DECIDED = frozenset({'selected', 'noise', 'uncertain'})
 
 
 class VisibleHTML(HTMLParser):
@@ -350,6 +351,25 @@ class GoogleSources:
                 text=None, original=None, sha256=None, url=self._mail_url(cfg, identity))
         return None
 
+    def _stored_decision(self, cfg, partition, adapter, identity, revision):
+        # The table is the selection authority. A decision persisted by
+        # older code in the adapter dict is adopted once, then the table
+        # rules; nothing consults the dict afterwards.
+        row = get_entry(self.store, 'gmail', cfg['account'], partition['collection'],
+                        identity, revision)
+        if row is not None and row['status'] in DECIDED:
+            return {'classification': row['status'],
+                    'reason_code': json.loads(row['metadata_json']).get('reason_code')}
+        legacy = (adapter.get('decisions') or {}).get(_hash([identity, revision]))
+        if (isinstance(legacy, dict) and legacy.get('classification') in DECIDED
+                and legacy.get('external_id') == identity and legacy.get('revision') == revision):
+            record_decision(self.store, provider='gmail', account=cfg['account'],
+                collection=partition['collection'], external_id=identity, revision=revision,
+                decision=legacy['classification'], reason_code=legacy.get('reason_code'))
+            return {'classification': legacy['classification'],
+                    'reason_code': legacy.get('reason_code')}
+        return None
+
     async def _read_selective_message(self, cfg, identity, adapter):
         partition = adapter['partition']
         pending = adapter.setdefault('pending_reads', {}).setdefault(identity,
@@ -365,9 +385,8 @@ class GoogleSources:
             revision = 'message:' + message['historyId'] + ':' + hashlib.sha256(message.original).hexdigest()
             pending['revision'] = revision
             self._save(partition, adapter)
-            key = _hash([identity, revision])
-            decisions = adapter.setdefault('decisions', {})
-            decision = decisions.get(key)
+            stored = self._stored_decision(cfg, partition, adapter, identity, revision)
+            decision = stored
             if int(message['internalDate']) < cfg['since_epoch'] * 1000:
                 decision = {'classification': 'noise', 'reason_code': 'outside_scope'}
             elif decision is None or decision['classification'] == 'uncertain':
@@ -390,15 +409,14 @@ class GoogleSources:
                     else {'non_actionable'} if result['classification'] == 'noise'
                     else {'needs_review', 'evaluation_unavailable'}), 'invalid_evaluation')
                 decision = dict(result)
-            decisions[key] = {**decision, 'external_id': identity, 'revision': revision}
-            # Queryable selection authority mirrors the durable decision;
-            # bodies never cross here (classification + reason only).
+            # The table owns the decision (bodies never cross here); the
+            # per-identity pointer stays as transport-scoped pending state.
             record_decision(self.store, provider='gmail', account=cfg['account'],
                 collection=partition['collection'],
                 external_id=identity, revision=revision,
                 decision=decision['classification'],
                 reason_code=decision.get('reason_code'))
-            adapter.setdefault('current_decisions', {})[identity] = key
+            adapter.setdefault('current_decisions', {})[identity] = _hash([identity, revision])
             if decision['classification'] == 'uncertain':
                 pending['reason'] = decision['reason_code']
                 self._save(partition, adapter)
@@ -492,10 +510,9 @@ class GoogleSources:
             if cfg.get('scope') == 'selective_since':
                 if identity not in adapter.get('current_decisions', {}) and identity not in adapter.get('pending_reads', {}):
                     continue  # history deletion alone cannot establish the date scope
-                key = _hash([identity, 'deleted:' + revision])
-                adapter.setdefault('decisions', {})[key] = {'external_id': identity, 'revision': 'deleted:' + revision,
-                    'classification': 'deleted', 'reason_code': 'source_deleted'}
-                adapter.setdefault('current_decisions', {})[identity] = key
+                # Deletion tombstones flow through intake (status deleted);
+                # only the per-identity pointer is transport state.
+                adapter.setdefault('current_decisions', {})[identity] = _hash([identity, 'deleted:' + revision])
             if identity in adapter.get('pending_reads', {}):
                 adapter['pending_reads'][identity]['resolving_revision'] = 'deleted:' + revision
             objects.append(dict(external_id=identity, revision='deleted:' + revision, status='deleted',

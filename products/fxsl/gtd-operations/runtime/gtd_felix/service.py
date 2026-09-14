@@ -550,6 +550,19 @@ class GTDService(GTDDomain):
             result.append(item)
         return result
 
+    def prune_sources(self, actor: str) -> dict:
+        """Explicit source-retention maintenance: owner only, no provider calls.
+
+        Keeps pending obligations, the latest projected revision per object and
+        cited bytes; archives pruned ids so migration never resurrects them.
+        Safe on a stopped service and across restarts (receipt converges).
+        Raises ValueError for any other actor.
+        """
+        if actor != self.owner_actor:
+            raise ValueError("owner_prune_only")
+        from .source_entries import run_retention
+        return run_retention(self.store)
+
     def export(self, destination: Path) -> dict:
         """Create a dated readable snapshot and a restorable DB/original archive.
 
@@ -886,6 +899,11 @@ def migrate_i3_sources(store):
     """
     from .source_entries import entry_id, _pruned_archive
     with store.transaction():
+        # Durable single cut: a completed migration never re-reads legacy nor
+        # mutates anything; later decisions live in the table, not here.
+        if store.db.execute(
+                "SELECT 1 FROM metadata WHERE key='migration:i3'").fetchone():
+            return {"note": "already_migrated"}
         for (key,) in store.db.execute(
                 "SELECT key FROM metadata WHERE key LIKE 'source-sync:%'"
                 " AND key NOT LIKE 'source-sync:object:%' AND key NOT LIKE 'source-sync:google:%'"):
@@ -1051,8 +1069,8 @@ def migrate_i3_sources(store):
             migrated += 1
             standalone += 1
         if migrated == 0:
-            return {"note": "already_migrated", "skipped_existing": skipped_existing,
-                    "skipped_pruned": skipped_pruned}
+            return {"note": "already_migrated", "migrated_source_entries": 0,
+                    "skipped_existing": skipped_existing, "skipped_pruned": skipped_pruned}
         receipt = {"schema": 4, "migrated_source_entries": migrated,
                    "skipped_existing": skipped_existing, "skipped_pruned": skipped_pruned,
                    "merged_scope": merged_scope,
