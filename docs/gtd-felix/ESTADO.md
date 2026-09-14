@@ -440,3 +440,18 @@ Comando: `/home/felix/.hermes/hermes-agent/venv/bin/python -B sonda.py
 --selftest` (httpx 0.28.1). Fallo de invocación con otro venv sin httpx fue
 error de entorno ajeno, no regresión. E33/E34 precisados: 401 en código no
 universaliza; causa del 400 E34 desconocida. C2 NOT_RUN, sin inferencias.
+
+## E37 · una medición externa única: 400 MissingSessionID (2026-09-14)
+
+Sonda exacta revisada `fd5bedac…6132` + lanzador `0e4035d1…74c2`, ID
+`GTD-DIR-20260914-37-ONE`, budget interior 80 / envolvente KILL 90.
+Precondiciones OK (hashes, sin marcador previo, dry-run `bf991f6745c26349`).
+Un solo POST: inicio/fin 20:41:24–25Z, exit 0, `elapsed 0.82 s`.
+Resultado: `400 MissingSessionID` (cuerpo 229 B, primer byte 0.628;
+TCP/TLS/envío/headers con tiempos reales, DNS desconocido).
+Conectividad/protocolo vivos ESE momento/payload; sin auth sana ni
+inferencia funcional acreditadas. No explica stalls 252/600 (fase distinta).
+Contabilidad separada de mantenimiento (~1 s; tokens/coste desconocidos,
+fuera del contador GTD). Marcador complete bloquea reenvío. Siguiente:
+payload fiel con session como el principal (sólo privado, bajo orden
+explícita). C2/minuta/aceptación: NOT_RUN.
