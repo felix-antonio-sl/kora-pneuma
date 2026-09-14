@@ -84,7 +84,7 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 | C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
 | C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
 | C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Camino probado con auxiliar distinto (E41); configuracion preparada, NO instalada | Padre por `gtd_dispatch` a hijo diferido (bot `helper`, actor `gtd-private-helper`, ruta separada, mismo mandato) luego material de integracion, retorno con `material_id` exacto en el prompt, `assess` del principal bajo mandato; una sola devolucion tras reinicio; STOP y `outside_mandate_scope` comprobados (`enc41-ejecutor-distinto/`, PASS). E40 era el mismo camino con el hijo sobre el principal y sin mandato en reservas. Falta orden direccionada e inferencia disponible para activar. No confundir con la delegacion entre tareas Codex |
+| G7 delegar | Paquete E42 ensayado (36/36), listo para decision, NO instalado | Auxiliar distinto probado (E41); aplicar/revertir endurecidos y ensayados sobre copias (idempotencia, parciales, auth MCP, suspendido, adaptador); perfil efectivo en destino aislado con discover compatible; `local_work` minimo por contrato. Propuesta: instalar perfil+config+bot SUSPENDED sin LLM; habilitar recorrido bajo orden aparte. E41 dry-run no era validacion completa. Falta orden e inferencia disponible |
 
 I4 = primer encargo útil del principal con fuentes y retorno sostenido;
 bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
