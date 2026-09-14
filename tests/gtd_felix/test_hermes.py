@@ -1105,6 +1105,91 @@ class HermesTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual((await self.adapter.poll(child))["error"], "native_identity_missing")
         self.assertEqual(self.control.get_job(child)["observed_runtime_seconds"], 0)
 
+    async def test_recovered_ack_keeps_first_attempt_deadline(self):
+        # E29-P1: uncertain send (timeout AFTER remote creation) recovered
+        # via reconcile must keep the first-attempt deadline, not renew it.
+        # Fails on e731c26 (anchor renewed at recovery, observed ~2).
+        job_id = self.reserve()  # max_runtime_seconds=60
+        self.run_status = "running"
+        t0 = time.time()
+        self.post_delay = 0.3
+        first = await self.adapter.submit(job_id, "Uncertain send")
+        self.assertEqual(first["status"], "uncertain")
+        self.assertEqual(len(self.runs), 1)
+        self.post_delay = 0
+        self.restart()
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 125):
+            recovered = await self.adapter.reconcile(job_id)
+        self.assertEqual(recovered["native_status"], "running")
+        self.assertEqual(len(self.runs), 1)
+        obs = recovered["observation"]
+        self.assertGreaterEqual(obs["runtime_seconds"], 124)
+        self.assertLessEqual(obs["runtime_seconds"], 125)
+        self.assertEqual(obs["native_runtime_seconds"], 2)
+        self.assertEqual(
+            self.control.validate(job_id, "prepare_private")["reason"], "job_runtime_exhausted")
+
+    async def test_queued_telemetry_then_running_counts_admitted_lifetime(self):
+        # E29-P2: queued polls report pure telemetry; once running, the bound
+        # counts admitted lifetime including the prior wait (no segmentation).
+        job_id = self.reserve()
+        t0 = time.time()
+        await self.adapter.submit(job_id, "Queued then running")
+        self.run_status = "queued"
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 120):
+            queued = await self.adapter.poll(job_id)
+        self.assertEqual(queued["observation"]["runtime_seconds"], 2)
+        self.run_status = "running"
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 121):
+            running = await self.adapter.poll(job_id)
+        self.assertGreaterEqual(running["observation"]["runtime_seconds"], 120)
+        self.assertLessEqual(running["observation"]["runtime_seconds"], 121)
+        self.assertEqual(
+            self.control.validate(job_id, "prepare_private")["reason"], "job_runtime_exhausted")
+
+    async def test_worker_reaches_durable_stop_by_itself_past_limit(self):
+        # E29-P3: the real orchestration advance (no manual stop call, no
+        # human request) reaches durable STOP past the limit: one remote stop,
+        # no re-admission to the same purpose, slot preserved until observed
+        # terminality. The crossing poll records the floor; STOP fires on the
+        # next advance (declared one-poll margin).
+        from gtd_felix.orchestration import OrchestrationWorker
+        job_id = self.reserve()
+        self.run_status = "running"
+        t0 = time.time()
+        worker = OrchestrationWorker(self.service, self.control, self.adapter,
+            {"actor": "gtd-felix", "principal_bot_id": "fixture", "timezone": "America/Santiago",
+             "reservation": {"max_cost_usd": 2, "max_runtime_seconds": 60, "max_retries": 0, "max_descendants": 0}})
+        state = worker._state()
+        state["runs"][job_id] = {"phase": "intent", "event_keys": [], "prompt": "Synthetic",
+                                 "durable": False, "item": self.item}
+        worker._save(state)
+        await worker._advance(worker._state(), job_id)
+        self.assertEqual(worker._state()["runs"][job_id]["phase"], "submitted")
+        with patch("gtd_felix.hermes.time.time", return_value=t0 + 130):
+            await worker._advance(worker._state(), job_id)  # crossing poll
+            pre = self.control.get_job(job_id)
+            self.assertFalse(pre["terminal"])
+            await worker._advance(worker._state(), job_id)  # STOP fires here
+        stops = [r for r in self.requests if r[0] == "POST" and r[1].endswith("/stop")]
+        self.assertEqual(1, len(stops))
+        job = self.control.get_job(job_id)
+        self.assertTrue(job["stop_requested"])
+        self.assertFalse(job["terminal"])
+        self.assertEqual(self.control.budget()["active"], 1)
+        await worker._advance(worker._state(), job_id)
+        self.assertEqual(1, len([r for r in self.requests if r[0] == "POST" and r[1].endswith("/stop")]))
+        families = [j["id"] for j in self.control.pending() if j["item_id"] == self.item["id"]]
+        self.assertEqual([job_id], families)
+        self.run_status = "failed"
+        await worker._advance(worker._state(), job_id)
+        final = self.control.get_job(job_id)
+        self.assertTrue(final["terminal"])
+        self.assertEqual(final["integration"], "discarded")
+        self.assertEqual(self.control.budget()["active"], 0)
+        self.assertLessEqual(
+            self.control.budget()["committed_runtime_seconds"], final["observed_runtime_seconds"] + 60)
+
 
 if __name__ == '__main__':
     unittest.main()
