@@ -527,6 +527,26 @@ esas condiciones y mantiene la red fuera de la transacción. Fuentes primarias:
   (libera la unicidad para un sucesor con causa nueva sin autorrenovar
   presupuesto); `failed/cancelled/expired` pasan a `abandoned`.
 
+### Ajustes I2 (2026-09-14, con evidencia en ESTADO.md)
+
+- `materials`/`assessments` viven en tablas; el documento guarda stubs de
+  referencia (identidad, autoría, juicio). Recibos, parches y vistas del
+  principal usan la misma forma: el stub de material lleva `mandate_id` y
+  `source_material` (procedencia, no snapshots); el de evaluación conserva
+  `resolution_basis` para evidencia compuesta y suelta `material_basis`
+  (duplicaría la colección por evaluación). Ausente y vacío leen igual.
+- `deliveries` guarda un intento de envío por fila (`channel`, `target_key`,
+  `semantic_key` = evento:ordinal, único). Los recibos por evento
+  (`telegram-delivery`, retornos de material/pregunta) siguen como marcas
+  acotadas de deduplicación por clave, no como segunda verdad de envíos.
+- `due_at` vencido genera retorno autorizado como `review_at`/`decision_at`;
+  mostrarlo no crea autoridad nueva. `max_active=2` sigue acotando reservas,
+  no ejecuciones simultáneas.
+- Migración: IDs de evaluación derivados de campos durables
+  (`item_id|assessed_at|evidence`); `criterion_hash` de la evidencia; tiempos
+  desconocidos quedan nulos; envíos sin evento se cuentan como transitorios
+  omitidos (un reintento los regenera). Sin trabajos en vuelo al cortar.
+
 ### Consultas y proyección de contexto
 
 Operaciones frecuentes: asuntos abiertos paginados; último material/evaluación

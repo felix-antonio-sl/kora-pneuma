@@ -9,12 +9,12 @@ Git conserva los cortes nuevos. No hay datos personales ni credenciales aquí.
 ## Veredicto de producto
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
-C1 operativo; C2–C6 abiertos. I1 corregido como candidato integrado y
-verificable en aislamiento tras la revisión independiente de 2026-09-14 (cinco
-defectos P1/P1/P1/P1/P2 reproducidos y corregidos); no instalado en vivo ni
-aceptado en producción. La dirección arquitectónica e integración las conserva
-Codex; Hermes sigue como runtime del bot. Este encargo se ejecutó en OpenCode
-según lo asignado.
+C1 operativo; C2–C6 abiertos. I1 publicado en origen (`9896336` verificado en
+remoto). I2 implementado como candidato integrado y verificable en aislamiento;
+no instalado en vivo, no publicado, aceptación humana NOT_RUN. La dirección
+arquitectónica e integración las conserva Codex; Hermes sigue como runtime del
+bot. Este encargo se ejecutó en OpenCode según lo asignado, sin llamadas LLM
+pagadas ni envíos reales.
 
 El último recorrido real reutilizó un material existente, registró una evaluación
 insatisfecha y confirmó la devolución por Telegram en 192,3 s sobre 240 s
@@ -45,8 +45,9 @@ se preservan; no se agregan masivamente al commit.
 | Subsistema | Implementado/observado | Límite relevante |
 |---|---|---|
 | Dominio y captura | API y comandos versionados; originales, operaciones, autoría y controles sin LLM | Interpretación contextual y UX no acreditadas en recorrido completo |
-| Datos | 9 tablas: 6 base + `work_cycles`, `runs`, `run_observations`; WAL, FK por conexión, `BEGIN IMMEDIATE`, originales por hash | `items.document`/`field_versions` conservan agregado humano; materiales/evaluaciones/entregas/fuentes se migran en I2–I3 |
+| Datos | 12 tablas: 9 de I1 + `materials`, `assessments`, `deliveries` (esquema v3); WAL, FK por conexión, `BEGIN IMMEDIATE`, originales por hash | `items.document` conserva agregado humano con stubs de referencia; recibos y parches usan la misma forma; fuentes se migran en I3 |
 | Ejecución | ciclo autorizado separado de intento nativo; admisión inmutable, consumo monotónico, terminalidad/integración separadas, STOP, pausa, reconciliación, presupuesto familiar | Orquestación activa en claves pequeñas; historial global congelado como `*:legacy:v1` sólo para consulta/idempotencia/recuperación |
+| Conversación y devolución (I2) | identidad por asunto ante respuestas y precisiones; corrección invalida y versiona; pausa en vuelo con regreso vigente; devolución referencia material y versión; lista/lote paginados; `due_at` como retorno autorizado | Recorrido humano real con el principal pendiente (NOT_RUN); pruebas sintéticas con fixtures, no inferencia LLM |
 | Fuentes | agenda conectada; Gmail readonly, ámbito autorizado desde 2026-08-01; fuentes seleccionadas usadas en material real | Cobertura parcial/degradada; selección global e incrementalidad/retención completas aún por acreditar (I3) |
 | Resultados | materiales versionados, evaluación separada, entrega automática y deduplicación | Material válido no significa resultado suficiente; nueva regla de prosa no prueba utilidad (I2) |
 | Efectos | ledger de propuestas, autorización, despacho y observación existente | No habilita escritura general en Google; reconciliación final pendiente de C5 |
@@ -121,6 +122,31 @@ en ~22 ms y el estado activo en 7.663 bytes.
   236   Hermes/orquestación/núcleo/fuentes/mcp/aplicación, medidos por módulo:
   71+17+7+7 y 46+62+17+47+12+23+29). KORA `check` revalidado aquí con
   `--knowledge-root /home/felix/kora-knowledge`: ok (523/18).
+- I2 verificado en aislamiento: `test_i2_journey` 12/12 (identidad de tres
+  frentes con plazo y precisiones, mensaje ajeno separado, corrección que
+  invalida y devolución versionada, pausa que bloquea y regreso vigente,
+  `due_at` como retorno, material largo completo por segmentos, lote 15 con
+  4 hechos + 2 pospuestos + 9 restantes, paginación sin crear asuntos,
+  idempotencia y no-repost de envíos, migración unitaria con rechazo en vivo).
+  Módulos I2 y vecinos en verde: control/diaria/gasto/adaptadores/gtd/núcleo
+  166/166; Hermes/orquestación/fuentes/mcp/aplicación/telegram/pausa 278/278;
+  agenda/efectos/materiales/índice/producto/recuperación/adjuntos/fuentes 129/129;
+  codex probes 50/50 y remoto 14/14 (un probe de Codex falló una vez por tiempo
+  y pasó al repetir; ruta no tocada por I2).
+- Conjuntos con fallos previos a I2, idénticos antes y después (listas
+  comparadas línea a línea contra la base publicada): 26 en
+  atención/codex-local/recorridos/instrucción y 19 en gmail/google/nativo;
+  fuera del contrato I2 y sin regresiones nuevas. Fuentes (I3) y Codex en
+  producción (no activado) quedan pendientes.
+- Migración I2 ensayada sobre la exportación privada (hash verificado
+  `09a38058…ee2424`): 8 materiales, 11 evaluaciones, 50 envíos, 0 omitidos;
+  0 diferencias semánticas (filas contra arreglos históricos, IDs nativas,
+  versiones, presupuesto); recibo `migration:i2` en metadatos. Rollback
+  ensayado: snapshot v2 + replay por identidad (1 asunto, 4 operaciones,
+  4 eventos, 2 originales, 1 envío; 50 envíos previos verificados
+  byte a byte); el runtime v2 publicado abre y lee lo revertido; el runtime
+  v2 rechaza el esquema v3 (`newer_schema`). Rollover diario comprobado de
+  paso: período 2026-09-14 amanece con 7.200 s intactos.
 - Invariantes I1: PASS en suite (causa duplicada/idempotencia, agotamiento sin
   autorrenovación, presupuesto familiar sin doble cómputo, exclusión global con
   incertidumbre y delegación, STOP/corrección/invalidación, reinicio y
@@ -177,11 +203,19 @@ Límites reales medidos: el conjunto activo vive del protocolo (plaza nativa
 asunto más sus antecesores (cadena `parent_id` ≤16); `pending()` de dueño
 devuelve el activo completo sin paginar por ser pequeño por protocolo.
 
-Siguiente: **I2 · conversación, material y devolución** sobre I1, con fuentes ya
-disponibles y sin reescribir todos los módulos. Instalación viva y publicación
-remota del candidato I1 quedan como pasos posteriores identificados (detener
-procesos, cero trabajos en vuelo o incertidumbre reconciliada, aplicar migración
-y cambio de lector/escritor como una entrega, ensayar restore/rollback final).
+I2 implementado en este candidato (no instalado, no publicado): tablas
+`materials`/`assessments`/`deliveries` como autoridad única con stubs de
+referencia en documento, recibos y parches; `due_at` como retorno autorizado;
+outbox de Telegram sobre `deliveries`. Recorrido cubierto con fixtures: tres frentes con
+plazo y precisiones, corrección que invalida, pausa con regreso vigente,
+devolución versionada, lote 15 y material completo por segmentos, todo con
+fixtures (principal humano/LLM: NOT_RUN).
+
+Siguiente: **recorrido humano preparado** con este candidato (ver preparación
+en el recibo de I2), luego **I3 · fuentes**. Instalación viva y publicación
+remota quedan como pasos posteriores identificados (detener procesos, cero
+trabajos en vuelo o incertidumbre reconciliada, aplicar migración y cambio de
+lector/escritor como una entrega, ensayar restore/rollback final).
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
 actual en SQLite 3.45.1 en memoria, con datos sintéticos. Incluye FK, identidad de
