@@ -6,7 +6,7 @@ from pathlib import Path
 import sqlite3
 import threading
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 MIGRATION_1 = (
     "CREATE TABLE items(id TEXT PRIMARY KEY, document TEXT NOT NULL, field_versions TEXT NOT NULL)",
     "CREATE TABLE operations(operation_id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL, actor TEXT NOT NULL, receipt TEXT NOT NULL, item_id TEXT, before_patch TEXT, after_patch TEXT, applied_version INTEGER, created_at TEXT NOT NULL)",
@@ -134,6 +134,27 @@ MIGRATION_3 = (
     "CREATE INDEX deliveries_pending ON deliveries(state, retry_at)",
     "CREATE INDEX deliveries_target ON deliveries(channel, target_key, state)",
 )
+# I3: source_entries as the single queryable authority for per-revision intake
+# and selection state. Reference DDL is GUIA section 6, applied without
+# adjustment: collection travels inside metadata_json (query key stays
+# provider+account), original_digest is NULL for bodyless tombstones, item_id
+# is NULL until projection links the affair.
+MIGRATION_4 = (
+    """CREATE TABLE source_entries (
+  id TEXT NOT NULL PRIMARY KEY,
+  provider TEXT NOT NULL, account TEXT NOT NULL,
+  external_id TEXT NOT NULL, revision TEXT NOT NULL,
+  status TEXT NOT NULL CHECK(status IN
+    ('pending','selected','noise','uncertain','unavailable','deleted')),
+  original_digest TEXT REFERENCES originals(digest),
+  item_id TEXT REFERENCES items(id),
+  metadata_json TEXT NOT NULL CHECK(json_valid(metadata_json)),
+  observed_at TEXT NOT NULL,
+  UNIQUE(provider, account, external_id, revision)
+)""",
+    "CREATE INDEX source_pending ON source_entries(provider, account, status)",
+    "CREATE INDEX source_item ON source_entries(item_id)",
+)
 
 
 def private_dir(path):
@@ -200,17 +221,27 @@ class Store:
                         self.db.execute(statement)
                     for statement in MIGRATION_3:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=3")
+                    for statement in MIGRATION_4:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=4")
                 elif version == 1:
                     for statement in MIGRATION_2:
                         self.db.execute(statement)
                     for statement in MIGRATION_3:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=3")
+                    for statement in MIGRATION_4:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=4")
                 elif version == 2:
                     for statement in MIGRATION_3:
                         self.db.execute(statement)
-                    self.db.execute("PRAGMA user_version=3")
+                    for statement in MIGRATION_4:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=4")
+                elif version == 3:
+                    for statement in MIGRATION_4:
+                        self.db.execute(statement)
+                    self.db.execute("PRAGMA user_version=4")
             self.db.execute("PRAGMA journal_mode=WAL")
             self.db.execute("PRAGMA synchronous=FULL")
             for suffix in ("", "-wal", "-shm"):
