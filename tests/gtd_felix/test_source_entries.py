@@ -563,6 +563,95 @@ class SelectiveJourneyTests(unittest.IsolatedAsyncioTestCase):
         rows = self.entries('m1')
         self.assertTrue(any(r['status'] == 'selected' for r in rows), rows)
 
+    async def test_prune_keeps_real_deletion_evidence(self):
+        # A prior selection never substitutes posterior provider evidence:
+        # the deleted:20 row is current availability, selected stays history.
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.page(['m1'])
+        await self.adapter.synchronize('mail')
+        self.profile('20')
+        self.transport.add(fixtures.GMAIL + '/history', {'maxResults': 2, 'startHistoryId': '10'},
+            {'historyId': '20', 'history': [{'id': '20', 'messagesDeleted': [{'message': {'id': 'm1'}}]}]})
+        await self.adapter.synchronize('mail')
+        rows = self.entries('m1')
+        self.assertEqual({r['status'] for r in rows}, {'selected', 'deleted'})
+        deleted = next(r for r in rows if r['status'] == 'deleted')
+        self.assertTrue(deleted['revision'].startswith('deleted:'), deleted)
+        receipt = self.service.prune_sources('felix')
+        self.assertEqual(receipt['pruned_rows'], 0, receipt)
+        # Restart: vigencia by observed order only (never by id/hash) still
+        # shows deletion as current and selection as history; an empty later
+        # sync neither resurrects nor re-infers.
+        self.service.close()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+        self.transport.service = self.service
+        calls = []
+        async def counting(evidence):
+            calls.append(evidence['external_id'])
+            return {'classification': 'selected', 'reason_code': 'gtd_relevant'}
+        adapter = GoogleSources(SourceSync(self.service), self.transport,
+            self.config, evaluator=counting)
+        rows = self.entries('m1')
+        self.assertEqual({r['status'] for r in rows}, {'selected', 'deleted'})
+        vigente = max(rows, key=lambda r: r['observed_at'])
+        self.assertEqual(vigente['status'], 'deleted', rows)
+        self.assertEqual(
+            self.service.store.db.execute(
+                "SELECT COUNT(*) FROM source_entries WHERE status='deleted'").fetchone()[0], 1)
+        self.profile('30')
+        self.transport.add(fixtures.GMAIL + '/history', {'maxResults': 2, 'startHistoryId': '20'},
+            {'historyId': '30', 'history': []})
+        await adapter.synchronize('mail')
+        self.assertEqual(calls, [])
+        self.assertEqual({r['status'] for r in self.entries('m1')}, {'selected', 'deleted'})
+
+    async def test_prune_keeps_genuine_unavailability_without_blocking_reassessment(self):
+        # A failed read leaves unassessed: evidence with no verdict behind it:
+        # maintenance must keep it, and a later successful read may still judge.
+        self.answers['m1'] = 'selected'
+        self.profile()
+        self.page(['m1'])
+        await self.adapter.synchronize('mail')
+        async def boom(evidence):
+            raise RuntimeError('model down')
+        self.adapter.evaluator = boom
+        self.profile('20')
+        self.history('10', ['m1'], end='20')
+        await self.adapter.synchronize('mail')
+        rows = self.entries('m1')
+        self.assertEqual({r['status'] for r in rows}, {'selected', 'unavailable'})
+        trace = next(r for r in rows if r['status'] == 'unavailable')
+        self.assertTrue(trace['revision'].startswith('unassessed:'), trace)
+        receipt = self.service.prune_sources('felix')
+        self.assertEqual(receipt['pruned_rows'], 0, receipt)
+        self.service.close()
+        self.service = GTDService(Path(self.temp.name) / 'data')
+        self.transport.service = self.service
+        rows = self.entries('m1')
+        self.assertEqual({r['status'] for r in rows}, {'selected', 'unavailable'})
+        # Reassessment after recovery judges the revision anew (unavailability
+        # is evidence, not a verdict) while the trace stays retained.
+        calls = []
+        async def counting(evidence):
+            calls.append(evidence['external_id'])
+            return {'classification': 'noise', 'reason_code': 'non_actionable'}
+        adapter = GoogleSources(SourceSync(self.service), self.transport,
+            self.config, evaluator=counting)
+        partition = adapter.inspect('mail')['partition']
+        persisted = self.service._meta('source-sync:google:' + __import__(
+            'hashlib').sha256(__import__('json').dumps(
+                partition, ensure_ascii=False, sort_keys=True,
+                separators=(',', ':')).encode()).hexdigest())
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            fixtures.raw_message('m1', history='20'))
+        await adapter._read_selective_message(self.config['mail'], 'm1', persisted)
+        self.assertEqual(calls, ['m1'])
+        rows = self.entries('m1')
+        decided = [r for r in rows if r['revision'].startswith('message:')]
+        self.assertTrue(any(r['status'] == 'noise' for r in decided), rows)
+        self.assertTrue(any(r['revision'].startswith('unassessed:') for r in rows), rows)
+
     async def test_post_cut_legacy_is_never_adopted(self):
         self.answers['m1'] = 'selected'
         self.profile()
