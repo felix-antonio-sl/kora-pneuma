@@ -51,7 +51,7 @@ se preservan; no se agregan masivamente al commit.
 | Fuentes | agenda conectada; Gmail readonly, ámbito autorizado desde 2026-08-01; fuentes seleccionadas usadas en material real | Cobertura parcial/degradada; selección global e incrementalidad/retención completas aún por acreditar (I3) |
 | Resultados | materiales versionados, evaluación separada, entrega automática y deduplicación | Material válido no significa resultado suficiente; nueva regla de prosa no prueba utilidad (I2) |
 | Efectos | ledger de propuestas, autorización, despacho y observación existente | No habilita escritura general en Google; reconciliación final pendiente de C5 |
-| Recuperación | exportación coherente, migración ensayada en copia aislada, rollback con replay por identidad (capturas preservadas, sin repetir efectos) | Restore/rollback final sobre la entrega completa se cierra en I5; instalación viva posterior |
+| Recuperación | exportación coherente, migración ensayada en copia aislada, restore con traslado de delta por PK que conserva uuid/versiones (ensayado; el replay por operación conserva contenido con uuid nuevo) | Restore/rollback final sobre la entrega completa se cierra en I5; instalación viva posterior |
 
 Magnitud de la copia: 32 jobs; serialización JSON de `execution:state` 4.734.704
 bytes y `execution:orchestration` 3.531.798 bytes en base. Tras I1 en copia
@@ -141,12 +141,21 @@ en ~22 ms y el estado activo en 7.663 bytes.
 - Realización preparada 2026-09-14 (sin instalar): export actual
   `b298c3…7a24f3` con manifiesto propio (esquema v1, 261/396); migración
   reensayada sobre ese origen con 0 diferencias (32/32/866/118 y 8/11/50/0);
-  restore/rollback reensayado con captura posterior preservada por identidad y
-  rechazo `newer_schema` del código instalado ante v3; release
-  `release-65f543e.tgz` (`2ca0d6…ee59`) y plan con migración offline explícita
-  (no hay comando CLI de migración de datos). Instalación viva observada ese
-  día: salud ok, cero pendientes, período fresco con 7.200 s. Recorrido humano
-  y producción siguen NOT_RUN.
+  restore/rollback reensayado con captura posterior preservada por identidad
+  mediante traslado de delta por PK (uuid/versiones/autoría/relaciones
+  idénticos, replay idempotente, sin envíos nuevos); el replay por operación
+  solo conserva contenido con uuid nuevo, por eso el corte exige quiescencia.
+  Comparación semántica integral de la migración con 0 diferencias (contenido
+  y basis de 8 materiales, criterio y contexto de 11 evaluaciones, derivación
+  exacta de 50 entregas, consumo de 866 observaciones, identidad nativa
+  cuádruple de 32 runs). Rechazo `newer_schema` del código instalado ante v3;
+  release `release-65f543e.tgz` (42 entradas: 5 dirs + 37 archivos, bytes
+  idénticos al candidato) y plan de corte ejecutable con migración offline
+  explícita y arranque por etapas vía `recovery_required`+`reconcile`.
+  Instalación viva observada ese día: salud ok, cero pendientes, período
+  fresco con 7.200 s; `service.json` efectivo ya declara DeepSeek/opencode-go
+  (el borrador preparado con otro modelo está superado, sin cambios).
+  Recorrido humano y producción siguen NOT_RUN.
 - Migración I2 ensayada sobre la exportación privada (hash verificado
   `09a38058…ee2424`): 8 materiales, 11 evaluaciones, 50 envíos, 0 omitidos;
   0 diferencias semánticas (filas contra arreglos históricos, IDs nativas,
@@ -162,7 +171,9 @@ en ~22 ms y el estado activo en 7.663 bytes.
   reconciliación de identidades, compatibilidad de comandos/versiones/recibos).
   Prueba sintética no acredita proveedor ni aceptación humana.
 - Código viejo rechaza esquema nuevo (`newer_schema`); rollback ensayado con una
-  captura posterior preservada (262 vs 261 asuntos) sin repetir efectos externos.
+  captura posterior preservada por traslado de filas (262 vs 261 asuntos, mismo
+  uuid y versión) sin repetir efectos externos; el replay por operación da
+  contenido idéntico con uuid nuevo.
 - KORA `check` revalidado en este checkout: `python3 kora_cli.py
   --knowledge-root /home/felix/kora-knowledge check` (CPython 3.12.3 del
   sistema, sin venv) devuelve `ok:true`, 523 activos, 18 archivados, 0
