@@ -345,7 +345,10 @@ spent+codex_probe 22 OK. C2/minuta/aceptación: NOT_RUN.
 P1: la recuperación de un envío incierto sin recibo renovaba el ancla
 (repro E29: timeout post-creación + reconcile a t0+125 ⇒ observed 2,
 límite intacto). Causa: sólo never_sent prueba ausencia de envío; incierto
-no. Fix: el ancla conserva el PRIMER intento (`intent.created_at` durable)
+no. Fix E29 (parcial): el ancla conserva el primer intento — pero E30
+precisa que `intent.created_at` NO equivale a primer envío (la intención
+nace antes, incluso sin envío): el dato es `first_send_at`, escrito
+pre-red en el claim y conservado al reconciliar.
 cuando ya hubo envío posible, y usa ahora sólo tras marca never_sent; un
 ancla existente jamás se sobrescribe. never_sent sigue sin ancla/cargo.
 P2 (política autorizada): la cota cuenta vida admitida incluida espera
@@ -356,3 +359,17 @@ al STOP durable post-límite (margen declarado: un poll; 1 POST stop, sin
 re-admisión al mismo propósito, plaza conservada sin terminalidad
 fabricada). Regresiones E29: P1 falla en e731c26 y pasa; P2/P3 fijan conducta.
 Focales vecinas: hermes+control+daily+spent 154 OK. C2/minuta: NOT_RUN.
+
+## E30 · candidato: primer envío efectivo como origen del plazo (sin instalar)
+
+Cruce never_sent→envío incierto: `_dispatch` borraba never_sent al pasar a
+sending sin conservar cuándo fue ESE primer intento; perder el ack caía en
+`intent.created_at` (120 s previos sin envío ⇒ falso agotamiento).
+Fix: `first_send_at` durable escrito en el claim antes de la red (una vez);
+el ancla = ancla existente ?? `first_send_at` ?? ahora. never_sent sin
+efecto sigue con observed 0; la recuperación no renueva; el backfill legacy
+queda sólo para datos antiguos. Política de vida admitida intacta (sin
+segmentar, sin ampliar queued/waiting). Regresión E30: falla en fae79e3
+(observed 124.93) y pasa (observed ~5 + STOP automático vía `_advance`
+real). Vecinas: hermes+control+daily+spent+codex_probe 170 OK.
+Paquete acumulado: un archivo `gtd_felix/hermes.py`. C2/minuta: NOT_RUN.
