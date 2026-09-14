@@ -243,10 +243,14 @@ archivos revisados `bf43b9f` (control, google_sources, source_monitor,
 source_evaluation + hoja nueva source_error_codes; resto de la composición
 previa intacta); ciclo huérfano sanado con re-STOP `i4-tm-stop:3` (sin gasto);
 worker recuperado de verdad (evento requested_review→run `b025d38f`, 53
-observaciones en 272.65 s, fin nativo cancelled→integración descartada, $1,
-slot libre, servicios sin reinicios). Causa de la cancelación nativa pendiente
-de diagnóstico, sin reintentos; Gmail degradado preexistente intacto (sin pases
-de selección en este run, sin material nuevo). Fuentes selectivas ya
+observaciones en 272.65 s, fin nativo cancelled→integración descartada, slot
+libre, servicios sin reinicios). Causa PROBADA: límite por trabajo agotado
+(`job_runtime_exhausted`: admitido 240 s, primera marca 260.4 s, STOP técnico
+14:32:54Z, recibo `hermes:stop` durable; sin fallo de proveedor ni defecto de
+producto demostrado). Coste observado desconocido (53 obs. con cost NULL;
+$1 es imputación conservadora, no cobro medido); resto 6682.58 = 6955.23 −
+272.65. Un pase de selección con 0 clasificaciones y 0 llamadas bridge; Gmail
+degradado preexistente intacto, sin material nuevo. Fuentes selectivas ya
 autorizadas en ámbito; cobertura incremental y retención en este incremento.
 
 Validación del diseño: **24/24 comprobaciones PASS** del DDL sobre el esquema
