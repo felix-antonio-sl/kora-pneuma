@@ -410,3 +410,17 @@ del agente). Conectividad/protocolo/capa vivos ESE momento; stalls de
 caída general. Exceso declarado: 2 peticiones en vez de 1 (2ª por relectura),
 <1 s c/u, 0 tokens, fuera del contador GTD. Sin defecto repo ⇒ sin
 candidato. E33 precisado (no reescrito). C2 NOT_RUN.
+
+## E35 · sonda fiel lista, sin ejecutar contra el proveedor (2026-09-14)
+
+Sonda reescrita offline (`enc34-transporte/sonda.py`, privada, fuera del
+producto): marcador durable exclusivo (reemisión imposible por ID),
+deadline total monotónico con kill garantizado (hijo supervisado),
+recibo siempre escrito con error acotado saneado (<=8 KiB, sin tokens).
+Selftest local 10/10 en ~8 s (400 saneado, sin reenvío, deadlines sin
+headers/cuerpo estancado, sin secretos). Contrato efectivo documentado
+(`contrato-solicitud.md`): 400 no es auth (el relay daría 401); mismo
+material en entradas opencode/opencode-go; session header como diferencia
+explícita no afirmada como causa. E33/E34 precisados (observado/inferido/
+sin medir). La eventual única petición externa requiere orden explícita.
+C2 NOT_RUN, sin inferencias en E35.
