@@ -172,6 +172,73 @@ class SourceAttachmentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'attachment_content_not_retained'):
             read_attachment(self.service.store, item, item['version'], attachment_index=0)
 
+    def test_full_aggregate_content_matches_row_bytes(self):
+        # E25.2: the aggregate `content` claim must not contradict its rows.
+        # Referenced-only -> not_retained; single inline 'YWJj' -> inline
+        # present (never not_retained); mixed referenced+inline -> mixed.
+        # Indices and raw compatibility are preserved.
+        import base64
+        import test_google_sources as fixtures
+        # Referenced-only (existing shape): aggregate not_retained.
+        full_ref = fixtures.full_message('agg-ref')
+        raw_ref = json.dumps(full_ref).encode()
+        digest_ref = hashlib.sha256(raw_ref).hexdigest()
+        item_ref = self.service.capture('felix', 'agg-ref', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'agg-ref',
+                    'sha256': digest_ref},
+            original=raw_ref, filename='source.bin', mime_type='application/json')['item']
+        manifest_ref = read_attachment(self.service.store, item_ref, item_ref['version'])
+        self.assertEqual('not_retained', manifest_ref['content'])
+        self.assertFalse(manifest_ref['attachments'][0]['body_present'])
+        # Single inline 'YWJj' (sonda 25): row present, aggregate consistent.
+        full_inline = fixtures.full_message('agg-inline', attachments=())
+        full_inline['payload']['parts'] = [
+            {'mimeType': 'text/plain', 'filename': '', 'headers': [],
+             'body': {'size': 2, 'data': base64.urlsafe_b64encode(b'hi').decode().rstrip('=')}},
+            {'mimeType': 'application/octet-stream', 'filename': 'tiny.bin', 'headers': [],
+             'partId': '3', 'body': {'size': 3, 'data': 'YWJj'}}]
+        raw_inline = json.dumps(full_inline).encode()
+        digest_inline = hashlib.sha256(raw_inline).hexdigest()
+        item_inline = self.service.capture('felix', 'agg-inline', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'agg-inline',
+                    'sha256': digest_inline},
+            original=raw_inline, filename='source.bin', mime_type='application/json')['item']
+        manifest_inline = read_attachment(self.service.store, item_inline, item_inline['version'])
+        self.assertTrue(manifest_inline['attachments'][0]['body_present'])
+        self.assertNotEqual('not_retained', manifest_inline['content'])
+        self.assertEqual('inline_present', manifest_inline['content'])
+        self.assertIsNone(manifest_inline['attachments'][0]['attachment_id'])
+        self.assertEqual('3', manifest_inline['attachments'][0]['part_id'])
+        # Mixed referenced + inline: aggregate mixed, per-index behaviour keeps.
+        wb = workbook()
+        b64 = base64.urlsafe_b64encode(wb).decode().rstrip('=')
+        full_mixed = fixtures.full_message('agg-mixed', attachments=())
+        full_mixed['payload']['parts'] = [
+            {'mimeType': 'text/plain', 'filename': '', 'headers': [],
+             'body': {'size': 2, 'data': base64.urlsafe_b64encode(b'hi').decode().rstrip('=')}},
+            {'mimeType': 'application/octet-stream', 'filename': 'ref.bin', 'headers': [],
+             'body': {'size': 999, 'attachmentId': 'ATT_ref'}},
+            {'mimeType': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+             'filename': 'inline.xlsx', 'headers': [], 'partId': '5',
+             'body': {'size': len(wb), 'data': b64}}]
+        raw_mixed = json.dumps(full_mixed).encode()
+        digest_mixed = hashlib.sha256(raw_mixed).hexdigest()
+        item_mixed = self.service.capture('felix', 'agg-mixed', 'Synthetic',
+            source={'provider': 'gmail', 'availability': 'present', 'external_id': 'agg-mixed',
+                    'sha256': digest_mixed},
+            original=raw_mixed, filename='source.bin', mime_type='application/json')['item']
+        manifest_mixed = read_attachment(self.service.store, item_mixed, item_mixed['version'])
+        self.assertEqual('mixed', manifest_mixed['content'])
+        by_name = {a['filename']: a for a in manifest_mixed['attachments']}
+        self.assertFalse(by_name['ref.bin']['body_present'])
+        self.assertTrue(by_name['inline.xlsx']['body_present'])
+        with self.assertRaisesRegex(ValueError, 'attachment_content_not_retained'):
+            read_attachment(self.service.store, item_mixed, item_mixed['version'], attachment_index=0)
+        served = read_attachment(self.service.store, item_mixed, item_mixed['version'], attachment_index=1)
+        self.assertIn('table', served)
+        with self.assertRaisesRegex(ValueError, 'attachment_not_found'):
+            read_attachment(self.service.store, item_mixed, item_mixed['version'], attachment_index=7)
+
     def test_full_inline_bytes_distinguished_from_referenced(self):
         import base64
         import test_google_sources as fixtures

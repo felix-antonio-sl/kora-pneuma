@@ -700,22 +700,21 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([], self.evaluated)
         self.assertEqual([], self.service.query())
 
-    async def test_partial_text_reports_missing_and_allows_noise_without_retention(self):
-        # P1b: available body with one referenced part keeps evaluation;
-        # coverage is explicit in metadata and text. Noise retains nothing.
+    async def test_partial_missing_text_forces_uncertainty_despite_available_part(self):
+        # E25.1: partial textual body (one inline part + one text part behind
+        # attachmentId) must not consolidate noise. missing_text>0 forces
+        # uncertain/needs_review without evaluation, pending survives restart.
         from gtd_felix.google_sources import ResponseDocument
+        from gtd_felix.source_error_codes import TransportError
         full = fixtures.full_message('m1')
         full['payload']['parts'][0]['parts'].append({'mimeType': 'text/plain', 'filename': '',
-            'body': {'size': 999, 'attachmentId': 'unread'}})
+            'body': {'size': 999, 'attachmentId': 'UNREAD_TEXT'}})
         doc = ResponseDocument(full, __import__('json').dumps(full).encode())
         obj = self.adapter._gmail_object_from_full(doc, 'm1', self.config['mail'])
         meta = __import__('json').loads(obj['text'].split('\n', 1)[0])
         self.assertEqual('plain', meta.get('body_projection'))
         self.assertEqual(1, meta.get('missing_text'))
-        self.assertEqual(1, meta.get('text_parts_retrieved'))
         self.assertIn('Structured coverage', obj['text'])
-        # Noise with available body completes and retains no body.
-        from gtd_felix.source_error_codes import TransportError
         self.answers['m1'] = 'noise'
         self.profile()
         self.transport.add(fixtures.GMAIL + '/messages',
@@ -724,6 +723,49 @@ class SelectiveGmailTests(unittest.IsolatedAsyncioTestCase):
         self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
             TransportError('response_too_large'))
         self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'}, full)
+        first = await self.adapter.synchronize('mail')
+        self.assertEqual('degraded', first['health'])
+        self.assertIn('m1', first['pending_reads'])
+        self.assertEqual('needs_review', first['pending_reads']['m1']['reason'])
+        self.assertEqual([], self.evaluated)
+        self.assertEqual([], self.service.query())
+        self.restart()
+        self.profile('20')
+        # Pending retry fires before the history page: same partial body.
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('response_too_large'))
+        partial_retry = fixtures.full_message('m1', history='10')
+        partial_retry['payload']['parts'][0]['parts'].append({'mimeType': 'text/plain', 'filename': '',
+            'body': {'size': 999, 'attachmentId': 'UNREAD_TEXT'}})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'}, partial_retry)
+        self.transport.add(fixtures.GMAIL + '/history', {'maxResults': 2, 'startHistoryId': '10'},
+            {'historyId': '20', 'history': [{'id': '20', 'messagesAdded': [{'message': {'id': 'm1'}}]}]})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('response_too_large'))
+        partial20 = fixtures.full_message('m1', history='20')
+        partial20['payload']['parts'][0]['parts'].append({'mimeType': 'text/plain', 'filename': '',
+            'body': {'size': 999, 'attachmentId': 'UNREAD_TEXT'}})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'}, partial20)
+        second = await self.adapter.synchronize('mail')
+        self.assertIn('m1', second['pending_reads'])
+        self.assertEqual('needs_review', second['pending_reads']['m1']['reason'])
+        self.assertEqual([], self.evaluated)
+        self.assertEqual([], self.service.query())
+
+    async def test_complete_body_with_referenced_attachments_stays_evaluable(self):
+        # E25.1 good case: inline text + referenced BINARY attachments (which
+        # never count as missing_text) stays evaluable; noise completes
+        # without retaining the body. Guards against overblocking.
+        from gtd_felix.source_error_codes import TransportError
+        self.answers['m1'] = 'noise'
+        self.profile()
+        self.transport.add(fixtures.GMAIL + '/messages',
+            {'maxResults': 2, 'includeSpamTrash': 'true', 'q': 'after:1785556800'},
+            {'messages': [{'id': 'm1'}]})
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'raw'},
+            TransportError('response_too_large'))
+        self.transport.add(fixtures.GMAIL + '/messages/m1', {'format': 'full'},
+            fixtures.full_message('m1'))
         result = await self.adapter.synchronize('mail')
         self.assertEqual('complete', result['health'])
         self.assertEqual({}, result['pending_reads'])
