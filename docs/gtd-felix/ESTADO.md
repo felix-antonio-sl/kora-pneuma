@@ -291,3 +291,26 @@ de dirección, sin frase humana nueva), NO escrito; sin `request_review`.
 Siguiente trabajo legítimo pendiente de decisión. KORA reproducible con 1
 hallazgo preexistente ajeno (`source_error_codes.py` de E17 sin declarar en
 resources); nada de los 4 realizados. C2/aceptación humana: NOT_RUN.
+
+## E27 · selección real TM: plan v30 admitido, nativo fallado en proveedor (2026-09-14)
+
+Plan owner `dir27-tm-focus-select:5869a0bb:v29` aplicado sobre TM v29 → v30
+(5 pasos, selección de fuentes TM primera, global preservado; validado antes
+en copia aislada con red/submit neutralizados: `applied`, intent con primer
+paso, y `_continue_work` espejo abrió continuación pendiente + reserva sin
+`request_review`). Una única admisión: job `ca99acbc` (prepare_private,
+native `run_06ff2d56`). Sin reintento tras el fallo, por contrato.
+
+Resultado: nativo `failed` tras ~600 s de pared sin ningún chunk del modelo
+(contexto ~16.5k tokens, 2 mensajes; Hermes mató la conexión por stall 600 s
+y el reintento devolvió Broken pipe, proveedor opencode-go). Cero llamadas a
+herramientas (sin `source_evaluation`, sin selección, sin material);
+integración `discarded`, slot/ciclo limpios (active 0), sin entregas
+duplicadas. La guarda local 240 s nunca disparó (observado ~0 s; resolución
+None, sin STOP). Gmail intacto: 4 pendientes gigantes, calendarios complete.
+Presupuesto: committed 1268.4→1628.7 s (+360.3 pared), remaining
+5931.6→5571.3 s, imputación conservadora 1 USD; coste de proveedor observado
+desconocido (117/117 obs. con cost NULL). TM v30 active, sin material nuevo.
+KORA `ok:true` tras declarar `source_error_codes.py` en resources de
+gtd-operations (1 línea, sin cambio de conducta ni reinstalación).
+C2/aceptación humana y mapa global: NOT_RUN.
