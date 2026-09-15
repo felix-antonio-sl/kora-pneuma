@@ -18,9 +18,10 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
 
 ## Instalado y verificado
 
-- Runtime: 37 `.py` instalados; 36/37 idénticos a `cefcfff` y `service.py`
-  = `f660a563` (E45) en principal y copia helper, verificado por hash
-  (recibo E46). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
+- Runtime: 37 `.py` instalados; 35/37 idénticos a `cefcfff`, `service.py`
+  = `f660a563` (E45) y `orchestration.py` = `1498bf25` + `telegram.py` =
+  `3264444c` (E49, aviso minimo) en principal y copia helper, verificado
+  por hash (recibo E49). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
   max, 7200 s/día America/Santiago, plaza única, un escritor, receptor
   Telegram único. Gateway helper en 51112 en marcha pero bot `helper`
   SUSPENDED (0 runs): capacidad instalada, no habilitada.
@@ -42,8 +43,8 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
   replay por identidad + reconcile; volver solo a `service.json` viejo NO es
   rollback válido).
 - Guardas vigentes: suites focales 156/156 (Hermes/control/diaria/gasto),
-  91/91 (fuentes/selección/monitor/evaluación) y 6/6 retorno-interrumpido
-  (candidato E47 pendiente de revisión/instalación) sobre este código.
+  91/91 (fuentes/selección/monitor/evaluación) y 12/12 retorno-interrumpido
+  (E49 instalado; pruebas deterministas, UX humana NOT_RUN).
 - Paquete repetible: `enc39-recuperacion/paquete-composicion-actual.md`
   (instalación, recuperación, rollback coherente, límites del operador).
 
@@ -57,9 +58,8 @@ principal + feriados al día. Presupuesto y plaza visibles para dirección.
 
 - Minuta TM (`5869a0bb` v31): sin material del principal; recorridos E27/E32
   terminaron sin herramientas ni entrega (protección temporal sí funcionó:
-  STOP medido, slot libre). Comprobado en E47: esos cortes tampoco avisaron
-  al usuario (0 eventos de notificación); el aviso honesto con pausa/retome
-  existe como candidato E47 pendiente de revisión/instalación.
+  STOP medido, slot libre). Desde E49 esos cortes avisan una vez con texto
+  honesto, pausa y retome (determinista; UX humana NOT_RUN).
 - Gmail: 4 lecturas pendientes (`selection_unavailable`, degradado
   preexistente). El fallback de lectura funciona para los 2 gigantes
   probados (texto + manifiesto, adjuntos sólo referenciados); la cobertura
