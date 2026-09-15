@@ -236,7 +236,9 @@ class TelegramAdapter:
         latest = {}
         for material in self.service.materials(item['id']):
             latest[material['id']] = material
-        if any(not m.get('valid') for m in latest.values()):
+        if payload.get('kind') != 'interrupted' and any(not m.get('valid') for m in latest.values()):
+            # 'interrupted' never attaches bodies (all omitted at delivery),
+            # so an invalidated prior must not silence the notice itself.
             raise TelegramError('notification_material_invalid')
         return item, latest, self._notification_body(event, item, latest,
             omit_materials=omit_materials)

@@ -519,40 +519,14 @@ class OrchestrationWorker:
         self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
             'external_id': job_id, 'revision': '1', 'payload': payload})
 
-    def _attempt_material_ids(self, job):
-        # Materials this attempt verifiably left: same item, same author,
-        # same mandate when the job carries one, created inside the run
-        # window. No table links a material to its job, so this is the
-        # explicit provenance rule; a discarded run never implies zero writes.
-        run = self.control._run_row(job['id'])
-        admitted = run['admitted_at'] if run else None
-        ended = run['ended_at'] if run else None
-        out = []
-        for material in self.service.materials(job['item_id']):
-            if not material.get('valid'):
-                continue
-            if material.get('author') != job['actor']:
-                continue
-            if job.get('mandate_id') and material.get('mandate_id') != job['mandate_id']:
-                continue
-            created = material.get('created_at') or ''
-            if admitted and created < admitted:
-                continue
-            if ended and created > ended:
-                continue
-            out.append(material['id'])
-        return out
-
     def _notify_interrupted(self, job_id):
         # One honest return for a guard-stopped attempt without verified
-        # result: the user learns the preparation did not complete, keeps the
-        # item with its history and materials, and can pause or resume
-        # explicitly. Deliberately narrow: only a guard first-stop (durable
-        # gtd-invalid-stop receipt, never re-sealed over a user stop) with the
-        # observed runtime at the allowance notifies; user-requested stops and
-        # paused/withdrawn items stay silent. A partial draft is named as
-        # unverified advance, never as result; prior materials are named as
-        # conserved, never attached. ingest_event dedupes reprocessing.
+        # result: the preparation did not complete; saved material, if any,
+        # is only pointed at, never attached or judged. Deliberately narrow:
+        # only a guard first-stop (durable gtd-invalid-stop receipt, never
+        # re-sealed over a user stop) with the observed runtime at the
+        # allowance notifies; user-requested stops and paused/withdrawn
+        # items stay silent. ingest_event dedupes reprocessing.
         job = self.control.get_job(job_id)
         if job.get('integration') != 'discarded':
             return
@@ -563,22 +537,13 @@ class OrchestrationWorker:
         item = self.service.get_item(job['item_id'])
         if not item or item['status'] in {'done', 'withdrawn', 'paused'}:
             return
-        mine = self._attempt_material_ids(job)
-        prior = [m['id'] for m in self.service.materials(item['id']) if m['id'] not in mine]
-        parts = ['No conseguí completar la preparación de ' + item['title'] + '.']
-        if mine:
-            parts.append('Este intento dejó un borrador parcial guardado, sin verificar: no es un resultado. Puedes verlo en el asunto.'
-                         if len(mine) == 1 else
-                         'Este intento dejó %d borradores parciales guardados, sin verificar: no son un resultado. Puedes verlos en el asunto.' % len(mine))
+        stored = self.service.materials(item['id'])
+        parts = ['No pude completar esta preparación: ' + item['title'] + '.']
+        if stored:
+            parts.append('Hay material guardado en el asunto; revisa allí su estado antes de usarlo.')
         else:
-            parts.append('Este intento no dejó material nuevo.')
-        if prior:
-            parts.append('El asunto conserva 1 material anterior.'
-                         if len(prior) == 1 else
-                         'El asunto conserva %d materiales anteriores.' % len(prior))
-        else:
-            parts.append('El asunto conserva su estado e historial.')
-        parts.append('Puedes verlo, retomarlo o pausarlo cuando quieras.')
+            parts.append('El asunto conserva su historial; no hay material guardado.')
+        parts.append('Puedes ver el asunto, revisarlo cuando quieras o pausarlo.')
         self.service.ingest_event({'provider': 'gtd-notification', 'account': 'local',
             'external_id': job_id, 'revision': '1',
             'payload': {'item_id': item['id'], 'version': item['version'], 'job_id': job_id,
