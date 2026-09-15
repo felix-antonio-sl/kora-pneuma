@@ -362,7 +362,9 @@ class ReadInputError(ValueError):
 MATERIAL_CHOICE_HINT = ('Save running text with content only (optional title); never combine content with '
     'filename, content_base64 or the presentation mime_type. PPTX bytes require content_base64, filename and '
     'mime_type "application/vnd.openxmlformats-officedocument.presentationml.presentation" together. '
-    'A retained source requires source_material alone.')
+    'A retained source requires source_material alone. '
+    'When you correct a rejected payload, retry with a new operation_id; '
+    'when you retransmit the same payload after a lost response, keep its operation_id.')
 
 
 class MCPClient:

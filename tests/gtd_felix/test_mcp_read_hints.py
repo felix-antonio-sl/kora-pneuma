@@ -106,9 +106,16 @@ class ReadHintTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(1, len(materials))
         body = self.service.read_material(self.item['id'], materials[0]['id'], materials[0]['version'])
         self.assertIn('Synthetic three-step text', json.dumps(body, ensure_ascii=False))
-        # Idempotent replay: same operation_id, no duplicate.
+        # Idempotent replay: same payload + same operation_id, no duplicate.
         again = await self.client.call('gtd_command', {'job_id': self.job, 'command': fixed})
         self.assertIn(again['status'], {'applied', 'already_applied'})
+        self.assertIn('new operation_id', rejected['hint'])
+        # Corrected payload under the rejected operation_id stays rejected
+        # (idempotency binds it); the fix needs its own operation_id.
+        clash = await self.client.call('gtd_command', {'job_id': self.job,
+            'command': dict(fixed, operation_id='e61-put-01')})
+        self.assertIn(clash['status'], {'rejected', 'conflict'})
+        self.assertEqual(1, len(self.service.materials(self.item['id'])))
         self.assertEqual(1, len(self.service.materials(self.item['id'])))
 
     async def test_negative_choices_keep_rejection_without_leak(self):
