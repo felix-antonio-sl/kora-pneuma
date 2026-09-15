@@ -32,6 +32,10 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
   cero errores de herramientas (operations leído por view+reference+offset),
   run cortado por deadline 180 s en inferencia lenta, 0 materiales;
   rama de canarios parada (recibo E62).
+  E66 instalado 2026-09-15 (`gtd.py` stubs canónicos, publicado `fd048d7`,
+  servicio reiniciado sano, helper SUSPENDED, budget intacto). Recorrido TM
+  no ejecutado: asunto 5869a0bb pausado por botón Telegram del dueño (v32);
+  se respeta sin reapertura (recibo E67). Hechos humanos: NOT_RUN.
   E64 instalado 2026-09-15: entrada proporcional (3.2 KB) + `flujos.md` con
   bloque de conversación conservado + `mcp.py` 32953079 en principal y helper;
   `title_generation` off en ambas configs; salud ok, helper SUSPENDED,
