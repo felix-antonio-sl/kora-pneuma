@@ -163,9 +163,10 @@ class WorkerEmissionTests(unittest.IsolatedAsyncioTestCase):
         payload = event['payload']
         self.assertEqual(payload['item_id'], self.item['id'])
         self.assertEqual(payload['version'], self.service.get_item(self.item['id'])['version'])
-        self.assertIn('No conseguí completar la preparación', payload['text'])
-        self.assertIn('no dejó material nuevo', payload['text'])
-        self.assertIn(self.item['title'], payload['text'])
+        self.assertEqual(payload['text'],
+                         'No pude completar esta preparación: ' + self.item['title'] + '. '
+                         'El asunto conserva su historial; no hay material guardado. '
+                         'Puedes ver el asunto, revisarlo cuando quieras o pausarlo.')
         self.assertNotIn(job_id, payload['text'])
         for banned in ('USD', 'segundos', 'Traceback', 'stack'):
             self.assertNotIn(banned, payload['text'])
@@ -221,9 +222,10 @@ class WorkerEmissionTests(unittest.IsolatedAsyncioTestCase):
                 break
         self.assertIsNotNone(event, 'partial draft produced no notice')
         text = event['payload']['text']
-        self.assertIn('borrador parcial', text)
-        self.assertNotIn('No conseguí preparar nada', text)
+        self.assertIn('Hay material guardado en el asunto; revisa allí su estado antes de usarlo.', text)
+        self.assertNotIn('Borrador parcial guardado por este intento', text)
         self.assertNotIn('anterior', text)
+        self.assertNotIn('nuevo', text)
         self.assertNotIn(job_id, text)
 
     async def test_user_stop_stays_silent(self):
@@ -310,7 +312,7 @@ class DeliveryTests(unittest.IsolatedAsyncioTestCase):
         await self.adapter._deliver_notification(event, automatic=True)
         self.assertEqual(1, len(self.http.sent))
         sent = self.http.sent[-1]
-        self.assertIn('No conseguí completar la preparación', sent['text'])
+        self.assertIn('No pude completar esta preparación', sent['text'])
         self.assertNotIn(job_id, sent['text'])
         buttons = [b for row in sent['reply_markup']['inline_keyboard'] for b in row]
         self.assertTrue(any(b['text'] == 'Ver asunto' for b in buttons))
@@ -372,10 +374,55 @@ class DeliveryTests(unittest.IsolatedAsyncioTestCase):
         await self.adapter._deliver_notification(events[0], automatic=True)
         self.assertEqual(1, len(self.http.sent))
         text = self.http.sent[-1]['text']
-        self.assertIn('borrador parcial', text)
-        self.assertIn('conserva 1 material anterior', text)
+        self.assertIn('Hay material guardado en el asunto; revisa allí su estado antes de usarlo.', text)
         self.assertNotIn('Borrador parcial de este segundo intento', text)
         self.assertNotIn('Minuta anterior ya conservada', text)
+        self.assertEqual(2, len(self.service.materials(self.item['id'])))
+
+    async def test_invalidated_material_is_pointed_at_not_attached(self):
+        put = self.service.execute('gtd-felix', {'operation_id': 'int-mat-inv', 'action': 'put_material',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'content': 'Borrador que quedara invalidado', 'mandate_id': self.mandate_id}})
+        self.assertEqual(put['status'], 'applied', put)
+        edit = self.service.execute('felix', {'operation_id': 'int-edit-inv', 'action': 'edit',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'title': 'Mapa de responsabilidades TM corregido'}})
+        self.assertEqual(edit['status'], 'applied', edit)
+        mats = self.service.materials(self.item['id'])
+        self.assertEqual(1, len(mats))
+        self.assertFalse(mats[0]['valid'])
+        fresh = self.service.execute('felix', {'operation_id': 'int-mand-inv', 'action': 'grant_mandate',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'scope_item_id': self.item['id'], 'capabilities': ['prepare_private'],
+                       'actors': ['gtd-felix'], 'completion_criteria': 'x'}})
+        self.assertEqual(fresh['status'], 'applied', fresh)
+        self.mandate_id = fresh['mandate']['id']
+        event, _ = self.interrupted_event(operation='int-job-inv')
+        self.assertIn('Hay material guardado en el asunto', event['payload']['text'])
+        await self.adapter._deliver_notification(event, automatic=True)
+        self.assertEqual(1, len(self.http.sent))
+        self.assertNotIn('Borrador que quedara invalidado', self.http.sent[-1]['text'])
+        self.assertEqual(1, len(self.service.materials(self.item['id'])))
+
+    async def test_domain_change_without_material_keeps_history_truth(self):
+        edit = self.service.execute('felix', {'operation_id': 'int-edit-nomat', 'action': 'edit',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'title': 'Mapa de responsabilidades TM aclarado'}})
+        self.assertEqual(edit['status'], 'applied', edit)
+        fresh = self.service.execute('felix', {'operation_id': 'int-mand-nomat', 'action': 'grant_mandate',
+            'item_id': self.item['id'],
+            'expected_version': self.service.get_item(self.item['id'])['version'],
+            'fields': {'scope_item_id': self.item['id'], 'capabilities': ['prepare_private'],
+                       'actors': ['gtd-felix'], 'completion_criteria': 'x'}})
+        self.assertEqual(fresh['status'], 'applied', fresh)
+        self.mandate_id = fresh['mandate']['id']
+        event, _ = self.interrupted_event(operation='int-job-nomat')
+        self.assertIn('no hay material guardado', event['payload']['text'])
+        self.assertNotIn('intacto', event['payload']['text'])
 
     async def test_prior_material_is_named_not_attached(self):
         put = self.service.execute('gtd-felix', {'operation_id': 'int-mat', 'action': 'put_material',
@@ -387,7 +434,7 @@ class DeliveryTests(unittest.IsolatedAsyncioTestCase):
         await self.adapter._deliver_notification(event, automatic=True)
         self.assertEqual(1, len(self.http.sent))
         sent = self.http.sent[-1]
-        self.assertIn('conserva 1 material anterior', sent['text'])
+        self.assertIn('Hay material guardado en el asunto; revisa allí su estado antes de usarlo.', sent['text'])
         self.assertNotIn('Antecedente previo verificable', sent['text'])
 
 
