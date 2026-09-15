@@ -426,7 +426,7 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
         (native / 'SKILL.md').symlink_to(self.root / 'outside')
         with self.assertRaises(ValueError):
             instructions(root=native)
-        self.assertEqual(TOOLS[0]['inputSchema']['properties']['reference']['enum'], ['SKILL.md', 'references/operations.md'])
+        self.assertEqual(TOOLS[0]['inputSchema']['properties']['reference']['enum'], ['SKILL.md', 'references/operations.md', 'references/flujos.md'])
         actions = TOOLS[1]['inputSchema']['properties']['command']['oneOf']
         self.assertIn('intent_basis', next(a for a in actions if a['properties']['action']['const'] == 'clarify')['properties']['fields']['properties'])
 
