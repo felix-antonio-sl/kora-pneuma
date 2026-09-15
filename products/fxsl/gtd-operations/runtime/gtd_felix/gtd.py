@@ -970,7 +970,6 @@ class GTDDomain:
             "source_versions": fields.get("source_versions", {}),
             "resolution_basis": self.work_input_basis(item["id"], fields.get("source_versions", {})),
             "material_basis": self._raw_materials(item["id"])}
-        previous = self._assessment_rows(item["id"])
         self.store.db.execute(
             "INSERT INTO assessments(id, item_id, item_version, material_id, material_version,"
             " actor, satisfied, criterion_hash, evidence, gap, resolution_basis_json,"
@@ -982,7 +981,7 @@ class GTDDomain:
              encode(assessment["resolution_basis"]), encode(assessment["material_basis"]),
              encode(fields.get("source_versions", {})), fields.get("mandate_id", item.get("mandate_id")),
              assessment["assessed_at"]))
-        full = [self._assessment_stub(entry) for entry in [*previous, assessment]]
+        full = [self._assessment_stub(entry) for entry in self._assessment_rows(item["id"])]
         updates = {"assessments": full, "result_gap": None if fields["satisfied"] else fields.get("gap", "criterion_not_met")}
         if fields["satisfied"]:
             updates.update(status="done", completed_at=now())
