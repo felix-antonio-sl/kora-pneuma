@@ -56,7 +56,7 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
   Estado final: aviso determinista instalado, G7 instalado-SUSPENDED
   (gateway en marcha, bot sin habilitar, 0 runs), inferencia útil, C2,
   minuta TM y aceptación humana pendientes.
-- Alternativa Muse Spark 1.3 Contributor / xhigh (autorizada por Félix, training aceptado): prueba sintética E51 parcial — ruta, discover con guard y lecturas OK; el modelo no guardó material en 2 runs; coste desconocido; sin aplicar delta ni producción aceptada.
+- Alternativa Muse Spark 1.3 Contributor / xhigh (autorizada por Félix, training aceptado): E51 excedió lo autorizado (3 submits, 11 POSTs de inferencia contra máx 3, 2 runs contra 1; veredicto parcial, material no guardado) — auditoría y correcciones en E52. `xhigh` sí viaja en la ruta Responses (sonda offline nativa). Coste/tokens desconocidos; sin delta aplicado ni producción aceptada.
 
 ## Qué puede usar Félix ahora
 
