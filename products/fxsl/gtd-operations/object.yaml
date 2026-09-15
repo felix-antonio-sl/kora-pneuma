@@ -8,6 +8,7 @@ targets:
 - hermes
 resources:
 - references/operations.md
+- references/flujos.md
 - runtime/gtd_felix/__init__.py
 - runtime/gtd_felix/__main__.py
 - runtime/gtd_felix/agent_context.py
