@@ -8,7 +8,7 @@ seguimiento se preservan.
 ## Veredicto
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
-Rama `fxai/gtd-felix-20260911` en sync con remoto (`4c50226`).
+Rama `fxai/gtd-felix-20260911`; código publicado hasta `fd048d7`; documentación según HEAD.
 C1 operativo; C2–C6 abiertos. Aceptación humana: NOT_RUN.
 
 ## Instalado y verificado (observado 2026-09-15 04:29 UTC)
@@ -17,7 +17,7 @@ C1 operativo; C2–C6 abiertos. Aceptación humana: NOT_RUN.
   hash contra `cefcfff`): 32/37 idénticos; los 5 restantes son `service.py` =
   `f660a563` (E45), `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c`
   (E49), `mcp.py` = `32953079` (E62/E63) y `gtd.py` = `ccb4bfb1` (E66),
-  publicados hasta `fd048d7`. Skill instalada: entrada 3.2 KB + `flujos.md` con
+  publicados hasta `fd048d7`. Skill instalada: entrada abreviada E64 + `flujos.md` con
   bloque de conversación conservado (E63/E64); `title_generation` off en ambas
   configs; resto de configuración, modelo (DeepSeek v4.1 Flash / opencode-go /
   max), presupuesto (7200 s/día America/Santiago), plaza única, un escritor y
@@ -45,10 +45,11 @@ principal + feriados. Presupuesto y plaza visibles para dirección.
 
 ## Qué NO está acreditado
 
-- Minuta TM (`5869a0bb` v32, pausado por el dueño): el principal guardó mapa
-  parcial (8 materiales) pero no la minuta; E27/E32 sin entrega; M64/M65
-  (sintéticos) sí guardaron propuesta + relectura + evaluación, con el fallo
-  de reconocimiento E65 corregido offline e instalado (E66/E67). C2 NOT_RUN.
+- Minuta TM (`5869a0bb` v32, pausado por el dueño): 8 materiales en
+  inventario del asunto, sin minuta del principal; E27/E32 sin entrega.
+  M64 (sintético) acredita material + relectura por el agente; M65 añade
+  evaluación persistida con fallo de confirmación, reparado offline e
+  instalado (E66/E67). Sin autoría global comprobada. C2 NOT_RUN.
 - Gmail: cobertura no acreditada (sin recorrido reciente; no se declara sana,
   caída ni ausente). Fallback de lectura instalado; 4 pendientes históricos.
 - Inferencia útil del proveedor: M64/M65 muestran generación real con frenos
@@ -59,14 +60,16 @@ principal + feriados. Presupuesto y plaza visibles para dirección.
 
 ## Recorrido humano mínimo (listo, sin ejecutar)
 
-Si Félix quiere continuar: reabrir explícitamente el mismo asunto (botón o
-mensaje de reapertura del receptor habitual) → el worker admite UN trabajo del
-principal → primera minuta TM por el bot → corrección con palabras propias →
-pausa/reingreso con los mismos controles. Controles reales verificados en
+Si Félix quiere continuar: Félix autoriza reapertura o usa Retomar
+(botón verificado de ficha pausada, `telegram.py`); dirección confirma estado
+y coordina UNA causa de trabajo para tramo E67, evitando duplicación →
+primera minuta TM por el bot → corrección con palabras propias →
+pausa/reingreso con los mismos controles. `/reanudar` sólo reanuda avisos,
+no reabre el asunto ni admite trabajo solo. Controles reales verificados en
 código: `pause`/`reopen` del dueño, `apply_human_instruction` con cita,
 `request_review` del principal, guarda STOP 240 s + sondeo, aviso único E49.
-Salida: reapertura explícita → ejecución real preparada (E67); antes, ninguna
-inferencia de este frente. Sin preguntas nuevas al usuario desde el sistema.
+Antes de la reapertura, ninguna inferencia de este frente. Sin preguntas
+nuevas al usuario desde el sistema.
 
 ## Referencias de evidencia vigente
 
