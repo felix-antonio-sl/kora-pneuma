@@ -32,6 +32,13 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
   cero errores de herramientas (operations leído por view+reference+offset),
   run cortado por deadline 180 s en inferencia lenta, 0 materiales;
   rama de canarios parada (recibo E62).
+  E64 instalado 2026-09-15: entrada proporcional (3.2 KB) + `flujos.md` con
+  bloque de conversación conservado + `mcp.py` 32953079 en principal y helper;
+  `title_generation` off en ambas configs; salud ok, helper SUSPENDED,
+  budget diario active 0. Ejecución M64: material real del agente (propuesta
+  sintética de biblioteca en 3 pasos, autor gtd-felix, válido) pero run discarded por cap
+  8/8 tras guardar, sin retorno; rama cerrada sin segundo run (recibo E64).
+  Hechos humanos: NOT_RUN.
 - Vivo (sólo lectura, periodo diario 2026-09-14 America/Santiago): salud
   `ok`, `pending` 0 no-terminal. Contabilidad observada: runtime imputado
   1881.06 s, imputación contable committed_cost_usd=6.0 USD (**no** es coste
