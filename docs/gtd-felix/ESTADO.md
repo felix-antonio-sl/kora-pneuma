@@ -18,10 +18,11 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
 
 ## Instalado y verificado
 
-- Runtime: 37 `.py` instalados; 35/37 idénticos a `cefcfff`, `service.py`
-  = `f660a563` (E45) y `orchestration.py` = `1498bf25` + `telegram.py` =
-  `3264444c` (E49, aviso minimo) en principal y copia helper, verificado
-  por hash (recibo E49). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
+- Runtime: 37 `.py` instalados y recontados por hash: 34/37 idénticos a
+  `cefcfff`; los 3 restantes son `service.py` = `f660a563` (E45),
+  `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c` (E49, aviso
+  mínimo), iguales en principal y copia helper, sin archivos sin origen
+  (recibo E49). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
   max, 7200 s/día America/Santiago, plaza única, un escritor, receptor
   Telegram único. Gateway helper en 51112 en marcha pero bot `helper`
   SUSPENDED (0 runs): capacidad instalada, no habilitada.
@@ -33,8 +34,12 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
   esquema v4, 261 asuntos / 332 operaciones / 39 runs / 8 materiales /
   12 evaluaciones / 52 entregas / 258 decisiones de fuente
   (conteos del ensayo E45 sobre export real; +3 standalone en el marcador
-  de fuentes). Sin cambios en entregas/outbox por el corte E46;
+  de fuentes). Sin cambios en entregas/outbox por los cortes E46/E49;
   `recovery_required` false (servicio operativo con la config nueva).
+  Aparte de `control.pending` = 0 hay 6 eventos `gtd-notification` en
+  `received` (3 `routed` de asuntos retirados + 3 `no_domain_progress` del
+  asunto TM, error NULL): la devolución automática los excluye por diseño;
+  no son trabajos pendientes ni entregas obligatorias atascadas.
 - Recuperación: el ensayo E39 cubrió una composición anterior y queda como
   precedente, no como evidencia vigente. Evidencia vigente E45/E46:
   re-export/re-restore preservando actores, snapshot previo + backups
@@ -45,8 +50,12 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
 - Guardas vigentes: suites focales 156/156 (Hermes/control/diaria/gasto),
   91/91 (fuentes/selección/monitor/evaluación) y 12/12 retorno-interrumpido
   (E49 instalado; pruebas deterministas, UX humana NOT_RUN).
-- Paquete repetible: `enc39-recuperacion/paquete-composicion-actual.md`
-  (instalación, recuperación, rollback coherente, límites del operador).
+- Paquete de recuperación vigente (observado E46/E49, no el enc39):
+  snapshot DB + backups `enc46-migracion-instalacion/` y `enc49-aviso-minimo/`,
+  procedimiento E45 (restore propietario + replay por identidad + reconcile).
+  Estado final: aviso determinista instalado, G7 instalado-SUSPENDED
+  (gateway en marcha, bot sin habilitar, 0 runs), inferencia útil, C2,
+  minuta TM y aceptación humana pendientes.
 
 ## Qué puede usar Félix ahora
 
