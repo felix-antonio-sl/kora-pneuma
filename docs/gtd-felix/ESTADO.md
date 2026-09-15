@@ -1,130 +1,74 @@
 # GTD de Félix · estado actual
 
-Corte **2026-09-14 23:50 UTC** (2026-09-15 01:50 CEST). Este archivo describe el estado vigente;
-el historial queda en Git y en recibos privados
-(`/home/felix/.local/state/gtd-felix/`). Sin datos personales ni credenciales.
-`candidates/` y `versions/` sin seguimiento se preservan.
+Corte **2026-09-15 04:30 UTC** (06:30 CEST). Estado vigente; el historial queda
+en Git y en recibos privados (`/home/felix/.local/state/gtd-felix/`).
+Sin datos personales ni credenciales. `candidates/` y `versions/` sin
+seguimiento se preservan.
 
 ## Veredicto
 
 **Servicio operativo, piloto supervisado; producción personal no aceptada.**
-Rama `fxai/gtd-felix-20260911` en sync con remoto. C1 operativo; C2–C6
-abiertos. I1/I2 publicados e instalados en su momento; I3 publicado
-(`7bc1fe8`) e instalado con datos v4 y `migration:i3`. Encima van los
-parches revisados E17 (control/fronteras de error), E26 (fallback Gmail),
-E28–E31 (vigilancia temporal del run), E45 (`incorporate_executor`) y la
-instalación E46 (migración `actor_config` + auxiliar registrado SUSPENDED
-con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
+Rama `fxai/gtd-felix-20260911` en sync con remoto (`4c50226`).
+C1 operativo; C2–C6 abiertos. Aceptación humana: NOT_RUN.
 
-## Instalado y verificado
+## Instalado y verificado (observado 2026-09-15 04:29 UTC)
 
-- Runtime: 37 `.py` instalados y recontados por hash: 33/37 idénticos a
-  `cefcfff`; los 4 restantes son `service.py` = `f660a563` (E45),
-  `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c` (E49, aviso
-  mínimo) y `mcp.py` = `03d1142a` (E62: códigos/pistas de lectura y put,
-  publicado `d883247`), iguales en principal y copia helper, sin archivos
-  sin origen (recibos E49/E62). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
-  max, 7200 s/día America/Santiago, plaza única, un escritor, receptor
-  Telegram único. Gateway helper en 51112 en marcha pero bot `helper`
-  SUSPENDED (0 runs): capacidad instalada, no habilitada.
-  E62 verificado 2026-09-15: `tools/list` instalado expone hints y `allOf`
-  nuevos; salud ok sin reinicios; comprobación DeepSeek aislada con E58:
-  cero errores de herramientas (operations leído por view+reference+offset),
-  run cortado por deadline 180 s en inferencia lenta, 0 materiales;
-  rama de canarios parada (recibo E62).
-  E66 instalado 2026-09-15 (`gtd.py` stubs canónicos, publicado `fd048d7`,
-  servicio reiniciado sano, helper SUSPENDED, budget intacto). Recorrido TM
-  no ejecutado: asunto 5869a0bb pausado por botón Telegram del dueño (v32);
-  se respeta sin reapertura (recibo E67). Hechos humanos: NOT_RUN.
-  E64 instalado 2026-09-15: entrada proporcional (3.2 KB) + `flujos.md` con
-  bloque de conversación conservado + `mcp.py` 32953079 en principal y helper;
-  `title_generation` off en ambas configs; salud ok, helper SUSPENDED,
-  budget diario active 0. Ejecución M64: material real del agente (propuesta
-  sintética de biblioteca en 3 pasos, autor gtd-felix, válido) pero run discarded por cap
-  8/8 tras guardar, sin retorno; rama cerrada sin segundo run (recibo E64).
-  Hechos humanos: NOT_RUN.
-- Vivo (sólo lectura, periodo diario 2026-09-14 America/Santiago): salud
-  `ok`, `pending` 0 no-terminal. Contabilidad observada: runtime imputado
-  1881.06 s, imputación contable committed_cost_usd=6.0 USD (**no** es coste
-  de proveedor medido), remaining 5318.94 s, active 0, `cost_control` false.
-- Datos (export `enc46-migracion-instalacion/export-pre46.zip`, 7 642 389 B):
-  esquema v4, 261 asuntos / 332 operaciones / 39 runs / 8 materiales /
-  12 evaluaciones / 52 entregas / 258 decisiones de fuente
-  (conteos del ensayo E45 sobre export real; +3 standalone en el marcador
-  de fuentes). Sin cambios en entregas/outbox por los cortes E46/E49;
-  `recovery_required` false (servicio operativo con la config nueva).
-  Aparte de `control.pending` = 0 hay 6 eventos `gtd-notification` en
-  `received` (3 `routed` de asuntos retirados + 3 `no_domain_progress` del
-  asunto TM, error NULL): la devolución automática los excluye por diseño;
-  no son trabajos pendientes ni entregas obligatorias atascadas.
-- Recuperación: el ensayo E39 cubrió una composición anterior y queda como
-  precedente, no como evidencia vigente. Evidencia vigente E45/E46:
-  re-export/re-restore preservando actores, snapshot previo + backups
-  `enc46-migracion-instalacion/`, migración con delta exacto y repetición
-  idéntica, procedimiento de recuperación coherente (restore propietario +
-  replay por identidad + reconcile; volver solo a `service.json` viejo NO es
-  rollback válido).
-- Guardas vigentes: suites focales 156/156 (Hermes/control/diaria/gasto),
-  91/91 (fuentes/selección/monitor/evaluación) y 12/12 retorno-interrumpido
-  (E49 instalado; pruebas deterministas, UX humana NOT_RUN).
-- Paquete de recuperación vigente (observado E46/E49, no el enc39):
-  snapshot DB + backups `enc46-migracion-instalacion/` y `enc49-aviso-minimo/`,
-  procedimiento E45 (restore propietario + replay por identidad + reconcile).
-  Estado final: aviso determinista instalado, G7 instalado-SUSPENDED
-  (gateway en marcha, bot sin habilitar, 0 runs), inferencia útil, C2,
-  minuta TM y aceptación humana pendientes.
-- Alternativa Muse Spark 1.3 Contributor / xhigh (autorizada por Félix, training aceptado): E51 excedió lo autorizado (3 submits, 11 POSTs de inferencia contra máx 3, 2 runs contra 1; veredicto parcial, material no guardado) — auditoría y correcciones en E52. `xhigh` sí viaja en la ruta Responses (sonda offline nativa). Coste/tokens desconocidos; sin delta aplicado ni producción aceptada.
+- Runtime principal y copia helper idénticos entre sí (37 `.py` recontados por
+  hash contra `cefcfff`): 32/37 idénticos; los 5 restantes son `service.py` =
+  `f660a563` (E45), `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c`
+  (E49), `mcp.py` = `32953079` (E62/E63) y `gtd.py` = `ccb4bfb1` (E66),
+  publicados hasta `fd048d7`. Skill instalada: entrada 3.2 KB + `flujos.md` con
+  bloque de conversación conservado (E63/E64); `title_generation` off en ambas
+  configs; resto de configuración, modelo (DeepSeek v4.1 Flash / opencode-go /
+  max), presupuesto (7200 s/día America/Santiago), plaza única, un escritor y
+  receptor Telegram único intactos. Helper: gateway en 51112 en marcha, bot
+  SUSPENDED, 0 runs (instalado, no habilitado ni útil probado en vivo).
+- Vivo: salud `ok`, PID de servicio posterior al reinicio E67 sin reinicios,
+  budget diario 2026-09-15 active 0 / remaining 7200.0 s / committed 0.0 USD
+  (imputación, no coste de proveedor medido), TM `5869a0bb` v32 **pausado por
+  botón Telegram del dueño** (se respeta; recorrido pendiente de reapertura).
+  Datos v4: 262 asuntos / 335 operaciones / 40 runs / 8 materiales /
+  12 evaluaciones / 56 entregas.
+- Recuperación (ensayo E68 sobre export-pre67 con composición instalada):
+  restore propietario + reconcile (`reconciled`, `recovery_required` false) +
+  replay por identidad (263/9/337 en copia, segunda aplicación sin duplicados);
+  pausa v32 conservada; rollback a `gtd.py` previo arranca y lee sano (con el
+  defecto de confirmación de assess ya conocido, no versión aceptada);
+  focales assess+progreso 3/3 sobre composición instalada. Recibo
+  `enc68-recuperacion/`.
 
 ## Qué puede usar Félix ahora
 
 Captura y conversación por Telegram con identidad por asunto, corrección que
 versiona, pausa/regreso, materiales y devoluciones; agenda de calendarios
-principal + feriados al día. Presupuesto y plaza visibles para dirección.
+principal + feriados. Presupuesto y plaza visibles para dirección.
 
 ## Qué NO está acreditado
 
-- Minuta TM (`5869a0bb` v31): sin material del principal; recorridos E27/E32
-  terminaron sin herramientas ni entrega (protección temporal sí funcionó:
-  STOP medido, slot libre). Desde E49 esos cortes avisan una vez con texto
-  honesto, pausa y retome (determinista; UX humana NOT_RUN).
-- Gmail: 4 lecturas pendientes (`selection_unavailable`, degradado
-  preexistente). El fallback de lectura funciona para los 2 gigantes
-  probados (texto + manifiesto, adjuntos sólo referenciados); la cobertura
-  global sigue incompleta y la selección real por el principal no ocurrió.
-- Inferencia útil del proveedor: bloqueada en la práctica. E38 (200 con
-  headers ~1.1 s, primer byte 14 B a ~13 s, ningún evento hasta deadline
-  80 s) sitúa el síntoma en fase cuerpo/eventos incluso con prompt mínimo;
-  causa interna no determinada; fin de la campaña de sondas.
-- Coste monetario del proveedor: desconocido (telemetría NULL; las cifras en
-  USD son imputación conservadora). Mantenimiento E34 (~1 s ×2) + E37 (~1 s)
-  + E38 (~80 s) va por recibo separado, fuera del contador de jobs.
+- Minuta TM (`5869a0bb` v32, pausado por el dueño): el principal guardó mapa
+  parcial (8 materiales) pero no la minuta; E27/E32 sin entrega; M64/M65
+  (sintéticos) sí guardaron propuesta + relectura + evaluación, con el fallo
+  de reconocimiento E65 corregido offline e instalado (E66/E67). C2 NOT_RUN.
+- Gmail: cobertura no acreditada (sin recorrido reciente; no se declara sana,
+  caída ni ausente). Fallback de lectura instalado; 4 pendientes históricos.
+- Inferencia útil del proveedor: M64/M65 muestran generación real con frenos
+  de envolvente y guarda; sin recorrido vivo que la acredite como útil.
+- Coste monetario del proveedor: desconocido (telemetría NULL).
+- G7: instalado-suspendido, útil en vivo no probado. El botón de pausa
+  observado no acredita UX ni aceptación.
 
-## Afirmaciones retiradas (sustituidas con referencia)
+## Recorrido humano mínimo (listo, sin ejecutar)
 
-- «Stalls específicos de payload 12–18k» (E34): refutada como específica;
-  E38 muestra silencio también con prompt mínimo. Queda: fase lenta en
-  cuerpo/eventos, causa sin determinar.
-- «400 determinista / 0 tokens» (E34): el 400 de E37 fue `MissingSessionID`
-  de la sonda sin cabecera de sesión; E38 con sesión propia obtuvo 200.
-  Tokens nunca medidos: se declara desconocido, no cero.
-- «400 no es auth» (E35): la inferencia desde el 401 del código cliente no
-  universaliza; la causa del 400 de E34 sigue desconocida.
+Si Félix quiere continuar: reabrir explícitamente el mismo asunto (botón o
+mensaje de reapertura del receptor habitual) → el worker admite UN trabajo del
+principal → primera minuta TM por el bot → corrección con palabras propias →
+pausa/reingreso con los mismos controles. Controles reales verificados en
+código: `pause`/`reopen` del dueño, `apply_human_instruction` con cita,
+`request_review` del principal, guarda STOP 240 s + sondeo, aviso único E49.
+Salida: reapertura explícita → ejecución real preparada (E67); antes, ninguna
+inferencia de este frente. Sin preguntas nuevas al usuario desde el sistema.
 
-## Criterios y trabajo pendiente (I4/G7)
+## Referencias de evidencia vigente
 
-| Criterio | Estado | Evidencia / siguiente paso |
-|---|---|---|
-| C1 continuidad | Operativo | Captura/identidad/presupuesto/recuperación conservados; ensayo E39 PASS |
-| C2 recorrido humano | Parcial | Principal real aún sin entrega útil; controles listos, inferencia bloqueada |
-| C3 fuentes | Parcial | I3 + fallback instalados; 4 pendientes Gmail; sin selección real del principal |
-| C4 retorno cotidiano | Parcial | Pendiente de un recorrido real con salida útil |
-| C5 recuperabilidad | Parcial (técnica) | Restore+reconcile ensayados sobre la composición actual; rollback coherente documentado, no ejecutado |
-| C6 aceptación | Abierto | Requiere reconocimiento explícito de Félix; nada lo sustituye |
-| G7 delegar | Instalado-suspendido y verificado (E46); util pendiente | Migracion actor_config con recibo durable + config helper + bot SUSPENDED + gateway propio 51112 (capabilities/toolsets/MCP/guard PASS sin inferencia). Principal sano, delta presupuestario cero, helper 0 runs. Siguiente decision: habilitar recorrido con via de inferencia util. Vivo util NOT_RUN |
-
-I4 = primer encargo útil del principal con fuentes y retorno sostenido;
-bloqueado hoy por inferencia sin salida; sin defecto determinista adicional demostrado que lo explique (no exclusión universal del runtime). I5 = este paquete +
-aceptación. Próximo recorrido humano (sólo cuando la inferencia vuelva a
-producir salida; no solicitarlo ahora): pedir al bot el estado de un asunto
-propio y una preparación acotada; dirección observará material, cobertura y
-devolución sin reintentos automáticos.
+Recibos E62/E64/E66/E67/E68, reportes `direccion-20260914/`, composición
+instalada arriba. El resto es historia en Git; no otra crónica aquí.
