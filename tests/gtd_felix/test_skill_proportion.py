@@ -84,6 +84,25 @@ class SkillProportionTests(unittest.IsolatedAsyncioTestCase):
                 'destination="existing"', 'apply_human_instruction', 'next_offset'):
             self.assertIn(anchor, text)
 
+    def test_conserved_entry_block_is_identical_and_indexed(self):
+        import subprocess
+        src71 = subprocess.run(['git', 'show',
+            '71a319d:products/fxsl/gtd-operations/content.md'],
+            capture_output=True, text=True, cwd=Path(__file__).resolve().parents[2]).stdout
+        block = src71[src71.find('La conversación es continua:'):src71.find('## A ·')].rstrip('\n')
+        self.assertEqual(3678, len(src71[src71.find('La conversación es continua:'):src71.find('## A ·')]))
+        flujos = (PRODUCT / 'references' / 'flujos.md').read_text()
+        head, sep, tail = flujos.partition('## Conversación, fuentes y saldo\n\n')
+        self.assertTrue(sep)
+        self.assertEqual(block, tail.rstrip('\n'))
+        entry = (PRODUCT / 'content.md').read_text()
+        self.assertIn('Conversación, fuentes y saldo', entry)
+        self.assertIn('una sola respuesta natural sin repetir acuse', entry)
+        self.assertIn('Guardar material no cumple por sí solo', entry)
+        self.assertIn('no prueban por sí solos que la\n   interpretación', entry)
+        ops = (PRODUCT / 'references' / 'operations.md').read_text()
+        self.assertIn('`references/operations.md` y `references/flujos.md`', ops)
+
     async def test_rendered_bundle_reads_prepare_and_persists(self):
         # Rendered bundle copy: frontmatter + entry, references alongside.
         bundle = self.root / 'skill'
