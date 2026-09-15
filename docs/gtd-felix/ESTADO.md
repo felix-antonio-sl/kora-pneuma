@@ -18,14 +18,20 @@ con gateway propio en 51112, sin habilitar). Aceptación humana: NOT_RUN.
 
 ## Instalado y verificado
 
-- Runtime: 37 `.py` instalados y recontados por hash: 34/37 idénticos a
-  `cefcfff`; los 3 restantes son `service.py` = `f660a563` (E45),
+- Runtime: 37 `.py` instalados y recontados por hash: 33/37 idénticos a
+  `cefcfff`; los 4 restantes son `service.py` = `f660a563` (E45),
   `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c` (E49, aviso
-  mínimo), iguales en principal y copia helper, sin archivos sin origen
-  (recibo E49). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
+  mínimo) y `mcp.py` = `03d1142a` (E62: códigos/pistas de lectura y put,
+  publicado `d883247`), iguales en principal y copia helper, sin archivos
+  sin origen (recibos E49/E62). Pin Hermes `5eb99eb`, DeepSeek v4.1 Flash / opencode-go /
   max, 7200 s/día America/Santiago, plaza única, un escritor, receptor
   Telegram único. Gateway helper en 51112 en marcha pero bot `helper`
   SUSPENDED (0 runs): capacidad instalada, no habilitada.
+  E62 verificado 2026-09-15: `tools/list` instalado expone hints y `allOf`
+  nuevos; salud ok sin reinicios; comprobación DeepSeek aislada con E58:
+  cero errores de herramientas (operations leído por view+reference+offset),
+  run cortado por deadline 180 s en inferencia lenta, 0 materiales;
+  rama de canarios parada (recibo E62).
 - Vivo (sólo lectura, periodo diario 2026-09-14 America/Santiago): salud
   `ok`, `pending` 0 no-terminal. Contabilidad observada: runtime imputado
   1881.06 s, imputación contable committed_cost_usd=6.0 USD (**no** es coste
