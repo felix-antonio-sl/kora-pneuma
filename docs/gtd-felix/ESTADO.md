@@ -134,7 +134,8 @@ Etiquetas fijadas **antes de inferencia** por el asistente: 10 selected, 3 noise
 proyecto GTD/Jev; relevancia como antecedente separada de obligación. El instrumento
 ahora admite contexto por caso y conserva el hash de la pregunta efectiva sin
 alterar los requests sintéticos. Seis pruebas del instrumento PASS, incluida
-regresión con distribución observada de masa 0.99. No se reajustaron etiquetas.
+regresión con distribución observada de masa 0.99. Estas etiquetas originales se
+conservan; la revisión humana posterior se registra separadamente más abajo.
 
 **22/22 HTTP 200, sin reintentos; 21 respuestas válidas y 1 anomalía de contrato.**
 Entre las válidas: 2 selected→selected, 7 selected→noise, 3 noise→noise,
@@ -155,20 +156,46 @@ Evidencia privada: `jev-evaluation-20260921/real/` (`cases-frozen.json`,
 `requests.jsonl`, `live-check-responses.jsonl`, `score.json`, `summary.json`).
 Los cuerpos y etiquetas de estos correos no se incorporan a Git.
 
+### Reevaluación con criterio humano, 2026-09-21
+
+Félix revisó los 22 textos sin ver las etiquetas del asistente ni de Jev y envió
+una clasificación completa: 1 pertinente, 21 ruido, 0 inciertos. El corpus
+original y las respuestas permanecen intactos. No hubo nuevas inferencias.
+Recibos privados en la misma carpeta: `human-labels.json`, `human-cases.json`,
+`human-score.json`, `human-summary.json`; misma identidad de peticiones verificada.
+
+Sobre las 21 respuestas válidas, Jev coincide en **18/21 (85,7 %)**: 18 ruidos
+bien descartados, 2 ruidos seleccionados y el único pertinente descartado.
+La respuesta excluida por masa 0.99 coincide categóricamente con el juicio humano;
+contarla sólo como sensibilidad daría 19/22, sin subsanar su invalidez estricta.
+Las etiquetas previas del asistente coinciden en **4/22**, o 4/21 en el subconjunto
+válido comparable. Queda corregida la interpretación basada en ellas: no había
+siete descartes pertinentes según Félix, sino uno. El criterio del asistente
+sobrestimó la pertinencia y la incertidumbre de esta muestra.
+
+La exactitud agregada no habilita descarte automático: una regla de todo-ruido
+acertaría 20/21 en ese mismo subconjunto y perdería también el único pertinente.
+No hay casos humanos inciertos para evaluar esa clase ni suficientes pertinentes
+para estimar sensibilidad general. El desacuerdo de etiquetas no identifica por
+sí solo la causa del error del modelo ni valida una política personalizada.
+
 ## Próximo paso y criterio de decisión
 
 **No instalar ni usar esta pregunta/contexto para descartar correo automáticamente.**
-La velocidad y coste favorables no compensan los falsos descartes respecto del
-criterio propuesto. Una confianza alta tampoco acredita pertinencia correcta.
+La revisión humana mejora mucho el acuerdo observado, pero conserva un falso
+descarte: el único pertinente de esta muestra. Una confianza alta tampoco acredita
+pertinencia correcta.
 No se comparó Hermes en el mismo corpus ni se aisló el efecto del contexto añadido:
 no atribuir una causa ni generalizar el fallo a todas las aplicaciones de Jev.
 
-Antes de otra inferencia, resolver la frontera entre antecedente útil, interés
-opcional y ruido con ejemplos reales; conservar incertidumbre cuando el contexto
-es insuficiente. Luego decidir una reformulación acotada o cerrar el experimento,
-sin una campaña indefinida para subir puntuaciones. Las etiquetas de esta muestra
-no son instrucciones de archivar o adoptar asuntos del usuario. Principal, control,
-base y filtro instalado permanecen iguales.
+Próximo trabajo propuesto: expresar una rúbrica breve a partir de los ejemplos
+humanos, sin convertir decisiones particulares en exclusiones universales por
+remitente o tema. Esta muestra pasa a ser material de ajuste; una reformulación
+requiere comprobación con otros correos etiquetados por Félix, incluidos pertinentes
+e inciertos cuando existan. Conservar revisión para decisiones insuficientemente
+sustentadas; no calibrar umbrales ni proclamar mejora sobre estos mismos 22 casos.
+Las etiquetas no son instrucciones de archivar o adoptar asuntos del usuario.
+Principal, control, base y filtro instalado permanecen iguales.
 
 El gateway requiere recuperación antes de cualquier recorrido vivo. No bloquea
 la evaluación offline. Sigue pendiente validación humana sobre ayuda real,

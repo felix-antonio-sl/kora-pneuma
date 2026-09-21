@@ -33,11 +33,15 @@ Las cifras y salud del apartado anterior son la base histórica de esta transici
 
 Félix autorizó explorar Jev comenzando por Gmail y facilitó la ruta de credencial.
 Tras 24 peticiones sintéticas favorables se evaluaron 22 correos reales con datos
-innecesarios eliminados. La configuración NO se incorpora: 7 descartes de casos
-etiquetados pertinentes entre respuestas válidas y una anomalía de distribución.
-ESTADO conserva métricas, límites y decisión. No seguir ajustando contra la muestra
-para lograr verde; resolver primero el criterio de pertinencia/contexto. Sin
-instalación ni cambios en correo o asuntos GTD.
+innecesarios eliminados. Félix completó después una revisión ciega: 1 pertinente,
+21 ruido. Jev coincide en 18/21 respuestas válidas, pero descarta el único pertinente
+y selecciona 2 ruidos; una anomalía de distribución sigue separada. Las etiquetas
+previas del asistente sólo coinciden en 4/22: quedan como evidencia histórica, no
+criterio humano. ESTADO y los recibos privados `real/human-*.json` conservan la
+reevaluación sin nuevas inferencias. La configuración NO se incorpora para descarte
+automático. Siguiente propuesta: rúbrica breve basada en las decisiones y posterior
+comprobación en otros correos; no llamar validación independiente al ajuste contra
+estos 22. Sin instalación ni cambios en correo o asuntos GTD.
 Al iniciar otra sesión, recuperar contexto mediante lecturas y **avisar a Félix
 cuando esté lista para partir**, indicando estado y primera acción concreta antes
 de modificar el producto o iniciar inferencias. Conservar autorizaciones vigentes;
