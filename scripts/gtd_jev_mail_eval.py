@@ -43,6 +43,8 @@ def load_cases(path, split):
                 not isinstance(case['text'], str) or not case['text'].strip() or
                 case['expected'] not in LABELS or case['split'] not in {'dev', 'check'}):
             raise ValueError('invalid_case')
+        if 'context' in case and (not isinstance(case['context'], str) or not case['context'].strip()):
+            raise ValueError('invalid_context')
     result = [c for c in cases if c['split'] == split]
     if not result:
         raise ValueError('empty_split')
@@ -51,8 +53,14 @@ def load_cases(path, split):
 
 def prepare(cases):
     for case in cases:
-        request = {'model': MODEL, 'state': {'text': case['text']},
-                   'questions': {'mail_relevance': QUESTION}}
+        state, question = {'text': case['text']}, QUESTION
+        if 'context' in case:
+            state['context'] = case['context']
+            question = {**QUESTION, 'instructions': QUESTION['instructions'] +
+                        ' Usa state.context como contexto declarado del usuario. Seleccionar un '
+                        'antecedente útil no crea una obligación ni afirma que esté pendiente.'}
+        request = {'model': MODEL, 'state': state,
+                   'questions': {'mail_relevance': question}}
         yield {'id': case['id'], 'request_sha256': fingerprint(request), 'request': request}
 
 
@@ -80,6 +88,7 @@ def validate_response(value):
 
 def score(cases, records):
     requests = {r['id']: r for r in prepare(cases)}
+    question_hashes = sorted({fingerprint(r['request']['questions']['mail_relevance']) for r in requests.values()})
     expected = {c['id']: c['expected'] for c in cases}
     seen, rows, confusion = set(), [], Counter()
     input_tokens = output_tokens = 0
@@ -110,7 +119,8 @@ def score(cases, records):
         rows.append({'id': identity, 'expected': expected[identity], 'missing': True})
     valid = [r for r in rows if 'predicted' in r]
     return {
-        'model': MODEL, 'question_sha256': fingerprint(QUESTION),
+        'model': MODEL, 'question_sha256': question_hashes[0] if len(question_hashes) == 1 else None,
+        'question_sha256s': question_hashes,
         'cases': len(cases), 'valid_responses': len(valid),
         'technical_failures': sum(bool(r.get('technical_failure')) for r in rows),
         'missing': len(set(expected) - seen),

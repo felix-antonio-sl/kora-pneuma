@@ -49,10 +49,16 @@ class JevMailEvaluationTests(unittest.TestCase):
             evaluation.score(self.cases, [row])
 
     def test_invalid_probabilities_or_model_are_not_decisions(self):
-        for change in ('nan', 'wrong_model', 'wrong_request'):
+        for change in ('nan', 'incomplete_mass', 'wrong_model', 'wrong_request'):
             row = self.result()
             if change == 'nan':
                 row['response']['answers']['mail_relevance']['probabilities']['selected'] = float('nan')
+            elif change == 'incomplete_mass':
+                # Observed provider response: preserve it as a contract anomaly,
+                # never silently normalize probabilities or pretend a valid decision.
+                row['response']['answers']['mail_relevance'].update(
+                    choice='noise', confidence=0.33,
+                    probabilities={'noise': 0.55, 'selected': 0.4, 'uncertain': 0.04})
             elif change == 'wrong_model':
                 row['response']['model'] = 'other-model'
             else:
@@ -65,3 +71,16 @@ class JevMailEvaluationTests(unittest.TestCase):
         self.assertEqual(1, result['uncertain_outputs'])
         self.assertEqual(200, result['observed_usage_valid_responses']['input_tokens'])
         self.assertIsNone(result['cost_usd'])
+
+    def test_context_is_explicit_changes_identity_and_leaves_synthetic_requests_unchanged(self):
+        original = self.cases[0]
+        before = next(evaluation.prepare([original]))
+        contextual = {**original, 'context': 'El usuario coordina telemedicina.'}
+        after = next(evaluation.prepare([contextual]))
+        self.assertNotEqual(before['request_sha256'], after['request_sha256'])
+        self.assertEqual(contextual['context'], after['request']['state']['context'])
+        self.assertEqual(before, next(evaluation.prepare([original])))
+        score = evaluation.score([contextual], [])
+        self.assertEqual(evaluation.fingerprint(after['request']['questions']['mail_relevance']), score['question_sha256'])
+        # An old response cannot be reused for the newly contextualized question.
+        self.assertEqual(1, evaluation.score([contextual], [self.result()])['technical_failures'])
