@@ -1,8 +1,9 @@
 # GTD de Félix · estado actual
 
 Corte de continuidad **2026-09-21**. Lecturas por API y exportación consistente;
-SQLite consultada sólo en copia privada. Sin instalación, inferencia ni envíos
-provocados por este corte. `candidates/` y `versions/` se preservan sin seguimiento.
+SQLite consultada sólo en copia privada. Sin instalación ni envíos GTD provocados por este corte.
+La evaluación Jev posterior hizo 24 peticiones con casos ficticios; ningún correo
+real cruzó esa frontera. `candidates/` y `versions/` se preservan sin seguimiento.
 
 ## Veredicto
 
@@ -66,7 +67,7 @@ Evidencia privada única de esta recuperación:
   focales assess+progreso 3/3 sobre composición instalada. Recibo
   `enc68-recuperacion/`.
 
-## Experimento Jev: preparación offline, sin incorporación
+## Experimento Jev: prueba sintética real, sin incorporación
 
 Objetivo autorizado: comprobar si un clasificador tipado sustituye el tramo de
 agente efímero de Gmail con calidad suficiente y menor complejidad. Principal,
@@ -86,8 +87,25 @@ control, esquema y fuentes vivas no cambian.
   Fallos técnicos y respuestas ausentes se separan de ruido e incertidumbre.
   Informa confusión, relevantes perdidos, incertidumbre, latencia por caso y uso
   observado; no inventa coste ni umbrales/calibración.
-- Cinco pruebas offline del instrumento PASS. No son pruebas de calidad de Jev.
-  Requests preparados en la carpeta privada; inferencia real NOT_RUN.
+- Cinco pruebas offline del instrumento PASS. Prueba real del proveedor:
+  **24/24 HTTP 200 y respuestas válidas, sin reintentos**. Misma pregunta y modelo
+  fijado en ambos grupos: acuerdo con etiquetas iniciales 11/12 ajuste y 12/12
+  comprobación. Ningún relevante clasificado como ruido; ningún ruido seleccionado.
+  No se aplicó umbral de confidence ni se acredita calibración.
+- Único desacuerdo `dev-02`: boletín para responsables de telemedicina, etiquetado
+  selected, respondió uncertain (confidence 0.16). El estado enviado no informa
+  que el usuario tenga ese rol: incertidumbre defendible y etiqueta discutible.
+  Conservar etiqueta y puntuación originales; revisar el contexto mínimo de roles,
+  sin agregar toda la memoria personal ni relabelar para obtener 24/24.
+- Latencia HTTP completa de este cliente: mediana 605.279 ms; rango 540.668–773.444 ms.
+  Uso observado: 11973 tokens entrada, 1050 salida. Estimación por tarifa publicada
+  de USD 0.042/M entrada y salida gratis: USD 0.000502866; no factura observada.
+  Fuente consultada 2026-09-21: https://docs.typesafe.ai/models.
+- Recibos y respuestas en carpeta privada: `live-dev-score.json`,
+  `live-check-score.json`, `live-summary.json`. La credencial se leyó en memoria
+  desde su archivo privado y no se copió al repo ni a recibos.
+  No hay comparación del clasificador Hermes sobre este mismo corpus ni prueba
+  de rendimiento en correo real: no afirmar superioridad de calidad o velocidad.
 
 Uso (salidas nuevas; se rechaza sobrescribir evidencia):
 
@@ -102,15 +120,19 @@ para comprobación. No ajustar contra comprobación y seguir llamándola indepen
 
 ## Próximo paso y criterio de decisión
 
-Confirmar acceso/cuenta TypeSafe y ámbito de datos; realizar una comparación
-acotada cuando corresponda, empezando por los ficticios. No se presume autorización
-para trasladar correo privado a otro proveedor por la autorización previa de Muse.
-Revisar errores por clase, en especial relevante→ruido, y coste/latencia completos.
-Una muestra pequeña sirve para descartar problemas y decidir continuar; no prueba
-fiabilidad universal. No admitir umbrales por intuición ni adoptar Jev sólo por
-JSON válido. Si aporta, sustituir el evaluador conservando autoridad, vigencia,
-consumo y cobertura; retirar mecanismo desplazado. Si no aporta, cerrar prueba.
+Acceso TypeSafe comprobado por las 24 respuestas válidas. La criba sintética
+justifica continuar una evaluación representativa; **no justifica instalar todavía**.
+Preparar etiquetas revisadas y contexto mínimo de roles sobre fuentes reales,
+incluyendo ruido y casos difíciles: las seis seleccionadas disponibles no bastan
+para estimar falsos negativos ni cobertura. Mantener el ámbito de datos explícito
+antes de enviar correo privado a este proveedor. No inferir ese ámbito de la
+credencial ni de la autorización previa de Muse.
 
+La siguiente comparación debe decidir si sustituir el evaluador, sin otra campaña
+sintética abierta. Revisar errores por clase y coste/latencia completos, conservando
+fallos técnicos como tales. Si aporta, integrar por la interfaz actual conservando
+autoridad, vigencia, consumo y cobertura, y retirar el mecanismo desplazado.
+Si no aporta, cerrar la prueba.
 El gateway requiere recuperación antes de cualquier recorrido vivo. No bloquea
 la evaluación offline. Sigue pendiente validación humana sobre ayuda real,
 corrección/pausa/regreso, fuentes pertinentes y G7 útil. `Retomar` actúa sobre el

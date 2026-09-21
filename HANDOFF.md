@@ -31,11 +31,11 @@ run cancelled/discarded por límite y aviso Telegram confirmado. No repetirlo.
 También registra la incidencia actual del gateway y la preparación offline de Jev.
 Las cifras y salud del apartado anterior son la base histórica de esta transición.
 
-Félix autorizó explorar Jev comenzando por Gmail. Se preparó una comparación sin
-proveedor ni instalación: casos ficticios, candidatos reales privados sin etiqueta
-y un instrumento offline. Continuar desde el próximo paso de ESTADO; no abrir otro
-plan paralelo ni sustituir el modelo principal. No confundir las cinco pruebas del
-instrumento con evidencia de calidad del modelo.
+Félix autorizó explorar Jev comenzando por Gmail y facilitó la ruta de credencial.
+Se ejecutaron 24 peticiones sintéticas: respuestas válidas, 23 acuerdos con etiquetas
+iniciales; el desacuerdo revela un rol no aportado en el estado. Sin correos reales
+ni instalación. ESTADO conserva métricas, límites y siguiente comparación con
+fuentes representativas. No abrir otro plan ni sustituir aún el modelo principal.
 
 Al iniciar otra sesión, recuperar contexto mediante lecturas y **avisar a Félix
 cuando esté lista para partir**, indicando estado y primera acción concreta antes
