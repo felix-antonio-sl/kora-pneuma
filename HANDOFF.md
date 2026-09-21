@@ -15,80 +15,32 @@ Lee `AGENTS.md`, [ESTADO](docs/gtd-felix/ESTADO.md) y las partes pertinentes de
 ESTADO conserva hechos, brechas y próximo paso. No reconstruyas los 69 encargos
 ni conviertas su numeración en el método de desarrollo.
 
-## Punto de partida comprobado al preparar esta transición
+## Punto de partida
 
-- Checkout: `/home/felix/lab/kora-gtd-felix`, rama
-  `fxai/gtd-felix-20260911`. HEAD y referencia local de upstream coinciden en
-  `e528313ec521fae566407bee6c5bedd7c31af326`; no se consultó el remoto por red.
-  Antes de editar este handoff, tracked limpio. Preservar `candidates/` y
-  `versions/` sin seguimiento.
-- ESTADO contiene un corte del **2026-09-15**, anterior al último recorrido.
-  Sus PID, salud, saldo y pausa no son observaciones actuales del 20 de septiembre.
-  No se consultó el servicio vivo durante esta transición.
-- Última instalación documentada: datos v4; E66 corrige el reconocimiento del
-  progreso de una evaluación usando stubs de filas canónicas. Conserva la
-  guarda de versiones. Entrada de skill abreviada con obligaciones en referencias,
-  herramientas con errores legibles y generación auxiliar de títulos desactivada.
-- Modelo principal documentado: DeepSeek v4.1 Flash vía OpenCode Go, razonamiento
-  max. Una ejecución global y presupuesto de 7200 s/día, America/Santiago.
-  Auxiliar instalado pero SUSPENDED; utilidad real de delegación pendiente.
-  Muse Spark Contributor está autorizado como alternativa, incluso para datos
-  reales; esa autorización no equivale a tenerlo instalado ni a una orden de cambio.
-- Producción personal **no aceptada**. Ensayos sintéticos y restauración tienen
-  evidencia; uso humano, utilidad y recorrido completo todavía requieren cierre.
+Checkout `/home/felix/lab/kora-gtd-felix`, rama `fxai/gtd-felix-20260911`.
+La transición inicial quedó en `87f60ee`, sobre `e528313`; consultar Git para
+cambios posteriores. Preservar `candidates/` y `versions/` sin seguimiento.
+El corte vigente de hechos está en ESTADO; no usar salud, saldo o pausa del
+15 de septiembre como observación actual.
 
-## Novedad decisiva: recuperar E69 antes de cualquier nueva ejecución
+## Continuación actualizada el 2026-09-21
 
-Félix respondió expresamente **«autorizo»** a reanudar el mismo asunto para el
-tramo de Telemedicina de E67. Esa autorización supera la espera de E68 en ese
-alcance; no volver a solicitarla. Una instrucción humana posterior incompatible
-sí prevalece.
+E69 ya fue recuperado por API y exportación consistente. El estado propietario
+ESTADO describe el resultado: minuta parcial válida, evaluación negativa,
+run cancelled/discarded por límite y aviso Telegram confirmado. No repetirlo.
+También registra la incidencia actual del gateway y la preparación offline de Jev.
+Las cifras y salud del apartado anterior son la base histórica de esta transición.
 
-Se inspeccionó la tarea ejecutora y las salidas de su último turno:
+Félix autorizó explorar Jev comenzando por Gmail. Se preparó una comparación sin
+proveedor ni instalación: casos ficticios, candidatos reales privados sin etiqueta
+y un instrumento offline. Continuar desde el próximo paso de ESTADO; no abrir otro
+plan paralelo ni sustituir el modelo principal. No confundir las cinco pruebas del
+instrumento con evidencia de calidad del modelo.
 
-- Tarea `01a09df2-0dcb-7e30-92fd-59e5a8355a0c`: idle; turno E69
-  `01a0a358-8a5c-7d91-ba58-1159fd7361c9`: **interrupted**.
-- La operación de reapertura respondió `applied`; el asunto pasó de pausado v32
-  a activo v33. Un sondeo posterior mostró una ejecución activa.
-- El último sondeo guardado mostró active 0, asunto activo v35, **9 materiales y
-  13 evaluaciones**, frente a 8 y 12 al inicio. Apareció una minuta de Telemedicina
-  con autor principal. Son salidas históricas de E69, no lecturas actuales.
-- No se encontró el reporte de cierre E69. El sondeo no acredita por sí solo
-  contenido útil, terminal nativo, integración, entrega por Telegram ni aceptación.
-  Tampoco permite adjudicar todos los cambios sin revisar su causalidad.
-
-La orden privada exacta conserva asunto, alcance, operación idempotente y límites:
-`/home/felix/.local/state/gtd-felix/direccion-20260914/encargo-69-telemedicina-autorizada.md`.
-El despacho está junto a ella en `despacho-encargo-69.json`.
-**No reenviar esta orden ni iniciar otro run porque falte el informe.**
-
-## Siguiente trabajo, en orden suficiente
-
-Al comenzar la nueva sesión, recuperar contexto y comprobar el punto de partida
-mediante lecturas. **Avisar a Félix cuando esté lista para partir**, antes de
-modificar el producto o iniciar nuevas ejecuciones. El aviso debe indicar
-brevemente qué se recuperó de E69, qué sigue pendiente y cuál será la primera
-acción concreta. No confundir este aviso de preparación con aceptación del
-producto ni convertirlo en una nueva solicitud de permisos ya concedidos.
-
-1. Recuperar E69 mediante lecturas soportadas: asunto y procedencia, causa/job,
-   terminal e integración, material completo, evaluación y delivery. Comprobar
-   salud, trabajo activo y presupuesto actuales. Reconciliar el mismo run si
-   corresponde; no recrearlo, reabrir otra vez ni sumar `request_review`.
-2. Juzgar el material existente: fuentes y cobertura, responsabilidades
-   respaldadas, pendientes y próximos pasos propuestos. Distinguir un corte
-   parcial útil del cierre del compromiso completo. Verificar devolución normal;
-   no escribir una minuta como operador para fingir éxito del agente.
-3. Actualizar ESTADO con ese resultado y el próximo obstáculo concreto. Si ya
-   hay entrega útil, pasar al recorrido humano de corrección, pausa y regreso.
-   Si falla algo, reparar la causa demostrada con el menor cambio completo;
-   una nueva inferencia necesita un propósito y una envolvente justificados,
-   sin reintentos automáticos de la orden E69 agotada.
-4. Cerrar lo pendiente de fuentes pertinentes y una delegación mínima útil
-   según GUIA, aprovechando lo existente. No activar el auxiliar por rutina.
-   Verificar recuperación sobre la composición final y dejar a Félix validar
-   utilidad y aceptar el uso. Un fallo o una decisión humana bloquean sólo
-   el trabajo que dependa de ellos.
+Al iniciar otra sesión, recuperar contexto mediante lecturas y **avisar a Félix
+cuando esté lista para partir**, indicando estado y primera acción concreta antes
+de modificar el producto o iniciar inferencias. Conservar autorizaciones vigentes;
+el aviso no es una solicitud ceremonial de permisos.
 
 ## Disciplina de ejecución: cuatro límites
 
@@ -147,8 +99,8 @@ producto ni convertirlo en una nueva solicitud de permisos ya concedidos.
   Verificar configuración efectiva antes de depender de estos valores históricos.
 - Evidencia privada: `/home/felix/.local/state/gtd-felix/`.
   Recuperación E68: `enc68-recuperacion/recibo.md`.
-  Consultar reportes E66–E68 sólo cuando el detalle haga falta; E69 es la
-  continuación pendiente. No copiar datos privados a documentación versionada.
+  Consultar reportes E66–E68 sólo cuando el detalle haga falta; la recuperación
+  E69 se encuentra en `jev-evaluation-20260921/e69-recovery.json`. No copiar datos privados a documentación versionada.
 - Ejecutar regresión del defecto y vecinas afectadas; ampliar sólo si la evidencia
   lo pide. Para KORA en este checkout:
   `python3 -B kora_cli.py --knowledge-root /home/felix/kora-knowledge check`.
