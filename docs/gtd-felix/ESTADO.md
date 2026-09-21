@@ -2,8 +2,9 @@
 
 Corte de continuidad **2026-09-21**. Lecturas por API y exportación consistente;
 SQLite consultada sólo en copia privada. Sin instalación ni envíos GTD provocados por este corte.
-La evaluación Jev posterior hizo 24 peticiones con casos ficticios; ningún correo
-real cruzó esa frontera. `candidates/` y `versions/` se preservan sin seguimiento.
+La evaluación Jev posterior hizo 24 peticiones sintéticas y, tras la siguiente
+instrucción de continuar, 22 con texto de correos reales revisado y con datos
+innecesarios eliminados. No se enviaron adjuntos ni el mensaje clínico excluido. `candidates/` y `versions/` se preservan sin seguimiento.
 
 ## Veredicto
 
@@ -23,8 +24,9 @@ no describe la disponibilidad actual.
   committed 0 s. No permite inferir coste histórico de proveedor.
 - Asunto del recorrido E69: activo v35; 9 materiales y 13 evaluaciones.
 - Cobertura declarada por el servicio: ambos calendarios complete; Gmail degraded,
-  4 pendientes de lectura, último código `cycle_not_active`. No se volvió a
-  consultar Google ni a ejecutar selección desde este encargo.
+  4 pendientes de lectura, último código `cycle_not_active`. No se ejecutó
+  selección viva. El muestreo posterior descrito abajo sí leyó Gmail directamente
+  para la evaluación, sin avanzar cobertura GTD.
 
 ## E69 recuperado: resultado parcial y aviso confirmado
 
@@ -67,7 +69,7 @@ Evidencia privada única de esta recuperación:
   focales assess+progreso 3/3 sobre composición instalada. Recibo
   `enc68-recuperacion/`.
 
-## Experimento Jev: prueba sintética real, sin incorporación
+## Experimento Jev: sintético favorable, correo real insuficiente
 
 Objetivo autorizado: comprobar si un clasificador tipado sustituye el tramo de
 agente efímero de Gmail con calidad suficiente y menor complejidad. Principal,
@@ -118,21 +120,56 @@ Cada registro de respuesta lleva `id`, `request_sha256`, `response` HTTP y
 `elapsed_ms`; en fallo, `error`. Probar ajuste antes de fijar pregunta/política
 para comprobación. No ajustar contra comprobación y seguir llamándola independiente.
 
+## Correo real: decisión de no incorporar la configuración evaluada
+
+Muestra de conveniencia: 24 posiciones espaciadas de una primera página de 50
+mensajes dentro del ámbito desde agosto. Sólo lecturas de Gmail, sin proyección,
+marcas, cursor GTD ni escritura de correos. Se excluyeron un mensaje clínico
+identificable y una actualización casi duplicada del mismo hilo. Quedaron 22 casos
+con enlaces/identificadores innecesarios eliminados, sin leer adjuntos. Español e
+inglés; no representan el universo ni son observaciones estadísticamente independientes.
+
+Etiquetas fijadas **antes de inferencia** por el asistente: 10 selected, 3 noise,
+9 uncertain. No son gold humano. Contexto explícito de ámbitos declarados y del
+proyecto GTD/Jev; relevancia como antecedente separada de obligación. El instrumento
+ahora admite contexto por caso y conserva el hash de la pregunta efectiva sin
+alterar los requests sintéticos. Seis pruebas del instrumento PASS, incluida
+regresión con distribución observada de masa 0.99. No se reajustaron etiquetas.
+
+**22/22 HTTP 200, sin reintentos; 21 respuestas válidas y 1 anomalía de contrato.**
+Entre las válidas: 2 selected→selected, 7 selected→noise, 3 noise→noise,
+9 uncertain→noise. Acuerdo exacto 5/21; cero salidas uncertain. El comprobante de
+asistencia restante eligió noise con probabilidades 0.55/0.40/0.04: suman 0.99;
+rechazado por la validación estricta preexistente, sin renormalizar ni repetir.
+No se presenta como fallo de transporte. Redondeo es una explicación posible,
+no verificada. Las etiquetas de varios avisos y promociones son discutibles;
+conservarlas permite revisar el criterio sin maquillar resultados.
+
+Latencia HTTP completa de las 22 llamadas: mediana 583.081 ms; rango
+549.576–672.325 ms. Uso de **todas** las respuestas, incluida la inválida:
+21851 tokens entrada y 946 salida. Estimación por tarifa: USD 0.000917742;
+coste facturado desconocido. Los totales del score incluyen sólo respuestas
+válidas y no deben confundirse con este consumo completo.
+
+Evidencia privada: `jev-evaluation-20260921/real/` (`cases-frozen.json`,
+`requests.jsonl`, `live-check-responses.jsonl`, `score.json`, `summary.json`).
+Los cuerpos y etiquetas de estos correos no se incorporan a Git.
+
 ## Próximo paso y criterio de decisión
 
-Acceso TypeSafe comprobado por las 24 respuestas válidas. La criba sintética
-justifica continuar una evaluación representativa; **no justifica instalar todavía**.
-Preparar etiquetas revisadas y contexto mínimo de roles sobre fuentes reales,
-incluyendo ruido y casos difíciles: las seis seleccionadas disponibles no bastan
-para estimar falsos negativos ni cobertura. Mantener el ámbito de datos explícito
-antes de enviar correo privado a este proveedor. No inferir ese ámbito de la
-credencial ni de la autorización previa de Muse.
+**No instalar ni usar esta pregunta/contexto para descartar correo automáticamente.**
+La velocidad y coste favorables no compensan los falsos descartes respecto del
+criterio propuesto. Una confianza alta tampoco acredita pertinencia correcta.
+No se comparó Hermes en el mismo corpus ni se aisló el efecto del contexto añadido:
+no atribuir una causa ni generalizar el fallo a todas las aplicaciones de Jev.
 
-La siguiente comparación debe decidir si sustituir el evaluador, sin otra campaña
-sintética abierta. Revisar errores por clase y coste/latencia completos, conservando
-fallos técnicos como tales. Si aporta, integrar por la interfaz actual conservando
-autoridad, vigencia, consumo y cobertura, y retirar el mecanismo desplazado.
-Si no aporta, cerrar la prueba.
+Antes de otra inferencia, resolver la frontera entre antecedente útil, interés
+opcional y ruido con ejemplos reales; conservar incertidumbre cuando el contexto
+es insuficiente. Luego decidir una reformulación acotada o cerrar el experimento,
+sin una campaña indefinida para subir puntuaciones. Las etiquetas de esta muestra
+no son instrucciones de archivar o adoptar asuntos del usuario. Principal, control,
+base y filtro instalado permanecen iguales.
+
 El gateway requiere recuperación antes de cualquier recorrido vivo. No bloquea
 la evaluación offline. Sigue pendiente validación humana sobre ayuda real,
 corrección/pausa/regreso, fuentes pertinentes y G7 útil. `Retomar` actúa sobre el

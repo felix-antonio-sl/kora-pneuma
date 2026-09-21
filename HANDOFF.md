@@ -32,11 +32,12 @@ También registra la incidencia actual del gateway y la preparación offline de 
 Las cifras y salud del apartado anterior son la base histórica de esta transición.
 
 Félix autorizó explorar Jev comenzando por Gmail y facilitó la ruta de credencial.
-Se ejecutaron 24 peticiones sintéticas: respuestas válidas, 23 acuerdos con etiquetas
-iniciales; el desacuerdo revela un rol no aportado en el estado. Sin correos reales
-ni instalación. ESTADO conserva métricas, límites y siguiente comparación con
-fuentes representativas. No abrir otro plan ni sustituir aún el modelo principal.
-
+Tras 24 peticiones sintéticas favorables se evaluaron 22 correos reales con datos
+innecesarios eliminados. La configuración NO se incorpora: 7 descartes de casos
+etiquetados pertinentes entre respuestas válidas y una anomalía de distribución.
+ESTADO conserva métricas, límites y decisión. No seguir ajustando contra la muestra
+para lograr verde; resolver primero el criterio de pertinencia/contexto. Sin
+instalación ni cambios en correo o asuntos GTD.
 Al iniciar otra sesión, recuperar contexto mediante lecturas y **avisar a Félix
 cuando esté lista para partir**, indicando estado y primera acción concreta antes
 de modificar el producto o iniciar inferencias. Conservar autorizaciones vigentes;
