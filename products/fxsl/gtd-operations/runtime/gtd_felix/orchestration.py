@@ -67,12 +67,20 @@ class OrchestrationWorker:
                 key = sync._key(partition)
                 if key != source.get('partition_key'):
                     raise ValueError('source_partition_mismatch')
-                registered = sync.inspect(partition)
-                if not registered or registered.get('partition') != partition:
+                # Inspect only this object's provenance. SourceSync.inspect hydrates
+                # every object in the collection; doing that for every pending
+                # event blocks the shared HTTP/Telegram event loop.
+                registered = self.service.store.db.execute(
+                    "SELECT json_extract(m.value, '$.partition') AS partition, o.value AS record "
+                    "FROM metadata AS m LEFT JOIN json_each(m.value, '$.objects') AS o "
+                    "ON o.key=? WHERE m.key=?", (source['external_id'], key)).fetchone()
+                if not registered or json.loads(registered['partition']) != partition:
                     raise ValueError('source_registry_partition_mismatch')
-                record = registered['objects'][source['external_id']]
+                record = json.loads(registered['record'])
+                registered_index = sync._load(record['index_key'])
                 index = sync._load(sync._object_key(partition, source['external_id']))
-                if record.get('item_id') != item['id'] or not index or index.get('item_id') != item['id']:
+                if (not registered_index or registered_index.get('item_id') != item['id']
+                        or not index or index.get('item_id') != item['id']):
                     raise ValueError('source_object_mismatch')
             except (KeyError, TypeError, ValueError):
                 return 'source_identity_unverified'
