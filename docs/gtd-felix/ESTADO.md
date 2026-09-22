@@ -3,7 +3,8 @@
 **Instalación coherente realizada; producción personal todavía no aceptada.**
 [GUIA.md](GUIA.md) gobierna alcance y aceptación. Corte de continuidad
 `gtd-felix/corte-2026-09-22` (`13bc6e8`), Jev en `af0a023`, corrección operativa
-en `f71837e`; composición fuente instalada en `2e0e6e0`.
+en `f71837e`; composición inicial `2e0e6e0`, seguida de la corrección
+de credencial `a563304` observada durante el primer recorrido real.
 
 ## Instalado y observado
 
@@ -67,17 +68,48 @@ running y con cero reinicios desde el arranque final.
 - El corte y la evaluación histórica de Jev siguen en Git y evidencia privada
   referida en `13bc6e8`. No constituyen una nueva cola de pruebas o decisiones.
 
+## Primer recorrido real y corrección de instalación
+
+Félix envió una intención real por Telegram el 22, a las 19:52 UTC. Captura durable
+y acuse observados; el principal preparó un material privado en un asunto derivado
+y la devolución sustantiva fue confirmada por Telegram. El primer intento terminó
+y quedó integrado tras 228,67 s. Esto acredita preparación y transporte, no aceptación.
+
+La primera selección real de Gmail y el posterior juicio tipado quedaron
+indisponibles: `LoadCredential` entrega la clave en **0400**, pero `read_private`
+exigía exactamente **0600**. La observación anterior de archivo montado y formato
+presente no acreditaba que el cliente pudiera leerlo. `a563304` admite 0400/0600
+sólo para la credencial Jev y conserva dueño, archivo regular, ausencia de enlaces
+y privacidad. Los demás lectores conservan 0600. Instalado en ambos perfiles;
+servicio reiniciado después de confirmar cero trabajos en vuelo. Sin inferencia
+artificial para probarlo: éxito de proveedor todavía no observado.
+
+La continuación automática de evaluación agotó su reserva: 245,53 s observados,
+STOP confirmado e integración descartada; el límite nativo es cooperativo.
+Conservó el material anterior y envió un aviso de revisión incompleta. No se
+amplió presupuesto ni se lanzó otro intento por la reparación. La secuencia de
+«material listo» y aviso de preparación incompleta puede resultar confusa: el
+material existe, pero no quedó evaluado como suficiente.
+
+Límites del primer material: regla de colación aún no confirmada; un límite
+horario descrito ambiguamente; `source_versions` vacío pese a citar correos;
+revisión nueva de Gmail fallida, que no demuestra ausencia de antecedentes.
+No cerrar C3/C4 ni declarar utilidad aceptada sobre esa base.
+Evidencia privada y exports propietarios del recorrido en
+`/home/felix/.local/state/gtd-felix/weekly-hours-20260922/`. El paquete de instalación
+anterior sigue conservado; los exports nuevos preservan material y entregas,
+sin acreditar recuperación de esta nueva composición completa.
+
 ## Incremento activo y siguiente acción
 
-**Instalación disponible para comenzar un asunto útil completo.** Responsable:
-la misma sesión integradora. Se invitó a Félix a enviar una intención real por
-Telegram; se espera esa intención o su decisión de dejar el sistema listo.
-No elegir un asunto antiguo ni crear un encargo para demostrar funcionamiento.
+**Un asunto útil completo sigue activo.** Responsable: la misma sesión integradora.
+El próximo avance depende de una precisión real de Félix sobre cómo se computa
+la colación o de otra corrección del resultado, conservada en el mismo asunto.
+No crear otra captura ni reiniciar una tentativa agotada para acreditar Jev.
 
-A partir de esa intención: observar preparación, primera llamada legítima a Jev,
-material, integración y devolución; resolver corrección, pausa y regreso dentro
-del mismo asunto, sin atribuir aceptación al silencio. Los procesos activos,
-hashes e inventarios no acreditan ese recorrido.
+Con esa precisión, observar revisión del material, procedencia de fuentes,
+primera inferencia Jev válida y devolución; después pausa y regreso cuando Félix
+los use. Corregir las fricciones de ese recorrido sin reabrir asuntos ajenos.
 
 C1–C6 y G1–G10 **siguen abiertos** hasta su evidencia aplicable. C2/C6 necesitan
 uso y aceptación de Félix; C3 cobertura útil; C4 devolución efectiva; G7 un aporte
