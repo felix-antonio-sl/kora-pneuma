@@ -1,29 +1,27 @@
-# Continuar GTD-Félix desde el corte 2026-09-22
+# Continuar GTD-Félix · 2026-09-22
 
 Lee `AGENTS.md`, [ESTADO](docs/gtd-felix/ESTADO.md) y
-[GUIA](docs/gtd-felix/GUIA.md). Son suficientes para arrancar; el detalle de
-herramientas vive junto al producto. No reconstruyas E1–E69 ni reinicies I1–I5.
+[GUIA](docs/gtd-felix/GUIA.md). Contratos junto al producto. No reconstruyas
+E1–E69 ni reinicies I1–I5.
 
 - Checkout `/home/felix/lab/kora-gtd-felix`; rama `fxai/gtd-felix-20260911`.
-  Corte Git `gtd-felix/corte-2026-09-22`, sobre la base de código `af0a023`.
-  La etiqueta identifica desarrollo; **no acredita producción aceptada**.
-- Propósito: dejar una intención → recibir trabajo útil → corregir → pausar →
-  volver con contexto, por Telegram. Un usuario/host/desarrollador.
-- Jev es decisor sí/no, clasificador y puntuador por defecto, por decisión de
-  Félix. Sin más tests/experimentos de adopción. No sustituye al generador,
-  las reglas del código ni las decisiones humanas. Implementado, aún no instalado.
-- Primer encargo: **instalación coherente**, delimitado en ESTADO. Gateway principal
-  en auto-restart; no inferir salud del servicio completo porque una unidad corre.
-  No abrir SQLite viva ni reactivar asuntos por una instrucción de desarrollo.
-- Reutilizar lo existente y la autoridad ya concedida. Un incremento activo,
-  una sesión responsable de integrar; sin subagentes ni nuevas capas por defecto.
-  Preservar `candidates/`, `versions/`, credenciales, datos y pausas.
-- Retirar el plan histórico conserva obligaciones C1–C6 y G1–G10, incluido G7 útil.
-  No llamar concluido al producto por compilar, instalar o guardar un material.
-- Sólo tres documentos de conducción: GUIA decide; ESTADO registra hechos y
-  siguiente acción; este puente orienta el arranque. Historia en Git, evidencia
-  privada enlazada cuando haga falta. Sin otra serie de reportes numerados.
+  Corte `gtd-felix/corte-2026-09-22` (`13bc6e8`). Fuente instalada `2e0e6e0`,
+  con Jev de `af0a023` y corrección de disponibilidad `f71837e`.
+- **Instalación coherente realizada; producción personal no aceptada.**
+  Principal y servicio disponibles; Jev instalado sin inferencia de prueba.
+  La causa del auto-restart era el pin del puente Gmail; gateway ahora nativo.
+  Hermes compartido intacto. DeepSeek v4.1 Flash / OpenCode Go / max conservado.
+- Próximo incremento: una intención real enviada por Félix, trabajo útil,
+  corrección, pausa y regreso. No reabrir asuntos anteriores por desarrollo.
+  El helper conserva suspensión; G7 útil sigue pendiente.
+- Sin nuevos tests, benchmarks ni canarios. API propietaria y exports;
+  no abrir SQLite viva. `candidates/`, `versions/`, credenciales y datos preservados.
+- Respaldos, configuración y recibos en
+  `/home/felix/.local/state/gtd-felix/installation-20260922/`;
+  `RECUPERACION.md` distingue paquete creado de recuperación observada.
+- Un integrador, un incremento activo, sin subagentes por defecto. Autoridad
+  vigente de desarrollo, instalación y publicación; no concede efectos a terceros
+  ni aceptación humana. GUIA gobierna, ESTADO conserva hechos, este puente orienta.
 
-Al iniciar otra sesión, **avisa a Félix cuando esté lista para partir** con el
-estado recuperado y la primera acción concreta. Conserva la autorización vigente;
-ese aviso no es una solicitud ceremonial de permiso.
+Al retomar, informa brevemente el estado recuperado y la primera acción concreta;
+continúa lo autorizado sin pedir una confirmación técnica rutinaria.

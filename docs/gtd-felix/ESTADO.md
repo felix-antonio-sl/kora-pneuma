@@ -1,81 +1,86 @@
-# GTD-Félix · estado desde el corte 2026-09-22
+# GTD-Félix · estado 2026-09-22
 
-**Base de desarrollo conservada:** `af0a0239b1579d9794791365b70b63060fe0eabf`.
-**Referencia de corte:** `gtd-felix/corte-2026-09-22`, sobre el commit de esta
-reorganización. **Producción personal todavía no aceptada.**
-[GUIA.md](GUIA.md) gobierna alcance, arquitectura, recorrido y aceptación.
+**Instalación coherente realizada; producción personal todavía no aceptada.**
+[GUIA.md](GUIA.md) gobierna alcance y aceptación. Corte de continuidad
+`gtd-felix/corte-2026-09-22` (`13bc6e8`), Jev en `af0a023`, corrección operativa
+en `f71837e`; composición fuente instalada en `2e0e6e0`.
 
-## Posición verificable
+## Instalado y observado
 
-- Checkout `/home/felix/lab/kora-gtd-felix`, rama `fxai/gtd-felix-20260911`.
-  Base previa al commit de corte: ocho commits sobre la referencia local
-  `origin/fxai/gtd-felix-20260911`; no se consultó el remoto para este corte.
-- `candidates/` y `versions/` sin seguimiento, preservados. Sin migración, borrado,
-  reinicio, escritura de dominio ni llamada de inferencia durante la reorganización.
-- Esquema fuente v4, 13 tablas, leído en `store.py`. Este dato describe el código;
-  no se abrió la DB viva para verificarla en este corte.
-- No se ejecutaron tests, experimentos, canarios ni comparaciones de proveedor.
-  Revisión de fuentes/documentos y estado systemd; no acredita el recorrido humano.
+Observación final del **2026-09-22, 19:22–19:24 UTC**. Checkout
+`/home/felix/lab/kora-gtd-felix`, rama `fxai/gtd-felix-20260911`.
+`candidates/` y `versions/` preservados. Sin migración de esquema.
 
-## Declarado, implementado y observado
+| Parte | Estado y límite |
+|---|---|
+| Servicio GTD | Running, API propietaria disponible, cero trabajos en vuelo. Captura/consulta/controles ofrecidos por la misma instalación; no se envió captura sintética |
+| Principal Hermes | Running, admisión `ready` sin errores, bot `available`. DeepSeek v4.1 Flash / OpenCode Go / max conservado |
+| Causa del reinicio | El wrapper `gmail_bridge.py` rechazaba el checkout compartido: pin `5eb99eb…`, instalado `1a1f4a59e252e1dc0137e7b2e7bcc8b0381d19c4`. Log `gmail_bridge_runtime_mismatch`, antes de contactar proveedor |
+| Corrección de arranque | Gateway usa CLI nativa Hermes `0.21.3`; no se modificó ni actualizó el checkout compartido. Gmail del servicio pasa directamente por Jev |
+| Jev | Cliente, Gmail, API, MCP, guard, instrucciones y allowlists instalados como conjunto. `gtd_decide` incluido entre las cuatro herramientas admitidas; no se llamó al proveedor |
+| Credencial | `LoadCredential=typesafe.env` sólo en la unidad GTD; `decisions.env_file` apunta a la copia privada de systemd. Formato/lectura local disponibles; clave ausente del entorno del proceso, perfiles y Git |
+| Telegram | `getMe` confirma `@korax_kv_bot`; `getWebhookInfo`: sin webhook, cero updates pendientes, sin último error. Receptor ejecutándose; no se envió mensaje de prueba ni se consumieron updates desde otra herramienta |
+| Helper G7 | Gateway running, bot sigue `suspended`, sin habilitación ni trabajo nuevo. Perfil actualizado y mandato acotado conservado; utilidad delegada sigue pendiente |
+| Presupuesto | 7.200 s disponibles, cero consumo/reserva actual, una plaza, día America/Santiago. El reinicio no cambió la política |
+| Fuentes | Selección Gmail preparada en Jev; cobertura útil nueva no observada. No se provocó revisión de dominio ni se reactivaron asuntos |
+| Recuperación | Exports consistentes y dos paquetes privados: composición anterior e instalada. Creación/validación del empaquetador existente realizada; no ensayo de restore. El venv Hermes sigue como dependencia identificada del host |
 
-| Parte | Código/contrato | Instalación y evidencia disponible |
-|---|---|---|
-| Registro, control y resultados | Servicio único, ciclos/intentos, materiales/evaluaciones/deliveries, esquema v4 | Instalados según recibos anteriores; unidad GTD running el 22. No se recontaron hashes ni se acredita salud integral por systemd |
-| Principal Hermes | Preparación, herramientas, integración y devolución | **Gateway en auto-restart el 22; impedimento actual**. Causa no diagnosticada en este corte |
-| Jev | Decisor tipado por defecto elegido por Félix; cliente, Gmail, `gtd_decide`, API/MCP/guard e instrucciones en `af0a023` | **No instalado.** Sólo revisión estática previa; no afirmar conducta observada de la nueva integración |
-| Google | Adquisición selectiva, identidad/revisión, cobertura e invalidación en código | Última lectura API del 21: calendarios completos, Gmail degradado con 4 pendientes y `cycle_not_active`; no reconsultado el 22 |
-| Material útil | Existe preparación parcial y conservación de material en recorridos previos | No hay todavía un recorrido completo aceptado por Félix; material guardado no equivale a entrega integrada |
-| Helper G7 | Incorporación y mandato acotados implementados | Gateway running el 22; bot SUSPENDED y 0 runs según último recibo, no revalidados hoy. Utilidad delegada no acreditada |
-| Recuperación | Export/restore, replay y reconciliación existentes | Evidencia histórica en copias; debe corresponder a la composición final para cerrar C5 |
+La comparación de instalación informa **38 módulos iguales a la fuente en cada
+perfil**, sin cambios nativos administrados ni recuperación KORA pendiente.
+Los recibos anteriores estaban atrasados: 18 ediciones locales del principal ya
+incorporadas en la fuente se conservaron en respaldo antes de reponer los bytes
+registrados y aplicar el instalador. Tres recursos del principal y 41 del helper
+se adoptaron con hashes y procedencia revisados. No hubo copia indiscriminada.
+El SOUL privado del helper explicita `gtd_decide` sin permitir subdelegación.
 
-Observación de unidades el **2026-09-22, 18:38:57 UTC** (hora exacta en
-recibo privado): GTD PID 3048478, 0 reinicios; gateway principal MainPID 0,
-auto-restart, contador 43824; helper PID 3868393, running, 1 reinicio.
-No hubo consulta nueva a `/health`, presupuesto o pausas: los saldos y posiciones
-del 21 no se presentan como actuales. No se cambiaron unidades ni configuración.
+## Incidente de disponibilidad resuelto en este incremento
 
-## Evidencia que se conserva sin convertirla en plan
+Al recuperar el gateway, una consulta de estado tardó **19,26 s** y el servicio
+consumía cerca de un núcleo. `_source_review_blocker` llamaba a `SourceSync.inspect`
+por cada evento: hidrataba todos los objetos de la colección repetidamente para
+253 revisiones bloqueadas por selección de fuentes.
 
-- E69: recuperado por API/export el 21. Minuta parcial válida; evaluación negativa
-  del objetivo completo; run cancelado/descartado por límite y aviso Telegram
-  confirmado. No repetirlo por faltar un reporte ni reabrir su asunto por este corte.
-- Jev: 24 peticiones sintéticas y 22 correos reales anteriores. Félix etiquetó
-  1 pertinente y 21 ruido; acuerdo 18/21 respuestas válidas, único pertinente
-  descartado, 2 falsos seleccionados y 1 distribución inválida. Mis etiquetas
-  iniciales coincidieron sólo 4/22. Resultados intactos, sin nueva inferencia.
-  **La decisión posterior de adoptar Jev prevalece; no reabrir su elección.**
-- Última composición contrastada del 15: 37 módulos principal/helper; 32 iguales
-  a `cefcfff`, cinco sustituciones documentadas, más instrucciones. No equivale al
-  HEAD actual; no copiar el repositorio entero encima sin identificar el conjunto.
-  Detalle recuperable en `git show af0a023:docs/gtd-felix/ESTADO.md`.
-- Evidencia privada: `/home/felix/.local/state/gtd-felix/corte-20260922/receipt.json`
-  para este corte; `jev-evaluation-20260921/` para E69 y clasificación humana;
-  `direccion-20260914/` para reportes y referencias a recuperación histórica E68.
-  Consultar el detalle sólo cuando una decisión dependa de él; cuerpos y secretos
-  permanecen fuera de Git.
+`f71837e` limita la lectura al objeto y sus dos índices de identidad, preservando
+partición, procedencia y rechazo por inconsistencia. Tras instalarlo, la consulta
+operativa de salud respondió en **1,181 s** y las de bots, presupuesto, pendientes
+y capacidades en aproximadamente **0,001 s**. Son observaciones puntuales del
+servicio, no benchmark ni garantía de latencia. Las tres unidades permanecían
+running y con cero reinicios desde el arranque final.
 
-## Trabajo activo: instalación coherente
+## Preservación y evidencia
 
-**Resultado:** dejar accesible el bot con la composición que incorpora Jev,
-captura/controles y recuperación conservados. Dueño: la sesión que tome el desarrollo;
-un solo escritor/integrador. El corte actual prepara el encargo, no lo ejecuta.
+- Los exports anterior/posterior conservan los **263 documentos de asuntos
+  idénticos**, 43 intentos históricos y cero recibos Jev. No se cambiaron plazos,
+  pausas, mandatos ni compromisos por este encargo de desarrollo.
+- No se abrió SQLite viva con herramientas auxiliares. Inspección de datos sólo
+  mediante API o copias extraídas de sus exports consistentes.
+- No se ejecutaron tests, benchmarks, canarios ni solicitudes de inferencia.
+  El arranque usó su descubrimiento operativo nativo, incluida la enumeración
+  MCP; no ejecutó herramientas de dominio. `git diff --check` sin incidencias.
+- Evidencia privada: `/home/felix/.local/state/gtd-felix/installation-20260922/`.
+  `receipt.json`, `operational-final.json`, `installed-modules.json`,
+  `domain-preservation.json`, recibos KORA y estados Telegram precisan el alcance.
+  `RECUPERACION.md` explica uso y límites de los respaldos.
+- `before-recovery.zip` conserva la instalación anterior; `installed-recovery.zip`
+  conserva la composición instalada y su export. La anterior reintroduce el pin
+  incompatible si se restaura literalmente: no es un fallback sano automático.
+- El corte y la evaluación histórica de Jev siguen en Git y evidencia privada
+  referida en `13bc6e8`. No constituyen una nueva cola de pruebas o decisiones.
 
-1. Leer error efectivo y configuración del gateway principal y resolver su causa
-   concreta. No atribuir al proveedor lo que sea un pin, entorno o dependencia;
-   no actualizar a ciegas el checkout Hermes compartido ni tocar instalaciones ajenas.
-2. Revisar el conjunto `af0a023` contra la composición realmente instalada:
-   cliente Jev, selección Gmail, API, MCP, guard, instrucciones, exposición efectiva
-   de herramientas y credencial del servicio. Conservar tipos, errores y autoridad
-   al conectar las piezas. No nuevo diseño general ni campaña de evaluación.
-3. Usar exportación, respaldo, corte y recuperación existentes; realizar el conjunto
-   identificado respetando pausas y trabajos en vuelo. Sin reabrir asuntos ni
-   provocar inferencia para fabricar una evidencia de instalación.
-4. Dejar versión/configuración identificadas, controles/canal disponibles y límites
-   explícitos. La primera inferencia posterior pertenece a un encargo real vigente.
-   Actualizar aquí lo instalado y lo observado, sin prometer éxito del modelo.
+## Incremento activo y siguiente acción
 
-Después: un asunto útil completo en Telegram; luego uso sostenido, G7 útil y
-recuperación final. C1–C6 permanecen abiertos hasta su evidencia aplicable; C2/C6
-necesitan uso/aceptación de Félix, C3 cobertura útil, C4 retorno, C5 composición final.
-No pedirle al dueño acciones de validación hasta que ese recorrido esté disponible.
+**Instalación disponible para comenzar un asunto útil completo.** Responsable:
+la misma sesión integradora. Se invitó a Félix a enviar una intención real por
+Telegram; se espera esa intención o su decisión de dejar el sistema listo.
+No elegir un asunto antiguo ni crear un encargo para demostrar funcionamiento.
+
+A partir de esa intención: observar preparación, primera llamada legítima a Jev,
+material, integración y devolución; resolver corrección, pausa y regreso dentro
+del mismo asunto, sin atribuir aceptación al silencio. Los procesos activos,
+hashes e inventarios no acreditan ese recorrido.
+
+C1–C6 y G1–G10 **siguen abiertos** hasta su evidencia aplicable. C2/C6 necesitan
+uso y aceptación de Félix; C3 cobertura útil; C4 devolución efectiva; G7 un aporte
+acotado útil. C5 tiene ahora paquetes identificados, pero no recuperación observada
+de la entrega final ni reconstrucción completa del entorno Hermes. No se reabre
+una campaña de tests para cerrar estos límites.
