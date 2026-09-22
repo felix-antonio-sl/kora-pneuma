@@ -81,7 +81,9 @@ class JevClient:
         value = os.environ.get(name)
         if not value and self.config.get('env_file'):
             from .application import read_private
-            for line in read_private(self.config['env_file']).decode().splitlines():
+            # systemd LoadCredential supplies an owner-only, read-only 0400
+            # file. Keep 0600 support for the original private env file.
+            for line in read_private(self.config['env_file'], allowed_modes=(0o400, 0o600)).decode().splitlines():
                 line = line.strip().removeprefix('export ')
                 key, sep, raw = line.partition('=')
                 if sep and key.strip() == name:

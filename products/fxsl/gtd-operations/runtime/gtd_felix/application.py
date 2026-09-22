@@ -37,7 +37,7 @@ EFFECT_CONTROL = {
 }
 
 
-def read_private(path):
+def read_private(path, *, allowed_modes=(0o600,)):
     path = Path(path).absolute()
     if any(p.is_symlink() for p in (path, *path.parents)):
         raise ValueError('unsafe_private_file')
@@ -45,7 +45,7 @@ def read_private(path):
     with os.fdopen(fd, 'rb') as stream:
         info = os.fstat(stream.fileno())
         if (not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid()
-                or stat.S_IMODE(info.st_mode) != 0o600 or info.st_nlink != 1):
+                or stat.S_IMODE(info.st_mode) not in allowed_modes or info.st_nlink != 1):
             raise ValueError('unsafe_private_file')
         data = stream.read(1024 * 1024 + 1)
         if len(data) > 1024 * 1024:
