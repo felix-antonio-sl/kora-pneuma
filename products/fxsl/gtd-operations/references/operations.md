@@ -583,6 +583,24 @@ de mutar. No sustituyas esos endpoints por una credencial humana. Una ruta no
 habilitada se reporta como límite, sin simularla ni abrir otra base.
 
 Arranque exclusivo de operación: `python -B -m gtd_felix serve --config ARCHIVO`.
+
+La composición con Jev arranca el gateway mediante la CLI nativa de Hermes;
+`gmail_bridge.py` es compatibilidad histórica y no debe envolver ese arranque.
+Su pin de checkout no corresponde a la ruta de selección Gmail que ahora posee
+el servicio. Actualizar Hermes compartido para satisfacer ese pin no es parte
+de instalar GTD. Mantener alineados `allowed_mcp_toolsets.gtd`, el filtro MCP
+del perfil y el guard: `gtd_read`, `gtd_command`, `gtd_dispatch`, `gtd_decide`.
+Actualizar el hash del guard en la configuración propietaria al instalarlo.
+
+En este host systemd entrega `typesafe.env` mediante `LoadCredential` al servicio
+GTD; `decisions.env_file` apunta a esa copia privada en su directorio de
+credenciales. El perfil Hermes/MCP no recibe la clave. No sustituir los archivos
+de datos para actualizar código. Para un corte coherente, detener adaptadores,
+servir temporalmente sólo la API propietaria, exportar y detenerla antes de
+capturar las otras entradas. Conservar la configuración completa y reponerla
+para recuperar Telegram, fuentes y orquestación; reconciliar cualquier trabajo
+incierto antes de admitir otro. El respaldo anterior y el paquete instalado son
+referencias distintas; crear un paquete no acredita haber recuperado el producto.
 El JSON privado requiere `data_dir` absoluto, bind loopback, puerto, actores,
 tokens y presupuesto explícitos para ejecución; permisos seguros `0600`, dueño
 efectivo y sin symlinks. Telegram, rutas Hermes y orquestación se habilitan desde
