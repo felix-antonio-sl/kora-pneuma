@@ -4,6 +4,13 @@ Lee esta referencia solo cuando la entrada de la skill te dirija a una de sus
 secciones. Todo el detalle es legible por páginas (`offset`/`next_offset`).
 Ninguna sección sustituye las obligaciones de la entrada.
 
+En todos los flujos, los juicios semánticos sí/no, clasificaciones y puntuaciones
+usan `gtd_decide` (Jev) por defecto, con evidencia y versión vigentes. Las reglas
+exactas siguen en el servicio. El principal prepara opciones y evidencia, redacta
+y ejecuta; conserva el recibo de Jev al fundamentar una evaluación o selección.
+Un criterio humano explícito prevalece sin someterlo a reclasificación. Un error
+de proveedor deja el juicio pendiente; no crea una respuesta negativa.
+
 ## A · Capturar, aclarar y organizar
 
 1. Distingue captura intencional, consulta, comando, selección de fuente y retorno.

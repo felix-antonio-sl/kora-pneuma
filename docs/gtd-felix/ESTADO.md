@@ -1,6 +1,7 @@
 # GTD de Félix · estado actual
 
-Corte de continuidad **2026-09-21**. Lecturas por API y exportación consistente;
+Corte de dirección **2026-09-22**; últimas lecturas del vivo **2026-09-21**.
+Lecturas por API y exportación consistente;
 SQLite consultada sólo en copia privada. Sin instalación ni envíos GTD provocados por este corte.
 La evaluación Jev posterior hizo 24 peticiones sintéticas y, tras la siguiente
 instrucción de continuar, 22 con texto de correos reales revisado y con datos
@@ -8,11 +9,38 @@ innecesarios eliminados. No se enviaron adjuntos ni el mensaje clínico excluido
 
 ## Veredicto
 
+**Jev adoptado como decisor tipado por defecto por instrucción de Félix.** No se
+condiciona esta elección a más tests o experimentos. Es una decisión de producto;
+no altera ni eleva la evidencia histórica de calidad.
+
 **Producción personal no aceptada. Gateway principal con reinicios repetidos.**
 C2–C6 abiertos; aceptación humana NOT_RUN. La observación sana del 15 de septiembre
 no describe la disponibilidad actual.
 
-## Observado ahora
+## Cambio de dirección e implementación, 2026-09-22
+
+- GUIA, entrada de la skill y flujos asignan decisiones semánticas sí/no,
+  clasificación y puntuación a Jev. Hermes prepara contexto, planes, materiales
+  y ejecuta herramientas; reglas exactas, autoridad y aceptación humana conservan
+  sus responsables.
+- `decisions.py`: cliente HTTP directo TypeSafe, modelo `jev-1.13.0`, validación
+  tipada Noul/Choice/Score, credencial privada, sin SDK ni reintentos automáticos.
+  `DecisionService` usa control/metadata existentes, recibo durable por operación,
+  versión y ámbito vigentes, límites locales y contabilidad dentro del padre.
+- `gtd_decide` expuesto en MCP/API y admitido por guard nativo; prompt de
+  orquestación y recursos actualizados. Gmail usa el mismo cliente directamente
+  y una rúbrica de atención concreta, sin heredar DeepSeek ni requerir inferencia
+  por el puente generativo. No se recalifican retrospectivamente fuentes guardadas.
+- Configuración predeterminada en el cliente y documentada en operations:
+  `decisions.provider=typesafe`, modelo fijado y referencia al archivo privado
+  ya autorizado. No se leyó ni copió la clave durante este cambio.
+- **Realización:** código y documentación modificados en el repositorio;
+  instalación viva no modificada. No se reinició el bot ni se hicieron llamadas
+  al proveedor. Tests y experimentos nuevos NOT_RUN por instrucción explícita;
+  no se usa ese estado para reabrir la elección de modelo. Revisión estática del
+  cambio, sin afirmar comportamiento observado. Sin migración de esquema.
+
+## Última observación del vivo (2026-09-21; no reconsultada el 22)
 
 - Servicio GTD: systemd active/running, PID 3048478, NRestarts 0. Lecturas de asunto,
   presupuesto, pendientes, cobertura y material respondieron; exportación obtenida.
@@ -120,7 +148,10 @@ Cada registro de respuesta lleva `id`, `request_sha256`, `response` HTTP y
 `elapsed_ms`; en fallo, `error`. Probar ajuste antes de fijar pregunta/política
 para comprobación. No ajustar contra comprobación y seguir llamándola independiente.
 
-## Correo real: decisión de no incorporar la configuración evaluada
+## Correo real: evidencia histórica del 2026-09-21
+
+La recomendación de no incorporar el proveedor quedó sustituida por la decisión
+de Félix del 2026-09-22. Las métricas siguientes conservan su alcance original.
 
 Muestra de conveniencia: 24 posiciones espaciadas de una primera página de 50
 mensajes dentro del ámbito desde agosto. Sólo lecturas de Gmail, sin proyección,
@@ -173,7 +204,7 @@ válido comparable. Queda corregida la interpretación basada en ellas: no habí
 siete descartes pertinentes según Félix, sino uno. El criterio del asistente
 sobrestimó la pertinencia y la incertidumbre de esta muestra.
 
-La exactitud agregada no habilita descarte automático: una regla de todo-ruido
+La exactitud agregada por sí sola no demuestra fiabilidad: una regla de todo-ruido
 acertaría 20/21 en ese mismo subconjunto y perdería también el único pertinente.
 No hay casos humanos inciertos para evaluar esa clase ni suficientes pertinentes
 para estimar sensibilidad general. El desacuerdo de etiquetas no identifica por
@@ -181,24 +212,16 @@ sí solo la causa del error del modelo ni valida una política personalizada.
 
 ## Próximo paso y criterio de decisión
 
-**No instalar ni usar esta pregunta/contexto para descartar correo automáticamente.**
-La revisión humana mejora mucho el acuerdo observado, pero conserva un falso
-descarte: el único pertinente de esta muestra. Una confianza alta tampoco acredita
-pertinencia correcta.
-No se comparó Hermes en el mismo corpus ni se aisló el efecto del contexto añadido:
-no atribuir una causa ni generalizar el fallo a todas las aplicaciones de Jev.
-
-Próximo trabajo propuesto: expresar una rúbrica breve a partir de los ejemplos
-humanos, sin convertir decisiones particulares en exclusiones universales por
-remitente o tema. Esta muestra pasa a ser material de ajuste; una reformulación
-requiere comprobación con otros correos etiquetados por Félix, incluidos pertinentes
-e inciertos cuando existan. Conservar revisión para decisiones insuficientemente
-sustentadas; no calibrar umbrales ni proclamar mejora sobre estos mismos 22 casos.
-Las etiquetas no son instrucciones de archivar o adoptar asuntos del usuario.
-Principal, control, base y filtro instalado permanecen iguales.
+**Continuar la realización de Jev como ruta tipada predeterminada**, con el cambio
+coherente del servicio, MCP, guard e instrucciones. No otra evaluación comparativa,
+corpus, campaña de umbrales o canario para decidir su adopción. El siguiente corte
+de instalación debe conservar captura, presupuesto, pausas y recuperación existentes;
+no se declara realizado aquí. La evidencia humana anterior ayuda a redactar criterios,
+sin autorizar archivos en Gmail ni generalizaciones por remitente. El principal
+generativo, control, base y filtro actualmente instalados permanecen iguales.
 
 El gateway requiere recuperación antes de cualquier recorrido vivo. No bloquea
-la evaluación offline. Sigue pendiente validación humana sobre ayuda real,
+la preparación del cambio. Sigue pendiente validación humana sobre ayuda real,
 corrección/pausa/regreso, fuentes pertinentes y G7 útil. `Retomar` actúa sobre el
 asunto; `/reanudar` sólo sobre avisos. C5 debe cerrarse sobre la entrega final.
 Contrato de aceptación y límites: GUIA §10–12.

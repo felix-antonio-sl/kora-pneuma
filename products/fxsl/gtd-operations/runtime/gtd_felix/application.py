@@ -86,6 +86,8 @@ def validate_config(config):
         from .effect_monitor import validate_effects
         accounts = {entry['transport']['account'] for entry in config.get('google', {}).get('accounts', {}).values()}
         validate_effects(config['external_effects'], accounts)
+    from .decisions import JevClient
+    JevClient(config.get('decisions'))
     return config
 
 
@@ -124,6 +126,8 @@ def create_app(service, control, config):
     effect_worker = EffectMonitor(service, effects, monitor, config.get('external_effects'))
     from .source_evaluation import SourceEvaluation
     selection = SourceEvaluation(service, control, monitor, config)
+    from .decisions import DecisionService
+    decisions = DecisionService(service, control, config)
     tokens = dict(config['api_tokens'])
 
     @web.middleware
@@ -185,11 +189,18 @@ def create_app(service, control, config):
             operations.extend(['review', 'choose', 'source_coverage', 'effects'])
         if role == 'owner':
             operations.extend(['capture', 'export'])
+        if role in {'principal', 'executor'}:
+            operations.append('decide')
         controls = ([] if role == 'executor' else list(CONTROL) if role == 'owner' else ['bots', 'pending', 'get_job', 'budget', 'validate'])
         if role != 'executor':
             controls.extend(list(EFFECT_CONTROL) if role == 'owner' else ['propose_effect'])
         return web.json_response({'version': 1, 'actor': request[ACTOR],
             'role': role, 'control': controls, 'operations': operations})
+
+    async def decide(request):
+        result = await decisions.run(request[ACTOR], request.headers.get('X-GTD-Job-ID'),
+            await body(request), alive=lambda: request.transport is not None and not request.transport.is_closing())
+        return web.json_response(result)
 
     async def items(request):
         filters = json.loads(request.query.get('filters', '{}'))
@@ -503,6 +514,7 @@ def create_app(service, control, config):
         return web.Response(body=data, content_type='application/zip', headers={'Content-Disposition': 'attachment; filename="gtd-snapshot.zip"'})
 
     app.add_routes([web.get('/health', health), web.get('/v1/capabilities', capabilities),
+        web.post('/v1/agent/decide', decide),
         web.post('/v1/source-evaluation/{operation}', source_evaluation),
         web.get('/v1/items', items), web.get('/v1/items/{item_id}', item),
         web.get('/v1/source-attachments/{item_id}/{version}', source_attachment),

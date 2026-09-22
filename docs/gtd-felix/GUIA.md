@@ -27,6 +27,7 @@ acreditan su resultado concreto; no sustituyen el recorrido completo.
 |---|---|
 | Interlocutor habitual | Telegram, `@korax_kv_bot`; captura, consulta y controles directos sin depender del modelo. |
 | Principal | Hermes, DeepSeek v4.1 Flash vía OpenCode Go, razonamiento max, por instrucción vigente de Félix. Aplicación y compatibilidad efectiva se acreditan en ESTADO.md. El principal absorbe preparación y coordinación bajo mandato. |
+| Juicios por defecto | Jev / TypeSafe para decisiones semánticas sí/no, clasificación y puntuación; instrucción de Félix del 2026-09-22. Hermes prepara evidencia y ejecuta; el servicio conserva autoridad e invariantes. |
 | Uso continuo | Una ejecución simultánea; 120 minutos diarios de ejecución acumulada por día civil America/Santiago. Captura y consulta siguen disponibles al agotarse. |
 | Fuentes Google | la cuenta personal configurada; calendario principal y feriados de Chile. Gmail debe incorporarse con selección pertinente y conservación mínima. Turnos HSC está excluido de la selección. |
 | Resultados | Preparación privada útil, materiales accesibles, corrección, pausa, retorno, revisión y avisos oportunos. |
@@ -84,10 +85,44 @@ el nombre solicitado hasta comprobar el identificador, proveedor y esfuerzo
 realmente disponibles; no inventar configuración ni cambiar de modelo en silencio.
 
 El **bot de producción** conserva una elección distinta: **DeepSeek v4.1 Flash vía
-OpenCode Go, razonamiento max**, incluido el evaluador Gmail que hereda su ruta.
+OpenCode Go, razonamiento max**, para preparación abierta, planificación,
+redacción y ejecución. **Jev es el decisor tipado por defecto**, incluida la
+clasificación Gmail; ésta ya no hereda el proveedor generativo del principal.
 Verificar identificador y soporte efectivo de max antes de declarar el cambio
 aplicado. La sesión de construcción usa un perfil distinto de `gtd-felix`; no
 sobrescribe su identidad, memoria ni configuración con las de construcción.
+
+### Jev: dirección vigente desde 2026-09-22
+
+Félix decidió adoptar Jev para juicios sí/no (`noul`), clasificación (`choice`) y
+puntuación por rúbrica (`score`), sin más tests ni experimentos para decidir su
+adopción. Sustituye la recomendación experimental de no incorporarlo. Los
+resultados anteriores se conservan como hechos, sin convertirlos en un veto ni
+en evidencia de calidad no observada. La instalación efectiva se declara en ESTADO.
+
+- Un cliente HTTP directo TypeSafe en el servicio, modelo fijado `jev-1.13.0`,
+  compartido por Gmail y `gtd_decide`. No nuevo agente, SDK, servicio o base.
+- El principal aporta el contexto vigente, candidatos y rúbrica. Jev emite el
+  juicio tipado; el principal conserva su procedencia al aplicar lo autorizado,
+  explicar una brecha o preparar el resultado. Agrupa preguntas independientes.
+- Permisos, presupuestos, pausa, versiones, idempotencia, fechas y aritmética
+  siguen siendo reglas/cálculos del código. Una decisión explícita de Félix no
+  requiere inferencia ni puede ser revocada por Jev. Selección no crea compromiso,
+  aceptación humana ni autorización de envío.
+- Noul usa una banda operativa explícita: ≤0,2 no; ≥0,8 sí; intermedio incierto.
+  Es política inicial, no calibración acreditada. Choice conserva la opción y su
+  distribución, con `unknown`/`uncertain` en el catálogo cuando corresponda.
+  Score conserva valor, distribución y rúbrica, sin fingir magnitud física.
+- Fallo, contexto excesivo, cuota o respuesta inválida dejan el juicio pendiente.
+  Sin fallback silencioso a Hermes ni reintentos automáticos de proveedor.
+  `confidence` no equivale a probabilidad de acierto. Las preguntas no comparten
+  respuestas y las probabilidades no se multiplican para inventar certeza conjunta.
+- Tiempo dentro del job autorizado; tokens observados por recibo, coste desconocido
+  si no hay dato. La clave permanece en el archivo privado autorizado, fuera de
+  perfiles del modelo, prompts, repositorio y recibos.
+
+Continuar con integración y realización ordinarias del producto. No abrir otra
+campaña de selección de modelo, corpus, canarios o umbrales como prerrequisito.
 
 - El siguiente mandato se concreta desde esta guía y ESTADO.md, con el incremento
   y su salida. El texto histórico INICIAR-SESION.md es antecedente privado y no
@@ -218,6 +253,8 @@ flowchart LR
   H --> S
   G[Google readonly] --> F[Adquisición y selección de fuentes]
   F --> S
+  S --> J[Jev: juicios tipados]
+  J --> S
   S --> O[Entrega durable y reconciliación]
   O --> U
 ```
@@ -225,7 +262,9 @@ flowchart LR
 Las cajas son responsabilidades dentro del paquete existente, no procesos nuevos.
 `service/gtd` conserva operaciones de dominio; `store` persistencia;
 `orchestration/control` política y ejecución; `telegram` presentación/recepción;
-`gmail_sync/gmail_bridge/source_evaluation` fuentes; `effects` efectos autorizados.
+`google_sources/source_evaluation` fuentes; `decisions` juicios tipados Jev;
+`effects` efectos autorizados. `gmail_bridge` permanece como implementación
+histórica de compatibilidad; no es la ruta de inferencia por defecto.
 No se divide un archivo sólo por su tamaño: se extrae cuando tiene contrato y
 prueba propios. El responsable de arquitectura e integración es uno.
 
@@ -576,10 +615,10 @@ copia base y con historial ampliado, antes de atribuir mejoras al cambio.
 | Frontera | Entrada / salida | Responsable y fallo |
 |---|---|---|
 | Canal → dominio | evento original identificado → guardado o error explícito | Receptor; no necesita LLM. No acusa persistencia antes del commit |
-| Interpretación → comando | propuesta con asunto/versión/base humana → aplicado/conflicto/rechazado | Principal interpreta; servicio autoriza. Contexto no concede facultades |
+| Interpretación → comando | propuesta con asunto/versión/base humana → aplicado/conflicto/rechazado | Principal prepara contexto y usa Jev para juicios tipados; servicio autoriza. Contexto no concede facultades |
 | Plan → ciclo | resultado finito + causa + base + cupo + retorno → admisión o razón | Política determinista, no título libre ni mero item activo |
 | Ciclo → Hermes | intento persistido + identidad → observación correlacionada | Adaptador; pérdida de respuesta conserva incertidumbre |
-| Progreso → evaluación | material/operación vigentes + criterio → juicio y brecha | Principal juzga contenido; servicio comprueba autoría/bases, no inventa satisfacción |
+| Progreso → evaluación | material/operación vigentes + criterio → juicio y brecha | Jev emite juicio tipado; principal registra evidencia/brecha; servicio comprueba autoría/bases, no inventa satisfacción |
 | Evaluación → entrega | consecuencia útil y material vigente → intención de entrega | Misma transacción local de cierre prepara outbox; envío posterior |
 | Pausa/corrección → todas | operación humana → nueva generación/alcance | Invalida sólo lo dependiente; prohíbe nuevas escrituras/entregas sobre base vieja |
 
@@ -737,7 +776,7 @@ cantidad de tareas cerradas como porcentaje de producción.
 | B0 · Línea de base | GUIA/ESTADO versionados, estado vivo exportado y código identificado | `9541abf` publicado, health/cola/saldo/identidad contrastados; **hecho** | — |
 | I1 · Ciclo e intento explícitos | `store`, repositorios focales, `control`, `orchestration`: work_cycles/runs/observations, admisión inmutable, proyección acotada | Revisión de un asunto ejecuta una sola familia con presupuesto causal; causa repetida/agotada no se renueva; STOP/reinicio/incertidumbre conservan identidad. Migración ensayada en export privado y comparación de observables | B0 y este contrato |
 | I2 · Conversación, material y devolución | `gtd/service/agent_context`, `telegram`, materiales/evaluaciones/deliveries: contexto y resultados por identidad | Entrada → preparación útil → corrección → pausa → regreso en Telegram; material/evaluación/outbox coherentes; lista/lote completos. Primero fixtures de transporte, después un recorrido humano preparado | I1; usar fuentes ya disponibles |
-| I3 · Fuentes suficientes | `gmail_sync/bridge/source_evaluation`, `source_entries`, proyecciones de agenda | Resolver los 6 fallos por causa; fuente pertinente cambia material dependiente; cursor/retención/reinicio comprobados; límites reales de cobertura. Si una brecha de C2 depende de esto, ejecutar esa porción antes de cerrar I2 | I1; se integra con I2 |
+| I3 · Fuentes suficientes | `google_sources/source_evaluation/decisions`, `source_entries`, proyecciones de agenda | Jev clasifica por defecto bajo el control existente; fuente pertinente cambia material dependiente; cursor/retención/reinicio y límites reales de cobertura se conservan. No más experimentos de adopción. Si una brecha de C2 depende de esto, ejecutar esa porción antes de cerrar I2 | I1; se integra con I2 |
 | I4 · Retorno sostenido y G7 | Scheduler existente, contratos de ejecutor y devolución | Un encargo útil delegado con aceptación/entrega/evaluación distintas, mismo cupo y STOP; avisos/esperas/resumen/ausencia sin insistencia. Una ejecución global también al delegar | I1–I3 |
 | I5 · Entrega recuperable y aceptación | Empaquetado, instalador existente, recuperación y evidencia final | Restore aislado y rollback de versión final, reconciliación antes de reanudar; recorridos críticos y fallos cubiertos; Félix reconoce utilidad, capacidades/límites operables | I2–I4 |
 

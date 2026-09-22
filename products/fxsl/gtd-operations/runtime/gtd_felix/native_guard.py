@@ -11,7 +11,7 @@ from pathlib import Path
 import sys
 
 ALLOWED = frozenset({'kanban_complete', 'kanban_block', 'kanban_heartbeat', 'kanban_comment'})
-MCP_ALLOWED = frozenset({'mcp__gtd__gtd_read', 'mcp__gtd__gtd_command', 'mcp__gtd__gtd_dispatch'})
+MCP_ALLOWED = frozenset({'mcp__gtd__gtd_read', 'mcp__gtd__gtd_command', 'mcp__gtd__gtd_dispatch', 'mcp__gtd__gtd_decide'})
 IDENTITY_KEYS = frozenset({'HERMES_HOME', 'HERMES_KANBAN_HOME', 'HERMES_KANBAN_TASK', 'HERMES_DELEGATED_CHILD_CONTEXT', 'HERMES_KANBAN_DB', 'HERMES_KANBAN_BOARD'})
 
 

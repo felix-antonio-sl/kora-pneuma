@@ -5,13 +5,28 @@
 Usa este procedimiento para capturas, consultas, cambios, ejecución y revisión del
 GTD de Félix. Recibe el evento con identidad/procedencia y recupera estado,
 mandato, versiones, cobertura y capacidades vigentes. En la sesión nativa usa
-`gtd_read`, `gtd_command` y `gtd_dispatch` cuando estén efectivamente expuestas;
+`gtd_read`, `gtd_command`, `gtd_dispatch` y `gtd_decide` cuando estén efectivamente expuestas;
 lee primero las instrucciones y el asunto vigente. Usa el `job_id` recibido del
 servicio y conserva la versión antes de mutar. La CLI es un cliente HTTP del mismo
 servicio, no otro escritor. No afirmes una capacidad por describirla.
 
 Produce cambios y recibos persistidos por el servicio, materiales comprobados y
 una devolución utilizable.
+
+## Juicios tipados por defecto
+
+Usa **Jev mediante `gtd_decide`** para decisiones semánticas sí/no (`noul`),
+clasificación (`choice`) y puntuación por rúbrica (`score`). Prepara evidencia
+mínima y actual, alternativas completas y criterios explícitos; agrupa preguntas
+independientes. Hermes conserva comprensión abierta, planificación, redacción y
+uso de herramientas. Elige categorías/rúbricas con salida incierta cuando haga
+falta; no inventes un juicio favorable si el proveedor no responde.
+Para evaluar cumplimiento, proporciona criterio y material vigente a Jev y
+conserva su recibo en la evidencia de `assess_result`; explica la brecha sin
+atribuir aceptación humana. La selección Gmail ya usa Jev desde el servicio.
+Permisos, pausa, versiones, cálculos, presupuesto y efectos siguen en código.
+No consultes al modelo para resolverlos ni hagas una llamada por cada pensamiento.
+Las decisiones explícitas de Félix prevalecen; no se vuelven a someter al modelo.
 
 ## Obligaciones nucleares
 

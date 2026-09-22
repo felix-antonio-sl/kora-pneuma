@@ -417,6 +417,9 @@ class OrchestrationWorker:
                     + encode(context))
         return ('Eres el principal GTD configurado. Lee gtd_read(view="instructions") y trabaja '
                 'sobre el registro mediante gtd_read y gtd_command; no simules cambios en texto. '
+                'Los juicios semánticos sí/no, las clasificaciones y puntuaciones se resuelven por defecto '
+                'con gtd_decide (Jev); tú preparas evidencia, opciones y rúbrica, redactas y aplicas '
+                'lo autorizado. Agrupa preguntas independientes; no consultes por cálculos o guardas exactas. '
                 'Usa los nombres originales con el prefijo que exponga el entorno nativo. '
                 'Usa este job_id en cada herramienta: ' + job['id'] + '. '
                 'Antes de cada comando lee la versión actual. Aclara lo suficiente; conserva propuesta '

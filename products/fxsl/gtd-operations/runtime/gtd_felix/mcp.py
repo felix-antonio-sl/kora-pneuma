@@ -19,6 +19,7 @@ from urllib.parse import quote, urlsplit
 import aiohttp
 
 from .agent_context import agent_item
+from .decisions import QUESTIONS_SCHEMA
 
 
 def obj(properties, required=()):
@@ -217,6 +218,12 @@ TOOLS = [
     {'name': 'gtd_dispatch', 'description': 'Reserve and enqueue durable specialist work within this job scope and shared budget. Does not wait for inference. A deferred receipt is not evidence that work ran.',
      'inputSchema': obj({'job_id': STRING, 'operation_id': STRING, 'request': REQUEST}, ['job_id', 'operation_id', 'request'])},
 ]
+TOOLS.append({'name': 'gtd_decide',
+    'description': 'Default Jev typed judgment for semantic yes/no decisions (noul), classification (choice), and rubric scores (score). Use current job, item and expected_version. Supply minimal evidence in state and explicit questions; include unknown/other when relevant. Questions are independent; IDs are invisible to the model. Reuse operation_id for the same request. This does not mutate a matter, grant authority, accept human commitments, calculate exact values or replace gtd_command. Unavailable is not no. Receipt includes usage and policy; do not retry an uncertain receipt with new IDs.',
+    'inputSchema': obj({'job_id': STRING, 'operation_id': STRING, 'item_id': STRING,
+        'expected_version': {'type': 'integer', 'minimum': 1},
+        'state': {'type': ['string', 'object', 'array']}, 'questions': QUESTIONS_SCHEMA},
+        ['job_id', 'operation_id', 'item_id', 'expected_version', 'state', 'questions'])})
 TOOLS[1]['description'] += ' Alternatively use effect_control with request to propose an immutable external effect; this never sends. Owner alone authorizes the exact proposal_hash, grants expiring draft preparation to grantee, or revokes. Principal proposals require current GTD_JOB_ID environment; no actor identity in arguments.'
 TOOLS[1]['inputSchema']['oneOf'] = [
     {'required': ['job_id', 'command'], 'not': {'anyOf': [{'required': ['effect_control']}, {'required': ['request']}]}},
@@ -458,6 +465,12 @@ class MCPClient:
                 method, payload = 'POST', {}
             else:
                 raise ValueError('unknown_view')
+        elif name == 'gtd_decide':
+            if (not isinstance(job_id, str) or not job_id
+                    or set(arguments) - {'job_id', 'operation_id', 'item_id', 'expected_version', 'state', 'questions'}):
+                raise ValueError('invalid_judgment_request')
+            method, path = 'POST', '/v1/agent/decide'
+            payload = {k: arguments[k] for k in ('operation_id', 'item_id', 'expected_version', 'state', 'questions')}
         elif name == 'gtd_command' and 'effect_control' in arguments:
             if set(arguments) != {'effect_control', 'request'} or arguments['effect_control'] not in EFFECT_REQUESTS:
                 raise ValueError('invalid_effect_control')

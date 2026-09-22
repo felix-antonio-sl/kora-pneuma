@@ -23,7 +23,7 @@ cambios posteriores. Preservar `candidates/` y `versions/` sin seguimiento.
 El corte vigente de hechos está en ESTADO; no usar salud, saldo o pausa del
 15 de septiembre como observación actual.
 
-## Continuación actualizada el 2026-09-21
+## Continuación actualizada el 2026-09-22
 
 E69 ya fue recuperado por API y exportación consistente. El estado propietario
 ESTADO describe el resultado: minuta parcial válida, evaluación negativa,
@@ -38,10 +38,20 @@ innecesarios eliminados. Félix completó después una revisión ciega: 1 pertin
 y selecciona 2 ruidos; una anomalía de distribución sigue separada. Las etiquetas
 previas del asistente sólo coinciden en 4/22: quedan como evidencia histórica, no
 criterio humano. ESTADO y los recibos privados `real/human-*.json` conservan la
-reevaluación sin nuevas inferencias. La configuración NO se incorpora para descarte
-automático. Siguiente propuesta: rúbrica breve basada en las decisiones y posterior
-comprobación en otros correos; no llamar validación independiente al ajuste contra
-estos 22. Sin instalación ni cambios en correo o asuntos GTD.
+reevaluación sin nuevas inferencias. **El 22 de septiembre Félix decidió que Jev
+sea el decisor sí/no, clasificador y puntuador por defecto, sin más tests ni
+experimentos.** Esa orden sustituye la recomendación previa de no incorporarlo y
+el plan de nuevos corpus/canarios. No reabrir la elección de proveedor.
+
+Implementado en el repositorio: `decisions.py` compartido por Gmail y la herramienta
+`gtd_decide`, API bajo job/versión/ámbito vigentes, recibos en metadata existente,
+guard y prompt nativos, instrucciones y guía coherentes. Hermes conserva preparación,
+redacción y ejecución; el código conserva permisos, cálculos y control. Jev directo
+TypeSafe `jev-1.13.0`; clave referenciada en archivo privado, nunca en el perfil LLM.
+Sin instalación, llamadas al proveedor, tests o experimentos nuevos. No atribuir
+conducta observada a esta implementación. Próximo trabajo: realizar el conjunto en
+la instalación y resolver el gateway por su causa concreta, preservando recuperación
+y pausas; seguir hacia utilidad humana del producto sin nueva campaña de evaluación.
 Al iniciar otra sesión, recuperar contexto mediante lecturas y **avisar a Félix
 cuando esté lista para partir**, indicando estado y primera acción concreta antes
 de modificar el producto o iniciar inferencias. Conservar autorizaciones vigentes;

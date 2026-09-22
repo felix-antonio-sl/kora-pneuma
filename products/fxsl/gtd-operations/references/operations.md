@@ -479,7 +479,7 @@ y `kanban_heartbeat` siguen disponibles para comunicar el impedimento. El hook
 rechaza un contexto completo mayor de 10.000 caracteres sin truncarlo; la
 configuración efectiva de `hooks.output_spill.max_chars` debe conservar al menos
 ese límite. Los hooks de contexto y guarda comparten las identidades y el
-directorio privado de recibos; el principal conserva sus tres herramientas MCP. La admisión
+directorio privado de recibos; el principal conserva sus herramientas MCP acotadas. La admisión
 contrasta ambos hashes y exige los dos hooks exactos con timeout de 20 segundos,
 `pre_tool_call.fail_closed=true` y spill habilitado a 10.000 caracteres. El contrato
 `route.native_guard` añade `context_path`, `context_sha256`, `board`, `kanban_db`,
@@ -1037,6 +1037,51 @@ como copia completa del buzón. No habilitar esta fuente hasta integrar y compro
 el callback y su no retención efectiva bajo la reserva de ejecución vigente.
 
 
+## Juicios tipados con Jev
+
+`gtd_decide(job_id, operation_id, item_id, expected_version, state, questions)`
+usa `POST /v1/agent/decide` con `X-GTD-Job-ID`. `operation_id` pertenece a este
+sobre, no a `command`. Es el proveedor por defecto para decisiones sí/no,
+clasificación y puntuación. `state` contiene evidencia mínima (string, objeto o
+array); el servicio agrega campos actuales del asunto. `questions` es un mapa
+de 1–8 preguntas independientes, con instrucciones completas en cada una:
+
+```json
+{"cumple":{"type":"noul","instructions":"¿El material de evidence cumple todos los criterios de item.completion_criteria?","criteria":{"true":"Todos los criterios están satisfechos con evidencia vigente.","false":"Falta o contradice al menos un criterio."}}}
+```
+
+Para `choice`, `criteria` es un objeto opción→descripción (2–255 opciones); agrega
+una salida de insuficiencia cuando sea posible. Para `score`, es un array ordenado
+de 2–10 situaciones autosuficientes. Los IDs no llegan al razonamiento del modelo.
+No pases información clínica identificable cuando basta un agregado pertinente.
+
+Devuelve `status=evaluated`, `answers`, proveedor/modelo/política, hashes, uso y
+duración. `noul` conserva la probabilidad y agrega `decision=yes/no/uncertain`
+(≥0,8 / ≤0,2 / banda intermedia); Choice y Score conservan su distribución.
+Los umbrales son política explícita, no calibración. Un juicio incierto no acredita
+cumplimiento; `status=uncertain` por error técnico tampoco es un juicio negativo.
+No transforma respuestas en comandos automáticamente: usa el recibo como evidencia
+en la operación de dominio correspondiente, con versión aún vigente.
+
+Sólo bajo job nativo activo de preparación privada o trabajo local y su ámbito;
+una petición de hasta 24 000 bytes, veinte segundos o saldo menor, máximo 16
+peticiones generales por job. El tamaño es un límite local, no equivalencia de
+tokens. Gmail conserva su límite específico de tanda. No se reserva otro job ni
+se duplica tiempo; se conserva uso separado, coste desconocido. Repetir idéntico
+`operation_id` recupera el recibo. Una interrupción conserva incertidumbre durable
+sin volver a enviar. No eludas el límite cambiando IDs ni hagas reintentos ciegos.
+
+Configuración del servicio (valores predeterminados; no añadirla al perfil LLM):
+
+```json
+{"decisions":{"provider":"typesafe","model":"jev-1.13.0","api_key_env":"TYPESAFE_API_KEY","env_file":"/home/felix/.config/secrets/typesafe.env"}}
+```
+
+Lee la variable del entorno del servicio o ese archivo privado 0600 como datos,
+sin ejecutar shell. No se comunica el secreto al agente. Contrato directo:
+https://docs.typesafe.ai/api (consultado 2026-09-22). Sin inferencia ni tests nuevos
+para este cambio, por instrucción de Félix; consultar ESTADO para realización.
+
 ## Evaluación de Gmail dentro del principal
 
 `gtd_read(view="source_evaluation", source_id="<id de cobertura>", job_id="<job vigente>")`
@@ -1057,13 +1102,13 @@ Un resultado parcial exige conservar la cobertura pendiente; no prueba
 que no existan antecedentes. Consulta después el índice paginado y detalles de
 fuentes seleccionadas pertinentes, vinculando sus versiones al material preparado.
 
-El servicio entrega al puente local un nonce en memoria ligado a job, run y digest
-del mensaje. El puente sólo acepta el principal nativo activo; usa su proveedor y
-credencial en memoria, sin resolver una ruta alternativa. El helper no tiene tools,
-transcripciones ni memoria; su salida es una clasificación cerrada. El launcher
-exige la versión Hermes comprobada. Pausa, desconexión o vencimiento invalidan la
+El servicio llama directamente a Jev con texto, contexto del asunto y rúbrica de
+pertinencia, bajo el job principal activo. No pasa por la inferencia generativa ni
+por el endpoint `evaluate-mail` del gateway Hermes. Conserva identidad efímera de
+job/run/digest y un recibo privado del juicio, sin persistir cuerpos descartados.
+La salida es selected/noise/uncertain. Pausa, desconexión o vencimiento invalidan la
 lectura, el resultado y la proyección, incluso al recuperar una decisión cacheada.
-El tiempo del helper ya está incluido en el tiempo de pared del padre: no se suma
+El tiempo de Jev ya está incluido en el tiempo de pared del padre: no se suma
 otra reserva ni se afirma que sus tokens sean gratuitos. El poller no inicia esta
 inferencia por su cuenta ni renueva artificialmente la cobertura de Gmail.
 

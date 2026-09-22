@@ -21,6 +21,7 @@ resources:
 - runtime/gtd_felix/codex_local.py
 - runtime/gtd_felix/codex_remote.py
 - runtime/gtd_felix/control.py
+- runtime/gtd_felix/decisions.py
 - runtime/gtd_felix/deployment.py
 - runtime/gtd_felix/domain.py
 - runtime/gtd_felix/effect_monitor.py
