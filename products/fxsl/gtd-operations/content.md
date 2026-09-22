@@ -13,6 +13,25 @@ servicio, no otro escritor. No afirmes una capacidad por describirla.
 Produce cambios y recibos persistidos por el servicio, materiales comprobados y
 una devolución utilizable.
 
+## Continuar una corrección
+
+Cuando la entrada precisa un asunto existente, resuelve primero su destino con
+el contexto humano reciente y la lectura del asunto. Si la relación está clara,
+usa `gtd_command` sobre la **captura actual**, con `action="clarify"` y
+`fields={destination:"existing", target_item_id, reason,
+intent_basis:{source_item_id, quote}}`. La cita es literal del original humano.
+Conserva su versión vigente y termina esa contribución: el servicio iniciará la
+revisión del destino con la fuente vinculada. No explores de nuevo el correo ni
+edites el destino desde el job de captura. Ante ambigüedad pregunta por el destino.
+
+En el job del destino, incorpora las precisiones ruteadas en la nueva versión del
+material y sus `source_versions`. Una precisión del contenido no exige editar el
+criterio de cierre ni usar `apply_human_instruction` fuera de sus casos admitidos.
+Lee el material previo y sólo los antecedentes que puedan cambiarlo. Persiste una
+primera versión útil, con cobertura parcial explícita cuando corresponda, antes
+de ampliar la búsqueda: completar toda la sincronización de correo no es requisito
+para guardar lo comprobable. Conserva las brechas y no declares cumplido lo pendiente.
+
 ## Juicios tipados por defecto
 
 Usa **Jev mediante `gtd_decide`** para decisiones semánticas sí/no (`noul`),

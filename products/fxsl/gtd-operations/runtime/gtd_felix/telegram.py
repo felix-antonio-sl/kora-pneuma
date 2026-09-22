@@ -840,6 +840,8 @@ class TelegramAdapter:
         status = receipt['status']
         if status in {'applied', 'already_applied'} and receipt.get('item'):
             await self.show_item(receipt['item'], receipt['operation_id'])
+        elif status in {'applied', 'already_applied'} and receipt.get('review_requested'):
+            await self._send('Revisión solicitada. Se preparará cuando haya capacidad disponible.')
         elif status == 'conflict':
             names = {'title': 'Asunto', 'status': 'Estado', 'kind': 'Tipo', 'review_at': 'Retorno',
                      'outcome': 'Resultado', 'executor': 'Responsable', 'project_id': 'Proyecto',
