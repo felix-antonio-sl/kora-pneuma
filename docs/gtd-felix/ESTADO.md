@@ -1,227 +1,81 @@
-# GTD de Félix · estado actual
+# GTD-Félix · estado desde el corte 2026-09-22
 
-Corte de dirección **2026-09-22**; últimas lecturas del vivo **2026-09-21**.
-Lecturas por API y exportación consistente;
-SQLite consultada sólo en copia privada. Sin instalación ni envíos GTD provocados por este corte.
-La evaluación Jev posterior hizo 24 peticiones sintéticas y, tras la siguiente
-instrucción de continuar, 22 con texto de correos reales revisado y con datos
-innecesarios eliminados. No se enviaron adjuntos ni el mensaje clínico excluido. `candidates/` y `versions/` se preservan sin seguimiento.
+**Base de desarrollo conservada:** `af0a0239b1579d9794791365b70b63060fe0eabf`.
+**Referencia de corte:** `gtd-felix/corte-2026-09-22`, sobre el commit de esta
+reorganización. **Producción personal todavía no aceptada.**
+[GUIA.md](GUIA.md) gobierna alcance, arquitectura, recorrido y aceptación.
 
-## Veredicto
+## Posición verificable
 
-**Jev adoptado como decisor tipado por defecto por instrucción de Félix.** No se
-condiciona esta elección a más tests o experimentos. Es una decisión de producto;
-no altera ni eleva la evidencia histórica de calidad.
+- Checkout `/home/felix/lab/kora-gtd-felix`, rama `fxai/gtd-felix-20260911`.
+  Base previa al commit de corte: ocho commits sobre la referencia local
+  `origin/fxai/gtd-felix-20260911`; no se consultó el remoto para este corte.
+- `candidates/` y `versions/` sin seguimiento, preservados. Sin migración, borrado,
+  reinicio, escritura de dominio ni llamada de inferencia durante la reorganización.
+- Esquema fuente v4, 13 tablas, leído en `store.py`. Este dato describe el código;
+  no se abrió la DB viva para verificarla en este corte.
+- No se ejecutaron tests, experimentos, canarios ni comparaciones de proveedor.
+  Revisión de fuentes/documentos y estado systemd; no acredita el recorrido humano.
 
-**Producción personal no aceptada. Gateway principal con reinicios repetidos.**
-C2–C6 abiertos; aceptación humana NOT_RUN. La observación sana del 15 de septiembre
-no describe la disponibilidad actual.
+## Declarado, implementado y observado
 
-## Cambio de dirección e implementación, 2026-09-22
+| Parte | Código/contrato | Instalación y evidencia disponible |
+|---|---|---|
+| Registro, control y resultados | Servicio único, ciclos/intentos, materiales/evaluaciones/deliveries, esquema v4 | Instalados según recibos anteriores; unidad GTD running el 22. No se recontaron hashes ni se acredita salud integral por systemd |
+| Principal Hermes | Preparación, herramientas, integración y devolución | **Gateway en auto-restart el 22; impedimento actual**. Causa no diagnosticada en este corte |
+| Jev | Decisor tipado por defecto elegido por Félix; cliente, Gmail, `gtd_decide`, API/MCP/guard e instrucciones en `af0a023` | **No instalado.** Sólo revisión estática previa; no afirmar conducta observada de la nueva integración |
+| Google | Adquisición selectiva, identidad/revisión, cobertura e invalidación en código | Última lectura API del 21: calendarios completos, Gmail degradado con 4 pendientes y `cycle_not_active`; no reconsultado el 22 |
+| Material útil | Existe preparación parcial y conservación de material en recorridos previos | No hay todavía un recorrido completo aceptado por Félix; material guardado no equivale a entrega integrada |
+| Helper G7 | Incorporación y mandato acotados implementados | Gateway running el 22; bot SUSPENDED y 0 runs según último recibo, no revalidados hoy. Utilidad delegada no acreditada |
+| Recuperación | Export/restore, replay y reconciliación existentes | Evidencia histórica en copias; debe corresponder a la composición final para cerrar C5 |
 
-- GUIA, entrada de la skill y flujos asignan decisiones semánticas sí/no,
-  clasificación y puntuación a Jev. Hermes prepara contexto, planes, materiales
-  y ejecuta herramientas; reglas exactas, autoridad y aceptación humana conservan
-  sus responsables.
-- `decisions.py`: cliente HTTP directo TypeSafe, modelo `jev-1.13.0`, validación
-  tipada Noul/Choice/Score, credencial privada, sin SDK ni reintentos automáticos.
-  `DecisionService` usa control/metadata existentes, recibo durable por operación,
-  versión y ámbito vigentes, límites locales y contabilidad dentro del padre.
-- `gtd_decide` expuesto en MCP/API y admitido por guard nativo; prompt de
-  orquestación y recursos actualizados. Gmail usa el mismo cliente directamente
-  y una rúbrica de atención concreta, sin heredar DeepSeek ni requerir inferencia
-  por el puente generativo. No se recalifican retrospectivamente fuentes guardadas.
-- Configuración predeterminada en el cliente y documentada en operations:
-  `decisions.provider=typesafe`, modelo fijado y referencia al archivo privado
-  ya autorizado. No se leyó ni copió la clave durante este cambio.
-- **Realización:** código y documentación modificados en el repositorio;
-  instalación viva no modificada. No se reinició el bot ni se hicieron llamadas
-  al proveedor. Tests y experimentos nuevos NOT_RUN por instrucción explícita;
-  no se usa ese estado para reabrir la elección de modelo. Revisión estática del
-  cambio, sin afirmar comportamiento observado. Sin migración de esquema.
+Observación de unidades el **2026-09-22, 18:38:57 UTC** (hora exacta en
+recibo privado): GTD PID 3048478, 0 reinicios; gateway principal MainPID 0,
+auto-restart, contador 43824; helper PID 3868393, running, 1 reinicio.
+No hubo consulta nueva a `/health`, presupuesto o pausas: los saldos y posiciones
+del 21 no se presentan como actuales. No se cambiaron unidades ni configuración.
 
-## Última observación del vivo (2026-09-21; no reconsultada el 22)
+## Evidencia que se conserva sin convertirla en plan
 
-- Servicio GTD: systemd active/running, PID 3048478, NRestarts 0. Lecturas de asunto,
-  presupuesto, pendientes, cobertura y material respondieron; exportación obtenida.
-  `/health` agotó 15 s: no se declara salud integral acreditada.
-- Gateway principal: activating/auto-restart, MainPID 0; contador 28427 y aumento
-  a 28429 en el journal durante la inspección. Causa no diagnosticada en este corte.
-  Es impedimento para un recorrido vivo; no se cambió el pin ni la instalación.
-- Presupuesto del 21 de septiembre: active 0, pending vacío, remaining 7200 s,
-  committed 0 s. No permite inferir coste histórico de proveedor.
-- Asunto del recorrido E69: activo v35; 9 materiales y 13 evaluaciones.
-- Cobertura declarada por el servicio: ambos calendarios complete; Gmail degraded,
-  4 pendientes de lectura, último código `cycle_not_active`. No se ejecutó
-  selección viva. El muestreo posterior descrito abajo sí leyó Gmail directamente
-  para la evaluación, sin avanzar cobertura GTD.
+- E69: recuperado por API/export el 21. Minuta parcial válida; evaluación negativa
+  del objetivo completo; run cancelado/descartado por límite y aviso Telegram
+  confirmado. No repetirlo por faltar un reporte ni reabrir su asunto por este corte.
+- Jev: 24 peticiones sintéticas y 22 correos reales anteriores. Félix etiquetó
+  1 pertinente y 21 ruido; acuerdo 18/21 respuestas válidas, único pertinente
+  descartado, 2 falsos seleccionados y 1 distribución inválida. Mis etiquetas
+  iniciales coincidieron sólo 4/22. Resultados intactos, sin nueva inferencia.
+  **La decisión posterior de adoptar Jev prevalece; no reabrir su elección.**
+- Última composición contrastada del 15: 37 módulos principal/helper; 32 iguales
+  a `cefcfff`, cinco sustituciones documentadas, más instrucciones. No equivale al
+  HEAD actual; no copiar el repositorio entero encima sin identificar el conjunto.
+  Detalle recuperable en `git show af0a023:docs/gtd-felix/ESTADO.md`.
+- Evidencia privada: `/home/felix/.local/state/gtd-felix/corte-20260922/receipt.json`
+  para este corte; `jev-evaluation-20260921/` para E69 y clasificación humana;
+  `direccion-20260914/` para reportes y referencias a recuperación histórica E68.
+  Consultar el detalle sólo cuando una decisión dependa de él; cuerpos y secretos
+  permanecen fuera de Git.
 
-## E69 recuperado: resultado parcial y aviso confirmado
+## Trabajo activo: instalación coherente
 
-La autorización humana de reapertura se aplicó una sola vez. El run causal
-conserva progreso de `put_material` v33→34 y `assess_result` v34→35: E66 reconoció
-ambas operaciones. Terminó cancelled/discarded tras STOP durable cuya validación
-registró `job_runtime_exhausted`; duración observada 256.041139 s, coste observado
-NULL. No fue una entrega integrada ni un nuevo fallo demostrado de reconocimiento.
+**Resultado:** dejar accesible el bot con la composición que incorpora Jev,
+captura/controles y recuperación conservados. Dueño: la sesión que tome el desarrollo;
+un solo escritor/integrador. El corte actual prepara el encargo, no lo ejecuta.
 
-La minuta privada se leyó completa por la API: válida y conservada. Contrasta
-antecedentes y explicita brechas, pero no acredita responsabilidades ni pendientes
-operativos nuevos. La evaluación mantiene `satisfied=false` para el compromiso
-completo. La proyección parcial de Gmail no prueba ausencia de documentación.
+1. Leer error efectivo y configuración del gateway principal y resolver su causa
+   concreta. No atribuir al proveedor lo que sea un pin, entorno o dependencia;
+   no actualizar a ciegas el checkout Hermes compartido ni tocar instalaciones ajenas.
+2. Revisar el conjunto `af0a023` contra la composición realmente instalada:
+   cliente Jev, selección Gmail, API, MCP, guard, instrucciones, exposición efectiva
+   de herramientas y credencial del servicio. Conservar tipos, errores y autoridad
+   al conectar las piezas. No nuevo diseño general ni campaña de evaluación.
+3. Usar exportación, respaldo, corte y recuperación existentes; realizar el conjunto
+   identificado respetando pausas y trabajos en vuelo. Sin reabrir asuntos ni
+   provocar inferencia para fabricar una evidencia de instalación.
+4. Dejar versión/configuración identificadas, controles/canal disponibles y límites
+   explícitos. La primera inferencia posterior pertenece a un encargo real vigente.
+   Actualizar aquí lo instalado y lo observado, sin prometer éxito del modelo.
 
-Outbox confirma el aviso de preparación incompleta, con acceso al asunto y
-advertencia de material guardado. Confirmación de transporte no implica lectura,
-utilidad aceptada ni cierre humano. **No repetir E69 por falta de su informe.**
-
-Evidencia privada única de esta recuperación:
-`/home/felix/.local/state/gtd-felix/jev-evaluation-20260921/`
-(`e69-recovery.json`, `snapshot.zip`, `minuta.json` y lecturas).
-
-## Última composición contrastada (2026-09-15; no recontada en este corte)
-
-- Runtime principal y copia helper idénticos entre sí (37 `.py` recontados por
-  hash contra `cefcfff`): 32/37 idénticos; los 5 restantes son `service.py` =
-  `f660a563` (E45), `orchestration.py` = `1498bf25` + `telegram.py` = `3264444c`
-  (E49), `mcp.py` = `32953079` (E62/E63) y `gtd.py` = `ccb4bfb1` (E66),
-  publicados hasta `fd048d7`. Skill instalada: entrada abreviada E64 + `flujos.md` con
-  bloque de conversación conservado (E63/E64); `title_generation` off en ambas
-  configs; resto de configuración, modelo (DeepSeek v4.1 Flash / opencode-go /
-  max), presupuesto (7200 s/día America/Santiago), plaza única, un escritor y
-  receptor Telegram único intactos. Helper: gateway en 51112 en marcha, bot
-  SUSPENDED, 0 runs (instalado, no habilitado ni útil probado en vivo).
-- Recuperación (ensayo E68 sobre export-pre67 con composición instalada):
-  restore propietario + reconcile (`reconciled`, `recovery_required` false) +
-  replay por identidad (263/9/337 en copia, segunda aplicación sin duplicados);
-  pausa v32 conservada; rollback a `gtd.py` previo arranca y lee sano (con el
-  defecto de confirmación de assess ya conocido, no versión aceptada);
-  focales assess+progreso 3/3 sobre composición instalada. Recibo
-  `enc68-recuperacion/`.
-
-## Experimento Jev: sintético favorable, correo real insuficiente
-
-Objetivo autorizado: comprobar si un clasificador tipado sustituye el tramo de
-agente efímero de Gmail con calidad suficiente y menor complejidad. Principal,
-control, esquema y fuentes vivas no cambian.
-
-- `tests/gtd_felix/fixtures/jev_mail_cases.json`: 24 casos ficticios en español,
-  12 de ajuste y 12 de comprobación, con 4 por clase en cada grupo. Etiquetas
-  propuestas por el asistente; no son gold humano ni corpus representativo real.
-  Incluyen pedidos, antecedentes útiles, copia ambigua, ruido, inyección y falta
-  de contenido. Las particiones no acreditan validación independiente.
-- Seis fuentes Gmail ya incorporadas quedaron en `real-mail-candidates.json`
-  privado, sin etiqueta. Tienen sesgo de selección y no representan el ruido.
-  No se enviaron a Jev. Revisar etiqueta y ámbito antes de usarlas.
-- `scripts/gtd_jev_mail_eval.py`: prepara peticiones fijadas a `jev-1.13.0` sin
-  etiquetas ni justificaciones; puntúa respuestas registradas por identidad y
-  hash de petición. Sin cliente de red, credenciales ni escrituras GTD.
-  Fallos técnicos y respuestas ausentes se separan de ruido e incertidumbre.
-  Informa confusión, relevantes perdidos, incertidumbre, latencia por caso y uso
-  observado; no inventa coste ni umbrales/calibración.
-- Cinco pruebas offline del instrumento PASS. Prueba real del proveedor:
-  **24/24 HTTP 200 y respuestas válidas, sin reintentos**. Misma pregunta y modelo
-  fijado en ambos grupos: acuerdo con etiquetas iniciales 11/12 ajuste y 12/12
-  comprobación. Ningún relevante clasificado como ruido; ningún ruido seleccionado.
-  No se aplicó umbral de confidence ni se acredita calibración.
-- Único desacuerdo `dev-02`: boletín para responsables de telemedicina, etiquetado
-  selected, respondió uncertain (confidence 0.16). El estado enviado no informa
-  que el usuario tenga ese rol: incertidumbre defendible y etiqueta discutible.
-  Conservar etiqueta y puntuación originales; revisar el contexto mínimo de roles,
-  sin agregar toda la memoria personal ni relabelar para obtener 24/24.
-- Latencia HTTP completa de este cliente: mediana 605.279 ms; rango 540.668–773.444 ms.
-  Uso observado: 11973 tokens entrada, 1050 salida. Estimación por tarifa publicada
-  de USD 0.042/M entrada y salida gratis: USD 0.000502866; no factura observada.
-  Fuente consultada 2026-09-21: https://docs.typesafe.ai/models.
-- Recibos y respuestas en carpeta privada: `live-dev-score.json`,
-  `live-check-score.json`, `live-summary.json`. La credencial se leyó en memoria
-  desde su archivo privado y no se copió al repo ni a recibos.
-  No hay comparación del clasificador Hermes sobre este mismo corpus ni prueba
-  de rendimiento en correo real: no afirmar superioridad de calidad o velocidad.
-
-Uso (salidas nuevas; se rechaza sobrescribir evidencia):
-
-```sh
-python3 -B scripts/gtd_jev_mail_eval.py prepare --split dev --output /ruta/privada/requests.jsonl
-python3 -B scripts/gtd_jev_mail_eval.py score --split dev --results /ruta/privada/responses.jsonl --output /ruta/privada/score.json
-```
-
-Cada registro de respuesta lleva `id`, `request_sha256`, `response` HTTP y
-`elapsed_ms`; en fallo, `error`. Probar ajuste antes de fijar pregunta/política
-para comprobación. No ajustar contra comprobación y seguir llamándola independiente.
-
-## Correo real: evidencia histórica del 2026-09-21
-
-La recomendación de no incorporar el proveedor quedó sustituida por la decisión
-de Félix del 2026-09-22. Las métricas siguientes conservan su alcance original.
-
-Muestra de conveniencia: 24 posiciones espaciadas de una primera página de 50
-mensajes dentro del ámbito desde agosto. Sólo lecturas de Gmail, sin proyección,
-marcas, cursor GTD ni escritura de correos. Se excluyeron un mensaje clínico
-identificable y una actualización casi duplicada del mismo hilo. Quedaron 22 casos
-con enlaces/identificadores innecesarios eliminados, sin leer adjuntos. Español e
-inglés; no representan el universo ni son observaciones estadísticamente independientes.
-
-Etiquetas fijadas **antes de inferencia** por el asistente: 10 selected, 3 noise,
-9 uncertain. No son gold humano. Contexto explícito de ámbitos declarados y del
-proyecto GTD/Jev; relevancia como antecedente separada de obligación. El instrumento
-ahora admite contexto por caso y conserva el hash de la pregunta efectiva sin
-alterar los requests sintéticos. Seis pruebas del instrumento PASS, incluida
-regresión con distribución observada de masa 0.99. Estas etiquetas originales se
-conservan; la revisión humana posterior se registra separadamente más abajo.
-
-**22/22 HTTP 200, sin reintentos; 21 respuestas válidas y 1 anomalía de contrato.**
-Entre las válidas: 2 selected→selected, 7 selected→noise, 3 noise→noise,
-9 uncertain→noise. Acuerdo exacto 5/21; cero salidas uncertain. El comprobante de
-asistencia restante eligió noise con probabilidades 0.55/0.40/0.04: suman 0.99;
-rechazado por la validación estricta preexistente, sin renormalizar ni repetir.
-No se presenta como fallo de transporte. Redondeo es una explicación posible,
-no verificada. Las etiquetas de varios avisos y promociones son discutibles;
-conservarlas permite revisar el criterio sin maquillar resultados.
-
-Latencia HTTP completa de las 22 llamadas: mediana 583.081 ms; rango
-549.576–672.325 ms. Uso de **todas** las respuestas, incluida la inválida:
-21851 tokens entrada y 946 salida. Estimación por tarifa: USD 0.000917742;
-coste facturado desconocido. Los totales del score incluyen sólo respuestas
-válidas y no deben confundirse con este consumo completo.
-
-Evidencia privada: `jev-evaluation-20260921/real/` (`cases-frozen.json`,
-`requests.jsonl`, `live-check-responses.jsonl`, `score.json`, `summary.json`).
-Los cuerpos y etiquetas de estos correos no se incorporan a Git.
-
-### Reevaluación con criterio humano, 2026-09-21
-
-Félix revisó los 22 textos sin ver las etiquetas del asistente ni de Jev y envió
-una clasificación completa: 1 pertinente, 21 ruido, 0 inciertos. El corpus
-original y las respuestas permanecen intactos. No hubo nuevas inferencias.
-Recibos privados en la misma carpeta: `human-labels.json`, `human-cases.json`,
-`human-score.json`, `human-summary.json`; misma identidad de peticiones verificada.
-
-Sobre las 21 respuestas válidas, Jev coincide en **18/21 (85,7 %)**: 18 ruidos
-bien descartados, 2 ruidos seleccionados y el único pertinente descartado.
-La respuesta excluida por masa 0.99 coincide categóricamente con el juicio humano;
-contarla sólo como sensibilidad daría 19/22, sin subsanar su invalidez estricta.
-Las etiquetas previas del asistente coinciden en **4/22**, o 4/21 en el subconjunto
-válido comparable. Queda corregida la interpretación basada en ellas: no había
-siete descartes pertinentes según Félix, sino uno. El criterio del asistente
-sobrestimó la pertinencia y la incertidumbre de esta muestra.
-
-La exactitud agregada por sí sola no demuestra fiabilidad: una regla de todo-ruido
-acertaría 20/21 en ese mismo subconjunto y perdería también el único pertinente.
-No hay casos humanos inciertos para evaluar esa clase ni suficientes pertinentes
-para estimar sensibilidad general. El desacuerdo de etiquetas no identifica por
-sí solo la causa del error del modelo ni valida una política personalizada.
-
-## Próximo paso y criterio de decisión
-
-**Continuar la realización de Jev como ruta tipada predeterminada**, con el cambio
-coherente del servicio, MCP, guard e instrucciones. No otra evaluación comparativa,
-corpus, campaña de umbrales o canario para decidir su adopción. El siguiente corte
-de instalación debe conservar captura, presupuesto, pausas y recuperación existentes;
-no se declara realizado aquí. La evidencia humana anterior ayuda a redactar criterios,
-sin autorizar archivos en Gmail ni generalizaciones por remitente. El principal
-generativo, control, base y filtro actualmente instalados permanecen iguales.
-
-El gateway requiere recuperación antes de cualquier recorrido vivo. No bloquea
-la preparación del cambio. Sigue pendiente validación humana sobre ayuda real,
-corrección/pausa/regreso, fuentes pertinentes y G7 útil. `Retomar` actúa sobre el
-asunto; `/reanudar` sólo sobre avisos. C5 debe cerrarse sobre la entrega final.
-Contrato de aceptación y límites: GUIA §10–12.
+Después: un asunto útil completo en Telegram; luego uso sostenido, G7 útil y
+recuperación final. C1–C6 permanecen abiertos hasta su evidencia aplicable; C2/C6
+necesitan uso/aceptación de Félix, C3 cobertura útil, C4 retorno, C5 composición final.
+No pedirle al dueño acciones de validación hasta que ese recorrido esté disponible.

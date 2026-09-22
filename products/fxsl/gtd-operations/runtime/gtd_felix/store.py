@@ -18,8 +18,8 @@ MIGRATION_1 = (
     "CREATE TABLE metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL)",
 )
 # I1: work_cycles / runs / run_observations as authoritative control.
-# Reference DDL is GUIA section 6; adjustments vs that text are documented in
-# GUIA itself: runs.native_host preserves the full native identity required by
+# This file is the authoritative DDL; GUIA section 6 describes its semantics.
+# runs.native_host preserves the full native identity required by
 # hermes/codex adapters (provider+host+profile+id); run_observations.observed_at
 # is nullable for migrated rows without durable timestamps (service requires it
 # for new rows); runs.detail_json / work_cycles.detail_json carry the mutable
@@ -80,8 +80,8 @@ MIGRATION_2 = (
     "CREATE INDEX observations_run ON run_observations(run_id, seq)",
 )
 # I2: materials / assessments / deliveries as the single authoritative
-# representation. Reference DDL is GUIA section 6; adjustments are documented
-# in GUIA: assessment ids are deterministic digests of durable fields (legacy
+# representation. Historical design: GUIA at af0a023. Assessment ids are
+# deterministic digests of durable fields (legacy
 # records carried none); criterion_hash derives from the assessment evidence;
 # created_at/retry_at/confirmed_at on deliveries are nullable because migrated
 # outbox intents carry no durable timestamps (inventing them is forbidden);
@@ -135,8 +135,8 @@ MIGRATION_3 = (
     "CREATE INDEX deliveries_target ON deliveries(channel, target_key, state)",
 )
 # I3: source_entries as the single queryable authority for per-revision intake
-# and selection state. Reference DDL is GUIA section 6 as adapted there for
-# the collection collision (I3 review): collection is a first-class identity
+# and selection state. Historical design: GUIA at af0a023, section 6.
+# After the collection collision (I3 review), collection is a first-class identity
 # column because two collections of one account reuse external ids; the id is
 # a JSON-array digest so no separator can collide with opaque fields.
 # original_digest is NULL for bodyless tombstones, item_id is NULL until
