@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:koraficacion-integral
+kind: skill
+namespace: kora
+name: koraficacion-integral
+candidate: economia-20260922
+base: f6e176cca94cc2729ff8b9a782bf5fadd76389d0a0db57d6cfae7796d0b59ee0
+base_revision: f6e176cca94cc2729ff8b9a782bf5fadd76389d0a0db57d6cfae7796d0b59ee0
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: cc6da71f03efc3b856bcefae4f96c2953f5944b03f258778508a5a5eaadb900c
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: cc6da71f03efc3b856bcefae4f96c2953f5944b03f258778508a5a5eaadb900c
+previous_revision: f6e176cca94cc2729ff8b9a782bf5fadd76389d0a0db57d6cfae7796d0b59ee0
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/koraficacion-integral
+displaced_path: /home/felix/kora-pneuma/candidates/kora/koraficacion-integral/economia-20260922/displaced-2a333c16903044a3bb9219d44a41102a
+admitted_at: '2026-09-22T20:22:33+00:00'

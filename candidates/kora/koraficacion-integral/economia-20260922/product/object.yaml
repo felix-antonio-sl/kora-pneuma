@@ -1,0 +1,18 @@
+id: urn:kora:artefacto:koraficacion-integral
+kind: skill
+name: koraficacion-integral
+description: Criterio único para conservar y expresar el contenido sustantivo de una
+  fuente con fidelidad y economía; usa workflow.py para cotejo, reparación y reanudación
+  del trabajo sin integrar modelos, extracción automática ni publicación.
+content: content.md
+targets:
+- codex
+- hermes
+provenance:
+  reconstruction:
+    date: '2026-09-13'
+    basis: docs/propuesta-refactorizacion-productos.md y encargo delegado de reconstrucción
+    change: Cierre funcional y revisión de condiciones, autoridad y recursos.
+resources:
+- scripts
+- references

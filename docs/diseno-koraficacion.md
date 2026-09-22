@@ -458,3 +458,23 @@ extracciones reales, diversidad de formatos/modelos y conducta de Hermes como
 agente. Los archivos instalados y la ejecución de su helper están comprobados;
 no se afirma recarga automática de sesiones abiertas ni uso efectivo por todo
 runtime. El corpus HSC no fue migrado, recontado ni acreditado con este cambio.
+
+
+## Ajuste de economía — 2026-09-22
+
+La revisión de economía queda dentro del cotejo vigente: resolver redundancias
+identificadas, elegir formas compactas sin pérdida y cerrar sin mejoras concretas
+pendientes. Se reutiliza `kora_cli.py measure`, ya existente; no se añade helper,
+esquema de revisión ni estado. El contador opcional `tiktoken 0.14.0` está
+habilitado en `.venv`; la guía operativa conserva su instalación reproducible.
+Revisión admitida: `cc6da71f03efc3b856bcefae4f96c2953f5944b03f258778508a5a5eaadb900c`.
+
+Prueba en contexto nuevo Luna max: transformó `nuevo.md` (238 tokens) en
+`economia.md` (200 tokens), ambos bajo `tests/fixtures/koraficacion-flujo/`, con
+`cl100k_base`: 38 tokens menos (~16%). Dirección cotejó la salida completa y
+repitió la medición; conserva modalidades, alternativas, excepción, tabla,
+incertidumbre y atribuciones. Una alternativa aún más corta que cambiaba permiso
+y disyunción e inventaba un acuerdo fue rechazada. La consulta vecina sobre °C
+se respondió sin koraficar. Es evidencia de estos casos, no de óptimo universal
+ni ahorro garantizado en otro corpus. Pasan las 24 pruebas existentes de
+medición, workflow y recuperación; no cambió código de esas operaciones.

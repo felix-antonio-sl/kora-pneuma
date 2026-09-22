@@ -151,6 +151,23 @@ Sin contador, encoding disponible o texto comparable, la salida dice
 `NOT_MEASURED` y explica por qué. Medir no demuestra fidelidad ni autoriza
 publicación; los binarios requieren una representación comparable identificada.
 
+El cotejo de koraficación también revisa economía: factoriza repeticiones y
+elige la representación menos costosa que conserve significado y legibilidad.
+Si comparar alternativas ayuda a decidir, reutiliza `measure`; la conclusión
+queda en la evidencia del mismo cotejo, sin otro estado o informe. Para habilitar
+el contador en el entorno local de KORA:
+
+```sh
+uv venv .venv  # sólo si todavía no existe
+uv pip install --python .venv/bin/python -r requirements.txt tiktoken
+.venv/bin/python kora_cli.py measure --source anterior.md --body propuesta.md \
+  --encoding cl100k_base
+```
+
+Compara cuerpos del mismo alcance y contabiliza los textos auxiliares que
+necesite cada uno. El tokenizer debe identificarse; uno de referencia no
+representa necesariamente el consumo exacto del modelo destinatario.
+
 ## Autoría de agentes y skills
 
 Usa `autoria-kora` para preparar la conducta y las capacidades necesarias. Su
