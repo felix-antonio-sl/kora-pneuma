@@ -103,13 +103,62 @@ sin acreditar recuperación de esta nueva composición completa.
 ## Incremento activo y siguiente acción
 
 **Un asunto útil completo sigue activo.** Responsable: la misma sesión integradora.
-El próximo avance depende de una precisión real de Félix sobre cómo se computa
-la colación o de otra corrección del resultado, conservada en el mismo asunto.
-No crear otra captura ni reiniciar una tentativa agotada para acreditar Jev.
+Félix ya precisó la colación incluida, presencia diaria en ambos servicios y
+preferencia por HODOM al inicio/final y telemedicina al centro. La captura quedó
+separada y agotó 248,25 s sin material: leyó antecedentes e intentó una edición
+lateral al final; el servicio rechazó por presupuesto agotado. No atribuir el
+fallo a falta de información del usuario.
 
-Con esa precisión, observar revisión del material, procedencia de fuentes,
-primera inferencia Jev válida y devolución; después pausa y regreso cuando Félix
-los use. Corregir las fricciones de ese recorrido sin reabrir asuntos ajenos.
+El botón «Revisar ahora» sí registró la solicitud. Su recibo aplicado no contiene
+`item`, y el presentador lo trataba como rechazo: aviso corregido en `8663e05`.
+Ese cambio también prioriza en las instrucciones la ruta existente de captura
+a asunto, y guardar material útil con límites antes de ampliar fuentes. Instalado
+en ambos perfiles, 38 módulos coincidentes; servicio reiniciado sin jobs pendientes.
+Sin tests ni inferencias artificiales; la conducta futura de la instrucción no
+queda acreditada por su instalación.
+
+La sesión integradora recuperó la precisión mediante `clarify` autenticado como
+dueño, con cita literal y destino original: conserva la captura como ruteada,
+sin compromiso duplicado. El servicio admitió revisión del destino con esa fuente
+en su reserva. Esta recuperación asistida no acredita todavía la vinculación
+autónoma de futuras correcciones.
+
+Durante la revisión real anterior sí hubo selección Gmail válida de Jev tras
+la reparación de la credencial (respuestas con fuentes seleccionadas y uso del
+proveedor). Esto supera el límite anterior de cero respuestas válidas, pero no
+acredita cobertura completa del correo ni resultado útil de toda la ejecución.
+
+La revisión ruteada terminó e integró material v2 en 221,55 s; Telegram confirmó
+su entrega. La continuación automática guardó v3 con cuatro dependencias de
+correo, obtuvo juicio Jev favorable y cerró la preparación en 193,57 s. Esto
+acredita ejecución/registro del juicio, no su suficiencia epistemológica ni
+aceptación humana. Se preservan versiones anteriores y recibos privados.
+
+Dos límites observados en esa salida requieren conservar el juicio crítico:
+
+- Al guardar v2, el modelo confundió `item.version=2` con `source_revision=1`
+  de la precisión ruteada y, tras el rechazo, omitió esa dependencia. V3 conserva
+  cuatro correos pero tampoco la fuente humana en `material.source_versions`;
+  la fuente sigue vinculada al asunto y a los jobs. `7c26a08` aclara esa unidad
+  en schema e instrucciones y exige corregir el número, no retirar la fuente.
+- V3 infiere actividad sincrónica al mediodía a partir de horas de interconsulta.
+  Ese dato no lo demuestra. El resumen enviado a Jev omitió esa inferencia y el
+  juicio favorable no la contrastó. `c5f24a0` exige contrastar las afirmaciones
+  con pasajes de fuente y conservar posibles refutaciones. No hay nueva
+  inferencia artificial que acredite la conducta posterior.
+
+La sesión preparó un material privado revisado, con la aritmética y el horario
+útiles, imputación de colación explícita y sin esas inferencias:
+`weekly-hours-20260922/recomendacion-horario-revisada.md` bajo el directorio privado
+de evidencia indicado arriba. Está fuera de Git y aún fuera del registro de
+materiales GTD: no presentarlo como v4 ni como una entrega del bot. El asunto
+figura `done` por su evaluación automática, no por aceptación de Félix.
+
+Siguiente trabajo: integrar correcciones de fundamento y dependencia en la
+continuidad del material, sin confundir juicio favorable con verificación de
+fuentes; después observar pausa/regreso cuando Félix los use. No reiniciar
+tentativas agotadas ni reabrir asuntos ajenos. La recuperación asistida de esta
+entrada no acredita todavía el recorrido autónomo de futuras correcciones.
 
 C1–C6 y G1–G10 **siguen abiertos** hasta su evidencia aplicable. C2/C6 necesitan
 uso y aceptación de Félix; C3 cobertura útil; C4 devolución efectiva; G7 un aporte

@@ -11,11 +11,19 @@ E1–E69 ni reinicies I1–I5.
   Principal y servicio disponibles; Jev instalado sin inferencia de prueba.
   La causa del auto-restart era el pin del puente Gmail; gateway ahora nativo.
   Hermes compartido intacto. DeepSeek v4.1 Flash / OpenCode Go / max conservado.
-- Primer recorrido real observado: captura, material privado y devolución
-  Telegram confirmados; evaluación posterior agotada, material conservado.
-  Jev falló al leer credencial 0400; lector corregido, sin nueva inferencia
-  artificial. Seguir con una precisión/corrección real de Félix en ese asunto;
-  no repetir el intento agotado ni reabrir otros. Pausa/regreso y G7 pendientes.
+- Primer recorrido real: material privado y devolución confirmados; evaluación
+  posterior agotada. Jev ya respondió válidamente en selección Gmail real tras
+  corregir lectura 0400. Precisión de Félix recibida, pero la captura separada
+  agotó tiempo sin material. `8663e05` corrige el falso rechazo de «Revisar ahora»
+  y prioriza vincular correcciones antes de explorar. Instalado en ambos perfiles.
+  La sesión integradora ruteó la precisión al asunto original mediante API;
+  hubo material v2, entrega Telegram confirmada, v3 y evaluación Jev favorable.
+  La preparación figura done, pero v3 contiene una inferencia sin sustento y
+  omite dependencia humana del material. `7c26a08` aclara revisiones de fuente;
+  `c5f24a0` exige pasajes de fuente al evaluar. Recomendación revisada privada en
+  `weekly-hours-20260922/recomendacion-horario-revisada.md`, todavía fuera del
+  registro GTD. Seguir esa continuidad según ESTADO. No atribuir recuperación
+  asistida a vinculación autónoma. Pausa/regreso y G7 pendientes.
 - Sin nuevos tests, benchmarks ni canarios. API propietaria y exports;
   no abrir SQLite viva. `candidates/`, `versions/`, credenciales y datos preservados.
 - Respaldos, configuración y recibos en
