@@ -25,7 +25,10 @@ revisión del destino con la fuente vinculada. No explores de nuevo el correo ni
 edites el destino desde el job de captura. Ante ambigüedad pregunta por el destino.
 
 En el job del destino, incorpora las precisiones ruteadas en la nueva versión del
-material y sus `source_versions`. Una precisión del contenido no exige editar el
+material y sus `source_versions`. Este campo usa el número de revisiones de la fuente
+(`len(source_revisions)` o `source_revision` ruteada), no `item.version`.
+Ante `source_version_stale`, relee y corrige ese número; no elimines la dependencia
+para lograr guardar. Una precisión del contenido no exige editar el
 criterio de cierre ni usar `apply_human_instruction` fuera de sus casos admitidos.
 Lee el material previo y sólo los antecedentes que puedan cambiarlo. Persiste una
 primera versión útil, con cobertura parcial explícita cuando corresponda, antes

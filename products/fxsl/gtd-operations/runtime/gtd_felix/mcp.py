@@ -28,7 +28,11 @@ def obj(properties, required=()):
 
 STRING = {'type': 'string'}
 STRINGS = {'type': 'array', 'items': STRING}
-VERSIONS = {'type': 'object', 'additionalProperties': {'type': 'integer', 'minimum': 1}}
+VERSIONS = {'type': 'object', 'additionalProperties': {'type': 'integer', 'minimum': 1},
+    'description': 'Map source item IDs to source revision counts: len(source_revisions), '
+                   'or source_revision from routed_human_sources. This is NOT the item version. '
+                   'After source_version_stale, read the current source and correct its revision; '
+                   'do not remove a source that supports the material.'}
 FIELDS = {k: STRING for k in ('title', 'text', 'notes', 'outcome', 'completion_criteria', 'context',
     'executor', 'project_id', 'responsibility_id', 'waiting_for', 'energy', 'timezone', 'purpose',
     'front', 'decision_question', 'capacity', 'due_at', 'review_at', 'starts_at', 'ends_at', 'decision_at')}
