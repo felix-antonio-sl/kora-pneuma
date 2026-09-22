@@ -46,6 +46,11 @@ falta; no inventes un juicio favorable si el proveedor no responde.
 Para evaluar cumplimiento, proporciona criterio y material vigente a Jev y
 conserva su recibo en la evidencia de `assess_result`; explica la brecha sin
 atribuir aceptación humana. La selección Gmail ya usa Jev desde el servicio.
+Si el cumplimiento depende de fundamentos documentales, incluye las afirmaciones
+materiales y los pasajes de fuente que las sostienen, distinguiendo dato e
+inferencia. Un resumen favorable del propio redactor no acredita esa relación:
+conserva también lo que podría refutarla. Sin esa evidencia, registra el límite
+en lugar de atribuir al juicio una verificación que no pudo realizar.
 Permisos, pausa, versiones, cálculos, presupuesto y efectos siguen en código.
 No consultes al modelo para resolverlos ni hagas una llamada por cada pensamiento.
 Las decisiones explícitas de Félix prevalecen; no se vuelven a someter al modelo.
