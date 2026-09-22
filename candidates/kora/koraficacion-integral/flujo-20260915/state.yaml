@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:koraficacion-integral
+kind: skill
+namespace: kora
+name: koraficacion-integral
+candidate: flujo-20260915
+base: 47aeee94825f3eb4a81c45593c27a1fac5a66bd4966fc87c3c0c53ed766b0356
+base_revision: 47aeee94825f3eb4a81c45593c27a1fac5a66bd4966fc87c3c0c53ed766b0356
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: f6e176cca94cc2729ff8b9a782bf5fadd76389d0a0db57d6cfae7796d0b59ee0
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: f6e176cca94cc2729ff8b9a782bf5fadd76389d0a0db57d6cfae7796d0b59ee0
+previous_revision: 47aeee94825f3eb4a81c45593c27a1fac5a66bd4966fc87c3c0c53ed766b0356
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/koraficacion-integral
+displaced_path: /home/felix/kora-pneuma/candidates/kora/koraficacion-integral/flujo-20260915/displaced-856249f6162948d6b2dfb81e3dae204f
+admitted_at: '2026-09-15T01:26:09+00:00'

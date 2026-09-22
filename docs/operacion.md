@@ -74,6 +74,23 @@ entregó `intake`. Repite `--requires URN` para los conocimientos necesarios par
 su uso; conserva otros vínculos en `relations`. Un recurso técnico mantiene su
 formato cuando pasarlo a prosa destruiría su función.
 
+Para nuevas koraficaciones usa el recorrido de
+[koraficacion-integral](../products/kora/koraficacion-integral/content.md) y su
+[helper workflow.py](../products/kora/koraficacion-integral/references/protocolo.md).
+Administra una candidata completa y un cotejo con hallazgos, sin inventario ni
+cuestionarios obligatorios por bloque. `--body` apunta al contenido del borrador
+KORA; el estado y los originales congelados quedan en una carpeta privada fuera
+del producto y del borrador. Tras `init`, `candidate` y `repair` gestionan ese
+cuerpo con protección de base; no lo edites a la vez mediante otro trabajo.
+`export` entrega evidencia auxiliar de la versión revisada, sin publicar. Cotejo
+del autor y revisión separada se declaran por su exposición real; la herramienta
+no acredita significado. El soporte, la paginación y las notas de procesamiento
+quedan fuera de las representaciones de contenido, las preguntas y la salida.
+
+Los trabajos existentes `integral-3` siguen con `integral.py` y su
+[compatibilidad](../products/kora/koraficacion-integral/references/compatibilidad-integral-3.md).
+No se convierten automáticamente sus estados ni sus juicios de revisión.
+
 Para cambiar un conocimiento existente, prepara su borrador y edita los archivos
 que entrega el comando:
 

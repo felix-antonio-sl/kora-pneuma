@@ -1,0 +1,22 @@
+id: urn:kora:artefacto:koraficacion
+kind: skill
+namespace: kora
+name: koraficacion
+candidate: flujo-20260915
+base: 0b9ab593a1d5701a9e93b6ab8103d94f76ce243f687bca9ff4d85b680da9dc9c
+base_revision: 0b9ab593a1d5701a9e93b6ab8103d94f76ce243f687bca9ff4d85b680da9dc9c
+base_residue: 4dfac2231c942f4ce60e4fdb4a1bbd2e1a961bdc07a73f85d0b09193c674950e
+status: admitted
+reviewed_sha256: 075825fd898fb7b776b3a0458c9cb8ae2ae91c1e8df4eeccce2de9cadd4c71b4
+realizable: true
+errors: []
+diagnostics: []
+realizable_targets:
+  codex: true
+  hermes: true
+revision: 075825fd898fb7b776b3a0458c9cb8ae2ae91c1e8df4eeccce2de9cadd4c71b4
+previous_revision: 0b9ab593a1d5701a9e93b6ab8103d94f76ce243f687bca9ff4d85b680da9dc9c
+staged_path: null
+destination_path: /home/felix/kora-pneuma/products/kora/koraficacion
+displaced_path: /home/felix/kora-pneuma/candidates/kora/koraficacion/flujo-20260915/displaced-8e6358e19af8466fb0f24d28405b3ea4
+admitted_at: '2026-09-15T01:26:24+00:00'
