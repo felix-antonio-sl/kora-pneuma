@@ -482,6 +482,49 @@ class GTDDomain:
                 'source_revision': revision, 'intent_basis': basis, 'clarification': route})
         return sources
 
+    def _routed_material_requirements(self, item):
+        """Dependency-only read of routed human precision for one target.
+
+        Terminal-agnostic on purpose: a done/withdrawn target keeps its
+        material dependency even though no authority to reopen or act is
+        granted. Read-only; callers must still authorize their own writes.
+        Matches by exact routed_to identity only, never by proximity.
+        Bounded: SQL filters candidates by this target id and only those
+        rows are hydrated (same class as f71837e); no full-inventory scan.
+        A later source edit never drops the dependency: the required
+        revision follows the current source state, while authority paths
+        keep enforcing route freshness themselves. The persisted
+        existing/routed route was already validated by _route_existing;
+        this read grants no authority and adds no provenance re-checks.
+        A recognized route with a damaged historical reference fails
+        closed (routed_dependency_unverifiable), never as valid silence.
+        """
+        if not item or not isinstance(item.get('id'), str):
+            return {}
+        rows = self.store.db.execute(
+            "SELECT document FROM items WHERE json_extract(document, '$.clarification.target_item_id') = ?",
+            (item['id'],)).fetchall()
+        required = {}
+        for row in rows:
+            source = json.loads(row[0])
+            if not isinstance(source, dict):
+                continue
+            route = source.get('clarification', {})
+            if (not isinstance(route, dict) or route.get('target_item_id') != item['id']
+                    or route.get('destination') != 'existing' or route.get('resolution') != 'routed'):
+                continue
+            revisions = source.get('source_revisions', [])
+            routed = route.get('source_revision')
+            basis = route.get('intent_basis', {})
+            entry = revisions[routed - 1] if type(routed) is int and isinstance(revisions, list) and 1 <= routed <= len(revisions) else None
+            quote = basis.get('quote') if isinstance(basis, dict) else None
+            if (not isinstance(source.get('id'), str) or source.get('created_by') != self.owner_actor
+                    or not isinstance(entry, dict) or not isinstance(entry.get('text'), str)
+                    or not isinstance(quote, str) or not quote.strip() or quote not in entry['text']):
+                raise ValueError('routed_dependency_unverifiable')
+            required[source['id']] = len(revisions)
+        return required
+
     def pending_routed_intents(self, item):
         """Recover compatible capture intent, never replay terminal events."""
         if item['kind'] not in {'capture', 'proposed_entry'} or item['status'] != 'active':
@@ -680,9 +723,16 @@ class GTDDomain:
             if fields.get('mime_type') == PPTX_MIME:
                 raise ValueError('pptx_binary_content_required')
             data, filename, mime_type = content.encode(), 'material.txt', fields.get('mime_type', 'text/plain; charset=utf-8')
-        sources = fields.get("source_versions", {})
-        if not isinstance(sources, dict):
+        supplied = fields.get("source_versions", {})
+        if not isinstance(supplied, dict):
             raise ValueError("invalid_source_versions")
+        # Service-owned preservation: a routed human precision stays a
+        # material dependency even if the model omits it. Omitted routed
+        # sources are completed with their current revision; an explicitly
+        # declared wrong revision is still rejected, never normalized.
+        sources = dict(supplied)
+        for sid, need in self._routed_material_requirements(item).items():
+            sources.setdefault(sid, need)
         for source_id, revision in sources.items():
             if type(revision) is not int or self._basis(source_id)["source_revision"] != revision:
                 raise ValueError("source_version_stale")
@@ -812,6 +862,20 @@ class GTDDomain:
             (item_id, material['id'])).fetchone()
         latest = row[0] or 0
         reasons = ['basis_changed:' + sid for sid, basis in material['basis'].items() if self._basis(sid) != basis]
+        # A material that never declared a currently required routed human
+        # precision is stale even if its stored snapshots match: the
+        # dependency was missing, not current. Terminal-agnostic read only;
+        # it does not reopen the item nor grant authority. No failure
+        # swallowing: without a readable current item the material cannot
+        # be shown as valid.
+        current_item = self._item(item_id)[0]
+        if current_item is None:
+            return reasons + ['basis_unverifiable:' + item_id]
+        for sid in self._routed_material_requirements(current_item):
+            if sid not in material.get('basis', {}) or sid not in material.get('source_versions', {}):
+                marker = 'basis_changed:' + sid
+                if marker not in reasons:
+                    reasons.append(marker)
         if material['version'] != latest:
             reasons.append('material_superseded')
         mandate = self._meta('mandate:' + str(material.get('mandate_id')))
