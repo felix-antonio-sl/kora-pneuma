@@ -1,6 +1,6 @@
 # GTD-Félix · estado 2026-09-23
 
-**Evaluación sustentada instalada; material corregido v4 conservado. Producción personal todavía no aceptada.**
+**Evaluación con diagnósticos y preparación de evidencia instalada. El recorrido nuevo agotó su tiempo sin juicio; v4 se conserva y la producción personal sigue sin aceptación.**
 [GUIA.md](GUIA.md) gobierna alcance y aceptación. Corte de continuidad
 `gtd-felix/corte-2026-09-22` (`13bc6e8`), Jev en `af0a023`, corrección operativa
 en `f71837e`; composición inicial `2e0e6e0`, seguida de la corrección
@@ -233,3 +233,55 @@ uso y aceptación de Félix; C3 cobertura útil; C4 devolución efectiva; G7 un 
 acotado útil. C5 tiene ahora paquetes identificados, pero no recuperación observada
 de la entrega final ni reconstrucción completa del entorno Hermes. No se reabre
 una campaña de tests para cerrar estos límites.
+
+
+## Evaluación accionable del 2026-09-23
+
+`e35bc3a` incorpora la oportunidad acotada elegida tras analizar Jev: preparar
+la evidencia por código y conservar diagnósticos semánticos independientes.
+La implementación se repartió entre tres subagentes **GPT-6 Luna / max**:
+cuestionario/recibos, contexto/API/MCP y revisión independiente. El integrador
+conservó dominio, instrucciones, documentación, instalación y observación.
+
+- `gtd_read(view="assessment_context")` lee criterio y material completos,
+  todas las fuentes requeridas vigentes y texto humano ruteado íntegro. Propone
+  citas literales por ranking léxico, con offsets y omisiones explícitas. No
+  acredita relevancia, privacidad ni suficiencia; el ejecutor revisa originales
+  y selecciona pasajes pertinentes sin datos clínicos identificables.
+- Se conserva el Noul global y se añaden tres Choice independientes: apoyo
+  factual, restricciones humanas y límites declarados. No explican causalmente
+  el Noul. Política de evaluación versionada; recibos antiguos se comprueban
+  con su pregunta y hash históricos exactos. Un cierre positivo necesita Noul
+  favorable y ausencia de contradicción factual/humana o límite bloqueante.
+- `satisfied=false` puede citar un recibo evaluado y conservar sus respuestas.
+  Aun entonces se validan identidad, trabajo, material, criterio, fuentes y
+  vigencia. Una caída técnica no se convierte en juicio negativo; la brecha
+  puede registrarse sin recibo. El dueño conserva evaluación explícita.
+
+Revisión estática independiente sin bloqueantes materiales, compilación/AST y
+`git diff --check` correctos; **sin tests ni inferencias sintéticas**. Instalación
+KORA sin conflictos ni recuperación pendiente; 39 módulos idénticos a fuente
+en principal y helper. Principal y servicio reiniciados y activos. Configuración
+LIVE sin cambio semántico; presupuesto, modelos, proveedor y esquema conservados.
+
+La lectura real del contexto de v4 devolvió **18.455 bytes**, seis fuentes
+vigentes y la precisión humana completa. Se solicitó una única revisión del
+asunto, con preguntas nuevas para diagnosticar la brecha; no una repetición para
+buscar un sí. Trabajo `60f3cf1e34e441928648610bb1ed1a5a`: cancelado por presupuesto,
+**250,85 s observados**, `integration=discarded`, cero progreso de dominio y
+**ningún recibo Jev nuevo**. El límite configurado sigue en 240 s; el tiempo
+observado incluye el intervalo hasta solicitar/parar la ejecución. La salida
+nativa informa `interrupted_during_api_call`; no acredita por sí sola la causa
+de que el principal no llegara al juicio.
+
+Los exports propietarios anterior/posterior conservan **272 asuntos idénticos**.
+El asunto sigue activo v8, material v4 vigente y la brecha anterior visible.
+Cero trabajos pendientes. La lectura del contexto está observada; el nuevo
+cuestionario y la persistencia de sus diagnósticos todavía no tienen resultado
+real observado en este recorrido. No se repitió ni amplió el presupuesto.
+
+Evidencia privada: `/home/felix/.local/state/gtd-felix/actionable-20260923/`,
+con contrato, huellas, exports, recibos KORA, comparación de módulos, lectura
+real del contexto, admisión/trabajo y comparación de documentos. La limitación
+previa del gateway helper y la aceptación humana siguen abiertas. Este incremento
+no acredita calibración de Jev, mejora de latencia ni cierre C1–C6/G1–G10.
