@@ -22,7 +22,7 @@ mensajes. Confirma con `tools/list` qué herramientas ofrece la realización act
 
 | Herramienta | Entrada y efecto |
 |---|---|
-| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `source_evaluation`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`, `page_size` (20 por defecto, máximo 50) y `cursor`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Para `source_evaluation`, `source_id` y `job_id` obligatorios: incorpora selectivamente una tanda bajo el job vigente. Las demás vistas consultan o calculan sin crear compromisos. |
+| `gtd_read` | `view`: `instructions`, `items`, `item`, `review`, `materials`, `material`, `assessment_context`, `choose`, `bots`, `jobs`, `budget`, `source_coverage`, `source_evaluation`, `agenda`, `effects`, `effect` o `calculate`. Para `item`/`materials`, `item_id`; para `material`/`assessment_context`, `item_id`, `material_id` y `version` obligatorios; para `items`, `filters`, `page_size` (20 por defecto, máximo 50) y `cursor`; para `choose`, `context`; para `calculate`, `calculation`; para `agenda`, `account_alias`, `start`, `end`, `timezone` y `calendar_ids` opcional. Para `source_evaluation`, `source_id` y `job_id` obligatorios: incorpora selectivamente una tanda bajo el job vigente. Las demás vistas consultan o calculan sin crear compromisos. |
 | `gtd_command` | `job_id` y `command`: `operation_id`, `action`, `item_id`, `expected_version`, `fields`. `review` no exige asunto/versión. Aplica un comando bajo el encargo vigente y conserva progreso ligado a ese job. |
 | `gtd_dispatch` | `job_id`, `operation_id`, `request`. Reserva y encola un hijo durable dentro del ámbito y presupuesto del encargo padre. Recibo reservado/diferido no demuestra ejecución ni resultado. |
 
@@ -1083,11 +1083,40 @@ en la operación de dominio correspondiente, con versión aún vigente.
 
 ### Evaluación de suficiencia de un material
 
+Para preparar una evaluación de material existente usa
+`gtd_read(view="assessment_context", item_id, material_id, version)` con el
+`job_id` vigente. Es una lectura determinista de
+`GET /v1/assessment-context/{item_id}/{material_id}/{version}`, sin inferencia,
+escrituras ni permisos nuevos. El dueño puede leer sin job; principal y ejecutor
+requieren un job vigente para el destino. Cada fuente requerida también debe ser
+legible según los permisos reales del actor.
+
+El paquete devuelve `schema`, `item` (ID/versión), `criterion`, `material`
+(ID/versión/hash/texto íntegro) y `required_sources`. Cada fuente conserva
+`source_id`, `source_revision`, `status`, los candidatos y, si es una precisión
+humana ruteada, `human_text` íntegro. Cada candidato separa `passage` (exactamente
+ID de fuente, revisión y `quote`) de `offsets={start,end,unit:"unicode_codepoint"}`.
+Los offsets son posiciones de caracteres sobre el texto original de esa revisión.
+Selecciona como máximo 24 pasajes en total para `assessment.passages`.
+Sólo el objeto `passage` se copia a ese arreglo; las otras
+claves no pertenecen al esquema de decisión.
+
+El ranking léxico propone como máximo dos pasajes por fuente; no demuestra
+respaldo, exhaustividad ni ausencia de datos sensibles. `candidate_omissions`
+explicita los límites de selección, escaneo o espacio; amplía la fuente mediante
+la lectura existente cuando esa omisión pueda cambiar el juicio. Todas las fuentes
+requeridas permanecen inventariadas. El paquete completo tiene límite de 24.000
+bytes serializados; si el contenido obligatorio no cabe, rechaza sin truncar el
+material ni el texto humano. Este límite de lectura no garantiza que la petición
+Jev quepa: preguntas y resto del estado tienen su propio coste. Revisa pertinencia
+y privacidad antes de enviar citas; no copies datos clínicos identificables.
+
 En lugar de `state` y `questions`, `gtd_decide` acepta una evaluación estructurada:
 `assessment={material_id, material_version, passages:[{source_id, source_revision,
 quote}]}`. El servicio lee el texto real **íntegro** del material y el
-`completion_criteria` vigente, y fija una única pregunta de suficiencia que exige
-apoyo factual, respeto de restricciones humanas y de límites declarados. El
+`completion_criteria` vigente, y fija una pregunta global de suficiencia y tres
+diagnósticos independientes: `factual_support`, `human_constraints` y
+`declared_limits`. El
 agente no aporta hash, texto, resumen ni recuento: sólo selecciona pasajes.
 
 Cada pasaje se coteja como cita literal contra `source_revisions` de la fuente, en
@@ -1109,15 +1138,37 @@ por fingerprint de (actor, job, operation_id), exige que el job coincida con el
 encabezado y valida asunto, material, criterio y fuentes. Un juicio genérico, una
 mencion textual o un hash no cierran material; la referencia queda registrada como
 procedencia del cierre. Una evaluación explícita del dueño no exige Jev, y
-`satisfied=false` conserva la brecha sin juicio positivo. La aprobación semántica
-del modelo no es aceptación humana.
+`satisfied=false` conserva la brecha sin juicio positivo. Si cita un `judgment`,
+éste debe ser un recibo estructurado `evaluated` del mismo trabajo, material y
+bases vigentes; puede tener suficiencia negativa o incierta. Su referencia,
+respuestas y política quedan conservadas también en la evaluación de brecha.
+Un fallo técnico sin respuestas evaluadas se registra como brecha sin esa
+referencia. La aprobación semántica del modelo no es aceptación humana.
 
-En un cierre estructurado, la fila de evaluación conserva el hash del criterio
+Los diagnósticos son Choices: respaldo factual `supported/contradicted/insufficient_evidence`,
+restricciones humanas `respected/contradicted/insufficient_evidence` y límites
+`compatible/blocking/insufficient_evidence`. Cada pregunta ve el mismo estado y
+no conoce las otras respuestas. No constituyen una explicación del Noul. El
+cierre conserva el Noul favorable y añade veto de contradicción o límite
+bloqueante; una insuficiencia diagnóstica no cambia por sí sola ese umbral ni
+se presenta como certeza. No se promedian ni multiplican respuestas. Cada brecha
+se traduce a recuperar evidencia pertinente o reparar el punto afectado; no a
+repetir la misma llamada esperando un sí.
+
+La evaluación usa `assessment_policy=jev-gtd-assessment-diagnostics-2026-09-23-v1`
+en recibo y binding, con hash del cuestionario completo y conjunto exacto de
+cuatro respuestas. La política genérica `jev-default-2026-09-22` sigue intacta.
+La compatibilidad con recibos anteriores de una sola pregunta es explícita:
+se verifica el cuestionario legado y no se les atribuyen diagnósticos nuevos.
+
+En una evaluación con juicio estructurado vinculado, la fila conserva el hash del criterio
 validado y las revisiones de todas las fuentes evaluadas. Los registros históricos
 y las evaluaciones sin juicio vinculado mantienen su hash heredado de evidencia;
 no se reinterpretan como prueba de suficiencia estructurada. La referencia
 `judgment` incorpora las bases completas y el hash de la petición, que incluye
-el texto humano completo leído desde sus revisiones originales.
+el texto humano completo leído desde sus revisiones originales. Conserva también
+`answers`, `assessment_policy` y el hash de las preguntas; los diagnósticos
+permanecen como respuestas tipadas, sin una justificación inventada.
 
 `assessment:judgment:<id>` es procedencia histórica inmutable, conservada incluso
 si `undo` retira la fila de evaluación. No se consulta como evaluación vigente

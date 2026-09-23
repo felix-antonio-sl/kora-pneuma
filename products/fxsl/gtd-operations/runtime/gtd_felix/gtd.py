@@ -1056,9 +1056,10 @@ class GTDDomain:
         # An agent's closure must cite a positive Jev sufficiency receipt that
         # the service itself bound to this actor/job/item/material/criterion and
         # current source revisions. The receipt is resolved by exact key, never
-        # by mention, regex, global hash scan or an owner-supplied judgment. An
+        # by mention, regex, global hash scan or caller-supplied assertions. An
         # explicit owner assessment still closes without Jev; satisfied=false
-        # may record a gap without any positive judgment.
+        # may record a gap without any judgment. When it cites one, preserve
+        # the same verified provenance, including independent diagnostics.
         judgment = fields.get("judgment")
         if judgment is not None and (not isinstance(judgment, dict) or set(judgment) != {"job_id", "operation_id"}
                 or not isinstance(judgment["job_id"], str) or not judgment["job_id"].strip()
@@ -1067,9 +1068,9 @@ class GTDDomain:
                 or len(judgment["operation_id"]) > 200):
             raise ValueError("invalid_assessment_judgment")
         receipt_reference = None
-        if fields["satisfied"] and actor != self.owner_actor:
-            if judgment is None:
-                raise ValueError("assessment_judgment_required")
+        if fields["satisfied"] and actor != self.owner_actor and judgment is None:
+            raise ValueError("assessment_judgment_required")
+        if judgment is not None:
             # Reuse the shared key helper so producer and consumer always agree
             # (a domain fingerprint would silently never match the stored key).
             from .decisions import judgment_receipt_key, verify_assessment_receipt
@@ -1106,7 +1107,9 @@ class GTDDomain:
             check = verify_assessment_receipt(receipt, actor=actor, job_id=judgment["job_id"],
                 item_id=item["id"], material=identity,
                 criterion_hash=fingerprint(item.get("completion_criteria")),
-                required=required, sources=live_sources)
+                criterion=item["completion_criteria"],
+                required=required, sources=live_sources,
+                require_favorable=fields["satisfied"])
             if check:
                 raise ValueError(check)
             # Bind the assessment row and its provenance to the receipt's material.
@@ -1116,6 +1119,9 @@ class GTDDomain:
             receipt_reference = {"job_id": judgment["job_id"], "operation_id": judgment["operation_id"],
                 "request_sha256": receipt.get("request_sha256"), "provider": receipt.get("provider"),
                 "model": receipt.get("model"), "policy": receipt.get("policy"),
+                "assessment_policy": binding.get("assessment_policy"),
+                "questions_sha256": receipt.get("questions_sha256"),
+                "answers": receipt.get("answers"),
                 "material": dict(identity), "criterion_hash": binding.get("criterion_hash"),
                 "required": dict(binding.get("required", {})),
                 "sources": dict(bound_sources),

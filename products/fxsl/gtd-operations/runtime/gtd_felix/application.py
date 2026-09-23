@@ -13,6 +13,7 @@ import tempfile
 from aiohttp import web
 
 from .store import private_dir
+from .assessment_context import build_assessment_context
 
 ACTOR = web.RequestKey('actor', str)
 
@@ -497,6 +498,51 @@ def create_app(service, control, config):
         return web.json_response(service.read_material(item_id, request.match_info['material_id'],
             int(request.match_info['version'])))
 
+    async def assessment_context(request):
+        if request.query:
+            raise ValueError('invalid_assessment_context_request')
+        actor = request[ACTOR]
+        role = service.actor_role(actor)
+        item_id = request.match_info['item_id']
+        material_id = request.match_info['material_id']
+        version = int(request.match_info['version'])
+        job_id = request.headers.get('X-GTD-Job-ID', '')
+        with service.store.lock:
+            item = service.get_item(item_id)
+            if item is None:
+                return web.json_response({'status': 'rejected', 'error': 'item_not_found'}, status=404)
+            job = None
+            if role in {'principal', 'executor'}:
+                if not job_id:
+                    return web.json_response({'status': 'rejected', 'error': 'judgment_job_required'}, status=403)
+                job = control.get_job(job_id)
+                if not job or job.get('actor') != actor or not (job.get('native') or {}).get('id'):
+                    return web.json_response({'status': 'rejected', 'error': 'judgment_job_required'}, status=403)
+                try:
+                    decisions.guard(actor, job_id, {'item_id': item_id, 'expected_version': item['version']})
+                except (ValueError, TypeError, KeyError) as exc:
+                    code = exc.args[0] if exc.args and type(exc.args[0]) is str else 'assessment_context_unavailable'
+                    status = 403 if code in {'judgment_job_required', 'judgment_job_unavailable'} else 409
+                    return web.json_response({'status': 'rejected', 'error': code}, status=status)
+            elif role != 'owner':
+                return web.json_response({'status': 'rejected', 'error': 'unauthorized'}, status=403)
+
+            def can_read_source(source_id, source):
+                if role == 'owner':
+                    return True
+                return decisions._source_readable(actor, job_id, job, source_id)
+
+            try:
+                result = build_assessment_context(service, item, material_id, version,
+                    can_read_source=can_read_source)
+            except (ValueError, TypeError, KeyError) as exc:
+                code = exc.args[0] if exc.args and type(exc.args[0]) is str else 'assessment_context_unavailable'
+                status = 413 if code == 'assessment_context_package_too_large' else (
+                    404 if code in {'assessment_context_material_not_found'} else (
+                    400 if code == 'invalid_assessment_context_request' else 409))
+                return web.json_response({'status': 'rejected', 'error': code}, status=status)
+        return web.json_response(result, headers={'Cache-Control': 'no-store'})
+
     async def material_file(request):
         from urllib.parse import quote
         if request.query:
@@ -533,6 +579,7 @@ def create_app(service, control, config):
         web.get('/v1/effects', effect_read), web.get('/v1/effects/{effect_id}', effect_read),
         web.post('/v1/effects/{operation}', effect_call), web.get('/v1/agenda', agenda), web.get('/v1/sources', sources), web.get('/v1/jobs', job_history), web.post('/v1/control/{operation}', control_call), web.get('/v1/review', review),
         web.get('/v1/material-files/{item_id}/{material_id}/{version}', material_file),
+        web.get('/v1/assessment-context/{item_id}/{material_id}/{version}', assessment_context),
         web.get('/v1/materials/{item_id}/{material_id}/{version}', material), web.get('/v1/materials/{item_id}', materials), web.get('/v1/export', export)])
     app[SOURCE_MONITOR] = monitor
     app[EFFECT_MONITOR] = effect_worker

@@ -43,6 +43,14 @@ mínima y actual, alternativas completas y criterios explícitos; agrupa pregunt
 independientes. Hermes conserva comprensión abierta, planificación, redacción y
 uso de herramientas. Elige categorías/rúbricas con salida incierta cuando haga
 falta; no inventes un juicio favorable si el proveedor no responde.
+Si ya existe material, comienza su evaluación con
+`gtd_read(view="assessment_context", item_id, material_id, version)` bajo tu job.
+Esta lectura prepara criterio, material íntegro, restricciones humanas y candidatos
+literales de las fuentes requeridas. Revisa las omisiones y pertinencia: el ranking
+léxico no demuestra respaldo. Amplía sólo las fuentes cuyo contexto pueda cambiar
+el juicio; no releas todo el inventario ni reconstruyas antecedentes ya disponibles.
+No envíes a Jev datos clínicos identificables, credenciales o información ajena al
+juicio; selecciona los pasajes administrativos necesarios antes de consultar.
 Para evaluar cumplimiento, usa la variante estructurada de `gtd_decide`:
 `assessment={material_id, material_version, passages:[{source_id, source_revision,
 quote}]}`. El servicio lee el texto real íntegro del material y el criterio de
@@ -55,8 +63,20 @@ evaluación de agente con `satisfied=true` debe citarlo en
 `fields.judgment={job_id, operation_id}`: un juicio genérico nunca cierra un
 material. Conserva ese recibo como evidencia de `assess_result` y explica la
 brecha sin atribuir aceptación humana. Una evaluación explícita del dueño no
-exige Jev, y `satisfied=false` registra una brecha sin juicio positivo. La
-selección Gmail ya usa Jev desde el servicio.
+exige Jev, y `satisfied=false` registra una brecha sin juicio positivo. Si existe
+un recibo estructurado `evaluated` incierto o negativo, cita también su `judgment`
+al registrar la brecha: el servicio conserva sus diagnósticos y bases verificadas.
+Un fallo técnico sin recibo evaluado se declara como fallo, sin inventar respuestas.
+La evaluación añade diagnósticos separados de respaldo factual, restricciones
+humanas y compatibilidad de límites con el criterio. Son juicios independientes,
+no explicaciones causales del Noul global. No atribuyas el 0,5 a una causa que el
+recibo no identifica. El cierre exige suficiencia favorable y ausencia de una
+contradicción o límite bloqueante diagnosticado. No promedies los resultados ni
+conviertas incertidumbre en aprobación. Repara sólo el punto afectado o recupera
+la evidencia faltante pertinente; no repitas la misma evaluación para buscar un sí.
+La selección Gmail ya usa Jev desde el servicio.
+Si la petición excede el límite, elige citas más breves que conserven el contexto
+necesario y la cobertura de todas las fuentes; no retires dependencias para hacerla caber.
 Si el cumplimiento depende de fundamentos documentales, incluye las afirmaciones
 materiales y los pasajes de fuente que las sostienen, distinguiendo dato e
 inferencia. Un resumen favorable del propio redactor no acredita esa relación:

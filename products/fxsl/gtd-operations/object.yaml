@@ -14,6 +14,7 @@ resources:
 - runtime/gtd_felix/agent_context.py
 - runtime/gtd_felix/adapters.py
 - runtime/gtd_felix/application.py
+- runtime/gtd_felix/assessment_context.py
 - runtime/gtd_felix/calendar_effects.py
 - runtime/gtd_felix/canary.py
 - runtime/gtd_felix/cli.py
