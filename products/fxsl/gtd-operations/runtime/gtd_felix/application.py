@@ -286,6 +286,16 @@ def create_app(service, control, config):
         job = control.get_job(job_id)
         if not job or job['actor'] != actor:
             return web.json_response({'status': 'rejected', 'error': 'job_required'}, status=403)
+        if action == 'assess_result':
+            # A judgment reference is only meaningful under the job that issued
+            # the receipt. The header job is trusted; a mismatched reference is
+            # rejected here, before any domain mutation.
+            fields = values.get('fields')
+            judgment = fields.get('judgment') if isinstance(fields, dict) else None
+            if judgment is not None and (not isinstance(judgment, dict)
+                    or set(judgment) != {'job_id', 'operation_id'} or judgment.get('job_id') != job_id):
+                return web.json_response({'status': 'rejected',
+                    'error': 'assessment_judgment_scope_mismatch'}, status=409)
         target = values.get('item_id', job['item_id'])
         if instruction_source is not None and target != job['item_id']:
             return web.json_response({'status': 'rejected', 'error': 'outside_job_scope'}, status=409)

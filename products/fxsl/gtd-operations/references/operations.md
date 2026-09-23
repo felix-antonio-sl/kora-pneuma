@@ -77,7 +77,7 @@ conserva `proposed` o `committed`. Estado activo no equivale a compromiso adopta
 | `derive` | `kind`, `title`, `capability` (`prepare_private`/`local_work`), `mandate_id` cuando corresponde; además `completion_criteria`, `front`, `executor`, `depends_on`, `source_versions` y demás campos pertinentes. El servicio fija padre y procedencia. |
 | `plan` | Para el principal: `plan_steps` (lista de textos), `uncertainties`, `decision_needed`, `decision_question` y actualización acotada de `source_versions` bajo las condiciones indicadas más abajo. Planifica con propósito/resultado existentes; no modifica la posición humana. |
 | `put_material` | Exactamente una entrada: texto `content` no vacío, PPTX con `content_base64`/`filename`/`mime_type`, o `source_material` identificado y vigente según el contrato siguiente. Opcionales `title`, `material_id` para nueva versión del mismo material, `source_versions`, `mandate_id`. Persiste los bytes originales y su hash; una ruta local no sustituye el contenido. |
-| `assess_result` | `evidence` concreta, `satisfied` booleano; `material_id` y `material_version` si sustentan la evaluación; `source_versions`, `gap`, `mandate_id` según caso. Requiere criterio de cierre, compromiso, vigencia y ausencia de decisión humana pendiente. |
+| `assess_result` | `evidence` concreta, `satisfied` booleano; `material_id` y `material_version` si sustentan la evaluación; `source_versions`, `gap`, `mandate_id` según caso y `judgment={job_id, operation_id}` cuando un agente cierra con `satisfied=true`. Requiere criterio de cierre, compromiso, vigencia y ausencia de decisión humana pendiente. |
 | `review` | `views`, `source_coverage` (asunto fuente → cantidad de revisiones conservadas), `return_at` opcional. Devuelve cobertura operativa y juicio humano pendiente por separado. |
 | `pause` del dueño | `fields={}`, `item_id` y `expected_version` vigentes: pausa indefinida de un asunto no terminal. Conserva contexto, compromiso, fechas y materiales; no crea fecha de retorno. `reopen` del dueño reanuda explícitamente. |
 | `edit` del agente | Solo `notes`, `plan_steps`, `uncertainties`, con mandato de trabajo local; no sustituye título, resultado, fechas o posición humana. |
@@ -1080,6 +1080,50 @@ Los umbrales son política explícita, no calibración. Un juicio incierto no ac
 cumplimiento; `status=uncertain` por error técnico tampoco es un juicio negativo.
 No transforma respuestas en comandos automáticamente: usa el recibo como evidencia
 en la operación de dominio correspondiente, con versión aún vigente.
+
+### Evaluación de suficiencia de un material
+
+En lugar de `state` y `questions`, `gtd_decide` acepta una evaluación estructurada:
+`assessment={material_id, material_version, passages:[{source_id, source_revision,
+quote}]}`. El servicio lee el texto real **íntegro** del material y el
+`completion_criteria` vigente, y fija una única pregunta de suficiencia que exige
+apoyo factual, respeto de restricciones humanas y de límites declarados. El
+agente no aporta hash, texto, resumen ni recuento: sólo selecciona pasajes.
+
+Cada pasaje se coteja como cita literal contra `source_revisions` de la fuente, en
+la revisión exacta `len(source_revisions)` (no `item.version`), sólo de fuentes
+legibles dentro del ámbito del actor y del job. Los pasajes deben cubrir cada
+fuente de `item.source_versions`, de `material.source_versions` y cada requisito
+ruteado del asunto. El texto humano ruteado completo se incorpora desde el
+servicio; las citas adicionales también quedan ligadas a sus bases vigentes. Un
+material no textual, no vigente, excesivo para el límite de la petición o con
+cobertura incompleta se rechaza sin truncar.
+
+El recibo queda ligado por el servicio a actor, job, asunto, material (id/versión/
+hash), criterio, revisiones de fuente y hash de la petición; se revalida tras el
+await y antes de cerrarlo. Repetir `operation_id` recupera el recibo; una
+interrupción o un cambio de material/fuente durante el await deja `uncertain` sin
+cerrar nada. `assess_result` con `satisfied=true` de un agente debe citar ese
+recibo en `fields.judgment={job_id, operation_id}`: el servicio resuelve el recibo
+por fingerprint de (actor, job, operation_id), exige que el job coincida con el
+encabezado y valida asunto, material, criterio y fuentes. Un juicio genérico, una
+mencion textual o un hash no cierran material; la referencia queda registrada como
+procedencia del cierre. Una evaluación explícita del dueño no exige Jev, y
+`satisfied=false` conserva la brecha sin juicio positivo. La aprobación semántica
+del modelo no es aceptación humana.
+
+En un cierre estructurado, la fila de evaluación conserva el hash del criterio
+validado y las revisiones de todas las fuentes evaluadas. Los registros históricos
+y las evaluaciones sin juicio vinculado mantienen su hash heredado de evidencia;
+no se reinterpretan como prueba de suficiencia estructurada. La referencia
+`judgment` incorpora las bases completas y el hash de la petición, que incluye
+el texto humano completo leído desde sus revisiones originales.
+
+`assessment:judgment:<id>` es procedencia histórica inmutable, conservada incluso
+si `undo` retira la fila de evaluación. No se consulta como evaluación vigente
+sin esa fila; deshacer el undo restaura la fila y su misma procedencia. Los recibos
+Jev por actor/job/operación también se conservan. Esta retención deliberada evita
+perder trazabilidad; no concede autoridad para reutilizar el juicio en otro cierre.
 
 Sólo bajo job nativo activo de preparación privada o trabajo local y su ámbito;
 una petición de hasta 24 000 bytes, veinte segundos o saldo menor, máximo 16

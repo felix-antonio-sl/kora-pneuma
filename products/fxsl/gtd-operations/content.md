@@ -43,9 +43,20 @@ mínima y actual, alternativas completas y criterios explícitos; agrupa pregunt
 independientes. Hermes conserva comprensión abierta, planificación, redacción y
 uso de herramientas. Elige categorías/rúbricas con salida incierta cuando haga
 falta; no inventes un juicio favorable si el proveedor no responde.
-Para evaluar cumplimiento, proporciona criterio y material vigente a Jev y
-conserva su recibo en la evidencia de `assess_result`; explica la brecha sin
-atribuir aceptación humana. La selección Gmail ya usa Jev desde el servicio.
+Para evaluar cumplimiento, usa la variante estructurada de `gtd_decide`:
+`assessment={material_id, material_version, passages:[{source_id, source_revision,
+quote}]}`. El servicio lee el texto real íntegro del material y el criterio de
+cierre vigente, coteja cada cita literal contra `len(source_revisions)` de la
+fuente y cubre las fuentes requeridas por el asunto, el material y cada precisión
+ruteada; no acepta un
+hash, un resumen ni una afirmación favorable del propio agente. El recibo queda
+ligado por el servicio a actor/job/asunto/material/criterio/fuentes, y la
+evaluación de agente con `satisfied=true` debe citarlo en
+`fields.judgment={job_id, operation_id}`: un juicio genérico nunca cierra un
+material. Conserva ese recibo como evidencia de `assess_result` y explica la
+brecha sin atribuir aceptación humana. Una evaluación explícita del dueño no
+exige Jev, y `satisfied=false` registra una brecha sin juicio positivo. La
+selección Gmail ya usa Jev desde el servicio.
 Si el cumplimiento depende de fundamentos documentales, incluye las afirmaciones
 materiales y los pasajes de fuente que las sostienen, distinguiendo dato e
 inferencia. Un resumen favorable del propio redactor no acredita esa relación:

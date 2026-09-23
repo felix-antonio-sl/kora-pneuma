@@ -19,7 +19,7 @@ from urllib.parse import quote, urlsplit
 import aiohttp
 
 from .agent_context import agent_item
-from .decisions import QUESTIONS_SCHEMA
+from .decisions import ASSESSMENT_MAX_PASSAGES, ASSESSMENT_MAX_QUOTE, QUESTIONS_SCHEMA
 
 
 def obj(properties, required=()):
@@ -30,9 +30,17 @@ STRING = {'type': 'string'}
 STRINGS = {'type': 'array', 'items': STRING}
 VERSIONS = {'type': 'object', 'additionalProperties': {'type': 'integer', 'minimum': 1},
     'description': 'Map source item IDs to source revision counts: len(source_revisions), '
-                   'or source_revision from routed_human_sources. This is NOT the item version. '
+                   'read from the current source, including sources required by the matter/material. This is NOT the item version. '
                    'After source_version_stale, read the current source and correct its revision; '
                    'do not remove a source that supports the material.'}
+ASSESSMENT_SCHEMA = obj({'material_id': STRING,
+    'material_version': {'type': 'integer', 'minimum': 1},
+    'passages': {'type': 'array', 'minItems': 1, 'maxItems': ASSESSMENT_MAX_PASSAGES,
+        'items': obj({'source_id': STRING, 'source_revision': {'type': 'integer', 'minimum': 1},
+            'quote': {'type': 'string', 'minLength': 1, 'maxLength': ASSESSMENT_MAX_QUOTE}},
+            ['source_id', 'source_revision', 'quote'])}},
+    ['material_id', 'material_version', 'passages'])
+JUDGMENT_REF = obj({'job_id': STRING, 'operation_id': STRING}, ['job_id', 'operation_id'])
 FIELDS = {k: STRING for k in ('title', 'text', 'notes', 'outcome', 'completion_criteria', 'context',
     'executor', 'project_id', 'responsibility_id', 'waiting_for', 'energy', 'timezone', 'purpose',
     'front', 'decision_question', 'capacity', 'due_at', 'review_at', 'starts_at', 'ends_at', 'decision_at')}
@@ -52,7 +60,8 @@ FIELD_SCHEMAS = {
         'mandate_id': {'type': ['string', 'null']}, 'mime_type': STRING}),
     'assess_result': obj({'evidence': STRING, 'satisfied': {'type': 'boolean'}, 'material_id': STRING,
         'material_version': {'type': 'integer', 'minimum': 1}, 'source_versions': VERSIONS,
-        'gap': STRING, 'mandate_id': {'type': ['string', 'null']}}, ['evidence', 'satisfied']),
+        'gap': STRING, 'mandate_id': {'type': ['string', 'null']}, 'judgment': JUDGMENT_REF},
+        ['evidence', 'satisfied']),
     'review': obj({'views': STRINGS, 'source_coverage': {'type': 'object', 'additionalProperties': {'type': 'integer', 'minimum': 0}}, 'return_at': STRING}),
 }
 FIELD_SCHEMAS['apply_human_instruction'] = {'oneOf': [
@@ -217,17 +226,22 @@ TOOLS = [
          'account_alias':STRING,'start':STRING,'end':STRING,'timezone':STRING,'calendar_ids':{'type':'array','items':STRING,'minItems':1,'uniqueItems':True},
          'attachment_index': {'type':'integer','minimum':0}, 'sheet_index': {'type':'integer','minimum':0}, 'row_offset': {'type':'integer','minimum':0}, 'row_limit': {'type':'integer','minimum':1,'maximum':20}, 'detail': {'enum': ['current', 'full']}, 'source_id': STRING, 'effect_id': STRING, 'item_id': STRING, 'material_id': STRING, 'version': {'type': 'integer', 'minimum': 1}, 'job_id': STRING, 'filters': {'type': 'object'}, 'page_size': {'type': 'integer', 'minimum': 1, 'maximum': 50, 'default': 20}, 'cursor': {'type': ['string', 'null'], 'maxLength': 1024}, 'context': {'type': 'object'},
          'reference': {'enum': ['SKILL.md', 'references/operations.md', 'references/flujos.md']}, 'offset': {'type': 'integer', 'minimum': 0}, 'calculation': CALCULATION}, ['view'])},
-    {'name': 'gtd_command', 'description': 'Apply one idempotent domain command under this live job. Envelope: {job_id, command: {operation_id, action, item_id, expected_version, fields}}. operation_id belongs INSIDE command, never beside job_id. Read current item/version first. A material is not a completed commitment; assess_result requires explicit criterion and evidence. put_material accepts exactly one content choice: running text via content (optionally title); PPTX bytes via content_base64, filename and the presentation mime_type together; or a retained source via source_material alone. filename never accompanies content. apply_human_instruction applies an already explicit direct owner correction (proposed possibility title/text only) or pause under the destination job and routed source revision; quote/provenance do not prove linguistic understanding. Ambiguity needs a pertinent question; a query only reads. Owner meaning remains protected. edit may correct completion_criteria or waiting_for only on eligible principal-created descendants under their active mandate, before human adoption; waiting_for requires a waiting item.',
+    {'name': 'gtd_command', 'description': 'Apply one idempotent domain command under this live job. Envelope: {job_id, command: {operation_id, action, item_id, expected_version, fields}}. operation_id belongs INSIDE command, never beside job_id. Read current item/version first. A material is not a completed commitment; assess_result requires explicit criterion and evidence, and a non-owner satisfied=true also requires fields.judgment={job_id,operation_id} pointing to a positive bound sufficiency receipt from gtd_decide for the same job, item and material; satisfied=false may record a gap without it and the owner closes without Jev. put_material accepts exactly one content choice: running text via content (optionally title); PPTX bytes via content_base64, filename and the presentation mime_type together; or a retained source via source_material alone. filename never accompanies content. apply_human_instruction applies an already explicit direct owner correction (proposed possibility title/text only) or pause under the destination job and routed source revision; quote/provenance do not prove linguistic understanding. Ambiguity needs a pertinent question; a query only reads. Owner meaning remains protected. edit may correct completion_criteria or waiting_for only on eligible principal-created descendants under their active mandate, before human adoption; waiting_for requires a waiting item.',
      'inputSchema': obj({'job_id': STRING, 'command': COMMAND, 'effect_control': {'enum': list(EFFECT_REQUESTS)}, 'request': {'type': 'object'}})},
     {'name': 'gtd_dispatch', 'description': 'Reserve and enqueue durable specialist work within this job scope and shared budget. Does not wait for inference. A deferred receipt is not evidence that work ran.',
      'inputSchema': obj({'job_id': STRING, 'operation_id': STRING, 'request': REQUEST}, ['job_id', 'operation_id', 'request'])},
 ]
 TOOLS.append({'name': 'gtd_decide',
-    'description': 'Default Jev typed judgment for semantic yes/no decisions (noul), classification (choice), and rubric scores (score). Use current job, item and expected_version. Supply minimal evidence in state and explicit questions; include unknown/other when relevant. Questions are independent; IDs are invisible to the model. Reuse operation_id for the same request. This does not mutate a matter, grant authority, accept human commitments, calculate exact values or replace gtd_command. Unavailable is not no. Receipt includes usage and policy; do not retry an uncertain receipt with new IDs.',
+    'description': 'Default Jev typed judgment for semantic yes/no decisions (noul), classification (choice), and rubric scores (score). Use current job, item and expected_version. Two request forms: generic state plus explicit questions (include unknown/other when relevant); or a structured assessment of one live material. For assessment, pass material_id, material_version and passages [{source_id, source_revision, quote}] literal from current source_revisions; the service reads the whole material text and the current completion_criteria itself and fixes one sufficiency question, so never send a hash, summary or favorable wording as evidence. Passages must cover every source_version of the material and every routed human requirement, and cite only readable sources. The receipt is bound by the service to this actor/job/item/material/criterion and current source revisions; a generic receipt never closes material. Reuse operation_id for the same request. Assessment closure of a satisfied=false gap is allowed without a positive receipt. This does not mutate a matter, grant authority, accept human commitments, calculate exact values or replace gtd_command. Unavailable is not no. Receipt includes usage and policy; do not retry an uncertain receipt with new IDs.',
     'inputSchema': obj({'job_id': STRING, 'operation_id': STRING, 'item_id': STRING,
         'expected_version': {'type': 'integer', 'minimum': 1},
-        'state': {'type': ['string', 'object', 'array']}, 'questions': QUESTIONS_SCHEMA},
-        ['job_id', 'operation_id', 'item_id', 'expected_version', 'state', 'questions'])})
+        'state': {'type': ['string', 'object', 'array']}, 'questions': QUESTIONS_SCHEMA,
+        'assessment': ASSESSMENT_SCHEMA},
+        ['job_id', 'operation_id', 'item_id', 'expected_version'])})
+TOOLS[-1]['inputSchema']['oneOf'] = [
+    {'required': ['state', 'questions'], 'not': {'required': ['assessment']}},
+    {'required': ['assessment'], 'not': {'anyOf': [{'required': ['state']}, {'required': ['questions']}]}},
+]
 TOOLS[1]['description'] += ' Alternatively use effect_control with request to propose an immutable external effect; this never sends. Owner alone authorizes the exact proposal_hash, grants expiring draft preparation to grantee, or revokes. Principal proposals require current GTD_JOB_ID environment; no actor identity in arguments.'
 TOOLS[1]['inputSchema']['oneOf'] = [
     {'required': ['job_id', 'command'], 'not': {'anyOf': [{'required': ['effect_control']}, {'required': ['request']}]}},
@@ -470,11 +484,16 @@ class MCPClient:
             else:
                 raise ValueError('unknown_view')
         elif name == 'gtd_decide':
-            if (not isinstance(job_id, str) or not job_id
-                    or set(arguments) - {'job_id', 'operation_id', 'item_id', 'expected_version', 'state', 'questions'}):
+            keys = {'job_id', 'operation_id', 'item_id', 'expected_version', 'state', 'questions', 'assessment'}
+            if (not isinstance(job_id, str) or not job_id or set(arguments) - keys
+                    or ('assessment' in arguments) == ('state' in arguments or 'questions' in arguments)
+                    or ('assessment' not in arguments and not {'state', 'questions'} <= set(arguments))):
                 raise ValueError('invalid_judgment_request')
             method, path = 'POST', '/v1/agent/decide'
-            payload = {k: arguments[k] for k in ('operation_id', 'item_id', 'expected_version', 'state', 'questions')}
+            if 'assessment' in arguments:
+                payload = {k: arguments[k] for k in ('operation_id', 'item_id', 'expected_version', 'assessment')}
+            else:
+                payload = {k: arguments[k] for k in ('operation_id', 'item_id', 'expected_version', 'state', 'questions')}
         elif name == 'gtd_command' and 'effect_control' in arguments:
             if set(arguments) != {'effect_control', 'request'} or arguments['effect_control'] not in EFFECT_REQUESTS:
                 raise ValueError('invalid_effect_control')

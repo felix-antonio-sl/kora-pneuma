@@ -871,11 +871,25 @@ class GTDDomain:
         current_item = self._item(item_id)[0]
         if current_item is None:
             return reasons + ['basis_unverifiable:' + item_id]
-        for sid in self._routed_material_requirements(current_item):
-            if sid not in material.get('basis', {}) or sid not in material.get('source_versions', {}):
-                marker = 'basis_changed:' + sid
-                if marker not in reasons:
-                    reasons.append(marker)
+        try:
+            routed = self._routed_material_requirements(current_item)
+        except ValueError as error:
+            # Only the known unverifiable-route failure becomes a stable
+            # invalidity reason: the material stays invalid (never becomes
+            # valid) and the listing, review_state and closure paths keep
+            # working instead of aborting. Any other error still propagates.
+            if error.args != ('routed_dependency_unverifiable',):
+                raise
+            routed = None
+        if routed is None:
+            if 'routed_dependency_unverifiable' not in reasons:
+                reasons.append('routed_dependency_unverifiable')
+        else:
+            for sid in routed:
+                if sid not in material.get('basis', {}) or sid not in material.get('source_versions', {}):
+                    marker = 'basis_changed:' + sid
+                    if marker not in reasons:
+                        reasons.append(marker)
         if material['version'] != latest:
             reasons.append('material_superseded')
         mandate = self._meta('mandate:' + str(material.get('mandate_id')))
@@ -901,7 +915,17 @@ class GTDDomain:
         rows = self.store.db.execute(
             "SELECT * FROM assessments WHERE item_id=? ORDER BY created_at, rowid",
             (item_id,)).fetchall()
-        return [self._assessment_dict(row) for row in rows]
+        entries = []
+        for row in rows:
+            entry = self._assessment_dict(row)
+            judgment = self._meta("assessment:judgment:" + row["id"])
+            if judgment is not None:
+                # Provenance of the closure's judgment receipt, read from the
+                # existing metadata table so it round-trips legibly here and in
+                # the item document without adding a table or column.
+                entry["judgment"] = judgment
+            entries.append(entry)
+        return entries
 
     def assessments(self, item_id):
         """Full assessment rows by identity; the item document keeps stubs."""
@@ -991,7 +1015,8 @@ class GTDDomain:
 
     def _assess(self, actor, command, digest, item, versions):
         fields = command["fields"]
-        if set(fields) - {"evidence", "satisfied", "material_id", "material_version", "source_versions", "gap", "mandate_id"}:
+        if set(fields) - {"evidence", "satisfied", "material_id", "material_version", "source_versions",
+                          "gap", "mandate_id", "judgment"}:
             raise ValueError("invalid_assessment")
         capability = item.get("work_capability", "local_work")
         mandate_id = fields.get("mandate_id", item.get("mandate_id"))
@@ -1028,9 +1053,76 @@ class GTDDomain:
                 raise ValueError("material_stale_or_missing")
         if fields["satisfied"] and any(self._item(dep)[0].get("status") != "done" for dep in item.get("depends_on", [])):
             raise ValueError("dependencies_incomplete")
+        # An agent's closure must cite a positive Jev sufficiency receipt that
+        # the service itself bound to this actor/job/item/material/criterion and
+        # current source revisions. The receipt is resolved by exact key, never
+        # by mention, regex, global hash scan or an owner-supplied judgment. An
+        # explicit owner assessment still closes without Jev; satisfied=false
+        # may record a gap without any positive judgment.
+        judgment = fields.get("judgment")
+        if judgment is not None and (not isinstance(judgment, dict) or set(judgment) != {"job_id", "operation_id"}
+                or not isinstance(judgment["job_id"], str) or not judgment["job_id"].strip()
+                or len(judgment["job_id"]) > 200
+                or not isinstance(judgment["operation_id"], str) or not judgment["operation_id"].strip()
+                or len(judgment["operation_id"]) > 200):
+            raise ValueError("invalid_assessment_judgment")
+        receipt_reference = None
+        if fields["satisfied"] and actor != self.owner_actor:
+            if judgment is None:
+                raise ValueError("assessment_judgment_required")
+            # Reuse the shared key helper so producer and consumer always agree
+            # (a domain fingerprint would silently never match the stored key).
+            from .decisions import judgment_receipt_key, verify_assessment_receipt
+            receipt = self._meta(judgment_receipt_key(actor, judgment["job_id"], judgment["operation_id"]))
+            binding = receipt.get("assessment_binding") if isinstance(receipt, dict) else None
+            identity = binding.get("material") if isinstance(binding, dict) else None
+            if not isinstance(identity, dict) or set(identity) != {"id", "version", "sha256"}:
+                raise ValueError("assessment_receipt_unbound")
+            live = next((m for m in self.materials(item["id"]) if m["id"] == identity["id"]
+                and m["version"] == identity["version"]), None)
+            if not live or not live["valid"] or live["original"]["sha256"] != identity["sha256"]:
+                raise ValueError("assessment_material_stale")
+            # Subject requirements, the material's own declared sources and the
+            # routed human requirements. Compare full live _basis snapshots so a
+            # meaning/provenance change with the same revision count also fails.
+            required = dict(item.get("source_versions", {}))
+            required.update(live.get("source_versions", {}))
+            required.update(self._routed_material_requirements(item))
+            for sid, revision in sorted(required.items()):
+                if self._basis(sid)["source_revision"] != revision:
+                    raise ValueError("assessment_source_revision_stale")
+            if fields.get("material_id") and (fields["material_id"] != identity["id"]
+                    or fields.get("material_version") != identity["version"]):
+                raise ValueError("assessment_material_mismatch")
+            # Cover every source actually cited by the receipt, extra included.
+            bound_sources = binding.get("sources")
+            if not isinstance(bound_sources, dict):
+                raise ValueError("assessment_sources_mismatch")
+            live_sources = {}
+            for sid in bound_sources:
+                if not isinstance(sid, str) or not sid:
+                    raise ValueError("assessment_sources_mismatch")
+                live_sources[sid] = self._basis(sid)
+            check = verify_assessment_receipt(receipt, actor=actor, job_id=judgment["job_id"],
+                item_id=item["id"], material=identity,
+                criterion_hash=fingerprint(item.get("completion_criteria")),
+                required=required, sources=live_sources)
+            if check:
+                raise ValueError(check)
+            # Bind the assessment row and its provenance to the receipt's material.
+            fields = {**fields, "material_id": identity["id"], "material_version": identity["version"],
+                "source_versions": {**supplied,
+                    **{sid: basis["source_revision"] for sid, basis in live_sources.items()}}}
+            receipt_reference = {"job_id": judgment["job_id"], "operation_id": judgment["operation_id"],
+                "request_sha256": receipt.get("request_sha256"), "provider": receipt.get("provider"),
+                "model": receipt.get("model"), "policy": receipt.get("policy"),
+                "material": dict(identity), "criterion_hash": binding.get("criterion_hash"),
+                "required": dict(binding.get("required", {})),
+                "sources": dict(bound_sources),
+                "basis": "Semantic sufficiency judgment; not human acceptance."}
         assessment = {**fields, "id": fingerprint([item["id"], now(), fields.get("evidence", "")]),
             "actor": actor, "assessed_at": now(), "item_version": item["version"],
-            "criterion_hash": fingerprint(fields.get("evidence", "")),
+            "criterion_hash": receipt_reference["criterion_hash"] if receipt_reference else fingerprint(fields.get("evidence", "")),
             "source_versions": fields.get("source_versions", {}),
             "resolution_basis": self.work_input_basis(item["id"], fields.get("source_versions", {})),
             "material_basis": self._raw_materials(item["id"])}
@@ -1045,6 +1137,11 @@ class GTDDomain:
              encode(assessment["resolution_basis"]), encode(assessment["material_basis"]),
              encode(fields.get("source_versions", {})), fields.get("mandate_id", item.get("mandate_id")),
              assessment["assessed_at"]))
+        if receipt_reference is not None:
+            # Provenance lives in the existing metadata table, keyed by the
+            # assessment id; no new table. It round-trips through the item
+            # document and assessment reads via _assessment_rows.
+            self._set_meta("assessment:judgment:" + assessment["id"], receipt_reference)
         full = [self._assessment_stub(entry) for entry in self._assessment_rows(item["id"])]
         updates = {"assessments": full, "result_gap": None if fields["satisfied"] else fields.get("gap", "criterion_not_met")}
         if fields["satisfied"]:

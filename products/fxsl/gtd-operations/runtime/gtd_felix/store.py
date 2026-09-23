@@ -82,7 +82,8 @@ MIGRATION_2 = (
 # I2: materials / assessments / deliveries as the single authoritative
 # representation. Historical design: GUIA at af0a023. Assessment ids are
 # deterministic digests of durable fields (legacy
-# records carried none); criterion_hash derives from the assessment evidence;
+# records carried none); legacy criterion_hash derives from assessment evidence,
+# while bound sufficiency assessments use the verified completion criterion;
 # created_at/retry_at/confirmed_at on deliveries are nullable because migrated
 # outbox intents carry no durable timestamps (inventing them is forbidden);
 # deliveries.item_id/item_version are nullable for transient UI sends without
