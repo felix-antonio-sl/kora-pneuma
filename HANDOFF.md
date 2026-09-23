@@ -1,37 +1,31 @@
-# Continuar GTD-Félix · 2026-09-22
+# Continuar GTD-Félix · 2026-09-23
 
 Lee `AGENTS.md`, [ESTADO](docs/gtd-felix/ESTADO.md) y
-[GUIA](docs/gtd-felix/GUIA.md). Contratos junto al producto. No reconstruyas
-E1–E69 ni reinicies I1–I5.
+[GUIA](docs/gtd-felix/GUIA.md). GUIA gobierna; ESTADO conserva hechos y límites.
+No reconstruyas E1–E69 ni reinicies I1–I5.
 
-- Checkout `/home/felix/lab/kora-gtd-felix`; rama `fxai/gtd-felix-20260911`.
-  Corte `gtd-felix/corte-2026-09-22` (`13bc6e8`). Fuente inicial `2e0e6e0`, corregida por `a563304` (credencial 0400),
-  con Jev de `af0a023` y corrección de disponibilidad `f71837e`.
-- **Instalación coherente realizada; producción personal no aceptada.**
-  Principal y servicio disponibles; Jev instalado sin inferencia de prueba.
-  La causa del auto-restart era el pin del puente Gmail; gateway ahora nativo.
-  Hermes compartido intacto. DeepSeek v4.1 Flash / OpenCode Go / max conservado.
-- Primer recorrido real: material privado y devolución confirmados; evaluación
-  posterior agotada. Jev ya respondió válidamente en selección Gmail real tras
-  corregir lectura 0400. Precisión de Félix recibida, pero la captura separada
-  agotó tiempo sin material. `8663e05` corrige el falso rechazo de «Revisar ahora»
-  y prioriza vincular correcciones antes de explorar. Instalado en ambos perfiles.
-  La sesión integradora ruteó la precisión al asunto original mediante API;
-  hubo material v2, entrega Telegram confirmada, v3 y evaluación Jev favorable.
-  La preparación figura done, pero v3 contiene una inferencia sin sustento y
-  omite dependencia humana del material. `7c26a08` aclara revisiones de fuente;
-  `c5f24a0` exige pasajes de fuente al evaluar. Recomendación revisada privada en
-  `weekly-hours-20260922/recomendacion-horario-revisada.md`, todavía fuera del
-  registro GTD. Seguir esa continuidad según ESTADO. No atribuir recuperación
-  asistida a vinculación autónoma. Pausa/regreso y G7 pendientes.
-- Sin nuevos tests, benchmarks ni canarios. API propietaria y exports;
-  no abrir SQLite viva. `candidates/`, `versions/`, credenciales y datos preservados.
-- Respaldos, configuración y recibos en
-  `/home/felix/.local/state/gtd-felix/installation-20260922/`;
-  `RECUPERACION.md` distingue paquete creado de recuperación observada.
-- Un integrador, un incremento activo, sin subagentes por defecto. Autoridad
-  vigente de desarrollo, instalación y publicación; no concede efectos a terceros
-  ni aceptación humana. GUIA gobierna, ESTADO conserva hechos, este puente orienta.
+- Checkout `/home/felix/lab/kora-gtd-felix`, rama `fxai/gtd-felix-20260911`.
+  `6fa6ed9` conserva dependencias humanas; `2297500` liga juicio de suficiencia
+  al material y fuentes reales. Ambos instalados en principal/helper y publicados.
+- Material corregido v4 guardado en el asunto original por API propietaria;
+  evaluación anterior deshecha, historia preservada. Evaluación real terminó:
+  Jev incierto (0,5), brecha registrada, asunto activo v8 y Telegram confirmado.
+  V4 sigue vigente; cero trabajos pendientes. No repetir para buscar un sí.
+- Principal y servicio disponibles. Helper con archivos coherentes, bot suspendido
+  y gateway fallido por política nueva del Hermes compartido; G7 pendiente.
+  No modificar ni migrar la flota por conveniencia. Modelo principal conservado.
+- Producción personal y horario no aceptados por Félix. Recuperación asistida
+  no acredita vinculación autónoma ni pausa/regreso. No cerrar C1–C6 por instalación.
+- Sin tests, benchmarks, canarios ni inferencias sintéticas. API propietaria y
+  exports consistentes; no abrir SQLite viva. `candidates/`, `versions/`, secretos
+  y datos ajenos preservados. Autoridad vigente de desarrollo, instalación y push.
+- Evidencia privada en `/home/felix/.local/state/gtd-felix/integration-20260923/`;
+  recuperación histórica en `installation-20260922/` y `weekly-hours-20260922/`.
+- Tareas Desktop: implementación `01a0cc16-2b81-7ce3-83ef-293c26ac011f` y revisión
+  `01a0cc16-e1d7-7ee0-ac21-b567f1ba8071`, ambas terminadas. Integrador conserva
+  responsabilidad. Mensajes mediante `codex queue --thread ID --message TEXTO`;
+  no `exec resume`, pues la app mantiene su escritor. La revisora retiró el último
+  bloqueante y confirmó el candidato de siete archivos por huella.
 
-Al retomar, informa brevemente el estado recuperado y la primera acción concreta;
-continúa lo autorizado sin pedir una confirmación técnica rutinaria.
+Continuar lo autorizado sin pedir confirmación técnica rutinaria. Un incremento
+activo; cerrar sobre material, resultado observado y Git publicado con límites.

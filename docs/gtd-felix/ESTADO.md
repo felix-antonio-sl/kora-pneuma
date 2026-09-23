@@ -1,6 +1,6 @@
-# GTD-Félix · estado 2026-09-22
+# GTD-Félix · estado 2026-09-23
 
-**Instalación coherente realizada; producción personal todavía no aceptada.**
+**Evaluación sustentada instalada; material corregido v4 conservado. Producción personal todavía no aceptada.**
 [GUIA.md](GUIA.md) gobierna alcance y aceptación. Corte de continuidad
 `gtd-felix/corte-2026-09-22` (`13bc6e8`), Jev en `af0a023`, corrección operativa
 en `f71837e`; composición inicial `2e0e6e0`, seguida de la corrección
@@ -147,18 +147,86 @@ Dos límites observados en esa salida requieren conservar el juicio crítico:
   con pasajes de fuente y conservar posibles refutaciones. No hay nueva
   inferencia artificial que acredite la conducta posterior.
 
-La sesión preparó un material privado revisado, con la aritmética y el horario
-útiles, imputación de colación explícita y sin esas inferencias:
-`weekly-hours-20260922/recomendacion-horario-revisada.md` bajo el directorio privado
-de evidencia indicado arriba. Está fuera de Git y aún fuera del registro de
-materiales GTD: no presentarlo como v4 ni como una entrega del bot. El asunto
-figura `done` por su evaluación automática, no por aceptación de Félix.
+## Integración del 2026-09-23
 
-Siguiente trabajo: integrar correcciones de fundamento y dependencia en la
-continuidad del material, sin confundir juicio favorable con verificación de
-fuentes; después observar pausa/regreso cuando Félix los use. No reiniciar
-tentativas agotadas ni reabrir asuntos ajenos. La recuperación asistida de esta
-entrada no acredita todavía el recorrido autónomo de futuras correcciones.
+`6fa6ed9` conserva la precisión humana ruteada como dependencia del material,
+incluso después del cierre del destino. Omisión se completa en el servicio;
+revisión explícita incorrecta se rechaza. Una ruta no comprobable invalida el
+material sin abortar todo el listado ni conceder autoridad nueva.
+
+`2297500` integra el juicio estructurado de suficiencia. El servicio lee el
+material íntegro y comprueba citas de fuentes actuales; incorpora completo el
+texto humano ruteado. El recibo queda ligado a actor, trabajo, asunto, material,
+criterio y bases de todas las fuentes citadas. Se revalidan después del proveedor
+y antes del cierre. Un agente no puede cerrar con un juicio genérico, un resumen
+propio o un recibo de otro trabajo. El dueño conserva el cierre explícito; una
+brecha puede registrarse sin juicio favorable. Se mantienen 24.000 bytes, 16
+juicios por trabajo, 20 s o saldo menor del padre y el esquema v4 de 13 tablas.
+
+La fila de evaluación conserva cobertura completa y hash del criterio en los
+cierres ligados. La procedencia inmutable en `metadata` conserva el vínculo al
+deshacer/restaurar una evaluación; sólo se expone junto a su fila. Los registros
+históricos sin binding conservan su semántica anterior, documentada junto al código.
+
+Implementación y revisión independiente se coordinaron en las dos tareas de
+Codex Desktop indicadas en HANDOFF. La revisora contrastó los siete archivos por
+huella y retiró el último bloqueante tras comprobar la reasignación completa de
+`source_versions`. Revisión estática, compilación y `git diff --check`; **sin tests,
+benchmarks, canarios ni inferencias artificiales**. Los fixtures que cierran como
+agente sin juicio ligado todavía representan el contrato anterior y no fueron
+actualizados ni ejecutados.
+
+Instalación KORA aplicada a principal y helper: 38 módulos coinciden con la fuente
+en cada perfil, sin cambios administrados ni recuperación pendiente. Principal y
+servicio reiniciados. Durante la recuperación se usó una configuración temporal
+sin orquestación ni Telegram; ya se retiró y la configuración LIVE original quedó
+intacta. Todas las escrituras de dominio pasaron por la API propietaria; no se
+abrió SQLite viva con herramientas auxiliares.
+
+La sesión integradora deshizo la evaluación defectuosa de v3 y guardó **v4 en el
+mismo material y asunto**, conservando historia. V4 contiene el patrón HODOM →
+telemedicina → HODOM, 22 h por servicio, colación nominal explícita, fundamentos
+acotados y pendientes. Retira la inferencia de sincronía al mediodía. Incluye seis
+dependencias: cuatro correos, intención original y precisión humana. Lectura
+íntegra por API comprobada, material vigente, SHA-256
+`2e5ee4352bae0c3a7e4040a23eff349db478b95ebf56c83e632b0de3fee127a0`.
+La autoría autenticada de esta recuperación usa el permiso del dueño; el texto
+explicita la asistencia de Codex y no atribuye aceptación humana. `Ver resultado`
+lee el material vigente; no se simuló una pulsación de Telegram.
+
+El trabajo real terminó e integró su resultado en **239,29 s**, sin solicitar
+STOP ni ampliar presupuesto. Jev `jev-1.13.0` recibió la evaluación estructurada
+ligada a v4 y seis fuentes: recibo `evaluated`, suficiencia **incierta (0,5)**,
+3.361 tokens de entrada y 23 de salida. El agente registró `satisfied=false` con
+brecha; el asunto permanece **activo, versión 8**, y v4 sigue vigente. La brecha
+menciona cobertura parcial, PDF sin interpretar y reparto de colación por confirmar;
+son límites declarados por el agente, no una explicación causal emitida por Jev.
+No hubo cierre positivo ni aceptación por proxy. Telegram confirmó la devolución
+correspondiente a la versión 8. Cero trabajos pendientes al observar el cierre.
+
+El rechazo aislado `job_actor_mismatch` durante una lectura no impidió continuar;
+no se atribuye una causa no comprobada. La ruta estructurada sí fue usada en este
+caso real. Esto acredita llamada, binding, registro de incertidumbre y retorno,
+pero no demuestra todas las ramas de rechazo ni el cierre con juicio positivo.
+
+El checkout Hermes compartido apareció actualizado por actividad ajena a
+`d3b25b52ad1318c526bdb259b600eeca3d5f38e6`. No se modificó. El gateway principal
+arrancó; el gateway auxiliar ya estaba fallando con salida 78 por la política de
+multiplexación y su unidad independiente no reconocida. El bot helper sigue
+suspendido y sus archivos están actualizados, pero no se fuerza su arranque ni se
+migra la flota. G7 continúa pendiente con esta limitación operativa explícita.
+
+Evidencia privada: `/home/felix/.local/state/gtd-felix/integration-20260923/`:
+huellas finales, recibos KORA, exports consistentes, comandos/recibos de deshacer
+y guardar, material corregido y lectura posterior. Estos respaldos conservan los
+datos; no acreditan un ensayo de restauración de la entrega final.
+
+Incremento integrado e instalado; cambios de código y continuidad publicados en
+la rama de trabajo. El material útil está disponible y la brecha de suficiencia
+sigue visible. Siguiente paso de producto: mejorar el fundamento pertinente si
+Félix desea afinar la propuesta, sin volver a evaluar repetidamente para obtener
+un sí. Pausa/regreso y aceptación requieren su uso. No reabrir asuntos ajenos ni
+convertir esta recuperación asistida en evidencia de vinculación autónoma.
 
 C1–C6 y G1–G10 **siguen abiertos** hasta su evidencia aplicable. C2/C6 necesitan
 uso y aceptación de Félix; C3 cobertura útil; C4 devolución efectiva; G7 un aporte
